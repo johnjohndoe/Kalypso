@@ -62,6 +62,10 @@ public class MeasuresConstants
 
   public static final String IN_MEASURE_PLANNING_ID = "xplanung";
 
+  public static final String IN_LastResults = "lastResults";
+
+  public static final String IN_CALC_DO_MEASURE_SWITCH ="doMeasures";
+
   /** propterties for metadata file (.calculation) */
   public static final String METADATA_OPTIMIZE_PROP = "optimize";
 
@@ -193,5 +197,7 @@ public class MeasuresConstants
   public static final String XPLANUNG_KS_LANDUSE_NAME = "BPlan_02";
 
   public static final String XPLANUNG_KG_LANDUSE_NAME = "BPlan_01";
+
+  
 
 }

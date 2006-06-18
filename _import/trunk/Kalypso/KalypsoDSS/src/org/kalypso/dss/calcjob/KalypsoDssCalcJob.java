@@ -45,8 +45,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,6 +68,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelCalcJob;
@@ -117,8 +121,7 @@ public class KalypsoDssCalcJob implements ISimulation
   List<String> m_featruesWithResults = new ArrayList<String>();
 
   /** assures to return only directories for a file.list() call */
-  private FileFilter m_dirFilter = new FileFilter();
-
+  // private FileFilter m_dirFilter = new FileFilter();
   ISimulationResultEater m_resultEater;
 
   /**
@@ -127,12 +130,18 @@ public class KalypsoDssCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    final Logger logger = Logger.getAnonymousLogger();
+    m_resultEater = resultEater;
     m_resultDirDSS = new File( tmpdir, "dssResults" );
     m_resultDirDSS.mkdirs();
 
+    // create baseDir for hqJobs
     final File hqJobsBaseDir = new File( tmpdir, "hqJobs" );
     hqJobsBaseDir.mkdirs();
+
+    // read control for optimize and requested HQs
     final URL controlURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_METADATA_ID );
+
     // TODO implement optimizing job
     boolean optimize = false;
     String choiseCalcCase = null;
@@ -147,92 +156,181 @@ public class KalypsoDssCalcJob implements ISimulation
     catch( Exception e )
     {
       e.printStackTrace();
+      // fallback to default calculate all HQs
+      choiseCalcCase = MeasuresConstants.METADATA_CALCCASE_ENUM_ALL;
     }
-    m_resultEater = resultEater;
-    final Logger logger = Logger.getAnonymousLogger();
+
     final URL calcCases = getClass().getResource( "../resources/hq1_bis_hq100.zip" );
-    ArrayList<CalcDataProviderDecorater> dataProvieder = null;
-    String[] files = new String[0];
+
+    // list of dataproviders for each hq-case
+    final ArrayList<CalcDataProviderDecorater> dataProvider = new ArrayList<CalcDataProviderDecorater>();
+
+    // HQs to calculate
     try
     {
       // unzip all available calc cases hq1 to hq100
       monitor.setMessage( "Vorbereiten des Basismodels" );
       if( monitor.isCanceled() )
         return;
+      // unpack all HQs
       ZipUtilities.unzip( calcCases.openStream(), hqJobsBaseDir );
       logger.info( " ...calc cases successfully unziped" );
       monitor.setMessage( "Model ist initialisiert.." );
       if( monitor.isCanceled() )
         return;
+
+      //  
+      final FileFilter m_dirFilter = new FileFilter();
       if( !choiseCalcCase.equals( MeasuresConstants.METADATA_CALCCASE_ENUM_ALL ) )
         m_dirFilter.add( new String[] { choiseCalcCase } );
+      final String[] hqIdentifierToCalculate = hqJobsBaseDir.list( m_dirFilter );
+      final boolean doMeasures;
 
-      files = hqJobsBaseDir.list( m_dirFilter );
-      final String tmpdirAsString = hqJobsBaseDir.toString();
-      dataProvieder = new ArrayList<CalcDataProviderDecorater>();
-      for( int i = 0; i < files.length; i++ )
+      if( inputProvider.hasID( MeasuresConstants.IN_CALC_DO_MEASURE_SWITCH ) )
       {
-        final String dirName = files[i];
-        final File baseDir = new File( tmpdirAsString + "\\" + dirName );
+        final URL calcSwitchURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_CALC_DO_MEASURE_SWITCH );
+        final StringWriter writer = new StringWriter();
+        InputStream inputStream = null;
+        try
+        {
+          inputStream = calcSwitchURL.openStream();
+          IOUtils.copy( inputStream, writer );
+          String string = writer.toString();
+          doMeasures = string.indexOf( "yes" ) >= 0;
+        }
+        finally
+        {
+          IOUtils.closeQuietly( inputStream );
+        }
+      }
+      else
+        doMeasures = false;
+
+      final String tmpdirAsString = hqJobsBaseDir.toString();
+      // 
+      for( int i = 0; i < hqIdentifierToCalculate.length; i++ )
+      {
+        final String hqIdentifier = hqIdentifierToCalculate[i];
+        final File baseDir = new File( tmpdirAsString + "\\" + hqIdentifier );
         final NaSimulationDataProvieder naSimulationDataProvider = new NaSimulationDataProvieder( baseDir );
-        dataProvieder.add( new CalcDataProviderDecorater( naSimulationDataProvider ) );
+        final CalcDataProviderDecorater rrmInputProvider = new CalcDataProviderDecorater( naSimulationDataProvider );
+
+        monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
+        // insert measures defined from the client application
+        final List<Feature> resultNodes = mergeMeasures( inputProvider, rrmInputProvider, logger );
+        final File dssResultDirRun = new File( m_resultDirDSS, hqIdentifier );
+        dssResultDirRun.mkdirs();
+        final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
+        {
+          public void addResult( final String id, final File file )
+          {
+            if( id.equals( NaModelConstants.OUT_ZML ) )
+            {
+              final File rrmResultDir = file;
+              // try
+              // {
+
+              for( final Feature resultNode : resultNodes )
+              {
+
+                try
+                {
+                  FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqIdentifier, resultNode, doMeasures );
+                }
+                catch( MalformedURLException e )
+                {
+                  e.printStackTrace();
+                }
+              }
+              // final ResultFileFilter filter = new ResultFileFilter( m_featruesWithResults );
+              // FileUtils.listFiles( file, filter, TrueFileFilter.INSTANCE );
+              // File[] resultfiles = filter.getMatchingFiles();
+              // for( int j = 0; j < resultfiles.length; j++ )
+              // {
+              // final File f = resultfiles[j];
+              // FileUtils.copyDirectoryToDirectory( f, resultDirRun );
+              // }
+              // }
+              // catch( IOException e )
+              // {
+              // e.printStackTrace();
+              // }
+            }
+          }
+
+        };
+
+        monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
+        final NaModelCalcJob calcJob = new NaModelCalcJob();
+        m_naCalcJobs.add( calcJob );
+        final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+        monitor.setMessage( "Starte Berechnungdurchlauf " + i + " von " + dataProvider.size() );
+        calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
+        monitor.setMessage( "Berechnungslauf " + i + " beendet" );
       }
     }
     catch( IOException e )
     {
       e.printStackTrace();
     }
-    Iterator<CalcDataProviderDecorater> iterator = dataProvieder.iterator();
-    int i = 1;
-    while( iterator.hasNext() )
-    {
-      final File resultDirRun = new File( m_resultDirDSS, files[i - 1] );
-      resultDirRun.mkdirs();
-      final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
-      {
-
-        public void addResult( String id, File file ) throws SimulationException
-        {
-          if( id.equals( NaModelConstants.OUT_ZML ) )
-          {
-            try
-            {
-              final ResultFileFilter filter = new ResultFileFilter( m_featruesWithResults );
-              FileUtils.listFiles( file, filter, TrueFileFilter.INSTANCE );
-              File[] resultfiles = filter.getMatchingFiles();
-              for( int j = 0; j < resultfiles.length; j++ )
-              {
-                File f = resultfiles[j];
-                FileUtils.copyDirectoryToDirectory( f, resultDirRun );
-              }
-            }
-            catch( IOException e )
-            {
-              e.printStackTrace();
-            }
-          }
-        }
-
-      };
-
-      final CalcDataProviderDecorater rrmInputProvider = iterator.next();
-      monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
-      // insert measures defined from the client application
-      mergeMeasures( inputProvider, rrmInputProvider, logger );
-      monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
-      final NaModelCalcJob calcJob = new NaModelCalcJob();
-      m_naCalcJobs.add( calcJob );
-      final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
-      monitor.setMessage( "Starte Berechnungdurchlauf " + i + " von " + dataProvieder.size() );
-      calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
-      monitor.setMessage( "Berechnungslauf " + i + " beendet" );
-      i++;
-    }
+    // final Iterator<CalcDataProviderDecorater> iterator = dataProvider.iterator();
+    // int i = 1;
+    // while( iterator.hasNext() )
+    // {
+    // final CalcDataProviderDecorater rrmInputProvider = iterator.next();
+    // final File resultDirRun = new File( m_resultDirDSS, hqIdentifierToCalculate[i - 1] );
+    // resultDirRun.mkdirs();
+    // final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
+    // {
+    //
+    // public void addResult( String id, File file )
+    // {
+    // if( id.equals( NaModelConstants.OUT_ZML ) )
+    // {
+    // try
+    // {
+    // final Feature[] resultNodes = new Feature[0];
+    // for( final Feature resultNode : resultNodes )
+    // {
+    // generateDssResultFor( file, resultNode );
+    // }
+    //
+    // final ResultFileFilter filter = new ResultFileFilter( m_featruesWithResults );
+    // FileUtils.listFiles( file, filter, TrueFileFilter.INSTANCE );
+    // File[] resultfiles = filter.getMatchingFiles();
+    // for( int j = 0; j < resultfiles.length; j++ )
+    // {
+    // final File f = resultfiles[j];
+    // FileUtils.copyDirectoryToDirectory( f, resultDirRun );
+    // }
+    // }
+    // catch( IOException e )
+    // {
+    // e.printStackTrace();
+    // }
+    // }
+    // }
+    //
+    // };
+    //
+    // monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
+    // // insert measures defined from the client application
+    // mergeMeasures( inputProvider, rrmInputProvider, logger );
+    // monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
+    // final NaModelCalcJob calcJob = new NaModelCalcJob();
+    // m_naCalcJobs.add( calcJob );
+    // final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+    // monitor.setMessage( "Starte Berechnungdurchlauf " + i + " von " + dataProvider.size() );
+    // calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
+    // monitor.setMessage( "Berechnungslauf " + i + " beendet" );
+    // i++;
+    // }
     resultEater.addResult( NaModelConstants.OUT_ZML, m_resultDirDSS );
   }
 
-  private void mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
+  private List<Feature> mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
   {
+    final List<Feature> resultNodes = new ArrayList<Feature>();
     boolean writeNewHydrotopFile = false;
     boolean writeNewInitalValueFile = false;
     // get the urls for measures and model files
@@ -316,14 +414,23 @@ public class KalypsoDssCalcJob implements ISimulation
       // set all generate result properties to false
       setAllResultFlags( modelWorkspace, false );
       final Feature[] affectedChannels = getAffectedChannels( modelWorkspace, designAreaURL );
-      setFeaturesWithResults( modelWorkspace, affectedChannels );
+      for( final Feature channelFE : affectedChannels )
+      {
+        final IRelationType nodelinkRT = (IRelationType) channelFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE ) );
+        final Feature nodeFE = modelWorkspace.resolveLink( channelFE, nodelinkRT );
+        nodeFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), Boolean.TRUE );
+        if( !resultNodes.contains( nodeFE ) )
+          resultNodes.add( nodeFE );
+      }
+
+      // setFeaturesWithResults( modelWorkspace, affectedChannels );
       // the calcCase always generates results for all elements in the rrm
       // setAllResultFlags( modelWorkspace, true );
     }
     catch( Exception e )
     {
       e.printStackTrace();
-      setAllResultFlags( modelWorkspace, true );
+      // setAllResultFlags( modelWorkspace, true );
     }
 
     Writer writerHydroTop = null;
@@ -373,7 +480,7 @@ public class KalypsoDssCalcJob implements ISimulation
       rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
       rrmInputProvider.addURL( NaModelConstants.IN_HYDROTOP_ID, hydrotopURL );
     }
-
+    return resultNodes;
   }
 
   private Feature[] getAffectedChannels( GMLWorkspace modelWorkspace, URL designAreaURL ) throws Exception
@@ -1015,56 +1122,67 @@ public class KalypsoDssCalcJob implements ISimulation
     modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  /**
-   * This method generates the net and sets only the lowest node to generate results for.
-   * 
-   * @param modelworkspace
-   *          the rrm model workspace
-   * @param affectedChannels
-   *          the channels to take the downstream node as a possible rootnode of the net
-   */
-
-  private void setFeaturesWithResults( final GMLWorkspace modelworkspace, final Feature[] affectedChannels ) throws Exception
-  {
-    final NAConfiguration naConfiguration = NAConfiguration.getGml2AsciiConfiguration( modelworkspace.getContext(), null );
-    final NetFileManager netManager = new NetFileManager( naConfiguration );
-    final HashMap<String, NetElement> netElements = netManager.generateNetElements( modelworkspace, null );
-    for( int i = 0; i < affectedChannels.length; i++ )
-    {
-      final Feature channel = affectedChannels[i];
-      final NetElement rootElement = netElements.get( channel.getId() );
-      getRootNetElements( netElements, rootElement.getDownStreamNode() );
-    }
-    final HashMap<QName, Object> qNames = new HashMap<QName, Object>();
-    qNames.put( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( true ) );
-    final CollectFeaturesWithProperty visitor = new CollectFeaturesWithProperty( qNames, null );
-    modelworkspace.accept( visitor, modelworkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-    final Feature[] resultFE = visitor.getFeatures();
-    for( int i = 0; i < resultFE.length; i++ )
-    {
-      final Feature feature = resultFE[i];
-      Object property = feature.getProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_NAME_PROP ) );
-      if( property != null )
-        m_featruesWithResults.add( (String) property );
-    }
-  }
-
-  private List getRootNetElements( HashMap<String, NetElement> netElements, Feature rootNode ) throws Exception
-  {
-    Collection<NetElement> netElemtentCollection = netElements.values();
-    // collect netelements that are direct upstream of result nodes
-    final RootNodeCollectorVisitor rootNodeVisitor;
-    if( rootNode == null )
-      rootNodeVisitor = new RootNodeCollectorVisitor();
-    else
-      rootNodeVisitor = new RootNodeCollectorVisitor( rootNode );
-    for( Iterator iter = netElemtentCollection.iterator(); iter.hasNext(); )
-    {
-      NetElement element = (NetElement) iter.next();
-      element.accept( rootNodeVisitor );
-    }
-    return rootNodeVisitor.getRootNodeElements();
-  }
+  // /**
+  // * This method generates the net and sets only the lowest node to generate results for.
+  // *
+  // * @param modelworkspace
+  // * the rrm model workspace
+  // * @param affectedChannels
+  // * the channels to take the downstream node as a possible rootnode of the net
+  // */
+  //
+  // private void setFeaturesWithResults( final GMLWorkspace modelworkspace, final Feature[] affectedChannels ) throws
+  // Exception
+  // {
+  // final NAConfiguration naConfiguration = NAConfiguration.getGml2AsciiConfiguration( modelworkspace.getContext(),
+  // null );
+  // final NetFileManager netManager = new NetFileManager( naConfiguration );
+  // final HashMap<String, NetElement> netElements = netManager.generateNetElements( modelworkspace, null );
+  // 
+  // for( int i = 0; i < affectedChannels.length; i++ )
+  // {
+  // final Feature channel = affectedChannels[i];
+  // final NetElement rootElement = netElements.get( channel.getId() );
+  //
+  // final Feature downStreamNode = rootElement.getDownStreamNode();
+  // // downStreamNode.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ),
+  // Boolean.TRUE );
+  // getRootNetElements( netElements, downStreamNode );
+  // }
+  //    
+  //    
+  // final HashMap<QName, Object> qNames = new HashMap<QName, Object>();
+  // qNames.put( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( true )
+  // );
+  // final CollectFeaturesWithProperty visitor = new CollectFeaturesWithProperty( qNames, null );
+  // modelworkspace.accept( visitor, modelworkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+  // final Feature[] resultFE = visitor.getFeatures();
+  // for( int i = 0; i < resultFE.length; i++ )
+  // {
+  // final Feature feature = resultFE[i];
+  // Object property = feature.getProperty( new QName( XMLHelper.GMLSCHEMA_NS, NaModelConstants.GML_FEATURE_NAME_PROP )
+  // );
+  // if( property != null )
+  // m_featruesWithResults.add( (String) property );
+  // }
+  // }
+  //
+  // private List getRootNetElements( HashMap<String, NetElement> netElements, Feature rootNode ) throws Exception
+  // {
+  // final Collection<NetElement> netElemtentCollection = netElements.values();
+  // // collect netelements that are direct upstream of result nodes
+  // final RootNodeCollectorVisitor rootNodeVisitor;
+  // if( rootNode == null )
+  // rootNodeVisitor = new RootNodeCollectorVisitor();
+  // else
+  // rootNodeVisitor = new RootNodeCollectorVisitor( rootNode );
+  // for( Iterator iter = netElemtentCollection.iterator(); iter.hasNext(); )
+  // {
+  // NetElement element = (NetElement) iter.next();
+  // element.accept( rootNodeVisitor );
+  // }
+  // return rootNodeVisitor.getRootNodeElements();
+  // }
 
   /**
    * Simple filter class Fthat assures only directories and the optionaly directories with a specific name are valid.

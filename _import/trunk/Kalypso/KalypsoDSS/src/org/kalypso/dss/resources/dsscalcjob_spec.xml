@@ -18,6 +18,11 @@
 	<input id="xplanung" description="Modelldaten - BPlan Massnahmen"
 		optional="true" />
 
+	<input id="lastResults" description="letzte Ergebnisse"
+		optional="true" />
+	<input id="doMeasures"
+		description="Datei mit yes, no ob planung oder planung+massnahmen gerechnet werden sollen"
+		optional="true" />
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML"
