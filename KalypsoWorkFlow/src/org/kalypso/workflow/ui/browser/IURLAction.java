@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.workflow.WorkflowContext;
-
 
 /**
  * interface representing an action in a CommandURL is based on the key/values pairs
@@ -51,16 +51,16 @@ import org.kalypso.workflow.WorkflowContext;
 public interface IURLAction
 {
 
-  public String getActionName();
+  public String getActionName( );
+
   /**
    * excecutes the action
    */
   public abstract boolean run( ICommandURL commandURL );
-  
+
   /**
    * init allways called before run
    */
   public void init( final WorkflowContext workFlowActivityContext );
-
 
 }
