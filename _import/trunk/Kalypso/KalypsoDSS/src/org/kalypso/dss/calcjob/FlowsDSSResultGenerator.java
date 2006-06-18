@@ -86,7 +86,7 @@ public class FlowsDSSResultGenerator
       final String hqEventId = combination.getHQEventId();
       final Feature nodeFE = combination.getNodeFeature();
       final String nodeNme = (String) nodeFE.getProperty( "name" );
-      return hqEventId + " - " + nodeNme;
+      return hqEventId + " / Knoten " + nodeNme;
     }
   };
 
@@ -101,7 +101,6 @@ public class FlowsDSSResultGenerator
     if( htmlFragmentCollector == null )
       htmlFragmentCollector = new ArrayList<HTMLFragmentBean>();
     final String nodeName = (String) resultNode.getProperty( "name" );
-    final String resultTitle = hqEventId + " - " + nodeName;
 
     // find sources for new result locations
     final URL srcStatusQuoFile = getStatusQuo( hqEventId, resultNode );
@@ -282,10 +281,10 @@ public class FlowsDSSResultGenerator
       e.printStackTrace();
     }
 
-    if( gotStatusQuo && gotPlaning && gotPlaningAndMeasure )
+    if( gotStatusQuo && gotPlaning )
     {
       String nodeTitle = createNodeTitle( resultNode );
-      final String pageHTML = generateHTML( nodeTitle, nodeName, maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId, htmlFragmentCollector );
+      final String pageHTML = generateHTML( nodeTitle, nodeName, maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId, htmlFragmentCollector, gotPlaningAndMeasure );
       OutputStream htmlOutputStream = null;
       try
       {
@@ -328,17 +327,17 @@ public class FlowsDSSResultGenerator
     return nodeName;
   }
 
-  private static String generateHTML( String nodeTitle, String nodeName, double maxStatusQuoQ, double maxPlaningQ, double maxPlaningAndMeasureQ, String hqEventId, final List<HTMLFragmentBean> htmlFragmentCollector )
+  private static String generateHTML( String nodeTitle, String nodeName, double maxStatusQuoQ, double maxPlaningQ, double maxPlaningAndMeasureQ, String hqEventId, final List<HTMLFragmentBean> htmlFragmentCollector, boolean gotPlaningAndMeasure )
   {
     double overLoadQ = maxPlaningQ - maxStatusQuoQ;
     double reducedQ = maxPlaningQ - maxPlaningAndMeasureQ;
     final int reducedPercent;
-    if( overLoadQ == reducedQ )
+    if( maxPlaningQ == maxStatusQuoQ )
       reducedPercent = 100;
     else
-      reducedPercent = (int) (100d * reducedQ / (overLoadQ));
+      reducedPercent = (int) (100d * reducedQ / overLoadQ);
     final String barHTML = generateBarHTML( reducedPercent );
-    final String tableHTML = generateTableHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
+    final String tableHTML = generateTableHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId, gotPlaningAndMeasure );
     final String legendHTML = generateLegendHTMLPart();
 
     final String prefix = hqEventId + "/" + nodeName;
@@ -358,7 +357,7 @@ public class FlowsDSSResultGenerator
     StringBuffer result = new StringBuffer( "<html><body bgcolor=\"#FFFFCC\">" );
 
     result.append( " <table width=\"100%\"><tr><td align=\"left\">" );
-    result.append( " <b>Details zur Analyse: " + hqEventId + " - Knoten " + nodeTitle + "</b>" );
+    result.append( " <b>Details zur Analyse: " + hqEventId + " / " + nodeTitle + "</b>" );
     result.append( " </td><td align=\"right\">" );
     result.append( "<a href=\"../../analyse.html\">zur Hauptseite</a>" );
     result.append( " </td></tr></table>" );
@@ -466,17 +465,29 @@ public class FlowsDSSResultGenerator
 
   private static String generateBarHTML( final int reducedPercent )
   {
-    return " "// 
-        + "<table border=\"0\" width=\"100%\" height=\"30\">"//
-        + "   <colgroup>"//
-        + "     <col width=\"" + (100 - reducedPercent) + "%\">"//
-        + "     <col width=\"" + reducedPercent + "%\">"//
-        + "   </colgroup>"//
-        + "   <tr>"//
-        + "     <td bgcolor=\"" + RED + "\"></td>"//
-        + "     <td bgcolor=\"" + GREEN + "\"></td>"//
-        + "   </tr>"//
-        + "</table>";
+    StringBuffer result = new StringBuffer();
+    result.append( "<table border=\"0\" width=\"100%\" height=\"30\">" );
+    result.append( "   <colgroup>" );
+    result.append( "     <col width=\"" + (100 - reducedPercent) + "%\">" );
+    result.append( "     <col width=\"" + reducedPercent + "%\">" );
+    result.append( "   </colgroup>" );
+    result.append( "   <tr>" );
+    if( reducedPercent == 100 )
+      result.append( "     <td bgcolor=\"" + GREEN + "\"></td>" );
+    else if( reducedPercent == 0 )
+      result.append( "     <td bgcolor=\"" + RED + "\"></td>" );
+    else
+      result.append( "     <td bgcolor=\"" + RED + "\"></td>" );
+
+    if( reducedPercent == 100 )
+      result.append( "     <td bgcolor=\"" + GREEN + "\"></td>" );
+    else if( reducedPercent == 0 )
+      result.append( "     <td bgcolor=\"" + RED + "\"></td>" );
+    else
+      result.append( "     <td bgcolor=\"" + GREEN + "\"></td>" );
+    result.append( "   </tr>" );//
+    result.append( "</table>" );
+    return result.toString();
   }
 
   private static String generateLegendHTMLPart( )
@@ -485,7 +496,7 @@ public class FlowsDSSResultGenerator
         + "<table border=\"2\" align=\"right\">"//
         + "<caption  align=\"bottom\"><b>Legende</b></caption>"//
         + "<tr>"//
-        + "<td bgcolor=\"" + GREEN + "\">Abflussredukton durch Massnahmen</td>"//
+        + "<td bgcolor=\"" + GREEN + "\">Abflussreduktion durch Massnahmen</td>"//
         + "<tr>"//
         + "</tr>"//
         + "<td bgcolor=\"" + RED + "\">Abflusszunahme durch Planung</td>"//
@@ -493,21 +504,25 @@ public class FlowsDSSResultGenerator
         + "</table>";
   }
 
-  private static String generateTableHTML( final double maxStatusQuoQ, final double maxPlaningQ, final double maxPlaningAndMeasureQ, final String hqEventId )
+  private static String generateTableHTML( final double maxStatusQuoQ, final double maxPlaningQ, final double maxPlaningAndMeasureQ, final String hqEventId, boolean gotPlaningAndMeasure )
   {
-    return "<!-- table info -->" //
-        + "  <table border=\"0\"  align=\"left\">"//
-        + "    <tr>"//
-        + generateCells( "Planung", maxPlaningQ, false ) // 
-        + generateCells( "Planung", maxPlaningQ, false ) // 
-        + "    </tr><tr>"//
-        + generateCells( hqEventId, maxStatusQuoQ, true ) //
-        + generateCells( "Massnahmen", maxPlaningAndMeasureQ, true ) //
-        + "    </tr><tr>"//
-        + generateCells( "Belastung", maxPlaningQ - maxStatusQuoQ, true ) //
-        + generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, true ) //
-        + "    </tr>"//
-        + "  </table>";
+    StringBuffer result = new StringBuffer( "<!-- table info -->" );
+    result.append( "  <table border=\"0\"  align=\"left\">" );
+    result.append( "    <tr>" );
+    result.append( generateCells( "Planung", maxPlaningQ, false ) );
+    if( gotPlaningAndMeasure )
+      result.append( generateCells( "Planung", maxPlaningQ, false ) );
+    result.append( "    </tr><tr>" );
+    result.append( generateCells( hqEventId, maxStatusQuoQ, true ) );
+    if( gotPlaningAndMeasure )
+      result.append( generateCells( "Massnahmen", maxPlaningAndMeasureQ, true ) );
+    result.append( "    </tr><tr>" );
+    result.append( generateCells( "zus. Belastung", maxPlaningQ - maxStatusQuoQ, false ) );
+    if( gotPlaningAndMeasure )
+      result.append( generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, false) );
+    result.append( "    </tr>" );
+    result.append( "  </table>" );
+    return result.toString();
   }
 
   private static String generateCells( final String title, final double q, final boolean underline )
@@ -516,7 +531,7 @@ public class FlowsDSSResultGenerator
     result.append( "<td><b>" + title + "</b></td><td>" );
     if( underline )
       result.append( "<u>" );
-    result.append( q + " m/s" );
+    result.append( q + " qm/s" );
     if( underline )
       result.append( "</u>" );
     result.append( "</td>" );
