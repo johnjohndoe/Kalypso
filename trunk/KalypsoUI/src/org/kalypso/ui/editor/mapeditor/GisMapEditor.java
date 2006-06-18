@@ -122,30 +122,32 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private boolean m_disposed = false;
 
+  private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
+  {
+    public void widgetChanged( final IWidget newWidget )
+    {
+      // the widget changed and there is something to show, so bring this
+      // view to top
+      try
+      {
+        if( newWidget instanceof IWidgetWithOptions )
+        {
+          final IWorkbenchPage page = getSite().getPage();
+          page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
+        }
+      }
+      catch( final PartInitException e )
+      {
+        e.printStackTrace();
+      }
+    }
+  };
+
   public GisMapEditor( )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
-    m_mapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
-    {
-      public void widgetChanged( final IWidget newWidget )
-      {
-        // the widget changed and there is something to show, so bring this
-        // view to top
-        try
-        {
-          if( newWidget instanceof IWidgetWithOptions )
-          {
-            final IWorkbenchPage page = getSite().getPage();
-            page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
-          }
-        }
-        catch( final PartInitException e )
-        {
-          e.printStackTrace();
-        }
-      }
-    } );
+    m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
   }
 
   /**
@@ -193,7 +195,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
       final IFile file = input.getFile();
-      
+
       GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -362,6 +364,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     setMapModell( null );
 
     m_mapPanel.dispose();
+    m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
 
     if( m_outlinePage != null )
       m_outlinePage.dispose();

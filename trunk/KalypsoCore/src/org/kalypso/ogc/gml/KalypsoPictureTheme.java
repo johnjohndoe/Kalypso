@@ -85,7 +85,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs )
+  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs )
   {
     super( themeName, linktype.toUpperCase() );
     m_themeName = themeName;
@@ -183,12 +183,18 @@ public KalypsoPictureTheme( String themeName, String linktype, String source, CS
     m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + (height * m_dy), ulcx + (width * m_dx), ulcy );
 
     m_imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
-  }  /**
-       * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
-       */
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   */
+  @Override
   public void dispose( )
   {
-    // nothing
+    if( m_image != null )
+      m_image.dispose();
+    
+    super.dispose();
   }
 
   /**

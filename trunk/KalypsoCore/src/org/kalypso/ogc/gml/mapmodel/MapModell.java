@@ -116,15 +116,6 @@ public class MapModell implements IMapModell
     fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
   }
 
-  public void clear()
-  {
-    m_activeTheme = null;
-    IKalypsoTheme[] themes = getAllThemes();
-    for( int i = 0; i < themes.length; i++ )
-      removeTheme( themes[i] );
-    fireModellEvent( null );
-  }
-
   public void enableTheme( final IKalypsoTheme theme, final boolean status )
   {
     // TODO: check if theme is in this model?
@@ -198,8 +189,9 @@ public class MapModell implements IMapModell
     removeTheme( m_themes.elementAt( pos ) );
   }
 
-  public void removeTheme( IKalypsoTheme theme )
+  public void removeTheme( final IKalypsoTheme theme )
   {
+    theme.removeModellListener( this );
     m_themes.remove( theme );
     m_enabledThemeStatus.remove( theme );
     if( m_activeTheme == theme )

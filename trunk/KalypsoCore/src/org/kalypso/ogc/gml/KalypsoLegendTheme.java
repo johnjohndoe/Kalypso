@@ -68,27 +68,21 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 {
-  private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
+  private ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
 
   private Image m_Image = null;
 
-  private Color backColor = new Color( 240, 240, 240);
-
-//  private int m_styleWidth = 170;
+  private Color backColor = new Color( 240, 240, 240 );
 
   private int m_styleHeight = 50;
 
   private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
 
-  // private int m_imageHeight = 0;
-  //
-  // private int m_imageWidth = 0;
-
   private String m_name;
 
   private final IMapModell m_mapModell;
 
-  public KalypsoLegendTheme( IMapModell mapModell )
+  public KalypsoLegendTheme( final IMapModell mapModell )
   {
     m_mapModell = mapModell;
     m_mapModell.addModellListener( this );
@@ -101,6 +95,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   public void dispose( )
   {
     m_mapModell.removeModellListener( this );
+
+    m_eventProvider.dispose();
   }
 
   /**
@@ -144,17 +140,17 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 
   public void addModellListener( final ModellEventListener listener )
   {
-    myEventProvider.addModellListener( listener );
+    m_eventProvider.addModellListener( listener );
   }
 
   public void fireModellEvent( final ModellEvent event )
   {
-    myEventProvider.fireModellEvent( event );
+    m_eventProvider.fireModellEvent( event );
   }
 
   public void removeModellListener( ModellEventListener listener )
   {
-    myEventProvider.removeModellListener( listener );
+    m_eventProvider.removeModellListener( listener );
   }
 
   /**
@@ -210,7 +206,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
           g.setFont( m_font );
           g.setColor( Color.black );
           final String title = featureTheme.getName();
-          if(title!=null)
+          if( title != null )
             g.drawString( title, 2, m_font.getSize() );
         }
         stylesCol.add( styleImage );
@@ -241,7 +237,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
         int legendIndex = x * yMax + y;
         if( legendIndex < stylesCol.size() )
         {
-          final Image styleImage = stylesCol.get( legendSize - legendIndex -1);
+          final Image styleImage = stylesCol.get( legendSize - legendIndex - 1 );
           g.drawImage( styleImage, x * widthPerLegend, heightPerLegend * y, widthPerLegend - 1, heightPerLegend - 1, null );
           g.setColor( Color.black );
           g.drawRect( x * widthPerLegend, heightPerLegend * y, widthPerLegend - 1, hMax - 2 );
