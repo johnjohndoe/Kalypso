@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.dss.calcjob;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -59,12 +55,9 @@ import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.utils.MeasuresConstants;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.util.ZMLUtilities;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FlowsDSSResultGenerator
 {
 
-  final ITokenReplacer titleReplacer = new ITokenReplacer()
+  final static ITokenReplacer titleReplacer = new ITokenReplacer()
   {
 
     public String getToken( )
@@ -93,13 +86,13 @@ public class FlowsDSSResultGenerator
     }
   };
 
-  private static TokenReplacerEngine ODT_TokenReplaceEngine = new TokenReplacerEngine( null );
+  private static TokenReplacerEngine ODT_TokenReplaceEngine = new TokenReplacerEngine( new ITokenReplacer[] { titleReplacer } );
 
   /**
    * @param noMeasures
    *          true, if calculation is based only on planing without measures
    */
-  public static void generateDssResultFor( final File dssResultDir, final File rrmResultDir, final ISimulationDataProvider inputProvider, final String hqEventId, final Feature resultNode, final boolean noMeasures ) throws MalformedURLException
+  public static void generateDssResultFor( final File dssResultDir, final File rrmResultDir, final ISimulationDataProvider inputProvider, final String hqEventId, final Feature resultNode, final boolean doMeasures ) throws MalformedURLException
   {
     final String nodeName = (String) resultNode.getProperty( "name" );
     final String resultTitle = hqEventId + " - " + nodeName;
@@ -112,7 +105,7 @@ public class FlowsDSSResultGenerator
     // define new result locations
     // final File dssResultContainer = getContainerPath( dssResultDir, resultNode, hqEventId );
 
-    final String containerPath = getContainerPath( resultNode, hqEventId );
+    final String containerPath = getContainerPath( resultNode );
     final File newStatusQuoFile = new File( dssResultDir, containerPath + "/statusQuo.zml" );
     final File newPlanFile = new File( dssResultDir, containerPath + "/mitPlanung.zml" );
     final File newPlanAndMeasuerFile = new File( dssResultDir, containerPath + "/mitPlanungUndMassnahmen.zml" );
@@ -123,34 +116,34 @@ public class FlowsDSSResultGenerator
     URL srcPlanURL = null;
     final URL srcPlanAndMeasuerURL;
 
-    if( noMeasures )
-    {
-      srcPlanURL = newNodeResultFile.toURL();
-      // srcPlanAndMeasure is obsolete
-      srcPlanAndMeasuerURL = null;
-    }
-    else
+    if( doMeasures )
     {
       srcPlanAndMeasuerURL = newNodeResultFile.toURL();
       // retrieve file from inputdata
       try
       {
         final URL lastResultContainerURL = (URL) inputProvider.getInputForID( MeasuresConstants.IN_LastResults );
-        srcPlanURL = new URL( lastResultContainerURL, containerPath + "/mitPlanung.zml" );
+        srcPlanURL = new URL( lastResultContainerURL,"Ergebnisse/" +hqEventId + "/" + containerPath + "/mitPlanung.zml" );
       }
-      catch( SimulationException e )
+      catch( Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
+    else
+    {
+      srcPlanURL = newNodeResultFile.toURL();
+      // srcPlanAndMeasure is obsolete
+      srcPlanAndMeasuerURL = null;
+    }
 
     // put them into the dss results
-
     OutputStream outputStream = null;
     // handle statusQuo
     try
     {
+      newStatusQuoFile.getParentFile().mkdirs();
       outputStream = new FileOutputStream( newStatusQuoFile );
       IOUtils.copy( srcStatusQuoFile.openStream(), outputStream );
     }
@@ -166,6 +159,7 @@ public class FlowsDSSResultGenerator
     // handle planing
     try
     {
+      newPlanFile.getParentFile().mkdirs();
       outputStream = new FileOutputStream( newPlanFile );
       IOUtils.copy( srcPlanURL.openStream(), outputStream );
     }
@@ -181,8 +175,12 @@ public class FlowsDSSResultGenerator
     // handle planing and measure
     try
     {
-      outputStream = new FileOutputStream( newPlanAndMeasuerFile );
-      IOUtils.copy( srcPlanAndMeasuerURL.openStream(), outputStream );
+      if( doMeasures )
+      {
+        newPlanAndMeasuerFile.getParentFile().mkdirs();
+        outputStream = new FileOutputStream( newPlanAndMeasuerFile );
+        IOUtils.copy( srcPlanAndMeasuerURL.openStream(), outputStream );
+      }
     }
     catch( Exception e )
     {
@@ -204,7 +202,7 @@ public class FlowsDSSResultGenerator
       IOUtils.copy( input, writer );
       odtAsString = writer.toString();
     }
-    catch( IOException e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
@@ -212,6 +210,7 @@ public class FlowsDSSResultGenerator
     {
       IOUtils.closeQuietly( input );
     }
+
     // StreamUtilities.streamCopy(resource.openStream(), writer);
     final Combination value = new Combination( resultNode, hqEventId );
     odtAsString = ODT_TokenReplaceEngine.replaceTokens( value, odtAsString );
@@ -222,7 +221,7 @@ public class FlowsDSSResultGenerator
       odtOutputStream = new FileOutputStream( newAnalysisOdtFile );
       IOUtils.write( odtAsString, odtOutputStream );
     }
-    catch( IOException e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
@@ -230,8 +229,12 @@ public class FlowsDSSResultGenerator
     {
       IOUtils.closeQuietly( odtOutputStream );
     }
+
     // analyse files
     boolean gotStatusQuo = false;
+    boolean gotPlaning = false;
+    boolean gotPlaningAndMeasure = false;
+
     double maxStatusQuoQ = 0;
     double maxPlaningQ = 0;
     double maxPlaningAndMeasureQ = 0;
@@ -240,21 +243,47 @@ public class FlowsDSSResultGenerator
       maxStatusQuoQ = ZMLUtilities.getMax( srcStatusQuoFile, TimeserieConstants.TYPE_RUNOFF, null );
       gotStatusQuo = true;
     }
-    catch( SensorException e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
 
-    final String pageHTML = generateHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
-    OutputStream htmlOutputStream = null;
     try
     {
-      odtOutputStream = new FileOutputStream( newAnalysisHTMLFile );
-      IOUtils.write( pageHTML, htmlOutputStream );
+      maxPlaningQ = ZMLUtilities.getMax( srcPlanURL, TimeserieConstants.TYPE_RUNOFF, null );
+      gotPlaning = true;
     }
-    catch( IOException e )
+    catch( Exception e )
     {
       e.printStackTrace();
+    }
+
+    try
+    {
+      if( doMeasures )
+      {
+        maxPlaningAndMeasureQ = ZMLUtilities.getMax( srcPlanAndMeasuerURL, TimeserieConstants.TYPE_RUNOFF, null );
+        gotPlaningAndMeasure = true;
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    if( gotStatusQuo && gotPlaning && gotPlaningAndMeasure )
+    {
+      final String pageHTML = generateHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
+      OutputStream htmlOutputStream = null;
+      try
+      {
+        htmlOutputStream = new FileOutputStream( newAnalysisHTMLFile );
+        IOUtils.write( pageHTML, htmlOutputStream );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -262,7 +291,11 @@ public class FlowsDSSResultGenerator
   {
     double overLoadQ = maxPlaningQ - maxStatusQuoQ;
     double reducedQ = maxPlaningQ - maxPlaningAndMeasureQ;
-    int reducedPercent = (int) (100d / (overLoadQ * reducedQ));
+    final int reducedPercent;
+    if( overLoadQ == reducedQ )
+      reducedPercent = 100;
+    else
+      reducedPercent = (int) (100d / (overLoadQ * reducedQ));
     final String barHTML = generateBarHTML( reducedPercent );
     final String tableHTML = generateTableHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId );
     final String legendHTML = generateLegendHTMLPart();
@@ -318,11 +351,10 @@ public class FlowsDSSResultGenerator
         + "    </tr><tr>"//
         + generateCells( hqEventId, maxStatusQuoQ, true ) //
         + generateCells( "Massnahmen", maxPlaningAndMeasureQ, true ) //
-        + "    </td></tr><tr><td>"//
+        + "    </tr><tr>"//
         + generateCells( "Belastung", maxPlaningQ - maxStatusQuoQ, true ) //
         + generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, true ) //
-        + "      <b> Differenz</b></td><td>24  m/s<br>"//
-        + "    </td></tr>"//
+        + "    </tr>"//
         + "  </table>";
   }
 
@@ -332,23 +364,23 @@ public class FlowsDSSResultGenerator
     result.append( "<td><b>" + title + "</b></td><td>" );
     if( underline )
       result.append( "<u>" );
-    result.append( q + "m/s" );
+    result.append( q + " m/s" );
     if( underline )
       result.append( "</u>" );
     result.append( "</td>" );
     return result.toString();
   }
 
-  private static String getContainerPath( Feature nodeFeature, String hqEventId )
+  private static String getContainerPath( Feature nodeFeature )
   {
     final String nodeName = (String) nodeFeature.getProperty( "name" );
-    return hqEventId + "/" + nodeName;
+    return nodeName;
   }
 
   private static URL getStatusQuo( String hqEventId, Feature resultNode ) throws MalformedURLException
   {
     final URL statusQuoZipURL = KalypsoDSSPlugin.class.getResource( "resources/resultsStatusQuo.zip" );
-    final String relativePath = DefaultPathGenerator.generateResultPathFor( resultNode, "name", "qgs", null );
+    final String relativePath = hqEventId + "/Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( resultNode, "name", "qgs", null );
     return new URL( new URL( "jar:" + statusQuoZipURL.toString() + "!/" ), relativePath );
   }
 

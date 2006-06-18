@@ -52,7 +52,6 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -61,21 +60,13 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.lang.MultiException;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.manager.NetFileManager;
-import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.dss.utils.MeasuresConstants;
 import org.kalypso.dss.utils.MeasuresHelper;
@@ -97,7 +88,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectFeaturesWithProperty;
 import org.kalypsodeegree_impl.model.feature.visitors.SetPropertyFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -217,7 +207,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
         monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
         // insert measures defined from the client application
-        final List<Feature> resultNodes = mergeMeasures( inputProvider, rrmInputProvider, logger );
+        final List<Feature> resultNodes = mergeMeasures( inputProvider, rrmInputProvider, doMeasures, logger );
         final File dssResultDirRun = new File( m_resultDirDSS, hqIdentifier );
         dssResultDirRun.mkdirs();
         final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
@@ -328,7 +318,7 @@ public class KalypsoDssCalcJob implements ISimulation
     resultEater.addResult( NaModelConstants.OUT_ZML, m_resultDirDSS );
   }
 
-  private List<Feature> mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, Logger logger ) throws SimulationException
+  private List<Feature> mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, final boolean doMeasures, Logger logger ) throws SimulationException
   {
     final List<Feature> resultNodes = new ArrayList<Feature>();
     boolean writeNewHydrotopFile = false;
@@ -386,18 +376,18 @@ public class KalypsoDssCalcJob implements ISimulation
         writeNewHydrotopFile = true;
         writeNewInitalValueFile = true;
       }
-      if( measuresRhbURL != null )
+      if( measuresRhbURL != null && doMeasures )
       {
         insertStorageChannelMeasure( measuresRhbURL, modelWorkspace, logger );
       }
-      if( measuresSealingURL != null )
+      if( measuresSealingURL != null && doMeasures )
       {
         if( hydrotopWorkspace == null )
           hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
         insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
         writeNewHydrotopFile = true;
       }
-      if( measuresMrsURL != null )
+      if( measuresMrsURL != null && doMeasures )
       {
         insertSwaleTrenchMeasure( measuresMrsURL, modelWorkspace, hydrotopWorkspace, designAreaURL, logger );
         writeNewHydrotopFile = true;
