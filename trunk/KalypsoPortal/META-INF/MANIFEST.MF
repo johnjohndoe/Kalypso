@@ -19,3 +19,10 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.workflow
 Eclipse-AutoStart: true
 Bundle-Vendor: Universtity of Technology Hamburg-Harburg
+Export-Package: org.kalypso.portal,
+ org.kalypso.portal.action,
+ org.kalypso.portal.dialog,
+ org.kalypso.portal.intro,
+ org.kalypso.portal.perspective,
+ org.kalypso.portal.view,
+ org.kalypso.portal.wizard
