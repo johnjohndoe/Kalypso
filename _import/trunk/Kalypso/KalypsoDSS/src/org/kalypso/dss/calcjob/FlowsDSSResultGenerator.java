@@ -433,8 +433,8 @@ public class FlowsDSSResultGenerator
       {
         try
         {
-          final Integer i1 = new Integer( o1 );
-          final Integer i2 = new Integer( o2 );
+          final Integer i1 = new Integer( o1.replaceAll("HQ","") );
+          final Integer i2 = new Integer( o2.replaceAll("HQ","") );
           return i1.compareTo( i2 );
         }
         catch( Exception e )
