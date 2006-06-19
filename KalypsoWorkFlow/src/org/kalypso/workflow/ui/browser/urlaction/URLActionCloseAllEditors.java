@@ -40,36 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
+ * example: <br>
+ * kalypso://closeAllEditors?exceptThese=org.eclipse.TestEditor1#org.eclipse.TestEditor2#...#...;
+ * 
  * @author kuepfer
  */
-public class URLActionActivateTheme extends AbstractURLAction
+public class URLActionCloseAllEditors extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "activateTheme";
+  private final static String COMMAND_NAME = "closeAllEditors";
 
-  /**
-   * optional
-   */
-  private final static String PARAM_THEME = "theme";
+  private final static String PARAM_DO_NOT_CLOSE = "exceptThese";
 
-  /**
-   * It is assumed the active part is the GisMapEditor, use the URLSelectEditor to activate the apporpriate Editor.
-   * 
-   * @see URLActionSelectEditor
-   */
+  private final static String PARAM_SEPERATOR = "sparator";
 
-  public URLActionActivateTheme( )
-  {
-  }
+  private String DEFAULT_SEPARATOR = "#";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
@@ -84,30 +73,15 @@ public class URLActionActivateTheme extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
-    final IEditorPart activePage = getActiveEditor();
-    String theme = commandURL.getParameter( PARAM_THEME );
-    if( activePage instanceof GisMapEditor )
-    {
-      final GisMapEditor editor = (GisMapEditor) activePage;
-      final MapPanel mapPanel = editor.getMapPanel();
-      if( mapPanel != null )
-      {
-        final IMapModell mapModell = mapPanel.getMapModell();
+    final String separator = commandURL.getParameter( PARAM_SEPERATOR );
+    final String[] doNotCloseList;
+    final String separatedList = commandURL.getParameter( PARAM_DO_NOT_CLOSE );
+    if( separator != null )
+      doNotCloseList = separatedList.split( separator );
+    else
+      doNotCloseList = separatedList.split( DEFAULT_SEPARATOR );
 
-        IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-        for( int i = 0; i < allThemes.length; i++ )
-        {
-          IKalypsoTheme layer = allThemes[i];
-          String name = layer.getName();
-          if( name.equals( theme ) )
-          {
-            mapModell.activateTheme( layer );
-            return true;
-          }
-        }
-      }
-
-    }
+    getActivePage().getEditorReferences();
     return false;
   }
 
