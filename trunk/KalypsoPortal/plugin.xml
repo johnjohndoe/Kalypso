@@ -20,13 +20,16 @@
             name="Kalypso Enterprise">
          <property
                name="aboutImage"
-               value="etc/aboutKalypso.gif"/>
+               value="icons/aboutKalypso.gif"/>
          <property
                name="aboutText"
                value="%productBlurb"/>
          <property
                name="windowImages"
-               value="etc/kalypso16.gif"/>
+               value="icons/planerClient32.gif"/>
+         <property
+               name="windowImage"
+               value="icons/kalypso16.gif"/>
       </product>
    </extension>
    <extension
@@ -75,12 +78,6 @@
             id="KalypsoPortal.view.site"
             name="Projekt Site"/>
       <view
-            allowMultiple="false"
-            class="org.kalypso.portal.view.DefinePotentialInteractionAreaView"
-            icon="icons/planerIconApplication.gif"
-            id="KalypsoPortal.view.interaction"
-            name="Betroffenheiten"/>
-      <view
             allowMultiple="true"
             class="org.kalypso.ui.gazetter.view.GazetterView"
             id="KalypsoPortal.view.gazatteer"
@@ -91,8 +88,9 @@
       <wizard
             category="org.kalypso.portal.loadProject.wizard"
             class="org.kalypso.portal.wizard.NewDssProjectWizard"
+            icon="icons/lc_aligncenter.png"
             id="org.kalypso.portal.wizard.newPlanerProject"
-            name="neues Planer-Client Projekt"
+            name="neues Projekt erstellen"
             project="true"/>
       <category
             id="org.kalypso.portal.loadProject.wizard"
@@ -102,8 +100,9 @@
       <wizard
             category="org.kalypso.portal.loadProject.wizard"
             class="org.kalypso.portal.wizard.LoadProjectFromWorkspaceWizard"
+            icon="icons/lc_closedoc_003.png"
             id="org.kalypso.portal.wizard.loadProject"
-            name="oeffnen eines Projekts im Arbeitsbereich"/>
+            name="bestehendes Projekt oeffnen"/>
    </extension>
 
 </plugin>

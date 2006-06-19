@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -75,7 +78,7 @@ public class URLActionShowMessage extends AbstractURLAction
     boolean decoding = Boolean.parseBoolean( commandURL.getParameter( PARAM_DECODE ) );
     final Display display = Display.getCurrent();
     final Shell shell = display.getActiveShell();
-    MessageDialog.openInformation( shell, title, message + "&decode=" + decoding );
+    MessageDialog.openInformation( shell, title, message + "&amp;decode=" + decoding );
     return true;
   }
 
