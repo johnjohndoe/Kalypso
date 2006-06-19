@@ -83,6 +83,7 @@ public class URLActionRegistry
       m_defaultInstance.register( new URLActionImportBPlanGML() );
       m_defaultInstance.register( new URLActionCopyFile() );
       m_defaultInstance.register( new URLActionShowInMap() );
+      m_defaultInstance.register( new URLActionCloseAllEditors() );
     }
     catch( URLActionRegistryException e )
     {

@@ -75,12 +75,13 @@ public class URLActionCloseView extends AbstractURLAction
     final String viewID = commandURL.getParameter( PARAM_PART_ID );
     final String secondaryID = commandURL.getParameter( PARAM_SECONDARY_PART_ID );
     final IViewReference viewRef = activePage.findViewReference( viewID, secondaryID );
+    // if viewRef == null, no reference of the requested view has been found nothing to hide, the action can still
+    // return true
     if( viewRef != null )
     {
       activePage.hideView( viewRef );
-      return true;
     }
-    return false;
+    return true;
   }
 
   /**

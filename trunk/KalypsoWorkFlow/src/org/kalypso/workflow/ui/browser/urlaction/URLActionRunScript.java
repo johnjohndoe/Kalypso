@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.CommandURLUtilities;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -59,15 +60,15 @@ import org.kalypso.workflow.ui.browser.urlaction.script.ScriptFactory;
  * html content
  * 
  * <pre>
- *                                                                &lt;script type=&quot;text/kalypso&quot;&gt;
- *                                                                    &lt;!--
- *                                                                    function test() {
- *                                                                     kalypso://showMessage?message=test;
- *                                                                     kalypso://showMessage?message=test;
- *                                                                     kalypso://showMessage?message=test;
- *                                                                     }
- *                                                                     //--&gt;
- *                                                                 &lt;/script&gt;
+ *                                                                     &lt;script type=&quot;text/kalypso&quot;&gt;
+ *                                                                         &lt;!--
+ *                                                                         function test() {
+ *                                                                          kalypso://showMessage?message=test;
+ *                                                                          kalypso://showMessage?message=test;
+ *                                                                          kalypso://showMessage?message=test;
+ *                                                                          }
+ *                                                                          //--&gt;
+ *                                                                      &lt;/script&gt;
  * </pre> }
  * 
  * @author doemming
@@ -101,12 +102,15 @@ public class URLActionRunScript extends AbstractURLAction
       final String content = IOUtils.toString( stream );
       final Script script = ScriptFactory.createScript( content, scriptType );
       final Function function = script.getFunction( functionName );
+      if( function == null )
+        throw new Exception( "Function (" + functionName + ") in skript defined on html-page\n " + url.toExternalForm() + "\n was not found!" );
       final List<String> commands = function.getCommands();
       return CommandURLUtilities.runCommands( getWorkFlowContext(), commands );
     }
     catch( Exception e )
     {
       e.printStackTrace();
+      MessageDialog.openError( getShell(), "Error Message Planer Client", "Error occured while processing a script." + e.getMessage() + ".\nContact your Administator." );
       return false;
     }
   }
