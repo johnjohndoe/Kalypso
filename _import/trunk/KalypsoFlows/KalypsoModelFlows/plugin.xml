@@ -14,6 +14,9 @@
          name="catalogs for flows"
          point="org.kalypso.core.catalogContribution">
       <catalogContribution class="org.kalypso.flows.xplanung.FeatureTypeStyleCatalogContribution"/>
+      <catalogContribution
+            class="org.kalypso.flows.measures.MeasuresFeatureTypeStyleCatalogContribution"
+            name="Measure sytles catalog"/>
    </extension>
 
 </plugin>

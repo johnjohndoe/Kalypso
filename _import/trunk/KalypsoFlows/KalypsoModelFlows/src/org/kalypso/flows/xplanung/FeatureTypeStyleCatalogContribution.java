@@ -13,9 +13,6 @@ public class FeatureTypeStyleCatalogContribution implements ICatalogContribution
 
   public void contributeTo( final CatalogManager catalogManager )
   {
-    // final URL catalogURL = getClass().getResource( "resources/urn/catalog.xml" );
-    // final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-    // baseCatalog.addNextCatalog( catalogURL );
 
     try
     {
