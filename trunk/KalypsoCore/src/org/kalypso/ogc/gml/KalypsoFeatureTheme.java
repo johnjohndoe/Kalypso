@@ -377,7 +377,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       for( final Object f : featuresToFilter )
       {
         final Feature feature = (Feature) f;
-        if( feature.getEnvelope().intersects( bbox ) )
+        
+        final GM_Envelope envelope = feature.getEnvelope();
+        if( envelope != null && envelope.intersects( bbox ) )
         {
           final DisplayElement[] elements = m_displayElements.get( feature );
           if( elements != null )
