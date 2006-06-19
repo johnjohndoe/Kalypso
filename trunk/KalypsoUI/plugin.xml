@@ -430,7 +430,7 @@
                label="Geometrie editieren"
                tooltip="Geometrien editieren"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate"
-               icon="icons/feature/geom_multipolygon.gif"
+               icon="icons/feature/geom_edit.gif"
                style="radio"
                state="false"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
