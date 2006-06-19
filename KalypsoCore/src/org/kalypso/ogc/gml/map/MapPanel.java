@@ -52,11 +52,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.media.jai.PointOpImage;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
@@ -378,14 +375,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireModellEvent( modellEvent );
   }
 
-  public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
+  public GM_Envelope getPanToLocationBoundingBox( double gisMX, double gisMY )
   {
     final double ratio = m_height / m_width;
 
     final GeoTransform transform = getProjection();
-
-    double gisMX = transform.getSourceX( mx );
-    double gisMY = transform.getSourceY( my );
 
     double gisDX = (transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ));
     double gisDY = gisDX * ratio;
@@ -395,6 +389,15 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     double gisY2 = gisMY + gisDY;
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+  }
+
+  public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
+  {
+    final GeoTransform transform = getProjection();
+
+    double gisMX = transform.getSourceX( mx );
+    double gisMY = transform.getSourceY( my );
+    return getPanToLocationBoundingBox( gisMX, gisMY );
   }
 
   /**
@@ -742,9 +745,37 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
   }
 
-  public void addPointOfInterest( PointOfinterest pointOfInterest )
+  public void addPointOfInterest( final PointOfinterest pointOfInterest )
   {
     m_pointofInterests.add( pointOfInterest );
+    setValidAll( false );
+    repaint();
+    final long duration = pointOfInterest.getDuration();
+    final Thread thread = new Thread()
+    {
+      /**
+       * @see java.lang.Thread#run()
+       */
+      @Override
+      public void run( )
+      {
+        try
+        {
+          sleep( duration );
+        }
+        catch( InterruptedException e )
+        {
+          // nothing
+        }
+        removePointOfInterest( pointOfInterest );
+      }
+    };
+    thread.start();
+  }
+
+  public void removePointOfInterest( PointOfinterest pointOfInterest )
+  {
+    m_pointofInterests.remove( pointOfInterest );
     setValidAll( false );
     repaint();
   }
@@ -759,34 +790,29 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     final GeoTransform projection = getProjection();
     for( PointOfinterest poi : m_pointofInterests )
     {
-      if( !poi.isValid() )
-        toRemove.add( poi );
-      else
-      {
-        final GM_Point geometry = poi.getGeometry();
-        final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
-        int r = 10;
-        int x = (int) screenPoint.getX();
-        int y = (int) screenPoint.getY();
-        String title = poi.getTitle();
-        g2d.drawString( title, x + 2 * r, y + 2 * r );
-        Font font = g2d.getFont();
-        FontRenderContext frc = ((Graphics2D) g2d).getFontRenderContext();
-        Rectangle2D bounds = font.getStringBounds( title, frc );
-        int bw = (int) bounds.getWidth();
-        int bh = (int) bounds.getHeight();
-        // inner
-        g2d.setColor( innerColor );
-        g2d.fillOval( x - r, y - r, r * 2, r * 2 );
-        g2d.setColor( Color.YELLOW );
-        
-        g2d.fillRect( x + 2 * r, y + 2 * r - bh, bw, bh+3 );
+      final GM_Point geometry = poi.getGeometry();
+      final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
+      int r = 10;
+      int x = (int) screenPoint.getX();
+      int y = (int) screenPoint.getY();
+      String title = poi.getTitle();
+      g2d.drawString( title, x + 2 * r, y + 2 * r );
+      Font font = g2d.getFont();
+      FontRenderContext frc = g2d.getFontRenderContext();
+      Rectangle2D bounds = font.getStringBounds( title, frc );
+      int bw = (int) bounds.getWidth();
+      int bh = (int) bounds.getHeight();
+      // inner
+      g2d.setColor( innerColor );
+      g2d.fillOval( x - r, y - r, r * 2, r * 2 );
+      g2d.setColor( Color.YELLOW );
 
-        // outer
-        g2d.setColor( color );
-        g2d.drawOval( x - r, y - r, r * 2, r * 2 );
-        g2d.drawString( title, x + 2 * r, y + 2 * r );
-      }
+      g2d.fillRect( x + 2 * r, y + 2 * r - bh, bw, bh + 3 );
+
+      // outer
+      g2d.setColor( color );
+      g2d.drawOval( x - r, y - r, r * 2, r * 2 );
+      g2d.drawString( title, x + 2 * r, y + 2 * r );
     }
     for( PointOfinterest ofinterest : toRemove )
     {

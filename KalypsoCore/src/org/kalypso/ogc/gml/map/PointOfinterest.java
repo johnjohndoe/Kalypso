@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
-import java.util.Calendar;
-
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -51,21 +49,15 @@ public class PointOfinterest
 {
   private final String m_title;
 
-  private final long m_validEnd;
+  private final long m_duration;
 
   private final GM_Point m_point;
 
-  public PointOfinterest( final String title, final long validEnd, final GM_Point point )
+  public PointOfinterest( final String title, final long duration, final GM_Point point )
   {
     m_title = title;
-    m_validEnd = validEnd;
+    m_duration = duration;
     m_point = point;
-  }
-
-  public boolean isValid( )
-  {
-    final long timeInMillis = Calendar.getInstance().getTimeInMillis();
-    return timeInMillis < m_validEnd;
   }
 
   public GM_Point getGeometry( )
@@ -77,5 +69,9 @@ public class PointOfinterest
   {
     return m_title;
   }
-
+  
+  public long getDuration( )
+  {
+    return m_duration;
+  }
 }
