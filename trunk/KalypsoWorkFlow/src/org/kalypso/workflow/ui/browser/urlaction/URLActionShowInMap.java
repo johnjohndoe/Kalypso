@@ -40,18 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.PointOfinterest;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -123,7 +119,7 @@ public class URLActionShowInMap extends AbstractURLAction
     String title = commandURL.getParameter( PARAM_TITLE );
     if( title == null )
       title = "";
-    title=title.replaceAll("%20", " ");
+    title = title.replaceAll( "%20", " " );
     long duration = 3000l; // 3 seconds
     try
     {
@@ -144,9 +140,9 @@ public class URLActionShowInMap extends AbstractURLAction
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       final CS_CoordinateSystem coordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
       final GM_Point point = GeometryFactory.createGM_Point( x, y, coordinateSystem );
-      final long timeInMillis = Calendar.getInstance().getTimeInMillis();
-      long validEnd = timeInMillis + 100;//duration;
-      final PointOfinterest pointOfInterest = new PointOfinterest( title, validEnd, point );
+      // final long timeInMillis = Calendar.getInstance().getTimeInMillis();
+      // long validEnd = timeInMillis + 100;//duration;
+      final PointOfinterest pointOfInterest = new PointOfinterest( title, duration, point );
       for( IEditorReference reference : editorReferences )
       {
         final IEditorPart editor = reference.getEditor( false );
@@ -154,6 +150,12 @@ public class URLActionShowInMap extends AbstractURLAction
           continue;
         final GisMapEditor mapEditor = (GisMapEditor) editor;
         final MapPanel mapPanel = mapEditor.getMapPanel();
+        final GM_Envelope boundingBox = mapPanel.getBoundingBox();
+        if( !boundingBox.contains( point.getPosition() ) )
+        {
+          final GM_Envelope panToLocationBoundingBox = mapPanel.getPanToLocationBoundingBox( x, y );
+          mapPanel.setBoundingBox( panToLocationBoundingBox );
+        }
         mapPanel.addPointOfInterest( pointOfInterest );
       }
       return true;
