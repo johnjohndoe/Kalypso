@@ -5,3 +5,6 @@ Bundle-SymbolicName: org.kalypso.model.KalypsoModelFlows; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.core
+Export-Package: org.kalypso.flows,
+ org.kalypso.flows.measures,
+ org.kalypso.flows.xplanung

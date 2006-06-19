@@ -47,7 +47,9 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.SortedSet;
@@ -423,8 +425,27 @@ public class FlowsDSSResultGenerator
     final StringBuffer result = new StringBuffer( "<html><body bgcolor=\"" + BGColor + "\">" );
 
     final Hashtable<String, HTMLFragmentBean> matrix = new Hashtable<String, HTMLFragmentBean>();
-    final SortedSet<String> hqNameSet = new TreeSet<String>();
+
+    final SortedSet<String> hqNameSet = new TreeSet<String>( new Comparator<String>()
+    {
+
+      public int compare( String o1, String o2 )
+      {
+        try
+        {
+          final Integer i1 = new Integer( o1 );
+          final Integer i2 = new Integer( o2 );
+          return i1.compareTo( i2 );
+        }
+        catch( Exception e )
+        {
+          return o1.compareTo( o2 );
+        }
+      }
+
+    } );
     final SortedSet<String> nodeTitleSet = new TreeSet<String>();
+
     for( HTMLFragmentBean fragment : fragments )
     {
       final String hq = fragment.getHqIdentifier();
@@ -549,7 +570,8 @@ public class FlowsDSSResultGenerator
 
   private static String generateTableHTML( final double maxStatusQuoQ, final double maxPlaningQ, final double maxPlaningAndMeasureQ, final String hqEventId, boolean gotPlaningAndMeasure )
   {
-    StringBuffer result = new StringBuffer( "<!-- table info -->" );
+
+    final StringBuffer result = new StringBuffer( "<!-- table info -->" );
     result.append( "  <table border=\"0\"  align=\"left\">" );
     result.append( "    <tr>" );
     result.append( generateCells( "Planung", maxPlaningQ, false ) );
@@ -560,9 +582,14 @@ public class FlowsDSSResultGenerator
     if( gotPlaningAndMeasure )
       result.append( generateCells( "Massnahmen", maxPlaningAndMeasureQ, true ) );
     result.append( "    </tr><tr>" );
-    result.append( generateCells( "zus. Belastung", maxPlaningQ - maxStatusQuoQ, false ) );
+    final double delta1 = maxPlaningQ - maxStatusQuoQ;
+    result.append( generateCells( "zus. Belastung", delta1, false ) );
     if( gotPlaningAndMeasure )
-      result.append( generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, false ) );
+    {
+      final double delta2 = maxPlaningQ - maxPlaningAndMeasureQ;
+      result.append( generateCells( "Reduktion", delta2, false ) );
+
+    }
     result.append( "    </tr>" );
     result.append( "  </table>" );
     return result.toString();
@@ -570,11 +597,16 @@ public class FlowsDSSResultGenerator
 
   private static String generateCells( final String title, final double q, final boolean underline )
   {
+    final NumberFormat nFormat = NumberFormat.getInstance();
+    nFormat.setMinimumFractionDigits( 2 );
+    nFormat.setMaximumFractionDigits( 4 );
+    final String qString = nFormat.format( q );
+
     final StringBuffer result = new StringBuffer();
     result.append( "<td><b>" + title + "</b></td><td>" );
     if( underline )
       result.append( "<u>" );
-    result.append( q + " qm/s" );
+    result.append( qString + " qm/s" );
     if( underline )
       result.append( "</u>" );
     result.append( "</td>" );
