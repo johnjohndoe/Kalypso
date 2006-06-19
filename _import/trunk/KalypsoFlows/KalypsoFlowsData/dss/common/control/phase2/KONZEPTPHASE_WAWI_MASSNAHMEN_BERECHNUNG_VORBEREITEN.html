@@ -10,19 +10,19 @@
 	function prepareCalculation()
 	{
 	  kalypso://openEditor?input=project:/.templates/control.gft&activate=true;
-	  kalypso://openURL?&url=KONZEPTPHASE_NULLVARIANTE_START.html;
+	  kalypso://openURL?&url=KONZEPTPHASE_WAWI_MASSNAHMEN_BERECHNUNG_VORBEREITEN.html;
     }
 	function runCalculation() 
 	{
 	  kalypso://closeEditor?input=project:/.templates/control.gft&doSave=true;
-	  kalypso://copyFile?source=project:/.data/mrsMeasures.gml&target=calcdir&overwrite=true;
-	  kalypso://copyFile?source=project:/.data/sealingMeasures.gml&target=calcdir&overwrite=true;
-	  kalypso://copyFile?source=project:/.data/rhbMeasures.gml&target=calcdir&overwrite=true;
+	  kalypso://copyFile?source=project:/.data/mrsMeasure.gml&target=calcdir&overwrite=true;
+	  kalypso://copyFile?source=project:/.data/sealingMeasure.gml&target=calcdir&overwrite=true;
+	  kalypso://copyFile?source=project:/.data/rhbMeasure.gml&target=calcdir&overwrite=true;
 	  kalypso://copyFile?source=project:/.model/.doMeasures_YES&target=calcdir&newfilename=.doMeasures&overwrite=true;
 	  kalypso://copyFile?source=project:/.templates/analyse.html&target=project:/Planvarianten/Ergebnisse/analyse.html;
-	  kalypso://startCalc?
 	  kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.analysis&url=project:/Planvarianten/Ergebnisse/analyse.html&activePartId=org.eclipse.ui.views.ResourceNavigator;
 	  kalypso://openURL?&url=KONZEPTPHASE_ZUR_ERGEBNISUEBERSICHT_PLANUNG_UND_WAWI_MASSNAHMEN.html;
+	  kalypso://startCalc?
 	}
 -->
 </script>

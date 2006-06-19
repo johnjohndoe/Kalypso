@@ -14,12 +14,16 @@
 
 <script type="text/kalypso"> 
 	<!--
-		function messageboxWithNextPageDateiLaden() 
+		function nextStep() 
 		{
+			kalypso://closeView?partId=org.kalypso.workflow.ui.WorkflowBrowserView&secondaryPartId=measureBPlan.analysis;
 			kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.watermeasures&url=KONZEPTPHASE_MASSNAHMEN_DEF.html
-			kalypso://openURL?&url=KONZEPTPHASE_WAWI_MASSNAHMEN_DEF.html;
+			kalypso://openView?partId=org.kalypso.featureview.views.FeatureView&activePartId=org.eclipse.ui.views.ResourceNavigator;
+			kalypso://closeEditor?input=BPlan_Editieren.gmt&doSave=true;
+			kalypso://setBBoxInGMT?urlGMTfrom=project:/.maps/BPlan_Editieren.gmt&urlGMTto=project:/.maps/Massnahmen_definieren.gmt;
+			kalypso://openEditor?input=project:/.maps/Massnahmen_definieren.gmt&activate=true;
+			kalypso://openURL?&url=KONZEPTPHASE_WAWI_MASSNAHMEN_BERECHNEN.html;
 		}
-
   	 -->
  </script>
   
