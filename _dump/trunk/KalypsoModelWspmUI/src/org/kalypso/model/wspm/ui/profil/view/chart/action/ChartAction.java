@@ -135,5 +135,4 @@ public class ChartAction extends Action implements IAction
 
     return null;
   }
-
 }

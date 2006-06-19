@@ -140,6 +140,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( m_chart != null )
       m_chart.dispose();
 
+    // fix by marc, TODO please Gernot/Kim check if this is ok
+    if( m_actions != null )
+      m_actions.dispose();
+
     m_chart = null;
 
     super.dispose();
