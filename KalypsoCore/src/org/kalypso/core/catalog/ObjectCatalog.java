@@ -95,10 +95,10 @@ public abstract class ObjectCatalog<O> extends Storage
     }
     catch( Exception e )
     {
-//      e.printStackTrace();
+      // e.printStackTrace();
       return null;
       // TODO make new exceptionType CatalogException
-//      throw new UnsupportedOperationException();
+      // throw new UnsupportedOperationException();
     }
   }
 
@@ -156,6 +156,7 @@ public abstract class ObjectCatalog<O> extends Storage
       if( generator == null )
         return null;
       final String defaultURN = generator.generateDefaultURNForRelated( parent );
+      //      System.out.println( "defaultURN: " + defaultURN );
       return getValue( resolver, defaultURN, defaultURN );
     }
     catch( Exception e )
