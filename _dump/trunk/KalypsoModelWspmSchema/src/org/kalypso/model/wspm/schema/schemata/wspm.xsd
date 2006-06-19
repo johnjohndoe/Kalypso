@@ -387,9 +387,9 @@
 						<annotation>
 							<appinfo>This property represent the lastTime, when the cached proeprties (line, markers) have been synchronized against the profileMember</appinfo>
 							<documentation xml:lang="de">
-								<label>???cacheDate</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>Cache Datum</label>
+								<tooltip>Cache Datum</tooltip>
+								<description>Cache Datum</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -397,9 +397,9 @@
 					<element name="profileMember" type="om:AbstractObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Profile</label>
-								<tooltip>Profile</tooltip>
-								<description>Profile</description>
+								<label>Profil</label>
+								<tooltip>Referenz auf Profil</tooltip>
+								<description>Referenz auf Profil</description>
 							</documentation>
 						</annotation>
 					</element>

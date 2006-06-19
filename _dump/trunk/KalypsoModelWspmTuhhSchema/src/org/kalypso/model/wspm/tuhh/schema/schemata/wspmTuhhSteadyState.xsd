@@ -141,9 +141,9 @@
 	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Station km - ${property:org.kalypso.model.wspm#station}</label>
-				<tooltip>Station km - ${property:org.kalypso.model.wspm#station}</tooltip>
-				<description>Station km - ${property:org.kalypso.model.wspm#station}</description>
+				<label>Profil Station km - ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Profil Station km - ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Profil Station km - ${property:org.kalypso.model.wspm#station}</description>
 			</documentation>
 		</annotation>
 	</element>

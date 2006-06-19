@@ -115,12 +115,16 @@ public class BreakLinesHelper implements IWspmConstants
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
-        final GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wsp );
+        if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
+        // simulation does not concern the whole reach.
+        {
+          final GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wsp );
 
-        final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
-        breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
-        breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
-        breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+          final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
+          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
+          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
+          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+        }
       }
 
       GmlSerializer.serializeWorkspace( breaklineFile, workspace, WspmTuhhCalcJob.WSPMTUHH_CODEPAGE );
@@ -203,9 +207,9 @@ public class BreakLinesHelper implements IWspmConstants
       for( final WspmReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
-        if( geometry == null ) //ignore profiles without geometry
+        if( geometry == null ) // ignore profiles without geometry
           continue;
-        
+
         if( crs == null ) // search the crs, we assume that all geometries have the same crs
           crs = geometry.getCoordinateSystem();
         final WspmProfile profileMember = reach.getProfileMember();
@@ -215,24 +219,32 @@ public class BreakLinesHelper implements IWspmConstants
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
 
-        final GM_Position[] points;
+        GM_Position[] points = null;
         if( useWsp )
-          points = calculateWspPoints( profil, wsp.doubleValue() );
+        {
+          if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
+          // simulation does not concern the whole reach.
+          {
+            points = calculateWspPoints( profil, wsp.doubleValue() );
+          }
+        }
         else
           points = calculateWspPoints( profil, Double.MAX_VALUE );
 
-        if( points.length > 1 )
+        if( points != null )
         {
-          leftPoints.add( points[0] );
-          rightPoints.add( points[points.length - 1] );
-        }
-
-        for( final GM_Position pos : points )
-        {
-          final Feature pointFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BOUNDARY, "wspPointMember" ), new QName( NS_WSPM_BOUNDARY, "WspPoint" ) );
-          pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), GeometryFactory.createGM_Point( pos, crs ) );
-          pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "station" ), station );
-          pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "wsp" ), wsp );
+          if( points.length > 1 )
+          {
+            leftPoints.add( points[0] );
+            rightPoints.add( points[points.length - 1] );
+          }
+          for( final GM_Position pos : points )
+          {
+            final Feature pointFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BOUNDARY, "wspPointMember" ), new QName( NS_WSPM_BOUNDARY, "WspPoint" ) );
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), GeometryFactory.createGM_Point( pos, crs ) );
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "station" ), station );
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "wsp" ), wsp );
+          }
         }
       }
 
