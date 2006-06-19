@@ -168,13 +168,13 @@
             icon="icons/kalypso_ott.gif"
             id="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView"
             name="Observation-Tabelle (Multi)"/>
-      <!--view
+      <view
             allowMultiple="true"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ogc.gml.om.chart.ObservationChartView"
             icon="icons/kalypso_odt.gif"
             id="org.kalypso.ogc.gml.om.chart.ObservationChartView"
-            name="Observation-Diagramm (Multi)"/-->
+            name="Observation-Diagramm (DnD)"/>
    </extension>
    <extension
          id="editorActions"

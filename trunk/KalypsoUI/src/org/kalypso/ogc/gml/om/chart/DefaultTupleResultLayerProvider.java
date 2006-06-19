@@ -40,33 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.chart;
 
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.swtchart.axis.registry.IAxisRegistry;
+import org.kalypso.swtchart.layer.IChartLayer;
+import org.kalypso.swtchart.layer.ILayerProvider;
 
 /**
  * @author schlienger
- *
  */
-public class ObservationLayerProvider //implements ILayerProvider
+public class DefaultTupleResultLayerProvider implements ILayerProvider
 {
-//  private final IObservation<TupleResult> m_obs;
-//  private final IComponent m_domainComponent;
-//  private final IComponent m_rangeComponent;
-//
-//  public ObservationLayerProvider( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent rangeComponent )
-//  {
-//    m_obs = obs;
-//    m_domainComponent = domainComponent;
-//    m_rangeComponent = rangeComponent;
-//  }
-//  
-//  /**
-//   * @see de.belger.swtchart.layer.ILayerProvider#getLayers()
-//   */
-//  public IChartLayer[] getLayers( )
-//  {
-//    final AxisRange domRange = new AxisRange( m_domainComponent.getName(), SwitchDelegate.HORIZONTAL );
-//    final AxisRange valueRange = new AxisRange( m_rangeComponent.getName(), SwitchDelegate.VERTICAL );
-//    
-//    //return new IChartLayer[] { new TupleResultChartLayer( m_obs.getResult(), domRange, valueRange ) };
-//    return null;
-//  }
+  private final IObservation<TupleResult> m_obs;
+
+  private final IComponent m_domainComponent;
+
+  private final IComponent m_valueComponent;
+
+  private final IAxisRegistry m_registry;
+
+  private final String m_domAxisID;
+
+  private final String m_valAxisID;
+
+  public DefaultTupleResultLayerProvider( final IAxisRegistry registry, final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent valueComponent, final String domAxisID, final String valAxisID )
+  {
+    m_registry = registry;
+    m_obs = obs;
+
+    m_domainComponent = domainComponent;
+    m_valueComponent = valueComponent;
+
+    m_domAxisID = domAxisID;
+    m_valAxisID = valAxisID;
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.ILayerProvider#getLayers()
+   */
+  public IChartLayer[] getLayers( )
+  {
+    final TupleResult result = m_obs.getResult();
+
+    final TupleResultChartLayer layer = new TupleResultChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
+    return new IChartLayer[] { layer };
+  }
 }
