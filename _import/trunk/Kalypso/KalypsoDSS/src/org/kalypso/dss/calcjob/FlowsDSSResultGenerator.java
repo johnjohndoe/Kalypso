@@ -90,6 +90,8 @@ public class FlowsDSSResultGenerator
     }
   };
 
+  private static final String BGColor = "#FFFFFF";
+
   /**
    * @param noMeasures
    *          true, if calculation is based only on planing without measures
@@ -361,10 +363,20 @@ public class FlowsDSSResultGenerator
     double overLoadQ = maxPlaningQ - maxStatusQuoQ;
     double reducedQ = maxPlaningQ - maxPlaningAndMeasureQ;
     final int reducedPercent;
-    if( maxPlaningQ == maxStatusQuoQ )
-      reducedPercent = 100;
+    if( gotPlaningAndMeasure )
+    {
+      if( maxPlaningQ == maxStatusQuoQ )
+        reducedPercent = 100;
+      else
+        reducedPercent = (int) (100d * reducedQ / overLoadQ);
+    }
     else
-      reducedPercent = (int) (100d * reducedQ / overLoadQ);
+    {
+      if( maxPlaningQ <= maxStatusQuoQ )
+        reducedPercent = 100;
+      else
+        reducedPercent = 0;
+    }
     final String barHTML = generateBarHTML( reducedPercent );
     final String tableHTML = generateTableHTML( maxStatusQuoQ, maxPlaningQ, maxPlaningAndMeasureQ, hqEventId, gotPlaningAndMeasure );
     final String legendHTML = generateLegendHTMLPart();
@@ -383,7 +395,7 @@ public class FlowsDSSResultGenerator
         + "|<a href=\"" + closeODTLink + "\">schliessen</a></td>";
 
     htmlFragmentCollector.add( new HTMLFragmentBean( hqEventId, nodeTitle, fragment ) );
-    StringBuffer result = new StringBuffer( "<html><body bgcolor=\"#FFFFCC\">" );
+    StringBuffer result = new StringBuffer( "<html><body bgcolor=\"" + BGColor + "\">" );
 
     result.append( " <table width=\"100%\"><tr><td align=\"left\">" );
     result.append( " <b>Details zur Analyse: " + hqEventId + " / " + nodeTitle + "</b>" );
@@ -408,7 +420,7 @@ public class FlowsDSSResultGenerator
 
   public static void generateHTMLFormFragments( File targetFile, List<HTMLFragmentBean> fragments, boolean nodeSorted )
   {
-    final StringBuffer result = new StringBuffer( "<html><body bgcolor=\"#FFFFCC\">" );
+    final StringBuffer result = new StringBuffer( "<html><body bgcolor=\"" + BGColor + "\">" );
 
     final Hashtable<String, HTMLFragmentBean> matrix = new Hashtable<String, HTMLFragmentBean>();
     final SortedSet<String> hqNameSet = new TreeSet<String>();
@@ -501,6 +513,7 @@ public class FlowsDSSResultGenerator
     result.append( "     <col width=\"" + reducedPercent + "%\">" );
     result.append( "   </colgroup>" );
     result.append( "   <tr>" );
+
     if( reducedPercent == 100 )
       result.append( "     <td bgcolor=\"" + GREEN + "\"></td>" );
     else if( reducedPercent == 0 )
@@ -514,6 +527,7 @@ public class FlowsDSSResultGenerator
       result.append( "     <td bgcolor=\"" + RED + "\"></td>" );
     else
       result.append( "     <td bgcolor=\"" + GREEN + "\"></td>" );
+
     result.append( "   </tr>" );//
     result.append( "</table>" );
     return result.toString();
