@@ -1,1 +1,15 @@
-Bla bla
+<?xml version="1.0" encoding="windows-1252" standalone="yes"?>
+<mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns11="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org">
+    <mapv:extent top="5943783.040240497" srs="EPSG:31467" right="3564590.500380601" left="3561217.9955939827" bottom="5941101.824868414"/>
+    <mapv:layers active="ID_2">
+        <mapv:layer visible="true" name="Überschwemmungslinienpunkte (vereinfacht)" id="ID_4" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Modellgrenzpunkte (vereinfacht)" id="ID_6" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="Profile" id="ID_2" featurePath="%FID%/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" linktype="gml" xlink:type="simple" xlink:href="../../../wspmTuhhModel.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Überschwemmungslinie" id="ID_11" featurePath="featureMember" linktype="shape" xlink:type="simple" xlink:href="Daten/floodDepth#EPSG:31467" xlink:actuate="onRequest">
+             <ns11:style style="Gewaesserflaechen" linktype="sld" xlink:type="simple" xlink:href="project:/Grunddaten/Styles/gewaesserflaechen.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Überschwemmungslinie (vereinfacht)" id="ID_5" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Modellgrenzen (vereinfacht)" id="ID_7" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Triangulation" id="ID_10" featurePath="#fid#root/triangleMember[Triangle]" linktype="gml" xlink:type="simple" xlink:href="Daten/triangle.gml" xlink:actuate="onRequest"/>
+    </mapv:layers>
+</mapv:gismapview>

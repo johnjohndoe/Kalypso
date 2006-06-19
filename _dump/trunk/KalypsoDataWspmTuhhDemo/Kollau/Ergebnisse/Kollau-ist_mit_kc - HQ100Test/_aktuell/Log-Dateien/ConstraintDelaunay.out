@@ -1,0 +1,22 @@
+Opening input.poly.
+Constructing Delaunay triangulation by divide-and-conquer method.
+Recovering segments in Delaunay triangulation.
+Removing unwanted triangles.
+
+Writing input.1.node.
+Writing input.1.ele.
+Writing input.1.poly.
+
+Statistics:
+
+  Input vertices: 1070
+  Input segments: 1036
+  Input holes: 0
+
+  Mesh vertices: 1070
+  Mesh triangles: 2120
+  Mesh edges: 3189
+  Mesh exterior boundary edges: 18
+  Mesh interior boundary edges: 1033
+  Mesh subsegments (constrained edges): 1051
+

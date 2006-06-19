@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="windows-1252" standalone="yes"?>
 <mapv:gismapview xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns11="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org">
-    <mapv:extent top="5945735.801816525" srs="EPSG:31467" right="3562539.869594492" left="3560887.405859654" bottom="5944272.191079954">
-    </mapv:extent>
+    <mapv:extent top="5943783.040240497" srs="EPSG:31467" right="3564590.500380601" left="3561217.9955939827" bottom="5941101.824868414"/>
     <mapv:layers active="ID_2">
-        <mapv:layer visible="true" name="Überschwemmungslinienpunkte" id="ID_4" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="Überschwemmungslinienpunkte (vereinfacht)" id="ID_4" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Profile" id="ID_2" featurePath="%FID%/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" linktype="gml" xlink:type="simple" xlink:href="../../../wspmTuhhModel.gml" xlink:actuate="onRequest"/>
-<!--        <mapv:layer visible="true" name="Gewässer" id="ID_3" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default#LAYERS=gewaesser#STYLES=default" xlink:actuate="onRequest"/> -->
-        <mapv:layer visible="true" name="Überschwemmungslinie" id="ID_5" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
-        <mapv:layer visible="false" name="Modellgrenzpunkte" id="ID_6" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
-        <mapv:layer visible="false" name="Modellgrenzen" id="ID_7" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
-<!--        <mapv:layer visible="false" name="Flaechennutzung Hamburg" id="ID_8" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default#LAYERS=gewaesser#STYLES=default#LAYERS=hh:planung#STYLES=default" xlink:actuate="onRequest"/> -->
-<!--        <mapv:layer visible="false" name="Geobasisdaten" id="ID_9" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default" xlink:actuate="onRequest"/> -->
-        <mapv:layer visible="false" name="Triangle" id="ID_10" featurePath="#fid#root/triangleMember[Triangle]" linktype="gml" xlink:type="simple" xlink:href="Daten/triangle.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="Gewässer" id="ID_12" featurePath="featureMember" linktype="shape" xlink:type="simple" xlink:href="project:/Grunddaten/oberflaechengewaesser#EPSG:31467" xlink:actuate="onRequest">
+             <ns11:style style="Gewaesser" linktype="sld" xlink:type="simple" xlink:href="project:/Grunddaten/Styles/gewaesser.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="false" name="Gewässer Hamburg" id="ID_3" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default#LAYERS=gewaesser#STYLES=default" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Überschwemmungslinie" id="ID_11" featurePath="featureMember" linktype="shape" xlink:type="simple" xlink:href="Daten/floodDepth#EPSG:31467" xlink:actuate="onRequest">
+             <ns11:style style="Gewaesser" linktype="sld" xlink:type="simple" xlink:href="project:/Grunddaten/Styles/gewaesser.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Überschwemmungslinie (vereinfacht)" id="ID_5" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Überschwemmungslinie.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Modellgrenzpunkte (vereinfacht)" id="ID_6" featurePath="#fid#root/wspPointMember[WspPoint]" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Modellgrenzen (vereinfacht)" id="ID_7" featurePath="#fid#root" linktype="gml" xlink:type="simple" xlink:href="Daten/Modellgrenzen.gml" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Landnutzung_2006" id="ID_13" featurePath="featureMember" linktype="shape" xlink:type="simple" xlink:href="project:/Grunddaten/landnutzung_2006#EPSG:31467" xlink:actuate="onRequest">
+             <ns11:style style="Landnutzung" linktype="sld" xlink:type="simple" xlink:href="project:/Grunddaten/Styles/landnutzung_shape.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="false" name="Flächennutzung Hamburg" id="ID_8" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default#LAYERS=gewaesser#STYLES=default#LAYERS=hh:planung#STYLES=default" xlink:actuate="onRequest"/> 
+        <mapv:layer visible="false" name="Geobasisdaten Hamburg" id="ID_9" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://mapservices.geonord.de:80/mrh-owsproxy/proxy#LAYERS=geobasisdaten#STYLES=default" xlink:actuate="onRequest"/>
+        <mapv:layer visible="false" name="Triangulation" id="ID_10" featurePath="#fid#root/triangleMember[Triangle]" linktype="gml" xlink:type="simple" xlink:href="Daten/triangle.gml" xlink:actuate="onRequest"/>
     </mapv:layers>
 </mapv:gismapview>

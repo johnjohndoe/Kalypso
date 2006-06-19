@@ -27,7 +27,8 @@
          ================================= -->
 	<target name="runCalculation" description="Führt die Berechnung durch">
 		<antcall target="runWspmCalculation" />
-		<antcall target="runGmlProcessConstDelaunay" />
+		<antcall target="runGmlProcessConstDelaunay" /> 
+		<antcall target="runGmlProcessFloodDepth" /> 
 		<antcall target="copyResults" />
 	</target>
 	<!-- ================================= 
@@ -127,9 +128,9 @@
 			<input id="DTM_RASTER" path="Grunddaten/dgm_unterlauf.tif" relativeToCalcCase="false" />
 			<!-- 
 		    Ergebniss -->
-			<output id="ResultShapeShp" path="${result.path.aktuell.data}/floodDepth.shp" relativeToCalcCase="true"/>
-			<output id="ResultShapeShx" path="${result.path.aktuell.data}/floodDepth.shx" relativeToCalcCase="true"/>
-			<output id="ResultShapeDbf" path="${result.path.aktuell.data}/floodDepth.dbf" relativeToCalcCase="true"/>
+			<output id="ResultShapeShp" path="${result.path.aktuell.data}/floodDepth.shp" relativeToCalcCase="true" />
+			<output id="ResultShapeShx" path="${result.path.aktuell.data}/floodDepth.shx" relativeToCalcCase="true" />
+			<output id="ResultShapeDbf" path="${result.path.aktuell.data}/floodDepth.dbf" relativeToCalcCase="true" />
 
 			<!-- 
 		    Output des CalcJobs -->
@@ -151,7 +152,6 @@
 			<fileset dir="${result.dir.aktuell}" includes="**/*" />
 		</copy>
 	</target>
-
 </project>
 
 

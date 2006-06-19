@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<om:Observation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
+    http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
+    http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd
+    http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
+    http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
+    http://www.ksp.org/om ../../schemas/original/kalypso/omExtensions.xsd
+    "
+    xmlns:kom="http://www.ksp.org/om" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe">
+    <gml:name>Längsschnitt</gml:name>
+    <om:time/>
+    <om:procedure>
+        <om:ObservationProcedure gml:id="proc_wspm_ls">
+            <gml:description>WSPM TUHH Längsschnitt Ergebnis</gml:description>
+            <gml:name>WSPM-TUHH-LS</gml:name>
+            <om:method/>
+        </om:ObservationProcedure>
+    </om:procedure>
+    <om:observedProperty>
+        <swe:Phenomenon gml:id="phen_wspm_ls">
+            <gml:name>WSPM-TUHH-LS</gml:name>
+        </swe:Phenomenon>
+    </om:observedProperty>
+    <om:featureOfInterest/>
+    <om:resultDefinition>
+        <swe:RecordDefinition recordLength="25" gml:id="rd">
+            <gml:name/>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Stat">
+                    <gml:name>Station</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-stat">
+                            <gml:name>Stationierung</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="4"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Kenn">
+                    <gml:name>Kennung</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-kenn">
+                            <gml:name>Kennung</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:Word>
+                            <swe:restriction>
+                                <st:pattern value="n|b|w|t|k|e|m|i"/>
+                            </swe:restriction>
+                            <swe:classification>foo</swe:classification>
+                        </swe:Word>
+                        <!--swe:Word>
+                         <swe:classification gml:remoteSchema="dict_kennung.xml"/>
+                    </swe:Word-->
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Abfluss">
+                    <gml:name>Abfluss</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-abfluss">
+                            <gml:name>Abfluss</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m3s"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Sohle">
+                    <gml:name>Sohlhöhe</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-sohle">
+                            <gml:name>Sohlhöhe</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="h_WSP">
+                    <gml:name>Höhe WSP</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-h_wsp">
+                            <gml:name>Höhe WSP</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="hen">
+                    <gml:name>Energielinie</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-hen">
+                            <gml:name>Energielinie</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="h_BV">
+                    <gml:name>Bordvoll Höhe</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-h_bv">
+                            <gml:name>Bordvoll Höhe</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Boe_li">
+                    <gml:name>Böschung (links)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-boe_li">
+                            <gml:name>Böschung (links)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="Boe_re">
+                    <gml:name>Böschung (rechts)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-boe_re">
+                            <gml:name>Böschung (rechts)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="v_m">
+                    <gml:name>Mittlere Geschwindigkeit</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-v_m">
+                            <gml:name>Mittlere Geschwindigkeit</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m_s"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="tau_fl">
+                    <gml:name>Sohlschubspannung (Flussschlauch)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-tau_fl">
+                            <gml:name>Sohlschubspannung (Flussschlauch)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="2"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#N_m2"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="lamb_li">
+                    <gml:name>lambda (links)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-lamb_li">
+                            <gml:name>lambda (links)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="4"/>
+                            </st:restriction>
+                            <swe:noScale>true</swe:noScale>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="lamb_fl">
+                    <gml:name>lambda (Flussschlauch)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-lam_fl">
+                            <gml:name>lambda (Flussschlauch)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="4"/>
+                            </st:restriction>
+                            <swe:noScale>true</swe:noScale>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="lamb_re">
+                    <gml:name>lambda (rechts)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-lam_re">
+                            <gml:name>lambda (rechts)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="4"/>
+                            </st:restriction>
+                            <swe:noScale>true</swe:noScale>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="f_li">
+                    <gml:name>Fläche (links)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-fl_li">
+                            <gml:name>Fläche (links)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="f_fl">
+                    <gml:name>Fläche (Flussschlauch)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-f_fl">
+                            <gml:name>Fläche (Flussschlauch)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="f_re">
+                    <gml:name>Fläche (rechts)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-f_re">
+                            <gml:name>Fläche (rechts)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m2"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="br_li">
+                    <gml:name>Breite (links)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-br_li">
+                            <gml:name>Breite (links)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="br_fl">
+                    <gml:name>Breite (Flussschlauch)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-br_fl">
+                            <gml:name>Breite (Flussschlauch)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="br_re">
+                    <gml:name>Breite (rechts)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-br_re">
+                            <gml:name>Breite (rechts)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="0.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="WehrOK">
+                    <gml:name>Wehr (Oberkante)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-wehrok">
+                            <gml:name>Wehr (Oberkante)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="-1000.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="BrueckOK">
+                    <gml:name>Brücke (Oberkante)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-brueckok">
+                            <gml:name>Brücke (Oberkante)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="-1000.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="BrueckUK">
+                    <gml:name>Brücke (Unterkante)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-brueckuk">
+                            <gml:name>Brücke (Unterkante)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="-1000.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="BrueckB">
+                    <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-brueckb">
+                            <gml:name>Brücke (Breite in Fließrichtung)</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="-1000.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+            <swe:component>
+                <swe:ItemDefinition gml:id="RohrDN">
+                    <gml:name>Rohrdurchmesser</gml:name>
+                    <swe:property>
+                        <swe:Phenomenon gml:id="phen-rohrdn">
+                            <gml:name>Rohrdurchmesser</gml:name>
+                        </swe:Phenomenon>
+                    </swe:property>
+                    <swe:representation>
+                        <swe:SimpleType>
+                            <st:restriction base="decimal">
+                                <st:minInclusive value="-1000.0"/>
+                                <st:fractionDigits value="3"/>
+                            </st:restriction>
+                            <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                        </swe:SimpleType>
+                    </swe:representation>
+                </swe:ItemDefinition>
+            </swe:component>
+        </swe:RecordDefinition>
+    </om:resultDefinition>
+    <om:result><![CDATA[
+     0.0130    n    10.000     3.841     4.710     4.938     5.606     5.606     6.904   2.091   46.69  0.0000  0.0828  0.1230     0.000     4.660     0.124     0.000     5.863     0.666  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.0425    i    10.000     4.059     4.936     5.166     5.861     6.197     5.861   2.052   49.60  0.0835  0.0877  0.0000     0.463     3.613     0.798     1.097     4.252     1.540  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.0550    i    10.000     4.140     5.126     5.607     6.278     6.278     6.278   3.069   99.49  0.0000  0.0845  0.0000     0.000     3.259     0.000     0.000     3.400     0.000  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.0590    b    10.000     4.140     5.467     5.729     6.278     6.278     6.278   2.264   48.36  0.0000  0.0755  0.0000     0.000     4.418     0.000     0.000     3.400     0.000  -999.999     6.278     5.463     4.000  -999.999
+     0.0640    i    10.000     4.190     5.665     5.750     5.992     6.328     5.992   1.216   13.77  0.0661  0.0729  0.0000     1.351     4.920     1.950     1.876     3.400     2.320  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.1590    n    10.000     4.313     5.902     6.019     6.641     6.821     6.641   1.361   25.68  0.1017  0.0779  0.1038     1.868     3.849     1.631     5.489     2.700     2.156  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.2050    n    10.000     4.362     6.046     6.168     6.705     6.705    12.228   1.427   23.33  0.1310  0.0677  0.1302     1.088     4.920     1.002     1.944     3.165     1.860  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.3147    i    10.000     4.776     6.355     6.435     7.974     7.974    12.454   1.233   15.96  0.0828  0.0728  0.0000     1.738     5.031     1.340     2.307     3.310     1.692  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.3310    i    10.000     4.822     6.330     6.618     8.020     8.020    12.570   2.378   53.37  0.0000  0.0757  0.0000     0.000     4.205     0.000     0.000     2.904     0.000  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.3660    b    10.000     4.822     6.610     6.772     8.020     8.020     8.020   1.783   27.94  0.0000  0.0703  0.0000     0.000     5.607     0.000     0.000     2.904     0.000  -999.999     8.020     6.780    35.000  -999.999
+     0.3710    i    10.000     4.872     6.727     6.784     8.070     8.070    12.550   1.054   10.77  0.0762  0.0715  0.0000     2.432     5.207     1.846     2.729     2.900     1.985  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.4750    n    10.000     5.053     7.033     7.072     6.643     6.643     8.149   0.625   13.82  0.1319  0.1517  7.2577     9.424     4.367     2.203    31.588     2.365     2.521  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.5139    i    10.000     5.130     7.106     7.109     6.547     6.859     6.547   0.226    0.51  0.1389  0.0682  0.0971     4.682    39.417     0.211    17.985    29.038     0.680  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.6310    i    10.000     5.355     7.156     7.221     7.084     7.084     7.084   1.016   11.52  0.1454  0.0706  0.1211     1.304     8.501     0.035    17.985     7.190     0.521  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.6320    b    10.000     5.355     7.196     7.253     7.084     7.084     7.084   0.920   10.13  0.1447  0.0696  0.1165     2.020     8.787     0.057    17.985     7.190     0.557  -999.999     7.084     6.772     1.000  -999.999
+     0.6370    i    10.000     5.405     7.198     7.262     6.822     7.134     6.822   1.008   11.58  0.1238  0.0708  0.1084     1.380     8.439     0.102    17.985     7.190     0.513  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.7200    n    10.000     5.401     7.299     7.350     7.503     7.503     7.667   0.911   10.27  0.1472  0.0779  4.4074     1.008     9.104     0.862     1.963     5.641     1.763  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.7235    i    10.000     5.425     7.249     7.369     7.640     7.640     8.020   1.532   19.55  0.0000  0.0667  0.0000     0.000     6.528     0.000     0.000     4.020     0.000  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.7360    b    10.000     5.425     7.432     7.528     7.640     7.640     7.640   1.377   15.34  0.0000  0.0647  0.0000     0.000     7.260     0.000     0.000     4.020     0.000  -999.999     7.640     6.750    12.500  -999.999
+     0.7410    i    10.000     5.475     7.492     7.534     7.552     7.650     7.552   0.877    7.89  0.0852  0.0646  0.0853     1.722     7.301     2.386     2.457     4.020     3.432  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.7490    n    10.000     5.257     7.523     7.540     7.183     7.183     7.405   0.461    5.39  0.1343  0.0844  0.0588    13.352     5.680     2.673    47.278     2.829     4.784  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.8100    n    10.000     5.586     7.563     7.566     7.143     7.143     7.171   0.226    2.09  0.1432  0.1123  0.1334    35.263     5.467     3.448   116.717     3.000     6.087  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.8620    n    10.000     5.450     7.575     7.580     7.217     7.245     7.217   0.255    2.29  0.1308  0.0804  0.1339    30.764     6.039     2.481   107.600     3.150     3.144  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.9090    n    10.000     5.586     7.587     7.590     6.888     7.144     6.888   0.214    1.63  0.1353  0.0872  0.1342    37.362     6.153     3.321   111.463     3.400     5.861  -999.999  -999.999  -999.999  -999.999  -999.999
+     0.9820    n    10.000     5.441     7.603     7.608     7.136     7.136     7.494   0.277    2.51  0.1375  0.0885  0.1350    28.081     5.789     2.257    81.232     3.000     3.208  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.0260    n    10.000     5.518     7.615     7.620     7.326     7.326     7.553   0.251    2.24  0.1388  0.0848  0.0910    31.717     6.120     2.047    96.985     3.340     4.861  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.0890    n    10.000     5.687     7.635     7.642     7.324     7.324     7.541   0.287    3.24  0.1377  0.0902  0.0976    27.463     4.856     2.498   114.523     2.740     4.995  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.1740    n    10.000     5.740     7.716     7.771     7.415     7.415     7.723   0.917   17.64  0.0956  0.0957  0.1612     4.133     4.671     2.101    13.207     2.588     2.867  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.2040    n    10.000     5.912     7.784     7.825     7.757     7.757     7.779   0.667   12.69  0.0944  0.0915  0.1572     7.226     6.068     1.707    64.732     3.531     2.613  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.2195    i    10.000     5.961     7.761     7.906     7.856     8.100     7.856   1.633   34.45- -999.999       0.1051  0.1348     2.088     3.681     0.356     2.801     2.190     2.910  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.2210    b    10.000     5.961     8.236     8.273     7.560     7.560     7.560   0.692    6.32- -999.999       0.0729 -999.999           4.021     4.723     5.698     6.331     2.190    18.458  -999.999     7.560     6.700     1.500  -999.999
+     1.2260    i    10.000     6.011     8.239     8.277     8.226     8.226     8.268   0.815    5.59  0.0539  0.0732  0.0000     3.739     4.619     3.913     5.390     2.190     6.880  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.2440    n    10.000     5.905     8.273     8.292     7.992     7.992     8.113   0.543    8.30  0.1223  0.1350  0.1471     8.902     6.691     2.824    29.046     3.100     3.681  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.3170    n    10.000     6.049     8.326     8.328     7.283     7.440     7.283   0.185    1.19  0.1424  0.0913  0.1811    36.463     6.240    11.436   120.777     3.000    11.612  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.3530    n    10.000     6.099     8.328     8.338     7.034     7.305     7.034   0.382    2.38  0.1339  0.0562  0.1823     6.305     5.942    13.901    13.681     2.900    13.418  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.3633    i    10.000     6.251     8.328     8.342     8.319     8.319    11.288   0.517    3.92  0.1619  0.1164  0.1625     0.011    19.266     0.052     1.299    15.221     5.786  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.3640    b    10.000     6.251     8.352     8.365     8.319     8.319     8.319   0.503    2.26  0.1420  0.0698  0.1480     0.042    19.629     0.191     1.299    15.221     5.822  -999.999     8.319     7.769     0.750  -999.999
+     1.3690    i    10.000     6.301     8.353     8.366     8.276     8.370     8.276   0.487    2.22  0.1379  0.0669  0.1345     0.348    18.883     1.294     1.266    15.221     5.616  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.4580    n    10.000     5.852     8.380     8.385     6.988     6.988     7.069   0.269    2.30  0.1081  0.1685  6.6138    27.186     7.869     2.085    56.980     3.738     3.285  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.5070    n    10.000     6.281     7.416     7.709     7.235     7.300     7.235   2.138   59.94  0.1242  0.0910  1.7419     0.514     4.005     0.159     7.073     4.600     0.904  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.6090    n    10.000     6.320     8.167     8.187     7.034     7.192     7.034   0.569    5.63  0.1592  0.0760  0.1437     9.806     6.118     1.643    12.359     3.664     2.900  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.6790    n    10.000     6.306     8.207     8.228     7.365     7.365     8.579   0.551    5.42  0.1613  0.0733  0.1433     9.539     6.953     1.656    13.830     4.200     2.743  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.7050    n    10.000     6.356     8.224     8.244     7.441     7.441     8.593   0.582    6.33  0.1591  0.0819  0.1431    10.054     5.490     1.642    14.005     3.300     2.684  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.7210    n    10.000     6.257     8.235     8.255     7.320     7.320     8.637   0.564    5.66  0.1626  0.0742  0.1437    10.208     5.817     1.714    13.970     3.500     2.777  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.8030    n    10.000     6.523     8.327     8.350     7.571     7.571     8.420   0.550   13.61  0.3650  0.1435  0.5092    10.698     4.970     2.517    23.554     2.898     3.453  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.8930    n    10.000     6.719     8.437     8.455     7.537     7.537     8.466   0.560    5.19  0.1650  0.0820  0.0838    11.127     4.435     2.281    14.392     2.700     3.175  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.9050    i    10.000     6.819     8.415     8.481     8.517     8.517     8.531   1.082   11.79  0.1379  0.0726  0.1277     0.486     8.631     0.127     5.085     7.801     1.313  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.9060    b    10.000     6.819     8.463     8.521     8.300     8.300     8.300   1.005   10.39  0.1251  0.0713 -999.999           0.750     9.006     0.195     5.892     7.801     1.499  -999.999     8.300     8.000     1.000  -999.999
+     1.9110    i    10.000     6.869     8.467     8.529     8.244     8.244     8.641   1.036   11.28  0.1244  0.0726  0.1131     0.738     8.647     0.267     5.120     7.801     1.321  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.9345    i    10.000     6.436     8.678     9.000     8.454     8.454     8.867   2.333  105.63  0.1306  0.1026  0.1277     0.996     2.090     1.201     4.615     0.935     6.428  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.9360    b    10.000     6.436     9.305     9.341     8.454     8.454     8.454   0.775    3.31  0.0646  0.1005  0.0708     3.913     2.676     6.309     4.650     0.935     9.128  -999.999     8.454     8.097     1.500  -999.999
+     1.9410    i    10.000     6.486     9.330     9.344     8.503     8.751     8.503   0.451    1.04  0.0543  0.0704  0.0000     5.532     6.397    10.223     3.330     2.254     9.061  -999.999  -999.999  -999.999  -999.999  -999.999
+     1.9790    n    10.000     6.766     9.346     9.347     7.578     7.631     7.578   0.120    0.35  0.1643  0.0734  0.1434    64.537    11.252     7.502    72.036     4.700     9.060  -999.999  -999.999  -999.999  -999.999  -999.999
+
+]]>
+    </om:result>
+</om:Observation>
