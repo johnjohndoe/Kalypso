@@ -82,7 +82,7 @@ public class FlowsDssTest extends TestCase
 
     final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
     String hqEventId = "HQ1";
-    boolean doMeasures = true;
+    boolean doMeasures = false;
     // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
     final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
     {

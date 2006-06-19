@@ -4,25 +4,17 @@
     <obsv:legend visible="true" title="${title}"/>
     <obsv:features>Alarmstufen</obsv:features>
     <obsv:axis unit="" position="bottom" label="Datum" inverted="false" id="date" direction="horizontal" datatype="date"/>
-    <obsv:axis unit="m3/s" position="left" label="Abfluss" inverted="false" id="Q" direction="vertical" datatype="double"/>
-    <obsv:observation linktype="zml" xlink:href="./mitPlanungUndMassnahmen.zml">
-        <obsv:curve shown="true" name="Planung mit Massnahmen" id="C2" color="238;44;44">
-            <obsv:mapping observation-axis="Datum" diagram-axis="date"/>
-            <obsv:mapping observation-axis="Abfluss" diagram-axis="Q"/>
-        </obsv:curve>
-    </obsv:observation>
-    <obsv:observation linktype="zml" xlink:href="mitPlanung.zml">
-        <obsv:curve shown="true" name="Planung ohne Massnahmen" id="C1" color="30;144;255">
-            <obsv:mapping observation-axis="Datum" diagram-axis="date"/>
-            <obsv:mapping observation-axis="Abfluss" diagram-axis="Q"/>
-        </obsv:curve>
-    </obsv:observation>
-    <obsv:observation linktype="zml" xlink:href="StatusQuo.zml">
-        <obsv:curve shown="true" name="Status Quo (Richtwert)" id="C3" color="0;139;0">
-            <obsv:mapping observation-axis="Datum" diagram-axis="date"/>
-            <obsv:mapping observation-axis="Abfluss" diagram-axis="Q"/>
-        </obsv:curve>
-    </obsv:observation>
+    <obsv:axis unit="qm/s" position="left" label="Abfluss" inverted="false" id="Q" direction="vertical" datatype="double"/>
+
+	<!-- Status Quo -->
+	${statusQuoFragment}
+	
+	<!-- Planing -->
+	${planingFragment}
+	
+	<!-- Planing and Measure -->
+	${planingAndMeasureFragment}
+    
     <obsv:timezone>GMT</obsv:timezone>
 </obsv:obsdiagview>
 

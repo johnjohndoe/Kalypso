@@ -54,6 +54,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.tokenreplace.DefaultTokenReplacer;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
@@ -74,7 +75,6 @@ public class FlowsDSSResultGenerator
 
   final static ITokenReplacer titleReplacer = new ITokenReplacer()
   {
-
     public String getToken( )
     {
       return "title";
@@ -89,8 +89,6 @@ public class FlowsDSSResultGenerator
       return hqEventId + " / Knoten " + nodeNme;
     }
   };
-
-  private static TokenReplacerEngine ODT_TokenReplaceEngine = new TokenReplacerEngine( new ITokenReplacer[] { titleReplacer } );
 
   /**
    * @param noMeasures
@@ -201,45 +199,6 @@ public class FlowsDSSResultGenerator
       IOUtils.closeQuietly( outputStream );
     }
 
-    // generate analysis odt
-    final URL resource = FlowsDSSResultGenerator.class.getResource( "resources/AnalyseTemplate.odt" );
-    String odtAsString = null;
-    InputStream input = null;
-    final StringWriter writer = new StringWriter();
-    try
-    {
-      input = resource.openStream();
-      IOUtils.copy( input, writer );
-      odtAsString = writer.toString();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( input );
-    }
-
-    // StreamUtilities.streamCopy(resource.openStream(), writer);
-    final Combination value = new Combination( resultNode, hqEventId );
-    odtAsString = ODT_TokenReplaceEngine.replaceTokens( value, odtAsString );
-
-    OutputStream odtOutputStream = null;
-    try
-    {
-      odtOutputStream = new FileOutputStream( newAnalysisOdtFile );
-      IOUtils.write( odtAsString, odtOutputStream );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( odtOutputStream );
-    }
-
     // analyse files
     boolean gotStatusQuo = false;
     boolean gotPlaning = false;
@@ -300,6 +259,76 @@ public class FlowsDSSResultGenerator
         IOUtils.closeQuietly( htmlOutputStream );
       }
     }
+
+    // do odt stuff
+    // generate analysis odt
+    final URL resource = FlowsDSSResultGenerator.class.getResource( "resources/AnalyseTemplate.odt" );
+    String odtAsString = null;
+    InputStream input = null;
+    final StringWriter writer = new StringWriter();
+    try
+    {
+      input = resource.openStream();
+      IOUtils.copy( input, writer );
+      odtAsString = writer.toString();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( input );
+    }
+
+    final List<ITokenReplacer> replacer = new ArrayList<ITokenReplacer>();
+
+    final ITokenReplacer statusQuoReplacer;
+    final ITokenReplacer planingReplacer;
+    final ITokenReplacer planingAndMeasureReplacer;
+
+    if( gotStatusQuo )
+      statusQuoReplacer = new DefaultTokenReplacer( "statusQuoFragment", FlowsOdtFragments.STATUS_QUO );
+    else
+      statusQuoReplacer = new DefaultTokenReplacer( "statusQuoFragment", "" );
+
+    if( gotPlaning )
+      planingReplacer = new DefaultTokenReplacer( "planingFragment", FlowsOdtFragments.PLANING );
+    else
+      planingReplacer = new DefaultTokenReplacer( "planingFragment", "" );
+
+    if( gotPlaningAndMeasure )
+      planingAndMeasureReplacer = new DefaultTokenReplacer( "planingAndMeasureFragment", FlowsOdtFragments.PLANING_AND_MEASURE );
+    else
+      planingAndMeasureReplacer = new DefaultTokenReplacer( "planingAndMeasureFragment", "" );
+
+    replacer.add( titleReplacer );
+    replacer.add( statusQuoReplacer );
+    replacer.add( planingReplacer );
+    replacer.add( planingAndMeasureReplacer );
+
+    final ITokenReplacer[] replacerArray = replacer.toArray( new ITokenReplacer[replacer.size()] );
+    final TokenReplacerEngine replaceEngine = new TokenReplacerEngine( replacerArray );
+
+    // StreamUtilities.streamCopy(resource.openStream(), writer);
+    final Combination value = new Combination( resultNode, hqEventId );
+    odtAsString = replaceEngine.replaceTokens( value, odtAsString );
+
+    OutputStream odtOutputStream = null;
+    try
+    {
+      odtOutputStream = new FileOutputStream( newAnalysisOdtFile );
+      IOUtils.write( odtAsString, odtOutputStream );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( odtOutputStream );
+    }
+
     return htmlFragmentCollector;
   }
 
@@ -519,7 +548,7 @@ public class FlowsDSSResultGenerator
     result.append( "    </tr><tr>" );
     result.append( generateCells( "zus. Belastung", maxPlaningQ - maxStatusQuoQ, false ) );
     if( gotPlaningAndMeasure )
-      result.append( generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, false) );
+      result.append( generateCells( "Reduktion", maxPlaningQ - maxPlaningAndMeasureQ, false ) );
     result.append( "    </tr>" );
     result.append( "  </table>" );
     return result.toString();
