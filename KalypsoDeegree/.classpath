@@ -5,11 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar">
-		<attributes>
-			<attribute value="jar:file:/D:/Eclipse/Kalypso/KalypsoDeegree/lib/jai/jai-1_1-mr-doc.zip!/jai-apidocs" name="javadoc_location"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xalan.jar"/>

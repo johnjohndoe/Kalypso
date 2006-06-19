@@ -26,7 +26,7 @@
                value="%productBlurb"/>
          <property
                name="windowImages"
-               value="icons/planerClient32.gif"/>
+               value="icons/kalypso16.gif,icons/planerClient32.gif"/>
          <property
                name="windowImage"
                value="icons/kalypso16.gif"/>

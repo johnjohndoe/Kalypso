@@ -61,6 +61,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.basics.JAXBContextProvider;
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
@@ -82,7 +83,6 @@ import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandlerGml3;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import ork.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 
 /**
  * @author doemming

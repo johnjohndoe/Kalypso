@@ -89,6 +89,7 @@
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
       <plugin id="org.kalypso.contribs.java"/>
+      <plugin id="org.kalypso.contribs.ogc2x"/>
       <plugin id="org.kalypso.contribs.ogc31"/>
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.dcadapter"/>

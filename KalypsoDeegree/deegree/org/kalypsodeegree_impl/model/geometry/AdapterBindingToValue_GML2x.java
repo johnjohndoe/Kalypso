@@ -64,6 +64,7 @@ import ogc2.www.opengis.net.gml.ObjectFactory;
 import ogc2.www.opengis.net.gml.PointType;
 import ogc2.www.opengis.net.gml.PolygonType;
 
+import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -79,7 +80,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Node;
 
-import ork.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 
 /**
  * @author doemming
