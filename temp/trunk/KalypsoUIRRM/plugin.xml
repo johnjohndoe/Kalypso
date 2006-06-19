@@ -25,5 +25,11 @@
                tooltip="tooltip"/>
       </objectContribution>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.ui.styles.RRMFeatureTypeStyleCatalogContribution"
+            name="RRM-Style-Catalog"/>
+   </extension>
 
 </plugin>
