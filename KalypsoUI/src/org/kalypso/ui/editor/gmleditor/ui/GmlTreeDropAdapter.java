@@ -91,7 +91,11 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         // Feature sourceFeature = (Feature)selectedSourceObject;
       }
     }
-    return true;
+
+    // momentan wichtig wo nix sinnvolles passiert in performDrop: false zurückgeben
+    // sonst kriegst du ein Problem wenn und DnD zwischen Navigator und hier machst, z.B. mit
+    // einer GML-Datei, es wird einfach gelöscht
+    return false;
   }
 
   /**
