@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.chart;
 
+import org.eclipse.swt.graphics.Device;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -75,9 +76,9 @@ public class TupleResultChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper, org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc )
+  public void paint( final GCWrapper gc, final Device dev )
   {
     int size = m_result.size();
     for( int i = 0, j = 1; j < size; i++, j++ )
