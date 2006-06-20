@@ -29,9 +29,13 @@
  */
 package org.kalypso.robotronadapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
@@ -145,27 +149,37 @@ public class RobotronRightsProvider implements IUserRightsProvider
         return UserRights.NO_RIGHTS;
       }
 
+      final Set rights = new HashSet();
+      
       // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
-      boolean modellierung = false;
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
       while( rightsEnum.hasMore() )
       {
         final String right = rightsEnum.next().toString();
 
-        // in Kalypso Sachsen-Anhalt the "Modellierung"-Right specifies whether
-        // a user is allowed to use Kalypso or not
+        if( "Modellierung-Vorhersage".equalsIgnoreCase( right ) )
+          rights.add( UserRights.RIGHT_PROGNOSE );
+
+        if( "Modellierung-Experte".equalsIgnoreCase( right ) )
+        {
+          rights.add( UserRights.RIGHT_ADMIN );
+          rights.add( UserRights.RIGHT_EXPERT );
+          rights.add( UserRights.RIGHT_PROGNOSE );
+        }
+
+        /**
+         * @deprecated nur solange LDAP nicht aktualisiert wurde
+         */
         if( "Modellierung".equalsIgnoreCase( right ) )
-          modellierung = true;
+        {
+          rights.add( UserRights.RIGHT_ADMIN );
+          rights.add( UserRights.RIGHT_EXPERT );
+          rights.add( UserRights.RIGHT_PROGNOSE );
+        }
       }
 
-      // Benutzer ist ein Modellierer, darf in Kalypso also alles machen
-      if( modellierung )
-        return UserRights.FULL_RIGHTS;
-
-      // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
-      return new String[]
-      { UserRights.RIGHT_PROGNOSE };
+      return (String[])rights.toArray( new String[rights.size()]);
     }
     catch( final NamingException e )
     {
