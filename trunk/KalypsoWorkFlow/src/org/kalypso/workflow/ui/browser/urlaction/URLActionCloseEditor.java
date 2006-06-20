@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -100,6 +101,7 @@ public class URLActionCloseEditor extends AbstractURLAction
       catch( MalformedURLException e )
       {
         e.printStackTrace();
+        MessageDialog.openError( getShell(), "Error WorkflowBrowser Command", "The requrested Editor could not be closed. Please contact your Administrator. Error:" + e.getMessage() );
         return false;
       }
     }
