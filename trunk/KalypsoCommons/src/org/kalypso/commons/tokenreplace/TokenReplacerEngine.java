@@ -60,6 +60,8 @@ public class TokenReplacerEngine
 
   public String replaceTokens( final Object valueObject, final String tokenString )
   {
+    if( tokenString == null )
+      return null;
     final StringBuffer buffer = new StringBuffer( tokenString );
 
     int pos = 0;
