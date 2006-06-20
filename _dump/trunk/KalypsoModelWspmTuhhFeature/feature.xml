@@ -205,37 +205,43 @@
          id="org.kalypso.auth"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.services.core.client"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.simulation.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.simulation.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.0.1"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.repository"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.gml.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
 
 </feature>
