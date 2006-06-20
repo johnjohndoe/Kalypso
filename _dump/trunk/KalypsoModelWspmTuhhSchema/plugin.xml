@@ -10,6 +10,7 @@
    <extension
       point="org.kalypso.simulation.core.simulation">
       <simulation
+      	 catalogClass="org.kalypso.model.wspm.tuhh.schema.schemata.WspmTuhhUrlCatalog"
          simulationClass="org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob"
          typeID="WspmTuhhV1.0"/>
    </extension>
