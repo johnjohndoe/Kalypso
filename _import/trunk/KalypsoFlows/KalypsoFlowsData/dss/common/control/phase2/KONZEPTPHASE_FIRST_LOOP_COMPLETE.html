@@ -6,11 +6,13 @@
 
 
 
-  
-  
-  
-  
+
+
+
+
+
   <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
 
 
 
@@ -19,21 +21,30 @@
 	<!--
 		function zurueckZuWaWiMassnahmen() 
 		{
+			kalypso://closeAllViews?exceptThese=org.kalypso.contribs.ui.browser.commandable.CommandURLBrowserView;
+			kalypso://closeAllEditors?doSave=true;
 			kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.watermeasures&url=KONZEPTPHASE_MASSNAHMEN_DEF.html
 			kalypso://openURL?&url=KONZEPTPHASE_WAWI_MASSNAHMEN_BERECHNEN.html
 			kalypso://openEditor?input=project:/.maps/Massnahmen_definieren.gmt&activate=true;
 		}
 
+		function zurueckZuPlanvariante()
+		{
+			kalypso://closeAllEditors?doSave=true;
+			kalypso://openURL?url=KONZEPTPHASE_BPLAN_LADEN_ZEICHNEN.html;
+		}
+
   	 -->
  </script>
-  
-  
-  
+
+
+
   <title>Ergebnisse der Berechnung</title>
 </head>
 
 
-<body style="direction: ltr;">
+<body style="direction: ltr; width: 525px;">
+
 
 
 
@@ -44,100 +55,124 @@
 
 
 
-  <tbody>
 
+	<tbody>
 
 
 
-    <tr style="margin-top: 15px; height: 83px;">
 
 
+		<tr style="margin-top: 15px; height: 83px;">
 
 
-      <td style="height: 77px; width: 102px;"><img src="planerClient.gif" alt="Planer client Logo" style="width: 98px; height: 74px; float: left;" /></td>
 
 
 
+			<td style="height: 77px; width: 102px;"><img src="planerClient.gif" alt="Planer client Logo" style="width: 98px; height: 74px; float: left;" /></td>
 
-      <td style="vertical-align: top; height: 77px; width: 399px;"><span style="font-family: Helvetica,Arial,sans-serif;">Das
-Projekt ist in der &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; Derzeitige Aktion:</span><br />
 
 
 
 
-      <big><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><br />
+			<td style="vertical-align: top; height: 77px; width: 399px;"><span style="font-family: Helvetica,Arial,sans-serif;">Das Projekt ist in
+			der &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Derzeitige Aktion:</span><br />
 
 
-      </span><span style="font-family: Helvetica,Arial,sans-serif;">KONZEPTHPHASE</span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"> &nbsp; &nbsp;</span><span style="font-family: Helvetica,Arial,sans-serif;">Planungszyklus
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; abgeschlossen</span><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><br />
 
 
 
+			<big><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><br />
 
 
-      </span></big></td>
 
+			</span><span style="font-family: Helvetica,Arial,sans-serif;">KONZEPTHPHASE</span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">
+			&nbsp; &nbsp;</span><span style="font-family: Helvetica,Arial,sans-serif;">Planungszyklus &nbsp;
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; abgeschlossen</span><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><br />
 
 
 
-    </tr>
 
 
 
+			</span></big></td>
 
-    <tr>
 
 
 
 
-      <td style="height: 28px; width: 102px;"></td>
+		</tr>
 
 
 
 
-      <td style="height: 28px; width: 399px;"><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-family: Helvetica,Arial,sans-serif;">Der Planungszyklus wurde jetzt vollst&auml;ndig durchlaufen.<br />
-Sie haben nun die M&ouml;glichkeit eine weiteren Durchlauf zu starten. </span></span></td>
 
+		<tr>
 
 
 
-    </tr>
 
 
+			<td style="height: 28px; width: 102px;"></td>
 
 
-    <tr>
 
 
 
+			<td style="height: 28px; width: 399px;"><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-family: Helvetica,Arial,sans-serif;">Der Planungszyklus
+			wurde jetzt vollst&auml;ndig durchlaufen.<br />
 
-      <td style="height: 71px; width: 102px;"></td>
+			Sie haben nun die M&ouml;glichkeit eine weiteren Durchlauf zu
+			starten. </span></span></td>
 
 
 
 
-      <td style="height: 71px; width: 399px;"><big><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-family: Helvetica,Arial,sans-serif;"></span></span></big><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-family: Helvetica,Arial,sans-serif;"> </span><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">Wasserwirtschaftliche Massnahmen anpassen ...</span> <a href="kalypso://runScript?type=text/kalypso&function=zurueckZuWaWiMassnahmen"><img style="border: 0px solid ; width: 26px; height: 26px;" alt="Link Logo" title="wasserwirtschaftlichen Maßnahmen einfügen" src="../img/lc10617.gif" align="middle" /></a></span><br />
-      <span style="font-family: Helvetica,Arial,sans-serif;">
 
-      <span style="font-weight: bold;">Planungsentwurf&nbsp;anpassen ...</span> <a href="KONZEPTPHASE_BPLAN_LADEN_ZEICHNEN.html"><img style="border: 0px solid ; width: 26px; height: 26px;" alt="Link Logo" title="wasserwirtschaftlichen Maßnahmen einfügen" src="../img/lc10617.gif" align="middle" /></a> &nbsp;&nbsp;</span><span style="font-family: Helvetica,Arial,sans-serif;"></span></td>
+		</tr>
 
 
 
 
-    </tr>
 
+		<tr>
 
 
 
-  
-  
-  
-  
+
+
+			<td style="height: 71px; width: 102px;"></td>
+
+
+
+
+
+			<td style="height: 71px; width: 399px;"><big><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-family: Helvetica,Arial,sans-serif;"></span></span></big><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-family: Helvetica,Arial,sans-serif;"> </span><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">Wasserwirtschaftliche Massnahmen anpassen
+			...</span> <a href="kalypso://runScript?type=text/kalypso&function=zurueckZuWaWiMassnahmen"><img style="border: 0px solid ; width: 26px; height: 26px;" alt="Link Logo" title="wasserwirtschaftlichen Maßnahmen einfügen" src="../img/lc10617.gif" align="middle" /></a></span><br />
+
+			<span style="font-family: Helvetica,Arial,sans-serif;"> <span style="font-weight: bold;"><br />
+Planungsentwurf&nbsp;anpassen ...</span>
+			<a href="kalypso://runScript?type=text/kalypso&function=zurueckZuPlanvariante"><img style="border: 0px solid ; width: 26px; height: 26px;" alt="Link Logo" title="wasserwirtschaftlichen Maßnahmen einfügen" src="../img/lc10617.gif" align="middle" /></a> &nbsp;&nbsp;</span><span style="font-family: Helvetica,Arial,sans-serif;"></span></td>
+
+
+
+
+
+		</tr>
+
+
+
+
+
+
+
+
+
+	
   </tbody>
 </table>
+
 
 
 
