@@ -175,7 +175,7 @@ public class BreakLinesHelper implements IWspmConstants
     {
       final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
       final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
-
+      // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
       return (GM_Curve) cloneObject;
     }
     catch( CloneNotSupportedException e )
@@ -183,9 +183,6 @@ public class BreakLinesHelper implements IWspmConstants
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-    // TODO thin out
-
     return curve;
   }
 
