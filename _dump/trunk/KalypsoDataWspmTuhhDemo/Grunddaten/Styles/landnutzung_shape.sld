@@ -9,9 +9,9 @@
 <FeatureTypeStyle>
 <Name>Landnutzung</Name>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Bebauung</Name>
+<Title>Bebauung</Title>
+<Abstract>Bebauung</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
@@ -39,14 +39,14 @@
 </PolygonSymbolizer>
 </Rule>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Grünflächen / Wald</Name>
+<Title>Grünflächen / Wald</Title>
+<Abstract>Grünflächen / Wald</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
 <ogc:LowerBoundary>20.0</ogc:LowerBoundary>
-<ogc:UpperBoundary>200.0</ogc:UpperBoundary>
+<ogc:UpperBoundary>20.0</ogc:UpperBoundary>
 </ogc:PropertyIsBetween>
 </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
@@ -69,9 +69,9 @@
 </PolygonSymbolizer>
 </Rule>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Schienenverkehr</Name>
+<Title>Schienenverkehr</Title>
+<Abstract>Schienenverkehr</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
@@ -99,9 +99,9 @@
 </PolygonSymbolizer>
 </Rule>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Grünflächen / Wald</Name>
+<Title>Grünflächen / Wald</Title>
+<Abstract>Grünflächen / Wald</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
@@ -129,9 +129,9 @@
 </PolygonSymbolizer>
 </Rule>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Straßen / Parkplätze / Plätze</Name>
+<Title>Straßen / Parkplätze / Plätze</Title>
+<Abstract>Straßen / Parkplätze / Plätze</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
@@ -159,9 +159,9 @@
 </PolygonSymbolizer>
 </Rule>
 <Rule>
-<Name>default</Name>
-<Title>default</Title>
-<Abstract>default</Abstract>
+<Name>Gewässer</Name>
+<Title>Gewässer</Title>
+<Abstract>Gewässer</Abstract>
 <ogc:Filter>
 <ogc:PropertyIsBetween>
 <ogc:PropertyName>KLASSENEU</ogc:PropertyName>
