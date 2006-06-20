@@ -738,7 +738,9 @@ public class FeatureHelper
   {
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-
+    // this can happen when we import a shape-file. d
+    if( annotation == null )
+      return "no-label";
     final String label = annotation.getLabel();
     return tokenReplace( feature, label );
 
