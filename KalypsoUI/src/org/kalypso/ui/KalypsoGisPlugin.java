@@ -73,9 +73,11 @@ import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.contribs.ogc31.KalypsoOGC31Plugin;
 import org.kalypso.core.RefactorThis;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -87,6 +89,7 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
+import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -97,6 +100,7 @@ import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
@@ -452,6 +456,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       try
       {
+      // HACK
+        KalypsoOGC31Plugin.getDefault();
+        KalypsoDeegreePlugin.getDefault();
+        
         final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
         final IPath stateLocation = getStateLocation();
         final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
