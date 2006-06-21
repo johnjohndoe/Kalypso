@@ -29,11 +29,9 @@
  */
 package org.kalypso.robotronadapter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -50,7 +48,28 @@ import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.UserRightsException;
 
 /**
- * RobotronRightsProvider
+ * Es gibt folgenden Möglichkeiten:
+ * <dl>
+ * <dt>Benutzer im LDAP unbekannt</dt>
+ * <dd>Der Benutzer darf Kalypso nicht benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe ohne die hier aufgelistete Rechte</dt>
+ * <dd>Der Benutzer darf Kalypso nicht benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe mit Modellierung-Vorhersage-Recht</dt>
+ * <dd>Der Benutzer darf Kalypso im Vorhersage-Assistent benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe mit Modellierung-Experte-Recht</dt>
+ * <dd>Der Benutzer hat alle Rechte und darf alles machen</dd>
+ * <dt>dem Benutzer wurde das simulation-Flag gesetzt (Verweigerungsrecht)</dt>
+ * <dd>Der Benutzer darf Kalypso nur dann starten, wenn das aktuelle Szenario das Simulationsbetrieb ist</dd>
+ * </dl>
+ * 
+ * <dl>
+ * <dt>20.06.2006</dt>
+ * <dd>Ergänzung auf Kundenwunsch der Rechteverwaltung: jetzt mit Unterscheidung zwischen nix, Vorhersage, Experte
+ * </dd>
+ * <dt>03.02.2006</dt>
+ * <dd>Einführung eines separaten Flag 'Simulationsbetrieb', welcher das Einrichten von (Test-)Benutzern erlaubt, die
+ * ausschließlich diesen Betriebsmodus benutzen dürfen (Absprache zwischen RDS, KAG und BCE vom 21.12.2005)</dd>
+ * </dl>
  * 
  * @author schlienger (13.05.2005)
  */
@@ -150,7 +169,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
       }
 
       final Set rights = new HashSet();
-      
+
       // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
@@ -179,7 +198,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
         }
       }
 
-      return (String[])rights.toArray( new String[rights.size()]);
+      return (String[])rights.toArray( new String[rights.size()] );
     }
     catch( final NamingException e )
     {
