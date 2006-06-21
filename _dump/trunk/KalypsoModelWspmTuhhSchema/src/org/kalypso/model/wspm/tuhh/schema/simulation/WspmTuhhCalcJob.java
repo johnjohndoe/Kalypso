@@ -178,16 +178,16 @@ public class WspmTuhhCalcJob implements ISimulation
       final File fleInParams = new File( tmpDir, "input.txt" );
       pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
       pwInParams.println( "n" );
-      pwInParams.println( tmpDir.getAbsolutePath() + File.separator + "kalypso-1D.ini" );
+      pwInParams.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "kalypso-1D.ini" + "\"" );
 
       pwInParams.close();
 
       // generate start.bat
       final File fleBat = new File( tmpDir, "start.bat" );
       PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
-      pwBat.println( tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe < " + fleInParams.getAbsolutePath() );
+      pwBat.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe" + "\" < " + "\"" + fleInParams.getAbsolutePath() + "\"" );
       pwBat.close();
-      String sCmd = fleBat.getAbsolutePath();
+      String sCmd = "\"" + fleBat.getAbsolutePath()+ "\"";
 
       // String sCmd = "Kalypso-1D.exe";
 
@@ -283,11 +283,11 @@ public class WspmTuhhCalcJob implements ISimulation
             final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
             final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
             String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
-            
+
             // introduce space around 'NaN' and '***' values to make it parseable
-            strLengthSection = strLengthSection.replaceAll( "NaN" , " -999.999 " );
-//            strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
-            
+            strLengthSection = strLengthSection.replaceAll( "NaN", " -999.999 " );
+            // strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
+
             // remove first two rows (old header) from laengsschnitt.txt
             int pos = strLengthSection.indexOf( "\n" );
             pos = strLengthSection.indexOf( "\n", pos + 1 );
