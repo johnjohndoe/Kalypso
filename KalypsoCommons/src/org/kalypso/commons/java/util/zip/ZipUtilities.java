@@ -72,7 +72,6 @@ public class ZipUtilities
     InputStream zipIS = null;
     try
     {
-
       zipIS = new BufferedInputStream( new FileInputStream( zip ) );
       unzip( zipIS, targetdir );
     }

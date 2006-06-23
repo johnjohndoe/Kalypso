@@ -84,6 +84,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.core.KalypsoStart;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
@@ -236,6 +237,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // put system properties
     mainConf.putAll( System.getProperties() );
 
+    // overwrite the user settings if list was provided as program argument
+    if( KalypsoStart.SERVER_LOCATIONS != null )
+      getPluginPreferences().setValue( IKalypsoPreferences.CLIENT_CONF_URLS, KalypsoStart.SERVER_LOCATIONS );
+    
     final String confUrls = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS );
 
     if( confUrls == null )
@@ -606,14 +611,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final IUrlCatalog deegreeCatalog = new DeegreeUrlCatalog();
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
-          // test
+      // test
           //          naCatalog,
           //          twoDCatalog,
 
-          updateObs,
-          serverUrlCatalog,
-          calcCatalog,
-          deegreeCatalog } );
+          updateObs, serverUrlCatalog, calcCatalog, deegreeCatalog } );
 
       final IPath stateLocation = getStateLocation();
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
@@ -774,20 +776,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // register inlines
 
       final String[] wvqAxis = new String[]
-      {
-          TimeserieConstants.TYPE_NORMNULL,
-          TimeserieConstants.TYPE_VOLUME,
-          TimeserieConstants.TYPE_RUNOFF };
+      { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
       final String[] taAxis = new String[]
-      {
-          TimeserieConstants.TYPE_HOURS,
-          TimeserieConstants.TYPE_NORM };
+      { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
       final String[] wtKcLaiAxis = new String[]
-      {
-          TimeserieConstants.TYPE_DATE,
-          TimeserieConstants.TYPE_LAI,
-          TimeserieConstants.TYPE_WT,
-          TimeserieConstants.TYPE_KC };
+      { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", wtKcLaiAxis,

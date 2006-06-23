@@ -88,5 +88,4 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
 
     return true;
   }
-
 }
