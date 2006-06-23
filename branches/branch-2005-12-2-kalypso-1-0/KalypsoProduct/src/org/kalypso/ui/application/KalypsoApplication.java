@@ -47,6 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.user.IKalypsoUser;
+import org.kalypso.core.KalypsoStart;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -71,6 +72,8 @@ public class KalypsoApplication implements IPlatformRunnable
 
     try
     {
+      KalypsoStart.parseArguments( (String[])args );
+
       // TODO: HACK TO BE REMOVED when separation client/server is ok
       KalypsoGisPlugin.getDefault();
 

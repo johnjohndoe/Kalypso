@@ -105,12 +105,13 @@ public class FileCopyVisitor implements FileVisitor
       {
         // falls die Zieldatei neuer ist und das überschreiben neuerer verboten wurde
         // einfach abbrechen
-        if( !m_overwrite && targetFile.exists() )
+//        if( !m_overwrite && targetFile.exists() )
+        if( targetFile.exists() )
         {
           // falls neuer überschreiben oder nicht?
           final long targetLastModified = targetFile.lastModified();
           final long lastModified = file.lastModified();
-          if( targetLastModified > lastModified )
+          if( !m_overwrite && targetLastModified > lastModified )
             return false;
 
           // falls die Dateien wirklich gleich sind, nichts tun
