@@ -29,9 +29,11 @@
  */
 package org.kalypso.robotronadapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -170,12 +172,17 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
       final Set rights = new HashSet();
 
+      LOG.info( "Checking rights from associated group..." );
+      
       // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
+      final List debugRights = new ArrayList( );
       while( rightsEnum.hasMore() )
       {
         final String right = rightsEnum.next().toString();
+        
+        debugRights.add( right );
 
         if( "Modellierung-Vorhersage".equalsIgnoreCase( right ) )
           rights.add( UserRights.RIGHT_PROGNOSE );
@@ -197,7 +204,10 @@ public class RobotronRightsProvider implements IUserRightsProvider
           rights.add( UserRights.RIGHT_PROGNOSE );
         }
       }
-
+      
+      LOG.info( "Retrieved following LDAP rights: " + debugRights );
+      debugRights.clear();
+      
       return (String[])rights.toArray( new String[rights.size()] );
     }
     catch( final NamingException e )
