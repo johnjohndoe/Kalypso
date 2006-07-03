@@ -255,7 +255,7 @@
         Tabelle -->
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!--arg name="zmlTableShow" value="all"/-->
-		<!-- ### für später: Vorbereitung für Talsperrensortierung, Achtung: Umschalten W/V in Tabelle mit Vorlage testen, auch in anderen Wizardseiten verwenden -->
+		<!-- Sortierung der Talsperren-Anzeige -->
 		<arg name="zmlTableShow" value="template"/>
 		<arg name="zmlTableAlphaSort" value="false"/>
 		<arg name="zmlTableTemplate" value=".templates/.wizard/sortiertTalsperrenvolumen.ott"/>
