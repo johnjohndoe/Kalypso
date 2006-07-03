@@ -41,8 +41,14 @@
 
 package org.kalypso.wiskiadapter;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -52,6 +58,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
@@ -79,8 +91,13 @@ public class WiskiDump implements IActionDelegate
       {
         monitor.beginTask( "Wiski-Dump", IProgressMonitor.UNKNOWN );
 
+        Writer writer = null;
+
         try
         {
+          final File dumpFile = File.createTempFile( "wiskiDump", ".txt" );
+          writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream( dumpFile ) ) );
+
           final IRepositoryItem[] supergroups = m_wiskiRep.getChildren();
           for( int i = 0; i < supergroups.length; i++ )
           {
@@ -96,23 +113,44 @@ public class WiskiDump implements IActionDelegate
               {
                 if( monitor.isCanceled() )
                   throw new InterruptedException();
-                
+
                 final TsInfoItem tsi = (TsInfoItem)stations[k];
 
-                System.out.println( tsi.getName() + "\t" + tsi.getWiskiStationName() + "\t" + tsi.getIdentifier());
-                counter.increment();
+                writer.write( "Id=" + tsi.getIdentifier() + "\tProperties: " + tsi.getWiskiPropertyMap() );
+                final WiskiTimeserie ts = (WiskiTimeserie)tsi.getAdapter( IObservation.class );
+                final IRequest req = new ObservationRequest( DateRange.createFromPastDays( 1 ) );
+                ts.getValues( req );
                 
+                final MetadataList mdl = ts.getMetadataList();
+                final String wqTablePresent = mdl.getProperty( TimeserieConstants.MD_WQTABLE ) == null ? " WQ=0 " : " WQ=1 ";
+                writer.write( wqTablePresent );
+                
+                writer.write( " GKR=" + mdl.getProperty( TimeserieConstants.MD_GKR ) );
+                writer.write( " GKH=" + mdl.getProperty( TimeserieConstants.MD_GKH ) );
+                writer.write( " COORDSYS=" + mdl.getProperty( TimeserieConstants.MD_COORDSYS ) );
+                writer.write( " GEWAESSER=" + mdl.getProperty( TimeserieConstants.MD_GEWAESSER ) );
+                writer.write( " FLUSSGEBIET=" + mdl.getProperty( TimeserieConstants.MD_FLUSSGEBIET ) );
+                writer.write( " KENNZIFFER=" + mdl.getProperty( TimeserieConstants.MD_KENNZIFFER ) );
+                writer.write( "\n" );
+
+                counter.increment();
+
                 monitor.subTask( counter + " Items behandelt..." );
               }
             }
           }
+
+          writer.close();
+
+          System.out.println( "See results of WISKI-Dump in: " + dumpFile );
         }
         catch( final Exception e )
         {
-          throw new InvocationTargetException( e );
+          e.printStackTrace();
         }
         finally
         {
+          IOUtils.closeQuietly( writer );
           monitor.done();
         }
       }

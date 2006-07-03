@@ -324,4 +324,12 @@ public class TsInfoItem implements IRepositoryItem
   {
     return getWiskiSuperGroupName().indexOf( WiskiUtils.getProperty( "FORECAST_SUPERGROUP" ) ) != -1;
   }
+
+  /**
+   * @return the underlying map that holds the wiski properties
+   */
+  protected Map getWiskiPropertyMap()
+  {
+    return m_map;
+  }
 }
