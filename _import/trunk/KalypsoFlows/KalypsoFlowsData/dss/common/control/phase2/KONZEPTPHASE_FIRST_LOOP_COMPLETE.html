@@ -21,7 +21,7 @@
 	<!--
 		function zurueckZuWaWiMassnahmen() 
 		{
-			kalypso://closeAllViews?exceptThese=org.kalypso.contribs.ui.browser.commandable.CommandURLBrowserView;
+			kalypso://closeAllViews?exceptThese=org.kalypso.contribs.ui.browser.commandable.CommandURLBrowserView#org.eclipse.ui.views.ContentOutline#KalypsoPortal.view.gazatteer#org.eclipse.ui.views.ResourceNavigator;
 			kalypso://closeAllEditors?doSave=true;
 			kalypso://openWorkflowBrowser?secondaryPartId=measureBPlan.watermeasures&url=KONZEPTPHASE_MASSNAHMEN_DEF.html
 			kalypso://openURL?&url=KONZEPTPHASE_WAWI_MASSNAHMEN_BERECHNEN.html
@@ -31,6 +31,7 @@
 		function zurueckZuPlanvariante()
 		{
 			kalypso://closeAllEditors?doSave=true;
+			kalypso://closeAllViews?exceptThese=org.kalypso.contribs.ui.browser.commandable.CommandURLBrowserView;
 			kalypso://openURL?url=KONZEPTPHASE_BPLAN_LADEN_ZEICHNEN.html;
 		}
 
