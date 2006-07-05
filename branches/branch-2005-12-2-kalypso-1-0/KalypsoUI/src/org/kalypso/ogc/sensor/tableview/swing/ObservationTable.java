@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,21 +50,33 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableColumnModelEvent;
+import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
+import org.kalypso.commons.java.swing.jtable.PopupMenu;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
@@ -73,6 +86,7 @@ import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
@@ -83,25 +97,24 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  * 
  * @author schlienger
  */
-public class ObservationTable extends JTable implements IObsViewEventListener
+public class ObservationTable extends JPanel implements IObsViewEventListener
 {
   private final ObservationTableModel m_model;
+  private final MainTable m_table;
 
   private final TableView m_view;
 
   private final DateTableCellRenderer m_dateRenderer;
 
-  private MaskedNumberTableCellRenderer m_nbRenderer;
-
   private final boolean m_waitForSwing;
 
-  private final PopupMenu m_popup;
-
-  private ExcelClipboardAdapter m_excelCp;
-
-  protected ObservationTablePanel m_panel = null;
-
   protected String m_currentScenarioName = "";
+
+  /** is created if an observation has a scenario property */
+  private final JLabel m_label = new JLabel( "", SwingConstants.CENTER );
+  
+  /** default background color for the date renderer when not displaying forecast */
+  private static final Color BG_COLOR = new Color( 222, 222, 222 );
 
   /**
    * if the amount of columns is equal or bigger than this threshold, then the autoResizeMode property is set to
@@ -109,8 +122,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * <p>
    * if value is < 0 then function is not used
    */
-  private int m_thresholdColumnsAutoResizeModeOff = -1;
-
+  //private int m_thresholdColumnsAutoResizeModeOff = -1;
   public ObservationTable( final TableView template )
   {
     this( template, false, true );
@@ -125,82 +137,90 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    */
   public ObservationTable( final TableView template, final boolean waitForSwing, final boolean useContextMenu )
   {
-    super( new ObservationTableModel() );
-
     m_view = template;
     m_waitForSwing = waitForSwing;
 
-    // for convenience
-    m_model = (ObservationTableModel)getModel();
+    m_model = new ObservationTableModel();
     m_model.setRules( template.getRules() );
 
     m_dateRenderer = new DateTableCellRenderer();
-
-    m_nbRenderer = new MaskedNumberTableCellRenderer( m_model );
-
-    setDefaultRenderer( Date.class, m_dateRenderer );
-    setDefaultRenderer( Number.class, m_nbRenderer );
-    setDefaultRenderer( Double.class, m_nbRenderer );
-    setDefaultRenderer( Float.class, m_nbRenderer );
-
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
-    setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
+    
+    m_table = new MainTable( useContextMenu, nf, m_model, new MainColumnModel() );
+    final TableCellRenderer nbRenderer = new MaskedNumberTableCellRenderer( m_model );
+    m_table.setDefaultRenderer( Date.class, m_dateRenderer );
+    m_table.setDefaultRenderer( Number.class, nbRenderer );
+    m_table.setDefaultRenderer( Double.class, nbRenderer );
+    m_table.setDefaultRenderer( Float.class, nbRenderer );
+    m_table.setAutoCreateColumnsFromModel( true );
+    m_table
+        .setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
+    m_table.setCellSelectionEnabled( true );
+    m_table.getTableHeader().setReorderingAllowed( false );
+    m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
-    setCellSelectionEnabled( true );
+    final JTable m_rowHeader = new JTable( m_model, new RowHeaderColumnModel() );
+    m_rowHeader.setDefaultRenderer( Date.class, m_dateRenderer );
+    m_rowHeader.setDefaultRenderer( Number.class, nbRenderer );
+    m_rowHeader.setDefaultRenderer( Double.class, nbRenderer );
+    m_rowHeader.setDefaultRenderer( Float.class, nbRenderer );
+    m_rowHeader.setColumnSelectionAllowed( false );
+    m_rowHeader.setCellSelectionEnabled( false );
+    m_rowHeader.getTableHeader().setReorderingAllowed( false );
+    m_rowHeader.setAutoCreateColumnsFromModel( true );
 
-    getTableHeader().setReorderingAllowed( false );
+    // make sure that selections between the main table and the header stay in sync
+    // by sharing the same model
+    m_table.setSelectionModel( m_rowHeader.getSelectionModel() );
 
-    if( useContextMenu )
-    {
-      m_popup = new PopupMenu( this );
-      m_excelCp = new ExcelClipboardAdapter( this, nf );
+    final JViewport vp = new JViewport();
+    vp.setView( m_rowHeader );
+    vp.setPreferredSize( m_rowHeader.getPreferredSize() );
 
-      m_popup.add( new JPopupMenu.Separator() );
-      m_popup.add( m_excelCp.getCopyAction() );
-      m_popup.add( m_excelCp.getPasteAction() );
-    }
-    else
-    {
-      m_popup = null;
-      m_excelCp = null;
-    }
+    final JScrollPane scrollPane = new JScrollPane( m_table );
+    scrollPane.setRowHeader( vp );
+    scrollPane.setCorner( ScrollPaneConstants.UPPER_LEFT_CORNER, m_rowHeader.getTableHeader() );
+
+    setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
+
+    m_label.setVisible( false );
+    add( m_label );
+
+    add( scrollPane );
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
   }
 
-  /**
-   * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
-   */
-  public void columnAdded( TableColumnModelEvent e )
-  {
-    super.columnAdded( e );
+  //  /**
+  //   * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
+  //   */
+  //  public void columnAdded( TableColumnModelEvent e )
+  //  {
+  //    super.columnAdded( e );
+  //
+  //    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() >= m_thresholdColumnsAutoResizeModeOff )
+  //      setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+  //  }
 
-    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() >= m_thresholdColumnsAutoResizeModeOff )
-      setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-  }
-
-  /**
-   * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
-   */
-  public void columnRemoved( TableColumnModelEvent e )
-  {
-    super.columnRemoved( e );
-
-    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() < m_thresholdColumnsAutoResizeModeOff )
-      setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
-  }
+  //  /**
+  //   * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
+  //   */
+  //  public void columnRemoved( TableColumnModelEvent e )
+  //  {
+  //    super.columnRemoved( e );
+  //
+  //    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() < m_thresholdColumnsAutoResizeModeOff )
+  //      setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
+  //  }
 
   public void dispose()
   {
-    if( m_excelCp != null )
-      m_excelCp.dispose();
-
+    m_table.dispose();
+    
     m_dateRenderer.clearMarkers();
     m_view.removeObsViewListener( this );
-
-    m_panel = null;
 
     m_model.clearColumns();
   }
@@ -262,7 +282,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
           if( model.getColumnCount() == 0 )
           {
-            m_panel.clearLabel();
+            clearLabel();
             m_currentScenarioName = "";
           }
         }
@@ -273,11 +293,8 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           model.clearColumns();
           dateRenderer.clearMarkers();
 
-          if( m_panel != null )
-          {
-            m_panel.clearLabel();
-            m_currentScenarioName = "";
-          }
+          clearLabel();
+          m_currentScenarioName = "";
         }
 
         // VIEW CHANGED
@@ -290,15 +307,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     };
 
     SwingEclipseUtilities.invokeAndHandleError( runnable, m_waitForSwing );
-  }
-
-  /**
-   * @see javax.swing.JTable#getCellRenderer(int, int)
-   */
-  public TableCellRenderer getCellRenderer( int row, int column )
-  {
-    final TableCellRenderer renderer = super.getCellRenderer( row, column );
-    return renderer;
   }
 
   /**
@@ -321,9 +329,9 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       if( dr != null )
       {
         if( adding )
-          m_dateRenderer.addMarker( new ForecastLabelMarker( dr ) );
+          m_dateRenderer.addMarker( new ForecastLabelMarker( dr, BG_COLOR ) );
         else
-          m_dateRenderer.removeMarker( new ForecastLabelMarker( dr ) );
+          m_dateRenderer.removeMarker( new ForecastLabelMarker( dr, BG_COLOR ) );
       }
 
       final MetadataList mdl = obs.getMetadataList();
@@ -334,8 +342,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
             mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
 
-        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null
-            && !m_panel.isLabelSet() )
+        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && isLabelSet() )
         {
           Icon icon = null;
           final String imageURL = scenario.getProperty( IScenario.PROP_TABLE_HEADER_IMAGE_URL, null );
@@ -367,7 +374,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
             showTxt = Boolean.valueOf( strShow );
 
           m_currentScenarioName = scenario.getName();
-          m_panel.setLabel( m_currentScenarioName, icon, color, height, showTxt );
+          setLabel( m_currentScenarioName, icon, color, height, showTxt );
         }
       }
     }
@@ -378,10 +385,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    */
   protected void processMouseEvent( MouseEvent e )
   {
-    if( e.isPopupTrigger() && m_popup != null )
-      m_popup.show( this, e.getX(), e.getY() );
-    else
-      super.processMouseEvent( e );
+
   }
 
   public ObservationTableModel getObservationTableModel()
@@ -394,20 +398,15 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     return m_view;
   }
 
-  public void setPanel( final ObservationTablePanel panel )
-  {
-    m_panel = panel;
-  }
-
   public String getCurrentScenarioName()
   {
     return m_currentScenarioName;
   }
 
-  public void setThresholdColumnsAutoResizeModeOff( final int thresholdColumnsAutoResizeModeOff )
-  {
-    m_thresholdColumnsAutoResizeModeOff = thresholdColumnsAutoResizeModeOff;
-  }
+  //  public void setThresholdColumnsAutoResizeModeOff( final int thresholdColumnsAutoResizeModeOff )
+  //  {
+  //    m_thresholdColumnsAutoResizeModeOff = thresholdColumnsAutoResizeModeOff;
+  //  }
 
   public void setAlphaSortActivated( final boolean bAlphaSort )
   {
@@ -419,6 +418,104 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    */
   public void onPrintObsView( final ObsViewEvent evt )
   {
-    // TODO Auto-generated method stub
+  // TODO Auto-generated method stub
+  }
+
+  protected void clearLabel()
+  {
+    m_label.setText( "" );
+    m_label.setVisible( false );
+  }
+
+  protected boolean isLabelSet()
+  {
+    return m_label.isVisible();
+  }
+
+  protected void setLabel( final String txt, final Icon icon, final Color color, final Integer height,
+      final Boolean showTxt )
+  {
+    final boolean bShowText;
+    if( showTxt != null )
+      bShowText = showTxt.booleanValue();
+    else
+      bShowText = true;
+
+    if( bShowText )
+      m_label.setText( txt );
+    else
+      m_label.setText( "" );
+    m_label.setIcon( icon );
+    setBackground( color );
+
+    if( height != null )
+      m_label.setPreferredSize( new Dimension( m_label.getWidth(), height.intValue() ) );
+
+    m_label.setVisible( true );
+    doLayout();
+  }
+
+  private class MainColumnModel extends DefaultTableColumnModel
+  {
+    // ignore key column
+    public void addColumn( TableColumn aColumn )
+    {
+      final IAxis sharedAxis = m_model.getSharedAxis();
+      if( sharedAxis != null && sharedAxis.getName().equals( aColumn.getHeaderValue() ) )
+        return;
+
+      super.addColumn( aColumn );
+    }
+  }
+
+  private static class RowHeaderColumnModel extends DefaultTableColumnModel
+  {
+    // just fist column, other are ignored
+    public void addColumn( TableColumn aColumn )
+    {
+      if( getColumnCount() >= 1 )
+        return;
+
+      aColumn.setMaxWidth( 75 );
+      aColumn.setResizable( false );
+
+      super.addColumn( aColumn );
+    }
+  }
+
+  private static class MainTable extends JTable
+  {
+    private PopupMenu m_popup = null;
+    
+    private ExcelClipboardAdapter m_excelCp = null;
+    
+    public MainTable( boolean useContextMenu, final NumberFormat nf, TableModel dm, TableColumnModel cm )
+    {
+      super( dm, cm );
+      
+      if( useContextMenu )
+      {
+        m_popup = new PopupMenu( this );
+        m_excelCp = new ExcelClipboardAdapter( this, nf );
+
+        m_popup.add( new JPopupMenu.Separator() );
+        m_popup.add( m_excelCp.getCopyAction() );
+        m_popup.add( m_excelCp.getPasteAction() );
+      }
+    }
+
+    public void dispose()
+    {
+      if( m_excelCp != null )
+        m_excelCp.dispose();
+    }
+    
+    protected void processMouseEvent( MouseEvent e )
+    {
+      if( e.isPopupTrigger() && m_popup != null )
+        m_popup.show( this, e.getX(), e.getY() );
+      else
+        super.processMouseEvent( e );
+    }
   }
 }

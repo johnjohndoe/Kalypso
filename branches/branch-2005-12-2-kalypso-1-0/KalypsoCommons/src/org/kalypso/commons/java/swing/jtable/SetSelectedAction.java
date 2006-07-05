@@ -1,8 +1,8 @@
-package org.kalypso.ogc.sensor.tableview.swing.actions;
+package org.kalypso.commons.java.swing.jtable;
 
 import java.awt.event.ActionEvent;
 
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import javax.swing.JTable;
 
 /**
  * SetAllAction
@@ -11,14 +11,14 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
  */
 public class SetSelectedAction extends AbstractObservationTableAction
 {
-  public SetSelectedAction( ObservationTable table )
+  public SetSelectedAction( JTable table )
   {
     super( table, "Selektierte Werte setzen", "Setzt die selektierten Werte auf den aktiven Wert" );
   }
 
   public void internalActionPerformed( ActionEvent e )
   {
-    final ObservationTable table = getTable();
+    final JTable table = getTable();
     final int col = table.getSelectedColumn();
     final int row = table.getSelectedRow();
     final int[] rows = table.getSelectedRows();

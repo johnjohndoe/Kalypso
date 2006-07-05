@@ -1,10 +1,9 @@
-package org.kalypso.ogc.sensor.tableview.swing.actions;
+package org.kalypso.commons.java.swing.jtable;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import javax.swing.JTable;
 
 /**
  * AbstractObservationTableAction
@@ -13,9 +12,9 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
  */
 public abstract class AbstractObservationTableAction extends AbstractAction
 {
-  private final ObservationTable m_table;
+  private final JTable m_table;
 
-  public AbstractObservationTableAction( final ObservationTable table, final String name, final String toolTip )
+  public AbstractObservationTableAction( final JTable table, final String name, final String toolTip )
   {
     super( name );
     m_table = table;
@@ -23,7 +22,7 @@ public abstract class AbstractObservationTableAction extends AbstractAction
     putValue( SHORT_DESCRIPTION, toolTip );
   }
 
-  public ObservationTable getTable()
+  public JTable getTable()
   {
     return m_table;
   }

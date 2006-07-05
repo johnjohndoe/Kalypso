@@ -52,6 +52,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
@@ -63,9 +64,12 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   /** maps dates to markers */
   private final Set m_markers = new TreeSet();
 
-  // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle
-  // Systemzeit im TableView angezeit!!!
-  private final static DateFormat df = DateFormat.getDateTimeInstance();
+  private final DateFormat m_df;
+
+  public DateTableCellRenderer()
+  {
+    m_df = TimeserieUtils.getDateFormat();
+  }
 
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
@@ -82,7 +86,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     if( !( value instanceof Date ) )
       return null;
 
-    label.setText( df.format( value ) );
+    label.setText( m_df.format( value ) );
 
     if( !isSelected )
     {

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  -----------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview.swing;
+package org.kalypso.ogc.sensor.tableview.swing.tablemodel;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -76,7 +76,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  * 
  * @author schlienger
  */
-public class ObservationTableModel extends AbstractTableModel
+public class ObservationTableModel extends AbstractTableModel implements IObservationTableModel
 {
   private static final RenderingRule[] EMPTY_RENDERING_RULES = new RenderingRule[0];
 
@@ -415,10 +415,10 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      if( column == 0 )
-        return EMPTY_RENDERING_RULES;
+      //if( column == 0 )
+      //  return EMPTY_RENDERING_RULES;
 
-      final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
+      final TableViewColumn col = (TableViewColumn)m_columns.get( column );
       try
       {
         final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
@@ -483,7 +483,7 @@ public class ObservationTableModel extends AbstractTableModel
       return pos;
     }
   }
-  
+
   public boolean containsColumn( final TableViewColumn col )
   {
     synchronized( m_columns )
@@ -613,13 +613,19 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Called to update the displayed columns by removing the one that should be ignored. This method should only be called by ObservationTable.
+   * Called to update the displayed columns by removing the one that should be ignored. This method should only be
+   * called by ObservationTable.
    */
   protected void hideIgnoredTypes()
   {
     synchronized( m_columns )
     {
-      
+
     }
+  }
+
+  public IAxis getSharedAxis()
+  {
+    return m_sharedAxis;
   }
 }
