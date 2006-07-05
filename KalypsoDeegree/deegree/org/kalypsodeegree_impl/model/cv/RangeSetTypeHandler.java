@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Vector;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;

@@ -280,17 +280,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return (TimeseriesLink)f.getProperty( m_targetobservation );
   }
 
-  /**
-   * 
-   * @param name
-   * @param index
-   */
   private File getValidFile( final String name, int index )
   {
     String newName = name;
     if( index > 0 )
       newName = newName + "_" + Integer.toString( index );
-    final String newName2 = FileUtilities.validateName( newName, "_" );
+    final String newName2 = org.kalypso.contribs.java.io.FileUtilities.validateName( newName, "_" );
     final File file = new File( m_targetobservationDir, newName2 + ".zml" );
     if( file.exists() )
     {

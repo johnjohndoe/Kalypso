@@ -30,26 +30,15 @@
 package org.kalypso.commons.java.lang;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class MathUtils
 {
-
   /**
-   * 
-   * @param x1
-   * @param x2
-   * @param y1
-   * @param y2
-   * @param x
    * @return f(x) on line (x1,y1) (x2,y2)
    */
   public static double interpolate( long x1, long x2, double y1, double y2, long x )
   {
     return y1 + ( y2 - y1 ) * ( ( (double)( x - x1 ) ) / ( (double)( x2 - x1 ) ) );
   }
-
 }

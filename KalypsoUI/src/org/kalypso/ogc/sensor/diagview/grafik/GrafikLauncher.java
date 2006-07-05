@@ -206,7 +206,7 @@ public class GrafikLauncher
       if( !dest.exists() )
         dest.create( true, true, monitor );
 
-      final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
+      final IFile tplFile = dest.getFile( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
 
       strWriter = new StringWriter();
       final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
@@ -335,7 +335,7 @@ public class GrafikLauncher
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
-    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe
+    final File grafikHelp = new File( grafikExe.getParentFile(), org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( grafikExe
         .getName() )
         + ".hlp" );
     grafikHelp.deleteOnExit();
@@ -442,7 +442,7 @@ public class GrafikLauncher
 
         // create a corresponding dat-File for the current observation file
         final IFile datFile = dest
-            .getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
+            .getFile( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 

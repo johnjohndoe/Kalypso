@@ -43,8 +43,8 @@ package org.kalypso.ui.wizard.ocs.idtable;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -84,9 +84,6 @@ public class IdStruct
 
   /**
    * Creates using the metadata found in the file
-   * 
-   * @param file
-   * @return id container
    */
   public static IdStruct createUsing( final IFile file )
   {

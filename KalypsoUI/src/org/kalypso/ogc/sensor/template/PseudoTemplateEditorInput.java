@@ -44,7 +44,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
-import org.kalypso.commons.java.io.FileUtilities;
 
 /**
  * PseudoTemplateEditorInput
@@ -100,7 +99,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName()
   {
-    return "Vorlage für " + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
+    return "Vorlage für " + org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
   }
 
   /**

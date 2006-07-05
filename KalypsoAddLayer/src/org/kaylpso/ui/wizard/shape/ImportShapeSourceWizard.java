@@ -7,7 +7,6 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -82,7 +81,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     {
       //Add Layer to mapModell
       IMapModell mapModell = m_outlineviewer.getMapModell();
-      String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
+      String themeName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
       AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName, "shape",
           "featureMember", fileName );

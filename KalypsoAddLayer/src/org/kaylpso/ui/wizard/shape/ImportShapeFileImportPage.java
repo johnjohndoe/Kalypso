@@ -75,7 +75,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.Layer;
@@ -506,12 +505,12 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   public File getShapeBaseFile()
   {
     return new File( m_project.getLocation() + "/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ) );
+        + org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ) );
   }
 
   public String getShapeBaseRelativePath()
   {
-    return "project:/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() );
+    return "project:/" + org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() );
   }
 
   public IPath getShapePath()
