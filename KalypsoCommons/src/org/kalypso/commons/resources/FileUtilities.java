@@ -43,10 +43,13 @@ package org.kalypso.commons.resources;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,16 +61,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class FileUtilities
 {
-  private FileUtilities()
+  private FileUtilities( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
    * Sets the contents of the dest file using the source file.
    */
-  public static void copyFile( final String sourceCharset, final File source, final IFile dest,
-      final IProgressMonitor monitor ) throws CoreException
+  public static void copyFile( final String sourceCharset, final File source, final IFile dest, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper helper = new SetContentHelper()
     {
@@ -75,8 +77,7 @@ public class FileUtilities
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );
-        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ),
-            sourceCharset ) );
+        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ), sourceCharset ) );
 
         try
         {
@@ -97,5 +98,37 @@ public class FileUtilities
     };
 
     helper.setFileContents( dest, false, false, monitor );
+  }
+
+  /**
+   * Returns the content of the given file as string object. The charset of the file object is used.
+   * <p>
+   * Alle exceptions are caught, if any is thrown, null is returned.
+   * </p>
+   * 
+   * @return null, if any error occurs.
+   */
+  public static String toStringQuietly( final IFile file )
+  {
+    InputStream contents = null;
+    try
+    {
+      contents = file.getContents();
+      final String content = IOUtils.toString( contents, file.getCharset() );
+      contents.close();
+      return content;
+    }
+    catch( final CoreException e )
+    {
+      return null;
+    }
+    catch( final IOException e )
+    {
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contents );
+    }
   }
 }
