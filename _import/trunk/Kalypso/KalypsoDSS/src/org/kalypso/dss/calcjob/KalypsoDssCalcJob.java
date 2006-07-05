@@ -495,7 +495,9 @@ public class KalypsoDssCalcJob implements ISimulation
       final Feature bgFE = bauGebFEs[i];
       final Object artBaulicherNutzung = bgFE.getProperty( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_ART_BAULICHNUTZ_PROP ) );
       final String type;
-      if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_RWG_PROP ) )
+      if( artBaulicherNutzung == null )
+        type = MeasuresConstants.XPLANUNG_UNDEFINED_LANDUSE_NAME;
+      else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_RWG_PROP ) )
         type = MeasuresConstants.XPLANUNG_RWG_LANDUSE_NAME;
       else if( artBaulicherNutzung.equals( MeasuresConstants.XPLANUNG_AWG_PROP ) )
         type = MeasuresConstants.XPLANUNG_AWG_LANDUSE_NAME;
