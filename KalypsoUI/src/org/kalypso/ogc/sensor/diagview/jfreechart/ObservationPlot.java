@@ -159,7 +159,7 @@ public class ObservationPlot extends XYPlot
     for( int i = 0; i < diagAxes.length; i++ )
     {
       final DiagramAxis diagAxis = diagAxes[i];
-      addDiagramAxis( diagAxis );
+      addDiagramAxis( diagAxis, null );
     }
 
     final ObsViewItem[] curves = view.getItems();
@@ -176,8 +176,10 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a diagram axis and configures it for the use in this plot.
+   * 
+   * @param axis can be null, if present it is used to define a best suited formater for the chart axis
    */
-  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis ) throws SensorException
+  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
     final ValueAxis vAxis;
 
@@ -189,6 +191,16 @@ public class ObservationPlot extends XYPlot
       if( vAxis instanceof NumberAxis )
       {
         NumberAxis na = (NumberAxis)vAxis;
+        
+        if( axis != null )
+        {
+          na.setNumberFormatOverride( TimeserieUtils.getNumberFormatFor( axis.getType() ) );
+          
+          final Double topMargin = TimeserieUtils.getTopMargin( axis.getType() );
+          if( topMargin != null )
+            na.setUpperMargin( topMargin.doubleValue() );
+        }
+        
         na.setAutoRangeMinimumSize( 1 );
       }
 
@@ -332,7 +344,7 @@ public class ObservationPlot extends XYPlot
 
         // check if this axis is already present in this plot
         if( !m_diag2chartAxis.containsKey( diagAxis ) )
-          addDiagramAxis( diagAxis );
+          addDiagramAxis( diagAxis, mings[i].getObservationAxis() );
 
         if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
         {

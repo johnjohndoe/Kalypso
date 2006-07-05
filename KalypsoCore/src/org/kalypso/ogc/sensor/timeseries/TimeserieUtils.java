@@ -421,13 +421,25 @@ public class TimeserieUtils
   }
 
   /**
-   * Returns the default format string for the given type
+   * @return the default format string for the given type
    */
   public static String getDefaultFormatString( final String type )
   {
     return getProperties().getProperty( "FORMAT_" + type );
   }
 
+  /**
+   * @return the default top margin defined for the given type or null if none
+   */
+  public static Double getTopMargin( final String type )
+  {
+    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
+    if( margin == null )
+      return null;
+    
+    return Double.valueOf( margin );
+  }
+  
   /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
