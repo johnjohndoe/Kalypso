@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 

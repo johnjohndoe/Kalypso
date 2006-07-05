@@ -44,7 +44,6 @@ import java.io.File;
 
 import javax.activation.DataHandler;
 
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -106,7 +105,7 @@ final class CalcJobThread extends Thread
     {
       QueuedCalcJobServiceWrapper.LOGGER.info( "Calling run for ID: " + jobID );
 
-      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig.getTempDir() );
+      final File tmpdir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig.getTempDir() );
       tmpdir.deleteOnExit();
       m_resultPacker.addFile( tmpdir );
 

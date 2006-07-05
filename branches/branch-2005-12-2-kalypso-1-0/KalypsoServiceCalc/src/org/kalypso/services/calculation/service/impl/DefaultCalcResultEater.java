@@ -179,7 +179,7 @@ public class DefaultCalcResultEater implements ICalcResultPacker
     for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
     {
       final File file = (File)iter.next();
-      FileUtilities.deleteRecursive( file );
+      org.kalypso.contribs.java.io.FileUtilities.deleteRecursive( file );
     }
   }
 }

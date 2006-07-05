@@ -60,7 +60,6 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -154,7 +153,7 @@ public class KalypsoObservationService implements IObservationService
 
     m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
+    m_tmpDir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
 
     try
@@ -359,7 +358,7 @@ public class KalypsoObservationService implements IObservationService
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
-      final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" );
+      final String tempFileName = org.kalypso.contribs.java.io.FileUtilities.validateName( "___" + obs.getName(), "-" );
 
       // create temp file
       final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );

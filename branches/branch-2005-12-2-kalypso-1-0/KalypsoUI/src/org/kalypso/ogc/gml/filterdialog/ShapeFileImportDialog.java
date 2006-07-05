@@ -60,7 +60,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -432,7 +431,7 @@ public class ShapeFileImportDialog extends Dialog
   public File getShapeBaseFile()
   {
     return new File( m_eclipseWorkspace.getLocation() + "/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.toString() ) );
+        + org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( m_relativeSourcePath.toString() ) );
   }
 
   public GM_Object getGeometry()

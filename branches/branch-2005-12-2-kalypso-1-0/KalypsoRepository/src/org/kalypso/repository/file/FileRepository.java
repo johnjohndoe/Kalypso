@@ -43,7 +43,7 @@ package org.kalypso.repository.file;
 import java.io.File;
 import java.io.FileFilter;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;

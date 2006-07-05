@@ -54,7 +54,6 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
@@ -230,7 +229,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       }
 
       // TODO: auch den catalog aus der schemaConf nehmen?
-      final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
+      final File cacheDir = new File( org.kalypso.contribs.java.io.FileUtilities.TMP_DIR, "schemaCache" );
       cacheDir.mkdir();
 
       GMLSchemaCatalog.init( catalog, cacheDir );

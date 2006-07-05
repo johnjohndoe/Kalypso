@@ -3,8 +3,8 @@ package org.kalypso.ogc.gml.convert.source;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;

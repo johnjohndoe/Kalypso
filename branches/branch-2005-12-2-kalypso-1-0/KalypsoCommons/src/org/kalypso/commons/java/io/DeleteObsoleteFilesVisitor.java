@@ -82,7 +82,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
 
     if( !compareFile.exists() )
     {
-      FileUtilities.deleteRecursive( file );
+      org.kalypso.contribs.java.io.FileUtilities.deleteRecursive( file );
       return false;
     }
 

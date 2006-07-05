@@ -16,7 +16,6 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -67,7 +66,7 @@ public class KalypsoMetaDocService implements IMetaDocService
     {
       // if not specified, we create a default temp-dir in the service temp dir
       // which is deleted once the jvm stops
-      m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
+      m_tmpDir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
       m_tmpDir.deleteOnExit();
     }
   }
@@ -139,7 +138,7 @@ public class KalypsoMetaDocService implements IMetaDocService
     {
       // fix: delete the whitespace from the preferredFilename
       final File docFile = File
-          .createTempFile( "document", StringUtils.deleteWhitespace( preferredFilename ), m_tmpDir );
+          .createTempFile( "document", org.kalypso.contribs.java.io.FileUtilities.validateName( preferredFilename, "_" ), m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       final Configuration mdConf;
