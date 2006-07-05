@@ -105,21 +105,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   static
   {
     String[] types = new String[]
-    {
-        TYPE_DATE,
-        TYPE_EVAPORATION,
-        TYPE_RAINFALL,
-        TYPE_RUNOFF,
-        TYPE_TEMPERATURE,
-        TYPE_VOLUME,
-        TYPE_WATERLEVEL,
-        TYPE_NORM,
-        TYPE_AREA,
-        TYPE_HOURS,
-        TYPE_NORMNULL,
-        TYPE_KC,
-        TYPE_WT,
-        TYPE_LAI };
+    { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC, TYPE_WT, TYPE_LAI };
     Arrays.sort( types );
     TYPES_ALL = types;
   }
@@ -135,7 +121,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_GKR = "Rechtswert";
 
   public final static String MD_GKH = "Hochwert";
-  
+
   public final static String MD_COORDSYS = "Koordinatensystem";
 
   public final static String MD_ALARM_1 = "Alarmstufe 1";

@@ -43,7 +43,9 @@ package org.kalypso.ogc.sensor.timeseries;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,6 +84,8 @@ public class TimeserieUtils
   private static HashMap m_formatMap = new HashMap();
 
   private static NumberFormat m_defaultFormat = null;
+
+  private static DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
 
   private TimeserieUtils()
   {
@@ -380,6 +384,16 @@ public class TimeserieUtils
     }
 
     return m_defaultFormat;
+  }
+
+  /**
+   * It is currently fix and is: "dd.MM.yy HH:mm"
+   * 
+   * @return the date format to use when displaying dates for observations/timeseries
+   */
+  public static DateFormat getDateFormat()
+  {
+    return DF;
   }
 
   public static Class getDataClass( final String type )

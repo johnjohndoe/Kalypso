@@ -1,8 +1,8 @@
-package org.kalypso.ogc.sensor.tableview.swing.actions;
+package org.kalypso.commons.java.swing.jtable;
 
 import java.awt.event.ActionEvent;
 
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import javax.swing.JTable;
 
 /**
  * SetAllAction
@@ -11,14 +11,14 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
  */
 public class SetTopAction extends AbstractObservationTableAction
 {
-  public SetTopAction( ObservationTable table )
+  public SetTopAction( JTable table )
   {
     super( table, "Werte oberhalb setzen", "Führt den selektierten Wert für alle vorhergehenden fort" );
   }
 
   public void internalActionPerformed( ActionEvent e )
   {
-    final ObservationTable table = getTable();
+    final JTable table = getTable();
     final int col = table.getSelectedColumn();
     final int row = table.getSelectedRow();
     final Object value = table.getValueAt( row, col );

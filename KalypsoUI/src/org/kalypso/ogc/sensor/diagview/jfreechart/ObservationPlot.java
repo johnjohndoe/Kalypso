@@ -60,6 +60,7 @@ import javax.swing.ImageIcon;
 
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.IntervalMarker;
@@ -184,6 +185,18 @@ public class ObservationPlot extends XYPlot
     {
       vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[]
       { diagAxis.toFullString() } );
+
+      if( vAxis instanceof NumberAxis )
+      {
+        NumberAxis na = (NumberAxis)vAxis;
+        na.setAutoRangeMinimumSize( 1 );
+      }
+
+      if( vAxis instanceof DateAxis )
+      {
+        DateAxis da = (DateAxis)vAxis;
+        da.setDateFormatOverride( TimeserieUtils.getDateFormat() );
+      }
     }
     catch( final FactoryException e )
     {
@@ -260,12 +273,12 @@ public class ObservationPlot extends XYPlot
     final int count = getDatasetCount();
     if( count == 0 )
       return 0;
-    
+
     for( int i = 0; i < count; i++ )
       if( getDataset( i ) == null )
         return i;
-      
-      return count;
+
+    return count;
   }
 
   /**
@@ -357,9 +370,16 @@ public class ObservationPlot extends XYPlot
 
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
       setRenderer( pos, renderer );
-      
+
       mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
       mapDatasetToRangeAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( yDiagAxis ) ) ).intValue() );
+    }
+
+    // UGLY TRICK: if it's a rainfall axis, set the range of the diagram axis to [0 - 1]
+    if( yAxis.getType().equals( TimeserieConstants.TYPE_RAINFALL ) )
+    {
+      final ValueAxis nAxis = (ValueAxis)m_diag2chartAxis.get( yDiagAxis );
+      nAxis.setAutoRangeMinimumSize( 1 );
     }
 
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
