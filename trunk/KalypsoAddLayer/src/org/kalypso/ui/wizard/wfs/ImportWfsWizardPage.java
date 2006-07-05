@@ -828,9 +828,16 @@ public class ImportWfsWizardPage extends WizardPage
 
   void updateButtons( )
   {
-
-    m_addFilterButton.setEnabled( ((IStructuredSelection) m_listRightSide.getSelection()).size() == 1 );
-    m_removeLayer.setEnabled( ((IStructuredSelection) m_listRightSide.getSelection()).size() > 0 );
+    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final Object firstElement = selection.getFirstElement();
+    IFeatureType selectedFT = null;
+    if( firstElement instanceof IWFSLayer )
+    {
+      final IWFSLayer wfsLayer = (IWFSLayer) firstElement;
+      selectedFT = wfsLayer.getFeatureType();
+    }
+    m_addFilterButton.setEnabled( (selection).size() == 1 && selectedFT != null );
+    m_removeLayer.setEnabled( (selection).size() > 0 );
     m_addLayer.setEnabled( ((IStructuredSelection) m_listLeftSide.getSelection()).size() > 0 );
     revalidatePage();
   }
