@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
@@ -73,11 +73,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author huebsch
- * 
  * here are moethodes used for preparing the kollau modell
+ * 
+ * @author huebsch
  */
-
 public class UpdateModellKollau
 {
   private final URL m_modellURL;
@@ -95,9 +94,7 @@ public class UpdateModellKollau
   public static void main( String[] args )
   {
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogNA() } );
+    { new DeegreeUrlCatalog(), new UrlCatalogNA() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
     try
     {
@@ -121,7 +118,6 @@ public class UpdateModellKollau
   public UpdateModellKollau() throws Exception
   {
     m_modellURL = getClass().getResource( "resources/modell.gml" );
-
   }
 
   public void updateIt() throws Exception
@@ -153,18 +149,15 @@ public class UpdateModellKollau
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
-
     for( int i = 0; i < features.length; i++ )
     {
-      final Feature feature = features[i];
-
+      //final Feature feature = features[i];
     }
   }
 
   //  int asciiID = Integer.parseInt( (String)idProp.getValue() );
   private static void updateNiederschlagZR( Feature[] features ) throws Exception
   {
-
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
@@ -288,7 +281,7 @@ public class UpdateModellKollau
           System.out.println( "copyvalue is null: id=" + id );
         FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
         destFeature.setProperty( fProp );
-        Object GEOMProperty = destFeature.getProperty("Ort");
+        Object GEOMProperty = destFeature.getProperty( "Ort" );
         if( GEOMProperty instanceof GM_Surface )
         {
 
@@ -305,7 +298,6 @@ public class UpdateModellKollau
 
   private static void updateGebNiederschlagZR( Feature[] features ) throws Exception
   {
-
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
@@ -325,7 +317,6 @@ public class UpdateModellKollau
 
   private static void updateLZNiederschlagZR( Feature[] features ) throws Exception
   {
-
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
@@ -371,5 +362,4 @@ public class UpdateModellKollau
   {
     fe.setProperty( FeatureFactory.createFeatureProperty( propName, tsLink ) );
   }
-
 }

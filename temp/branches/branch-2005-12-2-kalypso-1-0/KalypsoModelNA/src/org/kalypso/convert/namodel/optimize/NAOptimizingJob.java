@@ -61,7 +61,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -80,7 +80,6 @@ import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.PegelType;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;

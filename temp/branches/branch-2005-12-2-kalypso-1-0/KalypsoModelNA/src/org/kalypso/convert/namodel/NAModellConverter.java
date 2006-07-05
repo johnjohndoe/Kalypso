@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
