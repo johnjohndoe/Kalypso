@@ -48,7 +48,6 @@ import junit.framework.TestCase;
 
 import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.diff.DiffUtils;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.util.logging.ILogger;
@@ -95,7 +94,7 @@ public class SpreeCalcJobTest extends TestCase
 
   public void testCalcJob() throws Exception
   {
-    final File tmpDir = FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
+    final File tmpDir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
 
     final File schemaCatalogDir = new File( tmpDir, "schemaCache" );
     schemaCatalogDir.mkdir();
@@ -124,7 +123,7 @@ public class SpreeCalcJobTest extends TestCase
     job.run( jobTmpDir, inputProvider, resultEater, monitor );
 
     compareResults( resultEater );
-    FileUtilities.deleteRecursive( tmpDir );
+    org.kalypso.contribs.java.io.FileUtilities.deleteRecursive( tmpDir );
   }
 
   private void compareResults( final SimpleCalcResultEater resultEater ) throws Exception

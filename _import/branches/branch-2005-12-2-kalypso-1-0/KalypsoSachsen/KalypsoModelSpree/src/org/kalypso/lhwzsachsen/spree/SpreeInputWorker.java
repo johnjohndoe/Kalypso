@@ -125,8 +125,8 @@ public class SpreeInputWorker
           final TimeseriesLinkType tsLink = (TimeseriesLinkType)f.getProperty( "Wasserstand_vorhersage" );
           final String tsHref = tsLink.getHref();
 
-          final String path = FileUtilities.nameWithoutExtension( tsHref );
-          final String name = FileUtilities.nameFromPath( path );
+          final String path = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( tsHref );
+          final String name = org.kalypso.contribs.java.io.FileUtilities.nameFromPath( path );
           tsmap.setAccuracy( name, (Double)property );
         }
 

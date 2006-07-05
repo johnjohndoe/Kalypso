@@ -46,6 +46,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.contribs.java.io.FileUtilities;
 
 /**
  * Utilities for temp files stored within work directories of plugins
@@ -75,11 +76,10 @@ public class TempFileUtilities
     if( !dir.exists() )
       dir.mkdir();
 
-    // TODO as org.kalypso.commons.java.io.FileUtilities.validateName() should be moved to JavaApiContribs and could be
-    // used here
-    final String cleanPrefix = prefix.replaceAll( "[\\\\/:\\*\\?\"<>|]", "_" );
+    final String cleanPrefix = FileUtilities.validateName( prefix, "_" );
+    final String cleanSuffix = FileUtilities.validateName( suffix, "_" );
 
-    final File file = File.createTempFile( cleanPrefix, suffix, dir );
+    final File file = File.createTempFile( cleanPrefix, cleanSuffix, dir );
     return file;
   }
 

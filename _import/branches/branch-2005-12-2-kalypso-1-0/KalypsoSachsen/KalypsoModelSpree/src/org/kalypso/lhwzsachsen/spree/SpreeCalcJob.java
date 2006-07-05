@@ -727,7 +727,7 @@ public class SpreeCalcJob implements ICalcJob
     final double endOffest = accuracy
         * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
 
-    final String baseName = FileUtilities.nameWithoutExtension( outFile.getName() );
+    final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
     TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "-",
         TimeserieConstants.TYPE_WATERLEVEL, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
