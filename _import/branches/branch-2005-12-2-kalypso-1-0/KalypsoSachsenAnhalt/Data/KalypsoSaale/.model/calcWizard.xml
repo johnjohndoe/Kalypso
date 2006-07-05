@@ -868,12 +868,12 @@
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_50.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="hideCalcButton" value="true"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
@@ -896,6 +896,7 @@
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_55.gmt"/>
