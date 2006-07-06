@@ -116,13 +116,6 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
   /** default background color for the date renderer when not displaying forecast */
   private static final Color BG_COLOR = new Color( 222, 222, 222 );
 
-  /**
-   * if the amount of columns is equal or bigger than this threshold, then the autoResizeMode property is set to
-   * AUTO_RESIZE_OFF
-   * <p>
-   * if value is < 0 then function is not used
-   */
-  //private int m_thresholdColumnsAutoResizeModeOff = -1;
   public ObservationTable( final TableView template )
   {
     this( template, false, true );
@@ -192,28 +185,6 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
   }
-
-  //  /**
-  //   * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
-  //   */
-  //  public void columnAdded( TableColumnModelEvent e )
-  //  {
-  //    super.columnAdded( e );
-  //
-  //    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() >= m_thresholdColumnsAutoResizeModeOff )
-  //      setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-  //  }
-
-  //  /**
-  //   * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
-  //   */
-  //  public void columnRemoved( TableColumnModelEvent e )
-  //  {
-  //    super.columnRemoved( e );
-  //
-  //    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() < m_thresholdColumnsAutoResizeModeOff )
-  //      setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
-  //  }
 
   public void dispose()
   {
@@ -402,11 +373,6 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
   {
     return m_currentScenarioName;
   }
-
-  //  public void setThresholdColumnsAutoResizeModeOff( final int thresholdColumnsAutoResizeModeOff )
-  //  {
-  //    m_thresholdColumnsAutoResizeModeOff = thresholdColumnsAutoResizeModeOff;
-  //  }
 
   public void setAlphaSortActivated( final boolean bAlphaSort )
   {

@@ -64,6 +64,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -303,7 +304,7 @@ public class DiagViewUtils
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, new Double( 0.8 ) );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils.getTopMargin( axisType ) );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
