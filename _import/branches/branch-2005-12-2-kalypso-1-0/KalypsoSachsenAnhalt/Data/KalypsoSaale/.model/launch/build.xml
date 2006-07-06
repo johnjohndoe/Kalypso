@@ -201,7 +201,7 @@
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/.WISKI_Konfig/wiskiexport_prognose_W.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false" ignoreIllegalFeaturePath="true"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/.WISKI_Konfig/wiskiexport_prognose_Q.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/.WISKI_Konfig/wiskiexport_prognose_Q.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false" ignoreIllegalFeaturePath="true"/>
     </target>
 
 	<!-- ================================= 
