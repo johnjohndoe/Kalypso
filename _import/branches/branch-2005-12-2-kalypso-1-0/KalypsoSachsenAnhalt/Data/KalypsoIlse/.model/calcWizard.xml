@@ -29,7 +29,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
@@ -61,7 +60,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Wasserstand / Abfluss (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände  - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -92,7 +90,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose Ilse" imageLocation="icons/calcwizard/kalypso32.gif">

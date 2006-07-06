@@ -29,7 +29,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
@@ -61,7 +60,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -93,7 +91,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -124,7 +121,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -157,7 +153,6 @@
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
@@ -195,7 +190,6 @@
 		 
         Tabelle 
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 -->
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
@@ -229,7 +223,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -261,7 +254,6 @@
 		<!--
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose oh. Speicher"/>
@@ -301,7 +293,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und ggf. auch Prognose (wird f. BAT3 benötigt)) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -328,7 +319,6 @@
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 3  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
