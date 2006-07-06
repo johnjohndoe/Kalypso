@@ -1,4 +1,4 @@
-#Tue Apr 04 12:04:38 CEST 2006
+#Fri Jun 30 10:35:32 CEST 2006
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -58,6 +58,7 @@ encoding//.prognose/MD-Vorhersage-2005-10-20_09h03/Zeitreihen/Gebietsniederschla
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
+encoding//.prognose/Vorhersage-2006-06-30_08h34/.calculation=UTF-8
 encoding//.prognose/MD-test-Vorhersage-2005-10-20_10h54/.calculation=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPREY.zml=UTF-8
@@ -220,8 +221,8 @@ encoding//.prognose/Vorhersage-2005-06-03_11h17/Zeitreihen/Pegel/Messung/B\u00FC
 encoding//..BCE_intern/interne_Tests/interner_Test_20060330a/Zeitreihen/Gebietsniederschlag/Ilsenburg.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
