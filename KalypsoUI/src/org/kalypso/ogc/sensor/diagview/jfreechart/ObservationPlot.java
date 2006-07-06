@@ -177,7 +177,8 @@ public class ObservationPlot extends XYPlot
   /**
    * Adds a diagram axis and configures it for the use in this plot.
    * 
-   * @param axis can be null, if present it is used to define a best suited formater for the chart axis
+   * @param axis
+   *          can be null, if present it is used to define a best suited formater for the chart axis
    */
   private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
@@ -190,18 +191,20 @@ public class ObservationPlot extends XYPlot
 
       if( vAxis instanceof NumberAxis )
       {
-        NumberAxis na = (NumberAxis)vAxis;
-        
+        final NumberAxis na = (NumberAxis)vAxis;
+
         if( axis != null )
-        {
           na.setNumberFormatOverride( TimeserieUtils.getNumberFormatFor( axis.getType() ) );
-          
-          final Double topMargin = TimeserieUtils.getTopMargin( axis.getType() );
-          if( topMargin != null )
-            na.setUpperMargin( topMargin.doubleValue() );
-        }
-        
+
         na.setAutoRangeMinimumSize( 1 );
+
+        // HACK: damit immer zu mindest [0,1] als range gesetzt wird
+        if( na instanceof NumberAxis2 )
+        {
+          final NumberAxis2 na2 = (NumberAxis2)na;
+          na2.setMin( new Double( 0 ) );
+          na2.setMax( new Double( 1 ) );
+        }
       }
 
       if( vAxis instanceof DateAxis )
