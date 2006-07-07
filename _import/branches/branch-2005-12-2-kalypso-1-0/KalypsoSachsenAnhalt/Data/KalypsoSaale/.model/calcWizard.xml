@@ -3270,6 +3270,7 @@
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="26"/>
+		<arg name="visibleExportPrognose" value="false"/> 
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Talsperren.gmt"/>
