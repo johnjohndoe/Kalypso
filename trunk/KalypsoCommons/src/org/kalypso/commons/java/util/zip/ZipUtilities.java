@@ -48,6 +48,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -55,6 +56,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.tools.zip.ZipFile;
 import org.kalypso.commons.java.io.FileUtilities;
 
 /**
@@ -65,6 +67,89 @@ public class ZipUtilities
   private ZipUtilities( )
   {
     // wird nicht instantiiert
+  }
+
+  /**
+   * Unzips a stream into a directory using the apache zip classes.
+   * 
+   * @param zipStream
+   *          Is closed after this operation.
+   */
+  public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
+  {
+    final File file = File.createTempFile( "unzipTmpFile", ".zip" );
+    file.deleteOnExit();
+
+    OutputStream os = null;
+    try
+    {
+      os = new BufferedOutputStream( new FileOutputStream( file ) );
+      IOUtils.copy( zipStream, os );
+      os.close();
+
+      unzipApache( file, targetDir, overwriteExisting, encoding );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zipStream );
+      IOUtils.closeQuietly( os );
+
+      file.delete();
+    }
+
+  }
+
+  /** Unzips a zip archive into a directory using the apache zip classes. */
+  public static void unzipApache( final File zip, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
+  {
+    ZipFile file = null;
+    try
+    {
+      file = new ZipFile( zip, encoding );
+
+      final Enumeration entries = file.getEntries();
+      while( entries.hasMoreElements() )
+      {
+        final org.apache.tools.zip.ZipEntry entry = (org.apache.tools.zip.ZipEntry) entries.nextElement();
+        if( entry == null )
+          break;
+
+        final File newfile = new File( targetDir, entry.getName() );
+        if( entry.isDirectory() )
+          newfile.mkdirs();
+        else
+        {
+          if( !newfile.getParentFile().exists() )
+            newfile.getParentFile().mkdirs();
+
+          OutputStream os = null;
+          InputStream zis = null;
+          try
+          {
+            if( !overwriteExisting && newfile.exists() )
+              os = new NullOutputStream();
+            else
+              os = new BufferedOutputStream( new FileOutputStream( newfile ) );
+
+            zis = file.getInputStream( entry );
+            IOUtils.copy( zis, os );
+          }
+          finally
+          {
+            IOUtils.closeQuietly( os );
+            IOUtils.closeQuietly( zis );
+          }
+        }
+      }
+
+      file.close();
+    }
+    finally
+    {
+      if( file != null )
+        file.close();
+    }
+
   }
 
   public static void unzip( final File zip, final File targetdir ) throws ZipException, IOException
