@@ -515,6 +515,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       System.out.print( key + "=" + value + "&" );
     }
     System.out.println();
+    // TODO: the WMSFeatureInfoRequest does not support Base URLs with query part. Fix this.
     final WMSFeatureInfoRequest getFeatureInfoRequest = WMSProtocolFactory.createGetFeatureInfoRequest( id, parameterMap );
     final OGCWebServiceClient client = new OGCWebServiceClient()
     {
