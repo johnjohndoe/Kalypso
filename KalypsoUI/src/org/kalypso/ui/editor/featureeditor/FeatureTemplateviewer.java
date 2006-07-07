@@ -133,7 +133,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final int m_marginHeight;
 
-  private boolean m_disposed=false;
+  private boolean m_disposed = false;
 
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight,
       final int marginWidth )
@@ -163,7 +163,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    */
   public void dispose()
   {
-    m_disposed=true;
+    m_disposed = true;
     setWorkspace( null );
 
     m_featureComposite.dispose();
@@ -216,7 +216,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         href = props.getProperty( "href", null );
         linktype = props.getProperty( "linktype", "gml" );
       }
-      
+
       // only load, if href non null; in this case, the feature must be set via setFeature()
       if( href != null )
       {
@@ -250,14 +250,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     if( m_panel == null || m_panel.isDisposed() )
       return;
-    
+
     m_panel.getDisplay().asyncExec( new Runnable()
-        {
-          public void run()
-          {
-            updateControls();
-          }
-        } );
+    {
+      public void run()
+      {
+        updateControls();
+      }
+    } );
   }
 
   /**
@@ -431,5 +431,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public boolean isDisposed()
   {
     return m_disposed;
+  }
+
+  /**
+   * @return true, if this template own an data object. This is the case, if in
+   *         {@link #loadInput(Reader, URL, IProgressMonitor, Properties)}the properties parameter has an entry 'href'.
+   *         This Option was needed to fix the annoying bug concerning display of FeatureView in Sachsen/Sachsen-Anhalt
+   *         Wizards.
+   */
+  public boolean hasAdditionalDataObject()
+  {
+    return m_key != null;
   }
 }
