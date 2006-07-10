@@ -309,7 +309,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IKalypsoFeatureTheme theme = m_layerTable.getTheme();
-    if( theme == null )
+    if( theme == null || theme.getFeatureType() == null )
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();

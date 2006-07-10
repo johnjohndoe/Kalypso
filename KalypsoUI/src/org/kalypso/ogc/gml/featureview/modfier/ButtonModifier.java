@@ -223,4 +223,12 @@ public class ButtonModifier implements IFeatureModifier
   {
     return newData.equals( oldData );
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return true;
+  }
 }

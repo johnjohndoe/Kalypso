@@ -122,7 +122,8 @@ public class BooleanModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    return "";
+    final Boolean b = (Boolean)getValue( f );
+    return String.valueOf( b );
   }
 
   /**
@@ -166,5 +167,15 @@ public class BooleanModifier implements IFeatureModifier
   public boolean equals( final Object newData, final Object oldData )
   {
     return newData.equals( oldData );
+  }
+
+  /**
+   * For boolean properties there's no need to display the label since the image is enough
+   * 
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return false;
   }
 }

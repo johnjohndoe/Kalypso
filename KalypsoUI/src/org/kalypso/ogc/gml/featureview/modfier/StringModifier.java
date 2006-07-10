@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -262,5 +261,13 @@ public class StringModifier implements IFeatureModifier
   public boolean equals( final Object newData, final Object oldData )
   {
     return toText( newData ).equals( toText( oldData ) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return true;
   }
 }
