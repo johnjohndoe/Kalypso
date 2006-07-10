@@ -5,7 +5,8 @@
 
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="V" datatype="double" label="Volumen" unit="hm³" direction="vertical" position="left" />
-   	<axis id="Q" datatype="double" label="Abfluss" unit="m³/s" direction="vertical" position="left" />
+   	<axis id="Q" datatype="double" label="Abfluss" unit="m³/s" direction="vertical" position="right" />
+   	<axis id="W" datatype="double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
    	
    	<!-- Kodierung color:
    	red;green;blue[;alpha]
