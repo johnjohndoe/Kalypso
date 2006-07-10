@@ -59,6 +59,11 @@ public interface IFeatureModifier extends ICellEditorValidator
   public Image getImage( final Feature f );
 
   /**
+   * @return true if the label should be displayed in the gui
+   */
+  public boolean isLabelShown();
+  
+  /**
    * macht aus dem Feature ein (anzeigbares) Objekt
    * 
    * @param f

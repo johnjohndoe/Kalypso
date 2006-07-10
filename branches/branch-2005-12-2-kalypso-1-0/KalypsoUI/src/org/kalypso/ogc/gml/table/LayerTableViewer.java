@@ -58,7 +58,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -859,7 +858,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     final Collection lines = new ArrayList();
 
-    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
+    final LayerTableLabelProvider labelProvider = (LayerTableLabelProvider)getLabelProvider();
 
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
@@ -874,7 +873,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final String[] line = new String[columns.length];
 
       for( int j = 0; j < columns.length; j++ )
-        line[j] = labelProvider.getColumnText( features[i], j );
+        line[j] = labelProvider.getColumnTextForExport( features[i], j );
 
       lines.add( line );
     }

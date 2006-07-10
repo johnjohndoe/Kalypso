@@ -99,6 +99,27 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
     final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
+    if( modifier == null || !modifier.isLabelShown() )
+      return "";
+
+    final String label = modifier.getLabel( feature );
+    return label == null ? "" : label;
+  }
+
+  /**
+   * Same as getColumnText(Object,int) but does not take care of the visibility of the labe, it is always returned
+   * 
+   * @see #getColumnText(Object, int)
+   */
+  String getColumnTextForExport( final Object element, final int columnIndex )
+  {
+    // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
+    if( m_viewer.getColumnCount() == 0 )
+      return "";
+
+    final Feature feature = (Feature)element;
+
+    final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
       return "";
 
@@ -145,20 +166,20 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public Color getBackground( Object element )
   {
-//    if( element instanceof Feature )
-//    {
-//      final ISelection selection = m_viewer.getSelection();
-//      if( selection instanceof IStructuredSelection )
-//      {
-//        final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
-//        while( iterator.hasNext() )
-//        {
-//          final Object object = iterator.next();
-//          if( element == object )
-//            return m_selectionColor;
-//        }
-//      }
-//    }
+    //    if( element instanceof Feature )
+    //    {
+    //      final ISelection selection = m_viewer.getSelection();
+    //      if( selection instanceof IStructuredSelection )
+    //      {
+    //        final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
+    //        while( iterator.hasNext() )
+    //        {
+    //          final Object object = iterator.next();
+    //          if( element == object )
+    //            return m_selectionColor;
+    //        }
+    //      }
+    //    }
     return m_noSelectionColor;
   }
 }

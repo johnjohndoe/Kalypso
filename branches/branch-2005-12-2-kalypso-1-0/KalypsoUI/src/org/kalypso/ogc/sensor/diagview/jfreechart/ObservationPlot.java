@@ -182,6 +182,9 @@ public class ObservationPlot extends XYPlot
    */
   private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
+    if( diagAxis == null )
+      throw new IllegalArgumentException( "DiagramAxis is null" );
+    
     final ValueAxis vAxis;
 
     try
@@ -192,9 +195,6 @@ public class ObservationPlot extends XYPlot
       if( vAxis instanceof NumberAxis )
       {
         final NumberAxis na = (NumberAxis)vAxis;
-
-        if( axis != null )
-          na.setNumberFormatOverride( TimeserieUtils.getNumberFormatFor( axis.getType() ) );
 
         na.setAutoRangeMinimumSize( 1 );
 
@@ -345,6 +345,9 @@ public class ObservationPlot extends XYPlot
       {
         final DiagramAxis diagAxis = mings[i].getDiagramAxis();
 
+        if( diagAxis == null )
+          continue;
+        
         // check if this axis is already present in this plot
         if( !m_diag2chartAxis.containsKey( diagAxis ) )
           addDiagramAxis( diagAxis, mings[i].getObservationAxis() );
@@ -363,7 +366,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( "Kann Kurve " + curve
+      throw new SensorException( "Kann Kurve " + curve
           + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." );
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );

@@ -148,7 +148,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     if( key == null || key.equals( FileExportTarget.CONF_FILEEXPORT_EXTENSION ) )
     {
       String filename = m_destinationNameField.getText();
-      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION );
+      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION, "" );
       
       m_destinationNameField.setText( filename );
     }
