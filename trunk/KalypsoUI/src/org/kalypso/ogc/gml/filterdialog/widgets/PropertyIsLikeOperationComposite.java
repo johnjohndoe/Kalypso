@@ -126,8 +126,8 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     }
     m_firstRowLabel = new Label( this, SWT.FILL );
     m_firstRowLabel.setText( firstExpression.getExpressionName().trim() );
-    Combo firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY | SWT.DROP_DOWN );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final Combo firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY | SWT.DROP_DOWN );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
     firstRowCombo.setLayoutData( data );
     m_propViewer = new ComboViewer( firstRowCombo );
@@ -140,15 +140,15 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
 
       public void selectionChanged( SelectionChangedEvent event )
       {
-        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final QName item = ((IValuePropertyType) firstElement).getQName();
+          final QName qnamePt = ((IValuePropertyType) firstElement).getQName();
           PropertyName propertyName = m_operation.getPropertyName();
           if( propertyName == null )
-            propertyName = new PropertyName( item );
+            propertyName = new PropertyName( qnamePt );
           else
-            propertyName.setValue( item );
+            propertyName.setValue( qnamePt );
           m_operation.setPropertyName( propertyName );
         }
 
@@ -171,14 +171,14 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
 
       public void focusLost( FocusEvent e )
       {
-        IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
         if( !selection.isEmpty() )
         {
           Object firstElement = selection.getFirstElement();
           if( firstElement instanceof IValuePropertyType )
           {
-            IValuePropertyType vpt = (IValuePropertyType) firstElement;
-            String str = m_secondRowText.getText().trim();
+            final IValuePropertyType vpt = (IValuePropertyType) firstElement;
+            final  String str = m_secondRowText.getText().trim();
             validate( vpt, str );
             Literal literal = m_operation.getLiteral();
             if( literal == null )
@@ -189,27 +189,10 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
             // fireModellEvent( new ModellEvent( PropertyIsLikeOperationComposite.this, ModellEvent.WIDGET_CHANGE ) );
           }
         }
-        // String item = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
-        // IPropertyType ftp = m_ft.getProperty( item );
-        // if( item != null && ftp != null )
-        // {
-        // TextFieldToPropertyTypeValidator validator = new TextFieldToPropertyTypeValidator( (IValuePropertyType) ftp
-        // );
-        // String test = validator.isValid( m_secondRowText.getText() );
-        // m_errorMessageReciever.setErrorMessage( test );
-        // String str = m_secondRowText.getText().trim();
-        // Literal literal = m_operation.getLiteral();
-        // if( literal == null )
-        // literal = new Literal( str );
-        // else
-        // literal.setValue( str );
-        // m_operation.setLiteral( literal );
-        // fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
-        // }
       }
     } );
-    Group parameterGroup = new Group( this, SWT.LEFT );
-    GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
+    final Group parameterGroup = new Group( this, SWT.LEFT );
+    final GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
     data3.horizontalSpan = 2;
     parameterGroup.setLayoutData( data3 );
     parameterGroup.setLayout( new GridLayout( 2, true ) );

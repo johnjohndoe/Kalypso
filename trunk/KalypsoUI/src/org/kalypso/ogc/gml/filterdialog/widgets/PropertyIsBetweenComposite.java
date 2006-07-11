@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -74,7 +76,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
 
   Label m_propertyComboLabel;
 
-  Combo m_propertyCombo;
+  // Combo propertyCombo;
 
   Label m_upperBComboLabel;
 
@@ -89,6 +91,8 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
   protected boolean m_upperBtextModified;
 
   protected boolean m_lowerBTextModified;
+
+  private ComboViewer propViewer;
 
   public PropertyIsBetweenComposite( final Composite parent, final int style, final PropertyIsBetweenOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
@@ -120,11 +124,11 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     }
     m_propertyComboLabel = new Label( this, SWT.NULL );
     m_propertyComboLabel.setText( "Property Name:" );
-    m_propertyCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
+    Combo propertyCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
-    m_propertyCombo.setLayoutData( data );
-    ComboViewer propViewer = new ComboViewer( m_propertyCombo );
+    propertyCombo.setLayoutData( data );
+    propViewer = new ComboViewer( propertyCombo );
     propViewer.setContentProvider( new FeatureTypeContentProvider() );
     propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
     propViewer.addFilter( new NonGeometryPropertyFilter() );
@@ -134,10 +138,10 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
 
       public void selectionChanged( SelectionChangedEvent event )
       {
-        Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          String propName = ((IValuePropertyType) firstElement).getQName().getLocalPart();
+          final QName propName = ((IValuePropertyType) firstElement).getQName();
           m_operation.setPropertyName( new PropertyName( propName ) );
         }
       }
@@ -149,10 +153,10 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_lowerBComboLabel = new Label( this, SWT.NULL );
     m_lowerBComboLabel.setText( "Untere Grenze:" );
     m_lowerBText = new Text( this, SWT.FILL );
-    GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
     m_lowerBText.setLayoutData( data3 );
-    Expression lB = m_operation.getLowerBoundary();
+    final Expression lB = m_operation.getLowerBoundary();
     if( lB instanceof BoundaryExpression )
       m_lowerBText.setText( ((BoundaryExpression) lB).getValue() );
     else if( lB instanceof Literal )
@@ -195,10 +199,10 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_upperBComboLabel = new Label( this, SWT.NULL );
     m_upperBComboLabel.setText( "Obere Grenze:" );
     m_upperBText = new Text( this, SWT.FILL );
-    GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
     m_upperBText.setLayoutData( data2 );
-    Expression uB = m_operation.getUpperBoundary();
+    final Expression uB = m_operation.getUpperBoundary();
     if( uB instanceof BoundaryExpression )
       m_upperBText.setText( ((BoundaryExpression) uB).getValue() );
     else if( uB instanceof Literal )
@@ -234,7 +238,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       @Override
       public void focusLost( FocusEvent e )
       {
-        String uBText = m_upperBText.getText();
+        final String uBText = m_upperBText.getText();
         updateUpperBoundaryValue( uBText );
       }
     } );
@@ -246,7 +250,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     try
     {
       value = Double.parseDouble( lBText );
-      Expression lb = m_operation.getLowerBoundary();
+      final Expression lb = m_operation.getLowerBoundary();
       if( lb instanceof BoundaryExpression )
       {
         ((BoundaryExpression) lb).setValue( String.valueOf( value ) );
@@ -256,7 +260,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     }
     catch( NumberFormatException ne )
     {
-      String exType = ne.getClass().getName().replaceAll( ".+\\.", "" );
+      final String exType = ne.getClass().getName().replaceAll( ".+\\.", "" );
       setErrorMessage( exType + "\t" + ne.getMessage() );
     }
   }
@@ -267,7 +271,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     try
     {
       value = Double.parseDouble( lBText );
-      Expression ub = m_operation.getUpperBoundary();
+      final Expression ub = m_operation.getUpperBoundary();
       if( ub instanceof BoundaryExpression )
       {
         ((BoundaryExpression) ub).setValue( String.valueOf( value ) );
@@ -277,7 +281,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     }
     catch( NumberFormatException ne )
     {
-      String exType = ne.getClass().getName().replaceAll( ".+\\.", "" );
+      final String exType = ne.getClass().getName().replaceAll( ".+\\.", "" );
       setErrorMessage( exType + "\t" + ne.getMessage() );
     }
   }

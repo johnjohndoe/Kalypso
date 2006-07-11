@@ -36,13 +36,12 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
 
   IStructuredSelection m_ftSelection = null;
 
-  @SuppressWarnings("unchecked")
   public void run( IAction action )
   {
     Object sGeomOp = null;
     if( m_spatialOpSelection != null )
       sGeomOp = m_spatialOpSelection.getFirstElement();
-    Object sFtOutline = m_ftSelection.getFirstElement();
+    final Object sFtOutline = m_ftSelection.getFirstElement();
     Feature fGeom = null;
     if( sGeomOp instanceof Feature )
     {
@@ -57,8 +56,8 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getBoundingBox() );
       ft = selectedTheme.getFeatureType();
     }
-    Shell shell = getEditor().getSite().getShell();
-    FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, true );
+    final Shell shell = getEditor().getSite().getShell();
+    final FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, true );
     int open = -1;
     if( ft != null )
       open = dialog.open();
@@ -68,18 +67,16 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     {
 
       MultiStatus multiStatus = null;
-      Filter filter = dialog.getFilter();
+      final Filter filter = dialog.getFilter();
       final Feature[] features = (Feature[]) visableFeatures.toArray( new Feature[visableFeatures.size()] );
       final ArrayList<Feature> newSelectedFeatures = new ArrayList<Feature>();
       for( int i = 0; i < features.length; i++ )
       {
-        Feature f = features[i];
+        final Feature f = features[i];
         try
         {
           if( filter.evaluate( f ) )
-          {
             newSelectedFeatures.add( f );
-          }
         }
         catch( FilterEvaluationException e )
         {
@@ -95,10 +92,12 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
         MessageDialog.openWarning( shell, "Filter-Dialog-Fehler: sevirity code = " + multiStatus.getSeverity(), multiStatus.getException().getMessage() );
         return;
       }
+      // handle the new selection
       final IFeatureSelectionManager selectionManager = selectedTheme.getSelectionManager();
       final EasyFeatureWrapper[] featureWrappers = FeatureSelectionHelper.createEasyWrappers( new KalypsoFeatureThemeSelection( newSelectedFeatures, selectedTheme, selectionManager, null, null ) );
       selectionManager.changeSelection( features, featureWrappers );
     }
+
   }
 
   @Override
@@ -125,8 +124,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       {
         if( selection instanceof IFeatureSelection )
         {
-          IFeatureSelection fSelection = (IFeatureSelection) selection;
-          m_spatialOpSelection = fSelection;
+          m_spatialOpSelection = (IFeatureSelection) selection;
         }
         action.setEnabled( true );
       }

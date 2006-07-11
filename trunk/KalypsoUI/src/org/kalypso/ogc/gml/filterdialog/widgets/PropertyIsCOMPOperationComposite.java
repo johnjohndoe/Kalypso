@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -143,11 +144,11 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     }// is the case when an new (empty) filter operation is to be displayed
     else if( m_operation == null )
     {
-      PropertyName propertyName = new PropertyName( EMPTY_VALUE );
-      Literal literal = new Literal( EMPTY_VALUE );
+      final PropertyName propertyName = new PropertyName( EMPTY_VALUE );
+      final Literal literal = new Literal( EMPTY_VALUE );
       m_operation = new PropertyIsCOMPOperation( m_operation.getOperatorId(), propertyName, literal );
     }
-    GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
     data1.widthHint = STANDARD_WIDTH_FIELD;
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
@@ -169,9 +170,9 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
+        final String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
         int newOperationId = OperationDefines.getIdByName( item );
-        PropertyIsCOMPOperation comparisonOperation = m_operation;
+        final PropertyIsCOMPOperation comparisonOperation = m_operation;
         comparisonOperation.setOperatorId( newOperationId );
         fireModellEvent( new ModellEvent( PropertyIsCOMPOperationComposite.this, ModellEvent.WIDGET_CHANGE ) );
       }
@@ -179,14 +180,15 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     } );
     m_firstRowLabel = new Label( this, SWT.FILL );
     m_firstRowLabel.setText( "Feld:" );
-    Combo m_firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final Combo firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
-    m_firstRowCombo.setLayoutData( data );
-    m_propViewer = new ComboViewer( m_firstRowCombo );
+    firstRowCombo.setLayoutData( data );
+    m_propViewer = new ComboViewer( firstRowCombo );
     m_propViewer.setContentProvider( new FeatureTypeContentProvider() );
     m_propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
     m_propViewer.addFilter( new NonGeometryPropertyFilter() );
+    m_propViewer.add( m_ft.getProperties() );
     m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
@@ -195,15 +197,13 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
         Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          IValuePropertyType vtp = ((IValuePropertyType) firstElement);
-          String content = m_secondRowText.getText();
+          final IValuePropertyType vtp = ((IValuePropertyType) firstElement);
+          final String content = m_secondRowText.getText();
           validate( vtp, content );
           updateOperation();
         }
       }
     } );
-    m_propViewer.add( m_ft.getProperties() );
-
     m_secondRowLabel = new Label( this, SWT.FILL );
     m_secondRowLabel.setText( "Wert" );
     m_secondRowText = new Text( this, SWT.FILL | SWT.BORDER );
@@ -252,17 +252,10 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     {
       if( firstExpression != null && secondExpression != null )
       {
-        String[] items = m_firstRowCombo.getItems();
-        int index = ArrayUtils.indexOf( items, ((PropertyName) firstExpression).getValue() );
-        if( index > 0 )
-          m_firstRowCombo.select( index );
-        String value = ((Literal) secondExpression).getValue();
+        final String value = ((Literal) secondExpression).getValue();
         m_secondRowText.setText( value );
+        m_propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getFirstExpression() ) ) );
       }
-
-      // m_firstRowLabel.setText( "Feld" );
-      // m_secondRowLabel.setText( "Wert" );
-      // m_secondRowText.setText( ( (Literal)secondExpression ).getValue() );
     }
     else if( firstExpression instanceof PropertyName && secondExpression instanceof ArithmeticExpression )
     {
@@ -270,23 +263,19 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     }// only for "expr1 instance PropertyName" and "expr2 instanceof Literal"
   }
 
-  boolean updateOperation( )
+  void updateOperation( )
   {
-    IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
-    Object firstElement = selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+    final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = ((IValuePropertyType) firstElement);
-      // String item = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
-      IPropertyType ftp = m_ft.getProperty( vpt.getQName() );
-      // String propertyName = m_firstRowCombo.getText().trim();
-      String literalName = m_secondRowText.getText().trim();
+      final IPropertyType ftp = m_ft.getProperty( vpt.getQName() );
+      final String literalName = m_secondRowText.getText().trim();
       validate( (IValuePropertyType) ftp, literalName );
-      m_operation.setFirstExperssion( new PropertyName( vpt.getQName().getLocalPart() ) );
+      m_operation.setFirstExperssion( new PropertyName( vpt.getQName() ) );
       m_operation.setSecondExperssion( new Literal( literalName ) );
-      return true;
     }
-    return false;
   }
 
 }
