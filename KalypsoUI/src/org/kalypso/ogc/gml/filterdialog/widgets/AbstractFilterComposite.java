@@ -111,7 +111,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
   public boolean validate( IValuePropertyType vpt, String toValidate )
   {
     m_validator.setValueProptery( vpt );
-    String errorMessage = m_validator.isValid( toValidate );
+    final String errorMessage = m_validator.isValid( toValidate );
     if( m_errorMessageReciever != null )
       m_errorMessageReciever.setErrorMessage( errorMessage );
     if( errorMessage == null )

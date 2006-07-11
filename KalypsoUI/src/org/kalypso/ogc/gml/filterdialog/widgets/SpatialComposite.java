@@ -46,6 +46,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -66,6 +68,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
@@ -81,8 +84,6 @@ import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 class SpatialComposite extends AbstractFilterComposite
 {
 
-  // Text m_text;
-
   Label m_spatialLabel;
 
   Label m_geomLable;
@@ -91,7 +92,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   Combo m_supportedOpsCombo;
 
-  Combo m_combo;
+  // Combo m_combo;
 
   SpatialOperation m_operation;
 
@@ -110,6 +111,8 @@ class SpatialComposite extends AbstractFilterComposite
   static private GM_Object m_oldGeometryOp = null;
 
   HashMap<String, GM_Object> m_hash = new HashMap<String, GM_Object>();
+
+  private ComboViewer m_propViewer;
 
   public SpatialComposite( final Composite parent, final int style, final SpatialOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft, Feature spatialOperators )
   {
@@ -164,16 +167,16 @@ class SpatialComposite extends AbstractFilterComposite
     m_spatialLabel = new Label( this, SWT.NULL );
     m_spatialLabel.setText( "Geometrie:" );
 
-    m_combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    Combo combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
-    m_combo.setLayoutData( data );
-    ComboViewer propViewer = new ComboViewer( m_combo );
-    propViewer.setContentProvider( new FeatureTypeContentProvider() );
-    propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
-    propViewer.addFilter( new GeometryPropertyFilter() );
-    propViewer.add( m_ft.getProperties() );
-    propViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    combo.setLayoutData( data );
+    m_propViewer = new ComboViewer( combo );
+    m_propViewer.setContentProvider( new FeatureTypeContentProvider() );
+    m_propViewer.setLabelProvider( new FeatureTypeLabelProvider() );
+    m_propViewer.addFilter( new GeometryPropertyFilter() );
+    m_propViewer.add( m_ft.getProperties() );
+    m_propViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       public void selectionChanged( SelectionChangedEvent event )
@@ -181,7 +184,7 @@ class SpatialComposite extends AbstractFilterComposite
         Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          String propName = ((IValuePropertyType) firstElement).getQName().getLocalPart();
+          QName propName = ((IValuePropertyType) firstElement).getQName();
           m_operation.setProperty( new PropertyName( propName ) );
           // fireModellEvent( new ModellEvent( SpatialComposite.this, ModellEvent.WIDGET_CHANGE ) );
           // updateOperation( null );
@@ -190,7 +193,7 @@ class SpatialComposite extends AbstractFilterComposite
 
       }
     } );
-    propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getPropertyName() ) ) );
+    m_propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getPropertyName() ) ) );
     // get
     m_geomLable = new Label( this, SWT.NONE );
     // m_geomLable.setLayoutData( new GridData() );
@@ -312,8 +315,11 @@ class SpatialComposite extends AbstractFilterComposite
       if( newGeometry == null )
         return false;
       m_operation.setGeometry( newGeometry );
-      PropertyName newPropertyName = new PropertyName( m_combo.getItem( m_combo.getSelectionIndex() ) );
-      m_operation.setProperty( newPropertyName );
+      final PropertyName propertyName = m_operation.getPropertyName();
+      final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+      propertyName.setValue( ((IPropertyType) selection.getFirstElement()).getQName() );
+      // PropertyName newPropertyName = new PropertyName( m_propViewer.getSelection() );
+      // m_operation.setProperty( newPropertyName );
     }
     catch( Exception e )
     {
