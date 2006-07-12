@@ -1,4 +1,4 @@
-#Fri Jul 07 11:20:28 CEST 2006
+#Fri Jul 07 11:58:15 CEST 2006
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -193,6 +193,7 @@ encoding//.prognose/Vorhersage-2006-06-09_09h22/Zeitreihen/Pegel/Messung/Hadmers
 encoding//.prognose/prognose6/calcCase.gml=UTF-8
 encoding//.prognose/interner_Test_20060331/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Elend.zml=UTF-8
 encoding//..BCE_intern/interne_Tests/interner_Test_20060331/Zeitreihen/Pegel/Messung/Mahndorf.zml=UTF-8
+encoding//.prognose/Vorhersage-2006-06-30_08h39/Zeitreihen/Pegel/Messung/K\u00F6nigsh\u00FCtte.zml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h54/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_17h24/Bodenfeuchten.gtt=UTF-8
@@ -229,8 +230,8 @@ encoding//.prognose/Vorhersage-03-11-2004_20h59/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252

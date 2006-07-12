@@ -114,10 +114,7 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abgabe"/>
+		<arg name="ignoreType1" value="W"/> <!-- ignoreType sicherheitshalber gesetzt-->
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -316,10 +313,7 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abgabe"/>
+		<arg name="ignoreType1" value="W"/> <!-- ignoreType sicherheitshalber gesetzt-->
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
