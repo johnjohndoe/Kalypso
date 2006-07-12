@@ -425,11 +425,41 @@ public class WiskiTimeserie implements IObservation
   }
 
   /**
-   * Helper for translating Wiski Rating-Tables into Kalypso Metadata
+   * Helper for translating Wiski rating-table into a Kalypso WQ-Table as Metadata
+   * <p>
+   * The rating table performs conversion from a "sourceType" to a "destType". The sourceType is given from the value
+   * axis found in this observation. If the sourceType is:
+   * <ul>
+   * <li>Q, then the destType is W
+   * <li>V, then the destType is W
+   * <li>W, then the destType is derived from the requestType
+   * </ul>
+   * <p>
+   * The search for a rating table is performed the following way
+   * <nl>
+   * <li>the current wiski parameter is asked if it has a rating table
+   * <li>if that's not the case, depending on the destType, the sibling wiski group (which can be Wasserstand,
+   * Durchfluss or Inhalt, see config.ini in the resources) is asked for the same station and a rating table is searched
+   * there
+   * <li>if neither here a table is found, the rating table cache of kalypso is asked
+   * <li>if a table is found in wiski, it is first cached.
+   * <li>the table (if any) is then converted into WQTable metadata.
+   * </nl>
+   * <p>
+   * The rating table cache is only asked if nothing is found in the live system, thus as a last mean.
    */
   private void fetchWQTable( final MetadataList metadata, final Date dateFrom, final Date dateTo,
       final String requestType )
   {
+    // HACK: Q-Förderstrom (Speicherabgabe Bode/Ilse) darf eigentlich keine WQ-Beziehung haben
+    final String paramName = m_tsinfo.getStationParameterName();
+    if( paramName != null && paramName.startsWith( "QF" ) )
+    {
+      LOG.info( "Type QF detected, will not search a Rating Table for: " + getName() );
+
+      return;
+    }
+
     final String sourceType = m_axes[1].getType();
     final String destType;
     if( sourceType.equals( TimeserieConstants.TYPE_RUNOFF ) )
@@ -449,40 +479,33 @@ public class WiskiTimeserie implements IObservation
     WQTable wqt = fetchWQTableIntern( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
-      LOG.info( "Trying to find WQ-Table with siblings for " + getName() );
+      LOG.info( "Trying to find WQ-Table with sibling for " + getName() );
 
       // 2. this failed, so next try is using sibling of other type
       // which might also contain a usable rating table
 
       // try with sibling of other parameter
-      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + m_tsinfo.getWiskiGroupName() );
+      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + destType );
       if( prop != null )
       {
-        // step through the parameters that are possible siblings of the current one
-        final String[] parameters = prop.split( ";" );
-        for( int i = 0; i < parameters.length; i++ )
+        LOG.info( "Sibling " + prop + " is being asked for WQ-Table" );
+
+        try
         {
-          LOG.info( "Sibling " + parameters[i] + " is being asked for WQ-Table" );
-
-          try
+          final TsInfoItem tsi = m_tsinfo.findSibling( prop );
+          if( tsi != null )
           {
-            final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
-            if( tsi != null )
-            {
-              wqt = fetchWQTableIntern( tsi, rep, dateFrom, dateTo );
-              if( wqt != null )
-              {
-                LOG.info( "Found WQ-Table in sibling!" );
-
-                break;
-              }
-            }
+            wqt = fetchWQTableIntern( tsi, rep, dateFrom, dateTo );
+            if( wqt != null )
+              LOG.info( "Found WQ-Table in sibling: " + prop );
+            else
+              LOG.info( "Did not find WQ-Table in sibling: " + prop );
           }
-          catch( final RepositoryException e )
-          {
-            // should not occur
-            LOG.warning( e.getLocalizedMessage() );
-          }
+        }
+        catch( final RepositoryException e )
+        {
+          // should not occur
+          LOG.warning( e.getLocalizedMessage() );
         }
       }
     }

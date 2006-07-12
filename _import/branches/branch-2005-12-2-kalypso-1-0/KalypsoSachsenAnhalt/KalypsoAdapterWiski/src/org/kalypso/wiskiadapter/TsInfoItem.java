@@ -248,6 +248,11 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_no", "<?>" );
   }
 
+  String getStationParameterName()
+  {
+    return m_map.getProperty( "stationparameter_name", "" );
+  }
+  
   /**
    * Return the name of the group/parameter. The group of a TsInfoItem is actually the Parameter in the Wiski sense.
    * <p>

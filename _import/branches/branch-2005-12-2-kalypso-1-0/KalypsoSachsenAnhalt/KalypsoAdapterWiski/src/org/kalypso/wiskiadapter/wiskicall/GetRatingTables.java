@@ -3,10 +3,13 @@ package org.kalypso.wiskiadapter.wiskicall;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.kalypso.contribs.java.util.DoubleComparator;
 
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
@@ -31,9 +34,11 @@ public class GetRatingTables implements IWiskiCall
   /**
    * Constructor
    * 
-   * @param id either id of timeserie, parameter or station, depending on the value of wiskiObjectType
+   * @param id
+   *          either id of timeserie, parameter or station, depending on the value of wiskiObjectType
    * @param validity
-   * @param wiskiObjectType one of KiWWDataProviderInterface.OBJECT_*
+   * @param wiskiObjectType
+   *          one of KiWWDataProviderInterface.OBJECT_*
    */
   public GetRatingTables( final Long id, final Date validity, final String wiskiObjectType )
   {
@@ -53,8 +58,30 @@ public class GetRatingTables implements IWiskiCall
     {
       final HashMap table = (HashMap)list.getFirst();
 
-      m_stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
-      m_flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
+      final Number[] stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
+      final Number[] flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
+
+      if( stage.length != flow.length )
+        throw new IllegalStateException( "stage and flow arrays are not of the same length" );
+
+      // jetzt schlechte Werte (-777) herausfiltern
+      final List goodStage = new ArrayList( stage.length );
+      final List goodFlow = new ArrayList( stage.length );
+
+      final DoubleComparator dc = new DoubleComparator( 0.001 );
+      final Double errValue = new Double( -777 );
+
+      for( int i = 0; i < flow.length; i++ )
+      {
+        if( dc.compare( errValue, stage[i] ) == 0 || dc.compare( errValue, flow[i] ) == 0 )
+          continue;
+        
+        goodStage.add( stage[i] );
+        goodFlow.add( flow[i] );
+      }
+
+      m_stage = (Number[])goodStage.toArray( new Number[goodStage.size()] );
+      m_flow = (Number[])goodFlow.toArray( new Number[goodFlow.size()] );
 
       if( m_stage.length != m_flow.length )
         throw new IllegalArgumentException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
