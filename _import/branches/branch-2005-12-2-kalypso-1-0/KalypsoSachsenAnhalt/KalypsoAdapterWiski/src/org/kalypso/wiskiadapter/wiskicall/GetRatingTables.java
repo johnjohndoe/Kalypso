@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.DoubleComparator;
 
@@ -30,6 +31,8 @@ public class GetRatingTables implements IWiskiCall
   private Number[] m_flow;
 
   private final String m_wiskiObjectType;
+
+  private final static Logger LOG = Logger.getLogger( GetRatingTables.class.getName() );
 
   /**
    * Constructor
@@ -65,20 +68,40 @@ public class GetRatingTables implements IWiskiCall
         throw new IllegalStateException( "stage and flow arrays are not of the same length" );
 
       // jetzt schlechte Werte (-777) herausfiltern
+      // wir testen auch ob flow immer stetig steigend ist
       final List goodStage = new ArrayList( stage.length );
       final List goodFlow = new ArrayList( stage.length );
 
       final DoubleComparator dc = new DoubleComparator( 0.001 );
       final Double errValue = new Double( -777 );
 
+      Number stetigFlow = null;
+
+      StringBuffer buf = new StringBuffer();
+
       for( int i = 0; i < flow.length; i++ )
       {
         if( dc.compare( errValue, stage[i] ) == 0 || dc.compare( errValue, flow[i] ) == 0 )
+        {
+          buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i] + "]\n" );
           continue;
-        
+        }
+
+        if( stetigFlow != null && dc.compare( stetigFlow, flow[i] ) >= 0 )
+        {
+          buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i]
+              + "] due to flyback (Rücksprung)" );
+          continue;
+        }
+
+        stetigFlow = flow[i];
+
         goodStage.add( stage[i] );
         goodFlow.add( flow[i] );
       }
+
+      if( buf.length() > 0 )
+        LOG.info( "Rating-Table analysis found following warnings:\n" + buf.toString() );
 
       m_stage = (Number[])goodStage.toArray( new Number[goodStage.size()] );
       m_flow = (Number[])goodFlow.toArray( new Number[goodFlow.size()] );
