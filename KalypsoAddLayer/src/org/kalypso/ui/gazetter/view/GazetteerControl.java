@@ -60,8 +60,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper.CoreRunnableWrapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.wfs.WFSUtilities;
 import org.kalypso.view.gazetter.GazetterLocationType;

@@ -146,9 +146,6 @@ public class ImportWmsWizardPage extends WizardPage
     this( pageName, "Web Map Service", null );
   }
 
-  /**
-   *  
-   */
   public ImportWmsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
