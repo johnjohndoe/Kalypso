@@ -17,6 +17,12 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
 /**
  * GetRatingTables
+ * <p>
+ * the rating-table is cleaned once the values were retrieved from the WDP:
+ * <ul>
+ * <li>all invalid values are removed (-777)
+ * <li>the flow must be increasing continuously (flyback values are ignored)
+ * </ul>
  * 
  * @author schlienger
  */
@@ -72,7 +78,7 @@ public class GetRatingTables implements IWiskiCall
       final List goodStage = new ArrayList( stage.length );
       final List goodFlow = new ArrayList( stage.length );
 
-      final DoubleComparator dc = new DoubleComparator( 0.001 );
+      final DoubleComparator dc = new DoubleComparator( 0.000001 );
       final Double errValue = new Double( -777 );
 
       Number stetigFlow = null;
@@ -90,7 +96,7 @@ public class GetRatingTables implements IWiskiCall
         if( stetigFlow != null && dc.compare( stetigFlow, flow[i] ) >= 0 )
         {
           buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i]
-              + "] due to flyback (Rücksprung)" );
+              + "] due to flyback (Rücksprung)\n" );
           continue;
         }
 
