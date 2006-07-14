@@ -93,6 +93,11 @@ import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service.
+ * <p>
+ * When a observation is delivered to the client, the IObservationManipulator mechanism is always used to possibly
+ * manipulate the observation before it is delivered. ObservationManipulators are configured within the
+ * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
+ * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
  * 
  * <p>
  * This service is configured by a properties-file which has following syntax:
