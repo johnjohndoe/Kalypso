@@ -55,11 +55,15 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.tokenreplace.DefaultTokenReplacer;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
+import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.dss.KalypsoDSSPlugin;
 import org.kalypso.dss.utils.MeasuresConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -87,7 +91,7 @@ public class FlowsDSSResultGenerator
       final Combination combination = (Combination) value;
       final String hqEventId = combination.getHQEventId();
       final Feature nodeFE = combination.getNodeFeature();
-      final String nodeNme = (String) nodeFE.getProperty( "name" );
+      final String nodeNme = (String) nodeFE.getProperty( new QName( NS.GML2, "name" ) );
       return hqEventId + " / Knoten " + nodeNme;
     }
   };
@@ -102,7 +106,7 @@ public class FlowsDSSResultGenerator
   {
     if( htmlFragmentCollector == null )
       htmlFragmentCollector = new ArrayList<HTMLFragmentBean>();
-    final String nodeName = (String) resultNode.getProperty( "name" );
+    final String nodeName = (String) resultNode.getProperty( new QName( NS.GML2, "name" ) );
 
     // find sources for new result locations
     final URL srcStatusQuoFile = getStatusQuo( hqEventId, resultNode );
@@ -338,10 +342,10 @@ public class FlowsDSSResultGenerator
 
   private static String createNodeTitle( Feature nodeFE )
   {
-    final String nodeName = "Knoten " + (String) nodeFE.getProperty( "name" );
+    final String nodeName = "Knoten " + (String) nodeFE.getProperty( new QName( NS.GML2, "name" ) );
     try
     {
-      final GM_Object position = (GM_Object) nodeFE.getProperty( "Ort" );
+      final GM_Object position = (GM_Object) nodeFE.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_GEOM_PROP ) );
       final GM_Point centroid = position.getCentroid();
       double x = centroid.getPosition().getX();
       double y = centroid.getPosition().getY();
@@ -433,8 +437,8 @@ public class FlowsDSSResultGenerator
       {
         try
         {
-          final Integer i1 = new Integer( o1.replaceAll("HQ","") );
-          final Integer i2 = new Integer( o2.replaceAll("HQ","") );
+          final Integer i1 = new Integer( o1.replaceAll( "HQ", "" ) );
+          final Integer i2 = new Integer( o2.replaceAll( "HQ", "" ) );
           return i1.compareTo( i2 );
         }
         catch( Exception e )
@@ -615,7 +619,7 @@ public class FlowsDSSResultGenerator
 
   private static String getContainerPath( Feature nodeFeature )
   {
-    final String nodeName = (String) nodeFeature.getProperty( "name" );
+    final String nodeName = (String) nodeFeature.getProperty( new QName( NS.GML2, "name" ) );
     return nodeName;
   }
 
