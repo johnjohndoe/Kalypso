@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.workflow.ui.browser.urlaction;
+package org.kalypso.portal.action;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -51,6 +51,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.internal.dialogs.NewWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
+import org.kalypso.portal.wizard.NewDssProjectWizard;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
@@ -62,7 +63,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionSelectProject extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "selectProject";
+  // private final static String COMMAND_NAME = "selectProject";
 
   // e.g. "org.kalypso.portal.loadProject.wizard";
   private final static String PARAM_CATEGORY_ID = "categoryId";
@@ -96,6 +97,8 @@ public class URLActionSelectProject extends AbstractURLAction
         IProject selectedProject = null;
         if( wizard instanceof BasicNewProjectResourceWizard )
           selectedProject = ((BasicNewProjectResourceWizard) wizard).getNewProject();
+        else if( wizard instanceof NewDssProjectWizard )
+          selectedProject = ((NewDssProjectWizard) wizard).getNewProject();
         else if( wizard instanceof IProjectProvider )
           selectedProject = ((IProjectProvider) wizard).getProject();
         if( selectedProject != null )
@@ -113,6 +116,6 @@ public class URLActionSelectProject extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

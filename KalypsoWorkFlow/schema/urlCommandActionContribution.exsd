@@ -45,7 +45,7 @@
    <element name="urlaction">
       <complexType>
          <sequence>
-            <element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="urlaction"/>
          </sequence>
          <attribute name="name" type="string">
             <annotation>
@@ -71,19 +71,7 @@
                </appInfo>
             </annotation>
          </attribute>
-      </complexType>
-   </element>
-
-   <element name="parameter">
-      <complexType>
-         <attribute name="name" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="optional" type="boolean">
+         <attribute name="icon" type="string">
             <annotation>
                <documentation>
                   

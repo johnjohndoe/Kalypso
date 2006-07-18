@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
@@ -57,7 +55,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionShowMessage extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "showMessage";
+  // private final static String COMMAND_NAME = "showMessage";
 
   /** optional */
   private final static String PARAM_TITLE = "title";
@@ -71,14 +69,27 @@ public class URLActionShowMessage extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
-    String message = commandURL.getParameter( PARAM_MESSAGE );
+    final String message = commandURL.getParameter( PARAM_MESSAGE );
     if( message == null || message.length() == 0 )
       return false;
     final String title = commandURL.getParameter( PARAM_TITLE );
     boolean decoding = Boolean.parseBoolean( commandURL.getParameter( PARAM_DECODE ) );
-    final Display display = Display.getCurrent();
-    final Shell shell = display.getActiveShell();
-    MessageDialog.openInformation( shell, title, message + "&amp;decode=" + decoding );
+    final String decodedMessage;
+    if( decoding )
+    {
+      try
+      {
+        decodedMessage = URLDecoder.decode( message, "UTF-8" );
+      }
+      catch( UnsupportedEncodingException e )
+      {
+        e.printStackTrace();
+        return false;
+      }
+    }
+    else
+      decodedMessage = message;
+    MessageDialog.openInformation( getShell(), title, decodedMessage );
     return true;
   }
 
@@ -87,6 +98,6 @@ public class URLActionShowMessage extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

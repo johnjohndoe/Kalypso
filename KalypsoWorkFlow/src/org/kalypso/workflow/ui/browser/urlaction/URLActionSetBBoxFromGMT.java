@@ -45,13 +45,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.ExtentType;
@@ -69,7 +67,7 @@ import org.xml.sax.InputSource;
 public class URLActionSetBBoxFromGMT extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "setBBoxInGMT";
+//  private final static String COMMAND_NAME = "setBBoxInGMT";
 
   /**
    * The url of the Gismapview to get the bbox from
@@ -91,7 +89,7 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

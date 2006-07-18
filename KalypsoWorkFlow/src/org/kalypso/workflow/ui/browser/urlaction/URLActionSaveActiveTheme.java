@@ -56,14 +56,14 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionSaveActiveTheme extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "saveActiveTheme";
+//  private final static String COMMAND_NAME = "saveActiveTheme";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

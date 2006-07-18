@@ -67,6 +67,8 @@ public class WorkflowContext implements IUrlResolver2
 
   private URL m_contextActionURL = null;
 
+  private URL m_contextHome = null;
+
   public void setContextProject( IProject contextProject )
   {
     m_contextProject = contextProject;
@@ -122,6 +124,16 @@ public class WorkflowContext implements IUrlResolver2
       relative = relative.replaceFirst( entry.getKey(), entry.getValue() );
     }
     return new URL( getContextActionURL(), relative );
+  }
+
+  public URL getContextHome( )
+  {
+    return m_contextHome;
+  }
+
+  public void setContextHome( URL contextHome )
+  {
+    m_contextHome = contextHome;
   }
 
 }

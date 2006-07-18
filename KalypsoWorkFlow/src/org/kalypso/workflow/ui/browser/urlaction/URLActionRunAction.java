@@ -45,7 +45,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -63,7 +62,7 @@ import org.osgi.framework.Bundle;
  */
 public class URLActionRunAction extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "runAction";
+  // private final static String COMMAND_NAME = "runAction";
 
   private final static String PARAM_PLUGIN_ID = "pluginId";
 
@@ -172,6 +171,6 @@ public class URLActionRunAction extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

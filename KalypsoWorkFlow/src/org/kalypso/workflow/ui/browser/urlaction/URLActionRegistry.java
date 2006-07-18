@@ -42,7 +42,14 @@ package org.kalypso.workflow.ui.browser.urlaction;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.IURLAction;
+import org.kalypso.workflow.ui.browser.AbstractURLAction.CommandURLActionException;
 
 /**
  * @author doemming
@@ -50,70 +57,124 @@ import org.kalypso.workflow.ui.browser.IURLAction;
 public class URLActionRegistry
 {
 
-  final static URLActionRegistry m_defaultInstance;
-  static
-  {
-    m_defaultInstance = new URLActionRegistry();
-
-    try
-    {
-      // TODO make extensionpoint !
-      m_defaultInstance.register( new URLActionNavigate() );
-      m_defaultInstance.register( new URLActionOpenEditor() );
-      m_defaultInstance.register( new URLActionCloseEditor() );
-      m_defaultInstance.register( new URLActionSelectEditor() );
-      m_defaultInstance.register( new URLActionOpenView() );
-      m_defaultInstance.register( new URLActionCloseView() );
-      m_defaultInstance.register( new URLActionChangePerspective() );
-      m_defaultInstance.register( new URLActionRunAction() );
-      m_defaultInstance.register( new URLActionRunScript() );
-      m_defaultInstance.register( new URLActionShowMessage() );
-      m_defaultInstance.register( new URLActionSelectProject() );
-      m_defaultInstance.register( new URLActionExtract() );
-      m_defaultInstance.register( new URLActionAddGeometry() );
-      m_defaultInstance.register( new URLActionOpenURL() );
-      m_defaultInstance.register( new URLActionSaveAllThemes() );
-      m_defaultInstance.register( new URLActionActivateTheme() );
-      m_defaultInstance.register( new URLActionSaveActiveTheme() );
-      m_defaultInstance.register( new URLActionSaveActiveGMT() );
-      m_defaultInstance.register( new URLActionAddThemeGMT() );
-      m_defaultInstance.register( new URLActionOpenWorkflowBrowser() );
-      m_defaultInstance.register( new URLActionStartCalculation() );
-      m_defaultInstance.register( new URLActionSetBBoxFromGMT() );
-      m_defaultInstance.register( new URLActionImportBPlanGML() );
-      m_defaultInstance.register( new URLActionCopyFile() );
-      m_defaultInstance.register( new URLActionShowInMap() );
-      m_defaultInstance.register( new URLActionCloseAllEditors() );
-    }
-    catch( URLActionRegistryException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
+  private final static String URL_ACTION = "urlaction";
 
   private HashMap<String, IURLAction> m_register = new HashMap<String, IURLAction>();
 
+  private static HashMap<String, IConfigurationElement> m_extensionPointRegistery = new HashMap<String, IConfigurationElement>();
+
+  final static URLActionRegistry m_registryInstance;
+  static
+  {
+    m_registryInstance = new URLActionRegistry();
+    final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+    final IExtensionPoint extension = extensionRegistry.getExtensionPoint( "org.kalypso.workflow", "urlCommandActionContribution" );
+    IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+    for( int i = 0; i < configurationElements.length; i++ )
+    {
+      final IConfigurationElement element = configurationElements[i];
+      final String name = element.getName();
+      if( name.equalsIgnoreCase( URL_ACTION ) )
+      {
+        final String commandName = element.getAttribute( "command" );
+        m_extensionPointRegistery.put( commandName, element );
+      }
+    }
+  }
+
+  //
+  // final Object clazz = element.createExecutableExtension( "class" );
+  // m_defaultInstance.register( (IURLAction) clazz );
+  // ((AbstractURLAction) clazz).setCommandName( commandName );
+  // }
+  //
+  // }
+  // // m_defaultInstance.register( new URLActionNavigate() );
+  // // m_defaultInstance.register( new URLActionOpenEditor() );
+  // // m_defaultInstance.register( new URLActionCloseEditor() );
+  // // m_defaultInstance.register( new URLActionSelectEditor() );
+  // // m_defaultInstance.register( new URLActionOpenView() );
+  // // m_defaultInstance.register( new URLActionCloseView() );
+  // // m_defaultInstance.register( new URLActionChangePerspective() );
+  // // m_defaultInstance.register( new URLActionRunAction() );
+  // // m_defaultInstance.register( new URLActionRunScript() );
+  // // m_defaultInstance.register( new URLActionShowMessage() );
+  // // m_defaultInstance.register( new URLActionSelectProject() );
+  // // m_defaultInstance.register( new URLActionExtract() );
+  // // m_defaultInstance.register( new URLActionAddGeometry() );
+  // // m_defaultInstance.register( new URLActionOpenURL() );
+  // // m_defaultInstance.register( new URLActionSaveAllThemes() );
+  // // m_defaultInstance.register( new URLActionActivateTheme() );
+  // // m_defaultInstance.register( new URLActionSaveActiveTheme() );
+  // // m_defaultInstance.register( new URLActionSaveActiveGMT() );
+  // // m_defaultInstance.register( new URLActionAddThemeGMT() );
+  // // m_defaultInstance.register( new URLActionOpenWorkflowBrowser() );
+  // // m_defaultInstance.register( new URLActionStartCalculation() );
+  // // m_defaultInstance.register( new URLActionSetBBoxFromGMT() );
+  // // m_defaultInstance.register( new URLActionImportBPlanGML() );
+  // // m_defaultInstance.register( new URLActionCopyFile() );
+  // // m_defaultInstance.register( new URLActionShowInMap() );
+  // // m_defaultInstance.register( new URLActionCloseAllEditors() );
+  // // m_defaultInstance.register( new URLActionCloseAllViews() );
+  // }
+  // catch( URLActionRegistryException e )
+  // {
+  // e.printStackTrace();
+  // }
+  // catch( CoreException e )
+  // {
+  // e.printStackTrace();
+  // }
+  // catch( CommandURLActionException e )
+  // {
+  // e.printStackTrace();
+  // }
+  // }
+
   public static URLActionRegistry getDefault( )
   {
-    return m_defaultInstance;
+    return m_registryInstance;
   }
 
   public void register( IURLAction urlAction ) throws URLActionRegistryException
   {
     final String actionName = urlAction.getActionName();
     if( m_register.containsKey( actionName ) )
-      throw new URLActionRegistryException();
+      throw new URLActionRegistryException( "The action name=" + actionName + " class=" + urlAction.getClass().getName() + " is already registered" );
     m_register.put( actionName, urlAction );
   }
 
-  public IURLAction getURLAction( String actionName )
+  public IURLAction createURLAction( String actionName ) throws CommandURLActionException, URLActionRegistryException
   {
-    // TODO change to createURLAction and change to register classnames and constuct classes here
-    return m_register.get( actionName );
+
+    IURLAction action = m_register.get( actionName );
+    if( action == null && m_extensionPointRegistery.containsKey( actionName ) )
+    {
+      final IConfigurationElement element = m_extensionPointRegistery.get( actionName );
+      try
+      {
+        action = (IURLAction) element.createExecutableExtension( "class" );
+        ((AbstractURLAction) action).setCommandName( actionName );
+        m_registryInstance.register( action );
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+    return action;
   }
 
   public class URLActionRegistryException extends Exception
   {
+    public URLActionRegistryException( String message )
+    {
+      super( message );
+    }
+
+    public URLActionRegistryException( String message, Throwable e )
+    {
+      super( message, e );
+    }
   }
 }

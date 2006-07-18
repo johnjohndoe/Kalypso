@@ -50,14 +50,12 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionImportBPlanGML extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "importBPlanGML";
-
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**
@@ -66,7 +64,7 @@ public class URLActionImportBPlanGML extends AbstractURLAction
   public boolean run( ICommandURL commandURL )
   {
     // TODO implement the replacment of of the emtpy bplan gml in the map with the loaded data.
-    MessageDialog.openInformation( getShell(), "FLOWS Planer Client Info", "Das Kommando [" + COMMAND_NAME + "] ist noch nicht implementiert" );
+    MessageDialog.openInformation( getShell(), "FLOWS Planer Client Info", "Das Kommando [" + m_commandName + "] ist noch nicht implementiert" );
     return false;
   }
 

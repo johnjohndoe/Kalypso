@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
@@ -54,20 +54,14 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionCloseAllViews extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "closeAllViews";
-
-  private final static String PARAM_DO_NOT_CLOSE = "exceptThese";
-
-  private final static String PARAM_SEPERATOR = "sparator";
-
-  private String DEFAULT_SEPARATOR = "#";
+  // private final static String COMMAND_NAME = "closeAllViews";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**
@@ -75,26 +69,12 @@ public class URLActionCloseAllViews extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
-    final String separator = commandURL.getParameter( PARAM_SEPERATOR );
-    final String[] doNotCloseList;
-    final String separatedList = commandURL.getParameter( PARAM_DO_NOT_CLOSE );
-
-    if( separatedList != null && separatedList.length() > 0 )
-    {
-      if( separator != null )
-        doNotCloseList = separatedList.split( separator );
-      else
-        doNotCloseList = separatedList.split( DEFAULT_SEPARATOR );
-    }
-    else
-      doNotCloseList = new String[0];
+    final IWorkbenchPage activePage = getActivePage();
     final IViewReference[] viewReferences = getActivePage().getViewReferences();
-    for( IViewReference reference : viewReferences )
+    for( int i = 0; i < viewReferences.length; i++ )
     {
-      final String viewId = reference.getId();
-      if( ArrayUtils.contains( doNotCloseList, viewId ) )
-        continue;
-      getActivePage().hideView( reference );
+      IViewReference reference = viewReferences[i];
+      activePage.hideView( reference );
     }
     return true;
   }

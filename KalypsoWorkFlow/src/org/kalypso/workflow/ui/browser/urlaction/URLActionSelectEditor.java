@@ -57,7 +57,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionSelectEditor extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "selectEditor";
+//  private final static String COMMAND_NAME = "selectEditor";
 
   /**
    * file name that is the input of the editor to be selected
@@ -69,7 +69,7 @@ public class URLActionSelectEditor extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

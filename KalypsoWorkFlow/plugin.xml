@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="urlCommandActionContribution" name="urlcommandaction" schema="schema/urlCommandActionContribution.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -22,6 +23,115 @@
                launcher="org.kalypso.workflow.WorkflowLauncher"
                name="WorkflowLauncher">
       </editor>
+   </extension>
+   <extension
+         id="org.kalypso.workflow.urlCommandAction"
+         name="Command Actions for workflow browser"
+         point="org.kalypso.workflow.urlCommandActionContribution">
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionOpenEditor"
+            command="openEditor"
+            name="Open Editor"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionCloseEditor"
+            command="closeEditor"
+            name="Close Editor"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionNavigate"
+            command="navigate"
+            name="Navigate Home"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionSelectEditor"
+            command="selectEditor"
+            name="Select Editor"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionOpenView"
+            command="openView"
+            name="Open View"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionCloseView"
+            command="closeView"
+            name="Close View"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionChangePerspective"
+            command="changePerspective"
+            name="Change Perspective"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionRunAction"
+            command="runAction"
+            name="Run Action"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionRunScript"
+            command="runScript"
+            name="Run Script"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionShowMessage"
+            command="showMessage"
+            name="Show Message PopUp"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionExtract"
+            command="extract"
+            name="Extract From Zip"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionAddGeometry"
+            command="addGeometry"
+            name="Add Geometry Property"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionOpenURL"
+            command="openURL"
+            name="Open Page From URL"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionSaveAllThemes"
+            command="saveAllThemes"
+            name="Save All Themes"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionActivateTheme"
+            command="activateTheme"
+            name="Activate Theme"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionSaveActiveTheme"
+            command="saveActiveTheme"
+            name="Save Active Theme"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionSaveActiveGMT"
+            command="saveActiveGMT"
+            name="Save Map View"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionAddThemeGMT"
+            command="openAddThemeDialog"
+            name="Open Add Theme Wizard"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionOpenWorkflowBrowser"
+            command="openWorkflowBrowser"
+            name="Open Workflow Browser View"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionStartCalculation"
+            command="startCalc"
+            name="Start Calculation"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionSetBBoxFromGMT"
+            command="setBBoxInGMT"
+            name="Set BBox in Map View"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionImportBPlanGML"
+            command="importBPlanGML"
+            name="Import XPlanung GML"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionCopyFile"
+            command="copyFile"
+            name="Copy File"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionShowInMap"
+            command="showInMap"
+            name="Show Point Of Interest in Map"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionCloseAllEditors"
+            command="closeAllEditors"
+            name="Close all Editors in Active Page"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionCloseAllViews"
+            command="closeAllViews"
+            name="Close All Views"/>
    </extension>
 
 </plugin>

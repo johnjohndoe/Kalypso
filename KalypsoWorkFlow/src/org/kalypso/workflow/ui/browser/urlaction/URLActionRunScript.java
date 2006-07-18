@@ -75,7 +75,7 @@ import org.kalypso.workflow.ui.browser.urlaction.script.ScriptFactory;
  */
 public class URLActionRunScript extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "runScript";
+//  private final static String COMMAND_NAME = "runScript";
 
   private final static String PARAM_FUNCTION = "function";
 
@@ -115,52 +115,12 @@ public class URLActionRunScript extends AbstractURLAction
     }
   }
 
-  // private void getFunction( String function ) throws IOException
-  // {
-  // final String content = //
-  // " <script type=\"text/kalypso\"> \n"//
-  // + " <!--\n"//
-  // + " function test() {\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " }\n"//
-  // + " function zoom() {\n"//
-  // + " kalypso://showMessage?message=zoom1;\n"//
-  // + " kalypso://showMessage?message=zoom2;\n"//
-  // + " kalypso://showMessage?message=zoom3;\n"//
-  // + " }\n"//
-  // + " -->\n"//
-  // + " </script>\n" //
-  // + " bla bla bl"//
-  // + " <script type=\"text/kalypso\"> \n"//
-  // + " <!--\n"//
-  // + " function test2() {\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " kalypso://showMessage?message=test;\n"//
-  // + " }\n"//
-  // + " function zoom2() {\n"//
-  // + " kalypso://showMessage?message=zoom1;\n"//
-  // + " kalypso://showMessage?message=zoom2;\n"//
-  // + " kalypso://showMessage?message=zoom3;\n"//
-  // + " }\n"//
-  // + " -->\n"//
-  // + " </script>\n" //
-  // + " bla bla bl";
-  //
-  // final List<Script> scripts = ScriptFactory.createScripts( content );
-  // for( final Script script : scripts )
-  // System.out.println( "scripts loaded:\n" + script );
-  // return;
-  // }
-
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
 }
