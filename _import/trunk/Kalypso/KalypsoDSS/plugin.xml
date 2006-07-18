@@ -16,7 +16,7 @@
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
             class="org.kalypso.dss.UrlCatalogDss"
-            id="KalypsoDSS.catalog1"/>
+            id="org.kalypso.dss.catalog"/>
    </extension>
 
 
