@@ -52,14 +52,14 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionSaveActiveGMT extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "saveActiveGMT";
+//  private final static String COMMAND_NAME = "saveActiveGMT";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

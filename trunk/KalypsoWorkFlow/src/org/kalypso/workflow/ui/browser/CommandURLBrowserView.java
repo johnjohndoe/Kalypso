@@ -21,7 +21,7 @@ import org.kalypso.workflow.ui.KalypsoWorkFlowPlugin;
  */
 public class CommandURLBrowserView extends AbstractBrowserView
 {
-  public static final String WEB_BROWSER_VIEW_ID = "org.kalypso.contribs.ui.browser.commandable.CommandURLBrowserView"; //$NON-NLS-1$
+  public static final String WEB_BROWSER_VIEW_ID = "org.kalypso.workflow.ui.browser.CommandURLBrowserView"; //$NON-NLS-1$
 
   protected final CommandLocationListener m_listener;
 
@@ -40,6 +40,8 @@ public class CommandURLBrowserView extends AbstractBrowserView
   public void createPartControl( Composite parent )
   {
     super.createPartControl( parent );
+    // sets the first page as home
+    m_workflowContext.setContextHome( getContext() );
     configuerActionBar();
     updateNavigationActionsState();
     addLocationListener( m_listener );
@@ -60,6 +62,7 @@ public class CommandURLBrowserView extends AbstractBrowserView
     toolBarManager.add( m_refresh );
     toolBarManager.add( m_backAction );
     toolBarManager.add( m_forwardAction );
+    toolBarManager.add( m_homeAction );
     toolBarManager.update( true );
     actionBars.updateActionBars();
   }
@@ -96,6 +99,21 @@ public class CommandURLBrowserView extends AbstractBrowserView
     }
   };
 
+  protected Action m_homeAction = new Action()
+  {
+    {
+      setToolTipText( "Home" );
+      setImageDescriptor( ImageDescriptor.createFromURL( getClass().getResource( "icons/nav_home.gif" ) ) );
+      setDisabledImageDescriptor( ImageDescriptor.createFromURL( getClass().getResource( "icons/nav_home_gray.gif" ) ) );
+    }
+
+    @Override
+    public void run( )
+    {
+      navigateHome();
+    }
+  };
+
   protected Action m_refresh = new Action()
   {
 
@@ -117,9 +135,10 @@ public class CommandURLBrowserView extends AbstractBrowserView
     // in static html intro, use browser history.
     m_forwardAction.setEnabled( m_viewer.isForwardEnabled() );
     m_backAction.setEnabled( m_viewer.isBackEnabled() );
+    m_homeAction.setEnabled( m_workflowContext.getContextHome() != null );
   }
 
-  protected void navigateBack( )
+  public void navigateBack( )
   {
     m_viewer.back();
     try
@@ -133,7 +152,7 @@ public class CommandURLBrowserView extends AbstractBrowserView
     updateNavigationActionsState();
   }
 
-  protected void navigateForward( )
+  public void navigateForward( )
   {
     m_viewer.forward();
     try
@@ -155,6 +174,12 @@ public class CommandURLBrowserView extends AbstractBrowserView
   {
     super.setURL( url );
     updateNavigationActionsState();
+
+  }
+
+  public void navigateHome( )
+  {
+    setURL( m_workflowContext.getContextHome().toExternalForm() );
 
   }
 }

@@ -54,15 +54,15 @@ import org.eclipse.swt.widgets.Listener;
 public class CommandURL implements ICommandURL
 {
 
-  private final String m_actionName;
+  private final String m_commandName;
 
   private final String m_path;
 
   private final Properties m_arguments;
 
-  public CommandURL( String actionName, String path, Properties arguments )
+  public CommandURL( String commandName, String path, Properties arguments )
   {
-    m_actionName = actionName;
+    m_commandName = commandName;
     m_path = path;
     m_arguments = arguments;
   }
@@ -80,9 +80,9 @@ public class CommandURL implements ICommandURL
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL#getAction()
    */
-  public String getAction( )
+  public String getCommand( )
   {
-    return m_actionName;
+    return m_commandName;
   }
 
   public String getPath( )
@@ -110,7 +110,7 @@ public class CommandURL implements ICommandURL
   @Override
   public String toString( )
   {
-    String baseString = PROTOCOL + "://" + m_actionName + "?";
+    String baseString = PROTOCOL + "://" + m_commandName + "?";
     Properties arguments = getArguments();
     Set<Entry<Object, Object>> set = arguments.entrySet();
     for( Iterator<Entry<Object,Object>> iter = set.iterator(); iter.hasNext(); )

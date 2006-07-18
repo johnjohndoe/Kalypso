@@ -60,8 +60,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionOpenEditor extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "openEditor";
-
   private final static String PARAM_INPUT = "input";
 
   /**
@@ -96,7 +94,7 @@ public class URLActionOpenEditor extends AbstractURLAction
       else
         defaultDefaultDescriptor = editorRegistry.getDefaultEditor( inputURL.toString() );
       final IFile file = ResourceUtilities.findFileFromURL( inputURL );
-      
+
       final FileEditorInput input = new FileEditorInput( file );
       activePage.openEditor( input, defaultDefaultDescriptor.getId(), activateEditor );
     }
@@ -113,6 +111,6 @@ public class URLActionOpenEditor extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

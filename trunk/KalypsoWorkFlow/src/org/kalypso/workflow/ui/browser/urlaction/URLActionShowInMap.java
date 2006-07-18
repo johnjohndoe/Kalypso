@@ -63,7 +63,7 @@ public class URLActionShowInMap extends AbstractURLAction
   // + "&x=" + x//
   // + "&y=" + y//
   // + "&crs=" + crsName;
-  private final static String COMMAND_NAME = "showInMap";
+  // private final static String COMMAND_NAME = "showInMap";
 
   /**
    * title to show in map<br>
@@ -107,7 +107,7 @@ public class URLActionShowInMap extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

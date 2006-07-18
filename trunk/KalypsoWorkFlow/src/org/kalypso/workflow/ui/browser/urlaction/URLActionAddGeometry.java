@@ -77,7 +77,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class URLActionAddGeometry extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "addGeometry";
+  // private final static String COMMAND_NAME = "addGeometry";
 
   /**
    * optional
@@ -161,7 +161,7 @@ public class URLActionAddGeometry extends AbstractURLAction
       // find relation where to place new feature
       final QName relationQName = QNameUtilities.createQName( relationQNameString );
       final IRelationType relationType = (IRelationType) targetParentFE.getFeatureType().getProperty( relationQName );
-      
+
       // find featuretype to create
       final IFeatureType newFT;
       if( createFTQName != null && createFTQName.length() > 0 )
@@ -176,7 +176,7 @@ public class URLActionAddGeometry extends AbstractURLAction
 
       final Feature newFeature = workspace.createFeature( targetParentFE, newFT );
       workspace.addFeatureAsComposition( targetParentFE, relationType, 0, newFeature );
-      
+
       // find relation where to place new feature
       final QName newPropQName = QNameUtilities.createQName( createFPQNameString );
       final IPropertyType newPT = newFT.getProperty( newPropQName );
@@ -209,7 +209,7 @@ public class URLActionAddGeometry extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
 }

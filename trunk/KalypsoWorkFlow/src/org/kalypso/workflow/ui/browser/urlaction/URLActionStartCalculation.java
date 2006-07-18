@@ -62,7 +62,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionStartCalculation extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "startCalc";
+//  private final static String COMMAND_NAME = "startCalc";
 
   private final static String PARAM_CALC_CASE_FOLDER_URL_ID = "calcCaseFolder";
 
@@ -71,7 +71,7 @@ public class URLActionStartCalculation extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

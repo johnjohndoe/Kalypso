@@ -63,7 +63,7 @@ public class URLActionChangePerspective extends AbstractURLAction
 {
   public final static String PARAM_STATE_URL = "stateURL";
 
-  public final static String COMMAND_NAME = "changePerspective";
+//  public final static String COMMAND_NAME = "changePerspective";
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
@@ -103,6 +103,6 @@ public class URLActionChangePerspective extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

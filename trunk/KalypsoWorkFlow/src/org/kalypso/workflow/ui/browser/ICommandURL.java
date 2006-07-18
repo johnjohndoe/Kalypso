@@ -68,7 +68,7 @@ public interface ICommandURL
   /**
    * @return Returns the command imbedded in this URL.
    */
-  public String getAction( );
+  public String getCommand( );
 
   /**
    * Return a parameter defined in the CommandURL. Returns null if the parameter is not defined.

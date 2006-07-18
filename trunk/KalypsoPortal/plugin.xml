@@ -104,5 +104,12 @@
             id="org.kalypso.portal.wizard.loadProject"
             name="bestehendes Projekt oeffnen"/>
    </extension>
+   <extension
+         point="org.kalypso.workflow.urlCommandActionContribution">
+      <urlaction
+            class="org.kalypso.portal.action.URLActionSelectProject"
+            command="selectProject"
+            name="Select Project"/>
+   </extension>
 
 </plugin>

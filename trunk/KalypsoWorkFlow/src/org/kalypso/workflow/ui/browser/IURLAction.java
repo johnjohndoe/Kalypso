@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.workflow.WorkflowContext;
 
 /**

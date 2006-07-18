@@ -54,7 +54,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionActivateTheme extends AbstractURLAction
 {
 
-  private final static String COMMAND_NAME = "activateTheme";
+  // private final static String COMMAND_NAME = "activateTheme";
 
   /**
    * optional
@@ -76,7 +76,7 @@ public class URLActionActivateTheme extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

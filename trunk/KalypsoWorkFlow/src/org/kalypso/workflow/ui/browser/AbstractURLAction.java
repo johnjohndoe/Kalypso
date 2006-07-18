@@ -59,6 +59,8 @@ public abstract class AbstractURLAction implements IURLAction
 
   private WorkflowContext m_workFlowContext = null;
 
+  protected String m_commandName;
+
   /**
    * init will called befor run
    */
@@ -105,5 +107,26 @@ public abstract class AbstractURLAction implements IURLAction
   protected Shell getShell( )
   {
     return getWorkbench().getActiveWorkbenchWindow().getShell();
+  }
+
+  public void setCommandName( String commandName ) throws CommandURLActionException
+  {
+    if( m_commandName == null )
+      m_commandName = commandName;
+    else
+      throw new CommandURLActionException( "Command name of this action was already set, can not be assigned again!" );
+  }
+
+  public class CommandURLActionException extends Exception
+  {
+    public CommandURLActionException( String message )
+    {
+      super( message );
+    }
+
+    public CommandURLActionException( String message, Throwable e )
+    {
+      super( message, e );
+    }
   }
 }

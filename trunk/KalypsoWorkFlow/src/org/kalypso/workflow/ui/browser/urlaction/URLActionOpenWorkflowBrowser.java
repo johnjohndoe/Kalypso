@@ -63,7 +63,7 @@ public class URLActionOpenWorkflowBrowser extends AbstractURLAction
    */
   private final String WORKFLOW_BROWSER_PART_ID = "org.kalypso.workflow.ui.WorkflowBrowserView";
 
-  private final String COMMAND_NAME = "openWorkflowBrowser";
+  // private final String COMMAND_NAME = "openWorkflowBrowser";
 
   /**
    * required: the URL to load the first page from this is also the first context of the Browser
@@ -82,7 +82,7 @@ public class URLActionOpenWorkflowBrowser extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 
   /**

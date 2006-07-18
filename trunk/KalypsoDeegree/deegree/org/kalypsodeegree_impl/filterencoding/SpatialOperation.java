@@ -260,7 +260,7 @@ public class SpatialOperation extends AbstractOperation
    */
   public GM_Object getGeometryProperty( Feature feature ) throws FilterEvaluationException
   {
-    Object o = feature.getProperty( m_propertyName.getValue() );
+    Object o = feature.getProperty( m_propertyName.getQValue() );
 
     if( o != null && !(o instanceof GM_Object) )
     {

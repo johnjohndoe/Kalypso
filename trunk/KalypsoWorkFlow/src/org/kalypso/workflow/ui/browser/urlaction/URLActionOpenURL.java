@@ -58,7 +58,7 @@ public class URLActionOpenURL extends AbstractURLAction
 {
   private static final String DEFAULT_BROWSER_VIEW = "org.kalypso.workflow.ui.WorkflowBrowserView";
 
-  private final static String COMMAND_NAME = "openURL";
+  // private final static String COMMAND_NAME = "openURL";
 
   private final static String PARAM_URL = "url";
 
@@ -76,7 +76,7 @@ public class URLActionOpenURL extends AbstractURLAction
     {
       // activate the appropriate view (select the folder), where the new View will be relative to and
       // shown in.
-      if( id == null  )
+      if( id == null )
         id = DEFAULT_BROWSER_VIEW;
       final IViewPart part = activePage.showView( id );
       if( part instanceof CommandURLBrowserView )
@@ -100,6 +100,6 @@ public class URLActionOpenURL extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

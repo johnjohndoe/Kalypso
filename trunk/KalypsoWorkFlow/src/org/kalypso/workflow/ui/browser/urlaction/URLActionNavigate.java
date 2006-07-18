@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IViewPart;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
+import org.kalypso.workflow.ui.browser.CommandURLBrowserView;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 
 /**
@@ -52,7 +53,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionNavigate extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "navigate";
+//  private final static String COMMAND_NAME = "navigate";
 
   private final static String PARAM_DIRECTION = "direction";
 
@@ -60,29 +61,33 @@ public class URLActionNavigate extends AbstractURLAction
 
   private static final String PARAM_FORWARD = "forward";
 
+  private static final String PARAM_HOME = "home";
+
   /**
    * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#run(org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
     final String direction = commandURL.getParameter( PARAM_DIRECTION );
-
-    final Event event = new Event();
-    // if( m_listener != null )
-    // {
-    // if( direction.equalsIgnoreCase( VALUE_BACKWARD ) )
-    // {
-    // event.type = AbstractBrowserView.BACKWARD;
-    // m_listener.handleEvent( event );
-    // return true;
-    // }
-    // else if( direction.equalsIgnoreCase( VALUE_FORWARD ) )
-    // {
-    // event.type = AbstractBrowserView.FORWARD;
-    // m_listener.handleEvent( event );
-    // return true;
-    // }
-    // }
+    final IViewPart part = getActivePage().findView( CommandURLBrowserView.WEB_BROWSER_VIEW_ID );
+    if( part != null && (part instanceof CommandURLBrowserView) )
+    {
+      if( direction.equalsIgnoreCase( PARAM_BACKWARD ) )
+      {
+        ((CommandURLBrowserView) part).navigateBack();
+        return true;
+      }
+      else if( direction.equalsIgnoreCase( PARAM_FORWARD ) )
+      {
+        ((CommandURLBrowserView) part).navigateForward();
+        return true;
+      }
+      else if( direction.equalsIgnoreCase( PARAM_HOME ) )
+      {
+        ((CommandURLBrowserView)part).navigateHome();
+        return false;
+      }
+    }
     return false;
   }
 
@@ -91,6 +96,6 @@ public class URLActionNavigate extends AbstractURLAction
    */
   public String getActionName( )
   {
-    return COMMAND_NAME;
+    return m_commandName;
   }
 }

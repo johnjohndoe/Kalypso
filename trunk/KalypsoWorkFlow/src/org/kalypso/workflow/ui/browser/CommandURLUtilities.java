@@ -42,9 +42,10 @@ package org.kalypso.workflow.ui.browser;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.workflow.WorkflowContext;
+import org.kalypso.workflow.ui.browser.AbstractURLAction.CommandURLActionException;
 import org.kalypso.workflow.ui.browser.urlaction.URLActionRegistry;
+import org.kalypso.workflow.ui.browser.urlaction.URLActionRegistry.URLActionRegistryException;
 
 /**
  * @author doemming
@@ -55,11 +56,23 @@ public class CommandURLUtilities
   public static boolean run( WorkflowContext workflowContext, String urlString )
   {
     final ICommandURL commandURL = CommandURLFactory.createCommandURL( urlString );
-    final IURLAction actionURL = URLActionRegistry.getDefault().getURLAction( commandURL.getAction() );
-    if( actionURL != null )
+    final IURLAction actionURL;
+    try
     {
-      actionURL.init( workflowContext );
-      return actionURL.run( commandURL );
+      actionURL = URLActionRegistry.getDefault().createURLAction( commandURL.getCommand() );
+      if( actionURL != null )
+      {
+        actionURL.init( workflowContext );
+        return actionURL.run( commandURL );
+      }
+    }
+    catch( CommandURLActionException e )
+    {
+      e.printStackTrace();
+    }
+    catch( URLActionRegistryException e )
+    {
+      e.printStackTrace();
     }
     return false;
   }
