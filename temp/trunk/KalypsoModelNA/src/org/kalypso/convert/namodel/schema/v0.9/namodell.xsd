@@ -143,7 +143,7 @@
 	<element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Knoten ${property:http://www.opengis.net/gml#name}</label>
+				<label>Knoten</label>
 				<tooltip>Knoten</tooltip>
 				<description>Knoten</description>
 			</documentation>
@@ -537,7 +537,7 @@
 	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Teilgebiet  ${property:http://www.opengis.net/gml#name}</label>
+				<label>Teilgebiet</label>
 				<tooltip>Teilgebiet</tooltip>
 				<description>Teilgebiet</description>
 			</documentation>
@@ -1302,7 +1302,7 @@ siehe #ekturmember...
 	<element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Strang ${property:http://www.opengis.net/gml#name}</label>
+				<label>Strang</label>
 				<tooltip>Strang</tooltip>
 				<description>Strang</description>
 			</documentation>
@@ -1354,7 +1354,7 @@ siehe #ekturmember...
 	<element name="VirtualChannel" type="na:VirtualChannelFeatureType" substitutionGroup="na:_Channel">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>virtueller Strang ${property:http://www.opengis.net/gml#name}</label>
+				<label>virtueller Strang</label>
 				<tooltip>virtueller Strang</tooltip>
 				<description>virtueller Strang</description>
 			</documentation>
@@ -1377,7 +1377,7 @@ siehe #ekturmember...
 	<element name="KMChannel" type="na:KMChannelFeatureType" substitutionGroup="na:_Channel">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>KM Strang ${property:http://www.opengis.net/gml#name}</label>
+				<label>KM Strang</label>
 				<tooltip>Kalinin-Miljukov Strang</tooltip>
 				<description>Realer Strang; Flood Routing Berechnung erfolgt nach dem Verfahren von Kalinin-Miljukov</description>
 			</documentation>
@@ -1471,7 +1471,7 @@ siehe #ekturmember...
 	<element name="StorageChannel" type="na:StorageChannelFeatureType" substitutionGroup="na:_Channel">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Speicherstrang ${property:http://www.opengis.net/gml#name}</label>
+				<label>Speicherstrang</label>
 				<tooltip>Speicherstrang</tooltip>
 				<description>Modellstrang mit Retentionswirkung</description>
 			</documentation>
@@ -1648,7 +1648,7 @@ siehe #ekturmember...
 	<element name="SwaleAndTrench" type="na:SwaleAndTrenchFeatureType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Mulden-Rigole ${property:http://www.opengis.net/gml#name}</label>
+				<label>Mulden-Rigole</label>
 				<tooltip>Mulden-Rigole</tooltip>
 				<description>Mulden-Rigole</description>
 			</documentation>

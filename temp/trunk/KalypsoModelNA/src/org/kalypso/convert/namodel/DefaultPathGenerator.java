@@ -139,6 +139,8 @@ public class DefaultPathGenerator
     // n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
+    if( suffix.equalsIgnoreCase( "qmr"))
+      return "MuldenRigolen";
     // n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) )
       return "Hydrotope";

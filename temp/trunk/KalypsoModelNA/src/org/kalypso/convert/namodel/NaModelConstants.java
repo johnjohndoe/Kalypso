@@ -248,7 +248,7 @@ public interface NaModelConstants
   public static final String PARA_LANDUSE_PROP_LANDUSE_LINK = "idealLandUsePeriodLink";
 
   // default values
-  public static final String DEFAULT_MRS_LANDUSE_PROP = "6";
+  public static final String DEFAULT_MRS_LANDUSE_PROP = "15"; // Nutzung Grünland
 
   /** initalValues.xsd */
   public static final String INI_CATCHMENT_MEMBER_PROP = "catchmentMember";
