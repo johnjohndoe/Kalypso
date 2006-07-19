@@ -39,25 +39,15 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
+import org.kalypso.KalypsoTest;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
@@ -69,23 +59,23 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public class ImportNA extends TestCase
 {
-
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
+  {
+    KalypsoTest.init();
+  }
+  
   public void testImport( ) throws Exception
   {
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(),new DeegreeUrlCatalog(), new UrlCatalogNA() } );
-    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    // final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-    TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
-    RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
-
     final File asciiBaseDir = new File( "C:\\TMP\\na" );
     final File gmlBaseDir = new File( "C:\\TMP\\import" );
     if( !gmlBaseDir.exists() )
       gmlBaseDir.mkdirs();
-    importParameter( gmlBaseDir, asciiBaseDir );
+//    importParameter( gmlBaseDir, asciiBaseDir );
+    NAModellConverter.completeascii2gml(gmlBaseDir, asciiBaseDir );
   }
 
   public void importParameter( File gmlBaseDir, File asciiBaseDir ) throws Exception

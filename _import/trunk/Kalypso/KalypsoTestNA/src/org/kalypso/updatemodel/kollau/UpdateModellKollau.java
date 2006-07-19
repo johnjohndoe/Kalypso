@@ -60,10 +60,14 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -77,7 +81,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 public class UpdateModellKollau extends TestCase
 {
-//  private final URL m_modellURL;
+  // private final URL m_modellURL;
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 
@@ -106,12 +110,12 @@ public class UpdateModellKollau extends TestCase
 
   public UpdateModellKollau( URL modellURL ) throws Exception
   {
-//    m_modellURL = modellURL;
+    // m_modellURL = modellURL;
   }
 
   public UpdateModellKollau( ) throws Exception
   {
-//    m_modellURL = getClass().getResource( "resources/modell.gml" );
+    // m_modellURL = getClass().getResource( "resources/modell.gml" );
 
   }
 
@@ -176,7 +180,8 @@ public class UpdateModellKollau extends TestCase
       feature.setProperty( "vmax", vmax );
       feature.setProperty( "vmin", vmin );
       final ITuppleModel model = new SimpleTuppleModel( axisList, newValues );
-      feature.setProperty( "hvvsqd", model );
+      final SimpleObservation newObservation = new SimpleObservation( null, null, null, true, null, new MetadataList(), axisList, model );
+      feature.setProperty( "hvvsqd", newObservation );
     }
   }
 
