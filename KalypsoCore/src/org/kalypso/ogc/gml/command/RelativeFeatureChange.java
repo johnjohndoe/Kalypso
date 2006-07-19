@@ -100,6 +100,10 @@ public class RelativeFeatureChange extends FeatureChange
       {
         return m_operand;
       }
+      else if( "=".equals( m_operator ) )
+      {        
+        return castDoubleAsType( numericProperty.getClass(), m_operand );
+      }
       else if( "+".equals( m_operator ) )
       {
         return calculate( numericProperty, m_operand, "add" );
@@ -118,7 +122,7 @@ public class RelativeFeatureChange extends FeatureChange
       }
       else
       {
-        throw new IllegalArgumentException( "Operator was not one of: empty string, +, -, *, /" );
+        throw new IllegalArgumentException( "Operator was not one of: empty string, +, -, *, /, =" );
       }
     }
     else
