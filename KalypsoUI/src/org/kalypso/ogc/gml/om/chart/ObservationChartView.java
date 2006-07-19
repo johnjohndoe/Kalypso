@@ -50,7 +50,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
@@ -114,6 +116,7 @@ public class ObservationChartView extends AbstractObservationView
     final Color cfg = parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY );
     final Color cbg = parent.getDisplay().getSystemColor( SWT.COLOR_WHITE );
 
+    /*
     final NumberAxisRenderer numberAxisRenderer = new NumberAxisRenderer( cfg, cbg, AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 1, LABEL_INSETS, 4 );
     final IAxisRegistry axisRegistry = m_chart.getAxisRegistry();
     axisRegistry.setRenderer( Number.class, numberAxisRenderer );
@@ -125,12 +128,18 @@ public class ObservationChartView extends AbstractObservationView
     axisRegistry.addAxis( botAxis );
     axisRegistry.addAxis( leftAxis );
 
-    addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
-
+    */
     // testing
-    m_chart.addLayer( new TestLayer( botAxis, leftAxis ) );
+   // m_chart.addLayer( new TestLayer( botAxis, leftAxis ) );
     
-    m_chart.setAutoscale( true );
+    
+   //
+    
+    UIChartLoader cl=new UIChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
+    cl.createChart("WasserstandEtc");
+    
+    addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
+    m_chart.setAutoscale( false );
 
     m_composite.layout();
   }
@@ -158,7 +167,8 @@ public class ObservationChartView extends AbstractObservationView
    */
   @Override
   protected boolean handleDrop( final IObservation<TupleResult> obs )
-  {
+  { 
+    System.out.println("Something was dropped");
     final TupleResult result = obs.getResult();
     final IComponent[] comps = result.getComponents();
     final List<IComponent> list = new ArrayList<IComponent>( 2 );

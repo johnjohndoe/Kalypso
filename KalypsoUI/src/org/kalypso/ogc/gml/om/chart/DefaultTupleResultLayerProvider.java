@@ -46,6 +46,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.ILayerProvider;
+import org.kalypso.swtchart.layer.impl.TestLayer;
 
 /**
  * @author schlienger
@@ -82,8 +83,8 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
   public IChartLayer[] getLayers( )
   {
     final TupleResult result = m_obs.getResult();
-
-    final TupleResultChartLayer layer = new TupleResultChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
-    return new IChartLayer[] { layer };
+    
+    final TupleResultLineChartLayer layer = new TupleResultLineChartLayer( result, m_domainComponent, m_valueComponent, m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ) );
+    return new IChartLayer[] { layer /*, new TestLayer(m_registry.getAxis( m_domAxisID ), m_registry.getAxis( m_valAxisID ))*/ };
   }
 }
