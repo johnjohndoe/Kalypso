@@ -72,13 +72,15 @@ import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 @SuppressWarnings("unchecked")
 public class RelativeFeatureChangeTest extends TestCase
 {
+  private static final int COMMAND_COUNT = 5;
+  
   private final Feature m_original;
 
   private final IPropertyType[] m_originalProperties;
 
-  private final List<FeatureChange>[] m_changes = new List[4];
+  private final List<FeatureChange>[] m_changes = new List[COMMAND_COUNT];
 
-  private final Feature[] m_result = new Feature[4];
+  private final Feature[] m_result = new Feature[COMMAND_COUNT];
 
   private final CommandableWorkspace m_workspace;
 
@@ -106,13 +108,15 @@ public class RelativeFeatureChangeTest extends TestCase
     final FeatureList featureList = (FeatureList) m_feature.getProperty( 0 );
 
     m_original = (Feature) featureList.get( 0 );
-    for( int i = 0; i < 4; i++ )
+    for( int i = 0; i < COMMAND_COUNT; i++ )
     {
       m_result[i] = (Feature) featureList.get( i + 1 );
       m_changes[i] = new ArrayList<FeatureChange>();
     }
 
     m_originalProperties = m_original.getFeatureType().getProperties();
+    
+    // Command runs in the order add, multiply, subtract, divide, set that work on the same feature. 
     for( IPropertyType propertyType : m_originalProperties )
     {
       if( RelativeFeatureChange.isNumeric( propertyType ) )
@@ -129,18 +133,20 @@ public class RelativeFeatureChangeTest extends TestCase
         // divide value by 2.5
         final RelativeFeatureChange fcDIVIDE = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "/", 2.5 );
         m_changes[3].add( fcDIVIDE );
+        // set all values to 1.0
+        final RelativeFeatureChange fcSET = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "=", 1.0 );
+        m_changes[4].add( fcSET );
       }
     }
   }
 
   /**
    * Test method for 'org.kalypso.ui.editor.actions.RelativeFeatureChange.getNewValue()'
-   * Four command runs in the order add, multiply, subtract, divide that work on the same feature. The expected results
-   * are in the file resources/testFeature.gml.
+   * The expected results are in the file resources/testFeature.gml.
    */
   public final void testGetNewValue( ) throws Exception
   {
-    for( int i = 0; i < 4; i++ )
+    for( int i = 0; i < COMMAND_COUNT; i++ )
     {
       // apply changes
       final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( m_workspace, m_changes[i].toArray( new FeatureChange[m_changes[i].size()] ) );

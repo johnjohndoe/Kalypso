@@ -74,15 +74,12 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureBatchEditActionDelegate implements IActionDelegate
 {
-
   /**
-   * @author Stefan Kurzbach
-   */
+   * Input dialog for selecting the action to take
+   */ 
   private final class BatchEditParametersInputDialog extends InputDialog
   {
-    /**
-     * @author w00t
-     */
+    
     private final class ButtonSelectionListener extends SelectionAdapter
     {
       ButtonSelectionListener( )
@@ -93,7 +90,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         super.widgetSelected( e );
         final Button button = (Button) e.widget;
@@ -106,9 +103,12 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
 
     String m_op = "+";
 
-    public BatchEditParametersInputDialog( Shell shell, String title, Object value )
+    /**
+     * Creates a new input dialog 
+     */
+    public BatchEditParametersInputDialog( final Shell shell)
     {
-      super( shell, title, null, value.toString(), null );
+      super( shell, "Folgende Operation auf alle Werte in der Auswahl anwenden", null, "0", null );
     }
 
     @Override
@@ -116,23 +116,39 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     {
       final Composite composite = (Composite) super.createDialogArea( parent );
       final Group m_radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
-      m_radioButtonGroup.setText( "Operation" );
+      m_radioButtonGroup.setText( "Operation wählen" );
       final FillLayout fillLayout = new FillLayout();
       fillLayout.type = SWT.VERTICAL;
       m_radioButtonGroup.setLayout( fillLayout );
+      
+      final ButtonSelectionListener buttonSelectionListener = new ButtonSelectionListener();
+      
+      final Button equalsButton = new Button( m_radioButtonGroup, SWT.RADIO );
+      equalsButton.setToolTipText( "setzt den eingegebenen Wert" );
+      equalsButton.setText( "=" );
+      equalsButton.addSelectionListener( buttonSelectionListener );
+      
       final Button plusButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      plusButton.addSelectionListener( new ButtonSelectionListener() );
       plusButton.setText( "+" );
+      plusButton.setToolTipText( "addiert den eingegebenen Wert" );
+      plusButton.addSelectionListener( buttonSelectionListener );
       plusButton.setSelection( true );
+      
       final Button minusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       minusButton.setText( "-" );
-      minusButton.addSelectionListener( new ButtonSelectionListener() );
+      minusButton.setToolTipText( "subtrahiert den eingegebenen Wert" );
+      minusButton.addSelectionListener( buttonSelectionListener );
+      
       final Button timesButton = new Button( m_radioButtonGroup, SWT.RADIO );
       timesButton.setText( "*" );
-      timesButton.addSelectionListener( new ButtonSelectionListener() );
+      timesButton.setToolTipText( "multipliziert mit dem eingegebenen Wert" );
+      timesButton.addSelectionListener( buttonSelectionListener );
+      
       final Button divideButton = new Button( m_radioButtonGroup, SWT.RADIO );
+      divideButton.setToolTipText( "dividiert durch den eingegebenen Wert" );
       divideButton.setText( "/" );
-      divideButton.addSelectionListener( new ButtonSelectionListener() );
+      divideButton.addSelectionListener( buttonSelectionListener );
+      
       return composite;
     }
 
@@ -159,7 +175,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
   public void run( final IAction action )
   {
     final Shell shell = Display.getCurrent().getActiveShell();
-    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell, action.getText(), "0");
+    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell);
     dialog.open();
     final String op = dialog.getOperator();
     final FeatureChange[] changeArray = new FeatureChange[m_selectedFeatures.length];
