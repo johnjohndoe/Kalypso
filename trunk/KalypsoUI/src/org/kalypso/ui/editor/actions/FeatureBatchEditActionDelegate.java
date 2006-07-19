@@ -59,6 +59,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.command.RelativeFeatureChange;
@@ -76,10 +77,10 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
 {
   /**
    * Input dialog for selecting the action to take
-   */ 
+   */
   private final class BatchEditParametersInputDialog extends InputDialog
   {
-    
+
     private final class ButtonSelectionListener extends SelectionAdapter
     {
       ButtonSelectionListener( )
@@ -104,9 +105,9 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     String m_op = "+";
 
     /**
-     * Creates a new input dialog 
+     * Creates a new input dialog
      */
-    public BatchEditParametersInputDialog( final Shell shell)
+    public BatchEditParametersInputDialog( final Shell shell )
     {
       super( shell, "Folgende Operation auf alle Werte in der Auswahl anwenden", null, "0", null );
     }
@@ -120,35 +121,35 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
       final FillLayout fillLayout = new FillLayout();
       fillLayout.type = SWT.VERTICAL;
       m_radioButtonGroup.setLayout( fillLayout );
-      
+
       final ButtonSelectionListener buttonSelectionListener = new ButtonSelectionListener();
-      
+
       final Button equalsButton = new Button( m_radioButtonGroup, SWT.RADIO );
       equalsButton.setToolTipText( "setzt den eingegebenen Wert" );
       equalsButton.setText( "=" );
       equalsButton.addSelectionListener( buttonSelectionListener );
-      
+
       final Button plusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       plusButton.setText( "+" );
       plusButton.setToolTipText( "addiert den eingegebenen Wert" );
       plusButton.addSelectionListener( buttonSelectionListener );
       plusButton.setSelection( true );
-      
+
       final Button minusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       minusButton.setText( "-" );
       minusButton.setToolTipText( "subtrahiert den eingegebenen Wert" );
       minusButton.addSelectionListener( buttonSelectionListener );
-      
+
       final Button timesButton = new Button( m_radioButtonGroup, SWT.RADIO );
       timesButton.setText( "*" );
       timesButton.setToolTipText( "multipliziert mit dem eingegebenen Wert" );
       timesButton.addSelectionListener( buttonSelectionListener );
-      
+
       final Button divideButton = new Button( m_radioButtonGroup, SWT.RADIO );
       divideButton.setToolTipText( "dividiert durch den eingegebenen Wert" );
       divideButton.setText( "/" );
       divideButton.addSelectionListener( buttonSelectionListener );
-      
+
       return composite;
     }
 
@@ -175,7 +176,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
   public void run( final IAction action )
   {
     final Shell shell = Display.getCurrent().getActiveShell();
-    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell);
+    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell );
     dialog.open();
     final String op = dialog.getOperator();
     final FeatureChange[] changeArray = new FeatureChange[m_selectedFeatures.length];
@@ -210,6 +211,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     {
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       m_focusedProperty = featureSelection.getFocusedProperty();
+      addFocusDescription( action, m_focusedProperty );
       if( RelativeFeatureChange.isNumeric( m_focusedProperty ) )
       {
         action.setEnabled( true );
@@ -221,6 +223,16 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
       {
         action.setEnabled( false );
       }
+    }
+  }
+
+  private void addFocusDescription( final IAction action, final IPropertyType focusedProperty )
+  {
+    final String text = action.getText();
+    if( text != null )
+    {
+      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")";
+      action.setText( newText );
     }
   }
 

@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -99,9 +98,8 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
   {
     action.setEnabled( false );
     m_selection = null;
-    final String text = action.getText();
-    String newText = text == null ? "" : text.replaceAll( " \\(.*\\)", "" );
-    if( selection instanceof IFeatureSelection && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection ) > 0 )
+    final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
+    if( selection instanceof IFeatureSelection && featureCount > 0 )
     {
       m_selection = (IFeatureSelection) selection;
       final Feature focusedFeature = m_selection.getFocusedFeature();
@@ -113,10 +111,19 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
         if( focusedProperty != null && m_selection.size() >= 2 )
         {
           action.setEnabled( true );
-          newText += " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")";
+          addFocusDescription( action, focusedFeature, focusedProperty );
         }
       }
     }
-    action.setText( newText );
+  }
+
+  private void addFocusDescription( final IAction action, final Feature focusedFeature, final IPropertyType focusedProperty )
+  {
+    final String text = action.getText();
+    if( text != null )
+    {
+      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + focusedFeature.getProperty( focusedProperty ) + ")";
+      action.setText( newText );
+    }
   }
 }
