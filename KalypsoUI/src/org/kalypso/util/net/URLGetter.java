@@ -50,6 +50,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -124,7 +125,20 @@ public class URLGetter implements ICoreRunnableWithProgress
         }
         catch( final IOException e )
         {
-          final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Zugriff auf: " + urlAsString + "\n" + method.getResponseBodyAsString() , e );
+          final IStatus status;
+          
+          String responseBodyAsString = "Response Body not available.";
+          try
+          {
+            responseBodyAsString = method.getResponseBodyAsString();
+          }
+          catch( final IOException e1 )
+          {
+            final IStatus status2 = StatusUtilities.statusFromThrowable( e1 );
+            KalypsoGisPlugin.getDefault().getLog().log( status2 );
+          }
+
+          status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Zugriff auf: " + urlAsString + "\n" + responseBodyAsString , e );
           setStatus( status );
         }
       }
