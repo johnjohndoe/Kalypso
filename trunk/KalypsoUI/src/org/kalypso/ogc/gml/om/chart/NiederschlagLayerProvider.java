@@ -77,6 +77,7 @@ import org.ksp.chart.viewerconfiguration.AbstractAxisType;
 import org.ksp.chart.viewerconfiguration.ChartElementType;
 import org.ksp.chart.viewerconfiguration.DataSourceType;
 import org.ksp.chart.viewerconfiguration.LayerProviderType;
+import org.ksp.chart.viewerconfiguration.ParameterType;
 import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 
 /**
@@ -155,7 +156,9 @@ public class NiederschlagLayerProvider implements ILayerProvider
                  break;
              }
              
-             TupleResultBarChartLayer trcl=new TupleResultBarChartLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis);
+             List<ParameterType> parameter = m_lpt.getParameter();
+             
+             NiederschlagChartLayer trcl=new NiederschlagChartLayer(result, map.get("domain"),map.get("value") , domAxis, valAxis, parameter);
              trcl.setStyle(StyleLoader.createStyle((StyleType) ce.getStyleLink().getRef()));
              
              icl[0]=trcl;

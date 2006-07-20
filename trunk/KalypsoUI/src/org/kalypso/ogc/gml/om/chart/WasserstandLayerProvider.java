@@ -94,7 +94,6 @@ public class WasserstandLayerProvider implements ILayerProvider
   {
     m_lpt=lpt;
     m_chart=chart;
-    
   }
     
   /**
