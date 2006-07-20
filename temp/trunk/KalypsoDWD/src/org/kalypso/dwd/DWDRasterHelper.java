@@ -77,10 +77,10 @@ public class DWDRasterHelper
   private final static String KEY = "([0-9]+)";
 
   private final static Pattern HEADER_STATIC = Pattern.compile( " " + DATUM + " +" + KEY );
+
   private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
-
 
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
@@ -93,9 +93,10 @@ public class DWDRasterHelper
    *          dateformat used for parsing the file name and to extract date from it
    * @param removeOthers
    *          when true other older dwd forecasts are deleted
+   * @deprecated This method is now implemented in DWDCopyTask for use from the DVDFileCopyServlet. It seems that the
+   *             method isn't used form any other class anymore.
    */
-  public static File getNewestFile( final File srcDir, final String prefix, final SimpleDateFormat df,
-      final boolean removeOthers )
+  public static File getNewestFile( final File srcDir, final String prefix, final SimpleDateFormat df, final boolean removeOthers )
   {
     final FileFilter filter = new PrefixFileFilter( prefix );
     final File[] files = srcDir.listFiles( filter );
@@ -167,8 +168,7 @@ public class DWDRasterHelper
     }
     catch( final ParseException e )
     {
-      LOG.warning( "DWD-Forecast filename \"" + file.getName() + "\" has not a valid format, should be:"
-          + df.toPattern() );
+      LOG.warning( "DWD-Forecast filename \"" + file.getName() + "\" has not a valid format, should be:" + df.toPattern() );
       return null;
     }
   }
@@ -199,7 +199,7 @@ public class DWDRasterHelper
       DWDRaster xRaster = null;
       DWDRaster yRaster = null;
       final double factor = DWDRasterHelper.getFactorForDwdKey( DWDRaster.KEY_100000_LAT );
-      while( ( line = reader.readLine() ) != null )
+      while( (line = reader.readLine()) != null )
       {
         Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() )
@@ -214,7 +214,7 @@ public class DWDRasterHelper
           continue;
 
         }
-        final String[] values = ( line.trim() ).split( " +", 13 );
+        final String[] values = (line.trim()).split( " +", 13 );
 
         if( raster != null )
         {
@@ -256,15 +256,14 @@ public class DWDRasterHelper
       case DWDRaster.KEY_WINDM: // [m/s]
       case DWDRaster.KEY_WINDZ: // [m/s]
         return 1d / 100d;
-      case DWDRaster.KEY_100000_LAT: //[grad]
-      case DWDRaster.KEY_100000_LON: //[grad]
+      case DWDRaster.KEY_100000_LAT: // [grad]
+      case DWDRaster.KEY_100000_LON: // [grad]
         return 1d / 100000d;
     }
     return 1; // unknown
   }
 
-  public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells )
-      throws Exception
+  public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells ) throws Exception
   {
     LineNumberReader reader = null;
     final double factor = getFactorForDwdKey( dwdKey );
@@ -276,7 +275,7 @@ public class DWDRasterHelper
       DWDObservationRaster raster = null;
       Date date = null;
       int cellpos = 0;
-      while( ( line = reader.readLine() ) != null )
+      while( (line = reader.readLine()) != null )
       {
         final Matcher dynamicHeaderMatcher = HEADER_DYNAMIC.matcher( line );
         if( dynamicHeaderMatcher.matches() ) // lm1
@@ -317,7 +316,7 @@ public class DWDRasterHelper
         {
           case 1:
             final String[] values;
-            values = ( line.trim() ).split( " +", 13 );
+            values = (line.trim()).split( " +", 13 );
             for( int i = 0; i < values.length; i++ )
             {
               double value = Double.parseDouble( values[i] );
@@ -326,7 +325,7 @@ public class DWDRasterHelper
             }
             break;
           case 2:
-            values = ( line.trim() ).split( " +" );
+            values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
             {
               double value = Double.parseDouble( values[i] );
@@ -361,8 +360,7 @@ public class DWDRasterHelper
    * dwd-file gets the current date but the file content is left unchanged. Kalypso uses the dates found in the file so
    * we need to update it.
    */
-  public static void updateDWDFileContents( final File srcFile, final File destFile, final SimpleDateFormat df )
-      throws IOException, DWDException
+  public static void updateDWDFileContents( final File srcFile, final File destFile, final SimpleDateFormat df ) throws IOException, DWDException
   {
     final Date date = getDateFromRaster( srcFile, df );
     if( date == null )
@@ -388,7 +386,7 @@ public class DWDRasterHelper
         final String newLine;
         if( matcher.matches() )
         {
-          newLine = " " + strDate + matcher.group(1);
+          newLine = " " + strDate + matcher.group( 1 );
           count++;
         }
         else
