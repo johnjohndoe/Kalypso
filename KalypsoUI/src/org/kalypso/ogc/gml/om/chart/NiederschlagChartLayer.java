@@ -41,8 +41,13 @@
 package org.kalypso.ogc.gml.om.chart;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -67,13 +72,14 @@ import org.kalypso.swtchart.styles.StyledPolygon;
 import org.kalypso.swtchart.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.swtchart.util.AliComparator;
 import org.kalypso.swtchart.util.Recalc;
+import org.ksp.chart.viewerconfiguration.ParameterType;
 
 import sun.util.calendar.Gregorian;
 
 /**
  * @author schlienger
  */
-public class TupleResultBarChartLayer implements IChartLayer
+public class NiederschlagChartLayer implements IChartLayer
 {
   private final TupleResult m_result;
 
@@ -87,13 +93,16 @@ public class TupleResultBarChartLayer implements IChartLayer
 
   private ILayerStyle m_style;
 
-  public TupleResultBarChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis )
+  private final List<ParameterType> m_parameters;
+
+  public NiederschlagChartLayer( TupleResult result, IComponent domComp, IComponent valComp, IAxis domAxis, IAxis valAxis, List<ParameterType> parameters )
   {
     m_result = result;
     m_domComp = domComp;
     m_valComp = valComp;
     m_domAxis = domAxis;
     m_valAxis = valAxis;
+    m_parameters = parameters;
   }
 
   /**
@@ -109,14 +118,54 @@ public class TupleResultBarChartLayer implements IChartLayer
     
     StyledPolygon sp=(StyledPolygon) getStyle().getElement(SE_TYPE.POLYGON, 0);
     
-    //Intervall: ein Tag in Millisekunden
-    double barInterval=24*60*60*1000;
-    //Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
-    GregorianCalendar fixedGregCal=new GregorianCalendar();
-    fixedGregCal.set(2000, 1, 1, 0,0);
-    XMLGregorianCalendar fixedPoint=Recalc.gregCalToXMLGregCal(fixedGregCal);
     
+    double barInterval=0;
+    XMLGregorianCalendar fixedPoint=null;
+    if (m_parameters!=null)
+    {
+      for( ParameterType param : m_parameters )
+      {
+        //TODO: hier muss noch falsche Benutzereingabe abgefangen werden
+        if (param.getName().compareTo("fixedPoint")==0 && param.getValue().length()>0)
+        {
+          GregorianCalendar fixedGregCal=new GregorianCalendar();
+          DateFormat df= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+          Date d;
+          try
+          {
+            d = df.parse(param.getValue());
+            fixedGregCal.setTime(d);
+            fixedPoint=Recalc.gregCalToXMLGregCal(fixedGregCal);
+          }
+          catch( ParseException e )
+          {
+            e.printStackTrace();
+          }
+          
+        }
+        if (param.getName().compareTo("barInterval")==0 && param.getValue().length()>0)
+        {
+          barInterval=Double.parseDouble(param.getValue());
+          System.out.println("Parsed BarInterval: "+barInterval);
+        }
+      }
+    }  
+    //Falls noch nicht initialisiert werden nun Standardwerte gesetzt
+    if (barInterval==0)
+    {
+      //Intervall: ein Tag in Millisekunden
+      barInterval=24*60*60*1000;
+    } 
+    if (fixedPoint==null)
+    {
+      //Fixpunkt für Intervall setzten: Hauptsache 0 Uhr
+      GregorianCalendar fixedGregCal=new GregorianCalendar();
+      fixedGregCal.set(2000, 0, 1, 0,0);
+      fixedPoint=Recalc.gregCalToXMLGregCal(fixedGregCal);
+    }
+    System.out.println("Used BarInterval: "+barInterval);
     
+    //Daten zum Zeichnen durchlaufen
     for( int i = 0; i < size; i++)
     {
       final IRecord r1 = m_result.get( i );
@@ -129,9 +178,6 @@ public class TupleResultBarChartLayer implements IChartLayer
         Point xs = m_domAxis.logicalToScreenInterval( domVal,fixedPoint ,barInterval  );
         x1=Math.min(xs.x, xs.y);
         x2=Math.max(xs.x, xs.y);
-        
-            
-        
         y1 = m_valAxis.logicalToScreen( m_valAxis.getFrom() );
         y2= m_valAxis.logicalToScreen( valVal );
       }
