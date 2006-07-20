@@ -56,7 +56,7 @@ public class SampleData
     final Double[][] data = new Double[size][2];
     for( int i = 0; i < data.length; i++ )
     {
-      data[i][0] = new Double( i );
+      data[i][0] = new Double(1+ (100/data.length) * i );
       data[i][1] = ((double) i + 1) / data.length * Math.sin( 16 * Math.PI / size * i/2 );
     }
     return data;
@@ -67,7 +67,7 @@ public class SampleData
     final Double[][] data = new Double[size][2];
     for( int i = 0; i < data.length; i++ )
     {
-      data[i][0] = new Double( i );
+      data[i][0] = new Double(1+ (100/data.length) * i );
       data[i][1] = new Double( (int) (Math.random() * 10) );
     }
     return data;
