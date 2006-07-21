@@ -136,7 +136,7 @@ public class ObservationChartView extends AbstractObservationView
    //
     
     UIChartLoader cl=new UIChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
-    cl.createChart("WasserstandEtc");
+    cl.createChart("AliTest");
     
     addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
     m_chart.setAutoscale( false );

@@ -90,11 +90,17 @@ public class WasserstandLayerProvider implements ILayerProvider
   private LayerProviderType m_lpt;
   private Chart m_chart;
 
-  public WasserstandLayerProvider(LayerProviderType lpt, Chart chart)
+  public WasserstandLayerProvider()
+  {
+  }
+  
+  public void init(Chart chart, LayerProviderType lpt)
   {
     m_lpt=lpt;
     m_chart=chart;
   }
+
+
     
   /**
    * @see org.kalypso.swtchart.layer.ILayerProvider#getLayers()

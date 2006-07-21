@@ -75,14 +75,19 @@ import org.ksp.chart.viewerconfiguration.ChartElementType.AxisMapping;
 public class WQTabelleLayerProvider implements ILayerProvider
 {
 
-  private final Chart m_chart;
-  private final LayerProviderType m_lp;
+  private Chart m_chart=null;
+  private LayerProviderType m_lp=null;
 
-  public WQTabelleLayerProvider( LayerProviderType lp, Chart chart )
+  public WQTabelleLayerProvider()
+  {
+    
+  }
+  
+  
+  public void init(Chart chart, LayerProviderType lp )
   {
     m_lp = lp;
     m_chart = chart;
-      
   }
 
   /**

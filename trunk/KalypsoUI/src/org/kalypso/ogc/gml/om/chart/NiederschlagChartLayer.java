@@ -49,6 +49,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
@@ -109,7 +111,7 @@ public class NiederschlagChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc, final Device dev )
+  public void paint( final GCWrapper gc, final Device dev ) 
   {
     int size = m_result.size();
     gc.setLineWidth(5);
@@ -118,30 +120,25 @@ public class NiederschlagChartLayer implements IChartLayer
     
     StyledPolygon sp=(StyledPolygon) getStyle().getElement(SE_TYPE.POLYGON, 0);
     
-    
+    //Config-Parameter auslesen
     double barInterval=0;
     XMLGregorianCalendar fixedPoint=null;
     if (m_parameters!=null)
     {
       for( ParameterType param : m_parameters )
       {
-        //TODO: hier muss noch falsche Benutzereingabe abgefangen werden
+        //parsen des Config-Werts in XMLGregCalendar
         if (param.getName().compareTo("fixedPoint")==0 && param.getValue().length()>0)
         {
-          GregorianCalendar fixedGregCal=new GregorianCalendar();
-          DateFormat df= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-          Date d;
           try
           {
-            d = df.parse(param.getValue());
-            fixedGregCal.setTime(d);
-            fixedPoint=Recalc.gregCalToXMLGregCal(fixedGregCal);
+            DatatypeFactory df= DatatypeFactory.newInstance();
+            fixedPoint = df.newXMLGregorianCalendar(param.getValue());
           }
-          catch( ParseException e )
+          catch( DatatypeConfigurationException e )
           {
             e.printStackTrace();
           }
-          
         }
         if (param.getName().compareTo("barInterval")==0 && param.getValue().length()>0)
         {
