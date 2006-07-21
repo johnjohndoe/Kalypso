@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5650006.91697641" left="5438071.101292994" right="5511155.82212694" top="5712133.956144744"/>
+    <layers active="ID_1">
+        <layer name="Vorgabepegel (Flutungen und Zuflüsse)" visible="true" featurePath="VorgabeCollectionAssociation/VorgabeMember[_Vorgabe]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Flutungen" ns1:actuate="onRequest" ns1:href="project:/.styles/flutungen.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="sachsenrivers" ns3:actuate="onRequest" ns3:href="project:/.styles/styles.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+
