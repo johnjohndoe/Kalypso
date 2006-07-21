@@ -175,6 +175,14 @@
             icon="icons/kalypso_odt.gif"
             id="org.kalypso.ogc.gml.om.chart.ObservationChartView"
             name="Observation-Diagramm (DnD)"/>
+      <view
+            allowMultiple="true"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.views.map.MapView"
+            fastViewWidthRatio="70"
+            icon="icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.views.map.MapView"
+            name="Karten-Ansicht"/>
    </extension>
    <extension
          id="editorActions"

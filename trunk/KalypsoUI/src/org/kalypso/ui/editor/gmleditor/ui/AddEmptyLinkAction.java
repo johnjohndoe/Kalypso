@@ -41,7 +41,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,15 +57,13 @@ public class AddEmptyLinkAction extends Action
 
   private final Feature m_parentFeature;
 
-  private final IFeatureSelectionManager m_selectionManager;
 
-  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp, Feature parentFeature, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp, Feature parentFeature, CommandableWorkspace workspace )
   {
     super( text, image );
     m_fatp = fatp;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
-    m_selectionManager = selectionManager;
   }
 
   @Override

@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import java.awt.Frame;
 import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,29 +51,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -243,43 +232,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
-    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    // create MapPanel
-    final Frame virtualFrame = SWT_AWT.new_Frame( composite );
-    virtualFrame.setVisible( true );
-    m_mapPanel.setVisible( true );
-    virtualFrame.add( m_mapPanel );
 
-    // create Context Menu
-    final MenuManager menuManager = new MenuManager();
-    menuManager.setRemoveAllWhenShown( true );
-    menuManager.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( IMenuManager manager )
-      {
-        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( new Separator() );
-      }
-    } );
-    final Menu mapMenu = menuManager.createContextMenu( composite );
-    composite.setMenu( mapMenu );
-    // register it
-    getSite().registerContextMenu( menuManager, m_mapPanel );
-    getSite().setSelectionProvider( m_mapPanel );
-
-    m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
-
-    // add drag and drop support
-    // int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    // Transfer[] transfers = new Transfer[]
-    // {
-    // LocalSelectionTransfer.getInstance(),
-    // PluginTransfer.getInstance() };
-    // m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
-    // transfers = new Transfer[]
-    // { LocalSelectionTransfer.getInstance() };
-    // m_dropAdapter = new GmlTreeDropAdapter( this );
-    // m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
+    MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
   }
 
   @Override

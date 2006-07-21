@@ -198,7 +198,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
             final List list = (List)parentFeature.getProperty( fatp );
             if( list.size() < fatp.getMaxOccurs() ) 
               menuManager.add( new AddEmptyLinkAction( "Feature neu", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE, fatp,
-                  parentFeature, workspace, KalypsoCorePlugin.getDefault().getSelectionManager() ) );
+                  parentFeature, workspace ) );
           }
         }
       }
