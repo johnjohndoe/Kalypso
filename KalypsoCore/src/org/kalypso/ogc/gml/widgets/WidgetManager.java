@@ -239,12 +239,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     m_widgetChangeListener.add( listener );
   }
 
-  public void removeWidgetChangeListener( IWidgetChangeListener listener )
+  public void removeWidgetChangeListener( final IWidgetChangeListener listener )
   {
     m_widgetChangeListener.remove( listener );
   }
 
-  private void fireWidgetChangeEvent( IWidget newWidget )
+  private void fireWidgetChangeEvent( final IWidget newWidget )
   {
     final IWidgetChangeListener[] listener = m_widgetChangeListener.toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
     for( int i = 0; i < listener.length; i++ )
@@ -256,7 +256,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
    */
   public void keyTyped( KeyEvent e )
   {
-    getActualWidget().keyTyped( e );
+    final IWidget widget = getActualWidget();
+    if( widget != null )
+      widget.keyTyped( e );
   }
 
   /**
@@ -264,7 +266,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
    */
   public void keyPressed( KeyEvent e )
   {
-    getActualWidget().keyPressed( e );
+    final IWidget widget = getActualWidget();
+    if( widget != null )
+      widget.keyPressed( e );
   }
 
   /**
@@ -272,8 +276,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
    */
   public void keyReleased( KeyEvent e )
   {
-    getActualWidget().keyReleased( e );
-
+    final IWidget widget = getActualWidget();
+    if( widget != null )
+      widget.keyReleased( e );
   }
 
 }
