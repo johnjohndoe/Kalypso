@@ -140,7 +140,8 @@ public class UIChartLoader extends org.kalypso.swtchart.configuration.ChartLoade
             if (lpname.compareTo("org.ksp.observation.layerProvider.Wasserstand")==0)
             {
                System.out.println("LayerProvider: Wasserstand");
-               WasserstandLayerProvider wlp=new WasserstandLayerProvider(lp, m_chart); 
+               WasserstandLayerProvider wlp=new WasserstandLayerProvider();
+               wlp.init(m_chart,lp);
                IChartLayer[] icl=wlp.getLayers();
                for( IChartLayer layer : icl )
                {
@@ -151,7 +152,8 @@ public class UIChartLoader extends org.kalypso.swtchart.configuration.ChartLoade
             else if (lpname.compareTo("org.ksp.observation.layerProvider.WQTabelle")==0)
             {
               System.out.println("LayerProvider: WQTabelle");
-              WQTabelleLayerProvider wqlp=new WQTabelleLayerProvider(lp, m_chart); 
+              WQTabelleLayerProvider wqlp=new WQTabelleLayerProvider();
+              wqlp.init(m_chart, lp);
               IChartLayer[] icl=wqlp.getLayers();
               for( IChartLayer layer : icl )
               {
@@ -161,7 +163,8 @@ public class UIChartLoader extends org.kalypso.swtchart.configuration.ChartLoade
             else if (lpname.compareTo("org.ksp.observation.layerProvider.Niederschlag")==0)
             {
               System.out.println("LayerProvider: Niederschlag");
-              NiederschlagLayerProvider wqlp=new NiederschlagLayerProvider(lp, m_chart); 
+              NiederschlagLayerProvider wqlp=new NiederschlagLayerProvider();
+              wqlp.init(m_chart, lp);
               IChartLayer[] icl=wqlp.getLayers();
               for( IChartLayer layer : icl )
               {

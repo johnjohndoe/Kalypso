@@ -91,11 +91,15 @@ public class NiederschlagLayerProvider implements ILayerProvider
   private LayerProviderType m_lpt;
   private Chart m_chart;
 
-  public NiederschlagLayerProvider(LayerProviderType lpt, Chart chart)
+  public NiederschlagLayerProvider()
+  {
+    
+  }
+  
+  public void init(Chart chart, LayerProviderType lpt)
   {
     m_lpt=lpt;
     m_chart=chart;
-    
   }
     
   /**

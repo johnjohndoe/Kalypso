@@ -43,27 +43,33 @@ package org.kalypso.ogc.gml.om.chart;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.swtchart.Chart;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.ILayerProvider;
 import org.kalypso.swtchart.layer.impl.TestLayer;
+import org.ksp.chart.viewerconfiguration.LayerProviderType;
 
 /**
  * @author schlienger
  */
 public class DefaultTupleResultLayerProvider implements ILayerProvider
 {
-  private final IObservation<TupleResult> m_obs;
+  private IObservation<TupleResult> m_obs;
 
-  private final IComponent m_domainComponent;
+  private IComponent m_domainComponent;
 
-  private final IComponent m_valueComponent;
+  private IComponent m_valueComponent;
 
-  private final IAxisRegistry m_registry;
+  private IAxisRegistry m_registry;
 
-  private final String m_domAxisID;
+  private String m_domAxisID;
 
-  private final String m_valAxisID;
+  private String m_valAxisID;
+
+  private LayerProviderType m_lpt;
+
+  private Chart m_chart;
 
   public DefaultTupleResultLayerProvider( final IAxisRegistry registry, final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent valueComponent, final String domAxisID, final String valAxisID )
   {
@@ -75,6 +81,13 @@ public class DefaultTupleResultLayerProvider implements ILayerProvider
 
     m_domAxisID = domAxisID;
     m_valAxisID = valAxisID;
+  }
+  
+  
+  public void init(Chart chart, LayerProviderType lpt)
+  {
+    m_lpt=lpt;
+    m_chart=chart;
   }
 
   /**
