@@ -17,7 +17,7 @@
           </init-param>
           - <init-param>
               <param-name>source</param-name> 
-              <param-value>ftp://kalypso:kalypso@smdhvzlweb/lm2;ftp://kalypso:kalypso@smdhvzlweb/lm2_test</param-value> 
+              <param-value>ftp://kalypso:kalypso@smdhvzlweb/home/kalypso/lm2;ftp://kalypso:kalypso@smdhvzlweb/home/kalypso/lm2_test</param-value> 
               <description>source path of the directory where dwd files are located (semicolon separated if more than one instance)</description> 
           </init-param>
           - <init-param>
