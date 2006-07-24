@@ -45,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -153,7 +152,7 @@ public class FetchFromURLsTask extends Task
         if( !parentFile.exists() )
           parentFile.mkdirs();
         outputStream = new FileOutputStream( destination );
-        CopyUtils.copy( url.openStream(), outputStream );
+        IOUtils.copy( url.openStream(), outputStream );
         if( project2 != null )
         {
           project2.log( "copied from url : " + url.toExternalForm(), Project.MSG_INFO );
