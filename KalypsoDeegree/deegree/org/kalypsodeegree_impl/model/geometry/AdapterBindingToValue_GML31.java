@@ -125,50 +125,52 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     // see gml2xadapter
     throw new UnsupportedOperationException();
     // TODO
-//    try
-//    {
-//      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-//      final QName qName = new QName( "namespaceabc", "geometry", "pre" );
-//      final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
-//
-//      // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
-//      // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
-//
-//      // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
-//
-//      final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-//      fac.setNamespaceAware( true );
-//      final DocumentBuilder builder = fac.newDocumentBuilder();
-//      final Document document = builder.newDocument();
-//      final UnMarshallResultEater eater = new UnMarshallResultEater()
-//      {
-//        public void eat( Object value )
-//        {
-//          if( value instanceof Node )
-//          {
-//            String string = XMLHelper.toString( (Node) value );
-//            System.out.println( string );
-//          }
-//        }
-//      };
-//      // Element element = document.createElement("test");
-//      // document.appendChild(element);
-//      final DOMConstructor constructor = new DOMConstructor( document, eater );
-//      constructor.startElement( "bla", "blub", "b:blub", new AttributesImpl() );
-//      typeHandler.marshal( qName, geometry, constructor, null, null, gmlVersion );
-//
-//      // marshaller.marshal( bindingElement, document );
-//      String string1 = XMLHelper.toString( document );
-//      Node node = constructor.getNode();
-//      String string2 = XMLHelper.toString( node );
-//      return document.getDocumentElement();
-//    }
-//    catch( Exception e )
-//    {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
-//    // called from SpatialOperation.toXML()
+    // try
+    // {
+    // final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry =
+    // MarshallingTypeRegistrySingleton.getTypeRegistry();
+    // final QName qName = new QName( "namespaceabc", "geometry", "pre" );
+    // final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName(
+    // GeometryUtilities.getPolygonClass() );
+    //
+    // // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
+    // // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
+    //
+    // // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
+    //
+    // final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+    // fac.setNamespaceAware( true );
+    // final DocumentBuilder builder = fac.newDocumentBuilder();
+    // final Document document = builder.newDocument();
+    // final UnMarshallResultEater eater = new UnMarshallResultEater()
+    // {
+    // public void eat( Object value )
+    // {
+    // if( value instanceof Node )
+    // {
+    // String string = XMLHelper.toString( (Node) value );
+    // System.out.println( string );
+    // }
+    // }
+    // };
+    // // Element element = document.createElement("test");
+    // // document.appendChild(element);
+    // final DOMConstructor constructor = new DOMConstructor( document, eater );
+    // constructor.startElement( "bla", "blub", "b:blub", new AttributesImpl() );
+    // typeHandler.marshal( qName, geometry, constructor, null, null, gmlVersion );
+    //
+    // // marshaller.marshal( bindingElement, document );
+    // String string1 = XMLHelper.toString( document );
+    // Node node = constructor.getNode();
+    // String string2 = XMLHelper.toString( node );
+    // return document.getDocumentElement();
+    // }
+    // catch( Exception e )
+    // {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // // called from SpatialOperation.toXML()
   }
 
   private GM_Envelope createGM_Envelope( EnvelopeType bindingEnvelope )
@@ -190,9 +192,18 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
     }
     // TODO coordinates
-    DirectPositionType lowerCorner = bindingEnvelope.getLowerCorner();
-    DirectPositionType upperCorner = bindingEnvelope.getUpperCorner();
-    // TODO directPosition lower and upper
+    
+    final DirectPositionType lowerCorner = bindingEnvelope.getLowerCorner();
+    final DirectPositionType upperCorner = bindingEnvelope.getUpperCorner();
+    if( lowerCorner != null && upperCorner != null )
+    {
+      final List<Double> min = lowerCorner.getValue();
+      final List<Double> max = upperCorner.getValue();
+      final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
+      final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos );
+    }
+
     final List<DirectPositionType> pos = bindingEnvelope.getPos();
     if( pos != null && !pos.isEmpty() )
     {
