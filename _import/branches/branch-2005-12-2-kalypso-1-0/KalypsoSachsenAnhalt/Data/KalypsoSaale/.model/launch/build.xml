@@ -6,11 +6,11 @@
 	<!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
 	<!-- TODO: durch echte URLs ersetzen; zur Zeit linkt alles auf das lokale Projektverzeichnis -->
 	<!-- Scenario Normalbetrieb -->
-	<property name="szenario_EchtDwdUrl1" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
-	<property name="szenario_EchtDwdUrl2" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+	<property name="szenario_EchtDwdUrl1" value="http://smdhvzwapp:8088/webdav/dwd/lm_normal.txt" />
+	<property name="szenario_EchtDwdUrl2" value="http://shalhvzwapp:8088/webdav/dwd/lm_normal.txt" />
 	<!-- Scenario Testbetrieb -->
-	<property name="szenario_TestDwdUrl1" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
-	<property name="szenario_TestDwdUrl2" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+	<property name="szenario_TestDwdUrl1" value="http://smdhvzwapp:8088/webdav/dwd/lm_test.txt" />
+	<property name="szenario_TestDwdUrl2" value="http://shalhvzwapp:8088/webdav/dwd/lm_test.txt" />
 
 	<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
 	<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dwdzmlConf xmlns="dwdzml.dwd.kalypso.org">
-    <dwdKey>424</dwdKey> <!-- es ist eine Niderschlagskey -->
-    <numberOfCells>3886</numberOfCells>
+    <dwdKey>424</dwdKey> <!-- Niederschlag -->
+    <numberOfCells>700</numberOfCells>
     <defaultStatusValue>1</defaultStatusValue>
     <target>
         <targetZR>Niederschlag/570210.zml</targetZR>
