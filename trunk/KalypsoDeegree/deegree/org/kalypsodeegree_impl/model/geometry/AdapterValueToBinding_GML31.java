@@ -52,6 +52,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
 import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
 import ogc31.www.opengis.net.gml.CoordinatesType;
+import ogc31.www.opengis.net.gml.DirectPositionType;
+import ogc31.www.opengis.net.gml.EnvelopeType;
 import ogc31.www.opengis.net.gml.Exterior;
 import ogc31.www.opengis.net.gml.Interior;
 import ogc31.www.opengis.net.gml.LineStringPropertyType;
@@ -346,7 +348,29 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
    */
   public Object wrapToBinding( GM_Envelope geometry )
   {
-    // TODO see gml2x adapter
-    throw new UnsupportedOperationException();
+    final GM_Position min = geometry.getMin();
+    final GM_Position max = geometry.getMax();
+
+    final EnvelopeType envelopeType = gml3Fac.createEnvelopeType();
+
+    final DirectPositionType lowerCorner = gml3Fac.createDirectPositionType();
+    final DirectPositionType upperCorner = gml3Fac.createDirectPositionType();
+
+    final List<Double> lowers = lowerCorner.getValue();
+    lowers.clear();
+    lowers.add( min.getX() );
+    lowers.add( min.getY() );
+
+    final List<Double> uppers = upperCorner.getValue();
+    uppers.clear();
+    uppers.add( max.getX() );
+    uppers.add( max.getY() );
+
+    envelopeType.setLowerCorner( lowerCorner );
+    envelopeType.setUpperCorner( upperCorner );
+
+    // envelopeType.setSrsName( )
+
+    return envelopeType;
   }
 }
