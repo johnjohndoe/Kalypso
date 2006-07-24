@@ -96,8 +96,8 @@ public class MapPartHelper
     site.setSelectionProvider( mapPanel );
 
     mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
-    
+
     return composite;
   }
- 
+
 }

@@ -53,6 +53,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
@@ -69,50 +70,55 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
    */
   public void run( final IAction action )
   {
-    final GisMapEditor editor = (GisMapEditor)getEditor();
-    if( editor == null )
+    final WidgetActionPart part = getPart();
+    if( part == null )
       return;
 
-    final Shell shell = editor.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern",
-        "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+    final Shell shell = part.getSite().getShell();
+    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
       return;
 
-    final IMapModell mapModell = editor.getMapPanel().getMapModell();
-    if( mapModell != null )
+    final MapPanel mapPanel = part.getMapPanel();
+    if( mapPanel != null )
     {
-      final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-      if( activeTheme instanceof IKalypsoFeatureTheme )
+      final IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell != null )
       {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
-
-        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-
-        final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+        if( activeTheme instanceof IKalypsoFeatureTheme )
         {
-          @Override
-          protected void execute( final IProgressMonitor monitor ) throws CoreException
+          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+
+          final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+
+          final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
           {
-            editor.saveTheme( theme, monitor );
+            @Override
+            protected void execute( final IProgressMonitor monitor ) throws CoreException
+            {
+              final GisMapEditor editor = (GisMapEditor) part.getPart();
+              if( editor != null )
+                editor.saveTheme( theme, monitor );
+            }
+          };
+
+          try
+          {
+            progressService.busyCursorWhile( op );
           }
-        };
+          catch( final InvocationTargetException e )
+          {
+            e.printStackTrace();
 
-        try
-        {
-          progressService.busyCursorWhile( op );
-        }
-        catch( final InvocationTargetException e )
-        {
-          e.printStackTrace();
+            final CoreException ce = (CoreException) e.getTargetException();
+            ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
+          }
+          catch( final InterruptedException e )
+          {
+            e.printStackTrace();
+          }
 
-          final CoreException ce = (CoreException)e.getTargetException();
-          ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
         }
-        catch( final InterruptedException e )
-        {
-          e.printStackTrace();
-        }
-
       }
     }
 
@@ -124,19 +130,23 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
   {
     boolean bEnabled = false;
 
-    final GisMapEditor editor = (GisMapEditor)getEditor();
-    if( editor != null )
+    final WidgetActionPart part = getPart();
+    if( part != null )
     {
-      final IMapModell mapModell = editor.getMapPanel().getMapModell();
-      if( mapModell != null )
+      final GisMapEditor editor = (GisMapEditor) part.getPart();
+      if( editor != null )
       {
-        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
+        final IMapModell mapModell = editor.getMapPanel().getMapModell();
+        if( mapModell != null )
         {
-          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
-          final CommandableWorkspace workspace = theme.getWorkspace();
-          if( workspace != null )
-            bEnabled = workspace.isDirty();
+          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+          if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
+          {
+            final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+            final CommandableWorkspace workspace = theme.getWorkspace();
+            if( workspace != null )
+              bEnabled = workspace.isDirty();
+          }
         }
       }
     }

@@ -31,13 +31,12 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author kuepfer
@@ -60,17 +59,18 @@ public class FilterActionDelegate extends AbstractGisMapEditorActionDelegate
     action.setEnabled( false );
     if( selection instanceof KalypsoFeatureThemeSelection )
     {
-      final IEditorPart editor = getEditor();
-      if( editor instanceof GisMapEditor )
+      final WidgetActionPart part = getPart();
+      if( part != null )
       {
-        IMapModell mapModell = ((GisMapEditor) editor).getMapPanel().getMapModell();
-        IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
+        final MapPanel mapPanel = part.getMapPanel();
+        if( mapPanel != null )
         {
-          action.setEnabled( true );
+          final IMapModell mapModell = mapPanel.getMapModell();
+          IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+          if( activeTheme instanceof IKalypsoFeatureTheme )
+            action.setEnabled( true );
         }
       }
     }
   }
-
 }

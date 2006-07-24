@@ -40,6 +40,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author Küpferle
@@ -217,7 +218,11 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   {
     if( adapter == IPostSelectionProvider.class )
       return m_viewer;
-    else if( adapter == ISelectionProvider.class )
+    
+    if( adapter == ISelectionProvider.class )
+      return m_viewer;
+    
+    if( adapter == ModellEventProvider.class )
       return m_viewer;
 
     return super.getAdapter( adapter );

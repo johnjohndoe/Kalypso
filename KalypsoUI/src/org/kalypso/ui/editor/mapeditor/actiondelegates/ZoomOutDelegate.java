@@ -44,21 +44,18 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author belger
  */
-public class ZoomOutDelegate implements IEditorActionDelegate
+public class ZoomOutDelegate implements IEditorActionDelegate, IViewActionDelegate
 {
-  private GisMapEditor m_editor;
-
-  public ZoomOutDelegate( )
-  {
-  }
+  private WidgetActionPart m_part;
 
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
@@ -66,7 +63,15 @@ public class ZoomOutDelegate implements IEditorActionDelegate
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_editor = (GisMapEditor) targetEditor;
+    m_part = new WidgetActionPart( targetEditor );
+  }
+
+  /**
+   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+   */
+  public void init( final IViewPart view )
+  {
+    m_part = new WidgetActionPart( view );
   }
 
   /**
@@ -74,15 +79,15 @@ public class ZoomOutDelegate implements IEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    if( m_editor == null )
+    if( m_part == null )
       return;
 
-    final MapPanel mapPanel = m_editor.getMapPanel();
+    final MapPanel mapPanel = m_part.getMapPanel();
     if( mapPanel == null )
       return;
 
     final GM_Envelope zoomBox = mapPanel.getZoomOutBoundingBox();
-    m_editor.postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
+    m_part.postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
   }
 
   /**

@@ -23,7 +23,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -56,7 +56,9 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getBoundingBox() );
       ft = selectedTheme.getFeatureType();
     }
-    final Shell shell = getEditor().getSite().getShell();
+    
+    final WidgetActionPart part = getPart();
+    final Shell shell = part == null ? null : part.getSite().getShell();
     final FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, true );
     int open = -1;
     if( ft != null )
@@ -104,14 +106,15 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );
-    final GisMapEditor gisMapEditor = (GisMapEditor) getEditor();
-    if( gisMapEditor != null )
+    
+    final WidgetActionPart part = getPart();
+    if( part != null )
     {
-      final IContentOutlinePage page = gisMapEditor.getOutlineView();
+      final IContentOutlinePage page = (IContentOutlinePage) part.getPart().getAdapter( IContentOutlinePage.class );
       if( page != null )
       {
         m_ftSelection = null;
-        Display display = getEditor().getSite().getShell().getDisplay();
+        final Display display = part.getSite().getShell().getDisplay();
         display.syncExec( new Runnable()
         {
           public void run( )

@@ -31,7 +31,6 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -40,7 +39,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -99,18 +97,21 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
 
   public boolean fitsToAction( )
   {
-    final IEditorPart editor = getEditor();
-    if( editor != null && editor instanceof GisMapEditor )
+    final WidgetActionPart part = getPart();
+    if( part != null )
     {
-      final MapPanel mapPanel = ((GisMapEditor) editor).getMapPanel();
+      final MapPanel mapPanel = part.getMapPanel();
       if( mapPanel == null )
         return false;
+
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell == null )
         return false;
+      
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme == null )
         return false;
+      
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
         final IFeatureType featureType = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();

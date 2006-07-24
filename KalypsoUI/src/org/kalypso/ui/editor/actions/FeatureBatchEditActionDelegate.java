@@ -231,7 +231,11 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     final String text = action.getText();
     if( text != null )
     {
-      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")";
+      final String newText;
+      if( focusedProperty == null )
+        newText = text;
+      else
+        newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")";
       action.setText( newText );
     }
   }

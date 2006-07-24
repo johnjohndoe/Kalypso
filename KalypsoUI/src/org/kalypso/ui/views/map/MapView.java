@@ -163,6 +163,7 @@ public class MapView extends ViewPart implements ICommandTarget
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
+
     if( memento == null )
       return;
 
@@ -311,5 +312,18 @@ public class MapView extends ViewPart implements ICommandTarget
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == MapPanel.class )
+      return m_mapPanel;
+      
+    
+    return super.getAdapter( adapter );
   }
 }

@@ -82,7 +82,7 @@ public class URLActionAddThemeGMT extends AbstractURLAction
     if( activeEditor instanceof GisMapEditor )
     {
       final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
-      final IContentOutlinePage outlineView = gisMapEditor.getOutlineView();
+      final IContentOutlinePage outlineView = (IContentOutlinePage) gisMapEditor.getAdapter( IContentOutlinePage.class );
       if( outlineView instanceof GisMapOutlinePage )
       {
         final GisMapOutlinePage gisOutlinePage = (GisMapOutlinePage) outlineView;

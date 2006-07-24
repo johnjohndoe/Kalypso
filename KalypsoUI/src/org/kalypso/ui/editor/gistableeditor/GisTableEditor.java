@@ -96,6 +96,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * <p>
@@ -109,8 +110,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IExportableObjectFactory
 {
-//  private final static ObjectFactory OF = new ObjectFactory();
-
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private LayerTableViewer m_layerTable = null;
@@ -313,6 +312,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
+    
+    if( adapter == ModellEventProvider.class )
+      return m_layerTable;
 
     return super.getAdapter( adapter );
   }

@@ -41,10 +41,11 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author doemming
@@ -59,30 +60,36 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
+  protected void setActivePart( final IAction action, final IWorkbenchPart part )
   {
-    super.setActiveEditor( action, targetEditor );
+    super.setActivePart( action, part );
+
     if( action.getStyle() == IAction.AS_RADIO_BUTTON )
     {
-      final GisMapEditor editor = (GisMapEditor) targetEditor;
-      if( editor != null && action != null )
+      final WidgetActionPart widgetPart = getPart();
+      if( widgetPart != null && action != null )
       {
         if( action.isChecked() )
         {
           // da der event evt vom AWT-Thread kommt
-          getEditor().getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
+          final IWorkbenchPartSite site = widgetPart.getSite();
+          if( site != null )
           {
-            public void run( )
+            site.getShell().getDisplay().asyncExec( new Runnable()
             {
-              final IWidget widget = getWidget();
-//              System.out.println( widget.getName() );
-              editor.getMapPanel().getWidgetManager().setActualWidget( widget );
-            }
-          } );
+              public void run( )
+              {
+                final IWidget widget = getWidget();
+                final MapPanel mapPanel = widgetPart.getMapPanel();
+                if( mapPanel != null )
+                  mapPanel.getWidgetManager().setActualWidget( widget );
+              }
+            } );
+          }
         }
       }
     }
@@ -99,8 +106,15 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   public final void run( final IAction action )
   {
     // activate my widget
-    final GisMapEditor editor = (GisMapEditor) getEditor();
-    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    final MapPanel mapPanel = part.getMapPanel();
+    if( mapPanel == null )
+      return;
+    
+    mapPanel.getWidgetManager().setActualWidget( getWidget() );
   }
 
   /**
