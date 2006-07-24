@@ -49,26 +49,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.cache.DefaultFilesCache;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs.provider.ftp.FtpFileProvider;
-import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs.provider.url.UrlFileProvider;
 import org.kalypso.dwd.DWDException;
 import org.kalypso.dwd.DWDRasterHelper;
 
 class DWDCopyTask extends TimerTask
 {
-  private final File m_srcDir;
-
   private final File m_destFile;
-
-  private final String m_srcPrefix;
 
   private final SimpleDateFormat m_dateFormat;
 
@@ -84,10 +75,8 @@ class DWDCopyTask extends TimerTask
 
   private FileObject[] m_list;
 
-  public DWDCopyTask( final String URI, final DefaultFileSystemManager fsManager, final File srcDir, final String srcPrefix, final String srcFormat, final boolean srcDel, final File destName, final boolean destUpdate )
+  public DWDCopyTask( final String URI, final DefaultFileSystemManager fsManager, final String srcFormat, final boolean srcDel, final File destName, final boolean destUpdate )
   {
-    m_srcDir = srcDir;
-    m_srcPrefix = srcPrefix;
     m_srcDel = srcDel;
     m_dateFormat = new SimpleDateFormat( srcFormat );
     m_destFile = destName;

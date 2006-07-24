@@ -49,7 +49,7 @@
 
         <echo message="Building DWDFileCopy Servlet with deployment desc from: ${web.xml}"/>
         
-        <war webxml="${web.xml}"
+        <war  webxml="${web.xml}"
              destfile="${project}/build/deploy/KalypsoDWDFileCopyServlet.war">
             <classes dir="${project}/build/bin" excludes="*.xml" />
             <lib dir="${project}/etc/libdeploy" />

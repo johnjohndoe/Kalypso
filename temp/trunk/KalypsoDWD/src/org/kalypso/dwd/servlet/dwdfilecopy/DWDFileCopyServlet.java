@@ -114,8 +114,6 @@ public class DWDFileCopyServlet extends HttpServlet
             + sources_delete[i] + " DEST_FILENAME=" + dests[i] + " DEST_UPDATE=" + dests_update[i] );
 
         final int period = Integer.valueOf( periods[i] ).intValue();
-        final File srcDir = new File( sources[i] );
-        final String srcPrefix = sources_prefix[i];
         final String srcFormat = sources_format[i];
         final boolean srcDel = Boolean.valueOf( sources_delete[i] ).booleanValue();
         final File destName = new File( dests[i] );
@@ -134,7 +132,7 @@ public class DWDFileCopyServlet extends HttpServlet
         fsManager.init();
 
         m_timers[i] = new Timer( true );
-        m_timers[i].schedule( new DWDCopyTask( sources[i], fsManager, srcDir, srcPrefix, srcFormat, srcDel, destName, destUpdate ), 0, period );
+        m_timers[i].schedule( new DWDCopyTask( sources[i], fsManager, srcFormat, srcDel, destName, destUpdate ), 0, period );
 
         LOG.info( "Timer #" + i + " started." );
       }
