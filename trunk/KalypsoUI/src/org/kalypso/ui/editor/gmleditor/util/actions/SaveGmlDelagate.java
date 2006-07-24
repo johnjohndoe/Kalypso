@@ -55,25 +55,30 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 
 public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 {
-
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-
-    if( getEditor() == null )
+    final WidgetActionPart part = getPart();
+    if( part == null)
       return;
 
-    final Shell shell = getEditor().getSite().getShell();
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GmlEditor.
+    final GmlEditor editor = (GmlEditor) part.getPart();
+    if( editor == null )
+      return;
 
+    final Shell shell = part.getSite().getShell();
     if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des Baums gespeichert werden?" ) )
       return;
-
-    final GmlTreeView treeViewer = ( (GmlEditor)getEditor() ).getTreeView();
+    
+    final GmlTreeView treeViewer = editor.getTreeView();
     if( treeViewer != null )
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -112,10 +117,16 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
   {
     boolean bEnabled = false;
 
-    final GmlEditor gmlEditor = (GmlEditor)getEditor();
-    if( gmlEditor != null )
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GmlEditor.
+    final GmlEditor editor = (GmlEditor) part.getPart();
+    if( editor != null )
     {
-      final GmlTreeView treeViewer = gmlEditor.getTreeView();
+      final GmlTreeView treeViewer = editor.getTreeView();
       if( treeViewer != null )
       {
         final CommandableWorkspace workspace = treeViewer.getWorkspace();

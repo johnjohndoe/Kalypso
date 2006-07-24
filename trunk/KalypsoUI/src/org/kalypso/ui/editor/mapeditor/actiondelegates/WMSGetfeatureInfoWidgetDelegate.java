@@ -41,16 +41,15 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  public WMSGetfeatureInfoWidgetDelegate()
+  public WMSGetfeatureInfoWidgetDelegate( )
   {
     super( new WMSGetFeatureInfoWidget( "WMS-Abfrage", "Informationen vom WMS abholen" ) );
   }
@@ -65,13 +64,17 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
     if( action == null )
       return;
     action.setEnabled( false );
-    IEditorPart editor = getEditor();
-    if( editor != null && editor instanceof GisMapEditor )
+
+    final WidgetActionPart part = getPart();
+    if( part != null )
     {
-      final GisMapEditor mapEditor = (GisMapEditor)editor;
-      IMapModell mapModell = mapEditor.getMapPanel().getMapModell();
-      IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-      action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
+      final MapPanel mapPanel = part.getMapPanel();
+      if( mapPanel != null )
+      {
+        final IMapModell mapModell = mapPanel.getMapModell();
+        IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+        action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
+      }
     }
   }
 

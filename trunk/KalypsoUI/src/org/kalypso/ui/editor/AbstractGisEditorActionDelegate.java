@@ -44,18 +44,20 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author belger
  */
-public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate, ModellEventListener
+public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate, IViewActionDelegate, ModellEventListener
 {
-  private IEditorPart m_editor;
+  private WidgetActionPart m_part;
 
   private IAction m_action;
 
@@ -65,35 +67,43 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
+    setActivePart( action, targetEditor );
+  }
+
+  /**
+   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+   */
+  public void init( final IViewPart view )
+  {
+    setActivePart( null, view );
+  }
+
+  protected void setActivePart( final IAction action, final IWorkbenchPart part )
+  {
     // remember active action
+    // needed, because we want to rehfresh the action after modell events
     m_action = action;
+
     // disconnect eventlistener from old model
-    if( m_editor != null )
+    if( m_part != null )
     {
-      if( m_editor instanceof GisTableEditor )
-        ( (GisTableEditor)m_editor ).getLayerTable().removeModellListener( this );
-      if( m_editor instanceof GisMapEditor )
-      {
-        ( (GisMapEditor)m_editor ).getMapPanel().removeModellListener( this );
-      }
-      if( m_editor instanceof GmlEditor )
-      {
-        ( (GmlEditor)m_editor ).getTreeView().removeModellListener( this );
-      }
+      final ModellEventProvider mep = m_part.getModellEventProvider();
+      if( mep != null )
+        mep.removeModellListener( this );
     }
-    // remember new editor
-    m_editor = targetEditor;
+
+    m_part = new WidgetActionPart( part );
+
     // connect eventlistener from new model
-    if( m_editor != null )
+    if( m_part != null )
     {
-      if( m_editor instanceof GisTableEditor )
-        ( (GisTableEditor)m_editor ).getLayerTable().addModellListener( this );
-      if( m_editor instanceof GisMapEditor )
-        ( (GisMapEditor)m_editor ).getMapPanel().addModellListener( this );
-      if( m_editor instanceof GmlEditor )
-        ( (GmlEditor)m_editor ).getTreeView().addModellListener( this );
+      final ModellEventProvider mep = m_part.getModellEventProvider();
+      if( mep != null )
+        mep.addModellListener( this );
     }
+
     // update action state
+    // TODO: why refresh with null and not with m_action??
     refreshAction( null );
   }
 
@@ -103,29 +113,16 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-  //    m_action = action;
+    // m_action = action;
+    // TODO: refresh action??
   }
 
-  /**
-   * implement here: <br>
-   * 1. validate action constraints <br>
-   * 2. update action status
-   * 
-   * @param action
-   */
-  protected abstract void refreshAction( IAction action );
-
-  /**
-   * make cast to special editor in calling method
-   * 
-   * @return active editor
-   */
-  public IEditorPart getEditor()
+  protected WidgetActionPart getPart( )
   {
-    return m_editor;
+    return m_part;
   }
 
-  protected IAction getAction()
+  protected IAction getAction( )
   {
     return m_action;
   }
@@ -137,4 +134,14 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   {
     refreshAction( m_action );
   }
+
+  /**
+   * implement here: <br>
+   * 1. validate action constraints <br>
+   * 2. update action status
+   * 
+   * @param action
+   */
+  protected abstract void refreshAction( final IAction action );
+
 }

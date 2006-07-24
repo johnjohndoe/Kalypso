@@ -83,6 +83,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -147,9 +148,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      m_outlinePage = new GisMapOutlinePage( getCommandTarget() );
-
-      m_outlinePage.setMapModell( m_mapModell );
+      if( m_outlinePage == null )
+      {
+        m_outlinePage = new GisMapOutlinePage( getCommandTarget() );
+        m_outlinePage.setMapModell( m_mapModell );
+      }
 
       return m_outlinePage;
     }
@@ -163,6 +166,12 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       if( input instanceof IFileEditorInput )
         return ((IFileEditorInput) getEditorInput()).getFile();
     }
+
+    if( adapter == MapPanel.class )
+      return m_mapPanel;
+
+    if( adapter == ModellEventProvider.class )
+      return m_mapPanel;
 
     return super.getAdapter( adapter );
   }
@@ -324,11 +333,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       m_outlinePage.dispose();
 
     super.dispose();
-  }
-
-  public IContentOutlinePage getOutlineView( )
-  {
-    return m_outlinePage;
   }
 
   /**

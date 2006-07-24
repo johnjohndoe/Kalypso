@@ -45,6 +45,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -65,7 +66,13 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
    */
   public void run( final IAction action )
   {
-    final GisTableEditor editor = (GisTableEditor)getEditor();
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GisTableEditor.
+    final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor == null )
       return;
 
@@ -73,7 +80,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
 
     final CommandableWorkspace workspace = theme.getWorkspace();
 
-    if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
+    if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
       new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
     refreshAction( null );
@@ -84,7 +91,13 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
   {
     boolean bEnabled = false;
 
-    final GisTableEditor editor = (GisTableEditor)getEditor();
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GMLEditor.
+    final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor != null )
     {
       final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();

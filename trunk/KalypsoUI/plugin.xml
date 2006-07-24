@@ -1011,4 +1011,41 @@
          <selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="org.kalypso.ui.viewContributions.mapView"
+            targetID="org.kalypso.ui.views.map.MapView">
+         <menu
+               id="navigate"
+               label="Navigation"/>
+         <action
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
+               icon="icons/map/pan.gif"
+               id="org.kalypso.ui.editor.mapeditor.actions.PanMapActionDelegate"
+               label="Pan"
+               menubarPath="navigate"
+               style="radio"
+               toolbarPath="navigate"
+               tooltip="Ausschnitt verschieben"/>
+         <action
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
+               icon="icons/map/zoomin.gif"
+               id="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
+               label="%Extension.EditorActions.GisMapEditor.maximize.label"
+               menubarPath="navigate"
+               style="radio"
+               toolbarPath="navigate"
+               tooltip="%Extension.EditorActions.GisMapEditor.maximize.tooltip"/>
+         <action
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
+               icon="icons/map/zoomout.gif"
+               id="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
+               label="Zoom out"
+               menubarPath="navigate"
+               style="push"
+               toolbarPath="navigate"
+               tooltip="Ausschnitt vergrössern"/>
+      </viewContribution>
+   </extension>
  </plugin>

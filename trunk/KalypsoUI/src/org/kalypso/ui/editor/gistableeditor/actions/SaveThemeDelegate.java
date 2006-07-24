@@ -55,6 +55,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 
 /**
  * @author belger
@@ -66,13 +67,18 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    final GisTableEditor editor = (GisTableEditor)getEditor();
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GisTableEditor.
+    final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor == null )
       return;
 
     final Shell shell = editor.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern",
-        "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
       return;
 
     final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
@@ -97,7 +103,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       {
         e.printStackTrace();
 
-        final CoreException ce = (CoreException)e.getTargetException();
+        final CoreException ce = (CoreException) e.getTargetException();
         ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
       }
       catch( final InterruptedException e )
@@ -112,7 +118,14 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
   protected void refreshAction( final IAction action )
   {
     boolean enabled = false;
-    final GisTableEditor editor = (GisTableEditor)getEditor();
+
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GisTableEditor.
+    final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor != null )
     {
       final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();

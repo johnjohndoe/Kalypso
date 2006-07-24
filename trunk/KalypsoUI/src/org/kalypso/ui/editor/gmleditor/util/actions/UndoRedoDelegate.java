@@ -46,6 +46,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -67,7 +68,13 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
    */
   public void run( final IAction action )
   {
-    final GmlEditor editor = (GmlEditor)getEditor();
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GMLEditor.
+    final GmlEditor editor = (GmlEditor) part.getPart();
     if( editor == null )
       return;
 
@@ -75,22 +82,28 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     final JobExclusiveCommandTarget target = new JobExclusiveCommandTarget( workspace, null );
     final ISchedulingRule schedulingRule = target.getSchedulingRule();
 
-    if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
+    if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
       new CommandJob( null, workspace, schedulingRule, null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
     refreshAction( null );
   }
 
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( final IAction action )
   {
     boolean bEnabled = false;
 
-    final GmlEditor editor = (GmlEditor)getEditor();
+    final WidgetActionPart part = getPart();
+    if( part == null )
+      return;
+
+    // WARNING: Because of the following cast, we can only use
+    // this delegate with the GMLEditor.
+    final GmlEditor editor = (GmlEditor) part.getPart();
     if( editor != null )
     {
       final GmlTreeView treeView = editor.getTreeView();
-      
+
       if( treeView != null )
       {
         final CommandableWorkspace workspace = treeView.getWorkspace();
