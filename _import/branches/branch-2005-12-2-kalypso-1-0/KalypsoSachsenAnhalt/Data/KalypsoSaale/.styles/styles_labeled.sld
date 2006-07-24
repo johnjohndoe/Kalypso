@@ -762,7 +762,7 @@
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
-<!--			
+<!--	-->			
 				<Rule>
 					<Title>RuleName0815 - Labels</Title>
 					<MinScaleDenominator>0</MinScaleDenominator>
@@ -803,7 +803,7 @@
 			            </Halo>
             		</TextSymbolizer>
 				</Rule>
--->			
+<!-- -->				
 			</FeatureTypeStyle>
 		</UserStyle>
 
