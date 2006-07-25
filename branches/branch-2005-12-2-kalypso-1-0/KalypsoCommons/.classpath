@@ -6,6 +6,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/hb15.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-2.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-vfs-1.0-RC8-SELFBUILD.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/bin"/>
