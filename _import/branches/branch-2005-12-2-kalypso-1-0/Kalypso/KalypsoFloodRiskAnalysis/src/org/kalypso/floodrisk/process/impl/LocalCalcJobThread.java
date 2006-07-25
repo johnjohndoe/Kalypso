@@ -42,7 +42,7 @@ package org.kalypso.floodrisk.process.impl;
 
 import java.io.File;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;

@@ -42,7 +42,7 @@ package org.kalypso.floodrisk.statisticAnalysis.test;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.floodrisk.process.impl.ProcessDataProvider;

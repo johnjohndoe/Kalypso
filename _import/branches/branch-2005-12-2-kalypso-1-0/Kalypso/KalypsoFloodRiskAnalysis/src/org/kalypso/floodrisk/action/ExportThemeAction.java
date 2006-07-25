@@ -70,7 +70,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -179,7 +178,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
     //File tempFile = new File( "D://temp//test.jpg" );
     monitor.setTaskName( "Save Image" );
     saveAsJpg( m_targetFile, image );
-    File worldFile = new File( m_targetFile.getParentFile(), FileUtilities
+    File worldFile = new File( m_targetFile.getParentFile(), org.kalypso.contribs.java.io.FileUtilities
         .nameWithoutExtension( m_targetFile.getName() )
         + ".jgw" );
     createWorldFile( worldFile, rgDomain );
