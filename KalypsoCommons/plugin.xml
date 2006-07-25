@@ -26,6 +26,9 @@
       <library name="lib/commons-httpclient-2.0.2.jar">
          <export name="*"/>
       </library>
+      <library name="lib/commons-vfs-1.0-RC8-SELFBUILD.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
