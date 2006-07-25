@@ -69,6 +69,7 @@ import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
 import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
 import org.kalypso.swtchart.axis.registry.IAxisRegistry;
 import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
+import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.layer.IChartLayer;
 import org.kalypso.swtchart.layer.impl.TestLayer;
 
@@ -135,8 +136,8 @@ public class ObservationChartView extends AbstractObservationView
     
    //
     
-    UIChartLoader cl=new UIChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
-    cl.createChart("AliTest");
+    ChartLoader cl=new ChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
+    cl.createChart("WasserstandEtc");
     
     addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
     m_chart.setAutoscale( false );
@@ -164,11 +165,14 @@ public class ObservationChartView extends AbstractObservationView
 
   /**
    * @see org.kalypso.ogc.gml.om.views.AbstractObservationView#handleDrop(org.kalypso.observation.IObservation)
+   * Das ist der Drag & Drop Mechanisimus, der zur zeit aber keine Aktion ausführt. Hier muss noch ein Konzept her,
+   * wie die einzelnen Observation-Results den LayerProvidern (oder Layern) zugeordnet werden sollen; am besten vielleicht
+   * per Configurationsdatei
    */
   @Override
   protected boolean handleDrop( final IObservation<TupleResult> obs )
   { 
-    System.out.println("Something was dropped");
+    System.out.println("Something has been dropped");
     final TupleResult result = obs.getResult();
     final IComponent[] comps = result.getComponents();
     final List<IComponent> list = new ArrayList<IComponent>( 2 );
@@ -188,7 +192,8 @@ public class ObservationChartView extends AbstractObservationView
 
     final IComponent domComp = list.get( 0 );
     final IComponent valComp = list.get( 1 );
-
+    
+    /*
     final DefaultTupleResultLayerProvider layerProvider = new DefaultTupleResultLayerProvider( m_chart.getAxisRegistry(), obs, domComp, valComp, "1", "2" );
 
     final IChartLayer[] layers = layerProvider.getLayers();
@@ -199,7 +204,7 @@ public class ObservationChartView extends AbstractObservationView
       System.out.println( "Would like to add layer: " + layer );
       m_chart.addLayer( layer );
     }
-
+    */
     return true;
   }
 }
