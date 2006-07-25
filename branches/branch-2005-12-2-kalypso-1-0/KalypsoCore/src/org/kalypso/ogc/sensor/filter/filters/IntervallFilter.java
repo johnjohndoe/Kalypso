@@ -114,9 +114,16 @@ public class IntervallFilter extends AbstractObservationFilter
       to = null;
     }
 
+    // BUGFIX: it is not necessary to give the request to the base-observation
+    // because the range is ensured by the intervall tuple model itself
+    // This fixes the tageswert problem: the problem there was, that the request cut of
+    // the last day(s) with values in it. This lead to the problem, that
+    // the first hours got no values.
+//    final ITuppleModel values = m_baseobservation.getValues( request );
+    final ITuppleModel values = m_baseobservation.getValues( null );
+    
     return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
-        m_baseobservation.getValues( request ), from, to, m_defaultValue, m_defaultStatus );
-
+        values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   public void setValues( ITuppleModel values )
