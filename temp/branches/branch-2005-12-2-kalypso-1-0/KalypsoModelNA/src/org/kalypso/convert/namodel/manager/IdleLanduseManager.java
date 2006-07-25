@@ -7,15 +7,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.contribs.java.util.CalendarIterator;
-import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.contribs.java.util.ValueIterator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.ogc.sensor.IAxis;

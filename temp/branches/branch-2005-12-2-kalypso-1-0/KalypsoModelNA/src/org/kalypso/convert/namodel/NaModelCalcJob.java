@@ -109,9 +109,6 @@ public class NaModelCalcJob implements ICalcJob
     return getClass().getResource( "resources/nacalcjob_spec.xml" );
   }
 
-  /**
-   * @return
-   */
   public boolean isSucceeded()
   {
     if( m_calcJob instanceof NaModelInnerCalcJob )
