@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
+import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -75,7 +76,8 @@ class DWDCopyTask extends TimerTask
 
   private FileObject[] m_list;
 
-  public DWDCopyTask( final String URI, final DefaultFileSystemManager fsManager, final String srcFormat, final boolean srcDel, final File destName, final boolean destUpdate )
+  public DWDCopyTask( final String URI, final DefaultFileSystemManager fsManager, final String srcFormat,
+      final boolean srcDel, final File destName, final boolean destUpdate )
   {
     m_srcDel = srcDel;
     m_dateFormat = new SimpleDateFormat( srcFormat );
@@ -86,8 +88,7 @@ class DWDCopyTask extends TimerTask
     this.m_fsManager = fsManager;
   }
 
-  @Override
-  public void run( )
+  public void run()
   {
     FileObject newFile = null;
 
@@ -131,7 +132,7 @@ class DWDCopyTask extends TimerTask
       if( newFile == null )
         return;
 
-      DWDFileCopyServlet.LOG.info( "Newest file: " + newFile.getName().getBaseName().toString());
+      DWDFileCopyServlet.LOG.info( "Newest file: " + newFile.getName().getBaseName().toString() );
     }
     catch( FileSystemException e )
     {
@@ -139,8 +140,7 @@ class DWDCopyTask extends TimerTask
       return;
     }
     finally
-    {
-    }
+    {}
 
     // looping twice over this code in the case an exception
     // occurs, we try it again...
@@ -156,7 +156,7 @@ class DWDCopyTask extends TimerTask
         {
           /* Copy the newest file. */
           DWDFileCopyServlet.LOG.info( "Copying ..." );
-          
+
           final File dwdDest;
 
           if( m_destUpdate )
@@ -164,13 +164,14 @@ class DWDCopyTask extends TimerTask
           else
             dwdDest = m_destFile;
 
-          DWDFileCopyServlet.LOG.info( "Copying DWD-File \"" + newFile.getName().getBaseName() + "\" to: " + dwdDest.getAbsolutePath() );
+          DWDFileCopyServlet.LOG.info( "Copying DWD-File \"" + newFile.getName().getBaseName() + "\" to: "
+              + dwdDest.getAbsolutePath() );
 
           os = new FileOutputStream( dwdDest );
           is = newFile.getContent().getInputStream();
 
           /* The copy operation. */
-          IOUtils.copy( is, os );
+          CopyUtils.copy( is, os );
 
           os.close();
           is.close();
@@ -189,7 +190,7 @@ class DWDCopyTask extends TimerTask
               DWDFileCopyServlet.LOG.warning( "Could not delete temp DWD-File \"" + dwdDest.getName() + "\"" );
           }
         }
-        
+
         // delete source file if flag is set
         if( m_srcDel )
         {
@@ -207,7 +208,8 @@ class DWDCopyTask extends TimerTask
       }
       catch( final IOException e )
       {
-        DWDFileCopyServlet.LOG.warning( "Could not copy DWD-File \"" + newFile.getName().getBaseName() + "\" to folder: " + m_destFile.getAbsolutePath() + " due to: " + e.getLocalizedMessage() );
+        DWDFileCopyServlet.LOG.warning( "Could not copy DWD-File \"" + newFile.getName().getBaseName()
+            + "\" to folder: " + m_destFile.getAbsolutePath() + " due to: " + e.getLocalizedMessage() );
       }
       catch( final DWDException e )
       {
@@ -282,7 +284,8 @@ class DWDCopyTask extends TimerTask
     }
     catch( final ParseException e )
     {
-      DWDFileCopyServlet.LOG.warning( "DWD-Forecast filename \"" + file.getName().getBaseName().toString() + "\" has not a valid format, should be:" + df.toPattern() );
+      DWDFileCopyServlet.LOG.warning( "DWD-Forecast filename \"" + file.getName().getBaseName().toString()
+          + "\" has not a valid format, should be:" + df.toPattern() );
       return null;
     }
   }

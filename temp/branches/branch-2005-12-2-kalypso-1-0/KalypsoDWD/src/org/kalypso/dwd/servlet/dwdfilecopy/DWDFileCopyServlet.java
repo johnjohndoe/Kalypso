@@ -1,18 +1,17 @@
 package org.kalypso.dwd.servlet.dwdfilecopy;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.commons.io.FileUtils;
-import org.kalypso.dwd.DWDException;
-import org.kalypso.dwd.DWDRasterHelper;
+import org.apache.commons.vfs.cache.DefaultFilesCache;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.ftp.FtpFileProvider;
+import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs.provider.url.UrlFileProvider;
 
 /**
  * Handles the copy of DWD-Files from a source folder to some dest folder.
@@ -68,7 +67,7 @@ public class DWDFileCopyServlet extends HttpServlet
    */
   public final static String PARAM_DEST_UPDATE = "dest_update";
 
-  private static final Logger LOG = Logger.getLogger( DWDFileCopyServlet.class.getName() );
+  protected static final Logger LOG = Logger.getLogger( DWDFileCopyServlet.class.getName() );
 
   private Timer[] m_timers = new Timer[0];
 
@@ -88,7 +87,7 @@ public class DWDFileCopyServlet extends HttpServlet
     LOG.info( "Constructor called" );
   }
 
-  public void init() throws ServletException
+  public void init( ) throws ServletException
   {
     super.init();
 
@@ -98,25 +97,41 @@ public class DWDFileCopyServlet extends HttpServlet
 
     LOG.info( "Preparing start of " + instances + " instance(s) of DWDCopyTask..." );
 
-    m_timers = new Timer[instances];
-    for( int i = 0; i < m_timers.length; i++ )
+    try
     {
-      LOG.info( "Starting timer #" + i + " with parameters: PERIOD=" + periods[i] + " SOURCE_PATH=" + sources[i]
-          + " PREFIX=" + sources_prefix[i] + " FORMAT=" + sources_format[i] + " DELETE=" + sources_delete[i]
-          + " DEST_FILENAME=" + dests[i] + " DEST_UPDATE=" + dests_update[i] );
+      m_timers = new Timer[instances];
+      for( int i = 0; i < m_timers.length; i++ )
+      {
+        LOG.info( "Starting timer #" + i + " with parameters: PERIOD=" + periods[i] + " SOURCE_PATH=" + sources[i] + " PREFIX=" + sources_prefix[i] + " FORMAT=" + sources_format[i] + " DELETE="
+            + sources_delete[i] + " DEST_FILENAME=" + dests[i] + " DEST_UPDATE=" + dests_update[i] );
 
-      final int period = Integer.valueOf( periods[i] ).intValue();
-      final File srcDir = new File( sources[i] );
-      final String srcPrefix = sources_prefix[i];
-      final String srcFormat = sources_format[i];
-      final boolean srcDel = Boolean.valueOf( sources_delete[i] ).booleanValue();
-      final File destName = new File( dests[i] );
-      final boolean destUpdate = Boolean.valueOf( dests_update[i] ).booleanValue();
+        final int period = Integer.valueOf( periods[i] ).intValue();
+        final String srcFormat = sources_format[i];
+        final boolean srcDel = Boolean.valueOf( sources_delete[i] ).booleanValue();
+        final File destName = new File( dests[i] );
+        final boolean destUpdate = Boolean.valueOf( dests_update[i] ).booleanValue();
 
-      m_timers[i] = new Timer( true );
-      m_timers[i].schedule( new DWDCopyTask( srcDir, srcPrefix, srcFormat, srcDel, destName, destUpdate ), 0, period );
+        /* Initialize the DefaultFileSystemManager. */
+        DWDFileCopyServlet.LOG.info( "Init FileSystemManager ... " );
 
-      LOG.info( "Timer #" + i + " started." );
+        /* FileSystemManager initialisieren. */
+        final DefaultFileSystemManager fsManager = new DefaultFileSystemManager();
+
+        fsManager.addProvider( "file", new DefaultLocalFileProvider() );
+        fsManager.addProvider( "ftp", new FtpFileProvider() );
+        fsManager.setDefaultProvider( new UrlFileProvider() );
+        fsManager.setFilesCache( new DefaultFilesCache() );
+        fsManager.init();
+
+        m_timers[i] = new Timer( true );
+        m_timers[i].schedule( new DWDCopyTask( sources[i], fsManager, srcFormat, srcDel, destName, destUpdate ), 0, period );
+
+        LOG.info( "Timer #" + i + " started." );
+      }
+    }
+    catch( Exception e )
+    {
+      LOG.warning("Error: " + e.getLocalizedMessage());
     }
   }
 
@@ -168,101 +183,5 @@ public class DWDFileCopyServlet extends HttpServlet
     }
 
     super.destroy();
-  }
-
-  /**
-   * Handles the copy of the dwd files
-   */
-  private static class DWDCopyTask extends TimerTask
-  {
-    private final File m_srcDir;
-    private final File m_destFile;
-    private final String m_srcPrefix;
-    private final SimpleDateFormat m_dateFormat;
-    private final boolean m_srcDel;
-    private final boolean m_destUpdate;
-
-    public DWDCopyTask( final File srcDir, final String srcPrefix, final String srcFormat, final boolean srcDel,
-        final File destName, final boolean destUpdate )
-    {
-      m_srcDir = srcDir;
-      m_srcPrefix = srcPrefix;
-      m_srcDel = srcDel;
-      m_dateFormat = new SimpleDateFormat( srcFormat );
-      m_destFile = destName;
-      m_destUpdate = destUpdate;
-    }
-
-    public void run()
-    {
-      final File file = DWDRasterHelper.getNewestFile( m_srcDir, m_srcPrefix, m_dateFormat, m_srcDel );
-      if( file == null )
-        return;
-
-      // looping twice over this code in the case an exception
-      // occurs, we try it again...
-      for( int i = 0; i < 2; i++ )
-      {
-        try
-        {
-          // if dest file either does not exist or is not up to date, overwrite with current DWD forecast
-          if( !m_destFile.exists() || m_destFile.lastModified() < file.lastModified() )
-          {
-            final File dwdDest;
-            if( m_destUpdate )
-              dwdDest = new File( m_destFile.getParentFile(), file.getName() );
-            else
-              dwdDest = m_destFile;
-           
-            LOG.info( "Copying DWD-File \"" + file.getName() + "\" to: " + dwdDest.getAbsolutePath() );
-            FileUtils.copyFile( file, dwdDest );
-            
-            // update file contents
-            if( m_destUpdate )
-            {
-              LOG.info( "Updating " + m_destFile.getName() + " from " + dwdDest );
-              DWDRasterHelper.updateDWDFileContents( dwdDest, m_destFile, m_dateFormat );
-              
-              m_destFile.setLastModified( file.lastModified() );
-              
-              final boolean deleted = dwdDest.delete();
-              if( !deleted )
-                LOG.warning( "Could not delete temp DWD-File \"" + dwdDest.getName() + "\"" );
-            }
-          }
-
-          // delete source file if flag is set
-          if( m_srcDel )
-          {
-            LOG.info( "Deleting " + file.getName() );
-            final boolean deleted = file.delete();
-            if( !deleted )
-              LOG.warning( "Could not delete DWD-File \"" + file.getName() + "\"" );
-          }
-
-          // no exception, so end loop here
-          return;
-        }
-        catch( final IOException e )
-        {
-          LOG.warning( "Could not copy DWD-File \"" + file.getName() + "\" to folder: " + m_destFile.getAbsolutePath()
-              + " due to: " + e.getLocalizedMessage() );
-        }
-        catch( final DWDException e )
-        {
-          LOG.warning( "DWD-File could not be updated: " + e.getLocalizedMessage() );
-        }
-        
-        try
-        {
-          // make some pause before continuing
-          Thread.sleep( 500 );
-        }
-        catch( final InterruptedException ignored )
-        {
-          // empty
-        }
-      }
-    }
   }
 }

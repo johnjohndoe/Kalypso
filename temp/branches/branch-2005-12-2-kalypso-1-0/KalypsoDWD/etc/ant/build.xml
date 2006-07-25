@@ -44,8 +44,15 @@
         <copy tofile="${project.lib}/${project-name}Task.jar" file="${project.deploy}/${project-name}.jar"/>
     </target>
         
+    <target name="build-core">
+ 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
+    		
+  		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+   	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="../lib" overwrite="true"/>
+   	</target>
+    	
     <!-- Specific Build for KalypsoDWDFileCopyServlet -->
-    <target name="build-filecopyservlet-war" depends="compile">
+    <target name="build-filecopyservlet-war" depends="build-core, compile">
 
         <echo message="Building DWDFileCopy Servlet with deployment desc from: ${web.xml}"/>
         
