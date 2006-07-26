@@ -54,12 +54,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -250,8 +255,27 @@ public class MapView extends ViewPart implements ICommandTarget
         setMapModell( mapModell );
 
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-
         m_mapPanel.setBoundingBox( env );
+
+        // Apply action filters to action bars and refresh them
+        final IActionBars actionBars = getViewSite().getActionBars();
+        GisTemplateHelper.applyActionFilters( actionBars, gisview );
+        final UIJob job = new UIJob( "" )
+        {
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor uiMonitor )
+          {
+            // must frce on toolBarManager, just update action bars is not enough
+            final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+            toolBarManager.update( true );
+
+            actionBars.updateActionBars();
+            
+            return Status.OK_STATUS;
+          }
+        };
+        job.schedule();
+
       }
     }
     catch( final Throwable e )
@@ -322,8 +346,7 @@ public class MapView extends ViewPart implements ICommandTarget
   {
     if( adapter == MapPanel.class )
       return m_mapPanel;
-      
-    
+
     return super.getAdapter( adapter );
   }
 }
