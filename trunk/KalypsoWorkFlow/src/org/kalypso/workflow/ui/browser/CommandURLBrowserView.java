@@ -10,7 +10,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
-import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
+import org.kalypso.commons.browser.AbstractBrowserView;
 import org.kalypso.workflow.WorkflowContext;
 import org.kalypso.workflow.ui.KalypsoWorkFlowPlugin;
 

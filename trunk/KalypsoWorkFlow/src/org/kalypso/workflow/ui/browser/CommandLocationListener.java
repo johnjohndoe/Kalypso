@@ -50,7 +50,7 @@ import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.kalypso.contribs.eclipse.ui.browser.AbstractBrowserView;
+import org.kalypso.commons.browser.AbstractBrowserView;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.workflow.WorkflowContext;
 
