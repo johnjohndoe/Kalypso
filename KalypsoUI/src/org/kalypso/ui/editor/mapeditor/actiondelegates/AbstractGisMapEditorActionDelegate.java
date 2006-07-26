@@ -68,7 +68,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   {
     super.setActivePart( action, part );
 
-    if( action.getStyle() == IAction.AS_RADIO_BUTTON )
+    if( action != null && action.getStyle() == IAction.AS_RADIO_BUTTON )
     {
       final WidgetActionPart widgetPart = getPart();
       if( widgetPart != null && action != null )
