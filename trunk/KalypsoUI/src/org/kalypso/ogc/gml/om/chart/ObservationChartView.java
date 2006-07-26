@@ -60,7 +60,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.AbstractObservationView;
 import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ChartLoader;
+import org.kalypso.swtchart.configuration.ConfigurationLoader;
 
 /**
  * @author schlienger
@@ -125,8 +126,9 @@ public class ObservationChartView extends AbstractObservationView
     
    //
     
-    ChartLoader cl=new ChartLoader(m_chart, "/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml");
-    cl.createChart("WasserstandEtc");
+    String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
+    ConfigurationLoader cl=new ConfigurationLoader(configPath);
+    ChartLoader.createChart(m_chart, cl.getConfiguration() , "WasserstandEtc");
     
     addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
     m_chart.setAutoscale( false );
