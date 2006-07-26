@@ -50,28 +50,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.AbstractObservationView;
-import org.kalypso.swtchart.Chart;
-import org.kalypso.swtchart.axis.NumberAxis;
-import org.kalypso.swtchart.axis.IAxisConstants.DIRECTION;
-import org.kalypso.swtchart.axis.IAxisConstants.POSITION;
-import org.kalypso.swtchart.axis.IAxisConstants.PROPERTY;
-import org.kalypso.swtchart.axis.registry.IAxisRegistry;
-import org.kalypso.swtchart.axis.renderer.NumberAxisRenderer;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.layer.IChartLayer;
-import org.kalypso.swtchart.layer.impl.TestLayer;
+import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.configuration.ChartLoader;
 
 /**
  * @author schlienger
