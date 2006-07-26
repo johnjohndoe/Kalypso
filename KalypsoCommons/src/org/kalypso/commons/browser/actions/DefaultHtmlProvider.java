@@ -38,57 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.math;
-
-import java.util.Date;
-import java.util.TreeMap;
+package org.kalypso.commons.browser.actions;
 
 /**
- * @author alex_burtscher
- * Klasse zum Erzeugen von Beispieldaten für das Chart
+ * Default implementation of an html provider, based on a string.
  * 
- * 
+ * @author Gernot Belger
  */
-public class SampleData
+public class DefaultHtmlProvider implements IHtmlProvider
 {
-  public static Double[][] createSinusPoints( final int size )
+  private final String m_html;
+
+  public DefaultHtmlProvider( final String html )
   {
-    final Double[][] data = new Double[size][2];
-    for( int i = 0; i < data.length; i++ )
-    {
-      data[i][0] = new Double(1+ (100/data.length) * i );
-      data[i][1] = ((double) i + 1) / data.length * Math.sin( 16 * Math.PI / size * i/2 );
-    }
-    return data;
+    m_html = html;
   }
 
-  public static Double[][] createRandomPoints( int size )
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.browser.actions.IHtmlProvider#getHtml()
+   */
+  public String getHtml( )
   {
-    final Double[][] data = new Double[size][2];
-    for( int i = 0; i < data.length; i++ )
-    {
-      data[i][0] = new Double(1+ (100/data.length) * i );
-      data[i][1] = new Double( (int) (Math.random() * 10) );
-    }
-    return data;
-  }
-
-  public static TreeMap<Date, Double> createRandomDatePoints( int size )
-  {
-    final TreeMap<Date, Double> data = new TreeMap<Date, Double>();
-    
-    long now=System.currentTimeMillis();
-    
-    long dayInMillis=1000*60*60*24;
-    
-    long start=now-size*dayInMillis;
-    
-    for( int i = 0; i < size; i++ )
-    {
-      Date date=new Date(start+i*dayInMillis);
-      Double val=new Double( (int) (Math.random() * 10) );
-      data.put(date, val);
-    }
-    return data;
+    return m_html;
   }
 }
