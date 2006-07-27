@@ -224,6 +224,7 @@
 			<enumeration value="v2.0.2"/>
 			<enumeration value="v2.0.4"/>
 			<enumeration value="v2.0.5"/>
+			<enumeration value="v2.0.6"/>			
 			<enumeration value="test"/>
 			<enumeration value="neueste"/>
 			<enumeration value="latest"/>

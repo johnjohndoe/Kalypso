@@ -69,6 +69,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
+import java.util.logging.XMLFormatter;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -150,6 +151,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
+  private final String EXE_FILE_2_06beta = "start/kalypso_2.0.6beta.exe";
+
   private boolean m_succeeded = false;
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
@@ -181,7 +184,7 @@ public class NaModelInnerCalcJob implements ISimulation
   public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     final Logger logger = Logger.getAnonymousLogger();
-    Formatter f = new SimpleFormatter();
+    Formatter f = new XMLFormatter();
     Handler h = null;
     try
     {
@@ -875,13 +878,15 @@ public class NaModelInnerCalcJob implements ISimulation
     else if( kalypsoNAVersion.equals( "v2.0.2" ) )
       m_kalypsoKernelPath = EXE_FILE_2_02;
     else if( kalypsoNAVersion.equals( "test" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_04beta;
+      m_kalypsoKernelPath = EXE_FILE_2_06beta;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_05beta;
+      m_kalypsoKernelPath = EXE_FILE_2_06beta;
     else if( kalypsoNAVersion.equals( "v2.0.4" ) )
       m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "v2.0.5" ) )
       m_kalypsoKernelPath = EXE_FILE_2_05beta;
+    else if( kalypsoNAVersion.equals( "v2.0.6" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_06beta;
     else
     {
       System.out.println( "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
