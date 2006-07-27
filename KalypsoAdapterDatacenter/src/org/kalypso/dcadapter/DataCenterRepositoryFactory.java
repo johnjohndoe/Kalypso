@@ -78,7 +78,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
   private static class ConfigDialog extends TitleAreaDialog
   {
-    protected String m_url = "";
+    protected String m_url = "jdbc:edbc://134.28.87.75:II7/vn_datacenter::abwb_v2_flows/INGRES";
 
     protected String m_username = "";
 
