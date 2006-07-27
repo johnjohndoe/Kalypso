@@ -171,8 +171,8 @@ public class NativeObservationDWDAdapter implements INativeObservationAdapter
             // TODO: Write status
             if( value > 99.997 )
             {
-              System.out.println( "Messfehler" );
-              // value = 0.0;
+               System.out.println( "Messfehler" );
+               value = 0.0;
             }
             // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
             // Rohdaten benötigt)
