@@ -1238,14 +1238,18 @@
         jeweiligen (in Ausgabemenagement.gft gewählten) Zeitreihen im
         Unterordner <guimenu>Ergebnisse</guimenu> abgelegt. Es stehen je nach
         Auswahl folgende Ergebnisse zur Verfügung:</para>
-<para>Knoten:</para>
+
+        <para>Knoten:</para>
+
         <itemizedlist>
           <listitem>
             <para>Gesamtknotenabfluss</para>
           </listitem>
-          </itemizedlist>
-<para>Teilgebiete:</para>          
-<itemizedlist>
+        </itemizedlist>
+
+        <para>Teilgebiete:</para>
+
+        <itemizedlist>
           <listitem>
             <para>Temperatur</para>
           </listitem>
@@ -1292,11 +1296,12 @@
 
           <listitem>
             <para>Abflussbilanz</para>
-
           </listitem>
-</itemizedlist>
-<para>Speicher:</para>
-<itemizedlist>
+        </itemizedlist>
+
+        <para>Speicher:</para>
+
+        <itemizedlist>
           <listitem>
             <para>Wasserspiegelhoehe</para>
           </listitem>
@@ -1393,6 +1398,21 @@
               <entry>Geometrie des Objektes</entry>
 
               <entry>Polygon Property Type</entry>
+            </row>
+
+            <row>
+              <entry>generateResult</entry>
+
+              <entry>berechnen</entry>
+
+              <entry>[ - ]</entry>
+
+              <entry>-</entry>
+
+              <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
+              für dieses Teilgebiet erzeugt wird.</entry>
+
+              <entry>boolean</entry>
             </row>
 
             <row>
@@ -2127,7 +2147,7 @@
             </row>
 
             <row>
-              <entry>cinh</entry>
+              <entry> cinh</entry>
 
               <entry>KZ-Faktor cin</entry>
 
@@ -2142,7 +2162,7 @@
             </row>
 
             <row>
-              <entry>cind</entry>
+              <entry> cind</entry>
 
               <entry>LZ-Faktor cin</entry>
 
@@ -2157,7 +2177,7 @@
             </row>
 
             <row>
-              <entry>cex</entry>
+              <entry> cex</entry>
 
               <entry>Faktor cex</entry>
 
@@ -2172,7 +2192,7 @@
             </row>
 
             <row>
-              <entry>bmax</entry>
+              <entry> bmax</entry>
 
               <entry>Faktor max. Porenvolumen</entry>
 
@@ -2187,7 +2207,7 @@
             </row>
 
             <row>
-              <entry>banf</entry>
+              <entry> banf</entry>
 
               <entry>Anfangsbodenfeuchte Korrektur</entry>
 
@@ -2202,7 +2222,7 @@
             </row>
 
             <row>
-              <entry>fko</entry>
+              <entry> fko</entry>
 
               <entry>Faktor nFK</entry>
 
@@ -2217,7 +2237,7 @@
             </row>
 
             <row>
-              <entry>retlay</entry>
+              <entry> retlay</entry>
 
               <entry>Faktor QIntf.</entry>
 
@@ -2386,7 +2406,7 @@
             </row>
 
             <row>
-              <entry>branchingNodeMember</entry>
+              <entry> branchingNodeMember</entry>
 
               <entry>Relationsknoten (Link)</entry>
 
@@ -2400,7 +2420,7 @@
             </row>
 
             <row>
-              <entry>qzug</entry>
+              <entry> qzug</entry>
 
               <entry>Zugabemenge</entry>
 
@@ -2415,7 +2435,7 @@
             </row>
 
             <row>
-              <entry>qabg</entry>
+              <entry> qabg</entry>
 
               <entry>Entnahmemenge</entry>
 
@@ -2430,7 +2450,7 @@
             </row>
 
             <row>
-              <entry>queb</entry>
+              <entry> queb</entry>
 
               <entry>Überlaufhöhe</entry>
 
@@ -2445,7 +2465,7 @@
             </row>
 
             <row>
-              <entry>zproz</entry>
+              <entry> zproz</entry>
 
               <entry>Verzweigungsanteil</entry>
 
@@ -2582,7 +2602,7 @@
             </row>
 
             <row>
-              <entry>qrk</entry>
+              <entry> qrk</entry>
 
               <entry>Abfluss</entry>
 
@@ -2597,7 +2617,7 @@
             </row>
 
             <row>
-              <entry>rkf</entry>
+              <entry> rkf</entry>
 
               <entry>K Fluss</entry>
 
@@ -2611,7 +2631,7 @@
             </row>
 
             <row>
-              <entry>rnf</entry>
+              <entry> rnf</entry>
 
               <entry>n Fluss</entry>
 
@@ -2626,7 +2646,7 @@
             </row>
 
             <row>
-              <entry>rkv</entry>
+              <entry> rkv</entry>
 
               <entry>K Vorland</entry>
 
@@ -2641,7 +2661,7 @@
             </row>
 
             <row>
-              <entry>rnv</entry>
+              <entry> rnv</entry>
 
               <entry>n Vorland</entry>
 
@@ -2656,7 +2676,7 @@
             </row>
 
             <row>
-              <entry>c</entry>
+              <entry> c</entry>
 
               <entry>Aufteilungsfaktor F-V</entry>
 
@@ -2741,7 +2761,7 @@
               <entry>-</entry>
 
               <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
-              für diesen Knoten erzeugt wird.</entry>
+              für diesen Strang erzeugt wird.</entry>
 
               <entry>boolean</entry>
             </row>
