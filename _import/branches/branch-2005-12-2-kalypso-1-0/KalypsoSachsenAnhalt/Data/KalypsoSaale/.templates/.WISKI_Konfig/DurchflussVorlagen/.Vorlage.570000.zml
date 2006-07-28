@@ -5,7 +5,7 @@
         <metadata name="Kennziffer" value="570000"/>
         <metadata name="Name" value="Saale-TS-Zulauf"/>
         <metadata name="Beschreibung" value=""/>
-        <metadata name="Zeitzone" value="Europe/Berlin"/>
+        <metadata name="Zeitzone" value="GMT"/>
         <metadata name="Gewässer" value="Saale"/>
         <metadata name="Koordinatensystem" value="EPSG:31468"/>
         <metadata name="Rechtswert" value="0"/>

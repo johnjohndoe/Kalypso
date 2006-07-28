@@ -5,7 +5,7 @@
         <metadata name="Kennziffer" value="573090"/>
         <metadata name="Name" value="Straußfurt Zulauf"/>
         <metadata name="Beschreibung" value=""/>
-        <metadata name="Zeitzone" value="Europe/Berlin"/>
+        <metadata name="Zeitzone" value="GMT"/>
         <metadata name="Gewässer" value="Unstrut"/>
         <metadata name="Koordinatensystem" value="EPSG:31468"/>
         <metadata name="Rechtswert" value="0"/>

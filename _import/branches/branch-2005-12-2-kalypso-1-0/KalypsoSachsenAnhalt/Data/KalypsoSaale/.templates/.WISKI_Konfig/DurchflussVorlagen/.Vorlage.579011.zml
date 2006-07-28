@@ -5,7 +5,7 @@
         <metadata name="Kennziffer" value="579011"/>
         <metadata name="Name" value="Rappbode-TS-Zulauf"/>
         <metadata name="Beschreibung" value=""/>
-        <metadata name="Zeitzone" value="Europe/Berlin"/>
+        <metadata name="Zeitzone" value="GMT"/>
         <metadata name="Gewässer" value="Rappbode"/>
         <metadata name="Koordinatensystem" value="EPSG:31468"/>
         <metadata name="Rechtswert" value="0"/>
