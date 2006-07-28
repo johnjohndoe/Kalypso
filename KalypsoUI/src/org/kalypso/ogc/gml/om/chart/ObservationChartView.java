@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,6 +61,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.AbstractObservationView;
 import org.kalypso.swtchart.chart.Chart;
+import org.kalypso.swtchart.chart.Diagram;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
 
@@ -76,9 +78,10 @@ public class ObservationChartView extends AbstractObservationView
 
   private static final Insets TICK_INSETS = new Insets( 2, 10, 10, 10 );
 
-  private Chart m_chart;
 
-  private Composite m_composite;
+ // private Composite m_composite;
+
+  private Diagram m_diagram;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -86,8 +89,8 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   public void dispose( )
   {
-    if( m_composite != null )
-      m_composite.dispose();
+    if( m_diagram != null )
+      m_diagram.dispose();
 
     super.dispose();
   }
@@ -98,16 +101,26 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   public void createPartControl( Composite parent )
   {
+    /*
     m_composite = new Composite( parent, SWT.FILL );
-    m_composite.setLayout( new org.eclipse.swt.layout.GridLayout() );
+    FillLayout fillLayout = new FillLayout(   ) ;
+    fillLayout.type = SWT.VERTICAL;
+    m_composite.setLayout( fillLayout);
+*/
+    m_diagram=new Diagram(parent, SWT.FILL);
+    //m_diagram.setLayoutData(new FillData());
+    
+    addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
+    
 
-    m_chart = new Chart( m_composite, SWT.NONE );
-    m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
+   // m_composite.layout();
+    
+    
+    /*
     final Color cfg = parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY );
     final Color cbg = parent.getDisplay().getSystemColor( SWT.COLOR_WHITE );
 
-    /*
+    
     final NumberAxisRenderer numberAxisRenderer = new NumberAxisRenderer( cfg, cbg, AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 1, LABEL_INSETS, 4 );
     final IAxisRegistry axisRegistry = m_chart.getAxisRegistry();
     axisRegistry.setRenderer( Number.class, numberAxisRenderer );
@@ -126,14 +139,7 @@ public class ObservationChartView extends AbstractObservationView
     
    //
     
-    String configPath="/home/alibu/dev/kalypso_workspace312/KalypsoChart/etc/binding/examples/Configuration.xml";
-    ConfigurationLoader cl=new ConfigurationLoader(configPath);
-    ChartLoader.createChart(m_chart, cl.getConfiguration() , "WasserstandEtc");
     
-    addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
-    m_chart.setAutoscale( false );
-
-    m_composite.layout();
   }
 
   /**
@@ -142,7 +148,7 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   public void setFocus( )
   {
-    m_chart.setFocus();
+    ((Composite) m_diagram).setFocus();
   }
 
   /**
@@ -151,7 +157,7 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   protected Control getControl( )
   {
-    return m_composite;
+    return m_diagram;
   }
 
   /**
