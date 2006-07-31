@@ -71,8 +71,8 @@ public class RauheitenPanel extends AbstractProfilView
     m_enablePanel = !((building != null) && (pointProperties == null));
     m_blockRauheit = new Button( panel, SWT.CHECK );
     m_blockRauheit.setSelection( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) );
-
-    m_blockRauheit.setEnabled( m_enablePanel );
+    final IProfilDevider[] devs = (getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } ));
+    m_blockRauheit.setEnabled( m_enablePanel && (devs != null) );
     m_blockRauheit.setText( "einfache Rauheiten verwenden" );
     final GridData blockData = new GridData();
     blockData.horizontalSpan = 3;
@@ -190,19 +190,22 @@ public class RauheitenPanel extends AbstractProfilView
     if( !m_VL.isDisposed() )
     {
       m_VL.setEnabled( isBlockSetting && m_enablePanel );
-      setBlockValue( m_VL, devider[0] );
+      if( (devider != null) && (devider.length > 0) )
+        setBlockValue( m_VL, devider[0] );
 
     }
     if( !m_HF.isDisposed() )
     {
       m_HF.setEnabled( isBlockSetting && m_enablePanel );
-      setBlockValue( m_HF, devider[1] );
+      if( (devider != null) && (devider.length > 1) )
+        setBlockValue( m_HF, devider[1] );
     }
 
     if( !m_VR.isDisposed() )
     {
       m_VR.setEnabled( isBlockSetting && m_enablePanel );
-      setBlockValue( m_VR, devider[2] );
+      if( (devider != null) && (devider.length > 2) )
+        setBlockValue( m_VR, devider[2] );
     }
 
   }

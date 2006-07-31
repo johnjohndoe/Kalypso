@@ -40,8 +40,6 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
@@ -213,9 +211,9 @@ public class WehrPanel extends AbstractProfilView
   {
     super( pem, viewdata, null );
     m_deviderLines = new LinkedList<DeviderLine>();
-
-    m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
-    m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
+//TODO: KIM images suchen 
+    m_deleteImg = null;//KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
+    m_addImg = null;//KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
   }
 
   @Override
@@ -356,9 +354,10 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
-        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
+//        IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
+//        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
+//        new ProfilOperationJob( operation ).schedule();
+        getViewData().setDeviderVisibility(DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection());
       }
     } );
 
@@ -378,7 +377,7 @@ public class WehrPanel extends AbstractProfilView
         return;
       IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
       m_Wehrart.select( m_Wehrart.indexOf( wt.toString() ) );
-      m_WehrfeldVisible.setSelection( getProfil().getDeviderVisibility( DEVIDER_TYP.WEHR ) );
+      m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.WEHR ) );
       m_kronenParameter.setText( building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ).toString() );
       final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.WEHR );
       final int deviderCount = (deviders == null ? 0 : deviders.length);

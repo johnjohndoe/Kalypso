@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,11 +49,15 @@ import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.ui.JavaFileEditorInput;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -66,9 +71,6 @@ import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
 
-import serializer.prf.PrfSink;
-import serializer.prf.PrfSource;
-import serializer.prf.ProfilesSerializer;
 import de.belger.swtchart.legend.ChartLegend;
 
 /**
@@ -194,7 +196,9 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       final IFile file = (IFile) editorInput.getAdapter( IFile.class );
 
       final StringWriter prfWriter = new StringWriter();
-      PrfSink.store( getProfil(), prfWriter );
+      
+      final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
+      prfSink.write( getProfil(), prfWriter );
       prfWriter.close();
 
       monitor.worked( 500 );
@@ -273,7 +277,10 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         try
         {
           final File file = new File( path );
-          ProfilesSerializer.store( getProfil(), file );
+          final PrintWriter pw = new PrintWriter( file );
+          final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
+          prfSink.write( getProfil(), pw );
+          pw.close();
           setInput( new JavaFileEditorInput( file ) );
         }
         catch( final Exception e )
@@ -354,10 +361,15 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           contents = file.getContents();
           final String charset = file.getCharset( true );
           final InputStreamReader reader = new InputStreamReader( contents, charset );
-          final PrfSource source = ProfilesSerializer.loadFromReader( reader );
-          contents.close();
 
-          final IProfil profil = source.createProfil();
+          final IProfilSource source = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+          final IProfil profil = ProfilFactory.createProfil();
+          if( !source.read( profil, reader ) )
+          {
+            contents.close();
+            throw new Exception( file.getName() );
+          }
+          contents.close();
           monitor.worked( 1 );
           if( monitor.isCanceled() )
             return Status.CANCEL_STATUS;
@@ -373,8 +385,10 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         }
         finally
         {
+
           IOUtils.closeQuietly( contents );
           monitor.done();
+
         }
       }
     };
@@ -461,50 +475,50 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
 
   public void openTableview( )
   {
-//    try
-//    {
-//      final IWorkbenchPage page = getEditorSite().getPage();
-//
-//      // weil eventuell vom letzten Start noch ein Table-Editor da ist, holen wir uns den
-//      // als die erste TableView holen, die noch keinen Editor zugeordnet hat
-//
-//      final IViewReference[] viewReferences = page.getViewReferences();
-//
-//      // if any tableview already is attached to this editor, simply
-//      // activate it and return
-//      for( final IViewReference reference : viewReferences )
-//      {
-//        if( reference.getId().equals( TableView.class.getName() ) )
-//        {
-//          final TableView view = (TableView) reference.getView( false );
-//          if( view != null && view.getEditor() == this )
-//          {
-//            page.activate( view );
-//            return;
-//          }
-//        }
-//      }
-//
-//      for( final IViewReference reference : viewReferences )
-//      {
-//        if( reference.getId().equals( TableView.class.getName() ) )
-//        {
-//          final TableView view = (TableView) reference.getView( false );
-//          if( view != null && !view.isAttached() )
-//          {
-//            view.setEditor( this );
-//            return;
-//          }
-//        }
-//      }
-//
-//      // keine offene, leere TableView gefunden, neue aufmachen
-//      page.showView( TableView.class.getName(), this.toString(), IWorkbenchPage.VIEW_ACTIVATE );
-//    }
-//    catch( final PartInitException e )
-//    {
-//      e.printStackTrace();
-//    }
+    // try
+    // {
+    // final IWorkbenchPage page = getEditorSite().getPage();
+    //
+    // // weil eventuell vom letzten Start noch ein Table-Editor da ist, holen wir uns den
+    // // als die erste TableView holen, die noch keinen Editor zugeordnet hat
+    //
+    // final IViewReference[] viewReferences = page.getViewReferences();
+    //
+    // // if any tableview already is attached to this editor, simply
+    // // activate it and return
+    // for( final IViewReference reference : viewReferences )
+    // {
+    // if( reference.getId().equals( TableView.class.getName() ) )
+    // {
+    // final TableView view = (TableView) reference.getView( false );
+    // if( view != null && view.getEditor() == this )
+    // {
+    // page.activate( view );
+    // return;
+    // }
+    // }
+    // }
+    //
+    // for( final IViewReference reference : viewReferences )
+    // {
+    // if( reference.getId().equals( TableView.class.getName() ) )
+    // {
+    // final TableView view = (TableView) reference.getView( false );
+    // if( view != null && !view.isAttached() )
+    // {
+    // view.setEditor( this );
+    // return;
+    // }
+    // }
+    // }
+    //
+    // // keine offene, leere TableView gefunden, neue aufmachen
+    // page.showView( TableView.class.getName(), this.toString(), IWorkbenchPage.VIEW_ACTIVATE );
+    // }
+    // catch( final PartInitException e )
+    // {
+    // e.printStackTrace();
+    // }
   }
 
   public void addProfilchartEditorListener( final IProfilchartEditorListener l )

@@ -52,7 +52,7 @@ public interface IProfilPoint
 
     HOEHE("Geländehöhe", false, true, true, 0.0001),
 
-    RAUHEIT("Rauheit", false, true, false, 0.0001),
+    RAUHEIT("Rauheit", true, true, false, 0.0001),
 
     RECHTSWERT("Rechtswert", true, true, true, 0.0001),
 

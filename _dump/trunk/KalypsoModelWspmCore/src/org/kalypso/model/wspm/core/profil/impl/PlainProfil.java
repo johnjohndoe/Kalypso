@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.core.profil.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,18 +45,19 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private POINT_PROPERTY m_activeProperty;
 
-  private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
+  //private LinkedList<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new LinkedList<IProfilDevider.DEVIDER_TYP>();
 
   private double m_station = Double.NaN;
 
   public PlainProfil( )
   {
     m_profilMetaData = new HashMap<Object, Object>();
+    m_profilMetaData.put( PROFIL_PROPERTY.RAUHEIT_TYP,DEFAULT_RAUHEIT_TYP );
     m_points = new ProfilPoints();
     m_points.addProperty( POINT_PROPERTY.BREITE );
     m_points.addProperty( POINT_PROPERTY.HOEHE );
     m_building = null;
-    m_visibleDevider.addAll( Arrays.asList( IProfilDevider.DEVIDER_TYP.values() ) );
+    //m_visibleDevider.addAll( Arrays.asList( IProfilDevider.DEVIDER_TYP.values() ) );
   }
 
   /**
@@ -72,26 +72,7 @@ public class PlainProfil implements IProfilConstants, IProfil
     return pd;
   }
 
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
-  {
-    if( visible )
-    {
-      if( !m_visibleDevider.contains( deviderTyp ) )
-      {
-        m_visibleDevider.add( deviderTyp );
-      }
-
-    }
-    else
-      m_visibleDevider.remove( deviderTyp );
-  }
-
-  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp )
-  {
-
-    return m_visibleDevider.contains( deviderTyp );
-
-  }
+  
 
   /**
    * @see org.kalypso.model.wspm.core.profil.ProfilPoints#addPoint(double,double)
@@ -108,7 +89,7 @@ public class PlainProfil implements IProfilConstants, IProfil
   {
     if( pointProperty == null )
       return null;
-    
+
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
 
     for( POINT_PROPERTY pd : depending )
@@ -295,11 +276,9 @@ public class PlainProfil implements IProfilConstants, IProfil
   {
     final double[] values = new double[m_points.size()];
     int i = 0;
-    for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
+    for(IProfilPoint point : m_points )
     {
-
-      values[i] = ptIt.next().getValueFor( pointProperty );
-
+      values[i] = point.getValueFor( pointProperty );
       i++;
     }
     return values;
@@ -311,10 +290,11 @@ public class PlainProfil implements IProfilConstants, IProfil
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException
   {
     final int index = m_points.indexOf( thePointBefore ) + 1;
-    final IProfilPoint thePointNext = m_points.get( index );
+    final IProfilPoint thePointNext = index == 0 ? null : m_points.get( index );
     final IProfilPoint point = ProfilUtil.splitSegment( thePointBefore, thePointNext );
+    if( point == null )
+      return addPoint( 0.0, 0.0 );
     m_points.add( index, point );
-
     return point;
   }
 
@@ -347,7 +327,7 @@ public class PlainProfil implements IProfilConstants, IProfil
       if( !existingPP.contains( pp ) )
         return false;
     }
-    return m_points.insertPoint( thePointBefore, point );
+    return (m_points.insertPoint( thePointBefore, point )!=null);
   }
 
   /**
@@ -432,7 +412,7 @@ public class PlainProfil implements IProfilConstants, IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setBuilding(org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP)
    */
-  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException 
+  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
   {
     if( m_building != null )
       removeBuilding();

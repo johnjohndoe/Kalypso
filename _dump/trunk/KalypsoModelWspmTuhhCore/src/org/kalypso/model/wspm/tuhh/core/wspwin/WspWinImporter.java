@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -79,12 +81,15 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.START_KONDITION_KIND;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -113,8 +118,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import serializer.prf.PrfSource;
-import serializer.prf.ProfilesSerializer;
 
 /**
  * @author thuel2
@@ -276,6 +279,10 @@ public class WspWinImporter
       {
         importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
       }
+      catch( FileNotFoundException e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
       catch( GMLSchemaException e )
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
@@ -289,7 +296,7 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException, FileNotFoundException
   {
     final String fileName = bean.getFileName();
 
@@ -309,9 +316,12 @@ public class WspWinImporter
     try
     {
       final File prfFile = new File( profDir, fileName );
+      fileReader = new FileReader( prfFile );
 
-      final PrfSource prfSource = ProfilesSerializer.load( prfFile );
-      final IProfil profile = prfSource.createProfil();
+      // final PrfSource prfSource = ProfilesSerializer.load( prfFile );
+      final IProfilSource prfSource = new PrfSource();
+      final IProfil profile = ProfilFactory.createProfil();
+      prfSource.read( profile, fileReader );
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
 

@@ -296,7 +296,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     metastrings.add( "01.01.1900" );
     metastrings.add( "B-1 0 0 0 0 0 0" );
     metastrings.add( "" );
-    profil.setProperty( IProfil.PROFIL_PROPERTY.METASTRINGS, metastrings );
+    profil.setProperty( "IProfil.PROFIL_PROPERTY.METASTRINGS", metastrings );
     profil.setProperty( IProfil.PROFIL_PROPERTY.STATUS, "Zustand" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.VERZWEIGUNGSKENNUNG, "0" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.WASSERSPIEGEL, "Gewaesser" );

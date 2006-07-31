@@ -38,7 +38,6 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 
-
 /**
  * @author gernot
  */
@@ -116,9 +115,10 @@ public class TrennerPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final double value = NumberUtils.parseQuietDouble( m_fzl_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE )[0] );
+          setValue( value, devs[0] );
         }
         else
           updateControls();
@@ -143,9 +143,10 @@ public class TrennerPanel extends AbstractProfilView
       {
 
         final double value = NumberUtils.parseQuietDouble( m_fzr_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE )[1] );
+          setValue( value, devs[1] );
         }
         else
           updateControls();
@@ -159,11 +160,13 @@ public class TrennerPanel extends AbstractProfilView
     m_fzl_combo.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings({"boxing","boxing", "boxing", "boxing", "boxing"})
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final IProfilDevider devider = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE )[0];
+        final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
+        if( (deviders == null) || (deviders.length < 1) )
+          return;
+        final IProfilDevider devider = deviders[0];
         final DeviderEdit edit = new DeviderEdit( devider, IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG, m_fzl_combo.getSelectionIndex() == 0 );
 
         final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", getProfilEventManager(), edit, true );
@@ -182,7 +185,10 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final IProfilDevider devider = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE )[1];
+        final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
+        if( (deviders == null) || (deviders.length < 2) )
+          return;
+        final IProfilDevider devider = deviders[1];
 
         final DeviderEdit edit = new DeviderEdit( devider, IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG, m_fzr_combo.getSelectionIndex() == 0 );
 
@@ -201,9 +207,11 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
+        getViewData().setDeviderVisibility( DEVIDER_TYP.TRENNFLAECHE, m_fz_show.getSelection() );
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.TRENNFLAECHE, m_fz_show.getSelection() );
-        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
+        final ProfilChangeHint hint = new ProfilChangeHint();
+        hint.setDeviderMoved();
+        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -231,9 +239,10 @@ public class TrennerPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final double value = NumberUtils.parseQuietDouble( m_dbl_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0] );
+          setValue( value, devs[0] );
         }
         else
           updateControls();
@@ -258,9 +267,10 @@ public class TrennerPanel extends AbstractProfilView
       {
 
         final double value = NumberUtils.parseQuietDouble( m_dbr_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE )[1] );
+          setValue( value, devs[1] );
         }
         else
           updateControls();
@@ -276,9 +286,11 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
+        getViewData().setDeviderVisibility( DEVIDER_TYP.DURCHSTROEMTE, m_db_show.getSelection() );
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.DURCHSTROEMTE, m_db_show.getSelection() );
-        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
+        final ProfilChangeHint hint = new ProfilChangeHint();
+        hint.setDeviderMoved();
+        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -306,9 +318,10 @@ public class TrennerPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final double value = NumberUtils.parseQuietDouble( m_bvl_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.BORDVOLL );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.BORDVOLL )[0] );
+          setValue( value, devs[0] );
         }
         else
           updateControls();
@@ -333,9 +346,10 @@ public class TrennerPanel extends AbstractProfilView
       {
 
         final double value = NumberUtils.parseQuietDouble( m_bvr_text.getText() );
-        if( !Double.isNaN( value ) )
+        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.BORDVOLL );
+        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
         {
-          setValue( value, getProfil().getDevider( DEVIDER_TYP.BORDVOLL )[1] );
+          setValue( value, devs[1] );
         }
         else
           updateControls();
@@ -352,9 +366,11 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
+        getViewData().setDeviderVisibility( DEVIDER_TYP.BORDVOLL, m_bv_show.getSelection() );
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.BORDVOLL, m_bv_show.getSelection() );
-        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
+        final ProfilChangeHint hint = new ProfilChangeHint();
+        hint.setDeviderMoved();
+        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -373,6 +389,8 @@ public class TrennerPanel extends AbstractProfilView
         if( bv_devs == null )
         {
           final IProfilDevider[] db_devs = profil.getDevider( IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
+          if( (db_devs == null) || (db_devs.length < 2) )
+            return;
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", getProfilEventManager(), true );
           operation.addChange( new DeviderAdd( profil, IProfilDevider.DEVIDER_TYP.BORDVOLL, db_devs[0].getPoint() ) );
           operation.addChange( new DeviderAdd( profil, IProfilDevider.DEVIDER_TYP.BORDVOLL, db_devs[1].getPoint() ) );
@@ -413,13 +431,17 @@ public class TrennerPanel extends AbstractProfilView
     {
       if( !m_fz_show.isDisposed() )
       {
-        m_fz_show.setSelection( getProfil().getDeviderVisibility( DEVIDER_TYP.TRENNFLAECHE ) );
+        m_fz_show.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.TRENNFLAECHE ) );
       }
-      if( !m_fzl_text.isDisposed() )
+      if( (!m_fzl_text.isDisposed()) && (fz_devs != null) && (fz_devs.length > 0) )
         m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
-      if( !m_fzr_text.isDisposed() )
+      else
+        m_fzl_text.setText("unbekannt");
+      if( !m_fzr_text.isDisposed() && (fz_devs != null) && (fz_devs.length > 1) )
         m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
-      if( !m_fzl_combo.isDisposed() )
+      else
+        m_fzr_text.setText("unbekannt");
+      if( !m_fzl_combo.isDisposed() && (fz_devs != null) && (fz_devs.length > 0) )
       {
         if( (Boolean) fz_devs[0].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) )
         {
@@ -430,7 +452,7 @@ public class TrennerPanel extends AbstractProfilView
           m_fzl_combo.select( 1 );
         }
       }
-      if( !m_fzr_combo.isDisposed() )
+      if( !m_fzr_combo.isDisposed() && (fz_devs != null) && (fz_devs.length > 1) )
       {
         if( (Boolean) fz_devs[1].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) )
         {
@@ -443,12 +465,16 @@ public class TrennerPanel extends AbstractProfilView
       }
       if( !m_db_show.isDisposed() )
       {
-        m_db_show.setSelection( getProfil().getDeviderVisibility( DEVIDER_TYP.DURCHSTROEMTE ) );
+        m_db_show.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.DURCHSTROEMTE ) );
       }
-      if( !m_dbl_text.isDisposed() )
+      if( !m_dbl_text.isDisposed() && (db_devs != null) && (db_devs.length > 0) )
         m_dbl_text.setText( String.format( "%.4f", db_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
-      if( !m_dbr_text.isDisposed() )
+      else
+        m_dbl_text.setText("unbekannt");
+      if( !m_dbr_text.isDisposed() && (db_devs != null) && (db_devs.length > 1) )
         m_dbr_text.setText( String.format( "%.4f", db_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
+      else
+        m_dbr_text.setText("unbekannt");
       if( bv_devs == null )
       {
         if( !m_bvl_text.isDisposed() )
@@ -473,22 +499,27 @@ public class TrennerPanel extends AbstractProfilView
         if( !m_bv_show.isDisposed() )
         {
           m_bv_show.setVisible( true );
-          m_bv_show.setSelection( getProfil().getDeviderVisibility( DEVIDER_TYP.BORDVOLL ) );
+          m_bv_show.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.BORDVOLL ) );
         }
         if( !m_bv_add.isDisposed() )
         {
           m_bv_add.setText( "Bordvollpunkte entfernen" );
         }
-        if( !m_bvl_text.isDisposed() )
+        if( !m_bvl_text.isDisposed() && (bv_devs != null) && (bv_devs.length > 0) )
         {
           m_bvl_text.setVisible( true );
           m_bvl_text.setText( String.format( "%.4f", bv_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
+          
         }
-        if( !m_bvr_text.isDisposed() )
+        else
+          m_bvl_text.setText("unbekannt");
+        if( !m_bvr_text.isDisposed() && (bv_devs != null) && (bv_devs.length > 1) )
         {
           m_bvr_text.setVisible( true );
           m_bvr_text.setText( String.format( "%.4f", bv_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
         }
+        else
+          m_bvr_text.setText("unbekannt");
       }
     }
     catch( final ProfilDataException e )

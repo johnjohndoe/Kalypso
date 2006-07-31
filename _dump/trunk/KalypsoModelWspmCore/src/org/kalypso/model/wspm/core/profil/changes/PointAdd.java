@@ -11,7 +11,6 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
-
 /**
  * @author kimwerner
  */
@@ -21,7 +20,7 @@ public class PointAdd implements IProfilChange
 
   private final IProfilPoint m_pointBefore;
 
-  private final IProfilPoint m_point;
+  private IProfilPoint m_point;
 
   public PointAdd( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint point )
   {
@@ -38,7 +37,7 @@ public class PointAdd implements IProfilChange
     if( hint != null )
       hint.setPointsChanged();
     final IProfilPoints points = m_profil.getProfilPoints();
-    points.insertPoint( m_pointBefore, m_point );
+    m_point = points.insertPoint( m_pointBefore, m_point );
     return new PointRemove( m_profil, m_point );
   }
 

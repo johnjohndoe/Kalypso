@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
-
 /**
  * @author kimwerner
  */
@@ -219,11 +218,7 @@ public interface IProfil
 
   public void setActiveProperty( POINT_PROPERTY activeProperty );
 
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible );
-
-  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp );
-
   public void setStation( final double station );
-  
+
   public double getStation( );
 }

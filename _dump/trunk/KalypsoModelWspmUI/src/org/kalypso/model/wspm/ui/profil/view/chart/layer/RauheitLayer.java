@@ -19,7 +19,10 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
@@ -36,15 +39,17 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 {
   private final Color m_color;
 
-  private final IProfil m_profil;
+ // private final IProfil m_profil;
 
   private final Color m_fillColor;
+  
+  private IProfilEventManager m_pem;
 
   public RauheitLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
   {
     super( pvp, domainRange, valueRange );
 
-    m_profil = pvp.getProfil();
+    m_pem = pvp.getProfilEventManager();
     m_color = color;
     m_fillColor = fillColor;
   }
@@ -54,7 +59,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
    */
   public Rectangle2D getBounds( )
   {
-    final List<IProfilPoint> points = m_profil.getPoints();
+    final List<IProfilPoint> points = m_pem.getProfil().getPoints();
 
     Rectangle2D bounds = null;
 
@@ -107,7 +112,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     try
     {
 
-      final List<IProfilPoint> points = m_profil.getPoints();
+      final List<IProfilPoint> points = m_pem.getProfil().getPoints();
 
       IProfilPoint lastP = null;
       for( final Iterator<IProfilPoint> pIt = points.iterator(); pIt.hasNext(); )
@@ -142,7 +147,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   private void drawBlock( final GCWrapper gc )
   {
 
-    final IProfilDevider[] deviders = m_profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE } );
+    final IProfilDevider[] deviders = m_pem.getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE } );
 
     try
     {
@@ -204,7 +209,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public String toString( )
   {
-    final Object rw = m_profil.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP );
+    final Object rw = m_pem.getProfil().getProperty( PROFIL_PROPERTY.RAUHEIT_TYP );
     return "Rauheit " + ((rw == null) ? "unbekannter Typ" : rw.toString());
   }
 
@@ -229,7 +234,10 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
    */
   public void removeYourself( )
   {
-    throw new UnsupportedOperationException();
+    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), POINT_PROPERTY.RAUHEIT );
+   
+    final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, change, true );
+    new ProfilOperationJob( operation ).schedule();
   }
 
   /**

@@ -15,5 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.tuhh.core,
- org.kalypso.simulation.ui
+ org.kalypso.simulation.ui,
+ org.kalypso.commons,
+ org.kalypso.deegree,
+ org.kalypso.core
 Eclipse-AutoStart: true

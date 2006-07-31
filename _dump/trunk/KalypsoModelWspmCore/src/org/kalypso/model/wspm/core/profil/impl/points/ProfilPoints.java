@@ -11,7 +11,6 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
-
 /**
  * @author kimwerner
  */
@@ -21,8 +20,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
 
   private final LinkedList<POINT_PROPERTY> m_pointProperties = new LinkedList<POINT_PROPERTY>();
 
-  private LinkedList<IProfilPoint> m_unmodifiable = 
-    new UnmodifiableLinkedList<IProfilPoint>( this );
+  private LinkedList<IProfilPoint> m_unmodifiable = new UnmodifiableLinkedList<IProfilPoint>( this );
 
   public ProfilPoints( )
   {
@@ -33,18 +31,20 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
   private void setDependencies( )
   {
     final POINT_PROPERTY[] bewuchs = new POINT_PROPERTY[] { POINT_PROPERTY.BEWUCHS_AX, POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_DP };
-    final POINT_PROPERTY[] geoCoord = new POINT_PROPERTY[] { POINT_PROPERTY.HOCHWERT , POINT_PROPERTY.RECHTSWERT } ;
-    m_dependencies.put( POINT_PROPERTY.RECHTSWERT, geoCoord);
-    m_dependencies.put( POINT_PROPERTY.HOCHWERT, geoCoord);
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AX,bewuchs);
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AY, bewuchs);
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_DP, bewuchs);
+    final POINT_PROPERTY[] geoCoord = new POINT_PROPERTY[] { POINT_PROPERTY.HOCHWERT, POINT_PROPERTY.RECHTSWERT };
+    m_dependencies.put( POINT_PROPERTY.RECHTSWERT, geoCoord );
+    m_dependencies.put( POINT_PROPERTY.HOCHWERT, geoCoord );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AX, bewuchs );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AY, bewuchs );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_DP, bewuchs );
   }
 
   /*
    * return a valid ProfilPoint if operation succeeds, othwerwise null
    */
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#addPoint(double, double)
    */
   public final IProfilPoint addPoint( final double breite, final double hoehe )
@@ -57,8 +57,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
       point.addProperty( ecIt.next() );
     }
 
-    if( point.setValueFor( POINT_PROPERTY.HOEHE, hoehe )
-        & point.setValueFor( POINT_PROPERTY.BREITE, breite ) )
+    if( point.setValueFor( POINT_PROPERTY.HOEHE, hoehe ) & point.setValueFor( POINT_PROPERTY.BREITE, breite ) )
     {
       if( add( point ) )
         return point;
@@ -66,7 +65,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#addPoint(org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
   public final IProfilPoint addPoint( final IProfilPoint thePointBefore )
@@ -84,7 +85,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return point;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#addProperty(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public final void addProperty( final POINT_PROPERTY pointProperty )
@@ -94,22 +97,26 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
       final IProfilPoint pt = ptIt.next();
-      ((ProfilPoint)pt).addProperty( pointProperty );
+      ((ProfilPoint) pt).addProperty( pointProperty );
     }
     m_pointProperties.add( pointProperty );
 
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#getDependenciesFor(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY pointProperty )
   {
     final POINT_PROPERTY[] dep = m_dependencies.get( pointProperty );
-    return (dep == null) ? new POINT_PROPERTY[] {pointProperty} : dep;
+    return (dep == null) ? new POINT_PROPERTY[] { pointProperty } : dep;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#getExistingProperties()
    */
   public final LinkedList<POINT_PROPERTY> getExistingProperties( )
@@ -117,7 +124,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return m_pointProperties;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#getVisibleProperties()
    */
   public final LinkedList<POINT_PROPERTY> getVisibleProperties( )
@@ -126,18 +135,24 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
       final POINT_PROPERTY pointProperty = ecIt.next();
-      if( (Boolean)pointProperty.getParameter( PARAMETER.VISIBLE ) )
+      if( (Boolean) pointProperty.getParameter( PARAMETER.VISIBLE ) )
         visibleProperties.add( pointProperty );
     }
     return visibleProperties;
   }
 
-  /* (non-Javadoc)
-   * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#insertPoint(org.kalypso.model.wspm.core.profil.IProfilPoint, org.kalypso.model.wspm.core.profil.IProfilPoint)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#insertPoint(org.kalypso.model.wspm.core.profil.IProfilPoint,
+   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
-  public final boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
-      throws ProfilDataException
+  public final IProfilPoint insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException
   {
+    if( point == null )
+    {
+      return addPoint( 0.0, 0.0 );
+    }
     if( m_pointProperties.size() != point.getProperties().size() )
       throw new ProfilDataException( "ungültiger Punkt" );
     for( final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
@@ -147,23 +162,25 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
         throw new ProfilDataException( "ungültiger Punkt" );
       }
     }
-   
+
     final int pktIndex = indexOf( thePointBefore ) + 1;
     if( pktIndex < size() )
       add( pktIndex, point );
     else
       add( point );
-    return true;
+    return point;
   }
 
   /*
-   * public final IProfilPoint getPoint( final double breite, final double hoehe ) { for( final
-   * Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); ) { final ProfilPoint point =
-   * (ProfilPoint)ptIt.next(); try { if( point.isPosition( breite, hoehe ) ) return point; } catch(
-   * ProfilDataException e ) { e.printStackTrace(); } } return null; }
+   * public final IProfilPoint getPoint( final double breite, final double hoehe ) { for( final Iterator<IProfilPoint>
+   * ptIt = this.iterator(); ptIt.hasNext(); ) { final ProfilPoint point = (ProfilPoint)ptIt.next(); try { if(
+   * point.isPosition( breite, hoehe ) ) return point; } catch( ProfilDataException e ) { e.printStackTrace(); } }
+   * return null; }
    */
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#propertyExists(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public final boolean propertyExists( final POINT_PROPERTY pointProperty )
@@ -171,7 +188,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return m_pointProperties.contains( pointProperty );
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#removePoint(org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
   public final boolean removePoint( final IProfilPoint point )
@@ -179,33 +198,34 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return remove( point );
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#removeProperty(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
   public final boolean removeProperty( final POINT_PROPERTY pointProperty )
   {
-    if( !(Boolean)pointProperty.getParameter( PARAMETER.OPTIONAL ) )
+    if( !(Boolean) pointProperty.getParameter( PARAMETER.OPTIONAL ) )
       return false;
     if( !(propertyExists( pointProperty )) )
       return true;
     for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
       final IProfilPoint pt = ptIt.next();
-      ((ProfilPoint)pt).removeProperty( pointProperty );
+      ((ProfilPoint) pt).removeProperty( pointProperty );
     }
     m_pointProperties.remove( pointProperty );
     return true;
   }
 
-  //public void setDependenciesFor( POINT_PROPERTY pointProperty, POINT_PROPERTY[] dependencies )
- // {
-  //  m_dependencies.put( pointProperty, dependencies );
- // }
+  // public void setDependenciesFor( POINT_PROPERTY pointProperty, POINT_PROPERTY[] dependencies )
+  // {
+  // m_dependencies.put( pointProperty, dependencies );
+  // }
 
   public LinkedList<IProfilPoint> getPoints( )
   {
     return m_unmodifiable;
   }
 
-  
 }

@@ -457,10 +457,10 @@ public class ProfilSWTTableView extends AbstractProfilView
         }
 
         final TableItem row = getCursor().getRow();
-        if( row == null )
-          return;
+        // if( row == null )
+        // return;
 
-        final IProfilPoint thePointBefore = (IProfilPoint) row.getData();
+        final IProfilPoint thePointBefore = (row == null)?null:(IProfilPoint) row.getData();
 
         // final PointInsert change = new PointInsert( getProfil(), thePointBefore );
         final PointAdd change = new PointAdd( getProfil(), thePointBefore, null );

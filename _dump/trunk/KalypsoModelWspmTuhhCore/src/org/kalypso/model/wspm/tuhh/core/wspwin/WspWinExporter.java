@@ -74,9 +74,11 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -86,7 +88,6 @@ import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import serializer.prf.ProfilesSerializer;
 
 /**
  * @author thuel2
@@ -366,6 +367,7 @@ public class WspWinExporter
 
     PrintWriter zustWriter = null;
     PrintWriter psiWriter = null;
+    PrintWriter prfWriter = null;
     try
     {
       zustFile.getParentFile().mkdirs();
@@ -393,16 +395,23 @@ public class WspWinExporter
         profil.setStation( station.doubleValue() );
 
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
-        ProfilesSerializer.store( profil, outPrfFile );
+        prfWriter = new PrintWriter(outPrfFile);
+        final IProfilSink ps =  new PrfSink();
+        ps.write(profil,prfWriter);
+        
+//        ProfilesSerializer.store( profil,outPrfFile );
+//        ProfilesSerializer.store( profil,zustFile.getParent() + File.separatorChar + prfName );
       }
 
       zustWriter.close();
       psiWriter.close();
+      prfWriter.close();
     }
     finally
     {
       IOUtils.closeQuietly( zustWriter );
       IOUtils.closeQuietly( psiWriter );
+      IOUtils.closeQuietly( prfWriter );
     }
   }
 }

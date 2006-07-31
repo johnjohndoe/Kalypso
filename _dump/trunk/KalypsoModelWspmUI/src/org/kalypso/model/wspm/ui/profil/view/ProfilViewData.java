@@ -1,7 +1,9 @@
 package org.kalypso.model.wspm.ui.profil.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -9,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,6 +40,8 @@ public class ProfilViewData
   protected boolean m_edithorz = false;
 
   protected boolean m_editvert = true;
+  
+  private List<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new ArrayList<IProfilDevider.DEVIDER_TYP>();
 
   private IChartLayer m_activeLayer;
 
@@ -49,6 +54,7 @@ public class ProfilViewData
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
       m_document = builder.newDocument();
+      m_visibleDevider.addAll(Arrays.asList(IProfilDevider.DEVIDER_TYP.values()));
     }
     catch( final ParserConfigurationException e )
     {
@@ -86,7 +92,26 @@ public class ProfilViewData
   {
     m_edithorz = edithorz;
   }
+  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
+  {
+    if( visible )
+    {
+      if( !m_visibleDevider.contains( deviderTyp ) )
+      {
+        m_visibleDevider.add( deviderTyp );
+      }
 
+    }
+    else
+      m_visibleDevider.remove( deviderTyp );
+  }
+
+  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp )
+  {
+
+    return m_visibleDevider.contains( deviderTyp );
+
+  }
   public boolean isEditvert( )
   {
     return m_editvert;

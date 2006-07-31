@@ -90,7 +90,11 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     // Rechtswert Hochwert
     if( !pointProperties.contains( POINT_PROPERTY.HOCHWERT ) )
       addables.add( AddableLayer.HOCHWERT );
-
+    
+//  Rauheit
+    if( !pointProperties.contains( POINT_PROPERTY.RAUHEIT ) )
+      addables.add( AddableLayer.RAUHEIT );    
+    
     return addables.toArray( new AddableLayer[addables.size()] );
   }
 
@@ -125,7 +129,19 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
         new ProfilOperationJob( operation ).schedule();
       }
     };
-
+    
+    
+    public static final AddableLayer RAUHEIT = new AddableLayer( "Rauheiten" )
+    {
+      @Override
+      public void perform( final IProfil profil, final IProfilEventManager pem )
+      {
+        final IProfilChange change = new PointPropertyAdd(profil,POINT_PROPERTY.RAUHEIT,0 );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", pem,
+            change, true );
+        new ProfilOperationJob( operation ).schedule();
+      }
+    };
     private final String m_label;
 
     private AddableLayer( final String label )

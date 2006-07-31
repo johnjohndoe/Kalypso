@@ -4,4 +4,5 @@
      <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
    <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
    <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
+   <extension-point id="profilserializer" name="profilserializer" schema="schema/profilserializer.exsd"/>
 </plugin>

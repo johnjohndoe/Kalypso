@@ -26,10 +26,10 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.result.impl,
  org.kalypso.model.wspm.core.strang
 Require-Bundle: org.junit,
- org.eclipse.core.runtime;visibility:=reexport,
- org.kalypso.contribs.java;visibility:=reexport,
+ org.eclipse.core.runtime,
+ org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.deegree;visibility:=reexport,
- org.kalypso.core;visibility:=reexport
+ org.kalypso.deegree,
+ org.kalypso.core
 Eclipse-AutoStart: true

@@ -22,7 +22,7 @@ public interface IProfilPoints
 
   abstract LinkedList<POINT_PROPERTY> getVisibleProperties( );
 
-  abstract boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
+  abstract IProfilPoint insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException;
 
   abstract boolean propertyExists( final POINT_PROPERTY pointProperty );

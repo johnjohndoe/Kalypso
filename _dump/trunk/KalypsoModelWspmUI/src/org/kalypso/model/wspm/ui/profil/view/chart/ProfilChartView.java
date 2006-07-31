@@ -111,12 +111,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       if( buildingLayer != null )
         addLayer( buildingLayer, visibility, true );
       addLayer( new TrennerLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry ), visibility, true );
-      addLayer( new RauheitLayer( this, m_domainRange, m_valueRangeRight, m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_RAUHEIT ) ), visibility, false );
       final List lst = profil.getPointProperties( false );
       if( lst.contains( POINT_PROPERTY.HOCHWERT ) )
         addLayer( new HochRechtsLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) ), visibility, false );
       if( lst.contains( POINT_PROPERTY.BEWUCHS_AX ) )
         addLayer( new BewuchsLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_BEWUCHS ) ), visibility, true );
+      if( lst.contains( POINT_PROPERTY.RAUHEIT ) )
+        addLayer( new RauheitLayer( this, m_domainRange, m_valueRangeRight, m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_RAUHEIT ) ), visibility, false );
 
       // Wasserpiegel
       final IStationResult[] results = getResults();

@@ -173,7 +173,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
       for( m_deviders dev : m_deviders.values() )
       {
-        if( getProfil().getDeviderVisibility( dev.getDeviderTyp() ) )
+        if( getViewData().getDeviderVisibility( dev.getDeviderTyp() ) )
         {
           final IProfilDevider[] deviders = m_profil.getDevider( dev.getDeviderTyp() );
           if( deviders != null )
@@ -350,7 +350,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
       final DEVIDER_TYP devTyp = dev.getDeviderTyp();
       final IProfilDevider[] deviders = profil.getDevider( devTyp );
 
-      if( (deviders != null) && getProfil().getDeviderVisibility( devTyp ) )
+      if( (deviders != null) && getViewData().getDeviderVisibility( devTyp ) )
       {
         int pos = 0;
         for( IProfilDevider devider : deviders )
@@ -427,5 +427,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
+    
   }
 }

@@ -16,7 +16,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
 
-
 /**
  * @author kimwerner
  */
@@ -27,7 +26,7 @@ public class ProfilUtil
     if( profil == null )
       return null;
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilPoint leftP = ((pointBefore == null)&&(!points.isEmpty())) ? points.getFirst() : pointBefore;
+    final IProfilPoint leftP = ((pointBefore == null) && (!points.isEmpty())) ? points.getFirst() : pointBefore;
     try
     {
       final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
@@ -36,7 +35,7 @@ public class ProfilUtil
 
     catch( ProfilDataException e )
     {
-      // should never happen
+      // no Point available
       return null;
     }
   }
@@ -143,7 +142,7 @@ public class ProfilUtil
   public static IProfilPoint getPointBefore( final IProfil profil, IProfilPoint point ) throws ProfilDataException
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    if( point == points.getFirst() )
+    if( points.isEmpty() || point == points.getFirst() )
       return null;
 
     final int i = points.indexOf( point );
@@ -156,7 +155,7 @@ public class ProfilUtil
   public static IProfilPoint getPointAfter( final IProfil profil, final IProfilPoint point ) throws ProfilDataException
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    if( point == points.getLast() )
+    if( points.isEmpty() || point == points.getLast() )
       return null;
 
     final int i = points.indexOf( point );

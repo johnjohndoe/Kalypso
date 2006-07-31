@@ -164,18 +164,18 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
       for( int i = 0; i < points.length; i++ )
         bounds.add( points[i] );
     }
-
-    double height = bounds.getHeight();
-
-   
-    bounds.setRect( bounds.getMinX(), bounds.getMinY() - height * 0.1, bounds.getWidth(), height * 1.2 );
-    //KIM
-//    double width = bounds.getWidth();
-//    final AxisRange domainRange = getDomainRange();
-//    final double pxlW = domainRange.screenLength2Logical(10);
-//
-//    bounds.setRect( bounds.getMinX()-pxlW, bounds.getMinY() - height * 0.1, width+ pxlW*2, height * 1.2 );
-//KIM
+    if( bounds != null )
+    {
+      double height = bounds.getHeight();
+      bounds.setRect( bounds.getMinX(), bounds.getMinY() - height * 0.1, bounds.getWidth(), height * 1.2 );
+    }
+    // KIM
+    // double width = bounds.getWidth();
+    // final AxisRange domainRange = getDomainRange();
+    // final double pxlW = domainRange.screenLength2Logical(10);
+    //
+    // bounds.setRect( bounds.getMinX()-pxlW, bounds.getMinY() - height * 0.1, width+ pxlW*2, height * 1.2 );
+    // KIM
     return bounds;
   }
 

@@ -40,20 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.serializer;
 
+import java.io.Reader;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author kimwerner
- *
  */
 public interface IProfilSource
 {
-public void setPoints(final IProfil profil);
-public void setBuilding(final IProfil profil);
-public void setRauheit(final IProfil profil);
-public void setBewuchs(final IProfil profil);
-public void setComment(final IProfil profil);
-public void setMetaData(final IProfil profil);
-public void setGeoCoord(final IProfil profil);
-public void setDevider(final IProfil profil);
+  public boolean read( final IProfil profil,final Reader reader );
 }

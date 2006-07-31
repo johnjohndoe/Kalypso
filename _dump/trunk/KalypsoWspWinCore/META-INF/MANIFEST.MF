@@ -10,4 +10,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons
 Eclipse-AutoStart: true
-Export-Package: org.kalypso.wspwin.core
+Export-Package: org.kalypso.wspwin.core,
+ org.kalypso.wspwin.core.prf,
+ org.kalypso.wspwin.core.prf.datablock

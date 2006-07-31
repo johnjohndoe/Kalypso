@@ -147,7 +147,7 @@
      </extension>
      <extension
            point="org.eclipse.core.runtime.preferences">
-        <initializer class="org.kalypso.model.wspm.ui.profil.preferences.PreferenceInitializer"/>
+        <initializer class="org.kalypso.model.wspm.ui.preferences.PreferenceInitializer"/>
      </extension>
      <extension
            point="org.kalypso.model.wspm.ui.profilPointsSource">

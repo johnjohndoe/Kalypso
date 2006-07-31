@@ -4,7 +4,10 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -17,14 +20,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoints;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
-
-import serializer.prf.PrfSource;
-import serializer.prf.ProfilesSerializer;
-
-
 
 /**
  * @author Belger
@@ -38,14 +39,31 @@ public class FilePointsSource extends AbstractPointsSource
    */
   public IProfilPoints getPoints( )
   {
-    final PrfSource prfS = ProfilesSerializer.load( new File( m_fileName.getText() ) );
-    if( prfS == null )
+    final File f = new File( m_fileName.getText() );
+    final FileReader fr;
+    try
+    {
+      fr = new FileReader( f );
+    }
+    catch( FileNotFoundException e )
+    {
+      e.printStackTrace();
       return null;
-    final IProfil profil = prfS.createProfil();
-    if( profil == null )
-      return null;
+    }
 
-    return profil.getProfilPoints();
+    try
+    {
+      final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+      final IProfil profil = ProfilFactory.createProfil();
+      if( prfS.read( profil, fr ) )
+        return profil.getProfilPoints();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+
   }
 
   @Override
@@ -92,7 +110,7 @@ public class FilePointsSource extends AbstractPointsSource
 
   public void saveState( IDialogSettings settings )
   {
-    settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText()  );
+    settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText() );
 
   }
 }

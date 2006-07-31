@@ -53,7 +53,7 @@ public class ProfilChangesTest extends TestCase
     {
       metaData.add( "" );
     }
-    IProfilChange change = new ProfilPropertyEdit( p, PROFIL_PROPERTY.METASTRINGS, metaData );
+    IProfilChange change = new ProfilPropertyEdit( p, "PROFIL_PROPERTY.METASTRINGS", metaData );
     change.doChange( null );
     final IProfilChange[] changes = new IProfilChange[1];
     final ProfilChangeHint hint = new ProfilChangeHint();
