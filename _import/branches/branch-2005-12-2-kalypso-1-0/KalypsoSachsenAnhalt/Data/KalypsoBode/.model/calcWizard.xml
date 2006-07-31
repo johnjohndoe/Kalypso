@@ -533,6 +533,49 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 		</arg>
+		<!-- Längsschnitte  -->
+<!-- auskommentiert, da per Nachtragsangebot
+		<arg name="exporter5">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Längsschnitte"/>
+			<arg name="templateDiagLSBodeQ">
+				<arg name="documentName" value="LängsschnittBodeQ"/>
+				<arg name="label" value="Bode-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSBodeW">
+				<arg name="documentName" value="LängsschnittBodeW"/>
+				<arg name="label" value="Bode-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
+			</arg>
+			<arg name="templateDiagLSSelkeQ">
+				<arg name="documentName" value="LängsschnittSelkeQ"/>
+				<arg name="label" value="Selke-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Selke Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittSelkeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSSelkeW">
+				<arg name="documentName" value="LängsschnittSelkeW"/>
+				<arg name="label" value="Selke-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Selke Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittSelkeW.odt"/>
+			</arg>
+			<arg name="templateDiagLSHoltemmeQ">
+				<arg name="documentName" value="LängsschnittHoltemmeQ"/>
+				<arg name="label" value="Holtemme-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Holtemme Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittHoltemmeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSHoltemmeW">
+				<arg name="documentName" value="LängsschnittHoltemmeW"/>
+				<arg name="label" value="Holtemme-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Holtemme Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittHoltemmeW.odt"/>
+			</arg>
+		</arg>
+-->
 		<!-- Scheitelwert-Tabellen W / Q -->
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>

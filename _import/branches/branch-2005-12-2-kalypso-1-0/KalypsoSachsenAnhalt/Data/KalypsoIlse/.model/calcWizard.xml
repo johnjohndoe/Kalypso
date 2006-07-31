@@ -227,6 +227,25 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 		</arg>
+		<!-- Längsschnitte  -->
+<!-- auskommentiert, da per Nachtragsangebot
+		<arg name="exporter5">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Längsschnitte"/>
+			<arg name="templateDiagLSIlseQ">
+				<arg name="documentName" value="LängsschnittIlseQ"/>
+				<arg name="label" value="Ilse-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Ilse Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittIlseQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSIlseW">
+				<arg name="documentName" value="LängsschnittIlseW"/>
+				<arg name="label" value="Ilse-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Ilse Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittIlseW.odt"/>
+			</arg>
+		</arg>
+-->
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>
