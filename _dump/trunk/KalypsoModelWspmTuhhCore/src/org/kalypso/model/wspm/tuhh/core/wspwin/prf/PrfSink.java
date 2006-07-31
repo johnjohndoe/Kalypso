@@ -78,9 +78,9 @@ public class PrfSink implements IProfilSink
     final IProfilPoint anyPoint = p.getPoints().getFirst();
     writePoints( pw, p );
     writeDevider( pw, p );
-    writeBuilding( pw, p );
-    if( anyPoint.hasProperty( POINT_PROPERTY.RAUHEIT ) )
-      writeRauheit( pw, p );
+    writeRauheit( pw, p );
+    if( p.getBuilding() != null )
+      writeBuilding( pw, p );
     if( anyPoint.hasProperty( POINT_PROPERTY.HOCHWERT ) )
       writeHochRechts( pw, p );
     if( anyPoint.hasProperty( POINT_PROPERTY.BEWUCHS_AX ) )
@@ -228,8 +228,6 @@ public class PrfSink implements IProfilSink
   private void writeBuilding( final PrfWriter pw, final IProfil profil )
   {
     final IProfilBuilding building = profil.getBuilding();
-    if( building == null )
-      return;
     switch( building.getTyp() )
     {
       case BRUECKE:

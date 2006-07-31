@@ -178,7 +178,10 @@ public class PrfSource implements IProfilSource
     if( value != null && value.length > 0 )
     {
       final StringTokenizer sT = new StringTokenizer( value[0], " " );
-      final double rauheit = p.getPointProperties( false ).contains( POINT_PROPERTY.RAUHEIT ) ? p.getPoints().getFirst().getValueFor( POINT_PROPERTY.RAUHEIT ) : 0.0;
+      double rauheit = 0.0;
+      IDataBlock dbRau = pr.getDataBlock( "RAU" );
+      if( dbRau != null && dbRau.getY().length > 0 )
+        rauheit = dbRau.getY()[0];
       switch( dbh.getSpecification( 8 ) )
       {
         case 6:// Trapez
@@ -345,23 +348,20 @@ public class PrfSource implements IProfilSource
 
   private void readRauhheit( final IProfil p, final PrfReader pr )
   {
-    final IDataBlock db = pr.getDataBlock( "RAUHEIT" );
+    final IDataBlock db = pr.getDataBlock( "RAU" );
     if( db == null )
       return;
-
+    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
     final String rks = db.getSecondLine().toUpperCase();
     try
     {
       if( rks.startsWith( "KST" ) )
       {
-        p.addPointProperty( POINT_PROPERTY.RAUHEIT );
         p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.kst );
       }
       else if( rks.startsWith( "KS" ) )
       {
-        p.addPointProperty( POINT_PROPERTY.RAUHEIT );
         p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
-
       }
     }
     catch( ProfilDataException e )
