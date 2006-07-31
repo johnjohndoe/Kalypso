@@ -52,6 +52,7 @@ import org.jfree.chart.encoders.EncoderUtil;
 import org.jfree.chart.encoders.ImageEncoderFactory;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 
@@ -115,7 +116,7 @@ public class ExportableChart implements IExportableObject
     if( title != null && title.getText().length() > 0 )
       name = title.getText();
 
-    return name + "." + m_format;
+    return FileUtilities.validateName( name + "." + m_format, "_" );
   }
 
   /**
