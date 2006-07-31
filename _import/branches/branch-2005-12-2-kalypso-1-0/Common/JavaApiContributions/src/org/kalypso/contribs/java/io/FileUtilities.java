@@ -52,6 +52,7 @@ public class FileUtilities
   public static final File TMP_DIR = new File( System.getProperty( "java.io.tmpdir" ) );
 
   /** regex defining which are the invalid characters for a file name */
+  /** invalid characters for Windows filenames are: \ / : * ? " < > | */
   public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>| ]";
 
   private FileUtilities()
