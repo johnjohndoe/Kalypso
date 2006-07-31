@@ -51,6 +51,7 @@ import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -86,7 +87,7 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName()
   {
     // TODO besserer Name?
-    return "Karte." + m_format;
+    return FileUtilities.validateName( "Karte." + m_format, "_" );
   }
 
   /**

@@ -49,6 +49,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
@@ -77,7 +78,7 @@ public class ExportableObservationTable implements IExportableObject
    */
   public String getPreferredDocumentName()
   {
-    return "Tabelle.csv";
+    return FileUtilities.validateName( "Tabelle.csv", "_" );
   }
 
   /**
