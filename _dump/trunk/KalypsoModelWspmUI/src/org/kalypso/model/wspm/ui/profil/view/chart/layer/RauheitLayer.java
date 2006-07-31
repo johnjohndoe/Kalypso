@@ -94,15 +94,15 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   {
     final Color background = gc.getBackground();
     // final int alpha = gc.getAlpha();
-    if( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) )
-    {
-      drawBlock( gc );
-
-    }
-    else
-    {
+//    if( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) )
+//    {
+//      drawBlock( gc );
+//
+//    }
+//    else
+//    {
       drawDetail( gc );
-    }
+//    }
     // gc.setAlpha( alpha );
     gc.setBackground( background );
   }

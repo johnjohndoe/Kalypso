@@ -95,6 +95,7 @@ public class RauheitenPanel extends AbstractProfilView
         final IProfilChange change = new PointPropertyHide( POINT_PROPERTY.RAUHEIT, isBlockRauheit );
         final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
+        updateProperty( getProfil() );
       }
     } );
     addLabel( panel, "VL", "Vorland links" );
@@ -140,55 +141,97 @@ public class RauheitenPanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
 
-        final IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
-        if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || deviders.length != 4 )
-          return;
-        final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
-        final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
-        final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
-        final Double d1 = (Double) deviders[0].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        final Double d2 = (Double) deviders[1].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        final Double d3 = (Double) deviders[2].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        final Double oldvalue1 = d1 == null ? 0.0 : d1;
-        final Double oldvalue2 = d2 == null ? 0.0 : d2;
-        final Double oldvalue3 = d3 == null ? 0.0 : d3;
-        final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
-        final Double prec = (Double) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.PRECISION );
-        if( Math.abs( oldvalue1 - value1 ) > prec && !value1.isNaN() )
-        {
-          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[0], deviders[1] );
-          for( IProfilPoint point : points )
-          {
-            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value1 ) );
-          }
-          changes.add( new DeviderEdit( deviders[0], DEVIDER_PROPERTY.RAUHEIT, value1 ) );
-        }
-        if( Math.abs( oldvalue2 - value2 ) > prec && !value2.isNaN() )
-        {
-          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[1], deviders[2] );
-          for( IProfilPoint point : points )
-          {
-            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value2 ) );
-          }
-          changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2 ) );
-        }
-        if( Math.abs( oldvalue3 - value3 ) > prec && !value3.isNaN() )
-        {
-          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[2], deviders[3] );
-          for( IProfilPoint point : points )
-          {
-            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value3 ) );
-          }
-          changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3 ) );
-        }
-        final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
-        new ProfilOperationJob( operation ).schedule();
+        updateProperty( profil );
       }
+
+      
     } );
 
     return t;
   }
+  protected void updateProperty( final IProfil p )
+  {
+    final IProfilDevider[] deviders = p.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
+    if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || deviders.length != 4 )
+      return;
+    final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
+    final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
+    final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
+    final Double d1 = (Double) deviders[0].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+    final Double d2 = (Double) deviders[1].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+    final Double d3 = (Double) deviders[2].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+    final Double oldvalue1 = d1 == null ? 0.0 : d1;
+    final Double oldvalue2 = d2 == null ? 0.0 : d2;
+    final Double oldvalue3 = d3 == null ? 0.0 : d3;
+    final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
+    final Double prec = (Double) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.PRECISION );
 
+    final List<IProfilPoint> leftPoints = ProfilUtil.getInnerPoints( p, deviders[0], deviders[1] );
+    for( IProfilPoint point : leftPoints )
+    {
+      Double oldvalue;
+      try
+      {
+        oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
+      }
+      catch( ProfilDataException e1 )
+      {
+        oldvalue = 0.0;
+      }
+      if( !value1.isNaN() && Math.abs( oldvalue - value1 ) > prec )
+      {
+        changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value1 ) );
+      }
+    }
+    if( !value1.isNaN() && Math.abs( oldvalue1 - value1 ) > prec )
+    {
+      changes.add( new DeviderEdit( deviders[0], DEVIDER_PROPERTY.RAUHEIT, value1 ) );
+    }
+    final List<IProfilPoint> midPoints = ProfilUtil.getInnerPoints( p, deviders[1], deviders[2] );
+    for( IProfilPoint point : midPoints )
+    {
+      Double oldvalue;
+      try
+      {
+        oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
+      }
+      catch( ProfilDataException e1 )
+      {
+        oldvalue = 0.0;
+      }
+      if( !value2.isNaN() && Math.abs( oldvalue - value2 ) > prec )
+      {
+        changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value2 ) );
+      }
+    }
+    if( !value2.isNaN() && Math.abs( oldvalue2 - value1 ) > prec )
+    {
+      changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2 ) );
+    }
+    final List<IProfilPoint> rightPoints = ProfilUtil.getInnerPoints( p, deviders[2], deviders[3] );
+    for( IProfilPoint point : rightPoints )
+    {
+      Double oldvalue;
+      try
+      {
+        oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
+      }
+      catch( ProfilDataException e1 )
+      {
+        oldvalue = 0.0;
+      }
+      if( !value3.isNaN() && Math.abs( oldvalue - value3 ) > prec )
+      {
+        changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value3 ) );
+      }
+    }
+    if( !value3.isNaN() && Math.abs( oldvalue3 - value1 ) > prec )
+    {
+      changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3 ) );
+    }
+    final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
+    new ProfilOperationJob( operation ).schedule();
+  }
   private void addLabel( final Composite parent, final String text, final String toolTip )
   {
     final Label label = new Label( parent, SWT.CENTER );
