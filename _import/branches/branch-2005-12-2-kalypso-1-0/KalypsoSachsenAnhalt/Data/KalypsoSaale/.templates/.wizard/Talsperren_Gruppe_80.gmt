@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5604589.876347841" left="5189177.111219513" right="5397795.142101788" srs="EPSG:31469" top="5823679.082525364"/>
+    <extent bottom="5618018.932642491" left="5198999.019134934" right="5438282.890305198" srs="EPSG:31469" top="5869313.191168792"/>
     <layers active="ID_1">
         <layer name="Talsperren Gruppe 80" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_80.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
@@ -9,7 +9,7 @@
             <ns4:style linktype="sld" style="Speicher" ns3:actuate="onRequest" ns3:href="project:/.styles/speicher.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
         <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
-            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_30.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_80.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/.shape/Gewässerflächen#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="seen" ns7:actuate="onRequest" ns7:href="project:/.styles/seen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>

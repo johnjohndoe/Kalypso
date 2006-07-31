@@ -6,10 +6,10 @@
         <metadata name="Kennziffer" value="43198"/>
         <metadata name="Name" value="Zeigerheim-Rudolst."/>
         <metadata name="Zeitzone" value="GMT"/>
-        <metadata name="Koordinatensystem" value="EPSG:31468"/>
-        <metadata name="Hochwert" value=""/>
+        <metadata name="Koordinatensystem" value="EPSG:31469"/>
+        <metadata name="Hochwert" value="5626600"/>
         <metadata name="Gewässer" value=""/>
-        <metadata name="Rechtswert" value=""/>
+        <metadata name="Rechtswert" value="5241300"/>
         <metadata name="Entstehung" value="Vorlagendatei"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">
@@ -22,4 +22,3 @@
         <valueArray separator=";"></valueArray>
     </axis>
 </observation>
-

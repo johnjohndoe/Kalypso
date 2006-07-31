@@ -3178,15 +3178,11 @@
 				<arg name="axisType" value="Q"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-<!-- enfernt, da nicht Teil des Modells
 				<arg name="obs1">
 					<arg name="label" value="%obsname%"/>
--->
 					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
 				</arg>
--->
 				<arg name="obs2">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
@@ -3207,15 +3203,11 @@
 					<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
 				<arg name="obs6">
 					<arg name="label" value="%obsname%"/>
--->
 					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
 				</arg>
--->
 				<arg name="obs7">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Meisdorf"/> -->
@@ -3264,15 +3256,11 @@
 				<arg name="axisType" value="Q"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-<!-- enfernt, da nicht Teil des Modells
 				<arg name="obs1">
 					<arg name="label" value="%obsname%"/>
--->
 					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
 				</arg>
--->
 				<arg name="obs2">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
@@ -3293,15 +3281,11 @@
 					<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
 				<arg name="obs6">
 					<arg name="label" value="%obsname%"/>
--->
 					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
 				</arg>
--->
 				<arg name="obs7">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Blankenstein"/> -->

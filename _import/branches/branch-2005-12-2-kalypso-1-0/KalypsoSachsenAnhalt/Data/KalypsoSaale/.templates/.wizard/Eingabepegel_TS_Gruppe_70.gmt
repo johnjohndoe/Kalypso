@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5722994.998391646" left="5206644.235346783" right="5253320.4638550915" srs="EPSG:31469" top="5772014.0491802925"/>
+    <extent bottom="5729765.957339113" left="5212718.609941402" right="5250939.466302706" srs="EPSG:31469" top="5767257.571772086"/>
     <layers active="ID_1">
         <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel_ts_gruppe_70.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

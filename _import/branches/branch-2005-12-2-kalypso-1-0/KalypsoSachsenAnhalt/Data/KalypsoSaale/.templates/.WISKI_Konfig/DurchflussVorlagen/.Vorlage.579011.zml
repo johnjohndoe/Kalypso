@@ -7,9 +7,9 @@
         <metadata name="Beschreibung" value=""/>
         <metadata name="Zeitzone" value="GMT"/>
         <metadata name="Gewässer" value="Rappbode"/>
-        <metadata name="Koordinatensystem" value="EPSG:31468"/>
-        <metadata name="Rechtswert" value="0"/>
-        <metadata name="Hochwert" value="0"/>
+        <metadata name="Koordinatensystem" value="EPSG:31469"/>
+        <metadata name="Rechtswert" value="5216700"/>
+        <metadata name="Hochwert" value="5737300"/>
         <metadata name="Entstehung" value="Vorlagendatei"/>
     </metadataList>
     <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
