@@ -35,6 +35,7 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
     final Object[] values = new Object[] { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, true, m_editorID, pointPos, pointProperty };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
+    
   }
 
   public void reset( ) throws CoreException

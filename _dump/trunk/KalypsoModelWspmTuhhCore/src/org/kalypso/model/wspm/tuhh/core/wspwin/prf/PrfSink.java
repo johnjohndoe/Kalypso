@@ -180,9 +180,11 @@ public class PrfSink implements IProfilSink
         switch( index )
         {
           case 0:
-            ys[0] = isBoeschung ? 1.0 : 3.0;
+            ys[0] = isBoeschung ? 3.0 : 1.0;
+            break;
           case 1:
-            ys[1] = isBoeschung ? 2.0 : 4.0;
+            ys[1] = isBoeschung ? 4.0 : 2.0;
+            break;
           default:
             ys[index] = 0.0;
         }
@@ -219,6 +221,7 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Die Positionen der " + devider.getTyp().toString() + " konnten nicht geschrieben werden." );
 
         }
+        index++;
       }
       dbw.setCoords( xs, ys );
       pw.addDataBlock( dbw );

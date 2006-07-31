@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.ui.profil.view.panel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -22,14 +23,17 @@ import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyHide;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
@@ -72,7 +76,7 @@ public class RauheitenPanel extends AbstractProfilView
     m_blockRauheit = new Button( panel, SWT.CHECK );
     m_blockRauheit.setSelection( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) );
     final IProfilDevider[] devs = (getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } ));
-    m_blockRauheit.setEnabled( m_enablePanel && (devs != null) );
+    m_blockRauheit.setEnabled( m_enablePanel && (devs != null) && (devs.length == 4) );
     m_blockRauheit.setText( "einfache Rauheiten verwenden" );
     final GridData blockData = new GridData();
     blockData.horizontalSpan = 3;
@@ -135,29 +139,47 @@ public class RauheitenPanel extends AbstractProfilView
       @Override
       public void focusLost( final FocusEvent e )
       {
-        if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() )
-          return;
-        final IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
 
+        final IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
+        if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || deviders.length != 4 )
+          return;
         final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
         final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
         final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
-        final Double oldvalue1 = (Double) deviders[0].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        final Double oldvalue2 = (Double) deviders[1].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        final Double oldvalue3 = (Double) deviders[2].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+        final Double d1 = (Double) deviders[0].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+        final Double d2 = (Double) deviders[1].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+        final Double d3 = (Double) deviders[2].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+        final Double oldvalue1 = d1 == null ? 0.0 : d1;
+        final Double oldvalue2 = d2 == null ? 0.0 : d2;
+        final Double oldvalue3 = d3 == null ? 0.0 : d3;
         final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
         final Double prec = (Double) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.PRECISION );
-        if( Math.abs( oldvalue1 - value1 ) > prec )
+        if( Math.abs( oldvalue1 - value1 ) > prec && !value1.isNaN() )
         {
-          changes.add( new DeviderEdit( deviders[0], DEVIDER_PROPERTY.RAUHEIT, value1.isNaN() ? oldvalue1 : value1 ) );
+          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[0], deviders[1] );
+          for( IProfilPoint point : points )
+          {
+            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value1 ) );
+          }
+          changes.add( new DeviderEdit( deviders[0], DEVIDER_PROPERTY.RAUHEIT, value1 ) );
         }
-        if( Math.abs( oldvalue2 - value2 ) > prec )
+        if( Math.abs( oldvalue2 - value2 ) > prec && !value2.isNaN() )
         {
-          changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2.isNaN() ? oldvalue2 : value2 ) );
+          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[1], deviders[2] );
+          for( IProfilPoint point : points )
+          {
+            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value2 ) );
+          }
+          changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2 ) );
         }
-        if( Math.abs( oldvalue3 - value3 ) > prec )
+        if( Math.abs( oldvalue3 - value3 ) > prec && !value3.isNaN() )
         {
-          changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3.isNaN() ? oldvalue3 : value3 ) );
+          final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, deviders[2], deviders[3] );
+          for( IProfilPoint point : points )
+          {
+            changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value3 ) );
+          }
+          changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3 ) );
         }
         final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
         new ProfilOperationJob( operation ).schedule();

@@ -436,11 +436,11 @@ public class TrennerPanel extends AbstractProfilView
       if( (!m_fzl_text.isDisposed()) && (fz_devs != null) && (fz_devs.length > 0) )
         m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_fzl_text.setText("unbekannt");
+        m_fzl_text.setText( "unbekannt" );
       if( !m_fzr_text.isDisposed() && (fz_devs != null) && (fz_devs.length > 1) )
         m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_fzr_text.setText("unbekannt");
+        m_fzr_text.setText( "unbekannt" );
       if( !m_fzl_combo.isDisposed() && (fz_devs != null) && (fz_devs.length > 0) )
       {
         if( (Boolean) fz_devs[0].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) )
@@ -470,11 +470,11 @@ public class TrennerPanel extends AbstractProfilView
       if( !m_dbl_text.isDisposed() && (db_devs != null) && (db_devs.length > 0) )
         m_dbl_text.setText( String.format( "%.4f", db_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_dbl_text.setText("unbekannt");
+        m_dbl_text.setText( "unbekannt" );
       if( !m_dbr_text.isDisposed() && (db_devs != null) && (db_devs.length > 1) )
         m_dbr_text.setText( String.format( "%.4f", db_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_dbr_text.setText("unbekannt");
+        m_dbr_text.setText( "unbekannt" );
       if( bv_devs == null )
       {
         if( !m_bvl_text.isDisposed() )
@@ -509,17 +509,17 @@ public class TrennerPanel extends AbstractProfilView
         {
           m_bvl_text.setVisible( true );
           m_bvl_text.setText( String.format( "%.4f", bv_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
-          
+
         }
         else
-          m_bvl_text.setText("unbekannt");
+          m_bvl_text.setText( "unbekannt" );
         if( !m_bvr_text.isDisposed() && (bv_devs != null) && (bv_devs.length > 1) )
         {
           m_bvr_text.setVisible( true );
           m_bvr_text.setText( String.format( "%.4f", bv_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
         }
         else
-          m_bvr_text.setText("unbekannt");
+          m_bvr_text.setText( "unbekannt" );
       }
     }
     catch( final ProfilDataException e )
@@ -536,13 +536,16 @@ public class TrennerPanel extends AbstractProfilView
 
     final IProfilPoint pointCloseTo = getProfil().findNearestPoint( value );
     final IProfilPoint oldPos = key.getPoint();
-    if( oldPos != pointCloseTo )
+    if( oldPos == pointCloseTo )
     {
-      final ProfilOperation operation = new ProfilOperation( key.toString() + " verschieben", getProfilEventManager(), true );
-      operation.addChange( new DeviderMove( key, pointCloseTo ) );
-      operation.addChange( new ActiveObjectEdit( getProfil(), pointCloseTo, null ) );
-      new ProfilOperationJob( operation ).schedule();
+      updateControls();
+      return;
     }
+    final ProfilOperation operation = new ProfilOperation( key.toString() + " verschieben", getProfilEventManager(), true );
+    operation.addChange( new DeviderMove( key, pointCloseTo ) );
+    operation.addChange( new ActiveObjectEdit( getProfil(), pointCloseTo, null ) );
+    new ProfilOperationJob( operation ).schedule();
+
   }
 
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
