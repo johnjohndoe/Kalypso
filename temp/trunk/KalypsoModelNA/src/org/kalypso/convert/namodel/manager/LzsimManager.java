@@ -41,18 +41,13 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -70,31 +65,22 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.contribs.java.util.regex.RegexpUtilities;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.NAControlConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author huebsch
  */
+
 public class LzsimManager
 {
 
@@ -108,6 +94,9 @@ public class LzsimManager
 
   private static final int STATUS_READ_QGS = 4;
 
+  /**
+   * @deprecated
+   */
   private void loadIniValues( final File tmpDir, final Logger logger, final ISimulationResultEater resultEater )
   {
     try
@@ -134,163 +123,173 @@ public class LzsimManager
     }
   }
 
-  public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final ISimulationResultEater resultEater ) throws Exception
+  public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir ) throws Exception
   {
-    // TODO: implement for different dates!
-    // create new GMLworkspace for lzsim results
-    File lzsimDir = new File( tmpDir, "lzsim" );
-    final String ns = "http://www.tuhh.de/initialValues";
-    final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( ns, new QName( ns, "InitialValues" ) );
-    final Feature lzRootFE = lzWorkspace.getRootFeature();
-
-    final IFeatureType lzCatchmentFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "Catchment" ) );
-    final IFeatureType lzChannelFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "Channel" ) );
-    final IFeatureType lzrootFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( ns, "InitialValues" ) );
-
-    final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( new QName( ns, "catchmentMember" ) );
-    final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( new QName( ns, "channelMember" ) );
-
-    final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( new QName( ns, "hyd" ) );
-    final List<Feature> CatchmentFEs = idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
-    final List<Feature> ChannelFEs = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
-    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd HH" ) );
+    final SimpleDateFormat formatFileName = new SimpleDateFormat( "yyyyMMdd(HH)" );
     // 19960521 00 h 125 bodf
+    final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMdd HH" ) ;
     final Pattern patternHeaderBODF = Pattern.compile( "([0-9]{8} [0-9]{2}) h ([0-9]+?) bodf" );
-    // iterate over catchments / lzsim-files
-    for( final Feature feature : CatchmentFEs )
+    final NAControlConverter converter = new NAControlConverter();
+    final TreeSet<Date> dateWriteSet = converter.getDateWriteSet();
+    Iterator hydIter = dateWriteSet.iterator();
+    while( hydIter.hasNext() )
     {
-      final Feature lzCatchmentFE = lzWorkspace.createFeature( lzRootFE, lzCatchmentFT );
-      lzWorkspace.addFeatureAsComposition( lzRootFE, lzCatchmentMemberRT, 0, lzCatchmentFE );
-      lzCatchmentFE.setProperty( new QName( ns, "featureId" ), feature.getId() );
+      Date initialDate = (Date) hydIter.next();
+      final String iniDate = dateFormat.format( initialDate );
 
-      final int asciiID = idManager.getAsciiID( feature );
-      final String fileName = "we" + asciiID + ".lzs";
-      final File lzsFile = new File( lzsimDir, fileName );
-      final FileReader fileReader = new FileReader( lzsFile );
-      final LineNumberReader reader = new LineNumberReader( fileReader );
+      // create new GMLworkspace for lzsim results
+      File lzsimDir = new File( tmpDir, "lzsim" );
+      final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( NaModelConstants.NS_INIVALUES, new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
+      final Feature lzRootFE = lzWorkspace.getRootFeature();
+      XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
+      lzRootFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ), xmlIniDate );
 
-      int status = STATUS_SEARCH_HEADER;
-      String line = null;
-      int maxHydros = 0;
-      int counterHydros = 0;
+      final IFeatureType lzCatchmentFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Catchment" ) );
+      final IFeatureType lzChannelFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Channel" ) );
+      final IFeatureType lzrootFT = lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
 
-      // iterate over lines in file
-      while( (line = reader.readLine()) != null )
+      final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_MEMBER_PROP ) );
+      final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CHANNEL_MEMBER_PROP) );
+
+      final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
+      final List<Feature> CatchmentFEs = idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
+      final List<Feature> ChannelFEs = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
+
+      // iterate over catchments / lzsim-files
+      for( final Feature feature : CatchmentFEs )
       {
-        line = line.trim().replaceAll( "\\s+", " " );
-        switch( status )
+        final Feature lzCatchmentFE = lzWorkspace.createFeature( lzRootFE, lzCatchmentFT );
+        lzWorkspace.addFeatureAsComposition( lzRootFE, lzCatchmentMemberRT, 0, lzCatchmentFE );
+        lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), feature.getId() );
+
+        final int asciiID = idManager.getAsciiID( feature );
+        lzCatchmentFE.setProperty( new QName( "http://www.opengis.net/gml", "name" ), Integer.toString(asciiID) );
+        final String fileName = "we" + asciiID + ".lzs";
+        final File lzsFile = new File( lzsimDir, fileName );
+        final FileReader fileReader = new FileReader( lzsFile );
+        final LineNumberReader reader = new LineNumberReader( fileReader );
+
+        int status = STATUS_SEARCH_HEADER;
+        String line = null;
+        int maxHydros = 0;
+        int counterHydros = 0;
+
+        // iterate over lines in file
+        while( (line = reader.readLine()) != null )
         {
-          case STATUS_SEARCH_HEADER:
-            final Matcher matcherBODF = patternHeaderBODF.matcher( line );
-            if( line.endsWith( "snow" ) && line.startsWith( "19960824" ) )
-              status = STATUS_READ_SNOW;
-            else if( line.endsWith( "gwsp" ) && line.startsWith( "19960824" ) )
-              status = STATUS_READ_GWSP;
-            else if( matcherBODF.matches() && line.startsWith( "19960824" ) )
-            {
-              // System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
-              status = STATUS_READ_BODF;
-              String dateString = matcherBODF.group( 1 );
-              Date date = dateFormat.parse( dateString );
-              XMLGregorianCalendar calendarDate = DateUtilities.toXMLGregorianCalendar( date );
-              lzRootFE.setProperty( new QName( ns, "iniDate" ), calendarDate );
-              maxHydros = Integer.parseInt( matcherBODF.group( 2 ) );
-            }
-            break;
-          case STATUS_READ_BODF:
+          line = line.trim().replaceAll( "\\s+", " " );
+          switch( status )
           {
-            final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT.getTargetFeatureType() );
-            lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
-            final String[] strings = line.split( " " );
-            final int pos = Integer.parseInt( strings[0] ) - 1;
-            final String hydroID = idManager.getHydroFeatureId( feature, pos );
-            lzHydFE.setProperty( new QName( ns, "featureId" ), hydroID );
-            final Double interception = Double.valueOf( strings[1] );
-            final List<Double> bofs = new ArrayList<Double>();
-            for( int i = 2; i < strings.length; i++ )
+            case STATUS_SEARCH_HEADER:
+              final Matcher matcherBODF = patternHeaderBODF.matcher( line );
+              if( line.endsWith( "snow" ) && line.startsWith( iniDate ) )
+                status = STATUS_READ_SNOW;
+              else if( line.endsWith( "gwsp" ) && line.startsWith( iniDate ) )
+                status = STATUS_READ_GWSP;
+              else if( matcherBODF.matches() && line.startsWith( iniDate ) )
+              {
+                // System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
+                status = STATUS_READ_BODF;
+                maxHydros = Integer.parseInt( matcherBODF.group( 2 ) );
+              }
+              break;
+            case STATUS_READ_BODF:
             {
-              final Double bf = Double.valueOf( strings[i] );
-              bofs.add( bf );
+              final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT.getTargetFeatureType() );
+              lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
+              final String[] strings = line.split( " " );
+              final int pos = Integer.parseInt( strings[0] ) - 1;
+              final String hydroID = idManager.getHydroFeatureId( feature, pos );
+              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID );
+              final Double interception = Double.valueOf( strings[1] );
+              final List<Double> bofs = new ArrayList<Double>();
+              for( int i = 2; i < strings.length; i++ )
+              {
+                final Double bf = Double.valueOf( strings[i] );
+                bofs.add( bf );
+              }
+              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ), interception );
+              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ), bofs );
+              counterHydros++;
+              if( counterHydros >= maxHydros )
+              {
+                status = STATUS_SEARCH_HEADER;
+                counterHydros = 0;
+              }
             }
-            lzHydFE.setProperty( new QName( ns, "bi" ), interception );
-            lzHydFE.setProperty( new QName( ns, "bofs" ), bofs );
-            counterHydros++;
-            if( counterHydros >= maxHydros )
+              break;
+            case STATUS_READ_GWSP:
             {
+              final String[] strings = line.split( " " );
+              final Double hgws = Double.valueOf( strings[1] );// hoehe gw
+              final Double qb = Double.valueOf( strings[2] );// basisabfluss
+              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ), hgws );
+              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb );
               status = STATUS_SEARCH_HEADER;
-              counterHydros = 0;
             }
+              break;
+            case STATUS_READ_SNOW:
+              final String[] strings = line.split( " " );
+              final Double h = Double.valueOf( strings[1] );// hoehe schnee
+              final Double ws = Double.valueOf( strings[2] );// wassergehalt
+              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ), h );
+              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ), ws );
+              status = STATUS_SEARCH_HEADER;
+              break;
           }
-            break;
-          case STATUS_READ_GWSP:
-          {
-            final String[] strings = line.split( " " );
-            final Double hgws = Double.valueOf( strings[1] );// hoehe gw
-            final Double qb = Double.valueOf( strings[2] );// basisabfluss
-            lzCatchmentFE.setProperty( new QName( ns, "hgws" ), hgws );
-            lzCatchmentFE.setProperty( new QName( ns, "qb" ), qb );
-            status = STATUS_SEARCH_HEADER;
-          }
-            break;
-          case STATUS_READ_SNOW:
-            final String[] strings = line.split( " " );
-            final Double h = Double.valueOf( strings[1] );// hoehe schnee
-            final Double ws = Double.valueOf( strings[2] );// wassergehalt
-            lzCatchmentFE.setProperty( new QName( ns, "h" ), h );
-            lzCatchmentFE.setProperty( new QName( ns, "ws" ), ws );
-            status = STATUS_SEARCH_HEADER;
-            break;
         }
+
       }
 
-    }
-
-    // iterate over channels / lzsim-files
-    for( final Feature feature : ChannelFEs )
-    {
-      final int asciiID = idManager.getAsciiID( feature );
-      final String fileName = "we" + asciiID + ".lzg";
-      final File lzgFile = new File( lzsimDir, fileName );
-      if( !lzgFile.exists() )
+      // iterate over channels / lzsim-files
+      for( final Feature feature : ChannelFEs )
       {
-        continue;
-      }
-      final Feature lzChannelFE = lzWorkspace.createFeature( lzRootFE, lzChannelFT );
-      lzWorkspace.addFeatureAsComposition( lzRootFE, lzChannelMemberRT, 0, lzChannelFE );
-      lzChannelFE.setProperty( new QName( ns, "featureId" ), feature.getId() );
-      final FileReader fileReader = new FileReader( lzgFile );
-      final LineNumberReader reader = new LineNumberReader( fileReader );
-
-      int status = STATUS_SEARCH_HEADER;
-      String line = null;
-
-      // iterate over lines in file
-      while( (line = reader.readLine()) != null )
-      {
-        line = line.trim().replaceAll( "\\s+", " " );
-        switch( status )
+        final int asciiID = idManager.getAsciiID( feature );
+        final String fileName = "we" + asciiID + ".lzg";
+        final File lzgFile = new File( lzsimDir, fileName );
+        if( !lzgFile.exists() )
         {
-          case STATUS_SEARCH_HEADER:
-            // TODO read date
-            if( line.endsWith( "qgs" ) && line.startsWith( "19960824" ) )
-              // 19960521 00 h 1 qgs
-              // 1 0.000
-              status = STATUS_READ_QGS;
-            break;
-          case STATUS_READ_QGS:
+          continue;
+        }
+        final Feature lzChannelFE = lzWorkspace.createFeature( lzRootFE, lzChannelFT );
+        lzWorkspace.addFeatureAsComposition( lzRootFE, lzChannelMemberRT, 0, lzChannelFE );
+        lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), feature.getId() );
+        lzChannelFE.setProperty( new QName( "http://www.opengis.net/gml", "name" ), Integer.toString(asciiID) );
+        final FileReader fileReader = new FileReader( lzgFile );
+        final LineNumberReader reader = new LineNumberReader( fileReader );
+
+        int status = STATUS_SEARCH_HEADER;
+        String line = null;
+
+        // iterate over lines in file
+        while( (line = reader.readLine()) != null )
+        {
+          line = line.trim().replaceAll( "\\s+", " " );
+          switch( status )
           {
-            final String[] strings = line.split( " " );
-            final Double qgs = Double.valueOf( strings[1] );// Gesamtabfluss
-            lzChannelFE.setProperty( new QName( ns, "qgs" ), qgs );
-            status = STATUS_SEARCH_HEADER;
+            case STATUS_SEARCH_HEADER:
+              if( line.endsWith( "qgs" ) && line.startsWith( iniDate ) )
+                // 19960521 00 h 1 qgs
+                // 1 0.000
+                status = STATUS_READ_QGS;
+              break;
+            case STATUS_READ_QGS:
+            {
+              final String[] strings = line.split( " " );
+              final Double qgs = Double.valueOf( strings[1] );// Gesamtabfluss
+              lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ), qgs );
+              status = STATUS_SEARCH_HEADER;
+            }
+              break;
           }
-            break;
         }
       }
+      final String resultPathRelative = "Ergebnisse/Berechnet/Anfangswerte/" + formatFileName.format( initialDate ) + ".gml";
+      final File resultFile = new File( outputDir, resultPathRelative );
+      resultFile.getParentFile().mkdirs();
+      GmlSerializer.serializeWorkspace( resultFile, lzWorkspace, "UTF-8" );
+      logger.info("Anfangswerte fuer Kurzzeitsimulation geschrieben, Datum:"+ iniDate);
     }
-    final File lzsimGML = new File( tmpDir, "lzsim.gml" );
-    GmlSerializer.serializeWorkspace( lzsimGML, lzWorkspace, "UTF-8" );
-    resultEater.addResult( NaModelConstants.LZSIM_OUT_ID, lzsimGML );
   }
 
   public static void writeLzsimFiles( final NAConfiguration conf, final File tmpDir, final GMLWorkspace iniValuesWorkspace ) throws IOException
@@ -311,7 +310,7 @@ public class LzsimManager
     Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) );
-    DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
+    SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMdd  HH" ) ;
     String iniDate = dateFormat.format( initialDate );
 
     // write initial conditions for the strands
@@ -348,7 +347,8 @@ public class LzsimManager
       StringBuffer lzsBuffer = new StringBuffer();
 
       final Feature naCatchmentFE = catchmentIDToFeatureHash.get( catchmentID );
-      // in the catchmentIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is only
+      // in the catchmentIDToFeatureHash (HashMap<featureID, feature>) are all channels in the model. if this run is
+      // only
       // a subnet of the total model the idManager only knows the featuers in the submodel just skip this one.
       if( naCatchmentFE == null )
         continue;

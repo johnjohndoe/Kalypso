@@ -44,9 +44,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -59,6 +62,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
+  final static TreeSet<Date> m_dateWriteSet = new TreeSet<Date>();
   // graphicTool: types
   public static final int LINE = 0;
 
@@ -106,6 +110,7 @@ public class NAControlConverter
 
   private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
   {
+    SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
     List dateList = (List) controlFE.getProperty( "InitialValueDate" );
     if( dateList != null )
     {
@@ -117,13 +122,16 @@ public class NAControlConverter
         if( write )
         {
           final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( "initialDate" ) );
-          // Date initialDate = (Date) fe.getProperty( "initialDate" );
-          SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
-          String iniDate = format.format( initialDate );
-          b.append( iniDate + "\n" );
+          m_dateWriteSet.add( initialDate );
           conf.setIniWrite( true );
         }
       }
+    }
+    Iterator hydIter = m_dateWriteSet.iterator();
+    while( hydIter.hasNext() )
+    {
+      final String iniDate = format.format(hydIter.next());
+      b.append( iniDate + "\n" );
     }
     b.append( "99999\n" );
   }
@@ -251,5 +259,10 @@ public class NAControlConverter
     if( flag )
       return "j";
     return "n";
+  }
+
+  public TreeSet<Date> getDateWriteSet( )
+  {
+    return m_dateWriteSet;
   }
 }

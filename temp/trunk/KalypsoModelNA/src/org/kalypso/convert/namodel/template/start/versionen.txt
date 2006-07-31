@@ -5,3 +5,4 @@ kalypso_2.02: neueste exe mit behobenem fehler bodenspeicherberechnung
 kalypso_2.0.1a: aufbauend auf Version kalypso_WeisseElster; mit Bugfix in der Interzeptionsspeicherberechnung
 kalypso_2.0.3beta: restart und Bugfix Interzeptionsspeicherberechnung (!!!noch Testversion!!!)
 kalypso_2.0.5beta: test version mr (christoph)
+kalypso_2.0.6beta: Test korrigierte Anfangswerte und Fehlermanagement mit logger.

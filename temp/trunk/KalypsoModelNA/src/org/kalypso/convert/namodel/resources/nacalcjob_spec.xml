@@ -5,12 +5,11 @@
 	<input id="Modell" description="Modelldaten"/>
 	<input id="AnalyseModellXSD" description="Schema der Modelldaten fue Analyse" optional="true"/>
 	
-	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="true"/>
-	<input id="Parameter" description="Modelldaten - Parameter" optional="true"/>
+	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="false"/>
+	<input id="Parameter" description="Modelldaten - Parameter" optional="false"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
-	<input id="Template" description="Berechnungsverzeichnis" optional="true"/>
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
-	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="true"/>	
+	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>	
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
@@ -20,6 +19,5 @@
 	<output id="LOG_OUTRES" description="Ergebnisausgabe des Fortran Programmes"/>
 	<output id="LOG_OUTERR" description="Fehlerausgabe des Fortran Programmes"/>
 	<output id="LOG_INFO" description="bisher noch nicht identifizierter Output"/>
-	<output id="LZSIM_OUT" description="Produzierte Anfangswerte für fortsetzende Berechnung" optional="true"/>	
 	
 </modelspec>

@@ -67,7 +67,6 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 import java.util.logging.XMLFormatter;
 
@@ -207,24 +206,11 @@ public class NaModelInnerCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
-      // unzip templates aus inputdir (wird vom client als .asciitemplate.zip
-      // -siehe modelspec- dorthin kopiert):
       if( monitor.isCanceled() )
         return;
       // Kopieren von Berechnungsstandardverzeichnis
-      // TODO template is set as optional in the modelspec of the nacalcjob, can be removed because it always comes from
-      // the model itself. ( ask christoph)
-      final URL asciiTemplateURL;
-      // if( inputProvider.hasID( NaModelConstants.IN_TEMPLATE_ID ) )
-      // asciiTemplateURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_TEMPLATE_ID );
-      // else
-      asciiTemplateURL = getClass().getResource( "template/emptyAsciiTemplate.zip" );
+      final URL asciiTemplateURL = getClass().getResource( "template/emptyAsciiTemplate.zip" );
       unzipInput( asciiTemplateURL, tmpdir );
-
-      // Kopieren von zu verwendenden Anfangswerten in das Berechnungsverzeichnis
-      // final File lzsimDir = new File( tmpdir, "lzsim" );
-      // unzipInput( (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID ), lzsimDir );
-      // performance
 
       if( inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
       {
@@ -265,9 +251,17 @@ public class NaModelInnerCalcJob implements ISimulation
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
-      final URL iniValuesURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
-      final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( iniValuesURL );
-      LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
+      final URL iniValuesFolderURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+      final File lzsimFile = new File( iniValuesFolderURL.getFile(), "lzsim.gml" );
+      if( lzsimFile.exists() )
+      {
+        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURL() );
+        LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
+      }
+      else
+      {
+        logger.info( "Keine Anfangswerte vorhanden." );
+      }
 
       if( monitor.isCanceled() )
         return;
@@ -586,12 +580,13 @@ public class NaModelInnerCalcJob implements ISimulation
     NAModellConverter main = new NAModellConverter( conf );
     main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
 
-    // create temperatur und verdunstung timeseries
-    final File klimaDir = new File( tmpDir, "klima.dat" );
     // TODO: wird das hier noch benötigt (Weisse Elster)?
+    // create temperatur und verdunstung timeseries
+    // final File klimaDir = new File( tmpDir, "klima.dat" );
     // final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
     // final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
-    final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf.getSimulationEnd() );
+    // final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(),
+    // conf.getSimulationEnd() );
 
     // if( !tempFile.exists() )
     // {
@@ -601,8 +596,8 @@ public class NaModelInnerCalcJob implements ISimulation
     // {
     // writer.writeVerdFile( verdFile );
     // }
-    // dump idmapping to file
 
+    // dump idmapping to file
     final IDManager idManager = conf.getIdManager();
     Writer idWriter = null;
     try
@@ -1010,7 +1005,7 @@ public class NaModelInnerCalcJob implements ISimulation
     if( conf.getIniWrite() )
     {
       final LzsimManager lzsimManager = new LzsimManager();
-      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultEater );
+      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir );
     }
     loadLogs( tmpdir, logger, resultEater );
     final File[] files = resultDir.listFiles();
@@ -1210,7 +1205,7 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          resultPathRelative = "Ergebnisse/"+DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
+          resultPathRelative = "Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
           // resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" +
           // getTitleForSuffix( suffix ) + ".zml";
           //
@@ -1222,7 +1217,7 @@ public class NaModelInnerCalcJob implements ISimulation
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = "Ergebnisse/"+DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
+          resultPathRelative = "Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
           m_resultMap.add( resultPathRelative );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }

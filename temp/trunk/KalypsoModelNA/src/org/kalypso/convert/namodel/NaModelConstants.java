@@ -76,8 +76,6 @@ public interface NaModelConstants
 
   public final static String IN_CONTROL_ID = "Control";
 
-  public final static String IN_TEMPLATE_ID = "Template";
-
   public final static String IN_SYNTHN_ID = "synthNiederschlag";
 
   public static final String IN_OPTIMIZECONF_ID = "SceConf";
