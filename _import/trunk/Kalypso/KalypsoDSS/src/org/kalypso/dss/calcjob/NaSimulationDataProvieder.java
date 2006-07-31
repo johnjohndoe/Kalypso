@@ -91,10 +91,6 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
       {
         return new URL( m_calcDir.toURL(), "calcParameter.gml" );
       }
-      if( id.equals( NaModelConstants.IN_TEMPLATE_ID ) )
-      {
-        return new URL( m_calcDir.toURL(), "../.asciitemplate.zip" );
-      }
       if( id.equals( NaModelConstants.IN_OPTIMIZECONF_ID ) )
       {
         return new URL( m_calcDir.toURL(), ".sce.xml" );
@@ -113,7 +109,7 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
       }
       if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
       {
-        return new URL( m_calcDir.toURL(), "Ergebnisse/Anfangswerte/lzsim.gml" );
+        return new URL( m_calcDir.toURL(), "Anfangswerte/lzsim.gml" );
       }
       if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       {
