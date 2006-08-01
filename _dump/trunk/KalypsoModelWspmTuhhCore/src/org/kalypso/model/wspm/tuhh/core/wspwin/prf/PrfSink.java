@@ -244,9 +244,11 @@ public class PrfSink implements IProfilSink
         writeCoords( profil, POINT_PROPERTY.UNTERKANTEBRUECKE, dbu );
         try
         {
-          final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) )
-                  + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) ) );
+          final String secLine = 
+            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) ) +
+            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + 
+            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) ) +
+            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
           dbu.setSecondLine( secLine );
         }
         catch( final ProfilDataException e )
@@ -383,6 +385,8 @@ public class PrfSink implements IProfilSink
     try
     {
       metaData = (Map<Integer, String[]>) p.getProperty( "prfFileFormat_MetaData" );
+      if( metaData == null )
+        metaData = new HashMap<Integer, String[]>();
     }
     catch( Exception e )
     {
