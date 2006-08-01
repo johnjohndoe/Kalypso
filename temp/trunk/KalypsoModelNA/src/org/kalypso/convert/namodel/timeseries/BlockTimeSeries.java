@@ -74,13 +74,14 @@ public class BlockTimeSeries
   // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
   private final static Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
 
-  // private final static Pattern pTime = Pattern
-  // .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{5,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+  // synth. n.: haufigkeit: 0.100 jahre,dauer: 13.00 h , zeitschr.: 0.083 h , verteilung: 2
+  private final static Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" );
 
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" );
 
   private final Pattern pHeader = Pattern.compile( "\\s*(-?+\\d+\\.\\d+)\\s*" );
-//  private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
+
+  // private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
   private final Hashtable m_blocks;
 
@@ -125,6 +126,7 @@ public class BlockTimeSeries
       LineNumberReader reader = new LineNumberReader( new FileReader( blockFile ) );
       String line;
       Matcher m = null;
+      Matcher synthM = null;
       int step = SEARCH_TIMEOFFSET;
       while( (line = reader.readLine()) != null )
       {
@@ -134,6 +136,7 @@ public class BlockTimeSeries
           {
             case SEARCH_TIMEOFFSET:
               m = pTime.matcher( line );
+              synthM=pSynthTime.matcher(line);
               if( m.matches() )
               {
                 String sDate = m.group( 1 );
@@ -154,7 +157,7 @@ public class BlockTimeSeries
                    * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
                    */
                   timeStep = 300000l;
-                  System.out.println( "TimeStep: " + timeStep );
+//                  System.out.println( "TimeStep: " + timeStep );
                 }
                 else
                 {
@@ -162,9 +165,41 @@ public class BlockTimeSeries
                 }
 
                 Date testDate = new Date( startDate );
-                System.out.println( "startdate: " + testDate + "  step:" + sStep );
+//                System.out.println( "startdate: " + testDate + "  step:" + sStep );
                 step++;
               }
+              if( synthM.matches() )
+              {
+                // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
+                String sDate = "000101";
+                String sTime = "0";
+                String sStep = synthM.group( 3 );
+                final Date parseDate = m_dateFormat.parse( sDate );
+                startDate = (parseDate).getTime();
+                int sTime_int = Integer.parseInt( sTime );
+                // 24 means 0 same day ! (RRM/fortran-logic)
+                if( sTime_int == 24 )
+                {
+                  sTime = "0";
+                }
+                startDate += Long.parseLong( sTime ) * 1000l * 3600l;
+                if( sStep.equals( "0.083" ) )
+                {
+                  /*
+                   * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
+                   */
+                  timeStep = 300000l;
+//                  System.out.println( "TimeStep: " + timeStep );
+                }
+                else
+                {
+                  timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
+                }
+
+                Date testDate = new Date( startDate );
+//                System.out.println( "startdate: " + testDate + "  step:" + sStep );
+                step++;
+              }              
               break;
             case SEARCH_BLOCK_HEADER:
               m = pBlock.matcher( line );

@@ -7,10 +7,10 @@
 	<element name="SynthN" type="syn:synthNType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>synthetische Niederschläge</label>
+				<label>synthetische Niederschlag</label>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>synthetic Precipitation</label>
+				<label>synthetic precipitation</label>
 			</documentation>
 		</annotation>
 	</element>
@@ -21,10 +21,10 @@
 					<element name="synthNMember" type="syn:SynthNAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>besteht aus</label>
+								<label>in</label>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>exists of</label>
+								<label>of</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -49,10 +49,10 @@
 	<element name="StatN" type="syn:StatNType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Regionsliste</label>
+				<label>Region - ${property:http://www.opengis.net/gml#name}</label>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>region list</label>
+				<label>region - ${property:http://www.opengis.net/gml#name}</label>
 			</documentation>
 		</annotation>
 	</element>
@@ -60,13 +60,27 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
+				<element name="Ort" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geometrie</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>Geometric position</tooltip>
+								<description>Geometry of the object</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="statNParameterMember" type="syn:StatNParameterAssociationType" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>hat</label>
+								<label>mit</label>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>has</label>
+								<label>with</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -86,10 +100,10 @@
 	<element name="StatNParameter" type="syn:StatNParameterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>stat. N.</label>
+				<label>Wiederkehrwahrscheinlichkeit - ${property:http://www.tuhh.de/synthN#xjah}</label>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>stat. P.</label>
+				<label>intervall - ${property:http://www.tuhh.de/synthN#xjah}</label>
 			</documentation>
 		</annotation>
 	</element>
@@ -100,12 +114,12 @@
 					<element name="statNDiag" type="zmlinline:ZmlInlineTNType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Diagramm</label>
+								<label>Niederschlagsdiagramm</label>
 								<tooltip>Diagramm statistischer Niederschlag</tooltip>
-								<description>Niederschlagsmenge abhängig von der bisherigen Niederschlagsdauer</description>
+								<description>Niederschlagsmenge abhängig von der Niederschlagsdauer</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>diagram</label>
+								<label>precipitation diagram</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -117,9 +131,9 @@
 								<description>Wiederkehrwahrscheinlichkeit des synthetischen Niederschlagereignisses [1/a]</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>synth. P.</label>
-								<tooltip>synthetic Presipitation</tooltip>
-								<description>calculation based on synthetic precipitation</description>
+								<label>intervall</label>
+								<tooltip>intervall</tooltip>
+								<description>intervall</description>
 							</documentation>
 						</annotation>
 					</element>

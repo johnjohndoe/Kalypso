@@ -260,7 +260,7 @@ public class NaModelInnerCalcJob implements ISimulation
       }
       else
       {
-        logger.info( "Keine Anfangswerte vorhanden." );
+        logger.log( Level.INFO, "Keine Anfangswerte vorhanden für Startdatum.", conf.getSimulationStart().toString() );
       }
 
       if( monitor.isCanceled() )
@@ -277,15 +277,17 @@ public class NaModelInnerCalcJob implements ISimulation
       if( isSucceeded() )
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
+        logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, resultEater, conf );
 
-        System.out.println( "fertig - Ergebnisse vorhanden" );
+//        System.out.println( "fertig - Ergebnisse vorhanden" );
       }
       else
       {
         monitor.setMessage( "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
+        logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
         loadLogs( tmpdir, logger, resultEater );
-        System.out.println( "fertig - Fehler siehe Log-Dateien" );
+//        System.out.println( "fertig - Fehler siehe Log-Dateien" );
       }
     }
     catch( Exception e )
@@ -495,15 +497,16 @@ public class NaModelInnerCalcJob implements ISimulation
     conf.setNodeResultProvider( nodeResultProvider );
     updateModelWithExtraVChannel( modellWorkspace, nodeResultProvider );
 
-    // model Hydrotop
-    final GMLWorkspace hydrotopWorkspace;
-
     // model Parameter
     final GMLWorkspace synthNWorkspace;
-    if( dataProvider.hasID( NaModelConstants.IN_SYNTHN_ID ) )
-      synthNWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_SYNTHN_ID ) );
+    final File synthNGML = new File( ((URL) dataProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID )).getFile(), "calcSynthN.gml" );
+    if( synthNGML.exists() )
+      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURL() );
     else
       synthNWorkspace = null;
+
+    // model Hydrotop
+    final GMLWorkspace hydrotopWorkspace;
 
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
@@ -556,7 +559,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // choose simulation kernel
     chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
-
+   
     // choose precipitation form and parameters
     final Boolean pns = (Boolean) metaFE.getProperty( "pns" );
     conf.setUsePrecipitationForm( pns == null ? false : pns );
@@ -1409,7 +1412,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     try
     {
-      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( tmpDir, "start/output.err" ) );
+      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( tmpDir, "start/error.gml" ) );
     }
     catch( SimulationException e )
     {
