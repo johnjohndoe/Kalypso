@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Bode-Längsschnitt (Abfluss)</title>
+	<legend title="" visible="true"/>
+
+	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="Q" datatype="double" label="Abfluss" unit="m³" direction="vertical" position="left" />
+   	
+   	<!-- Kodierung color:
+   	red;green;blue[;alpha]
+   	jeweils in [0-255]
+   	
+   	Blau-Töne (Richtung grün)
+   	0;0;255
+   	0;153;255
+   	0;204;255
+   	0;153;102
+   	0;204;153
+   	153;153;0
+   	Rot-Töne (Richtung orange)
+   	255;0;0
+   	255;153;0
+   	255;204;0
+   	255;0;153
+   	204;102;255
+   	204;102;0
+   	-->
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Speicherabgabe/Wendefurth.zml">
+		<curve id="C1" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+<!-- Wendefurth ist kein Vorhersagepegel	
+in Scheitelwerttabelle ist entsprechend des alten Modells Speicherabgabe verwendet...
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Wendefurth.zml">
+		<curve id="C2" name="%obsname%  - Vorhersage" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+-->	   	
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Ditfurt.zml">
+		<curve id="C3" name="%obsname% - Beobachtung" color="0;153;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Ditfurt.zml">
+		<curve id="C4" name="%obsname%  - Vorhersage" color="255;153;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Wegeleben.zml">
+		<curve id="C5" name="%obsname% - Beobachtung" color="0;204;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Wegeleben.zml">
+		<curve id="C6" name="%obsname%  - Vorhersage" color="255;204;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Hadmersleben.zml">
+		<curve id="C7" name="%obsname% - Beobachtung" color="0;153;102" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml">
+		<curve id="C8" name="%obsname%  - Vorhersage" color="255;0;153" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Staßfurt.zml">
+		<curve id="C9" name="%obsname% - Beobachtung" color="0;204;153" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Staßfurt.zml">
+		<curve id="C10" name="%obsname%  - Vorhersage" color="204;102;255" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Messung/Neugattersleben.zml">
+		<curve id="C11" name="%obsname% - Beobachtung" color="153;153;0" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml">
+		<curve id="C12" name="%obsname%  - Vorhersage" color="204;102;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	
+</obsdiagview>

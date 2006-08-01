@@ -550,6 +550,18 @@
 				<arg name="category" value="Längsschnitt Pegel;Bode Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
 			</arg>
+			<arg name="templateDiagLSBodeQ_Speicher">
+				<arg name="documentName" value="LängsschnittBodeQ_Speicher"/>
+				<arg name="label" value="Bode-Längsschnitt (Abfluss) mit Speicherabgabe"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ_Speicher.odt"/>
+			</arg>
+			<arg name="templateDiagLSBodeW_Speicher">
+				<arg name="documentName" value="LängsschnittBodeW_Speicher"/>
+				<arg name="label" value="Bode-Längsschnitt (Wasserstand) mit Speicherabgabe"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW_Speicher.odt"/>
+			</arg>
 			<arg name="templateDiagLSSelkeQ">
 				<arg name="documentName" value="LängsschnittSelkeQ"/>
 				<arg name="label" value="Selke-Längsschnitt (Abfluss)"/>

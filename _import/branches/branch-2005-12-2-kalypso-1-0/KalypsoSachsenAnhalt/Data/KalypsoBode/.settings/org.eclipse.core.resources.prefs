@@ -1,4 +1,4 @@
-#Thu Jul 27 17:59:07 CEST 2006
+#Tue Aug 01 11:10:54 CEST 2006
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -63,8 +63,9 @@ encoding//.prognose/Vorhersage-2006-07-12_20h23/.calculation=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
 encoding//..BCE_intern/interne_Tests/interner_Test_20060331/Zeitreihen/Pegel/Messung/Thale.zml=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
+encoding//.prognose/Vorhersage-2006-06-30_08h39/Zeitreihen/Pegel/Messung/Wendefurth.zml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPREY.zml=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenvarianten/20041125_15_07/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_TSBAUTZ.zml=UTF-8
 encoding//Rechenvarianten/040427/Gesamtansicht.gmt=UTF-8
@@ -229,8 +230,8 @@ encoding//.prognose/Vorhersage-03-11-2004_20h59/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
