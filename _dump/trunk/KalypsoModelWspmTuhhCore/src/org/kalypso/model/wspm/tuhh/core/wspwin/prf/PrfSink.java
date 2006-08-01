@@ -256,6 +256,7 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Fehler beim schreiben der Brückenparameter" );
         }
         pw.addDataBlock( dbu );
+        break;
       }
 
       case WEHR:
@@ -281,6 +282,7 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Fehler beim schreiben der Wehrparameter" );
         }
         pw.addDataBlock( dbw );
+        break;
       }
       case EI:
       {
@@ -300,6 +302,7 @@ public class PrfSink implements IProfilSink
         }
         pw.addDataBlock( dbe );
       }
+      break;
       case MAUL:
       {
         final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" );
@@ -317,6 +320,7 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
         }
         pw.addDataBlock( dbm );
+        break;
       }
       case KREIS:
       {
@@ -336,6 +340,7 @@ public class PrfSink implements IProfilSink
         }
         pw.addDataBlock( dbk );
       }
+      break;
       case TRAPEZ:
       {
         final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" );

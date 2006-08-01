@@ -39,10 +39,10 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 {
   private final Color m_color;
 
- // private final IProfil m_profil;
+  // private final IProfil m_profil;
 
   private final Color m_fillColor;
-  
+
   private IProfilEventManager m_pem;
 
   public RauheitLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
@@ -93,88 +93,40 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   public void paint( final GCWrapper gc )
   {
     final Color background = gc.getBackground();
-    // final int alpha = gc.getAlpha();
-//    if( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) )
-//    {
-//      drawBlock( gc );
-//
-//    }
-//    else
-//    {
-      drawDetail( gc );
-//    }
-    // gc.setAlpha( alpha );
-    gc.setBackground( background );
-  }
-
-  private void drawDetail( final GCWrapper gc )
-  {
-    try
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return;
+    final List<IProfilPoint> points = getProfil().getPoints();
+    IProfilPoint lastP = null;
+    for( final Iterator<IProfilPoint> pIt = points.iterator(); pIt.hasNext(); )
     {
+      final IProfilPoint p = pIt.next();
 
-      final List<IProfilPoint> points = m_pem.getProfil().getPoints();
-
-      IProfilPoint lastP = null;
-      for( final Iterator<IProfilPoint> pIt = points.iterator(); pIt.hasNext(); )
+      if( lastP != null )
       {
-        final IProfilPoint p = pIt.next();
-
-        if( lastP != null )
+        try
         {
           final double x1 = lastP.getValueFor( POINT_PROPERTY.BREITE );
           final double x2 = p.getValueFor( POINT_PROPERTY.BREITE );
-
           final double y1 = 0;
           final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
-
           final Rectangle box = logical2screen( new Rectangle2D.Double( x1, y1, x2 - x1, y2 - y1 ) );
           box.width += 1;
           fillRectangle( gc, box );
         }
-
-        lastP = p;
+        catch( final ProfilDataException e )
+        {
+          //sollte nie passieren
+        }
       }
+      lastP = p;
     }
-    catch( final Exception e )
-    {
-      // should never happen
-
-      e.printStackTrace();
-    }
-
+    gc.setBackground( background );
   }
 
-  private void drawBlock( final GCWrapper gc )
-  {
+  
 
-    final IProfilDevider[] deviders = m_pem.getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE } );
-
-    try
-    {
-      for( int i = 0; i < deviders.length - 1; i++ )
-      {
-        final IProfilPoint firstP = deviders[i].getPoint();
-        final IProfilPoint lastP = deviders[i + 1].getPoint();
-        final Double value = (Double) deviders[i].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-        if( value == null )
-          break;
-        final double x1 = firstP.getValueFor( POINT_PROPERTY.BREITE );
-        final double x2 = lastP.getValueFor( POINT_PROPERTY.BREITE );
-
-        final double y1 = 0;
-        final double y2 = value;
-
-        final Rectangle box = logical2screen( new Rectangle2D.Double( x1, y1, x2 - x1, y2 - y1 ) );
-        box.width += 1;
-        fillRectangle( gc, box );
-      }
-    }
-    catch( ProfilDataException e )
-    {
-      // should never happen
-    }
-
-  }
+  
 
   private void fillRectangle( final GCWrapper gc, final Rectangle box )
   {
@@ -235,7 +187,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), POINT_PROPERTY.RAUHEIT );
-   
+
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, change, true );
     new ProfilOperationJob( operation ).schedule();
   }

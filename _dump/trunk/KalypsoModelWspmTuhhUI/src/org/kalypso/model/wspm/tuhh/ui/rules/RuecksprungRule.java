@@ -41,7 +41,7 @@ public class RuecksprungRule extends AbstractValidatorRule
                 "Gauss-Rücksprung bei Breite = "
                     + String.format( IProfilConstants.FMT_STATION, x2 ), "",
                 profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString() );
+                    .toString(), null );
           else if( (x2 - x1 < (Double) POINT_PROPERTY.BREITE
               .getParameter( PARAMETER.PRECISION ))
               && (y1 != y2) )
@@ -49,7 +49,7 @@ public class RuecksprungRule extends AbstractValidatorRule
                 "Senkrechte Wand bei Breite = "
                     + String.format( IProfilConstants.FMT_STATION, x2 ), "",
                 profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString() );
+                    .toString(), null );
         }
 
         prevPoint = point;

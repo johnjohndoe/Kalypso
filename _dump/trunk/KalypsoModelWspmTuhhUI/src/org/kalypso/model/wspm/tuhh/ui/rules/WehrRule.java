@@ -50,12 +50,12 @@ public class WehrRule extends AbstractValidatorRule
     if( deviders[0].getTyp()==DEVIDER_TYP.WEHR  )
     {
       final IProfilPoint point =  deviders[0].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString() ); 
+      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), null ); 
     }
     if( deviders[deviders.length -1].getTyp()==DEVIDER_TYP.WEHR  )
     {
       final IProfilPoint point =  deviders[deviders.length -1].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString() ); 
+      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), null ); 
     }
   }
 
@@ -71,7 +71,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( wk < h )
       {
-        collector.createProfilMarker( true, "Oberkante Wehr [" + String.format( IProfilConstants.FMT_STATION, b ) + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString() );
+        collector.createProfilMarker( true, "Oberkante Wehr [" + String.format( IProfilConstants.FMT_STATION, b ) + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
       }
 
     }
@@ -89,12 +89,12 @@ public class WehrRule extends AbstractValidatorRule
     if( Math.abs( firstPoint.getValueFor( POINT_PROPERTY.HOEHE ) - firstPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
     {
       collector.createProfilMarker( true, "Der erste Punkt[" + String.format( IProfilConstants.FMT_STATION, firstPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( firstPoint ), POINT_PROPERTY.BREITE.toString() );
+          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( firstPoint ), POINT_PROPERTY.BREITE.toString(), null );
     }
     if( Math.abs( lastPoint.getValueFor( POINT_PROPERTY.HOEHE ) - lastPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
     {
       collector.createProfilMarker( true, "Der letzte Punkt[" + String.format( IProfilConstants.FMT_STATION, lastPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( lastPoint ), POINT_PROPERTY.BREITE.toString() );
+          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( lastPoint ), POINT_PROPERTY.BREITE.toString(), null );
     }
   }
 }

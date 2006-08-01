@@ -63,7 +63,7 @@ public class BrueckeRule extends AbstractValidatorRule
           .createProfilMarker(
               true,
               "Die Grenzen der durchströmten Bereiche müssen auf der ersten und der letzten Geländekoordinate liegen.",
-              "", 0, POINT_PROPERTY.BREITE.toString() );
+              "", 0, POINT_PROPERTY.BREITE.toString(), null );
     }
   }
 
@@ -84,21 +84,21 @@ public class BrueckeRule extends AbstractValidatorRule
         collector.createProfilMarker( true, "Oberkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
-            POINT_PROPERTY.BREITE.toString() );
+            POINT_PROPERTY.BREITE.toString(), null );
       }
       if( uk < h )
       {
         collector.createProfilMarker( true, "Unterkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
-            POINT_PROPERTY.BREITE.toString() );
+            POINT_PROPERTY.BREITE.toString(), null );
       }
       if( ok < uk )
       {
         collector.createProfilMarker( true, "Oberkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Unterkante Brücke", "", profil.getPoints()
-            .indexOf( point ), POINT_PROPERTY.BREITE.toString() );
+            .indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
       }
     }
   }

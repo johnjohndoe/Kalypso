@@ -261,4 +261,8 @@
               class="org.kalypso.model.wspm.ui.sld.WspmFeatureTypeStyleCatalogContribution"
               name="Wspm Style Catalog"/>
      </extension>
+     <extension
+           point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator class="org.kalypso.model.wspm.ui.profil.validation.ProfilMarkerResolutionGenerator"/>
+     </extension>
 </plugin>

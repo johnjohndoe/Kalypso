@@ -123,7 +123,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     return m_control;
   }
 
-  public void dispose( )
+  public synchronized void dispose( )
   {
     if( m_chartview != null )
     {

@@ -15,11 +15,9 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
-
 public class DoppelterPunktRule extends AbstractValidatorRule
 {
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector )
-      throws CoreException
+  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -32,12 +30,10 @@ public class DoppelterPunktRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
-           if( ProfilUtil.comparePoints(new POINT_PROPERTY[]{POINT_PROPERTY.BREITE ,POINT_PROPERTY.HOEHE},prevPoint,point))
-               {
-            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = "
-                + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ), "", profil.getPoints()
-                .indexOf( point ), POINT_PROPERTY.BREITE.toString() );
-        }
+          if( ProfilUtil.comparePoints( new POINT_PROPERTY[] { POINT_PROPERTY.BREITE, POINT_PROPERTY.HOEHE }, prevPoint, point ) )
+          {
+            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ), "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
+          }
         }
         prevPoint = point;
       }
@@ -45,8 +41,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
     catch( final ProfilDataException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle()
-          .getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
     }
   }
 
