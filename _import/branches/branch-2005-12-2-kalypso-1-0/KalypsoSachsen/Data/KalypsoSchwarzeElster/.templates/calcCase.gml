@@ -7,7 +7,7 @@
           <Name>Trado 1</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5460570.00016158,5660600.021143925</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5444390.0,5690600.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
@@ -25,9 +25,9 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_TRADO_oben.zml"/>
           </Wasserstand_vorhersage_oben>
-          <BodenfeuchteMin>0.01</BodenfeuchteMin>
+          <BodenfeuchteMin>0.0</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
-          <BodenfeuchteMax>70.0</BodenfeuchteMax>
+          <BodenfeuchteMax>400.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_TRADO.zml"/>
           </Niederschlag_rechnung>
@@ -64,7 +64,7 @@
           <Name>Schönau</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5458610.000169803,5670080.021103631</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5446540.0,5688350.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
@@ -82,9 +82,9 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHOEN_oben.zml"/>
           </Wasserstand_vorhersage_oben>
-          <BodenfeuchteMin>0.01</BodenfeuchteMin>
+          <BodenfeuchteMin>0.0</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
-          <BodenfeuchteMax>130.0</BodenfeuchteMax>
+          <BodenfeuchteMax>300.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_SCHOEN.zml"/>
           </Niederschlag_rechnung>
@@ -121,29 +121,29 @@
           <Name>Zescha</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5473800.000107538,5674170.021085799</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5452950.0,5684580.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_ZESCHA.zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_GROEDI.zml" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_ZESCHA.zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI.zml" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_ZESCHA.zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_unten.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_ZESCHA_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_oben.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_ZESCHA_oben.zml"/>
           </Wasserstand_vorhersage_oben>
-          <BodenfeuchteMin>0.01</BodenfeuchteMin>
+          <BodenfeuchteMin>0.0</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
-          <BodenfeuchteMax>70.0</BodenfeuchteMax>
+          <BodenfeuchteMax>300.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_GROEDI.zml" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_ZESCHA.zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -184,7 +184,7 @@
           <Name>Neuwiese</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5467400.000134027,5688520.021023534</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5444350.0,5704950.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
@@ -205,7 +205,7 @@
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
-          <KorrekturEmpfehlungLaufzeit>0.0</KorrekturEmpfehlungLaufzeit>
+          <KorrekturEmpfehlungLaufzeit>-1.0</KorrekturEmpfehlungLaufzeit>
         </FlusslaufModell>
       </PegelMember>
     </PegelCollection>
@@ -218,7 +218,7 @@
           <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5463280.000150746,5675800.02107895</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5450910.0,5693000.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abgabe>
@@ -244,7 +244,7 @@
           <Name>Zuleiter Knappenrode</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5453430.000191948,5711860.020919969</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5454530.0,5695300.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss>
@@ -257,72 +257,72 @@
   <OmbrometerCollectionAssociation>
     <ombrometer:OmbrometerCollection fid="Ombrometer">
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="Ombrometer-Sohland">
-          <ombrometer:name>Sohland</ombrometer:name>
-          <ombrometer:NR>462080</ombrometer:NR>
+        <ombrometer:Ombrometer fid="Ombrometer-Kamenz_Lückersdorf">
+          <ombrometer:name>Kamenz-Lückersdorf</ombrometer:name>
+          <ombrometer:NR>41403</ombrometer:NR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5459333.725269554,5657226.828756005</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4644439.0,5683575.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Sohland.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Kamenz_Lückersdorf.zml"/>
+          </ombrometer:precipitation>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="Ombrometer-KA_Bischofswerda">
+          <ombrometer:name>KA Bischofswerda</ombrometer:name>
+          <ombrometer:NR>41434</ombrometer:NR>
+          <gml:location>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4651793.0,5666410.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+          <ombrometer:precipitation>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Bischofswerda.zml"/>
+          </ombrometer:precipitation>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="Ombrometer-Kleinröhrsdorf">
+          <ombrometer:name>Kleinröhrsdorf (TS Wallroda)</ombrometer:name>
+          <ombrometer:NR>41536</ombrometer:NR>
+          <gml:location>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4638578.0,5666131.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+          <ombrometer:precipitation>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Kleinröhrsdorf.zml"/>
+          </ombrometer:precipitation>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="Ombrometer-Strauch">
+          <ombrometer:name>Strauch</ombrometer:name>
+          <ombrometer:NR>sO25141554</ombrometer:NR>
+          <gml:location>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4610153.0,5693534.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+          <ombrometer:precipitation>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Strauch.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-Kubschütz,_Kr._Bautzen">
           <ombrometer:name>Kubschütz, Kr. Bautzen</ombrometer:name>
-          <ombrometer:NR>462480</ombrometer:NR>
+          <ombrometer:NR>sO38446248</ombrometer:NR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5465018.20343926,5668309.493696579</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4675239.0,5672474.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Kubschütz.zml"/>
-          </ombrometer:precipitation>
-        </ombrometer:Ombrometer>
-      </ombrometer:OmbrometerMember>
-      <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="Ombrometer-Boxberg">
-          <ombrometer:name>Boxberg</ombrometer:name>
-          <ombrometer:NR>462180</ombrometer:NR>
-          <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5470078.650735768,5696088.600233802</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <ombrometer:precipitation>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Boxberg.zml"/>
-          </ombrometer:precipitation>
-        </ombrometer:Ombrometer>
-      </ombrometer:OmbrometerMember>
-      <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="Ombrometer-TS_Quitzdorf">
-          <ombrometer:name>TS Quitzdorf</ombrometer:name>
-          <ombrometer:NR>462600</ombrometer:NR>
-          <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5482287.158278278,5683090.745302032</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <ombrometer:precipitation>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_TS_Quitzdorf.zml"/>
-          </ombrometer:precipitation>
-        </ombrometer:Ombrometer>
-      </ombrometer:OmbrometerMember>
-      <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="Ombrometer-Reichenbach_OL">
-          <ombrometer:name>Reichenbach OL</ombrometer:name>
-          <ombrometer:NR>462370</ombrometer:NR>
-          <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5485848.633524037,5668204.70942616</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <ombrometer:precipitation>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Reichenbach.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>

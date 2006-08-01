@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard xmlns="xml.model.kalypso.org" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!DOCTYPE entities
+[
+	<!ENTITY hid "org.kalypso.manual.">
+]>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" >
+	
+<!-- 
+ToDo: Help-Ids setzen!!! -->
 
 	<!-- Phase 1: KONTROLLE DER ZEITREIHEN -->
 
 	<!-- Kontrolle Ombrometer -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt"/>
-        <arg name="mainSash" value="50"/>
+        
+		<arg name="pageID" value="Ombrometer"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
+       <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
+        
         <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
+        
         <arg name="maximizeMap" value="true"/>
         <arg name="mapWidgetID" value="SELECT"/>
     </page>
@@ -20,7 +31,9 @@
        	<arg name="maximizeMap" value="true"/>
        	<arg name="selectFeatureID" value="EZ_1"/>
 
-        <arg name="mainSash" value="40"/>
+		<arg name="pageID" value="Einzugsgebiete"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Einzugsgebiete.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -33,12 +46,14 @@
     </page>
 
 	<!-- Kontrolle Talsperrenabgaben -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgabe" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
        	<arg name="maximizeMap" value="true"/>
-       	<arg name="selectFeatureID" value="TS_BAUTZEN"/>
+       	<arg name="selectFeatureID" value="SP_KNAPPENRODE"/>
 
-        <arg name="mainSash" value="40"/>
+ 		<arg name="pageID" value="Talsperre"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Talsperre.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -53,10 +68,12 @@
 
 	<!-- Kontrolle W-Eingabepegel -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
        	<arg name="maximizeMap" value="true"/>
        	<arg name="selectFeatureID" value="EZ_1"/>
 
+		<arg name="pageID" value="Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Pegel.html"/>
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
         <arg name="zmlTableShow" value="all"/>
@@ -70,32 +87,15 @@
         
     </page>
 
-	<!-- Kontrolle W-Eingabepegel -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
-       	<arg name="maximizeMap" value="true"/>
-       	<arg name="selectFeatureID" value="FM_1"/>
-
-        <arg name="mainSash" value="40"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="zmlTableShow" value="all"/>
-		
-        <arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-        <arg name="ignoreLabel1" value="Wasserstand"/>
-        <arg name="ignoreLabel2" value="Abfluss"/>
-		
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
-        
-    </page>
-
 	<!-- Kontrolle Flutungen und Zuflüsse -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuleiter" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/vorgabepegel.gmt"/>
        	<arg name="maximizeMap" value="true"/>
-       	<arg name="selectFeatureID" value="F_4"/>
+       	<arg name="selectFeatureID" value="F_1"/>
 
-        <arg name="mainSash" value="40"/>
+ 		<arg name="pageID" value="Zuleiter"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Zuleiter.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -121,7 +121,9 @@
 
         <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
 
-        <arg name="mainSash" value="40"/>
+		<arg name="pageID" value="Ber_NA_Modelle"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_NA_Modelle.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
         
         <arg name="ignoreType1" value="Q"/>
@@ -143,16 +145,18 @@
     </page>
 
 	<!-- Eingabe Anfangsvolumina der Talsperren -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperre" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
 
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
        	<arg name="maximizeMap" value="true"/>
-       	<arg name="selectFeatureID" value="TS_BAUTZEN"/>
+       	<arg name="selectFeatureID" value="SP_KNAPPENRODE"/>
 
         <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
 
-        <arg name="mainSash" value="40"/>
+		<arg name="pageID" value="Ber_Talsperre"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_Talsperre.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
 
         <arg name="ignoreType1" value="V;W"/>
@@ -173,7 +177,7 @@
     </page>
 
 	<!-- Eingabe Parameter der Flusslaufmodelle -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodell" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
        	<arg name="maximizeMap" value="true"/>
        	<arg name="selectFeatureID" value="FM_1"/>
@@ -193,7 +197,9 @@
         <arg name="timeserie4" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
         <arg name="timeserie5" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
 
-        <arg name="mainSash" value="40"/>
+		<arg name="pageID" value="Ber_Flusslauf_Modell"/>
+ 		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_Flusslauf_Modell.html"/>
+       <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
        	
         <arg name="buttonText" value="Berechnung durchführen"/>
@@ -226,6 +232,8 @@
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
 
+		<arg name="pageID" value="Berichtsablage"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage.html"/>
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="25"/>
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5613408.439793806" left="5398879.253585345" right="5543156.711594422" srs="EPSG:31469" top="5757048.911233307"/>
+    <extent bottom="5614406.513302311" left="5350031.880698623" right="5514127.972918954" srs="EPSG:31469" top="5757440.906803248"/>
     <highlightColors>
-    	<fillColor red="255" green="255" blue="0" alpha="100"/>
+        <fillColor alpha="100" blue="0" green="255" red="255"/>
     </highlightColors>
     <layers active="ID_1">
         <layer name="Ombrometer" visible="true" featurePath="OmbrometerCollectionAssociation/OmbrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
@@ -11,7 +11,7 @@
         <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="project:/modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="NA-Modelle" ns3:actuate="onRequest" ns3:href="project:/.styles/namodelle_mit_relationen.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
-        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:actuate="onRequest" ns5:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:actuate="onRequest" ns5:href="project:/Grunddaten/Shapes/gewässer#EPSG:31468" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
             <ns6:style linktype="sld" style="sachsenrivers" ns5:actuate="onRequest" ns5:href="project:/.styles/styles.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
         <layer name="Thiessen-Polygone" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/Grunddaten/Shapes/thiesn1#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
@@ -19,6 +19,9 @@
         </layer>
         <layer name="raster.gml" visible="true" featurePath="cellMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="project:/.model/dwd/raster.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
             <ns10:style linktype="sld" style="dwdCell" ns9:actuate="onRequest" ns9:href="project:/.styles/dwdraster.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Speicher" visible="true" featurePath="featureMember" id="ID_8" linktype="shape" ns15:actuate="onRequest" ns15:href="project:/Grunddaten/Shapes/Speicher#EPSG:31468" ns15:type="simple" xmlns:ns15="http://www.w3.org/1999/xlink">
+            <ns16:style linktype="sld" style="Talsperren" ns15:actuate="onRequest" ns15:href="project:/.styles/speicher_shape.sld" ns15:type="simple" xmlns:ns16="types.template.kalypso.org"/>
         </layer>
     </layers>
 </gismapview>
