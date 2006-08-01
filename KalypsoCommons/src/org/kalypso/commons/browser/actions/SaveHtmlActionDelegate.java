@@ -78,9 +78,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActionDelegate
 {
-  private static final String SETTINGS_FILE_NAME = null;
+  private static final String SETTINGS_FILE_NAME = "fileName";
 
-  private static final String SETTINGS_FILE_PATH = null;
+  private static final String SETTINGS_FILE_PATH = "filePath";
 
   private IWorkbenchPart m_part;
 
