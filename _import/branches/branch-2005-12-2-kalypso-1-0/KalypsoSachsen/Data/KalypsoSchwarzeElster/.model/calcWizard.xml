@@ -254,7 +254,7 @@ ToDo: Help-Ids setzen!!! -->
 				<arg name="href6" value="Wasserstand_vorhersage_oben"/>
 			</arg>
 			<arg name="templateDiagQ">
-				<arg name="label" value="Abflußgrafik"/>
+				<arg name="label" value="Abflussgrafik"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
 			</arg>
 			<arg name="templateDiagW">
@@ -266,6 +266,77 @@ ToDo: Help-Ids setzen!!! -->
 				<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
 			</arg>
 		</arg>
-      </page>
-	
+		<!-- Scheitelwert-Tabellen W / Q -->
+		<arg name="exporter3">
+			<arg name="id" value="multiExporter"/>
+			<arg name="name" value="Scheitelwerte"/>
+			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
+			<arg name="exporter3a">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Wasserstand"/>
+				<arg name="documentName" value="ScheitelwerteW.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Trado 1"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="Schönau"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="Zescha"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="Neuwiese"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter4">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Abfluss"/>
+				<arg name="documentName" value="ScheitelwerteQ.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Trado 1"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="Schönau"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="Zescha"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="Neuwiese"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
+				</arg>
+			</arg>
+		</arg>
+	</page>
 </calcwizard>

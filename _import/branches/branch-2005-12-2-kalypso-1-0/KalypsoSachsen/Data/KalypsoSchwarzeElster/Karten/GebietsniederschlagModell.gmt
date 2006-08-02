@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5614406.513302311" left="5350031.880698623" right="5514127.972918954" srs="EPSG:31469" top="5757440.906803248"/>
+    <extent bottom="5632125.213803099" left="5383616.72200666" right="5483049.22638692" srs="EPSG:31469" top="5725670.971422418"/>
     <highlightColors>
         <fillColor alpha="100" blue="0" green="255" red="255"/>
     </highlightColors>
@@ -17,11 +17,11 @@
         <layer name="Thiessen-Polygone" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/Grunddaten/Shapes/thiesn1#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="thiessen" ns7:actuate="onRequest" ns7:href="project:/.styles/thiessen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
         </layer>
-        <layer name="raster.gml" visible="true" featurePath="cellMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="project:/.model/dwd/raster.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <layer name="raster.gml" visible="false" featurePath="cellMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="project:/.model/dwd/raster.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
             <ns10:style linktype="sld" style="dwdCell" ns9:actuate="onRequest" ns9:href="project:/.styles/dwdraster.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
         </layer>
-        <layer name="Speicher" visible="true" featurePath="featureMember" id="ID_8" linktype="shape" ns15:actuate="onRequest" ns15:href="project:/Grunddaten/Shapes/Speicher#EPSG:31468" ns15:type="simple" xmlns:ns15="http://www.w3.org/1999/xlink">
-            <ns16:style linktype="sld" style="Talsperren" ns15:actuate="onRequest" ns15:href="project:/.styles/speicher_shape.sld" ns15:type="simple" xmlns:ns16="types.template.kalypso.org"/>
+        <layer name="Speicher" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/Speicher#EPSG:31468" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+            <ns12:style linktype="sld" style="Talsperren" ns11:actuate="onRequest" ns11:href="project:/.styles/speicher_shape.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
         </layer>
     </layers>
 </gismapview>
