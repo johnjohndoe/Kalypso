@@ -42,7 +42,6 @@ package org.kalypso.contribs.java.util;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Date utilities.
@@ -51,9 +50,6 @@ import java.util.TimeZone;
  */
 public final class DateUtilities
 {
-  private static Calendar calSrc = Calendar.getInstance();
-  private static Calendar calDest = Calendar.getInstance();
-
   private DateUtilities()
   {
   // not intended to be instanciated
@@ -77,22 +73,5 @@ public final class DateUtilities
     cal.set( yearMin, monthMin, dayMin, hourMin, minMin, secMin );
 
     return cal.getTime();
-  }
-
-  /**
-   * Convert a date from one timezone to another timezone
-   */
-  public final static Date convert( final Date d, final TimeZone source, final TimeZone dest )
-  {
-    calSrc.setTimeZone( source );
-    calDest.setTimeZone( dest );
-
-    calSrc.setTimeInMillis( d.getTime() );
-
-    calDest.clear();
-    calDest.set( calSrc.get( Calendar.YEAR ), calSrc.get( Calendar.MONTH ), calSrc.get( Calendar.DAY_OF_MONTH ), calSrc
-        .get( Calendar.HOUR_OF_DAY ), calSrc.get( Calendar.MINUTE ), calSrc.get( Calendar.SECOND ) );
-    
-    return calDest.getTime();
   }
 }

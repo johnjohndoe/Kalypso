@@ -128,12 +128,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.about();
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.about();
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -156,12 +154,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getUserAuthorisation( arg0, arg1, arg2, arg3, arg4 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getUserAuthorisation( arg0, arg1, arg2, arg3, arg4 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -217,12 +213,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (LinkedList)readFromFile( filename, new LinkedList() );
-    else
-    {
-      final LinkedList list = m_wiski.getColumnNames( arg0, arg1 );
-      writeToFile( filename, list );
-      return list;
-    }
+
+    final LinkedList list = m_wiski.getColumnNames( arg0, arg1 );
+    writeToFile( filename, list );
+    return list;
   }
 
   /**
@@ -249,12 +243,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getGroupList( arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getGroupList( arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -315,12 +307,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getTsInfoList( arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getTsInfoList( arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -440,12 +430,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getTsData( arg0, arg1, arg2, arg3, arg4 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getTsData( arg0, arg1, arg2, arg3, arg4 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -469,12 +457,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getStationDetailList( arg0, arg1, arg2, arg3 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getStationDetailList( arg0, arg1, arg2, arg3 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -506,12 +492,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getAlarmLevelList( arg0, arg1, arg2 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getAlarmLevelList( arg0, arg1, arg2 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -551,12 +535,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
 
     if( m_simulate )
       return (HashMap)readFromFile( filename, new HashMap() );
-    else
-    {
-      final HashMap map = m_wiski.getRatingTables( arg0, arg1, arg2, arg3 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.getRatingTables( arg0, arg1, arg2, arg3 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**
@@ -631,12 +613,10 @@ public class WDPDebuger implements KiWWDataProviderRMIf
       map.put( arg1[0], new Boolean( false ) );
       return (HashMap)readFromFile( filename, map );
     }
-    else
-    {
-      final HashMap map = m_wiski.isTsWritable( arg0, arg1, arg2 );
-      writeToFile( filename, map );
-      return map;
-    }
+
+    final HashMap map = m_wiski.isTsWritable( arg0, arg1, arg2 );
+    writeToFile( filename, map );
+    return map;
   }
 
   /**

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
@@ -30,7 +29,6 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   private final IValueConverter m_vc;
 
   private final TimeZone m_tzWiski;
-  private final TimeZone m_tzKalypso;
 
   /** flag indicating whether to convert the dates or not */
   private final boolean m_needsConversion;
@@ -51,18 +49,14 @@ public class WiskiTuppleModel extends AbstractTuppleModel
    *          a value converter (for instance when having different units)
    * @param tzSrc
    *          the wiski timezone
-   * @param tzDest
-   *          the destination timezone
    */
-  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tzSrc,
-      final TimeZone tzDest, final TsInfoItem tsinfo )
+  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tzSrc, final TsInfoItem tsinfo )
   {
     super( axes );
 
     m_vc = conv;
 
     m_tzWiski = tzSrc;
-    m_tzKalypso = tzDest;
 
     m_data = data;
     m_values = new Double[m_data.size()];
@@ -108,10 +102,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
         if( m_needsConversion )
           dWiski = wiskiToKalypso( dWiski );
 
-        // convert date according to timezones
-        final Date dKalypso = DateUtilities.convert( dWiski, m_tzWiski, m_tzKalypso );
-
-        return dKalypso;
+        return dWiski;
 
       case 1:
         return getValue( index );

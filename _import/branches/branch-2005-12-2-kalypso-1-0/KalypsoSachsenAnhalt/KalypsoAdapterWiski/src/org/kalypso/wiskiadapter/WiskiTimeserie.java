@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,8 +73,6 @@ public class WiskiTimeserie implements IObservation
 
   private DateRange m_cachedDr = null;
 
-  private final TimeZone m_tzDest;
-
   private final static Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
 
   public WiskiTimeserie( final TsInfoItem tsinfo )
@@ -97,12 +96,6 @@ public class WiskiTimeserie implements IObservation
     m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ), kalypsoType, kalypsoUnit, Double.class, false );
 
     m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1], true );
-
-    final String tzName = tsinfo.getRepository().getProperty( TimeZone.class.getName() );
-    if( tzName != null )
-      m_tzDest = TimeZone.getTimeZone( tzName );
-    else
-      m_tzDest = TimeZone.getDefault();
   }
 
   /**
@@ -264,8 +257,7 @@ public class WiskiTimeserie implements IObservation
       if( call.getData() == null )
         m_cachedValues = new SimpleTuppleModel( getAxisList() );
       else
-        m_cachedValues = new WiskiTuppleModel( getAxisList(), call.getData(), m_cv, call.getTimeZone(), m_tzDest,
-            m_tsinfo );
+        m_cachedValues = new WiskiTuppleModel( getAxisList(), call.getData(), m_cv, call.getTimeZone(), m_tsinfo );
 
       return m_cachedValues;
     }
@@ -281,6 +273,13 @@ public class WiskiTimeserie implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
+    // if true, incomminc and outgoing values are dumped to System.out
+    // should be false normally
+    final boolean bDump = true;
+    
+    if( bDump )
+      System.out.println( ObservationUtilities.dump( values, "\t" ) );
+
     if( !isEditable() )
       throw new SensorException( toString() + " ist nicht editierbar! Werte. "
           + "Werte dürfen nicht geschrieben werden." );
@@ -321,8 +320,8 @@ public class WiskiTimeserie implements IObservation
           + ". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
     }
 
-    //DateFormat df = DateFormat.getInstance();
-    //df.setTimeZone( m_tzDest );
+    final DateFormat dfDump = DateFormat.getInstance();
+    dfDump.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
 
     final ITuppleModel filteredValues = intfil.getValues( null );
     for( int ix = 0; ix < filteredValues.getCount(); ix++ )
@@ -332,7 +331,8 @@ public class WiskiTimeserie implements IObservation
       final Date date = (Date)filteredValues.getElement( ix, dateAxis );
       final Number value = (Number)filteredValues.getElement( ix, valueAxis );
 
-      //System.out.println( "writing wiski: " + date.getTime() + " " + df.format( date ) + " " + value );
+      if( bDump )
+        System.out.println( "writing wiski: " + date.getTime() + " " + dfDump.format( date ) + " " + value );
 
       row.put( "timestamp", new Timestamp( date.getTime() ) );
       row.put( "tsc_value0", new Double( value.doubleValue() ) );
@@ -344,13 +344,8 @@ public class WiskiTimeserie implements IObservation
     // compose setTsData HashMap
 
     // utc offset in seconds
-    final Date firstDate;
-    if( filteredValues.getCount() > 0 )
-      firstDate = (Date)filteredValues.getElement( 0, dateAxis );
-    else
-      firstDate = new Date();
-
-    final int utcOffset = m_tzDest.getOffset( firstDate.getTime() ) / 1000;
+    // always use offset 0
+    final int utcOffset = 0; //m_tzDest.getOffset( firstDate.getTime() ) / 1000;
     value_tsinfo_map.put( "utcoffset", new Integer( utcOffset ) );
 
     //System.out.println( "utcoffset: " + utcOffset );

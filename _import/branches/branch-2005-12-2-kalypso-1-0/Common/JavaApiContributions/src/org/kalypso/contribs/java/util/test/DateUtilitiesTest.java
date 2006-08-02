@@ -44,8 +44,6 @@ package org.kalypso.contribs.java.util.test;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.kalypso.contribs.java.util.DateUtilities;
-
 import junit.framework.TestCase;
 
 /**
@@ -53,14 +51,6 @@ import junit.framework.TestCase;
  */
 public class DateUtilitiesTest extends TestCase
 {
-  public void testConvert()
-  {
-    Date d = new Date( 1129647600000l );
-    System.out.println( d );
-    d = DateUtilities.convert( d, TimeZone.getTimeZone( "UTC0" ), TimeZone.getTimeZone( "Europe/Berlin" ) );
-    System.out.println( d );
-  }
-  
   public void testFoo()
   {
     Date firstDate = new Date( 1130331600000L );
