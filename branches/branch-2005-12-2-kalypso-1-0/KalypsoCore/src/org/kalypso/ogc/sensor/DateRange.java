@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * Simple Date Range
@@ -124,7 +125,7 @@ public class DateRange implements Comparable
    */
   public String toString()
   {
-    DateFormat df = DateFormat.getDateTimeInstance();
+    final DateFormat df = TimeserieUtils.getDateFormat();
     return df.format( m_from ) + " - " + df.format( m_to );
   }
 

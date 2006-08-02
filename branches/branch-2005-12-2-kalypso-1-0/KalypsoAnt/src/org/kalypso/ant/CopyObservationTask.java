@@ -161,7 +161,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final String property = source.getProperty();
     final long from = source.getFrom();
     final long to = source.getTo();
-
     final Date fromDate = new Date( from );
     final Date toDate = new Date( to );
     final String filter = source.getFilter();

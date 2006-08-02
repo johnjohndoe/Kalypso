@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
@@ -76,9 +77,9 @@ public class ConfigurePreviewAction extends AbstractObservationChooserAction imp
     if( rep == null )
       return;
 
+    final DateFormat dateFormat = TimeserieUtils.getDateFormat();
     final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "Zeitraum-Eingabe",
-        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
-            .getDateTimeInstance() ) );
+        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), dateFormat ) );
 
     if( dlg.open() == Window.OK )
     {

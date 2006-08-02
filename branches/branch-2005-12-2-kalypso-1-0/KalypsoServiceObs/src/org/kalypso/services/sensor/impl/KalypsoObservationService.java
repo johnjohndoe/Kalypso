@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -99,21 +98,6 @@ import org.xml.sax.InputSource;
  * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
  * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
  * 
- * <p>
- * This service is configured by a properties-file which has following syntax:
- * 
- * <pre>
- * # Set the timezone into which the kalypso-clients are used. Data that is 
- * # transferred to and from the clients will be located in this timezone.
- * # 
- * # This property is optional and if omitted, kalypso makes no conversion 
- * # internally (null is used as timezone name in that case).
- * # 
- * # The name of the timezone should be compatible with the specification of
- * # TimeZone.getTimeZone( String ) 
- * TIMEZONE_NAME=Europe/Berlin
- * </pre>
- * 
  * @author schlienger
  */
 public class KalypsoObservationService implements IObservationService
@@ -140,9 +124,6 @@ public class KalypsoObservationService implements IObservationService
   private final File m_tmpDir;
 
   private final Logger m_logger;
-
-  /** Timezone is used to convert dates between repositories and clients */
-  private TimeZone m_timezone = null;
 
   /**
    * Constructs the service by reading the configuration.
@@ -237,19 +218,6 @@ public class KalypsoObservationService implements IObservationService
         IOUtils.closeQuietly( ins );
       }
 
-      // set the timezone according to the properties
-      final String tzName = props.getProperty( "TIMEZONE_NAME" );
-      if( tzName != null )
-      {
-        m_timezone = TimeZone.getTimeZone( tzName );
-        m_logger.info( "TimeZone set on " + m_timezone );
-      }
-      else
-      {
-        m_timezone = null;
-        m_logger.info( "Reset TimeZone. Name not found: " + tzName );
-      }
-
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
@@ -272,10 +240,6 @@ public class KalypsoObservationService implements IObservationService
                 IObservationManipulator.class, getClass().getClassLoader() );
             m_mapRepId2Manip.put( rep.getIdentifier(), man );
           }
-
-          // adjust properties of repository
-          if( tzName != null )
-            rep.setProperty( TimeZone.class.getName(), tzName );
         }
         catch( final Exception e )
         {
@@ -359,7 +323,7 @@ public class KalypsoObservationService implements IObservationService
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, request, m_timezone );
+      final ObservationType obsType = ZmlFactory.createXML( obs, request, null );
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters

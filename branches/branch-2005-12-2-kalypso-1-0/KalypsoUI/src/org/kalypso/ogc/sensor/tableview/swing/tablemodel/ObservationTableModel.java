@@ -51,6 +51,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -418,6 +419,11 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       //if( column == 0 )
       //  return EMPTY_RENDERING_RULES;
 
+      // REMARK: in spite of synchronizing we still get ArrayOutOfBoundsException's here....
+      // So range check and return default value
+      if( column > m_columns.size() - 1 )
+        return EMPTY_RENDERING_RULES;
+      
       final TableViewColumn col = (TableViewColumn)m_columns.get( column );
       try
       {
@@ -559,7 +565,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
     // find appropriate format for shared column (Attention: can still be null)
     if( checkObject instanceof Date )
-      nf[0] = DateFormat.getDateTimeInstance();
+      nf[0] = TimeserieUtils.getDateFormat();
     else if( checkObject instanceof Integer )
       nf[0] = NumberFormat.getIntegerInstance();
     else if( checkObject instanceof Number )
@@ -567,6 +573,17 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
     // dump header and fetch numberformats
     writer.write( m_sharedAxis.getName() );
+    if( nf[0] instanceof DateFormat )
+    {
+      final DateFormat df = (DateFormat)nf[0];
+      final TimeZone timeZone = df.getTimeZone();
+      if( timeZone != null )
+      {
+        writer.write( " (" );
+        writer.write( timeZone.getID() );
+        writer.write( ")" );
+      }
+    }
 
     int col = 1;
     for( final Iterator it = m_columns.iterator(); it.hasNext(); )

@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
@@ -126,5 +127,20 @@ public class InterpolationFilterTest extends TestCase
     assertEquals( firstValue.doubleValue(), ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
     assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
     assertEquals( lastValue.doubleValue(), ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
+  }
+  
+  public void testWiskiProblem() throws SensorException
+  {
+    
+    final URL url = InterpolationFilterTest.class.getResource( "resources/Nienhagen.zml" );
+    final IObservation obs = ZmlFactory.parseXML( url, "" );
+
+    final int timeUnit = Calendar.HOUR_OF_DAY; //WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
+    final int timeStep = 1;//m_tsinfo.getWiskiDistValue();
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+        KalypsoStati.STATUS_USERMOD.intValue() );
+    intfil.initFilter( null, obs, null );
+    
+    System.out.println( ObservationUtilities.dump( intfil.getValues(null), "\t") );
   }
 }
