@@ -195,11 +195,11 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         intModel.addTupple( tupple );
 
+        d1 = cal.getTime();
+
         cal.add( m_calField, m_amount );
 
         startIx++;
-
-        d1 = cal.getTime();
       }
 
       final LinearEquation eq = new LinearEquation();
@@ -216,31 +216,51 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         while( cal.getTime().compareTo( d2 ) <= 0 )
         {
-          long ms = cal.getTimeInMillis();
+          final long ms = cal.getTimeInMillis();
 
-          Object[] tupple = new Object[valueAxes.length + 1];
+          final Object[] tupple = new Object[valueAxes.length + 1];
           tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
           for( int ia = 0; ia < valueAxes.length; ia++ )
           {
             final int pos = intModel.getPositionFor( valueAxes[ia] );
 
+            final double valStart = v1[pos];
+            final double valStop = v2[pos];
+            
+            final long linearStart = d1.getTime();
+            final long linearStop = d2.getTime();
+
             if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
             {
-              // this is the status axis: no interpolation
-              tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)v1[pos], (int)v2[pos] ) );
+              // BUGFIX: do not interpolate, if we have the exact date
+              if( linearStart == ms )
+                tupple[pos] = new Integer( (int)valStart );
+              else if( linearStop == ms )
+                tupple[pos] = new Integer( (int)valStop );
+              else
+                // this is the status axis: no interpolation
+                tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)valStart, (int)valStop ) );
             }
             else
             {
               // normal case: perform the interpolation
               try
               {
-                eq.setPoints( d1.getTime(), v1[pos], d2.getTime(), v2[pos] );
-                tupple[pos] = new Double( eq.computeY( ms ) );
+                // BUGFIX: do not interpolate, if we have the exact date
+                if( linearStart == ms )
+                  tupple[pos] = new Double( valStart );
+                else if( linearStop == ms )
+                  tupple[pos] = new Double( valStop );
+                else
+                {
+                  eq.setPoints( linearStart, valStart, linearStop, valStop );
+                  tupple[pos] = new Double( eq.computeY( ms ) );
+                }
               }
               catch( SameXValuesException e )
               {
-                tupple[pos] = new Double( v1[pos] );
+                tupple[pos] = new Double( valStart );
               }
             }
           }
@@ -275,7 +295,7 @@ public class InterpolationFilter extends AbstractObservationFilter
             lastValidTupple[intModel.getPositionFor( valueAxes[i] )] = intModel.getElement( pos, valueAxes[i] );
         }
       }
-      
+
       while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
         fillWithDefault( dateAxis, valueAxes, intModel, cal, lastValidTupple );
     }
