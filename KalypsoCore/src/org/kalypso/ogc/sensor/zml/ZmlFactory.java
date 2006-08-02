@@ -69,6 +69,7 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
+import org.kalypso.commons.parser.impl.DateParser;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -105,7 +106,6 @@ import org.kalypso.zml.AxisType.ValueLinkType;
 import org.kalypso.zml.request.RequestType;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
-
 
 /**
  * Factory for ZML-Files. ZML is a flexible format that covers following possibilities:
@@ -340,6 +340,13 @@ public class ZmlFactory
           format = getProperties().getProperty( type + "_format" );
 
         parser = getParserFactory().createParser( type, format );
+        
+        // if we have a date parser, set the right timezone to read the values
+        if( parser instanceof DateParser )
+        {
+          final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" );
+          ((DateParser)parser).setTimezone( TimeZone.getTimeZone( tzString ) );
+        }
 
         values = createValues( context, tmpAxis, parser, data );
       }
@@ -384,7 +391,7 @@ public class ZmlFactory
     // tricky: check if the observation is auto-proxyable using its own metadata
     // (for instance WQ)
     final IObservation autoProxyObs = AutoProxyFactory.getInstance().proxyObservation( proxyObs );
-    
+
     // tricky: manipulate observation (if some manipulators were found)
     ManipulatorExtensions.manipulateObservation( autoProxyObs, null );
 
@@ -455,7 +462,7 @@ public class ZmlFactory
    * @param timezone
    *          the timezone into which dates should be converted before serialized
    */
-  public static ObservationType createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
+  public static ObservationType createXML( final IObservation obs, final IRequest args, TimeZone timezone )
       throws FactoryException
   {
     try
@@ -491,14 +498,15 @@ public class ZmlFactory
       }
 
       // insert timezone in the metadata if specified
-      if( timezone != null )
-      {
-        final MetadataType mdType = OF.createMetadataType();
-        mdType.setName( TimeserieConstants.MD_TIMEZONE );
-        mdType.setValue( timezone.getID() );
+      if( timezone == null )
+        timezone = TimeZone.getDefault();
 
-        metadataList.add( mdType );
-      }
+      // write timezone info into metadata
+      final MetadataType mdType = OF.createMetadataType();
+      mdType.setName( TimeserieConstants.MD_TIMEZONE );
+      mdType.setValue( timezone.getID() );
+
+      metadataList.add( mdType );
 
       final List axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
@@ -568,14 +576,15 @@ public class ZmlFactory
   private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb,
       final TimeZone timezone ) throws SensorException
   {
-    XmlTypes.PDATE.setTimezone( timezone );
+    final DateParser dateParser = new DateParser( XmlTypes.DATE_FORMAT );
+    dateParser.setTimezone( timezone );
 
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) ).append( ";" );
+      sb.append( dateParser.toString( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( XmlTypes.PDATE.toString( model.getElement( amount, axis ) ) );
+      sb.append( dateParser.toString( model.getElement( amount, axis ) ) );
   }
 
   /**
@@ -688,7 +697,7 @@ public class ZmlFactory
             final Class dataClass = axis[ax].getDataClass();
             final Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
-              keyValue = TimeserieUtils.getNumberFormatFor(axis[ax].getType()).parseObject( stringValue );
+              keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
             else
               keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
             if( collector.contains( keyValue ) )
@@ -709,7 +718,7 @@ public class ZmlFactory
               final String stringValue = cells[ax];
               final Class dataClass = axis[ax].getDataClass();
               if( Number.class.isAssignableFrom( dataClass ) )
-                rowValues[ax] = TimeserieUtils.getNumberFormatFor(axis[ax].getType()).parseObject( stringValue );
+                rowValues[ax] = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
               else
                 rowValues[ax] = SpecialPropertyMapper.cast( stringValue, dataClass, true, false );
             }
@@ -772,7 +781,7 @@ public class ZmlFactory
         {
           if( value instanceof Number )
           {
-            stringValue = TimeserieUtils.getNumberFormatFor(sortedAxes[col].getType()).format( value );
+            stringValue = TimeserieUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
           }
           else
             stringValue = (String)SpecialPropertyMapper.cast( value, String.class, true, false );

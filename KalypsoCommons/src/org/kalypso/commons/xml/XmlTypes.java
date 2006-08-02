@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.xml;
 
-import org.kalypso.commons.parser.impl.DateParser;
 import org.kalypso.commons.parser.impl.DoubleParser;
 
 /**
@@ -56,14 +55,13 @@ public class XmlTypes
   }
 
   /**
-   * Parser for the type <code>date</code>. It uses following format string:
-   * 
+   * Date format used to parse and write zml files.
    * <pre>
    * yyyy-MM-dd'T'HH:mm:ss
    * </pre>
    */
-  public final static DateParser PDATE = new DateParser( "yyyy-MM-dd'T'HH:mm:ss" );
-
+  public final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  
   /**
    * Parser for the type <code>double</code>. It uses the default behaviour of the java.lang.Double class.
    */

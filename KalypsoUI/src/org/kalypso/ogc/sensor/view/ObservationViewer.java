@@ -78,6 +78,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -386,11 +387,14 @@ public class ObservationViewer extends Composite
     {
       public void widgetSelected( SelectionEvent e )
       {
+        final DateFormat dateFormat = TimeserieUtils.getDateFormat();
+
         final DateRangeInputControlStuct drs;
         if( m_dr == null )
-          drs = new DateRangeInputControlStuct( true, new Date(), new Date(), 0, DateFormat.getDateTimeInstance() );
+          drs = new DateRangeInputControlStuct( true, new Date(), new Date(), 0, dateFormat );
         else
-          drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat.getDateTimeInstance() );
+          drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, dateFormat );
+
         final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "", "", drs );
         if( dlg.open() == Window.OK )
         {

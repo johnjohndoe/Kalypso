@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
@@ -48,6 +49,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
@@ -103,25 +105,38 @@ public class IntervallFilter extends AbstractObservationFilter
   {
     final Date from;
     final Date to;
+    final IRequest bufferedRequest;
     if( request != null && request.getDateRange() != null )
     {
       from = request.getDateRange().getFrom();
       to = request.getDateRange().getTo();
+      
+      // BUGIFX: fixes the problem with the first value:
+      // the first value was always ignored, because the intervall
+      // filter cannot handle the first value of the source observation
+      // FIX: we just make the request a big bigger in order to get a new first value
+      final int bufferField = Calendar.DAY_OF_MONTH;
+      final int bufferAmount = 2;
+
+      final Calendar bufferedFrom = Calendar.getInstance(  );
+      bufferedFrom.setTime( from );
+      bufferedFrom.add( bufferField, -bufferAmount );
+
+      final Calendar bufferedTo = Calendar.getInstance(  );
+      bufferedTo.setTime( to );
+      bufferedTo.add( bufferField, bufferAmount );
+      
+      bufferedRequest = new ObservationRequest( bufferedFrom.getTime(), bufferedTo.getTime() );
     }
     else
     {
       from = null;
       to = null;
+      
+      bufferedRequest = null;
     }
 
-    // BUGFIX: it is not necessary to give the request to the base-observation
-    // because the range is ensured by the intervall tuple model itself
-    // This fixes the tageswert problem: the problem there was, that the request cut of
-    // the last day(s) with values in it. This lead to the problem, that
-    // the first hours got no values.
-//    final ITuppleModel values = m_baseobservation.getValues( request );
-    final ITuppleModel values = m_baseobservation.getValues( null );
-    
+    final ITuppleModel values = m_baseobservation.getValues( bufferedRequest );
     return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
         values, from, to, m_defaultValue, m_defaultStatus );
   }

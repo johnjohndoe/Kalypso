@@ -46,12 +46,14 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -78,6 +80,10 @@ public class StringModifier implements IFeatureModifier
 
   public StringModifier( final FeatureTypeProperty ftp )
   {
+    // Set the time zone according to the global settings
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    DATE_FORMATTER.setTimeZone( timeZone );
+
     NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
     //    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
@@ -97,7 +103,7 @@ public class StringModifier implements IFeatureModifier
     final String namespace = ftp.getNamespace();
     final String name = ftp.getName();
     final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
-//    ##0.000E0
+    //    ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
     if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
     {

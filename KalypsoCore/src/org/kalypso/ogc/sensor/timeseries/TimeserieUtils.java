@@ -53,13 +53,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -85,7 +88,24 @@ public class TimeserieUtils
 
   private static NumberFormat m_defaultFormat = null;
 
+  /**
+   * Used by the ObservationTable and the observationDiagram
+   */
   private static DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+
+  static
+  {
+    final TimeZone timeZone;
+    // if the platform is runnning, use its time zone
+    if( Platform.isRunning() )
+    {
+      // Set the time zone according to the global settings
+      timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+      DF.setTimeZone( timeZone );
+    }
+    else
+      timeZone = TimeZone.getTimeZone( "UTC" );
+  }
 
   private TimeserieUtils()
   {
@@ -436,10 +456,10 @@ public class TimeserieUtils
     final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
     if( margin == null )
       return null;
-    
+
     return Double.valueOf( margin );
   }
-  
+
   /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
