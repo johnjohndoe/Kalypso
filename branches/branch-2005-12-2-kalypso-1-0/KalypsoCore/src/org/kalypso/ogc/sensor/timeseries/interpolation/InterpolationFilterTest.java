@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -90,6 +91,8 @@ public class InterpolationFilterTest extends TestCase
     final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0, true );
     filter.initFilter( null, m_obs, null );
 
+    sdf.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+
     // test with same date-range
     final ITuppleModel m1 = filter.getValues( null );
     verifyTuppleModel( m1, sdf.parse( "2004-11-23 13:00:00" ), sdf.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ),
@@ -113,34 +116,133 @@ public class InterpolationFilterTest extends TestCase
   {
     final Calendar cal = Calendar.getInstance();
     cal.setTime( from );
-    int i=0;
+    int i = 0;
     while( cal.getTime().before( to ) )
     {
       i++;
       cal.add( Calendar.HOUR_OF_DAY, 1 );
     }
     i++;
-    
+
     assertEquals( i, m.getCount() );
-    
+
     assertEquals( from, m.getElement( 0, m_dateAxis ) );
-    assertEquals( firstValue.doubleValue(), ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( firstValue.doubleValue(), ( (Number)m.getElement( 0, m_valueAxis ) ).doubleValue(), 0.001 );
     assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
-    assertEquals( lastValue.doubleValue(), ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( lastValue.doubleValue(), ( (Number)m.getElement( m.getCount() - 1, m_valueAxis ) ).doubleValue(),
+        0.001 );
   }
-  
-  public void testWiskiProblem() throws SensorException
+
+  /** Bugfix test: the second value was never interpolatied but taken from the first value. */
+  public void testSecondValueProblem() throws SensorException
   {
-    
     final URL url = InterpolationFilterTest.class.getResource( "resources/Nienhagen.zml" );
     final IObservation obs = ZmlFactory.parseXML( url, "" );
+    final ITuppleModel orgValues = obs.getValues( null );
+
+    //    System.out.println( "Original: " );
+    //    System.out.println( ObservationUtilities.dump( orgValues, "\t" ) );
+    //    System.out.println();
+    //    System.out.println();
 
     final int timeUnit = Calendar.HOUR_OF_DAY; //WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
     final int timeStep = 1;//m_tsinfo.getWiskiDistValue();
+
     final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
-    
-    System.out.println( ObservationUtilities.dump( intfil.getValues(null), "\t") );
+    final ITuppleModel intValues = intfil.getValues( null );
+
+    //    System.out.println( "Interpolated: " );
+    //    System.out.println( ObservationUtilities.dump( intValues, "\t" ) );
+
+    final int orgCount = orgValues.getCount();
+    final int intCount = intValues.getCount();
+
+    assertEquals( "Length of timersieries must not change", orgCount, intCount );
+
+    final IAxis orgValueAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Double.class );
+    final IAxis intValueAxis = ObservationUtilities.findAxisByClass( intfil.getAxisList(), Double.class );
+
+    final IAxis orgDateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
+    final IAxis intDateAxis = ObservationUtilities.findAxisByClass( intfil.getAxisList(), Date.class );
+
+    for( int i = 0; i < orgCount; i++ )
+    {
+      final Date orgDate = (Date)orgValues.getElement( i, orgDateAxis );
+      final Date intDate = (Date)intValues.getElement( i, intDateAxis );
+
+      assertEquals( "Dates are not equal at index " + i, orgDate, intDate );
+
+      final Double orgValue = (Double)orgValues.getElement( i, orgValueAxis );
+      final Double intValue = (Double)intValues.getElement( i, intValueAxis );
+
+      // test with equals, because we know that we dont have really iterpolated
+      assertEquals( "Values are not equal at index " + i, orgValue, intValue );
+    }
   }
+
+  public void testStatusAfterBadStatusProblem() throws SensorException
+  {
+    final URL url = InterpolationFilterTest.class.getResource( "resources/KalteBode.zml" );
+    final IObservation obs = ZmlFactory.parseXML( url, "" );
+    //    final ITuppleModel orgValues = obs.getValues( null );
+
+    //    System.out.println( "Original: " );
+    //    System.out.println( ObservationUtilities.dump( orgValues, "\t" ) );
+    //    System.out.println();
+    //    System.out.println();
+
+    final int timeUnit = Calendar.HOUR_OF_DAY; //WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
+    final int timeStep = 1;//m_tsinfo.getWiskiDistValue();
+
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+        KalypsoStati.STATUS_USERMOD.intValue() );
+    intfil.initFilter( null, obs, null );
+    final ITuppleModel intValues = intfil.getValues( null );
+
+    //    System.out.println( "Interpolated: " );
+    //    System.out.println( ObservationUtilities.dump( intValues, "\t" ) );
+
+    final InterpolationFilter int2fil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+        KalypsoStati.STATUS_USERMOD.intValue() );
+    int2fil.initFilter( null, intfil, null );
+    final ITuppleModel int2Values = int2fil.getValues( null );
+
+    //    System.out.println( "Interpolated (2. time): " );
+    //    System.out.println( ObservationUtilities.dump( int2Values, "\t" ) );
+
+    final int intCount = intValues.getCount();
+    final int int2Count = int2Values.getCount();
+
+    assertEquals( "Length of timeseries must not change", intCount, int2Count );
+
+    final IAxis intValueAxis = ObservationUtilities.findAxisByClass( intfil.getAxisList(), Double.class );
+    final IAxis int2ValueAxis = ObservationUtilities.findAxisByClass( int2fil.getAxisList(), Double.class );
+
+    final IAxis intDateAxis = ObservationUtilities.findAxisByClass( intfil.getAxisList(), Date.class );
+    final IAxis int2DateAxis = ObservationUtilities.findAxisByClass( int2fil.getAxisList(), Date.class );
+
+    final IAxis intStatusAxis = ObservationUtilities.findAxisByName( intfil.getAxisList(), "_kalypso_status_Volumen" );
+    final IAxis int2StatusAxis = ObservationUtilities.findAxisByName( int2fil.getAxisList(), "_kalypso_status_Volumen" );
+
+    for( int i = 0; i < intCount; i++ )
+    {
+      final Date intDate = (Date)intValues.getElement( i, intDateAxis );
+      final Date int2Date = (Date)int2Values.getElement( i, int2DateAxis );
+
+      assertEquals( "Dates are not equal at index " + i, intDate, int2Date );
+
+      final Double intValue = (Double)intValues.getElement( i, intValueAxis );
+      final Double int2Value = (Double)int2Values.getElement( i, int2ValueAxis );
+
+      assertEquals( "Values are not equal at index " + i, intValue, int2Value );
+
+      final Number intStatus = (Number)intValues.getElement( i, intStatusAxis );
+      final Number int2Status = (Number)int2Values.getElement( i, int2StatusAxis );
+
+      assertEquals( "Stati are not equal at index " + i, intStatus, int2Status );
+    }
+  }
+
 }
