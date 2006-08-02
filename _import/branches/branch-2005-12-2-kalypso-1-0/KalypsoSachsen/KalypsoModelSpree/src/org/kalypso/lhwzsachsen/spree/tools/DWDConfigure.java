@@ -72,6 +72,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * Optional kann das Raster auch als GML (Polygon-Themen) ausgegeben werden.
  * </p>
+ * <p>
+ * Liest resources/dwd/lm2_inv_slug und resources/dwd/modell.gml
+ * </p>
+ * <p>
+ * Schreibt C:/tmp/dwdConf.xml
+ * </p>
  * 
  * @author doemming (16.06.2005)
  * @author belger Adaptiert für die Spree Februar 2006
@@ -88,7 +94,7 @@ public class DWDConfigure
    * 
    * @throws Exception
    */
-  public void main( final String[] args ) throws Exception
+  public static void main( final String[] args ) throws Exception
   {
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
@@ -119,7 +125,7 @@ public class DWDConfigure
     GMLSchemaCatalog.init( multiCatalog, cache );
 
     //    LM2:
-    final URL lmBaseURL = getClass().getResource( "resources/dwd/lm2_inv_slug" );
+    final URL lmBaseURL = DWDConfigure.class.getResource( "../resources/dwd/lm2_inv_slug" );
 
     final File fileDwdZmlN = new File( "C:\\TMP\\dwdZmlConf.xml" );
 
@@ -133,7 +139,7 @@ public class DWDConfigure
    * 
    * @throws Exception
    */
-  public void createBaseRasterDWDRaster( final String args[], final URL lmbaseURL, final File fileDwdZmlN )
+  public static void createBaseRasterDWDRaster( final String args[], final URL lmbaseURL, final File fileDwdZmlN )
       throws Exception
   {
     System.out.println( "Start reading raster..." );
@@ -162,11 +168,11 @@ public class DWDConfigure
     }
   }
 
-  private void generateDwdZmlConf( final DWDRasterGeoLayer geoRaster, final int dwdKey, final int defaultStatusValue,
-      final Writer writer ) throws Exception
+  private static void generateDwdZmlConf( final DWDRasterGeoLayer geoRaster, final int dwdKey,
+      final int defaultStatusValue, final Writer writer ) throws Exception
   {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass()
-        .getResource( "resources/dwd/modell.gml" ) );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( DWDConfigure.class
+        .getResource( "../resources/dwd/modell.gml" ) );
 
     final FeatureType featureType = workspace.getFeatureType( "Einzugsgebiet" );
     final Feature[] features = workspace.getFeatures( featureType );
