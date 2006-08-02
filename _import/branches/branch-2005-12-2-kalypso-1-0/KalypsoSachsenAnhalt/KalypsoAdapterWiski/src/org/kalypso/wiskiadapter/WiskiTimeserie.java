@@ -275,7 +275,7 @@ public class WiskiTimeserie implements IObservation
   {
     // if true, incomminc and outgoing values are dumped to System.out
     // should be false normally
-    final boolean bDump = true;
+    final boolean bDump = false;
     
     if( bDump )
       System.out.println( ObservationUtilities.dump( values, "\t" ) );
