@@ -15,7 +15,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class FidCollectorVisitor implements FeatureVisitor
 {
-  private final Collection m_results = new ArrayList();
+  private final Collection<String> m_results = new ArrayList<String>();
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
@@ -34,7 +34,7 @@ public class FidCollectorVisitor implements FeatureVisitor
    */
   public String[] getResults( final boolean reset )
   {
-    final String[] result = (String[])m_results.toArray( new String[m_results.size()] );
+    final String[] result = m_results.toArray( new String[m_results.size()] );
     if( reset )
       m_results.clear();
     return result;
