@@ -47,6 +47,7 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.net.URL;
 import java.util.Date;
+import java.util.TreeSet;
 
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
@@ -130,6 +131,7 @@ public class NAConfiguration
   private final URL m_parameterFormatURL;
 
   private final URL m_hydrotopFormatURL;
+
   private final URL m_swaleAndTrenchFormatURL;
 
   private int m_minutesTimeStep = 60;
@@ -152,15 +154,17 @@ public class NAConfiguration
 
   private Boolean m_iniWrite;
 
+  private TreeSet<Date> m_dateWriteSet;
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
-    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
-    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String)null );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
+    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
+    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
@@ -522,5 +526,15 @@ public class NAConfiguration
   public URL getSwaleAndTrenchFormatURL( )
   {
     return m_swaleAndTrenchFormatURL;
+  }
+
+  public void setInitalValues( TreeSet<Date> dateWriteSet )
+  {
+    m_dateWriteSet = dateWriteSet;
+  }
+
+  public TreeSet<Date> getDateWriteSet( )
+  {
+    return m_dateWriteSet;
   }
 }
