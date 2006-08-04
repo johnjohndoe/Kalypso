@@ -43,14 +43,18 @@ package org.kalypso.ant;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -161,11 +165,11 @@ public class GmlPropertyTask extends Task
     }
 
     final Object value = f.getProperty( featureProperty );
-    if( value instanceof Date )
+    if( value instanceof XMLGregorianCalendar )
     {
       // special handling for Date
       // just write time in millies since 1970
-      final Date dateValue = (Date) value;
+      final Date dateValue = DateUtilities.toDate((XMLGregorianCalendar) value);
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final Date date;
