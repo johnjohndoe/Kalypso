@@ -82,6 +82,9 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** hours [h] */
   public static final String TYPE_HOURS = "H";
 
+  /** minutes [min] */
+  public static final String TYPE_MIN = "min";
+
   /** area as norm [A/Asum] */
   public static final String TYPE_NORM = "n";
 
