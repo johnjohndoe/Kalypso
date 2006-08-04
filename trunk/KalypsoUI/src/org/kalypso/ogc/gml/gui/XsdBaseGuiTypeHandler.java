@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
@@ -49,6 +50,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -65,7 +68,7 @@ import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
 public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
@@ -120,7 +123,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
 
       return factory.createCombo( combo );
     }
-
+    
     // everything else will be edited in a text field
     final Text editor = factory.createText();
     editor.setStyle( "SWT.NONE" );
@@ -170,6 +173,17 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   public boolean isGeometry( )
   {
     return m_handler.isGeometry();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
+   */
+  public Object fromText( String text ) throws ParseException
+  {
+    // Standard is to use the parseType method from the corresponding marhsalling type handler
+    // In future, this should be directly implemented at this point 
+    final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
+    return marshallingHandler.parseType( text );
   }
 
 }

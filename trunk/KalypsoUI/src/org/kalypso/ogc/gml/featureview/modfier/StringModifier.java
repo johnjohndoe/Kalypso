@@ -143,13 +143,6 @@ public class StringModifier implements IFeatureModifier
     if( m_guiTypeHandler != null )
       return m_guiTypeHandler.getText( data );
 
-    if( data instanceof Date )
-      return DATE_FORMATTER.format( data );
-    else if( data instanceof XMLGregorianCalendar )
-      return DATE_FORMATTER.format( DateUtilities.toDate( (XMLGregorianCalendar) data ) );
-    else if( data instanceof Number )
-      return NUMBER_FORMAT.format( data );
-
     return data == null ? "" : data.toString();
   }
 
@@ -181,36 +174,11 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    final Class clazz = m_ftp.getValueClass();
     if( m_guiTypeHandler != null )
-      return m_marshallingTypeHandler.parseType( text );
-    else if( clazz == java.lang.String.class )
-      return text;
-    else if( clazz == Boolean.class )
-      return new Boolean( text );
-    else if( clazz == Date.class )
-      return DATE_FORMATTER.parse( text );
-    else if( clazz == XMLGregorianCalendar.class )
-    {
-      final Date date = DATE_FORMATTER.parse( text );
-      try
-      {
-        return DateUtilities.toXMLGregorianCalendar( date );
-      }
-      catch( DatatypeConfigurationException e )
-      {
-        throw new ParseException( text, 0 );
-      }
-    }
-    else if( clazz == Double.class )
-      // allways use NumberUtils to parse double, so to allow input of '.' or ','
-      return new Double( NumberUtils.parseDouble( text ) );
-    else if( clazz == Integer.class )
-      return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
-    else if( clazz == Float.class )
-      return new Float( NumberUtils.parseDouble( text ) );
-    else if( clazz == Long.class )
-      return new Long( NUMBER_FORMAT.parse( text ).longValue() );
+      return m_guiTypeHandler.fromText( text );
+    // TODO: the following code is never called, because we have type handle for all base types!
+    // TODO: do not use the marshalling type handler but the gui type handler instead!
+
     return null;
   }
 
