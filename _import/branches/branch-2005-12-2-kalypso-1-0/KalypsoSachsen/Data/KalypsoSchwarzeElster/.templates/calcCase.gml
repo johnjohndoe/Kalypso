@@ -203,7 +203,7 @@
           <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5450910.0,5693000.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5451410.0,5695650.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abgabe>
@@ -229,7 +229,7 @@
           <Name>Zuleiter Knappenrode</Name>
           <Ort>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5454530.0,5695300.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5451920.0,5693220.0</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss>
