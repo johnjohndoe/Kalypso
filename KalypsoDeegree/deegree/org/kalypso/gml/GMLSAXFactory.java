@@ -43,6 +43,7 @@ package org.kalypso.gml;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -79,10 +80,19 @@ public class GMLSAXFactory
 
   private String m_gmlVersion;
 
-  public GMLSAXFactory( final ContentHandler handler ) throws SAXException
+  /**
+   * (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  private final Map<String, String> m_idMap;
+
+  /**
+   * @param idMap
+   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  public GMLSAXFactory( final ContentHandler handler, Map<String, String> idMap ) throws SAXException
   {
     m_handler = handler;
-
+    m_idMap = idMap;
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
   }
@@ -127,7 +137,9 @@ public class GMLSAXFactory
     final IFeatureType featureType = feature.getFeatureType();
     final QName prefixedQName = getPrefixedQName( feature.getFeatureType().getQName() );
 
-    final String id = feature.getId();
+    String id = feature.getId();
+    if( m_idMap.containsKey( id ) )
+      id = m_idMap.get( id );
     if( id != null && id.length() > 0 )
     {
       final String version = featureType.getGMLSchema().getGMLVersion();
@@ -251,13 +263,13 @@ public class GMLSAXFactory
     {
       final FeatureList list = (FeatureList) property;
       for( final Object next : list )
-        processFeature( next, prefixedQName );
+        processFeatureLink( next, prefixedQName );
     }
     else
-      processFeature( property, prefixedQName );
+      processFeatureLink( property, prefixedQName );
   }
 
-  private void processFeature( final Object next, final QName prefixedQName ) throws SAXException
+  private void processFeatureLink( final Object next, final QName prefixedQName ) throws SAXException
   {
     final String uri = prefixedQName.getNamespaceURI();
     final String localPart = prefixedQName.getLocalPart();
@@ -270,9 +282,10 @@ public class GMLSAXFactory
     }
     else if( next instanceof String ) // its a ID
     {
-      final String fid = (String) next;
+      String fid = (String) next;
+      if( m_idMap.containsKey( fid ) )
+        fid = m_idMap.get( fid );
       final AttributesImpl atts = new AttributesImpl();
-
       atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", "#" + fid );
       m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
       m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );

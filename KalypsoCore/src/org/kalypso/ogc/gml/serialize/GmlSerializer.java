@@ -52,6 +52,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -96,7 +97,7 @@ public final class GmlSerializer
   {
     serializeWorkspace( writer, workspace, writer.getEncoding() );
   }
-  
+
   public static void serializeWorkspace( final File gmlFile, final GMLWorkspace gmlWorkspace, final String encoding ) throws IOException, GmlSerializeException
   {
     OutputStreamWriter writer = null;
@@ -114,15 +115,24 @@ public final class GmlSerializer
 
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
   {
+    serializeWorkspace( writer, gmlWorkspace, charsetEncoding, new HashMap<String, String>() );
+  }
+
+  /**
+   * @param idMap
+   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, Map<String, String> idMap ) throws GmlSerializeException
+  {
     try
     {
-      final XMLReader reader = new GMLWorkspaceReader();
+      final XMLReader reader = new GMLWorkspaceReader( idMap );
       reader.setFeature( "http://xml.org/sax/features/namespaces", true );
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true );
-      
+
       final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
       inputSource.setEncoding( charsetEncoding );
-      
+
       final Source source = new SAXSource( reader, inputSource );
       final StreamResult result = new StreamResult( writer );
 
