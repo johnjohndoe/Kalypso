@@ -64,13 +64,15 @@ public class ExportWizardNode implements IWizardNode
 
   private IWizard m_wizard = null;
   private ImageDescriptor m_defaultImage;
+  private final String m_windowTitle;
 
-  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage )
+  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage, final String windowTitle )
   {
     m_shell = shell;
     m_target = target;
     m_exporter = exporter;
     m_defaultImage = defaultImage;
+    m_windowTitle = windowTitle;
   }
 
   /**
@@ -102,7 +104,7 @@ public class ExportWizardNode implements IWizardNode
     {
       try
       {
-        m_wizard = new ExportWizard( m_target, m_exporter, m_shell, m_defaultImage );
+        m_wizard = new ExportWizard( m_target, m_exporter, m_shell, m_defaultImage, m_windowTitle );
       }
       catch( final CoreException e )
       {

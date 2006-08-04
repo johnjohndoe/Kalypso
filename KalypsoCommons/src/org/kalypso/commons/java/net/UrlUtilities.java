@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,17 +36,45 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.core;
+
+ --------------------------------------------------------------------------*/
+
+package org.kalypso.commons.java.net;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import org.apache.commons.io.IOUtils;
 
 /**
- * @author schlienger
+ * @author belger
  */
-public interface IKalypsoCoreConstants
+public class UrlUtilities
 {
-  public final static String PLUGIN_ID = "org.kalypso.core";
+  private UrlUtilities()
+  {
+  // will not get instantiated
+  }
 
-  /** System property dfrom which the locations of the kalypso-client.ini is read. If this property is set, it overwrites (and sets) the user preferences. */
-  public static final String CONFIG_PROPERTY_CLIENT_INI_LOCATION = "kalypso.client-ini-locations";
+  /**
+   * Opens a stream on the given url and copies its content into a string.
+   * @throws IOException
+   */
+  public static String toString( final URL url, final String encoding ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = url.openStream();
+      final String content = IOUtils.toString( is, encoding );
+      is.close();
+      return content;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
 }

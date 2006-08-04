@@ -184,7 +184,7 @@ public class ObservationPlot extends XYPlot
   {
     if( diagAxis == null )
       throw new IllegalArgumentException( "DiagramAxis is null" );
-    
+
     final ValueAxis vAxis;
 
     try
@@ -192,15 +192,18 @@ public class ObservationPlot extends XYPlot
       vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[]
       { diagAxis.toFullString() } );
 
-      if( vAxis instanceof NumberAxis )
+      // HACK: damit immer zu mindest [0,1] als range gesetzt wird
+      // z.Zt. nur für Niederschlag.
+      if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis.getType() ) )
       {
         final NumberAxis na = (NumberAxis)vAxis;
-
         na.setAutoRangeMinimumSize( 1 );
 
-        // HACK: damit immer zu mindest [0,1] als range gesetzt wird
         if( na instanceof NumberAxis2 )
         {
+          System.out.println( diagAxis.getDataType() );
+          System.out.println( axis.getType() );
+
           final NumberAxis2 na2 = (NumberAxis2)na;
           na2.setMin( new Double( 0 ) );
           na2.setMax( new Double( 1 ) );
@@ -347,7 +350,7 @@ public class ObservationPlot extends XYPlot
 
         if( diagAxis == null )
           continue;
-        
+
         // check if this axis is already present in this plot
         if( !m_diag2chartAxis.containsKey( diagAxis ) )
           addDiagramAxis( diagAxis, mings[i].getObservationAxis() );
@@ -366,8 +369,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new SensorException( "Kann Kurve " + curve
-          + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." );
+      throw new SensorException( "Kann Kurve " + curve + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." );
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 

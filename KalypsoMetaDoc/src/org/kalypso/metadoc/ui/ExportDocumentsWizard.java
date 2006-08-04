@@ -73,15 +73,19 @@ public class ExportDocumentsWizard extends Wizard
   private final Shell m_shell;
   private final DisposeHelper m_disposer;
   private final IExportTarget m_target;
+  private final String m_windowTitle;
 
-  public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target )
+  public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target,
+      final String windowTitle )
   {
     m_shell = shell;
     m_exporter = exporter;
     m_target = target;
+    m_windowTitle = windowTitle;
     m_disposer = new DisposeHelper();
 
     setForcePreviousAndNextButtons( true );
+    setWindowTitle( windowTitle );
   }
 
   /**
@@ -99,14 +103,15 @@ public class ExportDocumentsWizard extends Wizard
    */
   public void addPages()
   {
-    final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
+    final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(),
+        "icons/metadoc_wiz.gif" );
 
     // wizard selection for each exporter
     final IWizardNode[] nodes = new IWizardNode[m_exporter.length];
     for( int i = 0; i < nodes.length; i++ )
     {
       final IExporter exporter = m_exporter[i];
-      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor );
+      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor, m_windowTitle );
       m_disposer.addDisposeCandidate( nodes[i] );
     }
 
@@ -131,14 +136,14 @@ public class ExportDocumentsWizard extends Wizard
 
         setControl( lv.getControl() );
       }
-      
+
       /**
        * @see org.eclipse.jface.wizard.WizardSelectionPage#setSelectedNode(org.eclipse.jface.wizard.IWizardNode)
        */
       protected void setSelectedNode( final IWizardNode node )
       {
         super.setSelectedNode( node );
-        
+
         if( node == null )
           setMessage( null );
         else
@@ -148,7 +153,7 @@ public class ExportDocumentsWizard extends Wizard
 
     page.setTitle( "Wählen Sie die Exportart" );
     page.setImageDescriptor( imageDescriptor );
-    
+
     addPage( page );
   }
 
@@ -159,7 +164,7 @@ public class ExportDocumentsWizard extends Wizard
   {
     return true;
   }
-  
+
   private static final class ExporterWizardNodeLabelProvider extends LabelProvider
   {
     /** key -> image */
@@ -191,7 +196,7 @@ public class ExportDocumentsWizard extends Wizard
         final ImageDescriptor imageDescriptor = exporter.getImageDescriptor();
         m_images.put( node, imageDescriptor.createImage( true ) );
       }
-      
+
       return (Image)m_images.get( node );
     }
   }
