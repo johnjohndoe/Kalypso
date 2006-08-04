@@ -67,7 +67,8 @@ public class GuiTypeHandlerUtilities
     final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     // we simply wrap all XsdBaseTypeHandler's
-    final IMarshallingTypeHandler[] registeredTypeHandler = marshallingRegistry.getRegisteredTypeHandler( new IMarshallingTypeHandler[0] );
+    
+    final IMarshallingTypeHandler[] registeredTypeHandler = marshallingRegistry.getRegisteredTypeHandler( new IMarshallingTypeHandler[marshallingRegistry.getRegisteredTypeHandlerSize()] );
     for( final ITypeHandler handler : registeredTypeHandler )
     {
       if( handler instanceof XsdBaseTypeHandler )

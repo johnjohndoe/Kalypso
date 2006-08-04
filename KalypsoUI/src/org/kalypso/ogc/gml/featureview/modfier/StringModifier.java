@@ -64,6 +64,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -71,7 +72,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StringModifier implements IFeatureModifier
 {
-  private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  // TODO put a default dateformat into the preferences and special formats into the gml-applications-schemas !
+
+  private final static DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  static
+  {
+    DATE_FORMATTER.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+  }
 
   private final NumberFormat NUMBER_FORMAT;
 
@@ -138,8 +145,19 @@ public class StringModifier implements IFeatureModifier
     return toText( data );
   }
 
+  /**
+   * @param data
+   *          real property value
+   */
   private String toText( final Object data )
   {
+    if( data instanceof XMLGregorianCalendar )
+    {
+      final XMLGregorianCalendar cal = (XMLGregorianCalendar) data;
+      final Date date = DateUtilities.toDate( cal );
+      return DATE_FORMATTER.format( date );
+    }
+
     if( m_guiTypeHandler != null )
       return m_guiTypeHandler.getText( data );
 
@@ -150,10 +168,10 @@ public class StringModifier implements IFeatureModifier
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.Object)
    */
-  public Object parseInput( final Feature f, final Object value )
+  public Object parseInput( final Feature f, final Object editedStringValue )
   {
     Object result = null;
-    final String text = value == null ? "" : value.toString();
+    final String text = editedStringValue == null ? "" : editedStringValue.toString();
     if( text.length() == 0 )
       return null;
 
@@ -174,11 +192,25 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
+    final Class clazz = m_ftp.getValueClass();
+    if( clazz == XMLGregorianCalendar.class )
+    {
+      final Date date = DATE_FORMATTER.parse( text );
+      try
+      {
+        return DateUtilities.toXMLGregorianCalendar( date );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        throw new ParseException( e.getMessage(), 0 );
+      }
+    }
     if( m_guiTypeHandler != null )
+    //return m_marshallingTypeHandler.parseType( text );
       return m_guiTypeHandler.fromText( text );
     // TODO: the following code is never called, because we have type handle for all base types!
     // TODO: do not use the marshalling type handler but the gui type handler instead!
-
     return null;
   }
 
@@ -193,13 +225,13 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
    */
-  public String isValid( final Object value )
+  public String isValid( final Object editedStringValue )
   {
     try
     {
-      if( value == null )
+      if( editedStringValue == null )
         return null;
-      final String text = value.toString();
+      final String text = editedStringValue.toString();
       if( text.length() == 0 )
         return null;
       parseData( text );
