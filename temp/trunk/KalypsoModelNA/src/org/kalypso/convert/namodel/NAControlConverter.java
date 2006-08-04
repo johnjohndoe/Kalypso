@@ -43,9 +43,8 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +53,9 @@ import java.util.TreeSet;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -62,7 +63,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
-  final static TreeSet<Date> m_dateWriteSet = new TreeSet<Date>();
   // graphicTool: types
   public static final int LINE = 0;
 
@@ -78,6 +78,11 @@ public class NAControlConverter
   public static final int LEFT = 0;
 
   public static final int RIGHT = 1;
+
+  private NAControlConverter( )
+  {
+    // never instantiate
+  }
 
   public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace, GMLWorkspace modellWorkspace ) throws IOException
   {
@@ -110,7 +115,8 @@ public class NAControlConverter
 
   private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
   {
-    SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd  HH" );
+    final TreeSet dateWriteSet = new TreeSet();
+    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
     List dateList = (List) controlFE.getProperty( "InitialValueDate" );
     if( dateList != null )
     {
@@ -122,18 +128,20 @@ public class NAControlConverter
         if( write )
         {
           final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( "initialDate" ) );
-          m_dateWriteSet.add( initialDate );
+          dateWriteSet.add( initialDate );
           conf.setIniWrite( true );
         }
       }
     }
-    Iterator hydIter = m_dateWriteSet.iterator();
-    while( hydIter.hasNext() )
+
+    final Iterator iniIter = dateWriteSet.iterator();
+    while( iniIter.hasNext() )
     {
-      final String iniDate = format.format(hydIter.next());
+      final String iniDate = format.format( iniIter.next() );
       b.append( iniDate + "\n" );
     }
     b.append( "99999\n" );
+    conf.setInitalValues( dateWriteSet );
   }
 
   private static void appendResultsToGenerate( NAConfiguration conf, Feature controlFE, StringBuffer b )
@@ -211,7 +219,7 @@ public class NAControlConverter
 
     String system = "we";// "sys";
     String zustand = "nat";
-    SimpleDateFormat format = new SimpleDateFormat( "yyyy MM dd HH" );
+    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) );
 
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
@@ -240,9 +248,10 @@ public class NAControlConverter
       }
       else
         System.out.println( "Falsche Wahl der synthetische Niederschlagsform!" );
+
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" );
-      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + conf.getAnnuality().toString() + " " + conf.getDuration().toString() + " " + Integer.toString( preForm ) + " " + "start"
-          + File.separator + startFile.getName() + "\n" );
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" )
+          + " " + Integer.toString( preForm ) + " " + "start" + File.separator + startFile.getName() + "\n" );
     }
     else
     {
@@ -261,8 +270,4 @@ public class NAControlConverter
     return "n";
   }
 
-  public TreeSet<Date> getDateWriteSet( )
-  {
-    return m_dateWriteSet;
-  }
 }
