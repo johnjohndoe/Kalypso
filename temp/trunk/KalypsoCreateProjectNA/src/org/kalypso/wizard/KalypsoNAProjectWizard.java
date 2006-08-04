@@ -89,10 +89,12 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -391,13 +393,20 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
         final IPropertyType targetPT = hydFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        final Object so = sourceFeature.getProperty( sourcekey );
+        Object so = sourceFeature.getProperty( sourcekey );
 
         final double area;
         if( so instanceof GM_Object )
         {
           area = GeometryUtilities.calcArea( (GM_Object) so );
           targetFeature.setProperty( flaechPT, new Double( area ) );
+        }
+        if( so instanceof GM_Surface )        
+        {
+          final GM_Surface surface = (GM_Surface) so;
+          final GM_Surface[] surfaces = new GM_Surface[] { surface };
+          GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
+          so = MultiSurface;
         }
         targetFeature.setProperty( targetPT, so );
 
