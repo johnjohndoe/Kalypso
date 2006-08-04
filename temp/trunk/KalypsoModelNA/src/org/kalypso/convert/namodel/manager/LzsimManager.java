@@ -46,6 +46,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +69,7 @@ import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAControlConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -123,14 +125,14 @@ public class LzsimManager
     }
   }
 
-  public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir ) throws Exception
+  public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, NAConfiguration conf ) throws Exception
   {
-    final SimpleDateFormat formatFileName = new SimpleDateFormat( "yyyyMMdd(HH)" );
+    final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd(HH)" ) );
     // 19960521 00 h 125 bodf
-    final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMdd HH" ) ;
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd HH" ) );
     final Pattern patternHeaderBODF = Pattern.compile( "([0-9]{8} [0-9]{2}) h ([0-9]+?) bodf" );
-    final NAControlConverter converter = new NAControlConverter();
-    final TreeSet<Date> dateWriteSet = converter.getDateWriteSet();
+    
+    final TreeSet<Date> dateWriteSet = conf.getDateWriteSet();
     Iterator hydIter = dateWriteSet.iterator();
     while( hydIter.hasNext() )
     {
@@ -310,7 +312,7 @@ public class LzsimManager
     Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) );
-    SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMdd  HH" ) ;
+    DateFormat dateFormat =NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
     String iniDate = dateFormat.format( initialDate );
 
     // write initial conditions for the strands
