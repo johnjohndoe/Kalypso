@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -73,5 +76,9 @@ public class GuiTypeHandlerUtilities
         guiRegistry.registerTypeHandler( wrappedHandler );
       }
     }
+    
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ) ) );
+    
+    guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler( ) );
   }
 }

@@ -29,11 +29,15 @@
  */
 package org.kalypso.ogc.gml.gui;
 
+import java.text.ParseException;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -122,5 +126,16 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public boolean isGeometry( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
+   */
+  public Object fromText( String text ) throws ParseException
+  {
+    // Standard is to use the parseType method from the corresponding marhsalling type handler
+    // In future, this should be directly implemented at this point 
+    final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
+    return marshallingHandler.parseType( text );
   }
 }
