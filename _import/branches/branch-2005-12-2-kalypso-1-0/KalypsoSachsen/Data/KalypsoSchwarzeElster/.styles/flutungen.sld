@@ -29,8 +29,8 @@
 						<LabelPlacement>
 							<PointPlacement auto="true">
 								<Displacement>
-									<DisplacementX>-45.0</DisplacementX>
-									<DisplacementY>14.0</DisplacementY>
+									<DisplacementX>0.0</DisplacementX>
+									<DisplacementY>-12.0</DisplacementY>
 								</Displacement>
 							</PointPlacement>
 						</LabelPlacement>
