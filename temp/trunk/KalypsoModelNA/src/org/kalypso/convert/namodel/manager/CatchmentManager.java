@@ -552,7 +552,7 @@ public class CatchmentManager extends AbstractManager
           while( iter1.hasNext() )
           {
             final Feature fe = (Feature) iter1.next();
-            String annuality = Double.toString( (Double) fe.getProperty( "xjah" ) );
+            String annuality = Double.toString( 1d/(Double) fe.getProperty( "xjah" ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
               Object tnProp = fe.getProperty( "statNDiag" );
@@ -560,23 +560,27 @@ public class CatchmentManager extends AbstractManager
               {
                 IObservation observation = (IObservation) tnProp;
                 IAxis[] axisList = observation.getAxisList();
-                IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_HOURS );
+                IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_MIN );
                 IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RAINFALL );
+                buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" );
                 ITuppleModel values = observation.getValues( null );
                 int count = values.getCount();
-                buffer.append( annualityKey.toString() + " " + Integer.toString( count ) + "\n" );
-                if( count > 20 )
-                  throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl (20) \n Niederschlag:" + synthNKey + "\n Wiederkehrwahrscheinlichkeit: "
-                      + annualityKey );
+//                if( count > 20 )
+//                  throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl (20) \n Niederschlag:" + synthNKey + "\n Wiederkehrwahrscheinlichkeit: "
+//                      + annualityKey );
                 for( int row = 0; row < count; row++ )
                 {
-                  Double hoursValue = (Double) values.getElement( row, hoursAxis );
-                  Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
-                  buffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" );
-                  final FileWriter writer = new FileWriter( targetFileN );
-                  writer.write( buffer.toString() );
-                  IOUtils.closeQuietly( writer );
+                  Double minutesValue = (Double) values.getElement( row, minutesAxis );
+                  Double hoursValue = minutesValue / 60d;
+                  if( hoursValue.equals(conf.getDuration()) )
+                  {
+                    Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
+                    buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" );
+                  }
                 }
+                final FileWriter writer = new FileWriter( targetFileN );
+                writer.write( buffer.toString() );
+                IOUtils.closeQuietly( writer );
               }
               else
                 System.out.println( "Es existiert kein synthetischer Niederschlag für : " + synthNKey + ", Wiederkehrintervall: " + annualityKey );
