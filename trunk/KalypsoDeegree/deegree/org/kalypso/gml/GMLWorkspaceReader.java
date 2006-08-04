@@ -43,6 +43,7 @@ package org.kalypso.gml;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
@@ -78,6 +79,17 @@ public class GMLWorkspaceReader implements XMLReader
 
   private ErrorHandler m_errorHandler;
 
+  private final Map<String,String> m_idMap;
+
+  /**
+   * @param idMap
+   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  public GMLWorkspaceReader( final Map<String,String> idMap )
+  {
+    m_idMap = idMap;
+  }
+
   /**
    * @see org.xml.sax.XMLReader#parse(org.xml.sax.InputSource)
    */
@@ -90,7 +102,7 @@ public class GMLWorkspaceReader implements XMLReader
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
 
-    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler );
+    final GMLSAXFactory factory = new GMLSAXFactory( indentHandler ,m_idMap);
     handler.startDocument();
     factory.process( workspace );
     handler.endDocument();

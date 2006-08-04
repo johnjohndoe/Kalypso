@@ -43,6 +43,7 @@ package org.kalypso.gml;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -73,53 +74,47 @@ import org.xml.sax.XMLReader;
 @Deprecated
 public class GMLParser
 {
-	public GMLWorkspace parseGML(final URL gmlURL) throws SAXException,
-			ParserConfigurationException, IOException, GMLException
-	{
-		final SAXParserFactory saxFac = SAXParserFactory.newInstance();
-		saxFac.setNamespaceAware(true);
-		final SAXParser saxParser = saxFac.newSAXParser();
-		final XMLReader xmlReader = saxParser.getXMLReader();
-		final GMLContentHandler contentHandler = new GMLContentHandler(
-				xmlReader, gmlURL);
-		xmlReader.setContentHandler(contentHandler);
-		final InputSource source = new InputSource(gmlURL.openStream());
-		xmlReader.parse(source);
+  public GMLWorkspace parseGML( final URL gmlURL ) throws SAXException, ParserConfigurationException, IOException, GMLException
+  {
+    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
+    saxFac.setNamespaceAware( true );
+    final SAXParser saxParser = saxFac.newSAXParser();
+    final XMLReader xmlReader = saxParser.getXMLReader();
+    final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, gmlURL );
+    xmlReader.setContentHandler( contentHandler );
+    final InputSource source = new InputSource( gmlURL.openStream() );
+    xmlReader.parse( source );
 
-		final GMLSchema schema = contentHandler.getGMLSchema();
+    final GMLSchema schema = contentHandler.getGMLSchema();
 
-		final Feature rootFeature = contentHandler.getRootFeature();
-		final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace(
-				schema, rootFeature, gmlURL, null);
-		return workspace;
-	}
+    final Feature rootFeature = contentHandler.getRootFeature();
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, gmlURL, null );
+    return workspace;
+  }
 
-	public void writeGML(final GMLWorkspace gmlWorkspace,
-			final OutputStream outputStream) throws TransformerException,
-			SAXNotRecognizedException, SAXNotSupportedException
-	{
+  public void writeGML( final GMLWorkspace gmlWorkspace, final OutputStream outputStream ) throws TransformerException, SAXNotRecognizedException, SAXNotSupportedException
+  {
 
-		final TransformerFactory tFac = TransformerFactory.newInstance();
-		tFac.setAttribute("indent-number", new Integer(4));
-		final Transformer transformer = tFac.newTransformer();
+    final TransformerFactory tFac = TransformerFactory.newInstance();
+    tFac.setAttribute( "indent-number", new Integer( 4 ) );
+    final Transformer transformer = tFac.newTransformer();
 
-		final XMLReader reader = new GMLWorkspaceReader();
-		reader.setFeature("http://xml.org/sax/features/namespaces", true);
-		reader.setFeature("http://xml.org/sax/features/namespace-prefixes",
-				true);
-		final InputSource inpuSource = new GMLWorkspaceInputSource(gmlWorkspace);
-		final Source source = new SAXSource(reader, inpuSource);
-		final StreamResult result = new StreamResult(outputStream);
-		// transformer.setOutputProperty(
-		// "{http://xml.apache.org/xalan}indent-amount", "2" );
-		// t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2"
-		// );
-		// transformer.setOutputProperty(
-		// "{http://xml.apache.org/xslt}indent-amount", "5" );
-		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.transform(source, result);
+    final XMLReader reader = new GMLWorkspaceReader( new HashMap<String, String>() );
+    reader.setFeature( "http://xml.org/sax/features/namespaces", true );
+    reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true );
+    final InputSource inpuSource = new GMLWorkspaceInputSource( gmlWorkspace );
+    final Source source = new SAXSource( reader, inpuSource );
+    final StreamResult result = new StreamResult( outputStream );
+    // transformer.setOutputProperty(
+    // "{http://xml.apache.org/xalan}indent-amount", "2" );
+    // t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2"
+    // );
+    // transformer.setOutputProperty(
+    // "{http://xml.apache.org/xslt}indent-amount", "5" );
+    transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+    transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+    transformer.transform( source, result );
 
-	}
+  }
 
 }
