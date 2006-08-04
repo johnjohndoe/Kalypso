@@ -80,5 +80,6 @@ public class GuiTypeHandlerUtilities
     guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ) ) );
     
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler( ) );
+    guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler( ) );
   }
 }

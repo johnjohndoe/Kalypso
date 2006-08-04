@@ -80,7 +80,6 @@ public class ConvenienceCSFactoryFull
    */
   public ConvenienceCSFactoryFull()
   {
-
     ConvenienceCSFactory fac = ConvenienceCSFactory.getInstance();
 
     // 1. add the following geographic CS:
@@ -498,6 +497,12 @@ public class ConvenienceCSFactoryFull
   {
     String[] array = new String[systems.size()];
     return systems.keySet().toArray( array );
+  }
+  
+  public CoordinateSystem[] getKnownCoordinateSystems()
+  {
+    final CoordinateSystem[] array = new CoordinateSystem[systems.size()];
+    return systems.values().toArray( array );
   }
 
   public CoordinateSystem getCSByName( String name )

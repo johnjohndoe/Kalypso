@@ -50,15 +50,15 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author albert
  */
-final class EnvelopeDialogListener implements ModifyListener
+final class PointDialogListener implements ModifyListener
 {
-  private EnvelopeDialog m_envDialog;
+  private PointDialog m_ptDialog;
 
   private int m_whichText;
 
-  public EnvelopeDialogListener( EnvelopeDialog envDialog, int whichText )
+  public PointDialogListener( PointDialog ptDialog, int whichText )
   {
-    m_envDialog = envDialog;
+    m_ptDialog = ptDialog;
     m_whichText = whichText;
   }
 
@@ -67,26 +67,26 @@ final class EnvelopeDialogListener implements ModifyListener
     final Text text = (Text) e.getSource();
     final String content = text.getText();
 
-    Double[] values = m_envDialog.getValues();
+    double[] values = m_ptDialog.getValues();
 
     try
     {
-      Double dbl = Double.parseDouble( content );
+      double dbl = Double.parseDouble( content );
 
       values[m_whichText] = dbl;
 
-      m_envDialog.setValues( values );
+      m_ptDialog.setValues( values );
     }
     catch( Exception ex )
     {
       values[m_whichText] = new Double( "0.0" );
 
-      m_envDialog.setValues( values );
+      m_ptDialog.setValues( values );
     }
     finally
     {
       /* Setze den Status des OK-Buttons. */
-      m_envDialog.checkModified();
+      m_ptDialog.checkModified();
     }
   }
 }

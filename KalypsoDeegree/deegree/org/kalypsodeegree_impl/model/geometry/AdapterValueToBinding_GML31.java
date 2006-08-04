@@ -266,6 +266,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   {
     final PointType pointType = gml3Fac.createPointType();
     final GM_Position position = point.getPosition();
+    // TODO: coordinates is deprecates; use pos instead
     final CoordinatesType coordinatesType = createCoordinatesType( new GM_Position[] { position } );
     pointType.setSrsName( csNameDefault );
     pointType.setCoordinates( coordinatesType );
