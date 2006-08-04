@@ -24,7 +24,7 @@
 								<label>in</label>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>of</label>
+								<label>in</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -49,7 +49,7 @@
 	<element name="StatN" type="syn:StatNType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Region - ${property:http://www.opengis.net/gml#name}</label>
+				<label>Raum - ${property:http://www.opengis.net/gml#name}</label>
 			</documentation>
 			<documentation xml:lang="en">
 				<label>region - ${property:http://www.opengis.net/gml#name}</label>
@@ -60,7 +60,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-				<element name="Ort" type="gml:PolygonPropertyType">
+					<element name="Ort" type="gml:PolygonPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Geometrie</label>
@@ -100,10 +100,10 @@
 	<element name="StatNParameter" type="syn:StatNParameterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Wiederkehrwahrscheinlichkeit - ${property:http://www.tuhh.de/synthN#xjah}</label>
+				<label>Wiederkehrzeit - ${property:http://www.tuhh.de/synthN#xjah}</label>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>intervall - ${property:http://www.tuhh.de/synthN#xjah}</label>
+				<label>return period - ${property:http://www.tuhh.de/synthN#xjah}</label>
 			</documentation>
 		</annotation>
 	</element>
@@ -126,14 +126,14 @@
 					<element name="xjah" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wiederkehrwahrscheinlichkeit</label>
-								<tooltip>Wiederkehrwahrscheinlichkeit</tooltip>
-								<description>Wiederkehrwahrscheinlichkeit des synthetischen Niederschlagereignisses [1/a]</description>
+								<label>Wiederkehrzeit</label>
+								<tooltip>Wiederkehrzeit</tooltip>
+								<description>Wiederkehrzeit des synthetischen Niederschlagereignisses [a]</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>intervall</label>
-								<tooltip>intervall</tooltip>
-								<description>intervall</description>
+								<label>return period</label>
+								<tooltip>return period</tooltip>
+								<description>return period [a]</description>
 							</documentation>
 						</annotation>
 					</element>
