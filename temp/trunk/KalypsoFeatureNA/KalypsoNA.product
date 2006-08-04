@@ -13,9 +13,10 @@
    <configIni use="default"/>
 
    <launcherArgs>
-      <programArgs>-data %Workspace%
+      <programArgs>-data D:\KalypsoEnterprise\RuntimeWorkspace
+-consoleLog
 -nl de_DE</programArgs>
-      <vmArgs>-Xmx250m</vmArgs>
+      <vmArgs>-Xmx650m</vmArgs>
    </launcherArgs>
 
    <windowImages small="etc/kalypso16.gif"/>
@@ -24,7 +25,8 @@
 
    <launcher name="Kalypso">
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/KalypsoProduct/etc/kalypso32.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -35,7 +37,7 @@
    <features>
       <feature id="org.eclipse.platform" version="3.1.2"/>
       <feature id="org.eclipse.rcp" version="3.1.2"/>
-      <feature id="org.kalypso.enterprise.na" version="1.0.1"/>
+      <feature id="org.kalypso.enterprise.na" version="1.0.2"/>
    </features>
 
 </product>

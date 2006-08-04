@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.enterprise.na"
       label="Kalypso Enterprise-NA"
-      version="1.0.1"
+      version="1.0.2"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       os="linux,win32"
@@ -25,13 +25,13 @@
    </license>
 
    <url>
-      <discovery label="Kalypso Home" url="http://kalypso.wb.tu-harburg.de"/>
+      <discovery label="Kalypso Sources" url="https://www.kalypso.wb.tu-harburg.de"/>
+      <discovery label="Kalypso Homepage" url="http://ibpm.bjoernsen.de/kalypso/"/>
    </url>
 
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.core.runtime" version="2.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
@@ -39,14 +39,15 @@
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.externaltools"/>
       <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.update.core"/>
       <import plugin="org.eclipse.update.configurator"/>
@@ -54,6 +55,7 @@
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.text"/>
+      <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.ltk.core.refactoring"/>
       <import plugin="org.eclipse.search"/>
@@ -344,6 +346,24 @@
 
    <plugin
          id="org.eclipse.jdt.debug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.chart"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc2x"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc31"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
