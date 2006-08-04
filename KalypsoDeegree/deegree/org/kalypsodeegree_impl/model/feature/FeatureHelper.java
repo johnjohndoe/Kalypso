@@ -246,8 +246,16 @@ public class FeatureHelper
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( pt );
 
     if( typeHandler != null )
-      return typeHandler.cloneObject( object, gmlVersion );
-
+    {
+      try
+      {
+        return typeHandler.cloneObject( object, gmlVersion );
+      }
+      catch( Exception e )
+      {
+        // nothing as CloneNotSupportedException will be thrown next line
+      }
+    }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
