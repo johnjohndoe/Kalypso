@@ -221,7 +221,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
 
   public interface TN extends IObservation
   {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_RAINFALL };
+    final public static String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
   }
 
   /**
