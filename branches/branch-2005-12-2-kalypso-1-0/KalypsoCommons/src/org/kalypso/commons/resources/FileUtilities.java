@@ -43,10 +43,13 @@ package org.kalypso.commons.resources;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -96,5 +99,21 @@ public class FileUtilities
     };
 
     helper.setFileContents( dest, false, false, monitor );
+  }
+  
+  public static String toString( final IFile file ) throws IOException, CoreException
+  {
+    InputStream is = null;
+    try
+    {
+      is = file.getContents();
+      final String content = IOUtils.toString( is, file.getCharset() );
+      is.close();
+      return content;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 }

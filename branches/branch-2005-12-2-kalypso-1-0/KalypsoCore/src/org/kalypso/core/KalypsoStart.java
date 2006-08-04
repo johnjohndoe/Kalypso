@@ -41,7 +41,6 @@
 
 package org.kalypso.core;
 
-import java.util.logging.Logger;
 
 /**
  * Helper class for better handling the start of Kalypso. It parses program arguments and allows others to retrieve the
@@ -56,17 +55,6 @@ import java.util.logging.Logger;
  */
 public class KalypsoStart
 {
-  /**
-   * The list of client-configuration locations, can be given as program argument.
-   * <p>
-   * If defined, it overwrites the one found in the user preferences.
-   * 
-   * @see #parseArguments(String[])
-   */
-  public static String SERVER_LOCATIONS = null;
-
-  private static final Logger LOGGER = Logger.getLogger( KalypsoStart.class.getName() );
-
   private KalypsoStart()
   {
   // not intended to be instanciated
@@ -90,8 +78,6 @@ public class KalypsoStart
    */
   public static void parseArguments( final String[] args )
   {
-    SERVER_LOCATIONS = null;
-
     if( args == null )
       return;
 
@@ -100,10 +86,8 @@ public class KalypsoStart
     {
       if( args[i].startsWith( ARG_NAME ) )
       {
-        SERVER_LOCATIONS = args[i].replaceAll( ARG_NAME, "" );
-
-        LOGGER.info( "Starting KALYPSO with a predefined list of locations: " + SERVER_LOCATIONS );
-        LOGGER.info( "This list will overwrite the one found in the user preferences" );
+        final String locations = args[i].replaceAll( ARG_NAME, "" );
+        System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_CLIENT_INI_LOCATION, locations );
       }
     }
   }

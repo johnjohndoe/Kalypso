@@ -81,12 +81,13 @@ public final class ExportWizard extends Wizard
   private final IExportTarget m_target;
 
   public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell,
-      final ImageDescriptor defaultImage ) throws CoreException
+      final ImageDescriptor defaultImage, final String windowTitle ) throws CoreException
   {
     m_target = target;
     m_shell = shell;
 
     setNeedsProgressMonitor( true );
+    setWindowTitle( windowTitle );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
 
@@ -134,7 +135,7 @@ public final class ExportWizard extends Wizard
             catch( final Exception e )
             {
               status = StatusUtilities.statusFromThrowable( e );
-              
+
               KalypsoMetaDocPlugin.getDefault().getLog().log( status );
             }
 
@@ -144,7 +145,7 @@ public final class ExportWizard extends Wizard
         catch( final CoreException e )
         {
           KalypsoMetaDocPlugin.getDefault().getLog().log( e.getStatus() );
-          
+
           stati.add( e.getStatus() );
         }
         finally

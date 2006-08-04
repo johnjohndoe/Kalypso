@@ -460,16 +460,16 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
             0, 0 );
 
         final int colWidth = c.getPreferredSize().width + 5;
-        m_colWidth = colWidth/*Math.max( m_colWidth, colWidth )*/;
+        m_colWidth = colWidth/* Math.max( m_colWidth, colWidth ) */;
 
         aColumn.setPreferredWidth( m_colWidth );
 
         aColumn.setWidth( m_colWidth );
-//        for( final Enumeration columns = getColumns(); columns.hasMoreElements(); )
-//        {
-//          final TableColumn col = (TableColumn)columns.nextElement();
-//          col.setWidth( m_colWidth );
-//        }
+        //        for( final Enumeration columns = getColumns(); columns.hasMoreElements(); )
+        //        {
+        //          final TableColumn col = (TableColumn)columns.nextElement();
+        //          col.setWidth( m_colWidth );
+        //        }
       }
 
       aColumn.setMinWidth( 50 );
