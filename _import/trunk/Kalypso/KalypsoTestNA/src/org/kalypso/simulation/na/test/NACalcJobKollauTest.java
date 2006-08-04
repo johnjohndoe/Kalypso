@@ -84,10 +84,7 @@ public class NACalcJobKollauTest extends TestCase
 //    registry.registerTypeHandler( new DiagramTypeHandler() );
     try
     {
-      //      weisseElster();
-      //      weisseElsterOptimize();
       kollau();
-      //      kollauOptimize();
     }
     catch( SimulationException e )
     {
@@ -121,8 +118,6 @@ public class NACalcJobKollauTest extends TestCase
           return clazz.getResource( "weisseElster/calcCase.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "weisseElster/.calculation" );
-        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "weisseElster/.asciitemplate_we.zip" );
         return null;
       }
 
@@ -166,8 +161,6 @@ public class NACalcJobKollauTest extends TestCase
           return clazz.getResource( "weisseElster/calcCase.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "weisseElster/.calculation" );
-        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "weisseElster/.asciitemplate_we.zip" );
         if( NaModelConstants.IN_OPTIMIZECONF_ID.equals( id ) )
           return clazz.getResource( "weisseElster/.sce.xml" );
         return null;
@@ -216,8 +209,6 @@ public class NACalcJobKollauTest extends TestCase
         //          return clazz.getResource( "kollau/calcCase_cycle.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "kollau/.calculation" );
-        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "kollau/.asciitemplate.zip" );
         return null;
       }
 
@@ -263,8 +254,6 @@ public class NACalcJobKollauTest extends TestCase
           return clazz.getResource( "kollau/calcCase.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "kollau/.calculation" );
-        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "kollau/.asciitemplate.zip" );
         if( NaModelConstants.IN_OPTIMIZECONF_ID.equals( id ) )
           return clazz.getResource( "kollau/.sce.xml" );
         return null;
