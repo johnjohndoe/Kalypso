@@ -47,15 +47,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * This class opens a envelope editing dialog.
+ * This class opens a point editing dialog.
  * 
  * @author Holger Albert
  */
-public class EnvelopeFeatureDialog implements IFeatureDialog
+public class PointFeatureDialog implements IFeatureDialog
 {
   private FeatureChange m_change = null;
 
@@ -63,7 +65,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
 
   private final IValuePropertyType m_ftp;
 
-  public EnvelopeFeatureDialog( final Feature feature, final IValuePropertyType ftp )
+  public PointFeatureDialog( final Feature feature, final IValuePropertyType ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -74,20 +76,13 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
    */
   public int open( Shell shell )
   {
-    GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
+    GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
 
-    Double[] values = null;
+    double[] values = point.getAsArray();
 
-    if( envelope == null )
-    {
-      values = new Double[] { new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ) };
-    }
-    else
-    {
-      values = new Double[] { envelope.getMin().getX(), envelope.getMin().getY(), envelope.getMax().getX(), envelope.getMax().getY() };
-    }
+    PointDialog dialog = null;
 
-    final EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
+    dialog = new PointDialog( shell, values, point.getCoordinateSystem() );
 
     final int open = dialog.open();
 
@@ -95,9 +90,13 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
     {
       values = dialog.getValues();
 
-      envelope = GeometryFactory.createGM_Envelope( values[0], values[1], values[2], values[3] );
+      GM_Position pos = GeometryFactory.createGM_Position( values );
 
-      m_change = new FeatureChange( m_feature, m_ftp, envelope );
+      CS_CoordinateSystem crs = dialog.getCS_CoordinateSystem();
+
+      point = GeometryFactory.createGM_Point( pos, crs );
+
+      m_change = new FeatureChange( m_feature, m_ftp, point );
     }
 
     return open;

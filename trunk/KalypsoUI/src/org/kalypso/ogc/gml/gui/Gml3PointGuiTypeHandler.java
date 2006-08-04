@@ -40,20 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -65,17 +65,22 @@ import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Gui type handler for gml:envelopes's.
  * 
  * @author Holger Albert
  */
-public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
+public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  public Gml3EnvelopeGuiTypeHandler( )
+  public Gml3PointGuiTypeHandler( )
   {
   }
 
@@ -85,7 +90,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
    */
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new EnvelopeFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new PointFeatureDialog( feature, (IValuePropertyType) ftp );
   }
 
   /**
@@ -163,7 +168,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
    */
   public Class getValueClass( )
   {
-    return GM_Envelope.class;
+    return GM_Point.class;
   }
 
   /**
@@ -171,7 +176,8 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
    */
   public QName getTypeName( )
   {
-    return new QName( NS.GML3, "BoundingShapeType" );
+    /* This corresponds to the qname, it in defined in GeometryUtilities. */
+    return GeometryUtilities.QN_POINT_PROPERTY;
   }
 
   /**
@@ -191,10 +197,27 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     if( element == null )
       return "";
 
-    GM_Envelope envelope = (GM_Envelope) element;
+    GM_Point point = (GM_Point) element;
+    GM_Position pos = point.getPosition();
 
-    final String result = new Double( envelope.getMin().getX() ).toString() + ";" + new Double( envelope.getMin().getY() ).toString() + ";" + new Double( envelope.getMax().getX() ).toString() + ";"
-        + new Double( envelope.getMax().getY() ).toString();
+    double[] dbl_values = pos.getAsArray();
+
+    String result = new Double( dbl_values[0] ).toString();
+
+    for( int i = 1; i < dbl_values.length; i++ )
+    {
+      result = result + ";" + new Double( dbl_values[i] ).toString();
+    }
+
+    try
+    {
+      result = result + ";" + point.getCoordinateSystem().getName();
+    }
+    catch( RemoteException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     return result;
   }
@@ -204,29 +227,25 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
    */
   public Object fromText( String text )
   {
-    /* Erstellen des Envelopes. */
+    /* Erstellen des Points. */
 
     /* Werte anhand von ; trennen. */
     String[] str_values = text.split( ";" );
 
-    Double[] dbl_values = new Double[4];
+    double[] dbl_values = new double[str_values.length - 1];
 
-    /* Es muss vier Werte geben. */
-    for( int i = 0; i < 4; i++ )
+    for( int i = 0; i < str_values.length - 1; i++ )
     {
-      /* Ist kein Wert vorhanden, so speichere 0.0. */
-      if( str_values.length - 1 < i )
-      {
-        dbl_values[i] = new Double( "0.0" );
-      }
-      else
-      {
-        dbl_values[i] = new Double( str_values[i] );
-      }
+      dbl_values[i] = new Double( str_values[i] );
     }
 
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( dbl_values[0], dbl_values[1], dbl_values[2], dbl_values[3] );
+    GM_Position pos = GeometryFactory.createGM_Position( dbl_values );
 
-    return envelope;
+    final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
+    CS_CoordinateSystem crs = m_csAdapter.export( new ConvenienceCSFactoryFull().getCSByName( str_values[str_values.length - 1] ) );
+
+    GM_Point point = GeometryFactory.createGM_Point( pos, crs );
+
+    return point;
   }
 }
