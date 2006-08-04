@@ -29,8 +29,6 @@
  */
 package org.kalypso.lhwsachsenanhalt.tubig.exceptions;
 
-import org.kalypso.services.calculation.job.ICalcMonitor;
-
 /**
  * @author Thül
  * @see org.eclipse.core.runtime.IStatus für Konstanten
@@ -48,51 +46,40 @@ public class TubigBatchException extends Exception
 
   public static final int STATUS_CANCEL = 0x08;
 
-  public TubigBatchException( ICalcMonitor monitor, final int iStatus, final String sFinishText )
+  private final int m_status;
+
+  private final String m_finishText;
+
+  public TubigBatchException( final int iStatus, final String sFinishText )
   {
-    super();
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( null, null, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final ICalcMonitor monitor, final int iStatus,
-      final String sFinishText )
+  public TubigBatchException( final String message, final int iStatus, final String sFinishText )
   {
-    super( message );
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( message, null, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final Throwable cause, final ICalcMonitor monitor, final int iStatus,
-      final String sFinishText )
+  public TubigBatchException( final Throwable cause, final int iStatus, final String sFinishText )
   {
-    super( cause );
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( null, cause, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final Throwable cause, final ICalcMonitor monitor,
-      final int iStatus, final String sFinishText )
+  public TubigBatchException( final String message, final Throwable cause, final int iStatus, final String sFinishText )
   {
     super( message, cause );
-    monitor.setFinishInfo( iStatus, sFinishText );
+
+    m_status = iStatus;
+    m_finishText = sFinishText;
   }
 
-  public TubigBatchException()
+  public int getStatus()
   {
-    super();
+    return m_status;
   }
 
-  public TubigBatchException( final String message )
+  public String getFinishText()
   {
-    super( message );
+    return m_finishText;
   }
-
-  public TubigBatchException( final Throwable cause )
-  {
-    super( cause );
-  }
-
-  public TubigBatchException( final String message, final Throwable cause )
-  {
-    super( message, cause );
-  }
-
 }

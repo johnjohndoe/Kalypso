@@ -217,7 +217,13 @@ public class WiskiTuppleModel extends AbstractTuppleModel
       for( final Iterator it = m_data.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap)it.next();
-        if( date.equals( map.get( "timestamp" ) ) )
+        
+        Date wiskiDate = (Date)map.get( "timestamp" );
+        // 2006-06-06 Tageswert Problematik, Begin und Offset berücksichtigen
+        if( m_needsConversion )
+          wiskiDate = wiskiToKalypso( wiskiDate );
+        
+        if( date.equals( wiskiDate ) )
           return m_data.indexOf( map );
       }
     }

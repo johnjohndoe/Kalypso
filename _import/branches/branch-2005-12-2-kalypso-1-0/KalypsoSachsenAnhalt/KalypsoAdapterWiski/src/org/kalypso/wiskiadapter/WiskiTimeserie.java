@@ -213,6 +213,10 @@ public class WiskiTimeserie implements IObservation
    */
   public ITuppleModel getValues( final IRequest req ) throws SensorException
   {
+    // if true, incomming and outgoing values are dumped to System.out
+    // should be false normally
+    final boolean bDump = false;
+
     final DateRange dr;
 
     final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
@@ -254,10 +258,30 @@ public class WiskiTimeserie implements IObservation
       final GetTsData call = new GetTsData( m_tsinfo.getWiskiId(), dr );
       rep.executeWiskiCall( call );
 
-      if( call.getData() == null )
+      final LinkedList data = call.getData();
+      if( data == null )
         m_cachedValues = new SimpleTuppleModel( getAxisList() );
       else
-        m_cachedValues = new WiskiTuppleModel( getAxisList(), call.getData(), m_cv, call.getTimeZone(), m_tsinfo );
+        m_cachedValues = new WiskiTuppleModel( getAxisList(), data, m_cv, call.getTimeZone(), m_tsinfo );
+
+      if( bDump )
+      {
+        if( data != null )
+        {
+          System.out.println( "Data retrieved from WDP: " );
+          for( final Iterator iter = data.iterator(); iter.hasNext(); )
+          {
+            final Object elt = iter.next();
+            System.out.println( elt );
+          }
+        }
+
+        System.out.println();
+        System.out.println( "Generated observation tuple:" );
+        System.out.println( ObservationUtilities.dump( m_cachedValues, "\t" ) );
+        System.out.println();
+        System.out.println();
+      }
 
       return m_cachedValues;
     }
@@ -273,10 +297,10 @@ public class WiskiTimeserie implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    // if true, incomminc and outgoing values are dumped to System.out
+    // if true, incomming and outgoing values are dumped to System.out
     // should be false normally
     final boolean bDump = false;
-    
+
     if( bDump )
       System.out.println( ObservationUtilities.dump( values, "\t" ) );
 

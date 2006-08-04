@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 
 import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
-import org.kalypso.services.calculation.job.ICalcMonitor;
 
 /**
  * <p>
@@ -79,7 +78,7 @@ public class TubigCopyUtils
    * @throws TubigBatchException
    */
   public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ICalcMonitor monitor ) throws TubigBatchException
+      final PrintWriter pwErr ) throws TubigBatchException
   {
     boolean bExeEnde = false;
     String sMess = "";
@@ -129,7 +128,7 @@ public class TubigCopyUtils
     }
     if( "pwErr".equals( sLastWrtr ) )
     {
-      throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     return bExeEnde;
   }

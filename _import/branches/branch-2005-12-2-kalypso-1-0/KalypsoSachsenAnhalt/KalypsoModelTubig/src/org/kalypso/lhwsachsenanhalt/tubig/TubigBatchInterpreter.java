@@ -95,12 +95,12 @@ public class TubigBatchInterpreter
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -124,7 +124,7 @@ public class TubigBatchInterpreter
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -268,7 +268,7 @@ public class TubigBatchInterpreter
 
                           // TODO Monika Ende-Token **ende** noch
                           // weiterverabeiten (BODESTEU liefert aber noch keine Ausgabe)
-                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr, cancelable );
+                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr );
 
                         }
                       }
@@ -293,14 +293,14 @@ public class TubigBatchInterpreter
       pwErr.println( "Fehlergrund (IOException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final ProcessTimeoutException e )
     {
       pwErr.println( "Fehlergrund (ProcessTimeoutException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {

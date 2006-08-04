@@ -74,6 +74,8 @@ public class ArrayChooserPage extends WizardPage
     public void checkStateChanged( final CheckStateChangedEvent event )
     {
       m_checked = m_viewer.getCheckedElements();
+
+      setPageComplete( m_checked != null && m_checked.length > 0 );
     }
   };
 
@@ -104,7 +106,7 @@ public class ArrayChooserPage extends WizardPage
   {
     if( m_viewer != null )
       m_viewer.removeCheckStateListener( m_checkStateListener );
-    
+
     super.dispose();
   }
 
@@ -119,14 +121,18 @@ public class ArrayChooserPage extends WizardPage
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_viewer.setLabelProvider( new LabelProvider() );
-    m_viewer.setContentProvider( new ArrayContentProvider() );
+    final ArrayContentProvider arrayContentProvider = new ArrayContentProvider();
+    m_viewer.setContentProvider( arrayContentProvider );
     m_viewer.setInput( m_chooseables );
     m_viewer.addCheckStateListener( m_checkStateListener );
 
     if( m_selected != null )
       m_viewer.setSelection( new StructuredSelection( m_selected ) );
     if( m_checked != null )
+    {
       m_viewer.setCheckedElements( m_checked );
+      setPageComplete( m_checked != null && m_checked.length > 0 );
+    }
 
     final Composite buttonpanel = new Composite( panel, SWT.RIGHT );
     buttonpanel.setLayout( new GridLayout( 2, true ) );
@@ -160,8 +166,10 @@ public class ArrayChooserPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         viewer.setAllChecked( select );
-        
+
         m_checked = viewer.getCheckedElements();
+        
+        setPageComplete( m_checked != null && m_checked.length > 0 );
       }
     } );
   }
