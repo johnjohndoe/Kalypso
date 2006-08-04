@@ -80,7 +80,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Node;
 
-
 /**
  * @author doemming
  */
@@ -302,6 +301,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
       if( bindingTypeObject instanceof PolygonType )
       {
         final GM_Surface surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        // if multisurface is expected but surface is provided, then we create a multisurface with this surface inside.
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
           final GM_Surface[] surfaces = new GM_Surface[] { surface };
