@@ -142,19 +142,19 @@ public class NaModelInnerCalcJob implements ISimulation
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
+//  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
-  private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
+  // private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
 
-  private final String EXE_FILE_2_04beta = "start/kalypso_2.0.4beta.exe";
+  // private final String EXE_FILE_2_04beta = "start/kalypso_2.0.4beta.exe";
 
   private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
-  private final String EXE_FILE_2_06beta = "start/kalypso_2.0.6beta.exe";
+  private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe";
 
   private boolean m_succeeded = false;
 
-  private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+  private String m_kalypsoKernelPath = null;
 
   final private List<String> m_resultMap = new ArrayList<String>();
 
@@ -280,14 +280,14 @@ public class NaModelInnerCalcJob implements ISimulation
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, resultEater, conf );
 
-//        System.out.println( "fertig - Ergebnisse vorhanden" );
+        // System.out.println( "fertig - Ergebnisse vorhanden" );
       }
       else
       {
         monitor.setMessage( "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
         logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
         loadLogs( tmpdir, logger, resultEater );
-//        System.out.println( "fertig - Fehler siehe Log-Dateien" );
+        // System.out.println( "fertig - Fehler siehe Log-Dateien" );
       }
     }
     catch( Exception e )
@@ -559,14 +559,17 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // choose simulation kernel
     chooseSimulationExe( (String) metaFE.getProperty( "versionKalypsoNA" ) );
-   
+
     // choose precipitation form and parameters
     final Boolean pns = (Boolean) metaFE.getProperty( "pns" );
     conf.setUsePrecipitationForm( pns == null ? false : pns );
     if( conf.isUsePrecipitationForm().equals( true ) )
     {
-      conf.setAnnuality( (Double) metaFE.getProperty( "xjah" ) );
-      conf.setDuration( (Double) metaFE.getProperty( "xwahl2" ) );
+      // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
+      conf.setAnnuality( 1d/(Double) metaFE.getProperty( "xjah" ) );
+      Double durationMinutes = (Double) metaFE.getProperty( "xwahl2" );
+      Double durationHours = durationMinutes / 60d;
+      conf.setDuration( durationHours );
       conf.setForm( (String) metaFE.getProperty( "ipver" ) );
     }
 
@@ -871,25 +874,25 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void chooseSimulationExe( final String kalypsoNAVersion )
   {
-    if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
-      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
-    else if( kalypsoNAVersion.equals( "v2.0.2" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_02;
-    else if( kalypsoNAVersion.equals( "test" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_06beta;
+    if( kalypsoNAVersion.equals( "test" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_06;
+    // else if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
+    // m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+    // else if( kalypsoNAVersion.equals( "v2.0.2" ) )
+    // m_kalypsoKernelPath = EXE_FILE_2_02;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_06beta;
-    else if( kalypsoNAVersion.equals( "v2.0.4" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_04beta;
+      m_kalypsoKernelPath = EXE_FILE_2_06;
+    // else if( kalypsoNAVersion.equals( "v2.0.4" ) )
+    // m_kalypsoKernelPath = EXE_FILE_2_04beta;
     else if( kalypsoNAVersion.equals( "v2.0.5" ) )
       m_kalypsoKernelPath = EXE_FILE_2_05beta;
     else if( kalypsoNAVersion.equals( "v2.0.6" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_06beta;
+      m_kalypsoKernelPath = EXE_FILE_2_06;
     else
     {
       System.out.println( "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
-          + " Es wird mit der default version gerechnet." );
-      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+          + " Es wird mit der neuesten version gerechnet." );
+      m_kalypsoKernelPath = EXE_FILE_2_06;
     }
   }
 
@@ -1008,7 +1011,7 @@ public class NaModelInnerCalcJob implements ISimulation
     if( conf.getIniWrite() )
     {
       final LzsimManager lzsimManager = new LzsimManager();
-      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir );
+      lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir, conf );
     }
     loadLogs( tmpdir, logger, resultEater );
     final File[] files = resultDir.listFiles();

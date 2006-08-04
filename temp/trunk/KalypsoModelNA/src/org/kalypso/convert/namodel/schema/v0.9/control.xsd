@@ -165,12 +165,13 @@
 							</documentation>
 						</annotation>
 					</element>
+					<!--In der Oberfläche wird die Wiederkehrzeit verwendet - für das Modell wird dies zur Jährlichkeit umgerechnet-->
 					<element name="xjah" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wiederkehrwahrscheinlichkeit</label>
-								<tooltip>Wiederkehrwahrscheinlichkeit</tooltip>
-								<description>Wiederkehrwahrscheinlichkeit des synthetischen Niederschlagereignisses [1/a]</description>
+								<label>Wiederkehrzeit</label>
+								<tooltip>Wiederkehrzeit</tooltip>
+								<description>Wiederkehrzeit des synthetischen Niederschlagereignisses [a]</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>synth. P.</label>
@@ -184,12 +185,12 @@
 							<documentation xml:lang="de">
 								<label>Dauer</label>
 								<tooltip>Niederschlagsdauer</tooltip>
-								<description>Dauer des synthetischen Niederschlagereignisses [h]</description>
+								<description>Dauer des synthetischen Niederschlagereignisses [min]</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>synth. P.</label>
-								<tooltip>synthetic Precipitation</tooltip>
-								<description>calculation based on synthetic precipitation</description>
+								<label>duration</label>
+								<tooltip>duration</tooltip>
+								<description>duration [min]</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -221,14 +222,10 @@
 	</simpleType>
 	<simpleType name="versionEnumerationType">
 		<restriction base="string">
-			<enumeration value="v2.0.2"/>
-			<enumeration value="v2.0.4"/>
 			<enumeration value="v2.0.5"/>
-			<enumeration value="v2.0.6"/>			
-			<enumeration value="test"/>
+			<enumeration value="v2.0.6"/>
 			<enumeration value="neueste"/>
 			<enumeration value="latest"/>
-			<enumeration value="lfug"/>
 		</restriction>
 	</simpleType>
 </schema>
