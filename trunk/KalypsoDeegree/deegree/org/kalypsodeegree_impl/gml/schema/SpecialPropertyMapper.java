@@ -6,6 +6,11 @@ package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.HashMap;
 
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
 /**
  * @author kuepfer
  */
@@ -14,10 +19,21 @@ public class SpecialPropertyMapper
   // TODO move to Kalypso-Commons, give a name like CastUtilities, work on Class objects instead of typenames
   private static SpecialPropertyMapper m_instance;
 
-  private static HashMap<String,SpecialMapper> m_map = new HashMap<String,SpecialMapper>();
+  private static HashMap<String, SpecialMapper> m_map = new HashMap<String, SpecialMapper>();
   static
   {
     m_instance = new SpecialPropertyMapper();
+
+    m_instance.register( m_instance.new SpecialMapper( GM_Surface.class, GM_MultiSurface.class )
+    {
+      @Override
+      public Object map( Object srcObject )
+      {
+        final GM_Surface surface = (GM_Surface) srcObject;
+        final GM_Surface[] surfaces = new GM_Surface[] { surface };
+        return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
+      }
+    } );
 
     m_instance.register( m_instance.new SpecialMapper( String.class, Integer.class )
     {
