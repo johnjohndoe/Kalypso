@@ -1,9 +1,11 @@
-#Mon Jun 19 15:58:26 CEST 2006
+#Fri Aug 04 09:34:20 CEST 2006
 eclipse.preferences.version=1
 encoding//..BCE_intern/Hintergrunddaten/dgm/raster.gml=Cp1252
 encoding//Grunddaten/Styles/gewaesser.sld=Cp1252
 encoding//Grunddaten/Styles/gewaesserflaechen.sld=Cp1252
 encoding//Grunddaten/Styles/landnutzung_shape.sld=Cp1252
 encoding//Kollau/wspmTuhhModel.gml=Cp1252
+encoding//Spielwiese/wspmTuhhModel.gml=Cp1252
+encoding//test/K2/wspmTuhhModel.gml=Cp1252
 encoding//test/Kollau/wspmTuhhModel.gml=Cp1252
 encoding/test.gft=Cp1252
