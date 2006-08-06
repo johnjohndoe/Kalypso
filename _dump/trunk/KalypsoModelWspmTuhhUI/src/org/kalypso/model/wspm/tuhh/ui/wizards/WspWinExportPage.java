@@ -345,7 +345,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
     // create the input element, which has the root resource
     // as its only child
-    List input = new ArrayList();
+    List<IProject> input = new ArrayList<IProject>();
     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
     for( int i = 0; i < projects.length; i++ )
     {
@@ -443,7 +443,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
           }
 
           // filter out the desired resource types
-          ArrayList results = new ArrayList();
+          ArrayList<IResource> results = new ArrayList<IResource>();
           for( int i = 0; i < members.length; i++ )
           {
             // And the test bits with the resource types to see if they are what we want

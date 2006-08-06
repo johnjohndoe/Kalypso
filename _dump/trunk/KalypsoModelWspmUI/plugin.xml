@@ -265,4 +265,11 @@
            point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator class="org.kalypso.model.wspm.ui.profil.validation.ProfilMarkerResolutionGenerator"/>
      </extension>
+     <extension
+           point="org.eclipse.ui.newWizards">
+        <category
+              id="org.kalypso.wspm.ui"
+              name="Spiegellinienberechnung"
+              parentCategory="org.kalypso.ui.newwizards.kalypso"/>
+     </extension>
 </plugin>

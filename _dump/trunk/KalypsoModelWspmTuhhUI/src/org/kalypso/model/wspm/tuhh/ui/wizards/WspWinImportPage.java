@@ -73,7 +73,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardResourceImportPage;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.eclipse.ui.internal.wizards.datatransfer.MinimizedFileSystemElement;
@@ -99,16 +98,16 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   protected Button deselectAllButton;
 
   // A boolean to indicate if the user has typed anything
-  private boolean entryChanged = false;
+  protected boolean entryChanged = false;
 
   // dialog store id constants
   private final static String STORE_SOURCE_NAMES_ID = "WspWinImportPage.STORE_SOURCE_NAMES_ID";//$NON-NLS-1$
 
   private final static String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WspWinImportPage.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
 
-  private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID = "WspWinImportPage.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
+//  private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID = "WspWinImportPage.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
 
-  private static final String SELECT_TYPES_TITLE = DataTransferMessages.DataTransfer_selectTypes;
+//  private static final String SELECT_TYPES_TITLE = DataTransferMessages.DataTransfer_selectTypes;
 
   private static final String SELECT_ALL_TITLE = DataTransferMessages.DataTransfer_selectAll;
 
@@ -120,16 +119,16 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
   protected static final String SOURCE_EMPTY_MESSAGE = DataTransferMessages.FileImport_sourceEmpty;
 
-  private final IWorkbench m_workbench;
+//  private final IWorkbench m_workbench;
 
   /**
    * Creates an instance of this class
    */
-  protected WspWinImportPage( final String name, final IWorkbench workbench, final IStructuredSelection selection )
+  protected WspWinImportPage( final String name, final IStructuredSelection selection )
   {
     super( name, selection );
 
-    m_workbench = workbench;
+//    m_workbench = workbench;
 
     setTitle( "WspWin Daten" );
     setDescription( "WspWin Projekt wählen" );
@@ -143,9 +142,9 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    * @param selection
    *          IStructuredSelection
    */
-  public WspWinImportPage( final IWorkbench workbench, final IStructuredSelection selection )
+  public WspWinImportPage( final IStructuredSelection selection )
   {
-    this( "WspWinImportPage", workbench, selection );//$NON-NLS-1$
+    this( "WspWinImportPage", selection );//$NON-NLS-1$
   }
 
   /**
@@ -215,6 +214,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     final SelectionListener selectAlllistener = new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -228,6 +228,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     final SelectionListener deselectAllListener = new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -279,6 +280,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     sourceNameField.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -342,8 +344,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   /**
    * Update the receiver from the source name field.
    */
-
-  private void updateFromSourceField( )
+  protected void updateFromSourceField( )
   {
 
     setSourceName( sourceNameField.getText() );
@@ -358,7 +359,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   protected MinimizedFileSystemElement createRootElement( final Object fileSystemObject, final IImportStructureProvider provider )
   {
     final boolean isContainer = provider.isFolder( fileSystemObject );
-    final String elementLabel = provider.getLabel( fileSystemObject );
+    /*final String elementLabel = */provider.getLabel( fileSystemObject );
 
     // Use an empty label so that display of the element's full name
     // doesn't include a confusing label
@@ -421,6 +422,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   {
     return new WorkbenchContentProvider()
     {
+      @Override
       public Object[] getChildren( Object o )
       {
         if( o instanceof MinimizedFileSystemElement )

@@ -33,8 +33,6 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
 {
   private IStructuredSelection m_selection;
 
-  private IWorkbench m_workbench;
-
   private WspWinImportPage m_wspWinImportPage;
 
   public WspWinImportWizard( )
@@ -59,7 +57,7 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
   {
     super.addPages();
 
-    m_wspWinImportPage = new WspWinImportPage( m_workbench, m_selection );
+    m_wspWinImportPage = new WspWinImportPage( m_selection );
     addPage( m_wspWinImportPage );
   }
 
@@ -133,7 +131,6 @@ public class WspWinImportWizard extends Wizard implements IImportWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    m_workbench = workbench;
     m_selection = selection;
   }
 

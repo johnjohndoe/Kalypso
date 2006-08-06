@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -35,7 +36,7 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
    * If it is not the case, it creates the structure
    * </p>
    */
-  public static void ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws IOException, CoreException
+  public static void ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Validiere Modellstruktur", 1000 );
 
@@ -68,6 +69,10 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
 
       // TODO: check if model.gml is valid xml with right namespace
     }
+    catch( final IOException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
     finally
     {
       IOUtils.closeQuietly( zipInputStream );
@@ -76,7 +81,6 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
 
   }
 
-  
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
     final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), new QName( NS_WSPM, "reachMember" ), new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );

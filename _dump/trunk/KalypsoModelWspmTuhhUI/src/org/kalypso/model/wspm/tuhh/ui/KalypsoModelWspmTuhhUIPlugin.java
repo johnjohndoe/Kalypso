@@ -2,6 +2,7 @@ package org.kalypso.model.wspm.tuhh.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -11,6 +12,8 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
 {
   // The shared instance.
   private static KalypsoModelWspmTuhhUIPlugin plugin;
+
+  private PluginImageProvider m_imgProvider = null;
 
   /**
    * The constructor.
@@ -25,18 +28,25 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    m_imgProvider = new PluginImageProvider( this );
+    m_imgProvider.resetTmpFiles();
   }
 
   /**
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
+    m_imgProvider.resetTmpFiles();
+    m_imgProvider = null;
+
     super.stop( context );
+
     plugin = null;
   }
 
@@ -46,6 +56,11 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
   public static KalypsoModelWspmTuhhUIPlugin getDefault( )
   {
     return plugin;
+  }
+
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imgProvider;
   }
 
   /**
