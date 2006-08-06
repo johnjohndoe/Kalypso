@@ -5,14 +5,16 @@
      <extension
          point="org.eclipse.ui.newWizards">
       <category
+            id="org.kalypso.wizard"
             name="NA-Modell Projekt"
-            id="org.kalypso.wizard"/>
+            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
       <wizard
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard"
             class="org.kalypso.wizard.KalypsoNAProjectWizard"
             icon="icons/kalypso16.gif"
-            category="org.kalypso"
+            id="org.kalypso.wizard.KalypsoNAProjectWizard"
             name="%NewWizard.name"
-            id="org.kalypso.wizard.KalypsoNAProjectWizard"/>
+            project="true"/>
    </extension>
 
 </plugin>
