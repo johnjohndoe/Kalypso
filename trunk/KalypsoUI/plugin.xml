@@ -996,11 +996,11 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.kalypso.ui.newwizards.gml"
+            id="org.kalypso.ui.newwizards.kalypso"
             name="Kalypso"/>
       <wizard
             canFinishEarly="false"
-            category="org.kalypso.ui.newwizards.gml"
+            category="org.kalypso.ui.newwizards.kalypso"
             class="org.kalypso.ui.wizard.NewGMLFileWizard"
             hasPages="true"
             id="org.kalypso.ui.wizard.NewGMLFileWizard"
