@@ -84,9 +84,9 @@
 	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>${property:http://www.opengis.net/gml#name}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#name}</description>
+				<label>${property:org.kalypso.model.wspm#name}</label>
+				<tooltip>${property:org.kalypso.model.wspm#name}</tooltip>
+				<description>${property:org.kalypso.model.wspm#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -429,8 +429,17 @@
 	</complexType>
 	<complexType name="WaterBodyType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
+					<element name="name" type="string" default="Gewässer">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Name</label>
+								<tooltip>Bezeichnung des Gewässers</tooltip>
+								<description>Bezeichnung des Gewässers</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="refNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
