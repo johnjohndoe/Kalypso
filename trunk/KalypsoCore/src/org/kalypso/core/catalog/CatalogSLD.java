@@ -68,7 +68,6 @@ import org.w3c.dom.Element;
  */
 public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
 {
-
   private static CatalogSLD M_CatalogFeatureTypeStyle = null;
 
   public static CatalogSLD getDefault( )
