@@ -22,7 +22,7 @@
 			<documentation xml:lang="de">
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#name}</description>
+				<description>Berechnungsvariante '${property:http://www.opengis.net/gml#name}'</description>
 			</documentation>
 		</annotation>
 	</element>
