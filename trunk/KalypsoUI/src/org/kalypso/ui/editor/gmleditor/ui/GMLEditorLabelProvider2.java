@@ -47,8 +47,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class GMLEditorLabelProvider2 extends LabelProvider
@@ -114,17 +112,14 @@ public class GMLEditorLabelProvider2 extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof GMLWorkspace )
       return "GML";
+    
     if( element instanceof Feature )
-    {
       return FeatureHelper.getLabel( (Feature) element );
-//      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-//      if( annotation != null )
-//        return annotation.getLabel() + " #" + feature.getId();
-    }
+
     if( element instanceof FeatureAssociationTypeElement )
     {
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
@@ -132,20 +127,22 @@ public class GMLEditorLabelProvider2 extends LabelProvider
         return annotation.getLabel();
       return "<-> ";
     }
+    
     if( element instanceof LinkedFeatureElement2 )
     {
       final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
     }
+    
     if( element instanceof IValuePropertyType )
     {
       IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
     }
+    
     if( element instanceof GM_Object )
-    {
       return element.getClass().getName().replaceAll( ".+\\.", "" );
-    }
+
     return "unknown";
   }
 }

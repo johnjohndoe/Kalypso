@@ -98,20 +98,23 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
   {
     action.setEnabled( false );
     m_selection = null;
-    final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
-    if( selection instanceof IFeatureSelection && featureCount > 0 )
+    if( selection instanceof IFeatureSelection )
     {
-      m_selection = (IFeatureSelection) selection;
-      final Feature focusedFeature = m_selection.getFocusedFeature();
-
-      if( focusedFeature != null )
+      final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
+      if( featureCount > 0 )
       {
-        final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+        m_selection = (IFeatureSelection) selection;
+        final Feature focusedFeature = m_selection.getFocusedFeature();
 
-        if( focusedProperty != null && m_selection.size() >= 2 )
+        if( focusedFeature != null )
         {
-          action.setEnabled( true );
-          addFocusDescription( action, focusedFeature, focusedProperty );
+          final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+
+          if( focusedProperty != null && m_selection.size() >= 2 )
+          {
+            action.setEnabled( true );
+            addFocusDescription( action, focusedFeature, focusedProperty );
+          }
         }
       }
     }

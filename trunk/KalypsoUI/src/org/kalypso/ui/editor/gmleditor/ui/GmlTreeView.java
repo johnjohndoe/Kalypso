@@ -262,6 +262,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     m_selectionManager.removeSelectionListener( m_globalSelectionChangedListener );
     m_treeViewer.removePostSelectionChangedListener( m_treeSelectionChangedListener );
+    
+    // TODO: unhook double click listener
   }
 
   /**
@@ -405,7 +407,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       m_key = new PoolableObjectType( linktype, href, context );
       m_pool.addPoolListener( this, m_key );
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );

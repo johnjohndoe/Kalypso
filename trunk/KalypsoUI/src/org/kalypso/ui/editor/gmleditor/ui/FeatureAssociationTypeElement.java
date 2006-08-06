@@ -33,21 +33,13 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FeatureAssociationTypeElement
 {
-
   private final IRelationType m_featureAssociattionTypeProp;
 
   private final Feature m_parent;
-
-  /**
-   *  
-   */
 
   public FeatureAssociationTypeElement( final Feature parent, final IRelationType property )
   {
@@ -58,7 +50,6 @@ public class FeatureAssociationTypeElement
   public Feature getParentFeature()
   {
     return m_parent;
-
   }
 
   public IRelationType getAssociationTypeProperty()

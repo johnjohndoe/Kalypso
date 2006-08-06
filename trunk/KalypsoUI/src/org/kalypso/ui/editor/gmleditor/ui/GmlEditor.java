@@ -166,14 +166,13 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     super.createPartControl( parent );
 
     m_viewer = new GmlTreeView( parent, KalypsoCorePlugin.getDefault().getSelectionManager() );
+    
     //register as site selection provider
     getSite().setSelectionProvider( m_viewer );
+    
     createContextMenu();
   }
 
-  /**
-   *  
-   */
   private void createContextMenu()
   {
     //  create context menu for editor
@@ -181,8 +180,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
-
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
         manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( new Separator() );
@@ -197,15 +195,17 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
           if(  fatp.isList() )
           {
             final List list = (List)parentFeature.getProperty( fatp );
-            if( list.size() < fatp.getMaxOccurs() ) 
+            final int maxOccurs = fatp.getMaxOccurs();
+            if( maxOccurs == -1 || list.size() < maxOccurs ) 
               menuManager.add( new AddEmptyLinkAction( "Feature neu", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE, fatp,
                   parentFeature, workspace ) );
           }
         }
       }
     } );
-    TreeViewer treeViewer = m_viewer.getTreeViewer();
-    Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
+    
+    final TreeViewer treeViewer = m_viewer.getTreeViewer();
+    final Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
     getSite().registerContextMenu( menuManager, m_viewer );
     treeViewer.getControl().setMenu( menu );
   }
