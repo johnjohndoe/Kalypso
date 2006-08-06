@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -256,16 +255,6 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     // }
     // } );
     // }
-  }
-
-  public void accept( Object element, ITreeVisitor visitor )
-  {
-    if( visitor.visit( element, this ) )
-    {
-      Object[] children = getChildren( element );
-      for( int i = 0; i < children.length; i++ )
-        accept( children[i], visitor );
-    }
   }
 
   public boolean isChecked( final Object element )

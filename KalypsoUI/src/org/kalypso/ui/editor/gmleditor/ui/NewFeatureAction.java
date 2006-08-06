@@ -29,18 +29,17 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -49,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author kuepfer
  */
-public class AddEmptyLinkAction extends Action
+public class NewFeatureAction extends Action
 {
   private final IRelationType m_fatp;
 
@@ -57,47 +56,36 @@ public class AddEmptyLinkAction extends Action
 
   private final Feature m_parentFeature;
 
+  private final IFeatureType m_targetType;
 
-  public AddEmptyLinkAction( String text, ImageDescriptor image, IRelationType fatp, Feature parentFeature, CommandableWorkspace workspace )
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public NewFeatureAction( final String text, final ImageDescriptor image, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType fatp, final IFeatureType targetType, final IFeatureSelectionManager selectionManager )
   {
     super( text, image );
-    m_fatp = fatp;
+
     m_workspace = workspace;
     m_parentFeature = parentFeature;
+    m_fatp = fatp;
+    m_targetType = targetType;
+    m_selectionManager = selectionManager;
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
   @Override
-  public void run( )
+  public void runWithEvent( final Event event )
   {
-
-    final IFeatureType featureType = m_fatp.getTargetFeatureType();
-    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
-    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ICommand command = null;
-    FeatureTypeSelectionDialog dialog = null;
-    IFeatureType ft = null;
-    if( featureTypes.length > 1 )
-    {
-      dialog = new FeatureTypeSelectionDialog( shell, featureTypes, SWT.MULTI );
-      int open = dialog.open();
-      if( open == Window.OK )
-      {
-        IFeatureType[] types = dialog.getSelectedFeatureTypes();
-        ft = types[0];
-        if( ft == null )
-          return;
-      }
-    }
-    else
-      ft = featureTypes[0];
-    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp, 0, null );
     try
     {
+      final ICommand command = new AddFeatureCommand( m_workspace, m_targetType, m_parentFeature, m_fatp, 0, null, m_selectionManager );
       m_workspace.postCommand( command );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), "Fehler beim Hinzufügen", status );
     }
 
   }

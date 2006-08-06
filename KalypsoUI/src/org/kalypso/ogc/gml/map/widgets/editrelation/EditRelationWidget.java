@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -632,7 +633,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           if( element != null )
           {
             boolean status = m_contentProvider.isChecked( element );
-            m_contentProvider.accept( element, new SetCheckedTreeVisitor( !status ) );
+
+            TreeViewerUtilities.accept( m_contentProvider, element, new SetCheckedTreeVisitor( !status ) );
+
             viewer.refresh( element, true );
           }
         }

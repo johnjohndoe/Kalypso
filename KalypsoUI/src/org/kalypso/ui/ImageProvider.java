@@ -111,6 +111,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_FILTERDIALOG_WARNING = id("icons/filterdialog/warning_obj.gif");
   
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_NEW = id( "icons/feature/gis_feature_neu.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_AGGREGATION = id( "icons/feature/feature_link_aggregation.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = id( "icons/feature/feature_link_composition.gif" );

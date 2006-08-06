@@ -255,11 +255,12 @@
                path="additions"
                id="org.kalypso.ui.editors.treeeditor.menu">
             <groupMarker name="edit"/>
+            <separator name="navigate"/>
             <separator name="additions"/>
          </menu>
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"
-               toolbarPath="Baum/edit"
+               toolbarPath="edit"
                label="%Extension.EditorActions.saveData.label"
                tooltip="%Extension.EditorActions.saveData.tree.tooltip"
                icon="icons/feature/save_GML.gif"
@@ -289,6 +290,15 @@
                toolbarPath="edit"
                id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate">
          </action>
+         <action
+               class="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate"
+               icon="icons/util/tree_collapse_all.gif"
+               id="KalypsoUI.action1"
+               label="Collapse all"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate"
+               style="push"
+               toolbarPath="navigate"
+               tooltip="Collapse All"/>
 
 
       </editorContribution>
@@ -581,6 +591,11 @@
                id="org.kalypso.objectclass.feature.action.remove">
          </action>
          <action
+               label="%Extension.popupMenus.feature.edit"
+               icon="icons/feature/gis_feature_edit.gif"
+               class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
+               id="org.kalypso.objectclass.feature.editfeature"/>
+         <action
                enablesFor="0"
                label="%Extension.popupMenus.feature.new.label"
                tooltip="%Extension.popupMenus.feature.new.tooltip"
@@ -604,11 +619,6 @@
                menubarPath="org.kalypso.objectclass.feature.menu.menuGroupEdit/editGroup"
                style="push"
                tooltip="%Extension.popupMenus.feature.setValue.tooltip"/>
-         <action
-               label="%Extension.popupMenus.feature.edit"
-               icon="icons/feature/gis_feature_edit.gif"
-               class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
-               id="org.kalypso.objectclass.feature.editfeature"/>
          <action
                class="org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate"
                enablesFor="+"

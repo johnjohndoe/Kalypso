@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -77,6 +78,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -149,7 +151,26 @@ public class FeatureFactory
       if( (ftp instanceof IValuePropertyType) )
       {
         final IValuePropertyType vpt = (IValuePropertyType) ftp;
-        final Object value = Mapper.defaultValueforJavaType( vpt, createGeometry );
+
+        Object value = null;
+
+        // get default value from schema if possible
+        final String defaultValue = vpt.getDefault();
+        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+        if( typeHandler != null && defaultValue != null )
+        {
+          try
+          {
+            value = typeHandler.parseType( defaultValue );
+          }
+          catch( final ParseException e )
+          {
+            e.printStackTrace();
+          }
+        }
+        else
+          value = Mapper.defaultValueforJavaType( vpt, createGeometry );
+
         results.put( ftp, value );
       }
     }

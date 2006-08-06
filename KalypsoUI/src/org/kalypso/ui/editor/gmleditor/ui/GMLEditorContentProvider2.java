@@ -37,6 +37,8 @@ import java.util.Map;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.FindParentTreeVisitor;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -129,7 +131,18 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     final Object object = m_parentHash.get( element );
-    return object;
+    if( object != null )
+      return object;
+
+    // brute force search
+    final FindParentTreeVisitor visitor = new FindParentTreeVisitor( element );
+    TreeViewerUtilities.accept( m_viewer, visitor );
+
+    final Object parent = visitor.getParent();
+    if( parent != null )
+      m_parentHash.put( element, parent );
+
+    return parent;
   }
 
   /**
@@ -145,7 +158,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof GMLWorkspace )
       return new Object[] { ((GMLWorkspace) inputElement).getRootFeature() };
@@ -201,6 +214,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     return parent.getAssociationTypeProperty();
   }
 
+  /** Expand the element and all of its parents */
   public void expandElement( final Object element )
   {
     if( element == null )
@@ -210,5 +224,4 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     m_viewer.setExpandedState( element, true );
   }
-
 }

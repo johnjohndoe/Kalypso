@@ -48,6 +48,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
@@ -68,12 +71,12 @@ public class AddFeatureCommand implements ICommand
 
   private final CommandableWorkspace m_workspace;
 
-  // private final IFeatureSelectionManager m_selectionManager;
-
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
   private final Map<IPropertyType, Object> m_props;
 
-  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties )
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -81,6 +84,7 @@ public class AddFeatureCommand implements ICommand
     m_pos = pos;
     m_props = properties;
     m_type = type;
+    m_selectionManager = selectionManager;
   }
 
   /**
@@ -170,9 +174,8 @@ public class AddFeatureCommand implements ICommand
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    // if( m_selectionManager != null )
-    // m_selectionManager.changeSelection( new Feature[0], new EasyFeatureWrapper[]
-    // { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
+    if( m_selectionManager != null )
+      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
 
   }
 }
