@@ -270,6 +270,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
+    // TODO: 
+    // - put all code into a WorkspaceModifyOperation
+    // - run it with RunnableContextHelper on getContainer()
+    // - remove cathes and show resulting status in errod dialog
+    // - use operation's monitor to show progress (dont give null to Project.create and so on)
+    
     m_workspacePath = m_createProjectPage.getLocationPath();
     m_projectHandel = m_createProjectPage.getProjectHandle();
 
@@ -281,6 +287,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       m_projectHandel.create( description, null );
       m_projectHandel.open( null );
       // set charSet for the new project to the UTF-8 standard
+      // TODO: do not do such a thing (at least without comment why).
+      // The workspace has its own preference settings
       m_projectHandel.setDefaultCharset( "UTF-8", null ); //$NON-NLS-1$
     }
     catch( CoreException e )
