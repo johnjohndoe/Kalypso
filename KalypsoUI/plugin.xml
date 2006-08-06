@@ -62,12 +62,13 @@
             id="org.kalypso.ogc.gml.editor.GMLSchemaEditor"
             name="GMLSchemaEditor"/>
       <editor
-            name="%Extension.Editor.GML"
+            class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
+            contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor"
             default="true"
             extensions="gmv"
             icon="icons/kalypso_gtt.gif"
-            class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
-            id="org.kalypso.ui.editor.GmlEditor">
+            id="org.kalypso.ui.editor.GmlEditor"
+            name="%Extension.Editor.GML">
       </editor>
       <editor
             class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"

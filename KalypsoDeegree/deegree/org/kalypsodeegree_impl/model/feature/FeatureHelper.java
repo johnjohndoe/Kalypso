@@ -17,7 +17,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -28,7 +27,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -746,13 +744,22 @@ public class FeatureHelper
   {
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-    // this can happen when we import a shape-file. d
+    // this can happen when we import a shape-file.
     if( annotation == null )
       return "no-label";
     final String label = annotation.getLabel();
     return tokenReplace( feature, label );
+  }
 
-    // return annotation.getLabel() + " #" + feature.getId();
+  public static String getDescription( final Feature feature )
+  {
+    final IFeatureType featureType = feature.getFeatureType();
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
+    // this can happen when we import a shape-file.
+    if( annotation == null )
+      return "no-label";
+    final String label = annotation.getDescription();
+    return tokenReplace( feature, label );
   }
 
   /** Performs the token replace for the methods {@link #getLabel(Feature)}, ... */
@@ -760,5 +767,4 @@ public class FeatureHelper
   {
     return FEATURE_TOKEN_REPLACE.replaceTokens( feature, tokenString );
   }
-
 }
