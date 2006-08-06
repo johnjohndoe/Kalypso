@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -18,12 +19,24 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
+/**
+ * Wizard to create a new wspm tuhh project.
+ * <p>
+ * Overwrite for special purposes, like create new project and import data from an existing datasource.
+ * </p>
+ * <p>
+ * If overwritten, also {@link #doFinish(IProject, IProgressMonitor)} should be overwritten
+ * </p>
+ * 
+ * @author Gernot Belger
+ */
 public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension
 {
   private static final String STR_WINDOW_TITLE = "Neues Projekt - Spiegellinienberechnung";
@@ -34,9 +47,15 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
   private IConfigurationElement m_config;
 
+  private IStructuredSelection m_selection;
+
   public NewProjectWizard( )
   {
     setWindowTitle( STR_WINDOW_TITLE );
+    setNeedsProgressMonitor( true );
+
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+    setDialogSettings( dialogSettings );
   }
 
   /**
@@ -51,13 +70,22 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     m_createProjectPage.setImageDescriptor( KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.NEWPROJECT_PROJECT_PAGE_WIZBAN ) );
 
     addPage( m_createProjectPage );
-
-    super.addPages();
   }
 
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_workbench = workbench;
+    m_selection = selection;
+  }
+  
+  protected IStructuredSelection getSelection( )
+  {
+    return m_selection;
+  }
+
+  protected IWorkbench getWorkbench( )
+  {
+    return m_workbench;
   }
 
   @Override
@@ -70,17 +98,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Projekt wird erzeugt", 4 );
-
-        project.create( new SubProgressMonitor( monitor, 1 ) );
-        project.open( new SubProgressMonitor( monitor, 1 ) );
-
-        final IProjectDescription description = project.getDescription();
-        final String[] natures = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
-        description.setNatureIds( natures );
-        project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
-
-        TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
+        doFinish( project, monitor );
       }
     };
 
@@ -99,7 +117,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     return status.isOK();
   }
 
-   private void deleteProject( final IProject project )
+  private void deleteProject( final IProject project )
   {
     if( project != null && project.exists() )
     {
@@ -126,5 +144,26 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_config = config;
+  }
+
+  /**
+   * Creates and configures the new project.
+   * <p>
+   * Overwrite, if more has to be done while finishing.
+   * </p>
+   */
+  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Projekt wird erzeugt", 4 );
+
+    project.create( new SubProgressMonitor( monitor, 1 ) );
+    project.open( new SubProgressMonitor( monitor, 1 ) );
+
+    final IProjectDescription description = project.getDescription();
+    final String[] natures = { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
+    description.setNatureIds( natures );
+    project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
+
+    TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
   }
 }

@@ -84,7 +84,6 @@ import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
  * @author thuel2
  */
 public class WspWinImportPage extends WizardResourceImportPage implements Listener
-
 {
   // widgets
   protected Combo sourceNameField;
@@ -105,9 +104,10 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
   private final static String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WspWinImportPage.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
 
-//  private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID = "WspWinImportPage.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
+  // private final static String STORE_CREATE_CONTAINER_STRUCTURE_ID =
+  // "WspWinImportPage.STORE_CREATE_CONTAINER_STRUCTURE_ID";//$NON-NLS-1$
 
-//  private static final String SELECT_TYPES_TITLE = DataTransferMessages.DataTransfer_selectTypes;
+  // private static final String SELECT_TYPES_TITLE = DataTransferMessages.DataTransfer_selectTypes;
 
   private static final String SELECT_ALL_TITLE = DataTransferMessages.DataTransfer_selectAll;
 
@@ -119,16 +119,12 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
   protected static final String SOURCE_EMPTY_MESSAGE = DataTransferMessages.FileImport_sourceEmpty;
 
-//  private final IWorkbench m_workbench;
-
   /**
    * Creates an instance of this class
    */
   protected WspWinImportPage( final String name, final IStructuredSelection selection )
   {
     super( name, selection );
-
-//    m_workbench = workbench;
 
     setTitle( "WspWin Daten" );
     setDescription( "WspWin Projekt wählen" );
@@ -141,6 +137,8 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
    *          IWorkbench
    * @param selection
    *          IStructuredSelection
+   * @param showTarget
+   *          If true, the user is asked for the target forlder; if false the entry fields are hidden.
    */
   public WspWinImportPage( final IStructuredSelection selection )
   {
@@ -250,7 +248,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
     overwriteExistingResourcesCheckbox = new Button( optionsGroup, SWT.CHECK );
     overwriteExistingResourcesCheckbox.setFont( optionsGroup.getFont() );
     overwriteExistingResourcesCheckbox.setText( DataTransferMessages.FileImport_overwriteExisting );
-    
+
     // not yet implemented, so disable it
     overwriteExistingResourcesCheckbox.setEnabled( false );
   }
@@ -359,7 +357,7 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
   protected MinimizedFileSystemElement createRootElement( final Object fileSystemObject, final IImportStructureProvider provider )
   {
     final boolean isContainer = provider.isFolder( fileSystemObject );
-    /*final String elementLabel = */provider.getLabel( fileSystemObject );
+    /* final String elementLabel = */provider.getLabel( fileSystemObject );
 
     // Use an empty label so that display of the element's full name
     // doesn't include a confusing label
@@ -813,4 +811,6 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     return root.getFolder( path );
   }
+  
+  
 }

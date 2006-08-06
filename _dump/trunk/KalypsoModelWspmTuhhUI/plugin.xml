@@ -103,9 +103,24 @@
             id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
             name="TUHH 1D-Spiegellinienberechnung Projekt"
             project="true">
-         Geht was?
+         
          <description>
             Erzeugt ein neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wspm.ui"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+            descriptionImage="icons/wizban/kalypso32.gif"
+            finalPerspective="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
+            hasPages="true"
+            icon="icons/obj16/wspwin.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
+            name="TUHH 1D-Spiegellinienberechnung Projekt aus WspWin Projekt"
+            project="true">
+         <description>
+            Importiert ein bestehendes WspWin Projekt als neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
          </description>
       </wizard>
    </extension>
