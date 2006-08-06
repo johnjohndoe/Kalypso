@@ -41,7 +41,6 @@
 package org.kalypso.core.repository;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
 /**
  * @author doemming
