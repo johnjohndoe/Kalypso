@@ -488,7 +488,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
-    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, false );
+    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, true );
     m_indexMap.put( newId, newFeature );
     return newFeature;
   }

@@ -135,6 +135,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   protected void handleGlobalSelectionChanged( final IFeatureSelection selection )
   {
     final TreeViewer treeViewer = m_treeViewer;
+    // must be sync, if not we get a racing condition with handleModelChange
     treeViewer.getControl().getDisplay().syncExec( new Runnable()
     {
       public void run( )
@@ -144,9 +145,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
         if( !isEqual )
         {
-          treeViewer.setSelection( selection, true );
           for( int i = 0; i < globalFeatures.length; i++ )
             m_contentProvider.expandElement( m_contentProvider.getParent( globalFeatures[i] ) );
+          treeViewer.setSelection( selection, true );
         }
       }
     } );
@@ -262,7 +263,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     m_selectionManager.removeSelectionListener( m_globalSelectionChangedListener );
     m_treeViewer.removePostSelectionChangedListener( m_treeSelectionChangedListener );
-    
+
     // TODO: unhook double click listener
   }
 
@@ -279,7 +280,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       if( !m_composite.isDisposed() )
       {
         final TreeViewer treeViewer = m_treeViewer;
-        m_composite.getDisplay().asyncExec( new Runnable()
+        // must be sync, if not we get a racing condition with handleGlobalSelection
+        m_composite.getDisplay().syncExec( new Runnable()
         {
           public void run( )
           {
@@ -344,7 +346,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_eventProvider.fireModellEvent( event );
   }
 
-  protected TreeViewer getTreeViewer( )
+  public TreeViewer getTreeViewer( )
   {
     return m_treeViewer;
   }
@@ -437,6 +439,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       monitor.done();
     }
+  }
+
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
   }
 
   /**

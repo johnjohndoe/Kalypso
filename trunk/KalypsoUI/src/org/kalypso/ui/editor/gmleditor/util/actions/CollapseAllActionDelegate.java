@@ -38,31 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.editrelation;
+package org.kalypso.ui.editor.gmleditor.util.actions;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeVisitor;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
+import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
 
 /**
- * @author doemming
+ * @author Gernot
+ *
  */
-public class SetCheckedTreeVisitor implements ITreeVisitor
+public class CollapseAllActionDelegate implements IEditorActionDelegate
 {
-  private final boolean m_checked;
+  private IEditorPart m_targetEditor;
 
-  public SetCheckedTreeVisitor( boolean checked )
+  /**
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_checked = checked;
-    // nothing
+    m_targetEditor = targetEditor;
   }
 
-  public boolean visit( Object element, ITreeContentProvider contentProvider )
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( final IAction action )
   {
-    if( contentProvider instanceof EditRelationOptionsContentProvider )
+    if( m_targetEditor instanceof GmlEditor )
     {
-      // TODO extract interface (e.g. ICheckedStateProvider)
-      ( (EditRelationOptionsContentProvider)contentProvider ).setChecked( element, m_checked );
+      final GmlEditor editor = (GmlEditor) m_targetEditor;
+      final GmlTreeView treeView = editor.getTreeView();
+      treeView.getTreeViewer().collapseAll();
     }
-    return contentProvider.hasChildren( element );
   }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+  }
+
 }

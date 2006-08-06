@@ -261,7 +261,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getSchemaLocationString();
   }
 
-  public Feature createFeature( Feature parent, IFeatureType type )
+  public Feature createFeature( final Feature parent, final IFeatureType type )
   {
     return m_workspace.createFeature( parent, type );
   }

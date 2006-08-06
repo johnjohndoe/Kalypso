@@ -302,7 +302,7 @@ public class CreateGeometeryWidget2 extends AbstractWidget
         return;
       final Map<IPropertyType, Object> valueMap = new HashMap<IPropertyType, Object>();
       valueMap.put( m_geometryProperty, m_validGeometryValue );
-      final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_linkFTP, 0, valueMap );
+      final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_linkFTP, 0, valueMap, null );
       m_workspace.postCommand( command );
     }
     catch( Exception e )
