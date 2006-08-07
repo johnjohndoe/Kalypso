@@ -105,8 +105,7 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<!-- alter filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot;                                                   defaultStatus=&quot;2&quot; xmlns=&quot;filters.zml.kalypso.org&quot; forceFill=&quot;true&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/> -->
-		<!-- neuer filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;intervallFilter     amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; mode=&quot;sum&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; xmlns=&quot;filters.zml.kalypso.org&quot;                                                              /&gt;&lt;/filter&gt;"/> -->
+		<!-- Ombrometer (Messung) -->
 		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_ombrometer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${ombrometerLink}" 
 				from="${startsim}" 
