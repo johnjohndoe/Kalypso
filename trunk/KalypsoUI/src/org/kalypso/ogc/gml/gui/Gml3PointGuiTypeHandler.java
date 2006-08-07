@@ -64,11 +64,13 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -202,21 +204,20 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     double[] dbl_values = pos.getAsArray();
 
-    String result = new Double( dbl_values[0] ).toString();
-
-    for( int i = 1; i < dbl_values.length; i++ )
-    {
-      result = result + ";" + new Double( dbl_values[i] ).toString();
-    }
+    String result = "";
 
     try
     {
-      result = result + ";" + point.getCoordinateSystem().getName();
+      result = point.getCoordinateSystem().getName();
     }
     catch( RemoteException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+    }
+
+    for( int i = 0; i < dbl_values.length; i++ )
+    {
+      result = result + ";" + new Double( dbl_values[i] ).toString();
     }
 
     return result;
@@ -227,22 +228,69 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public Object fromText( String text )
   {
+    final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
+
     /* Erstellen des Points. */
+    GM_Position pos = null;
+    CS_CoordinateSystem crs = null;
 
     /* Werte anhand von ; trennen. */
     String[] str_values = text.split( ";" );
 
-    double[] dbl_values = new double[str_values.length - 1];
+    double[] dbl_values = null;
 
-    for( int i = 0; i < str_values.length - 1; i++ )
+    /* Sind mind. zwei Einträge vorhanden (CS und ein double-Wert)? */
+    if( str_values.length > 1 )
     {
-      dbl_values[i] = new Double( str_values[i] );
+      /* Der erste Eintrag wird als das CS angenommen. */
+      CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
+
+      /* Sollte es das CS nicht geben, stelle das Default CS ein. */
+      if( cs != null )
+      {
+        crs = crs = m_csAdapter.export( cs );
+
+        /* Der erste Eintrag war ein CS. */
+        dbl_values = new double[str_values.length - 1];
+
+        for( int i = 1; i < str_values.length; i++ )
+        {
+          dbl_values[i - 1] = new Double( str_values[i] );
+        }
+      }
+      else
+      {
+        crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+
+        /* Der erste Eintrag war kein CS. */
+        dbl_values = new double[str_values.length];
+
+        for( int i = 0; i < str_values.length; i++ )
+        {
+          dbl_values[i] = new Double( str_values[i] );
+        }
+      }
+
+      pos = GeometryFactory.createGM_Position( dbl_values );
     }
+    else
+    {
+      /* Falls es nur einen Wert gibt, wird er als CS angenommen. */
+      CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
 
-    GM_Position pos = GeometryFactory.createGM_Position( dbl_values );
+      /* Sollte es das CS nicht geben, stelle das Default CS ein. */
+      if( cs != null )
+      {
+        crs = crs = m_csAdapter.export( cs );
+        pos = GeometryFactory.createGM_Position( new double[] { 0.0 } );
+      }
+      else
+      {
+        crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        pos = GeometryFactory.createGM_Position( new double[] { new Double( str_values[0] ) } );
+      }
 
-    final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-    CS_CoordinateSystem crs = m_csAdapter.export( new ConvenienceCSFactoryFull().getCSByName( str_values[str_values.length - 1] ) );
+    }
 
     GM_Point point = GeometryFactory.createGM_Point( pos, crs );
 

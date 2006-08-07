@@ -40,13 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
+import java.rmi.RemoteException;
 import java.util.Locale;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -60,6 +64,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -127,7 +132,20 @@ public class PointDialog extends Dialog
       /* The label for the input data. */
       m_label[i] = new Label( group, SWT.NONE );
       m_label[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_label[i].setText( "Wert" );
+
+      try
+      {
+        if( i < getCS_CoordinateSystem().getDimension() )
+          m_label[i].setText( "Achse " + getCS_CoordinateSystem().getAxis( i ).name + " [" + getCS_CoordinateSystem().getUnits( i ).getName() + "]" );
+        else
+          m_label[i].setText( "nicht unterstützt" );
+
+      }
+      catch( RemoteException e )
+      {
+        e.printStackTrace();
+      }
+
       m_label[i].setAlignment( SWT.LEFT );
 
       /* The text for the input data. */
@@ -139,7 +157,26 @@ public class PointDialog extends Dialog
       m_text[i].addModifyListener( doubleModifyListener );
     }
 
-    ComboViewer combo = new ComboViewer( panel );
+    /* The label for the input data. */
+    Label label1 = new Label( panel, SWT.NONE );
+    label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    label1.setText( "Geben Sie hier das Koordinaten-System an." );
+    label1.setAlignment( SWT.LEFT );
+    
+    /* A new group for the labels and texts. */
+    final Group combo_group = new Group( panel, SWT.NONE );
+    combo_group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Configuring the group. */
+    combo_group.setLayout( new GridLayout( 2, true ) );
+    
+    /* The label for the coordinate system. */
+    Label label2 = new Label( combo_group, SWT.NONE );
+    label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    label2.setText( "Koordinaten-System: " );
+    label2.setAlignment( SWT.LEFT );
+
+    final ComboViewer combo = new ComboViewer( combo_group );
     ArrayContentProvider contentProvider = new ArrayContentProvider();
     LabelProvider labelProvider = new LabelProvider()
     {
@@ -165,6 +202,27 @@ public class PointDialog extends Dialog
     combo.setContentProvider( contentProvider );
     combo.setInput( crs );
     combo.setLabelProvider( labelProvider );
+
+    try
+    {
+      combo.setSelection( new StructuredSelection( factory.getCSByName( getCS_CoordinateSystem().getName() ) ) );
+    }
+    catch( RemoteException e )
+    {
+      e.printStackTrace();
+    }
+
+    combo.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
+        CS_CoordinateSystem cs_crs = m_csAdapter.export( (CoordinateSystem) combo.getElementAt( combo.getCombo().getSelectionIndex() ) );
+        setCS( cs_crs );
+      }
+
+    } );
 
     return panel;
   }
@@ -198,7 +256,7 @@ public class PointDialog extends Dialog
     return m_cs;
   }
 
-  public void setNameCS( CS_CoordinateSystem cs )
+  public void setCS( CS_CoordinateSystem cs )
   {
     m_cs = cs;
   }
