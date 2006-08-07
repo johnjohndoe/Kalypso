@@ -46,6 +46,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -78,17 +79,18 @@ public class PointFeatureDialog implements IFeatureDialog
   {
     GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
 
-    double[] values = point.getAsArray();
-
     PointDialog dialog = null;
 
-    dialog = new PointDialog( shell, values, point.getCoordinateSystem() );
+    if( point != null )
+      dialog = new PointDialog( shell, point.getAsArray(), point.getCoordinateSystem() );
+    else
+      dialog = new PointDialog( shell, new double[] { 0.0, 0.0 }, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
     final int open = dialog.open();
 
     if( open == Window.OK )
     {
-      values = dialog.getValues();
+      double[] values = dialog.getValues();
 
       GM_Position pos = GeometryFactory.createGM_Position( values );
 
