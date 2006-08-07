@@ -67,6 +67,10 @@ public class WiskiTuppleModel extends AbstractTuppleModel
 
     m_needsConversion = WiskiUtils.isConversionNeeded( tsinfo );
 
+    // TODO: Tageswerte: Zeitreihen mit Tagessummen können, im Gegensatz zu Hochauflösenden Zeitreihen,
+    // Lücken enthalten. Dies führt später zu Fehlern, da ereignisbasiert gedacht wird.
+    // Es müsste hier also zusätzlich noch mal auf das richtige Zeitraster interpoliert werden.
+    
     if( m_needsConversion )
     {
       // init a calendar for the begin date, it will be used to fetch the date fields
