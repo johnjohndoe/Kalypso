@@ -76,10 +76,13 @@ class DWDCopyTask extends TimerTask
 
   private FileObject[] m_list;
 
+  private final boolean m_debug;
+
   public DWDCopyTask( final String URI, final DefaultFileSystemManager fsManager, final String srcFormat,
-      final boolean srcDel, final File destName, final boolean destUpdate )
+      final boolean srcDel, final File destName, final boolean destUpdate, final boolean debug )
   {
     m_srcDel = srcDel;
+    m_debug = debug;
     m_dateFormat = new SimpleDateFormat( srcFormat );
     m_destFile = destName;
     m_destUpdate = destUpdate;
@@ -210,6 +213,9 @@ class DWDCopyTask extends TimerTask
       {
         DWDFileCopyServlet.LOG.warning( "Could not copy DWD-File \"" + newFile.getName().getBaseName()
             + "\" to folder: " + m_destFile.getAbsolutePath() + " due to: " + e.getLocalizedMessage() );
+
+        if( m_debug )
+          e.printStackTrace();
       }
       catch( final DWDException e )
       {

@@ -67,6 +67,11 @@ public class DWDFileCopyServlet extends HttpServlet
    */
   public final static String PARAM_DEST_UPDATE = "dest_update";
 
+  /**
+   * whether more debug output should be produced. Can be 'true' or 'false'. Only ONE parameter is supported.
+   */
+  public final static String PARAM_DEBUG = "debug";
+
   protected static final Logger LOG = Logger.getLogger( DWDFileCopyServlet.class.getName() );
 
   private Timer[] m_timers = new Timer[0];
@@ -79,6 +84,7 @@ public class DWDFileCopyServlet extends HttpServlet
   private String[] sources_delete;
   private String[] dests;
   private String[] dests_update;
+  private String shall_debug;
 
   public DWDFileCopyServlet()
   {
@@ -110,6 +116,7 @@ public class DWDFileCopyServlet extends HttpServlet
         final boolean srcDel = Boolean.valueOf( sources_delete[i] ).booleanValue();
         final File destName = new File( dests[i] );
         final boolean destUpdate = Boolean.valueOf( dests_update[i] ).booleanValue();
+        final boolean debug = Boolean.valueOf( shall_debug ).booleanValue();
 
         /* Initialize the DefaultFileSystemManager. */
         DWDFileCopyServlet.LOG.info( "Init FileSystemManager ... " );
@@ -124,7 +131,7 @@ public class DWDFileCopyServlet extends HttpServlet
         fsManager.init();
 
         m_timers[i] = new Timer( true );
-        m_timers[i].schedule( new DWDCopyTask( sources[i], fsManager, srcFormat, srcDel, destName, destUpdate ), 0, period );
+        m_timers[i].schedule( new DWDCopyTask( sources[i], fsManager, srcFormat, srcDel, destName, destUpdate, debug ), 0, period );
 
         LOG.info( "Timer #" + i + " started." );
       }
@@ -170,6 +177,8 @@ public class DWDFileCopyServlet extends HttpServlet
       dests_update = new String[instances];
       java.util.Arrays.fill( dests_update, "false" );
     }
+    
+    shall_debug = getInitParameter( PARAM_DEBUG );
   }
 
   public void destroy()
