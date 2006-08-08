@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
@@ -132,6 +133,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private Control m_control = null;
 
   private final IFeatureSelectionManager m_selectionManager;
+
+  private FormToolkit m_formToolkit = null;
 
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
   {
@@ -239,6 +242,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final FeatureviewType view = getFeatureview( ft );
 
     m_control = createControl( parent, style, view );
+
+    /* If a toolkit is set, use it. */
+    if( m_formToolkit != null )
+      m_formToolkit.adapt( m_control, true, true );
+
     return m_control;
   }
 
@@ -268,6 +276,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else
       control.setLayoutData( new GridData() );
+
     return control;
   }
 
@@ -284,8 +293,17 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( layoutType != null )
         composite.setLayout( createLayout( layoutType ) );
 
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+      {
+        m_formToolkit.adapt( composite, true, true );
+        m_formToolkit.paintBordersFor( composite );
+      }
+
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
+      {
         createControl( composite, SWT.NONE, element.getValue() );
+      }
 
       return composite;
     }
@@ -303,6 +321,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
       label.setText( labelType.getText() );
       applyAnnotation( label, labelType.getProperty(), feature );
+
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+        m_formToolkit.adapt( label, true, true );
 
       return label;
     }
@@ -404,7 +426,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final SubcompositeType compoType = (SubcompositeType) controlType;
 
-      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ), m_formToolkit );
+
       fc.setFeature( feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
@@ -428,6 +451,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     final Label label = new Label( parent, SWT.NONE );
     label.setText( "<could not create control>" );
+
+    /* If a toolkit is set, use it. */
+    if( m_formToolkit != null )
+      m_formToolkit.adapt( label, true, true );
+
     return label;
   }
 
@@ -698,5 +726,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           ((FeatureComposite) fc).collectViewTypes( types );
       }
     }
+  }
+
+  public FormToolkit get_formToolkit( )
+  {
+    return m_formToolkit;
+  }
+
+  public void set_formToolkit( FormToolkit formToolkit )
+  {
+    m_formToolkit = formToolkit;
   }
 }

@@ -67,7 +67,7 @@ public class GuiTypeHandlerUtilities
     final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     // we simply wrap all XsdBaseTypeHandler's
-    
+
     final IMarshallingTypeHandler[] registeredTypeHandler = marshallingRegistry.getRegisteredTypeHandler( new IMarshallingTypeHandler[marshallingRegistry.getRegisteredTypeHandlerSize()] );
     for( final ITypeHandler handler : registeredTypeHandler )
     {
@@ -77,10 +77,12 @@ public class GuiTypeHandlerUtilities
         guiRegistry.registerTypeHandler( wrappedHandler );
       }
     }
-    
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ) ) );
-    
-    guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler( ) );
-    guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler( ) );
+
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ), XsdDateGuiTypeHandler.DF_Date, true ) );
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) );
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) );
+
+    guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );
+    guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
   }
 }

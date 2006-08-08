@@ -123,7 +123,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 0 );
-    composite.setLayout( factory.createLayout( layout ) );
+    composite.setLayout( factory.createGridLayout( layout ) );
     composite.setStyle( "SWT.NONE" );
 
     // Text
@@ -146,8 +146,8 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
-    control.add( factory.createControl( text ) );
-    control.add( factory.createControl( button ) );
+    control.add( factory.createText( text ) );
+    control.add( factory.createButton( button ) );
 
     return factory.createComposite( composite );
   }

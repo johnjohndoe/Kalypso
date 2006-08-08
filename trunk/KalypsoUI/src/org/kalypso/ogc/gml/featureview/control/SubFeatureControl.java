@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
@@ -24,11 +25,14 @@ public class SubFeatureControl extends AbstractFeatureControl
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
+  private final FormToolkit m_formToolkit;
+
+  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views, FormToolkit formToolkit )
   {
     super( ftp );
     m_selectionManager = selectionManager;
     m_views = views;
+    m_formToolkit = formToolkit;
   }
 
   /**
@@ -39,9 +43,18 @@ public class SubFeatureControl extends AbstractFeatureControl
     final Feature feature = getFeature();
     final Object property = feature.getProperty( getFeatureTypeProperty() );
     if( property instanceof Feature )
-      m_fc = new FeatureComposite( (Feature) property, m_selectionManager, m_views );
+    {
+      FeatureComposite fc = new FeatureComposite( (Feature) property, m_selectionManager, m_views );
+
+      /* Set the toolkit to the FeatureComposite. The check for null is perfomrmed in FeatureComposite. */
+      fc.set_formToolkit( m_formToolkit );
+
+      m_fc = fc;
+    }
     else
+    {
       m_fc = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
+    }
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {
@@ -57,6 +70,7 @@ public class SubFeatureControl extends AbstractFeatureControl
     } );
 
     final Control control = m_fc.createControl( parent, SWT.NONE );
+
     return control;
   }
 

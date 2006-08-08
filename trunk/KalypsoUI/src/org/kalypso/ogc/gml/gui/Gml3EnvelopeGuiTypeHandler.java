@@ -109,8 +109,8 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     final GridLayout layout = factory.createGridLayout();
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
-    layout.setMarginWidth( 0 );
-    composite.setLayout( factory.createLayout( layout ) );
+    layout.setMarginWidth( 1 );
+    composite.setLayout( factory.createGridLayout( layout ) );
     composite.setStyle( "SWT.NONE" );
 
     // Text
@@ -134,8 +134,8 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
-    control.add( factory.createControl( text ) );
-    control.add( factory.createControl( button ) );
+    control.add( factory.createText( text ) );
+    control.add( factory.createButton( button ) );
 
     return factory.createComposite( composite );
   }

@@ -40,22 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -64,7 +56,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -74,11 +65,13 @@ public class StringModifier implements IFeatureModifier
 {
   // TODO put a default dateformat into the preferences and special formats into the gml-applications-schemas !
 
-  private final static DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
-  static
-  {
-    DATE_FORMATTER.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-  }
+  // Es gibt jetzt GuiTypeHandler für Datums-Typen.
+  //
+  // private final static DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  // static
+  // {
+  // DATE_FORMATTER.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+  // }
 
   private final NumberFormat NUMBER_FORMAT;
 
@@ -151,12 +144,14 @@ public class StringModifier implements IFeatureModifier
    */
   private String toText( final Object data )
   {
-    if( data instanceof XMLGregorianCalendar )
-    {
-      final XMLGregorianCalendar cal = (XMLGregorianCalendar) data;
-      final Date date = DateUtilities.toDate( cal );
-      return DATE_FORMATTER.format( date );
-    }
+    // Es gibt jetzt GuiTypeHandler für Datums-Typen.
+    //
+    // if( data instanceof XMLGregorianCalendar )
+    // {
+    // final XMLGregorianCalendar cal = (XMLGregorianCalendar) data;
+    // final Date date = DateUtilities.toDate( cal );
+    // return DATE_FORMATTER.format( date );
+    // }
 
     if( m_guiTypeHandler != null )
       return m_guiTypeHandler.getText( data );
@@ -192,25 +187,26 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    final Class clazz = m_ftp.getValueClass();
-    if( clazz == XMLGregorianCalendar.class )
-    {
-      final Date date = DATE_FORMATTER.parse( text );
-      try
-      {
-        return DateUtilities.toXMLGregorianCalendar( date );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        throw new ParseException( e.getMessage(), 0 );
-      }
-    }
+    // Es gibt jetzt GuiTypeHandler für Datums-Typen.
+    //
+    // final Class clazz = m_ftp.getValueClass();
+    // if( clazz == XMLGregorianCalendar.class )
+    // {
+    // final Date date = DATE_FORMATTER.parse( text );
+    // try
+    // {
+    // return DateUtilities.toXMLGregorianCalendar( date );
+    // }
+    // catch( Exception e )
+    // {
+    // e.printStackTrace();
+    // throw new ParseException( e.getMessage(), 0 );
+    // }
+    // }
+
     if( m_guiTypeHandler != null )
-    //return m_marshallingTypeHandler.parseType( text );
       return m_guiTypeHandler.fromText( text );
-    // TODO: the following code is never called, because we have type handle for all base types!
-    // TODO: do not use the marshalling type handler but the gui type handler instead!
+
     return null;
   }
 

@@ -13,5 +13,6 @@ Export-Package: org.kalypso.featureview,
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.deegree,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.eclipse.ui.forms
 Eclipse-AutoStart: true

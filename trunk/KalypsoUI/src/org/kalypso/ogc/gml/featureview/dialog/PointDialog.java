@@ -136,10 +136,15 @@ public class PointDialog extends Dialog
       try
       {
         if( i < getCS_CoordinateSystem().getDimension() )
+        {
           m_label[i].setText( "Achse " + getCS_CoordinateSystem().getAxis( i ).name + " [" + getCS_CoordinateSystem().getUnits( i ).getName() + "]" );
+          m_label[i].setToolTipText( "" );
+        }
         else
+        {
           m_label[i].setText( "nicht unterstützt" );
-
+          m_label[i].setToolTipText( "Diese Achse wird von Koordinaten-System nicht unterstützt." );
+        }
       }
       catch( RemoteException e )
       {
@@ -162,14 +167,14 @@ public class PointDialog extends Dialog
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     label1.setText( "Geben Sie hier das Koordinaten-System an." );
     label1.setAlignment( SWT.LEFT );
-    
+
     /* A new group for the labels and texts. */
     final Group combo_group = new Group( panel, SWT.NONE );
     combo_group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Configuring the group. */
     combo_group.setLayout( new GridLayout( 2, true ) );
-    
+
     /* The label for the coordinate system. */
     Label label2 = new Label( combo_group, SWT.NONE );
     label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
