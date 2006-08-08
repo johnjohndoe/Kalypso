@@ -255,6 +255,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    */
   public ISelection getSelection( )
   {
+    if( m_viewer == null )
+      return null;
+    
     return m_viewer.getSelection();
   }
 
