@@ -67,7 +67,6 @@ import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NAControlConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -97,8 +96,9 @@ public class LzsimManager
   private static final int STATUS_READ_QGS = 4;
 
   /**
-   * @deprecated
+   * @deprecated ?? it is not used anyway, so why just we dont delete it (dont be afraid to loos it, the cvs still keeps it)
    */
+  @Deprecated
   private void loadIniValues( final File tmpDir, final Logger logger, final ISimulationResultEater resultEater )
   {
     try
@@ -141,7 +141,7 @@ public class LzsimManager
 
       // create new GMLworkspace for lzsim results
       File lzsimDir = new File( tmpDir, "lzsim" );
-      final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( NaModelConstants.NS_INIVALUES, new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
+      final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
       final Feature lzRootFE = lzWorkspace.getRootFeature();
       XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
       lzRootFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ), xmlIniDate );
