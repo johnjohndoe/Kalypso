@@ -231,17 +231,17 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final String schemaNamespace, final QName rootFeatureQName ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName ) throws InvocationTargetException
   {
-    return createGMLWorkspace( schemaNamespace, rootFeatureQName, null );
+    return createGMLWorkspace( rootFeatureQName, null );
   }
 
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final String schemaNamespace, final QName rootFeatureQName, final String gmlVersion ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion ) throws InvocationTargetException
   {
-    final IGMLSchema schema = GMLSchemaCatalog.getSchema( schemaNamespace, gmlVersion );
+    final IGMLSchema schema = GMLSchemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
     final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
     return createGMLWorkspace( rootFeatureType );
   }

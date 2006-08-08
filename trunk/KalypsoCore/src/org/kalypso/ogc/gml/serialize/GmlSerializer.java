@@ -51,12 +51,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
@@ -69,11 +71,22 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.GMLContentHandler;
 import org.kalypso.gml.GMLWorkspaceInputSource;
 import org.kalypso.gml.GMLWorkspaceReader;
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -226,7 +239,6 @@ public final class GmlSerializer
     // used to allow necessary schemas from gml document
     saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
 
-    
     final XMLReader xmlReader = saxParser.getXMLReader();
     final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, context );
     xmlReader.setContentHandler( contentHandler );
@@ -254,4 +266,64 @@ public final class GmlSerializer
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString );
     return workspace;
   }
+
+  public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Creating gml file", 2 );
+
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType );
+    monitor.worked( 1 );
+
+    final SetContentHelper contentHelper = new SetContentHelper()
+    {
+      @Override
+      protected void write( final OutputStreamWriter writer ) throws Throwable
+      {
+        GmlSerializer.serializeWorkspace( writer, workspace );
+      }
+    };
+    contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
+    monitor.worked( 1 );
+  }
+
+  public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  {
+    monitor.beginTask( "Creating gml file", 2 );
+
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName );
+    
+    // introduce further schemata into workspace
+    final IGMLSchema schema = workspace.getGMLSchema();
+    if( introduceNamespaces != null && schema instanceof GMLSchema )
+    {
+      final GMLSchema gmlSchema = (GMLSchema) schema;
+      for( final String namespaceUri : introduceNamespaces )
+      {
+        try
+        {
+          gmlSchema.getGMLSchemaForNamespaceURI( namespaceUri );
+        }
+        catch( final GMLSchemaException e )
+        {
+          // probably not a vital error, just log it
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          KalypsoCorePlugin.getDefault().getLog().log( status );
+        }
+      }
+    }
+
+    monitor.worked( 1 );
+
+    final SetContentHelper contentHelper = new SetContentHelper()
+    {
+      @Override
+      protected void write( final OutputStreamWriter writer ) throws Throwable
+      {
+        GmlSerializer.serializeWorkspace( writer, workspace );
+      }
+    };
+    contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
+    monitor.worked( 1 );
+  }
+
 }
