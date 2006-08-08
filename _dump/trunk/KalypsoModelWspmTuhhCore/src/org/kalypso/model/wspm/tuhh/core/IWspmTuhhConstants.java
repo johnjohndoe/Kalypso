@@ -45,8 +45,7 @@ package org.kalypso.model.wspm.tuhh.core;
  * 
  * @author thuel2
  */
-public interface IWspmTuhhConstants {
-
-	public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
-
+public interface IWspmTuhhConstants
+{
+  public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
 }

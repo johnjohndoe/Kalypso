@@ -272,4 +272,13 @@
               name="Spiegellinienberechnung"
               parentCategory="org.kalypso.ui.newwizards.kalypso"/>
      </extension>
+     <extension
+           point="org.eclipse.ui.perspectives">
+        <perspective
+              class="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+              fixed="false"
+              icon="icons/obj16/wspmPerspective.gif"
+              id="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
+              name="Spiegellinienberechnung"/>
+     </extension>
 </plugin>

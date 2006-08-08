@@ -1,25 +1,21 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -31,16 +27,17 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
   }
 
   /**
-   * Ensures that the given container holds a valid wspm-tuhh modell.
+   * TODO: just name it createTuhh-Project Ensures that the given container holds a valid wspm-tuhh modell.
    * <p>
    * If it is not the case, it creates the structure
    * </p>
+   * 
+   * @return the freshly created modell file
    */
-  public static void ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws CoreException
+  public static IFile ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Validiere Modellstruktur", 1000 );
+    monitor.beginTask( "Erzeuge Modellstruktur", 1 );
 
-    InputStream zipInputStream = null;
     try
     {
       if( !wspmContainer.exists() )
@@ -50,37 +47,36 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
           monitor.subTask( "Verzeichnis wird erzeugt" );
           ((IFolder) wspmContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
-        else if( wspmContainer instanceof IProject )
-        {
-          monitor.subTask( "Projekt wird angelegt" );
-          final IProject project = (IProject) wspmContainer;
-          (project).create( new SubProgressMonitor( monitor, 50 ) );
-          monitor.subTask( "Projekt wird geöffnet" );
-          project.open( new SubProgressMonitor( monitor, 50 ) );
-        }
+//        else if( wspmContainer instanceof IProject )
+//        {
+//          monitor.subTask( "Projekt wird angelegt" );
+//          final IProject project = (IProject) wspmContainer;
+//          (project).create( new SubProgressMonitor( monitor, 50 ) );
+//          monitor.subTask( "Projekt wird geöffnet" );
+//          project.open( new SubProgressMonitor( monitor, 50 ) );
+//        }
       }
 
       monitor.subTask( "Validiere Modellstruktur" );
-      final File containerDir = wspmContainer.getLocation().toFile();
-      zipInputStream = TuhhHelper.class.getResourceAsStream( "resources/wspmTuhh_template.zip" );
-      ZipUtilities.unzip( zipInputStream, containerDir, false );
-      monitor.worked( 650 );
-      wspmContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 250 ) );
 
-      // TODO: check if model.gml is valid xml with right namespace
-    }
-    catch( final IOException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      final IFile targetFile = wspmContainer.getFile( new Path( "modell.gml" ) );
+      final String[] additionalNamespaces = new String[] { IWspmTuhhConstants.NS_WSPM_TUHH };
+      // TODO: this does not do what it shall do
+      // It does not leads to have an additional xmlsn:tuhh entry in the gml file
+      // But is has the sideefect, that the tuhh schema is loaded NOW, and so the types and present (but for this session only) 
+      GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, monitor );
+
+      return targetFile;
+
     }
     finally
     {
-      IOUtils.closeQuietly( zipInputStream );
       monitor.done();
     }
 
   }
 
+  /** TODO: shouldn't this belong to one of the feature wrapper classes? e.g. WaterBody? */
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
     final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), new QName( NS_WSPM, "reachMember" ), new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );

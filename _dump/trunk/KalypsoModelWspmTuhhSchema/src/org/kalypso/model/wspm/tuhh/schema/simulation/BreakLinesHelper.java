@@ -101,7 +101,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NS_WSPM_BREAKLINE, new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ) );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ) );
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
@@ -195,7 +195,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NS_WSPM_BOUNDARY, new QName( NS_WSPM_BOUNDARY, "Boundary" ) );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ) );
       final Feature rootFeature = workspace.getRootFeature();
 
       // we assume that all points have the same crs

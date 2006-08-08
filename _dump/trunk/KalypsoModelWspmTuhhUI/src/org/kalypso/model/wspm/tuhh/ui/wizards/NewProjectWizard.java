@@ -1,5 +1,8 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -13,10 +16,13 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -25,6 +31,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
 
 /**
  * Wizard to create a new wspm tuhh project.
@@ -39,6 +46,30 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
  */
 public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension
 {
+  private final class DoFinishOperation extends WorkspaceModifyOperation
+  {
+    private final IProject m_project;
+
+    private IFile m_file;
+
+    private DoFinishOperation( IProject project )
+    {
+      super();
+      m_project = project;
+    }
+
+    public IFile getFile( )
+    {
+      return m_file;
+    }
+
+    @Override
+    protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+    {
+      m_file = doFinish( m_project, monitor );
+    }
+  }
+
   private static final String STR_WINDOW_TITLE = "Neues Projekt - Spiegellinienberechnung";
 
   private WizardNewProjectCreationPage m_createProjectPage;
@@ -77,7 +108,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     m_workbench = workbench;
     m_selection = selection;
   }
-  
+
   protected IStructuredSelection getSelection( )
   {
     return m_selection;
@@ -93,20 +124,15 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   {
     final IProject project = m_createProjectPage.getProjectHandle();
 
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-    {
-      @Override
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        doFinish( project, monitor );
-      }
-    };
+    final DoFinishOperation op = new DoFinishOperation( project );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
     if( status.isOK() )
     {
       BasicNewProjectResourceWizard.updatePerspective( m_config );
       BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
+
+      openTreeView( op.getFile() );
     }
     else
     {
@@ -115,6 +141,33 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     }
 
     return status.isOK();
+  }
+
+  private void openTreeView( final IFile file )
+  {
+    final UIJob job = new UIJob( "Öffne Spiegellinienmodell" )
+    {
+      @Override
+      public IStatus runInUIThread( IProgressMonitor monitor )
+      {
+        try
+        {
+          final GmlEditorTemplateLauncher launcher = new GmlEditorTemplateLauncher();
+          final IEditorInput input = launcher.createInput( file );
+          final IEditorDescriptor editor = launcher.getEditor();
+          getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor( input, editor.getId() );
+
+          return Status.OK_STATUS;
+        }
+        catch( final CoreException e )
+        {
+          return e.getStatus();
+        }
+      }
+    };
+
+    job.setUser( true );
+    job.schedule();
   }
 
   private void deleteProject( final IProject project )
@@ -152,7 +205,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    * Overwrite, if more has to be done while finishing.
    * </p>
    */
-  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Projekt wird erzeugt", 4 );
 
@@ -164,6 +217,6 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     description.setNatureIds( natures );
     project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
 
-    TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
+    return TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
   }
 }

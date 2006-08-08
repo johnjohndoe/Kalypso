@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -77,11 +79,11 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Projekt wird erzeugt", 10 );
 
-    super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
+    final IFile resultFile = super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
 
     final File wspwinDirectory = m_wspWinImportPage.getSourceDirectory();
 
@@ -96,6 +98,6 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
 
-//    m_wspWinImportPage.saveWidgetValues();
+    return resultFile;
   }
 }
