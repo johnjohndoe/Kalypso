@@ -45,7 +45,9 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
@@ -57,6 +59,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.xml.sax.Attributes;
@@ -113,13 +116,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
    */
   public GMLContentHandler( XMLReader xmlReader, final URL context )
   {
-    this(xmlReader,null,true,context);
-//    m_xmlReader = xmlReader;
-//    m_schemaLocationHint = null;
-//    m_useSchemaCatalog = true;
-//    m_context = context;
-//    m_featureParser = new FeatureParser( this );
-//    m_propParser = new PropertyParser();
+    this( xmlReader, null, true, context );
   }
 
   public GMLContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context )
@@ -184,8 +181,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     m_indent++;
     indent();
 
-    if( m_gmlSchema == null )
-      m_gmlSchema = loadGMLSchema( uri, atts );
+    initGmlSchema( uri, atts );
 
     final String localUri = (uri == null || uri.length() < 1) ? m_gmlSchema.getTargetNamespace() : uri;
     switch( m_status )
@@ -287,6 +283,49 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
       default:
         break;
+    }
+  }
+
+  /** Loads the main application schema and also all 8via xmlns) references schemas. */
+  private void initGmlSchema( final String uri, final Attributes atts ) throws SAXException
+  {
+    if( m_gmlSchema == null )
+    {
+      // the main schema is the schema defining the root elements namespace
+      // REMARK: schemaLocationHint only used for main schema
+      m_gmlSchema = loadGMLSchema( uri, atts );
+
+      // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into 
+      // the main schema.
+      // This allows to introduce necessary schemata (for example which introduce new elements
+      // vis substitution).
+      final int attLength = atts.getLength();
+      for( int i = 0; i < attLength; i++ )
+      {
+        // STRANGE: shouldn't it work like this?
+        // if( NS.XML_PREFIX_DEFINITION_XMLNS.equals( atts.getURI( i ) ) )
+        // But atts.getURI gives empty string for xmlns entries.
+        // so we ask for the qname
+        final String qname = atts.getQName( i );
+        if( qname != null && qname.startsWith( "xmlns:" ) )
+        {
+          // HM: are there any other possible namespaces wo do NOT want to load?
+          if( !qname.endsWith( ":xsi" ) )
+          {
+            final String xmlnsUri = atts.getValue( i );
+            try
+            {
+              m_gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );
+            }
+            catch( final GMLSchemaException e )
+            {
+              // Just log it, this is pobably not a critical error
+              final IStatus status = StatusUtilities.statusFromThrowable( e );
+              KalypsoDeegreePlugin.getDefault().getLog().log( status );
+            }
+          }
+        }
+      }
     }
   }
 

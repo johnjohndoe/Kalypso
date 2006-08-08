@@ -30,6 +30,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
@@ -55,6 +56,7 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -295,6 +297,25 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
                 treeViewer.refresh( feature );
               }
             }
+          }
+        } );
+      }
+    }
+    else if( modellEvent instanceof FeaturesChangedModellEvent )
+    {
+      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
+      final List featureList = fcme.getFeatures();
+      final Feature[] features = (Feature[]) featureList.toArray( new Feature[featureList.size()] );
+      final Control treeControl = m_treeViewer.getControl();
+      final TreeViewer treeViewer = m_treeViewer;
+      if( treeControl != null && !treeControl.isDisposed() )
+      {
+        treeControl.getDisplay().asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            if( !treeControl.isDisposed() )
+              treeViewer.update( features, null );
           }
         } );
       }
