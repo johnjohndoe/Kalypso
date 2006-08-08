@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard;
 
-import java.io.OutputStreamWriter;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -66,14 +64,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot
@@ -93,7 +88,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   public NewGMLFileWizard( )
   {
     setNeedsProgressMonitor( true );
-    
+
     setWindowTitle( "GML Datei erzeugen" );
   }
 
@@ -107,42 +102,22 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     final String fileName = m_fileCreationPage.getFileName();
     final IFeatureType featureType = m_featureTypeSelectionPage.getSelectedFeatureType();
     final IWorkbenchPage page = m_workbench.getActiveWorkbenchWindow().getActivePage();
-    
+
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( "Creating " + fileName, 3 );
 
-        //
-        // Workspace
-        //
-        monitor.subTask( " - creating GMLWorkspace" );
-        final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( featureType );
-        monitor.worked( 1 );
-
-        //
-        // create file
-        //
-        monitor.subTask( "- writing " + fileName );
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final IResource resource = root.findMember( containerName );
         if( !resource.exists() || !(resource instanceof IContainer) )
-          StatusUtilities.createErrorStatus( "Container \"" + containerName + "\" does not exist." );
+          return StatusUtilities.createErrorStatus( "Container \"" + containerName + "\" does not exist." );
 
         final IContainer container = (IContainer) resource;
         final IFile file = container.getFile( new Path( fileName ) );
 
-        final SetContentHelper contentHelper = new SetContentHelper()
-        {
-          @Override
-          protected void write( final OutputStreamWriter writer ) throws Throwable
-          {
-            GmlSerializer.serializeWorkspace( writer, workspace );
-          }
-        };
-        contentHelper.setFileContents( file, false, true, new SubProgressMonitor( monitor, 1 ) );
-        monitor.worked( 1 );
+        GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ) );
 
         monitor.subTask( " - opening file for editing..." );
         getShell().getDisplay().asyncExec( new Runnable()
@@ -155,12 +130,12 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
             }
             catch( final PartInitException e )
             {
-              ErrorDialog.openError(getShell(), "Neue GML Datei", "Editor konnte nicht geöffnet werden.", e.getStatus());
+              ErrorDialog.openError( getShell(), "Neue GML Datei", "Editor konnte nicht geöffnet werden.", e.getStatus() );
             }
           }
         } );
         monitor.worked( 1 );
-        
+
         return Status.OK_STATUS;
       }
     };
