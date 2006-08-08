@@ -222,6 +222,11 @@ public final class GmlSerializer
     saxFac.setNamespaceAware( true );
 
     final SAXParser saxParser = saxFac.newSAXParser();
+    // make namespace-prefxes vsible to content handler
+    // used to allow necessary schemas from gml document
+    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
+
+    
     final XMLReader xmlReader = saxParser.getXMLReader();
     final GMLContentHandler contentHandler = new GMLContentHandler( xmlReader, context );
     xmlReader.setContentHandler( contentHandler );
