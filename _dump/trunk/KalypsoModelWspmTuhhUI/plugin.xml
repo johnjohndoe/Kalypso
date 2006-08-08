@@ -115,7 +115,7 @@
             descriptionImage="icons/wizban/kalypso32.gif"
             finalPerspective="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
             hasPages="true"
-            icon="icons/obj16/wspwin.gif"
+            icon="icons/obj16/wspwin16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
             name="TUHH 1D-Spiegellinienberechnung Projekt aus WspWin Projekt"
             project="true">
@@ -123,5 +123,12 @@
             Importiert ein bestehendes WspWin Projekt als neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
          </description>
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
+         <newWizardShortcut id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"/>
+         <newWizardShortcut id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"/>
+      </perspectiveExtension>
    </extension>
 </plugin>
