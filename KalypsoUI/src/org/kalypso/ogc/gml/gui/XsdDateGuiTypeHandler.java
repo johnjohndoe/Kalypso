@@ -65,6 +65,7 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -77,11 +78,29 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
 {
-  private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.MEDIUM );
+  public static final DateFormat DF_Date = DateFormat.getDateInstance( DateFormat.MEDIUM );
 
-  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler handler )
+  
+  public static final DateFormat DF_DateTime = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+
+  public static final DateFormat DF_Time = DateFormat.getTimeInstance( DateFormat.MEDIUM );
+  
+  static
+  {
+    DF_Date.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    DF_DateTime.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    DF_Time.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+  }
+
+  private final DateFormat m_df;
+
+  private final boolean m_show_button;
+
+  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler handler, DateFormat df, boolean show_button )
   {
     super( handler );
+    m_df = df;
+    m_show_button = show_button;
   }
 
   /**
@@ -116,8 +135,8 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     final GridLayout layout = factory.createGridLayout();
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
-    layout.setMarginWidth( 0 );
-    composite.setLayout( factory.createLayout( layout ) );
+    layout.setMarginWidth( 1 );
+    composite.setLayout( factory.createGridLayout( layout ) );
     composite.setStyle( "SWT.NONE" );
 
     // Text
@@ -137,16 +156,18 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     button.setStyle( "SWT.PUSH" );
     button.setProperty( qname );
 
+    button.setVisible( m_show_button );
+
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
-    control.add( factory.createControl( text ) );
-    control.add( factory.createControl( button ) );
+    control.add( factory.createText( text ) );
+    control.add( factory.createButton( button ) );
 
     return factory.createComposite( composite );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
@@ -156,22 +177,23 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) element;
     if( xmlCal == null )
       return "";
-    
-    return DF.format( xmlCal.toGregorianCalendar().getTime() );
+
+    return m_df.format( xmlCal.toGregorianCalendar().getTime() );
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
   @Override
-  public Object fromText( String text ) throws ParseException {
-    Date date = DF.parse(text);
-    
+  public Object fromText( String text ) throws ParseException
+  {
+    Date date = m_df.parse( text );
+
     Calendar cal = Calendar.getInstance();
     cal.setTime( date );
-    
+
     XMLGregorianCalendarImpl gregorianCalendar = new XMLGregorianCalendarImpl( (GregorianCalendar) cal );
-        
+
     return gregorianCalendar;
   }
 }

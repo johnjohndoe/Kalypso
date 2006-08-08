@@ -53,6 +53,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -64,6 +65,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -190,6 +192,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private Action m_showTablesAction = null;
 
+  private FormToolkit m_toolkit;
+
   public FeatureView( )
   {
     final IDialogSettings viewsSettings = KalypsoFeatureViewPlugin.getDefault().getDialogSettings();
@@ -279,9 +283,18 @@ public class FeatureView extends ViewPart implements ModellEventListener
   @Override
   public void createPartControl( final Composite parent )
   {
+    // Comment this in, if you want to use the FormToolkit for FeatureView.
+    // m_toolkit = new FormToolkit( parent.getDisplay() );
+
+    m_featureComposite.set_formToolkit( m_toolkit );
+
     m_mainGroup = new Group( parent, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout() );
     m_mainGroup.setText( _KEIN_FEATURE_SELEKTIERT_ );
+
+    /* If a toolkit is set, use it for the main group. */
+    if( m_toolkit != null )
+      m_toolkit.adapt( m_mainGroup, true, true );
 
     m_featureComposite.addChangeListener( m_fcl );
 
@@ -361,7 +374,20 @@ public class FeatureView extends ViewPart implements ModellEventListener
           workspace.addModellListener( FeatureView.this );
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
-          creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+          FormToolkit toolkit = getToolkit();
+
+          Control contentControl = creator.getContentControl();
+
+          ScrolledComposite scrolledComposite = creator.getScrolledComposite();
+          scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+          // TODO
+          if( toolkit != null )
+          {
+            toolkit.adapt( contentControl, true, true );
+            toolkit.adapt( scrolledComposite, true, true );
+          }
 
           final IFeatureType featureType = feature.getFeatureType();
           final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
@@ -439,5 +465,15 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_featureComposite.collectViewTypes( types );
 
     return types.toArray( new FeatureviewType[types.size()] );
+  }
+
+  public FormToolkit getToolkit( )
+  {
+    return m_toolkit;
+  }
+
+  public void setToolkit( FormToolkit toolkit )
+  {
+    m_toolkit = toolkit;
   }
 }

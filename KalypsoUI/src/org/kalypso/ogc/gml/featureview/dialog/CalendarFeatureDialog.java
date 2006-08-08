@@ -62,8 +62,6 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class CalendarFeatureDialog implements IFeatureDialog
 {
-  //private DateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
-
   private FeatureChange m_change = null;
 
   private final Feature m_feature;
@@ -106,9 +104,6 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
   private XMLGregorianCalendar getCalendar( )
   {
-    if( m_change != null )
-      return (XMLGregorianCalendar) m_change.getNewValue();
-
     return (XMLGregorianCalendar) m_feature.getProperty( m_ftp );
   }
 
