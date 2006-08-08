@@ -37,7 +37,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -51,12 +54,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * FeatureAddActionDelegate
- * <p>
- * created by
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureAddActionDelegate implements IActionDelegate
+public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewActionDelegate
 {
   private IFeatureSelection m_selection = null;
 
@@ -154,5 +155,19 @@ public class FeatureAddActionDelegate implements IActionDelegate
     }
 
     return true;
+  }
+
+  /**
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  {
+  }
+
+  /**
+   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+   */
+  public void init( IViewPart view )
+  {
   }
 }

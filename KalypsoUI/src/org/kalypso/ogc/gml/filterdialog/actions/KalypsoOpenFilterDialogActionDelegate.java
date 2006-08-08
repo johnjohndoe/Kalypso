@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -56,7 +57,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getBoundingBox() );
       ft = selectedTheme.getFeatureType();
     }
-    
+
     final WidgetActionPart part = getPart();
     final Shell shell = part == null ? null : part.getSite().getShell();
     final FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, true );
@@ -106,11 +107,12 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );
-    
+
     final WidgetActionPart part = getPart();
     if( part != null )
     {
-      final IContentOutlinePage page = (IContentOutlinePage) part.getPart().getAdapter( IContentOutlinePage.class );
+      final IWorkbenchPart workbenchPart = part.getPart();
+      final IContentOutlinePage page = workbenchPart == null ? null : (IContentOutlinePage) workbenchPart.getAdapter( IContentOutlinePage.class );
       if( page != null )
       {
         m_ftSelection = null;
