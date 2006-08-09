@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -128,7 +129,7 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
       final Feature feature = FeatureSelectionHelper.getFirstFeature( (IFeatureSelection) selection );
       if( feature != null )
       {
-        final String desc = FeatureHelper.getDescription( feature );
+        final String desc = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_DESCRIPTION );
         setText( desc );
       }
     }

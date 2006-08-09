@@ -18,17 +18,21 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -37,6 +41,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -210,20 +215,31 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
               for( final IFeatureType ft : featureTypes )
               {
                 final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
-                final String label2 = FeatureHelper.getLabel( pseudoFeature );
+                final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_NAME );
+
+                final String actionLabel = name == null ? featureType.getQName().getLocalPart() : name;
 
                 // TODO: get feature individual img
                 final ImageDescriptor featureNewImg = ImageProvider.IMAGE_FEATURE_NEW;
-                
+
                 final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
-                
-                newMenuManager.add( new NewFeatureAction( label2, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
+
+                newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
               }
 
-              // TODO: we still have the problem, that features from another (yet unknown) schema
-              // cannot added to this workspace, although they might substitute the feature type.
-              // Solution: maybe show a dialog to the user where he can choose among the registered schemas?
-              // or better: an action which takes some time, but looks in alle registered schemats for good types
+              final Action newfeatureFromExternalSchemaAction = new Action( "Feature aus zusätzlichem Schema..." )
+              {
+                /**
+                 * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+                 */
+                @Override
+                public void runWithEvent( final Event event )
+                {
+                  final Shell shell = event.widget.getDisplay().getActiveShell();
+                  MessageDialog.openInformation( shell, "Neues Feature aus zusätzlichem Schema", "Diese Operation ist noch nicht implementiert.\nDer Anwender sollte hier zuerst ein GML-Schema auswählen und danach einen passenden Feature-Typ." );
+                }
+              };
+              newMenuManager.add( newfeatureFromExternalSchemaAction );
             }
           }
         }
