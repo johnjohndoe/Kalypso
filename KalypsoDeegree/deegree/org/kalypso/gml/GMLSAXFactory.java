@@ -42,14 +42,17 @@ package org.kalypso.gml;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -106,22 +109,31 @@ public class GMLSAXFactory
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     m_handler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
-    m_gmlVersion = workspace.getGMLSchema().getGMLVersion();
-    // final Set<String> uriSet = new HashSet<String>();
-    final IFeatureType[] featureTypes = workspace.getGMLSchema().getAllFeatureTypes();
+
+    final GMLSchema gmlSchema = (GMLSchema) workspace.getGMLSchema();
+    m_gmlVersion = gmlSchema.getGMLVersion();
+    final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
       final QName qName = featureTypes[i].getQName();
       // generate used prefixes
       getPrefixedQName( qName );
-      // uriSet.add( qName.getNamespaceURI() );
     }
 
-    // for( final String uri : uriSet )
-    // {
-    // final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
-    // m_handler.startPrefixMapping( prefix, uri );
-    // }
+    // we may have additional schema, but no features using them (now)
+    // We save these namespaces as prefixes, so if we reload the gml
+    // the additional schema will also be loaded
+    final Set<String> uriSet = new HashSet<String>();
+    final GMLSchema[] additionalSchemas = gmlSchema.getAdditionalSchemas();
+    for( final GMLSchema additionalSchema : additionalSchemas )
+     uriSet.add( additionalSchema.getTargetNamespace() ); 
+    for( final String uri : uriSet )
+    {
+      final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
+      m_handler.startPrefixMapping( prefix, uri );
+    }
+
+    // Add schemalocation string: wouldn't it be better to create it?
     final AttributesImpl a = new AttributesImpl();
     final String schemaLocationString = workspace.getSchemaLocationString();
     if( schemaLocationString != null && schemaLocationString.length() > 0 )
