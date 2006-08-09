@@ -56,6 +56,18 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class FeatureTypeLabelProvider extends LabelProvider
 {
+  private String m_annotationKey;
+
+  public FeatureTypeLabelProvider( )
+  {
+    this( IAnnotation.ANNO_LABEL );
+  }
+
+  public FeatureTypeLabelProvider( final String annotationKey )
+  {
+    m_annotationKey = annotationKey;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
@@ -82,7 +94,7 @@ public class FeatureTypeLabelProvider extends LabelProvider
         descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
       if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
-      
+
       // TODO: dispose those images!
       // use a helper class from your plugin, see for example KalypsInformDss Plugin classes
       if( descriptor != null )
@@ -95,18 +107,17 @@ public class FeatureTypeLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof IFeatureType )
     {
-      IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
-      return annotation.getLabel();
-
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      return annotation.getValue( m_annotationKey );
     }
     else if( element instanceof IPropertyType )
     {
       IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
-      return annotation.getLabel();
+      return annotation.getValue( m_annotationKey );
     }
     return "";
   }
