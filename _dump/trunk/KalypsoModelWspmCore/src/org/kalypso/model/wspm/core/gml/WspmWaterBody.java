@@ -67,12 +67,13 @@ public class WspmWaterBody implements IWspmConstants
 
   public String getName( )
   {
-    return NamedFeatureHelper.getName( m_water );
+    final Object name = m_water.getProperty( new QName( NS_WSPM, "name" ) );
+    return name == null ? "" : (String) name;
   }
 
   public void setName( final String name )
   {
-    NamedFeatureHelper.setName( m_water, name );
+    m_water.setProperty( new QName( NS_WSPM, "name" ), name );
   }
 
   public String getDescription( )

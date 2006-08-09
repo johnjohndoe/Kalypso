@@ -84,6 +84,7 @@
 	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Gewässer</name>
 				<label>${property:org.kalypso.model.wspm#name}</label>
 				<tooltip>${property:org.kalypso.model.wspm#name}</tooltip>
 				<description>${property:org.kalypso.model.wspm#name}</description>
@@ -431,7 +432,7 @@
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="name" type="string" default="Gewässer">
+					<element name="name" type="string" default="&lt;Gewässername&gt;">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Name</label>
