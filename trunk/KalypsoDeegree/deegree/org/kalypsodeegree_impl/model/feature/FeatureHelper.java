@@ -740,25 +740,14 @@ public class FeatureHelper
    * </ul>
    * </p>
    */
-  public static String getLabel( final Feature feature )
+  public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
     // this can happen when we import a shape-file.
     if( annotation == null )
       return "no-label";
-    final String label = annotation.getLabel();
-    return tokenReplace( feature, label );
-  }
-
-  public static String getDescription( final Feature feature )
-  {
-    final IFeatureType featureType = feature.getFeatureType();
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-    // this can happen when we import a shape-file.
-    if( annotation == null )
-      return "no-label";
-    final String label = annotation.getDescription();
+    final String label = annotation.getValue( annotationKey );
     return tokenReplace( feature, label );
   }
 

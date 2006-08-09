@@ -75,9 +75,7 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.KalypsoFeatureViewPlugin;
 import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
@@ -89,6 +87,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * The Feature View shows a single feature as a form.
@@ -389,10 +388,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
             toolkit.adapt( scrolledComposite, true, true );
           }
 
-          final IFeatureType featureType = feature.getFeatureType();
-          final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-          final String label = annotation == null ? featureType.getQName().getLocalPart() : annotation.getLabel();
-          groupLabel = label + " - " + feature.getId();
+          groupLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
         }
         else
           groupLabel = _KEIN_FEATURE_SELEKTIERT_;
@@ -431,15 +427,25 @@ public class FeatureView extends ViewPart implements ModellEventListener
   {
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
     {
+      final Group mainGroup = m_mainGroup;
       final Control control = m_featureComposite.getControl();
-      if( control != null && !control.isDisposed() )
+      if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
+      {
         control.getDisplay().asyncExec( new Runnable()
         {
           public void run( )
           {
-            m_featureComposite.updateControl();
+            // As the label of the main group may depend on the values of the feature, we must update it as well.
+            final Feature feature = m_featureComposite.getFeature();
+            final String groupLabel = feature == null ? _KEIN_FEATURE_SELEKTIERT_ : FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+            if( !mainGroup.isDisposed() )
+              mainGroup.setText( groupLabel );
+
+            if( !control.isDisposed() )
+              m_featureComposite.updateControl();
           }
         } );
+      }
     }
   }
 

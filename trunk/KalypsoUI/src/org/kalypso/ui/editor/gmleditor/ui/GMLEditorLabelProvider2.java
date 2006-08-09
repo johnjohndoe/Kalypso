@@ -116,9 +116,9 @@ public class GMLEditorLabelProvider2 extends LabelProvider
   {
     if( element instanceof GMLWorkspace )
       return "GML";
-    
+
     if( element instanceof Feature )
-      return FeatureHelper.getLabel( (Feature) element );
+      return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
 
     if( element instanceof FeatureAssociationTypeElement )
     {
@@ -127,19 +127,19 @@ public class GMLEditorLabelProvider2 extends LabelProvider
         return annotation.getLabel();
       return "<-> ";
     }
-    
+
     if( element instanceof LinkedFeatureElement2 )
     {
       final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
     }
-    
+
     if( element instanceof IValuePropertyType )
     {
       IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
     }
-    
+
     if( element instanceof GM_Object )
       return element.getClass().getName().replaceAll( ".+\\.", "" );
 

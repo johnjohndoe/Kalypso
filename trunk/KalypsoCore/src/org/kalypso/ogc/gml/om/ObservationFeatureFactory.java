@@ -116,7 +116,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     // TODO: only strings, no linked features are supported now
     final Object phenProp = f.getProperty( OM_OBSERVED_PROP );
-    final String phenomenon = phenProp instanceof String ? (String)phenProp : null;
+    final String phenomenon = phenProp instanceof String ? (String) phenProp : null;
 
     final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
 
@@ -184,6 +184,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   protected static ComponentDefinition[] buildComponentDefinitions( final Feature recordDefinition )
   {
+    if( recordDefinition == null )
+      return new ComponentDefinition[0];
+
     final List<ComponentDefinition> components = new ArrayList<ComponentDefinition>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( SWE_COMPONENT );
