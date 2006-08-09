@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 
@@ -70,7 +71,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
  */
 public class FeatureTypeSelectionPage extends WizardPage implements ISelectionChangedListener
 {
-
   private IFeatureType m_selectedfeatureType = null;
 
   private ListViewer m_viewer;
@@ -92,12 +92,12 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     m_viewer = new ListViewer( parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
     m_contentProvider = new ArrayContentProvider();
     m_viewer.setContentProvider( m_contentProvider );
-    m_featureTypeLabelProvider = new FeatureTypeLabelProvider();
+    m_featureTypeLabelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
     m_viewer.setLabelProvider( m_featureTypeLabelProvider );
     final ViewerSorter sorter = new ViewerSorter();
     m_viewer.setSorter( sorter );
@@ -106,17 +106,18 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
     setControl( list );
     m_viewer.addSelectionChangedListener( this );
 
-    m_viewer.addFilter( new ViewerFilter() {
-
+    m_viewer.addFilter( new ViewerFilter()
+    {
       @Override
       public boolean select( final Viewer viewer, final Object parentElement, final Object element )
       {
-        return element instanceof IFeatureType && !((IFeatureType)element).isAbstract();
-      }} );
-    
+        return element instanceof IFeatureType && !((IFeatureType) element).isAbstract();
+      }
+    } );
+
     update();
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.DialogPage#dispose()
    */
@@ -125,7 +126,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   {
     m_featureTypeLabelProvider.dispose();
     m_contentProvider.dispose();
-    
+
     super.dispose();
   }
 
