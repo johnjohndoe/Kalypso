@@ -140,7 +140,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     {
       if( feature != null )
       {
-
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) )
           profileMember = new WspmProfile( feature );
         else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" ) ) )

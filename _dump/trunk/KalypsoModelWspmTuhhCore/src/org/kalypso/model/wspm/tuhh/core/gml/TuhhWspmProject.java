@@ -86,10 +86,10 @@ public class TuhhWspmProject extends WspmProject
    * If there is already a water with the given name, use it. If not, generate a new one.
    * </p>
    */
-  public WspmProfile createNewProfile( final String waterName, final boolean isDirectionUpstreams, final String hrefHint ) throws GMLSchemaException
+  public WspmProfile createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
-    return newWater.createNewProfile( hrefHint );
+    return newWater.createNewProfile(  );
   }
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException

@@ -153,7 +153,7 @@ public class WspWinImporter
     {
       // load gml workspace
       monitor.subTask( " - Modell wird geladen..." );
-      final IFile modelFile = targetContainer.getFile( new Path( "wspmTuhhModel.gml" ) );
+      final IFile modelFile = targetContainer.getFile( new Path( "modell.gml" ) );
       final URL url = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url );
       monitor.worked( 200 );
@@ -303,10 +303,9 @@ public class WspWinImporter
     if( knownProfiles.containsKey( fileName ) )
       return knownProfiles.get( fileName );
 
-    final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams, fileName );
+    final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
     knownProfiles.put( fileName, prof );
 
-    // TODO: fill data into profile
     bean.getStation();
     bean.getFileName();
 
@@ -324,11 +323,6 @@ public class WspWinImporter
       prfSource.read( profile, fileReader );
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
-
-      // final URL targetUrl = new URL( context, prof.getHref() );
-      // urlWriter = UrlResolverSingleton.getDefault().createWriter( targetUrl );
-      // fileReader = new FileReader( prfFile );
-      // IOUtils.copy( fileReader, urlWriter );
 
       return prof;
     }

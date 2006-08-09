@@ -59,7 +59,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   private final Map<IWorkbenchPart, FeatureSelectionProfileProvider> m_providers = new HashMap<IWorkbenchPart, FeatureSelectionProfileProvider>();
 
   private IPartListener2 m_partAdapter = new PartAdapter2()
-  {
+  { 
     /**
      * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
      */
@@ -68,7 +68,6 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
     {
       ProfileProviderAdapterFactory.this.partClosed( partRef.getPart( false ) );
     }
-
   };
 
   protected void partClosed( final IWorkbenchPart part )

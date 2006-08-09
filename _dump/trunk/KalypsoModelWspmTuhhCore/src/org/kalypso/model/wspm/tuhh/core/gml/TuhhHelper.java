@@ -44,30 +44,27 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       {
         if( wspmContainer instanceof IFolder )
         {
-          monitor.subTask( "Verzeichnis wird erzeugt" );
+          monitor.subTask( " - Verzeichnis wird erzeugt" );
           ((IFolder) wspmContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
-//        else if( wspmContainer instanceof IProject )
-//        {
-//          monitor.subTask( "Projekt wird angelegt" );
-//          final IProject project = (IProject) wspmContainer;
-//          (project).create( new SubProgressMonitor( monitor, 50 ) );
-//          monitor.subTask( "Projekt wird geöffnet" );
-//          project.open( new SubProgressMonitor( monitor, 50 ) );
-//        }
+        // else if( wspmContainer instanceof IProject )
+        // {
+        // monitor.subTask( "Projekt wird angelegt" );
+        // final IProject project = (IProject) wspmContainer;
+        // (project).create( new SubProgressMonitor( monitor, 50 ) );
+        // monitor.subTask( "Projekt wird geöffnet" );
+        // project.open( new SubProgressMonitor( monitor, 50 ) );
+        // }
       }
 
-      monitor.subTask( "Validiere Modellstruktur" );
+      monitor.subTask( " - erzeuge Modellstruktur" );
 
       final IFile targetFile = wspmContainer.getFile( new Path( "modell.gml" ) );
+      // Add the tuhh namespace to the known namespaces, so it is later known for adding new feature
       final String[] additionalNamespaces = new String[] { IWspmTuhhConstants.NS_WSPM_TUHH };
-      // TODO: this does not do what it shall do
-      // It does not leads to have an additional xmlsn:tuhh entry in the gml file
-      // But is has the sideefect, that the tuhh schema is loaded NOW, and so the types and present (but for this session only) 
       GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, monitor );
 
       return targetFile;
-
     }
     finally
     {

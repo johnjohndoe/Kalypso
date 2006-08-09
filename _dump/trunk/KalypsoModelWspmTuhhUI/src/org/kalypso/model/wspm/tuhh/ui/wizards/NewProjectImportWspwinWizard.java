@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
 public class NewProjectImportWspwinWizard extends NewProjectWizard
 {
@@ -65,13 +65,12 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
   @Override
   public void addPages( )
   {
-    super.addPages();
-
-    // TODO: use own import page in order to hide destination folder
     m_wspWinImportPage = new WspWinImportSourcePage( "pageImportWspwin" );
     addPage( m_wspWinImportPage );
-  }
 
+    super.addPages();
+  }
+  
   /**
    * Additionally import wspwin data into freshly created project.
    * 

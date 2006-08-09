@@ -441,6 +441,15 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="description" type="string" default="&lt;Beschreibung&gt;">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Beschreibung des Gewässers</tooltip>
+								<description>Zusätzlicher Kommentar für das Gewässer</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="refNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
