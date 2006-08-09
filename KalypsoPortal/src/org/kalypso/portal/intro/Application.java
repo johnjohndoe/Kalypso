@@ -21,12 +21,14 @@ public class Application implements IPlatformRunnable
   {
     Display display = PlatformUI.createDisplay();
     boolean auth = authenticate();
+    System.out.println("application.run: Display created"  );
     if( auth )
       configure();
 
     try
     {
       int returnCode = PlatformUI.createAndRunWorkbench( display, APPLICATION_WORKBENCH_ADVISOR );
+      System.out.println("application.run: createAndRunWorkbench"  );
       if( returnCode == PlatformUI.RETURN_RESTART )
       {
         return IPlatformRunnable.EXIT_RESTART;

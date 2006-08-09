@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="Kalypso Enterprise" id="org.kalypso.portal.product" application="org.kalypso.portal.application" useFeatures="false">
+<product name="Kalypso Enterprise Planer-Client" id="org.kalypso.portal.product" application="org.kalypso.portal.application" useFeatures="false">
 
    <aboutInfo>
       <image path="icons/aboutKalypso.gif"/>
@@ -13,8 +13,9 @@
    <configIni use="default"/>
 
    <launcherArgs>
-      <programArgs>-data %WORKSPACE%
--nl de_DE</programArgs>
+      <programArgs>-data workspace
+-nl de_DE
+-consolelog</programArgs>
       <vmArgs>-Xmx450m</vmArgs>
    </launcherArgs>
 
@@ -85,6 +86,7 @@
       <plugin id="org.kalypso.NACalcJob"/>
       <plugin id="org.kalypso.ant"/>
       <plugin id="org.kalypso.auth"/>
+      <plugin id="org.kalypso.chart"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
@@ -128,9 +130,7 @@
       <plugin id="org.kalypso.ui.addlayer"/>
       <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
-      <plugin id="org.kalypso.wiskiadapter"/>
       <plugin id="org.kalypso.wizard"/>
-      <plugin id="org.kalypso.wizard.CreateFloodRiskProject"/>
       <plugin id="org.kalypso.workflow"/>
    </plugins>
 
