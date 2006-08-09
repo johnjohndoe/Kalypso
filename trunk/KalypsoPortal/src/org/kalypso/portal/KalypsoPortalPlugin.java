@@ -14,14 +14,13 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   private static KalypsoPortalPlugin plugin;
   private static String m_id = "org.kalypso.portal";
 
-//  private URL m_context = null;
-
   /**
    * The constructor.
    */
   public KalypsoPortalPlugin( )
   {
     plugin = this;
+    System.out.println("constuctor " + m_id );
   }
 
   /**
@@ -31,6 +30,8 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    System.out.println("startBundle " + m_id );
+    
   }
 
   /**
@@ -67,21 +68,4 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   {
     return m_id;
   }
-
-  // public void setContext( final IProject project )
-  // {
-  // try
-  // {
-  // m_context = ResourceUtilities.createURL( project );
-  // }
-  // catch( MalformedURLException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // }
-  //
-  // public URL getContext( )
-  // {
-  // return m_context;
-  // }
 }

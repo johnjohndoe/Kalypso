@@ -17,7 +17,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.kalypso.portal.application"
-            name="Kalypso Enterprise">
+            name="Kalypso Enterprise Planer-Client">
          <property
                name="aboutImage"
                value="icons/aboutKalypso.gif"/>
