@@ -182,7 +182,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="img/gui/Mehrere_Ansichten.png"
-                       scale="50" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -385,7 +385,7 @@
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_karte.png"
-                       format="PNG" scale="45" vendor="hh_ingenieurbueros" />
+                       format="PNG" scale="100" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -435,7 +435,7 @@
             <imageobject>
               <imagedata align="center"
                          fileref="img/gui/style_editor_tuhh.png" format="PNG"
-                         scale="45" vendor="hh_ingenieurbueros" />
+                         scale="100" vendor="hh_ingenieurbueros" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -462,7 +462,7 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center" fileref="img/gui/gis_neue_karte.png"
-                         scale="60" />
+                         scale="100" />
             </imageobject>
           </mediaobject>
         </figure></para>
@@ -513,7 +513,8 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-                         fileref="img/gui/layer_import_auswahl.png" scale="80" />
+                         fileref="img/gui/layer_import_auswahl.png"
+                         scale="100" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -543,7 +544,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="img/gui/gui-navi_baum.png"
-                       scale="45" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -605,7 +606,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/gui-featureview_karte.png" scale="55" />
+                       fileref="img/gui/gui-featureview_karte.png" scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -642,7 +643,7 @@
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_tabelle.png"
-                       scale="45" vendor="hh_ingenieurbueros" />
+                       scale="100" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -723,7 +724,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/tabellen-ansicht_zml.png" scale="30" />
+                       fileref="img/gui/tabellen-ansicht_zml.png" scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1035,7 +1036,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/diagramm.png" scale="50" />
+            <imagedata fileref="img/gui/diagramm.png" scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1182,6 +1183,40 @@ dd MM yyyy HH Wert2</programlisting>
           <programlisting>01 01 1971 12 0.127
 02 01 1971 12 0.302
 03 01 1971 12 0.136</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>DWD-Format (5-Minuten Daten)</para>
+
+          <para>Datentyp: Niederschlag - N</para>
+
+          <para>Datenformat: Blockdaten mit Kopfsatz</para>
+
+          <para>Vereinbarung: 99998 = kein Niederschlag durch Registrierung
+          festgestellt, 99999 = Ausfall</para>
+
+          <programlisting>77 Stationsnummer  jj/mm/tt  gemessene Niederschlagshöhe 7:30 MEZ bis 7:30 MEZ (1/10mm)  Tagessumme Kalendertag (1/1000mm)
+16 5-Minutenwerte der Niederschlagshöhe</programlisting>
+
+          <programlisting>77 11479 020403   03   1000
+ 1000    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+  300    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0  100    0    0  100
+    0    0    0    0    0    0    0  100    0    0    0  100  100  100    0    0
+    0  100    0    0    0    0    0    0    0  100    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0  100    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0  100    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0</programlisting>
         </listitem>
       </itemizedlist>
 

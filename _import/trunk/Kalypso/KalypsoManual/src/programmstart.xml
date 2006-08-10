@@ -10,8 +10,7 @@
   des Benutzers. Die Benutzerrechte sind dabei klassifiziert nach den in <xref
   linkend="anwendungsfaelle" /> beschriebenen Anwendungsfällen und Anwendern.
   Die Benutzerrechte werden bei einer vorhandenen Schnittstelle zu einer
-  zentralen Benutzerverwaltung (siehe <xref linkend="benutzerrechte" />) durch
-  diese übergeben.</para>
+  zentralen Benutzerverwaltung durch diese übergeben.</para>
 
   <para>Ist eine Benutzerverwaltung nicht vorgesehen, so erfolgt der Login
   durch ein einheitliches Passwort. Wird die Rechteverwaltung nicht benötigt,
@@ -122,7 +121,7 @@
           <imageobject>
             <imagedata align="center"
                        fileref="img/Programm-Start/startseite_ing.png"
-                       scale="35" vendor="hh_ingenieurbueros" />
+                       scale="100" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
       </figure></para>
@@ -173,6 +172,59 @@
       zur Verfügung steht, ist in diesem Fall aber die manuelle Eingabe aller
       Eingabedaten notwendig.</para>
     </note>
+  </section>
+
+  <section vendor="hh_ingenieurbueros">
+    <title>Voreinstellungen</title>
+
+    <para>Nach dem ersten Programmstart müssen einmalig einige
+    Voreinstellungen getroffen werden. Zunächst ist im Menü
+    <guimenuitem>Fenster -&gt; Voreinstellungen -&gt; Kalypso</guimenuitem>
+    der evtl. vorhandene Server zu Konfigurieren. Außerdem werden hier
+    allgemeine Angaben zum globalen Koordinatensystem (In diesem
+    Koordinatensystem erfolgt die Kartenansicht - Geometriedaten werden ggf.
+    transformiert) und zur globalen Zeitzone (In dieser Zeitzone werden die
+    Zeitangaben und Zeitreihen dargestellt) erwartet.</para>
+
+    <table>
+      <title>Beispielkoordinatensysteme</title>
+
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry>Angabe</entry>
+
+            <entry>Bedeutung</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:31467</entry>
+
+            <entry>Gauss-Krüger Streifen 3</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <table>
+      <title>Beispielzeitzonen</title>
+
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry>Angabe</entry>
+
+            <entry>Bedeutung</entry>
+          </row>
+
+          <row>
+            <entry>Etc/GMT-1</entry>
+
+            <entry>GMT+1 (Deutsche Winterzeit)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
   </section>
 
   <section id="kalypso_testbetrieb" vendor="sachsen-anhalt">

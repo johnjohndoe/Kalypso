@@ -67,6 +67,9 @@
       </listitem>
     </itemizedlist>
 
+    <para>Besuchen sie uns auch auf unserer Homepage im Internet:
+    http://ibpm.bjoernsen.de/kalypso/ .</para>
+
     <section id="nymphe_kalypso">
       <title>Die Nymphe Kalypso</title>
 
@@ -352,9 +355,9 @@
 
             <tbody>
               <row>
-                <entry>...\eclipse.exe</entry>
+                <entry>...\kalypso.exe</entry>
 
-                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
+                <entry>D:\Programme\ KalypsoClient\kalypso.exe</entry>
 
                 <entry>Lokales Installationsverzeichnis</entry>
               </row>
