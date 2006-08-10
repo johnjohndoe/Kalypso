@@ -48,8 +48,7 @@ package org.kalypso.ogc.gml.util;
 public class MaxExclusiveRule implements IRule
 {
   /**
-   * This variable stores a value, that should be checked against. This could be a minimun-, maximum-value or a string
-   * pattern.
+   * This variable stores a value, that should be checked against. This is a maximum exclusive value.
    */
   public Number m_checkagainst;
 
@@ -83,7 +82,7 @@ public class MaxExclusiveRule implements IRule
    * This function sets the parameter to check against.
    * 
    * @param checkagainst
-   *          Could be a min-, max-value for example.
+   *          The max value.
    */
   public void setCheckParameter( Number checkagainst )
   {
@@ -93,7 +92,7 @@ public class MaxExclusiveRule implements IRule
   /**
    * This function returns the parameter, against which is checked.
    * 
-   * @return The parameter, against which is checked.
+   * @return The max value.
    */
   public Number getCheckParameter( )
   {

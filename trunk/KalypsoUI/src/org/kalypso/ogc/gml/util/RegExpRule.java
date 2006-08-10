@@ -40,26 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * This class is a rule for the MinExclusiveRestriction.
+ * This class is a rule for the RegExpRestriction.
  * 
  * @author albert
  */
-public class MinExclusiveRule implements IRule
+public class RegExpRule implements IRule
 {
   /**
-   * This variable stores a value, that should be checked against. This is a minimum exclusive value.
+   * This variable stores a value, that should be checked against. This could be a minimun-, maximum-value or a string
+   * pattern.
    */
-  public Number m_checkagainst;
+  public String[] m_patterns;
 
-  public MinExclusiveRule( Number checkagainst )
+  public RegExpRule( String[] patterns )
   {
     super();
-    m_checkagainst = checkagainst;
+    m_patterns = patterns;
   }
 
   /**
-   * RULE : MinExclusiveRestriction
+   * RULE : RegExpRestriction
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
@@ -67,12 +71,21 @@ public class MinExclusiveRule implements IRule
   {
     boolean ret = false;
 
-    /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
-    Number number = (Number) object;
+    /* Cast in a string. It must be one, because a restriction for a regexp should be made with a string. */
+    String txt = (String) object;
 
-    if( number.floatValue() > m_checkagainst.floatValue() )
+    for( int i = 0; i < m_patterns.length; i++ )
     {
-      ret = true;
+      Pattern p = Pattern.compile( m_patterns[i] );
+      Matcher m = p.matcher( txt );
+
+      ret = m.matches();
+
+      /* If one pattern fails, there is no need to check the other patterns. */
+      if( ret == false )
+      {
+        break;
+      }
     }
 
     return ret;
@@ -81,21 +94,21 @@ public class MinExclusiveRule implements IRule
   /**
    * This function sets the parameter to check against.
    * 
-   * @param checkagainst
-   *          The min value.
+   * @param patterns
+   *          The RegExp pattern.
    */
-  public void setCheckParameter( Number checkagainst )
+  public void setPatterns( String[] patterns )
   {
-    m_checkagainst = checkagainst;
+    m_patterns = patterns;
   }
 
   /**
-   * This function returns the parameter, against which is checked.
+   * This function returns the parameters, against which is checked.
    * 
-   * @return The min value.
+   * @return The RegExp pattern.
    */
-  public Number getCheckParameter( )
+  public String[] getPatterns( )
   {
-    return m_checkagainst;
+    return m_patterns;
   }
 }
