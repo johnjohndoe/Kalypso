@@ -1,0 +1,9 @@
+# Mulden-Rigolen Daten für das Einzugsgebiet der Kollau
+# Format:
+# TG-Nummer
+# Fläche[m²]  Nutzung  Bodenprofil  max.Perk[mm/d] Zufluss-GW[-]   
+# d-Dränrohr[mm] kf-Dränrohr[mm/d] Gefälle-Dränrohr[m/m] Rauigkeit-Drän [mm] Muldenbreite[m]  entwä. Knoten
+(name,*)
+(area,*)_(nutzung,*)_(boden,*)_(maxPerk,*)_(InflowGW,*)
+(diameterPipe,*)_(kfPipe,*)_(drainPipeSlope,*)_(roughnessPipe,*)_(widthTrench,*)_(dischargeNode,*)
+# ende MR TG 4562

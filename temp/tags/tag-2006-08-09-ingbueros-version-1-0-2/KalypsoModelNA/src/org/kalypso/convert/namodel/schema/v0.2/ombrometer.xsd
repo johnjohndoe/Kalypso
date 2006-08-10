@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:na="http://org.kalypso.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://org.kalypso.ombrometer" elementFormDefault="qualified" version="0.2">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<element name="OmbrometerCollection" type="na:OmbrometerCollectionType"/>
+	<complexType name="OmbrometerCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="ombrometerMember" type="na:OmbrometerAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="OmbrometerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:Ombrometer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Ombrometer" type="na:OmbrometerType" substitutionGroup="gml:_Feature"/>
+	<complexType name="OmbrometerType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Ort" type="gml:PointPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geometrie</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="DWDID" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>DWDID</label>
+								<tooltip>DWD Kennung</tooltip>
+								<description>Kennung des Deutschen Wetterdienstes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>DWDID</label>
+								<tooltip>DWD Identification</tooltip>
+								<description>Identification number of German Wether Service</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="NRepository" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Pfad ZR (Original)Ablage</label>
+								<tooltip>Pfad ZR Ablage</tooltip>
+								<description>Pfad der Zeitreihe Niederschlag aus der Datenablage (lokal, Datenbank, Server...)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>P Repository</label>
+								<tooltip>path P Repository</tooltip>
+								<description>path of time series precipitation in the repository (local, database, server,...)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="NRepository1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="N" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>ZR Zielpfad (Rechenvariante)</label>
+								<tooltip>Pfad N Rechenvariante</tooltip>
+								<description>Pfad der Zeitreihe Niederschlag in der Rechenvariante</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>P target</label>
+								<tooltip>path P target directory</tooltip>
+								<description>path of time series precipitation in the calculation case</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="TRepository" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="T" type="obslink:TimeseriesLinkFeatureProperty"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
