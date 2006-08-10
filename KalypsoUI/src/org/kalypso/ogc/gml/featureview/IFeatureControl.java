@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IFeatureControl
 {

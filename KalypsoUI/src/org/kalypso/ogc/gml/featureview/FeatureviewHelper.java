@@ -46,7 +46,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.xml.XMLHelper;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -68,6 +68,7 @@ import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.Table;
+import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -77,7 +78,7 @@ public class FeatureviewHelper
 {
   public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
-  public final static QName QNAME_GML_BOUNDEDBY = new QName( XMLHelper.GMLSCHEMA_NS, "boundedBy" );
+  public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" );
 
   public static final ObjectFactory FACTORY = new ObjectFactory();
 
@@ -85,11 +86,17 @@ public class FeatureviewHelper
 
   private FeatureviewHelper( )
   {
-    // wird nicht instantiiert
+    // wird nicht instanziert
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue, boolean showTables )
+  /**
+   * Erzeugt eine Zeile der GUI.
+   */
+  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue, final boolean showTables )
   {
+    /* The variable for adding a validator label. */
+    boolean addValidator = false;
+
     JAXBElement< ? extends ControlType> jaxbType = null;
     boolean addLabel = true;
     final GridDataType griddata = FACTORY.createGridDataType();
@@ -99,6 +106,8 @@ public class FeatureviewHelper
     final QName property = ftp.getQName();
     if( ftp instanceof IValuePropertyType )
     {
+      /* It is a IValuePropertyType, that means, a validator could be needed. */
+      // addValidator = true; // TODO
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
       // ignore 'boundedBy' and value lists
@@ -106,7 +115,7 @@ public class FeatureviewHelper
         return;
 
       final QName valueQName = vpt.getValueQName();
-      
+
       if( GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( valueQName ) )
       {
         final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
@@ -117,6 +126,8 @@ public class FeatureviewHelper
 
         if( type instanceof CompositeType )
         {
+          // TODO Is it safe to remove the following two lines, because the composite should not grab more space than
+          // needed. */
           griddata.setHorizontalAlignment( "GridData.FILL" );
           griddata.setGrabExcessHorizontalSpace( true );
           griddata.setHorizontalSpan( 2 );
@@ -139,7 +150,7 @@ public class FeatureviewHelper
       {
         if( !showTables )
           return;
-        
+
         final Table table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
         table.setProperty( property );
@@ -162,6 +173,9 @@ public class FeatureviewHelper
         // We just do nothing, so the default behaviour (label + button) applies
         // PROBLEM: we have still problems, because if we have a list with features
         // sometimes null and sometimes not, the result depends on the first visited feature
+
+        /* RelationType, a validator could be needed. */
+        // addValidator = true; //TODO
       }
       else
       {
@@ -256,7 +270,25 @@ public class FeatureviewHelper
       controlList.add( jaxbType );
     }
 
-    for( int i = cellCount; i < 3; i++ )
+    /* If a validator is needed, it is added here. */
+    if( addValidator )
+    {
+      cellCount++;
+
+      final ValidatorLabelType validatorLabel = FACTORY.createValidatorLabelType();
+      validatorLabel.setStyle( "SWT.NONE" );
+
+      validatorLabel.setVisible( true );
+      validatorLabel.setProperty( property );
+
+      final GridDataType labelGridData = FACTORY.createGridDataType();
+      labelGridData.setGrabExcessHorizontalSpace( false );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      validatorLabel.setLayoutData( FACTORY.createGridData( labelGridData ) );
+      controlList.add( FACTORY.createValidatorlabel( validatorLabel ) );
+    }
+
+    for( int i = cellCount; i < 4; i++ )
     {
       final LabelType label = FACTORY.createLabelType();
       label.setStyle( "SWT.NONE" );
@@ -269,7 +301,6 @@ public class FeatureviewHelper
 
       controlList.add( FACTORY.createLabel( label ) );
     }
-
   }
 
   /**
@@ -288,7 +319,7 @@ public class FeatureviewHelper
     featureview.setStyle( "SWT.NONE" );
 
     final GridLayout gridLayout = FACTORY.createGridLayout();
-    gridLayout.setNumColumns( 3 );
+    gridLayout.setNumColumns( 4 );
     featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
     final GridDataType griddata = FACTORY.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );

@@ -78,6 +78,13 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:element name="validatorlabel" type="ns1:ValidatorLabelType" substitutionGroup="ns1:control"/>
+	<xs:complexType name="ValidatorLabelType">
+		<xs:complexContent>
+			<xs:extension base="ns1:PropertyControlType"/>
+		</xs:complexContent>
+	</xs:complexType>
 	
 	<xs:element name="text" substitutionGroup="ns1:control">
 		<xs:complexType>

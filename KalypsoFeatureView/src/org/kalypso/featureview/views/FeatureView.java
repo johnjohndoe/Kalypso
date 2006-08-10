@@ -381,7 +381,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
           ScrolledComposite scrolledComposite = creator.getScrolledComposite();
           scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-          // TODO
+          /* If a toolkit is set, use it. */
           if( toolkit != null )
           {
             toolkit.adapt( contentControl, true, true );
