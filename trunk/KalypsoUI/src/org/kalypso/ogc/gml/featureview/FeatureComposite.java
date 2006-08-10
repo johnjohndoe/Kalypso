@@ -88,6 +88,7 @@ import org.kalypso.ogc.gml.featureview.control.RadioFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.ValidatorFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
@@ -105,6 +106,7 @@ import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swt.SWTUtilities;
@@ -327,6 +329,22 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         m_formToolkit.adapt( label, true, true );
 
       return label;
+    }
+    else if( controlType instanceof ValidatorLabelType )
+    {
+      final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
+
+      final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, true );
+
+      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
+
+      addFeatureControl( vfc );
+
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+        m_formToolkit.adapt( control, true, true );
+
+      return control;
     }
     else if( controlType instanceof Text )
     {
