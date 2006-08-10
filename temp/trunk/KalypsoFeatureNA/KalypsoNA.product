@@ -13,10 +13,6 @@
    <configIni use="default"/>
 
    <launcherArgs>
-      <programArgs>-data D:\KalypsoEnterprise\RuntimeWorkspace
--consoleLog
--nl de_DE</programArgs>
-      <vmArgs>-Xmx650m</vmArgs>
    </launcherArgs>
 
    <windowImages small="etc/kalypso16.gif"/>

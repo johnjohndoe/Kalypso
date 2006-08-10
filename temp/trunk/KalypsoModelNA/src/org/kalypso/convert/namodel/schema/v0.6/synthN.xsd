@@ -7,7 +7,7 @@
 	<element name="SynthN" type="syn:synthNType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>synthetische Niederschlag</label>
+				<label>synthetischer Niederschlag</label>
 			</documentation>
 			<documentation xml:lang="en">
 				<label>synthetic precipitation</label>
