@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -131,7 +132,16 @@ public abstract class RuleFactory
             rules.add( new MinInclusiveRule( mininclusiverestriction.getMinInclusive() ) );
         }
 
-        /* Add the specific rule for this restriction. */
+        /* RegExpRestriction. */
+        if( restriction instanceof RegExpRestriction )
+        {
+          RegExpRestriction regexprestriction = (RegExpRestriction) restriction;
+
+          /* Add the Rule. */
+          rules.add( new RegExpRule( regexprestriction.getPatterns() ) );
+        }
+
+        /* TODO: Add new rules here. */
       }
     }
 
