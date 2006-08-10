@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
@@ -78,7 +79,8 @@ public class PrfSink implements IProfilSink
     final IProfilPoint anyPoint = p.getPoints().getFirst();
     writePoints( pw, p );
     writeDevider( pw, p );
-    writeRauheit( pw, p );
+    if( anyPoint.hasProperty( POINT_PROPERTY.RAUHEIT ) )
+      writeRauheit( pw, p );
     if( p.getBuilding() != null )
       writeBuilding( pw, p );
     if( anyPoint.hasProperty( POINT_PROPERTY.HOCHWERT ) )
@@ -99,6 +101,7 @@ public class PrfSink implements IProfilSink
   {
     final DataBlockHeader dbhr = PrfWriter.createHeader( "RAU" );
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
+    dbr.setSecondLine(profil.getProperty(IProfil.PROFIL_PROPERTY.RAUHEIT_TYP )==RAUHEIT_TYP.kst?"kst   m":"k-s   m");
     writeCoords( profil, POINT_PROPERTY.RAUHEIT, dbr );
     final IProfilBuilding building = profil.getBuilding();
     if( building != null && building.getTyp() != BUILDING_TYP.BRUECKE && building.getTyp() != BUILDING_TYP.WEHR )
@@ -176,7 +179,8 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Die Positionen der Trennflächen konnten nicht geschrieben werden." );
 
         }
-        boolean isBoeschung = (Boolean) devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG );
+        
+        boolean isBoeschung = devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG ) == null ? false : (Boolean) devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG );
         switch( index )
         {
           case 0:
@@ -244,11 +248,9 @@ public class PrfSink implements IProfilSink
         writeCoords( profil, POINT_PROPERTY.UNTERKANTEBRUECKE, dbu );
         try
         {
-          final String secLine = 
-            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) ) +
-            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + 
-            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) ) +
-            String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
+          final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) )
+              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) )
+              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
           dbu.setSecondLine( secLine );
         }
         catch( final ProfilDataException e )
@@ -302,7 +304,7 @@ public class PrfSink implements IProfilSink
         }
         pw.addDataBlock( dbe );
       }
-      break;
+        break;
       case MAUL:
       {
         final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" );
@@ -340,7 +342,7 @@ public class PrfSink implements IProfilSink
         }
         pw.addDataBlock( dbk );
       }
-      break;
+        break;
       case TRAPEZ:
       {
         final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" );

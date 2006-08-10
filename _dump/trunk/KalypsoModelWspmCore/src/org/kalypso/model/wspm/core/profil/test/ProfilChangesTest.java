@@ -13,15 +13,18 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.BuildingEdit;
 import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
+import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
@@ -31,7 +34,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
-
 /**
  * @author kimwerner
  */
@@ -40,21 +42,17 @@ public class ProfilChangesTest extends TestCase
   public void testRunTest( ) throws Exception
   {
     final IProfil p = CreateTestProfil();
-    setGetDeleteBuilding( p );
+    setGetDeleteBruecke( p );
     addMoveDeleteBordvoll( p );
+    setGetDeleteWehr(p);
   }
 
-  @SuppressWarnings("boxing")
+  @SuppressWarnings( { "boxing", "unchecked" })
   public static IProfil CreateTestProfil( ) throws Exception
   {
-    final IProfil p = null;// ProfilFactory.createProfil();
-    final ArrayList<String> metaData = new ArrayList<String>();
-    for( int i = 0; i < 13; i++ )
-    {
-      metaData.add( "" );
-    }
-    IProfilChange change = new ProfilPropertyEdit( p, "PROFIL_PROPERTY.METASTRINGS", metaData );
-    change.doChange( null );
+    final IProfil p = ProfilFactory.createProfil();
+    
+    // erzeuge Punkte
     final IProfilChange[] changes = new IProfilChange[1];
     final ProfilChangeHint hint = new ProfilChangeHint();
 
@@ -84,6 +82,7 @@ public class ProfilChangesTest extends TestCase
     changes[0] = new PointAdd( p, p1, p2 );
     changes[0].doChange( hint );
 
+    // erzeuge Trenner
     changes[0] = new DeviderAdd( p, DEVIDER_TYP.DURCHSTROEMTE, p1 );
     changes[0].doChange( hint );
     changes[0] = new DeviderAdd( p, DEVIDER_TYP.DURCHSTROEMTE, p5 );
@@ -93,29 +92,40 @@ public class ProfilChangesTest extends TestCase
     changes[0] = new DeviderAdd( p, DEVIDER_TYP.TRENNFLAECHE, p4 );
     changes[0].doChange( hint );
 
+    // TrennerTest
     final IProfilPoint dpL = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0].getPoint();
     final IProfilPoint dpR = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[1].getPoint();
     final IProfilPoint tpL = p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[0].getPoint();
     final IProfilPoint tpR = p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[1].getPoint();
-
     assertEquals( "Durchströmter Bereich links:", p1, dpL );
     assertEquals( "Durchströmter Bereich rechts", p5, dpR );
     assertEquals( "Trennfläche links:", p2, tpL );
     assertEquals( "Trennfläche rechts:", p4, tpR );
 
+    // erzeuge Rauheiten
     changes[0] = new PointPropertyAdd( p, POINT_PROPERTY.RAUHEIT, 1.2345 );
     changes[0].doChange( hint );
     changes[0] = new ProfilPropertyEdit( p, PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
     changes[0].doChange( hint );
 
+    // RauheitTest
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( POINT_PROPERTY.RAUHEIT ) );
     assertEquals( "RauheitTyp:", RAUHEIT_TYP.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
+
+    // erzeuge Kommentar
     final ArrayList<String> stringList = new ArrayList<String>();
     stringList.add( "" );
     stringList.add( "Einzeiliger Kommentar" );
     stringList.add( "dritte Zeile" );
     changes[0] = new ProfilPropertyEdit( p, PROFIL_PROPERTY.KOMMENTAR, stringList );
     changes[0].doChange( hint );
+
+    // KommentarTest
+    ArrayList<String> c = (ArrayList<String>) p.getProperty( PROFIL_PROPERTY.KOMMENTAR );
+    assertEquals( "Zeile1:", "", c.get( 0 ) );
+    assertEquals( "Zeile2:", "Einzeiliger Kommentar", c.get( 1 ) );
+    assertEquals( "Zeile3:", "dritte Zeile", c.get( 2 ) );
+    
     return p;
   }
 
@@ -149,13 +159,13 @@ public class ProfilChangesTest extends TestCase
   }
 
   @SuppressWarnings("boxing")
-  public void setGetDeleteBuilding( final IProfil p ) throws Exception
+  public void setGetDeleteBruecke( final IProfil p ) throws Exception
   {
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
     IProfilChange change = new BuildingSet( p, building );
     IProfilChange undoChange = change.doChange( null );
 
-    assertEquals( "neues Gebäude:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
+    assertEquals( "neue Brücke:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getPoints().getFirst();
     change = new PointPropertyEdit( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
     change.doChange( null );
@@ -177,4 +187,36 @@ public class ProfilChangesTest extends TestCase
     }
 
   }
+  public void setGetDeleteWehr( final IProfil p ) throws Exception
+  {
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.WEHR );
+    IProfilChange change = new BuildingSet( p, building );
+    IProfilChange undoChange = change.doChange( null );
+
+    assertEquals( "neues Wehr:", BUILDING_TYP.WEHR, p.getBuilding().getTyp() );
+    final IProfilPoint firstPkt = p.getDevider(DEVIDER_TYP.TRENNFLAECHE)[0].getPoint();
+    final IProfilPoint midPkt = ProfilUtil.getPointAfter(p,firstPkt);
+    change = new PointPropertyEdit( midPkt, POINT_PROPERTY.OBERKANTEWEHR, 1000.23456 );
+    change.doChange( null );
+    change = new DeviderAdd( p,DEVIDER_TYP.WEHR ,midPkt);
+    change.doChange( null );
+    change = new DeviderEdit( p.getDevider(DEVIDER_TYP.WEHR)[0] ,DEVIDER_PROPERTY.BEIWERT,0.123);
+    change.doChange( null );
+    assertEquals( "Überfallbeiwert:", 0.123,  p.getDevider(DEVIDER_TYP.WEHR)[0].getValueFor(DEVIDER_PROPERTY.BEIWERT) );
+    assertEquals( "Hoehe Wehrkante: ", 1000.23456, midPkt.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) );
+
+    undoChange.doChange( null );
+    assertEquals( "kein Gebäude:", null, p.getBuilding() );
+
+    try
+    {
+      firstPkt.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
+    }
+    catch( ProfilDataException e )
+    {
+      assertEquals( "Exception erwartet: ", ProfilDataException.class, e.getClass() );
+    }
+
+  }
+
 }

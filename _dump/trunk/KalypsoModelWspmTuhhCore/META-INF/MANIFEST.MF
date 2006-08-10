@@ -1,4 +1,4 @@
-Manifest-Version: 1.0
+Manifest-Version: 1.0 
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmTuhhCore Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
