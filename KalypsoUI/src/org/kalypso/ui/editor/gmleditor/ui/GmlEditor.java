@@ -203,7 +203,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
           final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
           final Feature parentFeature = fate.getParentFeature();
           final IRelationType fatp = fate.getAssociationTypeProperty();
-
+// TODO: should not work only for lists
           if( fatp.isList() )
           {
             final List list = (List) parentFeature.getProperty( fatp );

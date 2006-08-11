@@ -111,19 +111,56 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( Feature parent, String id, IFeatureType featureType, Object[] properties )
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final Object[] properties )
   {
     return new Feature_Impl( parent, featureType, id, properties );
   }
 
   /**
+   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
+   * 
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
-   *          set <code>false</code> to not generate default properties ( e.g. when reading from GML or so.)
+   *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
   public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
   {
-    return new Feature_Impl( parent, featureType, id, initializeWithDefaults );
+    if( featureType == null )
+      throw new IllegalArgumentException( "must provide a featuretype" );
+
+    final IPropertyType[] ftp = featureType.getProperties();
+
+    final Feature feature = new Feature_Impl( parent, featureType, id, new Object[ftp.length] );
+
+    for( final IPropertyType pt : ftp )
+    {
+      if( pt.isList() )
+      {
+        if( pt instanceof IRelationType )
+          feature.setProperty( pt, FeatureFactory.createFeatureList( feature, (IRelationType) pt ) );
+        else
+          feature.setProperty( pt, new ArrayList() );
+      }
+      else
+      {
+        // leave it null
+      }
+    }
+
+    if( initializeWithDefaults )
+    {
+      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
+      for( final Map.Entry<IPropertyType, Object> entry : properties.entrySet() )
+      {
+        final IPropertyType pt = entry.getKey();
+        final Object value = entry.getValue();
+
+        if( value != null && pt.getMaxOccurs() == 1 )
+          feature.setProperty( pt, value );
+      }
+    }
+
+    return feature;
   }
 
   /** Creates default feature, used by LegendView */
@@ -148,7 +185,7 @@ public class FeatureFactory
     {
       final IPropertyType ftp = propTypes[i];
 
-      if( (ftp instanceof IValuePropertyType) )
+      if( ftp instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
