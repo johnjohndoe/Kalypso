@@ -2,7 +2,6 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -44,52 +43,6 @@ public class Feature_Impl extends AbstractFeature implements Feature
   private final IFeatureType m_featureType;
 
   private final String m_id;
-
-  /**
-   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
-   * 
-   * @param initializeWithDefaults
-   *          set <code>true</code> when generating from UserInterface <br>
-   *          set <code>false</code> when generating from GML or so.
-   */
-  public Feature_Impl( final Object parent, final IFeatureType ft, final String id, final boolean initializeWithDefaults )
-  {
-    if( ft == null )
-      throw new UnsupportedOperationException( "must provide a featuretype" );
-
-    m_parent = parent;
-    m_featureType = ft;
-    m_id = id;
-
-    // initialize
-    final IPropertyType[] ftp = ft.getProperties();
-    m_properties = new Object[ftp.length];
-    for( int i = 0; i < ftp.length; i++ )
-    {
-      if( m_featureType.getProperties( i ).isList() )
-      {
-        if( ftp[i] instanceof IRelationType )
-          m_properties[i] = FeatureFactory.createFeatureList( this, (IRelationType) ftp[i] );
-        else
-          m_properties[i] = new ArrayList();
-      }
-      else
-        m_properties[i] = null;
-    }
-
-    if( initializeWithDefaults )
-    {
-      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-      for( final Map.Entry<IPropertyType, Object> entry : properties.entrySet() )
-      {
-        final IPropertyType pt = entry.getKey();
-        final Object value = entry.getValue();
-
-        if( value != null && pt.getMaxOccurs() == 1 )
-          setProperty( pt, value );
-      }
-    }
-  }
 
   protected Feature_Impl( final Object parent, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -281,7 +234,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
       if( pt instanceof IValuePropertyType )
       {
         // TODO:This doesn´t work - what to do?
-        // REMARK: WHAT? does nto work?? This is a test if thee value fits to
+        // REMARK: WHAT? does not work?? This is a test if thee value fits to
         // the type of the property. Test here is necessary because if
         // we do not test here we will get later ClassCastExceptions
         // and there we do not know why.
@@ -300,6 +253,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
     final int pos = m_featureType.getPropertyPosition( pt );
     m_properties[pos] = value;
+    
     if( GeometryUtilities.isGeometry( pt ) )
       invalidEnvelope();
   }
@@ -337,7 +291,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
   @Deprecated
-  public void setProperty( String propLocalName, Object value )
+  public void setProperty( final String propLocalName, final Object value )
   {
     final IPropertyType pt = FeatureHelper.getPT( this, propLocalName );
     setProperty( pt, value );

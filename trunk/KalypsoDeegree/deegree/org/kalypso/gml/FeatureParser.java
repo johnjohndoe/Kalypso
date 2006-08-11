@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.Attributes;
 
 /**
@@ -94,7 +94,7 @@ public class FeatureParser
     else
       fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
     // conflict with other ids
-    final Feature feature = new Feature_Impl( parent, featureType, fid, false );
+    final Feature feature = FeatureFactory.createFeature( (Feature) parent, fid, featureType, false );
     // System.out.println( " | created Feature " + fid + " " + featureType.getQName() );
     m_stackFE.push( feature );
   }
