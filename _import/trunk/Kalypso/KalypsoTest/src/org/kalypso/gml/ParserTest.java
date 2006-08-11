@@ -69,7 +69,7 @@ public class ParserTest extends TestCase
   {
     KalypsoTest.init();
   }
-  
+
   /**
    * @see junit.framework.TestCase#tearDown()
    */
@@ -107,27 +107,31 @@ public class ParserTest extends TestCase
     }
   }
 
+  // TODO: no possibe to work at the moment, because
+  // it is not possible to load the om schema without running
+  // workbench
+  // TODO: change to plugin unit test
   public void testObsToFeature( ) throws Exception
   {
-    final URL resource = getClass().getResource( "resources/_timeseriesNoDict.gml" );
-
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
-
-    final Feature f = workspace.getFeature( "wasserstandsmessung" );
-
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( f );
-
-    ObservationFeatureFactory.toFeature( obs, f );
-
-    OutputStreamWriter writer = null;
-    try
-    {
-      writer = new OutputStreamWriter( new FileOutputStream( new File( "C:/TMP/obsSerialized.gml" ) ), "ISO-8859-1" );
-      GmlSerializer.serializeWorkspace( writer, workspace );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+    // final URL resource = getClass().getResource( "resources/_timeseriesNoDict.gml" );
+    //
+    // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resource );
+    //
+    // final Feature f = workspace.getFeature( "wasserstandsmessung" );
+    //
+    // final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( f );
+    //
+    // ObservationFeatureFactory.toFeature( obs, f );
+    //
+    // OutputStreamWriter writer = null;
+    // try
+    // {
+    // writer = new OutputStreamWriter( new FileOutputStream( new File( "C:/TMP/obsSerialized.gml" ) ), "ISO-8859-1" );
+    // GmlSerializer.serializeWorkspace( writer, workspace );
+    // }
+    // finally
+    // {
+    // IOUtils.closeQuietly( writer );
+    // }
   }
 }

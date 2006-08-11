@@ -117,57 +117,61 @@ public class FlowsDssTest extends TestCase
 
   }
 
-  public void testFlowsDSS( ) throws Exception
-  {
-    final File dssResultDirRun = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/dssResults/HQ1" );
-    final File gmlFile = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcCase.gml" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
-    final Feature[] resultNodes = new Feature[] { workspace.getFeature( "Node715" ), workspace.getFeature( "Node719" ), workspace.getFeature( "Node721" ) };
-    // [Feature Node#Node702, Feature Node#Node715, Feature Node#Node719, Feature Node#Node721, Feature Node#Node722,
-    // Feature Node#Node724, Feature Node#Node9728, Feature Node#Node726
-
-    final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
-    String hqEventId = "HQ1";
-    boolean doMeasures = false;
-    // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
-    final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
-    {
-
-      public void dispose( )
-      {
-        // TODO Auto-generated method stub
-      }
-
-      public boolean hasID( String id )
-      {
-        return false;
-      }
-
-      public Object getInputForID( String id ) throws SimulationException
-      {
-        if( "lastResults".equals( id ) )
-        {
-          try
-          {
-            return (new File( "C:/TMP/testkdss/lastResults" )).toURL();
-          }
-          catch( MalformedURLException e )
-          {
-            // TODO Auto-generated catch block
-            throw new SimulationException( "", e );
-          }
-        }
-        return null;
-      }
-
-    };
-    final List<HTMLFragmentBean> fragments = new ArrayList<HTMLFragmentBean>();
-    for( final Feature resultNode : resultNodes )
-      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures, fragments );
-    final File analyseFile = new File( dssResultDirRun.getParentFile(), "analyse.html" );
-    final File analyseHQFile = new File( dssResultDirRun.getParentFile(), "analyseHQ.html" );
-    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, fragments, true );
-    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, fragments, false );
-
-  }
+  // TODO: please do not use tests with absoute pathes
+  // if you want to run such code for testing purposes
+  // make a main() method
+  // Test should run ANYWHERE!!!
+//  public void testFlowsDSS( ) throws Exception
+//  {
+//    final File dssResultDirRun = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/dssResults/HQ1" );
+//    final File gmlFile = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcCase.gml" );
+//    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
+//    final Feature[] resultNodes = new Feature[] { workspace.getFeature( "Node715" ), workspace.getFeature( "Node719" ), workspace.getFeature( "Node721" ) };
+//    // [Feature Node#Node702, Feature Node#Node715, Feature Node#Node719, Feature Node#Node721, Feature Node#Node722,
+//    // Feature Node#Node724, Feature Node#Node9728, Feature Node#Node726
+//
+//    final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
+//    String hqEventId = "HQ1";
+//    boolean doMeasures = false;
+//    // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
+//    final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
+//    {
+//
+//      public void dispose( )
+//      {
+//        // TODO Auto-generated method stub
+//      }
+//
+//      public boolean hasID( String id )
+//      {
+//        return false;
+//      }
+//
+//      public Object getInputForID( String id ) throws SimulationException
+//      {
+//        if( "lastResults".equals( id ) )
+//        {
+//          try
+//          {
+//            return (new File( "C:/TMP/testkdss/lastResults" )).toURL();
+//          }
+//          catch( MalformedURLException e )
+//          {
+//            // TODO Auto-generated catch block
+//            throw new SimulationException( "", e );
+//          }
+//        }
+//        return null;
+//      }
+//
+//    };
+//    final List<HTMLFragmentBean> fragments = new ArrayList<HTMLFragmentBean>();
+//    for( final Feature resultNode : resultNodes )
+//      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures, fragments );
+//    final File analyseFile = new File( dssResultDirRun.getParentFile(), "analyse.html" );
+//    final File analyseHQFile = new File( dssResultDirRun.getParentFile(), "analyseHQ.html" );
+//    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, fragments, true );
+//    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, fragments, false );
+//
+//  }
 }
