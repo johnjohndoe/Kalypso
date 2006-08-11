@@ -86,4 +86,9 @@ public class ObservationTest extends TestCase
     
     return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList );
   }
+  
+  public void testDummy()
+  {
+    // does not test anything, but junit complains if we have a test class without test
+  }
 }
