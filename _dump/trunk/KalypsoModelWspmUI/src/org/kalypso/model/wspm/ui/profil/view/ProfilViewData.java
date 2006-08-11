@@ -19,15 +19,14 @@ import de.belger.swtchart.layer.IChartLayer;
 
 /**
  * <p>
- * Daten, welche sich die verschiedenen {@link org.kalypso.model.wspm.ui.profil.view.IProfilView}s teilen ,aber nicht ins Profil
- * selbst gehören.
+ * Daten, welche sich die verschiedenen {@link org.kalypso.model.wspm.ui.profil.view.IProfilView}s teilen ,aber nicht
+ * ins Profil selbst gehören.
  * </p>
  * <p>
  * Z.B. welcher Layer sind sichtabr, welcher wird editiert etc.
  * </p>
  * 
  * @author Gernot Belger
- * 
  */
 public class ProfilViewData
 {
@@ -40,7 +39,9 @@ public class ProfilViewData
   protected boolean m_edithorz = false;
 
   protected boolean m_editvert = true;
-  
+
+  protected boolean m_useDeviderValue = false;
+
   private List<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new ArrayList<IProfilDevider.DEVIDER_TYP>();
 
   private IChartLayer m_activeLayer;
@@ -54,7 +55,7 @@ public class ProfilViewData
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
       m_document = builder.newDocument();
-      m_visibleDevider.addAll(Arrays.asList(IProfilDevider.DEVIDER_TYP.values()));
+      m_visibleDevider.addAll( Arrays.asList( IProfilDevider.DEVIDER_TYP.values() ) );
     }
     catch( final ParserConfigurationException e )
     {
@@ -78,6 +79,16 @@ public class ProfilViewData
     return m_legendMemento;
   }
 
+  public void useDeviderValue( final boolean use )
+  {
+    m_useDeviderValue = use;
+  }
+
+  public boolean useDeviderValue( )
+  {
+    return m_useDeviderValue;
+  }
+
   public IMemento getChartMemento( )
   {
     return m_chartMemento;
@@ -92,6 +103,7 @@ public class ProfilViewData
   {
     m_edithorz = edithorz;
   }
+
   public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
   {
     if( visible )
@@ -112,6 +124,7 @@ public class ProfilViewData
     return m_visibleDevider.contains( deviderTyp );
 
   }
+
   public boolean isEditvert( )
   {
     return m_editvert;

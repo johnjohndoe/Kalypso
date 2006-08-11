@@ -101,7 +101,7 @@ public class PrfSink implements IProfilSink
   {
     final DataBlockHeader dbhr = PrfWriter.createHeader( "RAU" );
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-    dbr.setSecondLine(profil.getProperty(IProfil.PROFIL_PROPERTY.RAUHEIT_TYP )==RAUHEIT_TYP.kst?"kst   m":"k-s   m");
+    dbr.setSecondLine( profil.getProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP ) == RAUHEIT_TYP.kst ? "kst   m" : "k-s   m" );
     writeCoords( profil, POINT_PROPERTY.RAUHEIT, dbr );
     final IProfilBuilding building = profil.getBuilding();
     if( building != null && building.getTyp() != BUILDING_TYP.BRUECKE && building.getTyp() != BUILDING_TYP.WEHR )
@@ -179,7 +179,7 @@ public class PrfSink implements IProfilSink
           m_logger.log( Level.SEVERE, "Die Positionen der Trennflächen konnten nicht geschrieben werden." );
 
         }
-        
+
         boolean isBoeschung = devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG ) == null ? false : (Boolean) devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG );
         switch( index )
         {
@@ -269,6 +269,7 @@ public class PrfSink implements IProfilSink
         try
         {
           final StringBuffer secLine = new StringBuffer( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString().toUpperCase() );
+          secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) ) );
           final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
           if( deviders != null )
           {
@@ -293,10 +294,9 @@ public class PrfSink implements IProfilSink
         dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" );
         try
         {
-          dbe.addLine( String.format( Locale.US, " %12.4f", (building.getValueFor( BUILDING_PROPERTY.BREITE )) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) ) );
+          dbe.addLine( getDoubleStr (building.getValueFor( BUILDING_PROPERTY.BREITE )) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) ) ;
         }
         catch( final ProfilDataException e )
         {
@@ -312,10 +312,9 @@ public class PrfSink implements IProfilSink
         dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" );
         try
         {
-          dbm.addLine( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+          dbm.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
         }
         catch( final ProfilDataException e )
         {
@@ -331,10 +330,8 @@ public class PrfSink implements IProfilSink
         dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" );
         try
         {
-          dbk.addLine( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+          dbk.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
         }
         catch( final ProfilDataException e )
         {
@@ -350,11 +347,9 @@ public class PrfSink implements IProfilSink
         dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" );
         try
         {
-          dbt.addLine( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.STEIGUNG ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+          dbt.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.STEIGUNG ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
+              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
         }
         catch( final ProfilDataException e )
         {
@@ -365,6 +360,18 @@ public class PrfSink implements IProfilSink
     }
     if( building == null )
       return;
+  }
+
+  private String getDoubleStr( final Object o )
+  {
+    try
+    {
+      return String.format( Locale.US, " %12.4f", o );
+    }
+    catch( Exception e )
+    {
+      return "       0.0000";
+    }
   }
 
   private void writeBewuchs( final PrfWriter pw, final IProfil profil )

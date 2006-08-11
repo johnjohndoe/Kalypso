@@ -310,24 +310,14 @@ public class PrfSource implements IProfilSource
       final double hoehe = point.getValueFor( POINT_PROPERTY.HOEHE );
 
       if( rangeO.contains( breite ) )
-      {
-        final double yValue = polyLineO.getYFor( breite );
-        final double value = Math.max( hoehe, yValue );
-        point.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, value );
-      }
+        point.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, polyLineO.getYFor( breite ) );
       else
         point.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, hoehe );
-
       if( rangeU.contains( breite ) )
-      {
-        final double yValue = polyLineU.getYFor( breite );
-        final double value = Math.max( hoehe, yValue );
-        point.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, value );
-      }
+        point.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, polyLineU.getYFor( breite ) );
       else
         point.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, hoehe );
     }
-
     return true;
 
   }
@@ -485,9 +475,9 @@ public class PrfSource implements IProfilSource
       final IProfilPoint point = p.findPoint( pos[i], 0 );
       if( point != null )
       {
-        final IProfilDevider dev = p.addDevider( point, DEVIDER_TYP.WEHR );
-        if( (dev != null) && (values != null) && (values.length > i + 1) )
+        if( (values != null) && (values.length > i + 1) )
         {
+          final IProfilDevider dev = p.addDevider( point, DEVIDER_TYP.WEHR );
           dev.setValueFor( DEVIDER_PROPERTY.BEIWERT, values[i + 1] );
         }
       }
@@ -508,6 +498,21 @@ public class PrfSource implements IProfilSource
     wehr.setValue( BUILDING_PROPERTY.FORMBEIWERT, wt == null ? 0.0 : wt[0] );
     p.setBuilding( wehr );
     readWehrtrenner( wt, p, pr );
+    final double delta = (Double) POINT_PROPERTY.OBERKANTEWEHR.getParameter( PARAMETER.PRECISION );
+    final PolyLine polyLineO = new PolyLine( dbw.getX(), dbw.getY(), delta );
+    final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
+    for( final Iterator<IProfilPoint> points = p.getPoints().iterator(); points.hasNext(); )
+    {
+      final IProfilPoint point = points.next();
+      final double breite = point.getValueFor( POINT_PROPERTY.BREITE );
+      final double hoehe = point.getValueFor( POINT_PROPERTY.HOEHE );
+
+      if( rangeO.contains( breite ) )
+        point.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, polyLineO.getYFor( breite ) );
+      else
+        point.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, hoehe );
+
+    }
     return true;
   }
 

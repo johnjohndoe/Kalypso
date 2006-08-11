@@ -40,18 +40,17 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-
 
 /**
  * @author belger
  */
 /**
  * @author kimwerner
- * 
  */
 public class WehrPanel extends AbstractProfilView
 {
@@ -152,7 +151,7 @@ public class WehrPanel extends AbstractProfilView
       } );
 
       m_buttonD = new Button( this, SWT.NONE );
-      m_buttonD.setImage(m_deleteImg );
+      m_buttonD.setImage( m_deleteImg );
       m_buttonD.setToolTipText( "löscht den linken Wehrfeldtrenner" );
       m_buttonD.addSelectionListener( new SelectionAdapter()
       {
@@ -170,7 +169,7 @@ public class WehrPanel extends AbstractProfilView
     public void refresh( final IProfilDevider dev )
     {
       m_devider = dev;
-      final Double value = (Double) dev.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT );
+      final Double value = dev == null ? 0.0 : (Double) dev.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT );
       m_beiwert.setText( value.toString() );
       try
       {
@@ -211,9 +210,9 @@ public class WehrPanel extends AbstractProfilView
   {
     super( pem, viewdata, null );
     m_deviderLines = new LinkedList<DeviderLine>();
-//TODO: KIM images suchen 
-    m_deleteImg = null;//KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
-    m_addImg = null;//KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
+    // TODO: KIM images suchen
+    m_deleteImg = null;// KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
+    m_addImg = null;// KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
   }
 
   @Override
@@ -226,7 +225,8 @@ public class WehrPanel extends AbstractProfilView
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final int style )
@@ -354,10 +354,12 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-//        IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
-//        final ProfilOperation operation = new ProfilOperation( "Trennflächen verbergen/anzeigen", getProfilEventManager(), change, true );
-//        new ProfilOperationJob( operation ).schedule();
-        getViewData().setDeviderVisibility(DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection());
+        getViewData().setDeviderVisibility( DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
+        IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
+        final ProfilChangeHint hint = new ProfilChangeHint();
+        hint.setDeviderMoved();
+        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
+        // getViewData().setDeviderVisibility( DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
       }
     } );
 

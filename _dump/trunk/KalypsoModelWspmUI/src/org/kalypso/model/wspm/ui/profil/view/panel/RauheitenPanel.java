@@ -74,7 +74,7 @@ public class RauheitenPanel extends AbstractProfilView
     // (building == null) ? true : (.length == 0)
     m_enablePanel = !((building != null) && (pointProperties == null));
     m_blockRauheit = new Button( panel, SWT.CHECK );
-    m_blockRauheit.setSelection( !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) );
+    m_blockRauheit.setSelection( getViewData().useDeviderValue() );
     final IProfilDevider[] devs = (getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } ));
     m_blockRauheit.setEnabled( m_enablePanel && (devs != null) && (devs.length == 4) );
     m_blockRauheit.setText( "einfache Rauheiten verwenden" );
@@ -88,14 +88,13 @@ public class RauheitenPanel extends AbstractProfilView
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
 
-        final boolean isBlockRauheit = !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE );
-        if( isBlockRauheit == m_blockRauheit.getSelection() )
-          return;
-
-        final IProfilChange change = new PointPropertyHide( POINT_PROPERTY.RAUHEIT, isBlockRauheit );
-        final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), change, true );
-        new ProfilOperationJob( operation ).schedule();
-        updateProperty( getProfil() );
+//        if( getViewData().useDeviderValue() == m_blockRauheit.getSelection() )
+//          return;
+        getViewData().useDeviderValue( m_blockRauheit.getSelection() );
+        updateControls();
+//        final IProfilChange change = new PointPropertyHide( POINT_PROPERTY.RAUHEIT, !m_blockRauheit.getSelection() );
+//        final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), change, true );
+//        new ProfilOperationJob( operation ).schedule();
       }
     } );
     addLabel( panel, "VL", "Vorland links" );
@@ -124,7 +123,7 @@ public class RauheitenPanel extends AbstractProfilView
     data.horizontalAlignment = GridData.FILL;
     t.setLayoutData( data );
 
-    t.setEnabled( (Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE ) );
+    t.setEnabled( getViewData().useDeviderValue() );
     t.addModifyListener( doubleModifyListener );
     t.addFocusListener( new FocusAdapter()
     {
@@ -144,11 +143,11 @@ public class RauheitenPanel extends AbstractProfilView
         updateProperty( profil );
       }
 
-      
     } );
 
     return t;
   }
+
   protected void updateProperty( final IProfil p )
   {
     final IProfilDevider[] deviders = p.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
@@ -232,6 +231,7 @@ public class RauheitenPanel extends AbstractProfilView
     final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
     new ProfilOperationJob( operation ).schedule();
   }
+
   private void addLabel( final Composite parent, final String text, final String toolTip )
   {
     final Label label = new Label( parent, SWT.CENTER );
@@ -247,7 +247,7 @@ public class RauheitenPanel extends AbstractProfilView
   void updateControls( )
   {
     final IProfilDevider[] devider = getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
-    Boolean isBlockSetting = !(Boolean) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.VISIBLE );
+    Boolean isBlockSetting = getViewData().useDeviderValue();
     if( !m_blockRauheit.isDisposed() )
     {
       m_blockRauheit.setSelection( isBlockSetting );

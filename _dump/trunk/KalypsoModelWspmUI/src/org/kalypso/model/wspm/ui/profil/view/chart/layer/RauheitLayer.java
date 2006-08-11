@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,9 +16,7 @@ import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -52,6 +51,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     m_pem = pvp.getProfilEventManager();
     m_color = color;
     m_fillColor = fillColor;
+
   }
 
   /**
@@ -96,8 +96,42 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    final List<IProfilPoint> points = getProfil().getPoints();
+    IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE } );
+    List<IProfilPoint> points = new ArrayList<IProfilPoint>();
+    double[] values;
+    if( getViewData().useDeviderValue() && deviders.length == 4 )
+    {
+      values = new double[4];
+      int i = 0;
+      for( IProfilDevider dev : deviders )
+      {
+        final Double value = (Double)dev.getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT );
+        try
+        {
+          values[i++] = value == null ? dev.getPoint().getValueFor(IProfilPoint.POINT_PROPERTY.RAUHEIT ) :value;
+        }
+        catch( ProfilDataException e )
+        {
+          values[i++] =0.0;
+        }
+        points.add( dev.getPoint() );
+      }
+    }
+    else
+    {
+      points = getProfil().getPoints();
+      try
+      {
+        values = getProfil().getValuesFor(POINT_PROPERTY.RAUHEIT);
+      }
+      catch( ProfilDataException e )
+      {
+        values = new double[points.size()];
+      }
+    }
+   
     IProfilPoint lastP = null;
+    int i = 0;
     for( final Iterator<IProfilPoint> pIt = points.iterator(); pIt.hasNext(); )
     {
       final IProfilPoint p = pIt.next();
@@ -108,25 +142,22 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
         {
           final double x1 = lastP.getValueFor( POINT_PROPERTY.BREITE );
           final double x2 = p.getValueFor( POINT_PROPERTY.BREITE );
-          final double y1 = 0;
-          final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
-          final Rectangle box = logical2screen( new Rectangle2D.Double( x1, y1, x2 - x1, y2 - y1 ) );
+          //final double y1 = 0;
+          //final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
+          final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, values[i++] ) );
           box.width += 1;
           fillRectangle( gc, box );
         }
         catch( final ProfilDataException e )
         {
-          //sollte nie passieren
+          // sollte nie passieren
         }
       }
       lastP = p;
+
     }
     gc.setBackground( background );
   }
-
-  
-
-  
 
   private void fillRectangle( final GCWrapper gc, final Rectangle box )
   {
