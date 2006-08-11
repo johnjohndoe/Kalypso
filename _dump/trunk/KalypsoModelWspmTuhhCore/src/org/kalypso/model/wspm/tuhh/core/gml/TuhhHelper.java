@@ -36,7 +36,7 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
    */
   public static IFile ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Erzeuge Modellstruktur", 1 );
+    monitor.beginTask( "Validierung der Modellstruktur", 1000 );
 
     try
     {
@@ -44,9 +44,11 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       {
         if( wspmContainer instanceof IFolder )
         {
-          monitor.subTask( " - Verzeichnis wird erzeugt" );
+          monitor.subTask( " - erzeuge Verzeichnis " + wspmContainer.getName() );
           ((IFolder) wspmContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
+        else
+          monitor.worked(100);
         // else if( wspmContainer instanceof IProject )
         // {
         // monitor.subTask( "Projekt wird angelegt" );
@@ -62,7 +64,7 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       final IFile targetFile = wspmContainer.getFile( new Path( "modell.gml" ) );
       // Add the tuhh namespace to the known namespaces, so it is later known for adding new feature
       final String[] additionalNamespaces = new String[] { IWspmTuhhConstants.NS_WSPM_TUHH };
-      GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, monitor );
+      GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, new SubProgressMonitor( monitor, 900 ) );
 
       return targetFile;
     }

@@ -145,23 +145,23 @@ public class WspWinImporter
 
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
 
-    monitor.subTask( " - Initialisiere KALYPSO..." );
+    monitor.subTask( " - initialisiere KALYPSO..." );
     // HACK: initialize KalypsoUI
     KalypsoGisPlugin.getDefault();
 
     try
     {
       // load gml workspace
-      monitor.subTask( " - Modell wird geladen..." );
+      monitor.subTask( " - lade Grundmodell..." );
       final IFile modelFile = targetContainer.getFile( new Path( "modell.gml" ) );
       final URL url = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url );
       monitor.worked( 200 );
 
-      monitor.subTask( " - WspWin Projekt wird geladen..." );
+      monitor.subTask( " - lade WspWin Projekt..." );
       // load wspwin data
 
-      monitor.subTask( " - Daten werden konvertiert..." );
+      monitor.subTask( " - konvertiere Daten..." );
       // fill wspwin data into workspace
       final Feature modelRootFeature = workspace.getRootFeature();
 
@@ -245,7 +245,7 @@ public class WspWinImporter
       // /////////////// //
       // write workspace //
       // /////////////// //
-      monitor.subTask( " - Modell wird geschrieben..." );
+      monitor.subTask( " - schreibe Modell..." );
       final SetContentHelper contentHelper = new SetContentHelper()
       {
         @Override

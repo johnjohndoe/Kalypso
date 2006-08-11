@@ -49,6 +49,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter;
 
@@ -70,7 +73,43 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
 
     super.addPages();
   }
-  
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    // REMARK: do not create the controls now
+    // in order to allow the hack in getNextPage
+    // super.createPageControls(pageContainer);
+  }
+
+  /**
+   * Overwritten in order to set the new project name to the name of the selected wspwin directory (= name of the wspwin
+   * project).
+   * 
+   * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  @Override
+  public IWizardPage getNextPage( final IWizardPage page )
+  {
+    final IWizardPage nextPage = super.getNextPage( page );
+
+    if( page == m_wspWinImportPage && nextPage instanceof WizardNewProjectCreationPage )
+    {
+      final File sourceDirectory = m_wspWinImportPage.getSourceDirectory();
+      if( sourceDirectory != null )
+      {
+        final String name = sourceDirectory.getName();
+        final WizardNewProjectCreationPage projectPage = (WizardNewProjectCreationPage) nextPage;
+        projectPage.setInitialProjectName( name );
+      }
+    }
+
+    return nextPage;
+  }
+
   /**
    * Additionally import wspwin data into freshly created project.
    * 
@@ -80,7 +119,7 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
   @Override
   protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Projekt wird erzeugt", 10 );
+    monitor.beginTask( "Import aus WspWin", 10 );
 
     final IFile resultFile = super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
 

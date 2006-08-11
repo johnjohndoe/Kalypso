@@ -126,7 +126,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
     final DoFinishOperation op = new DoFinishOperation( project );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( status.isOK() )
     {
       BasicNewProjectResourceWizard.updatePerspective( m_config );
@@ -183,7 +183,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
         }
       };
 
-      final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
       ErrorDialog.openError( getShell(), getWindowTitle(), "Das zwischenzeitlich erzeugte Projekt konnte nicht gelöscht werden, ist aber vermutlich nicht korrekt initialisiert worden.\nBitte löschen Sie das Projekt im Navigator per Hand.", status );
     }
   }
@@ -207,7 +207,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    */
   protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Projekt wird erzeugt", 4 );
+    monitor.beginTask( "Neues Spiegellinienprojekt", 4 );
 
     project.create( new SubProgressMonitor( monitor, 1 ) );
     project.open( new SubProgressMonitor( monitor, 1 ) );
