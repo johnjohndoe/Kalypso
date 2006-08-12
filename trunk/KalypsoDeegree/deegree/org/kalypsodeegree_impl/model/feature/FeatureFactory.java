@@ -117,13 +117,21 @@ public class FeatureFactory
   }
 
   /**
+   * Same as {@link #createFeature(Feature, String, IFeatureType, boolean, false)}.
+   */
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
+  {
+    return createFeature( parent, id, featureType, initializeWithDefaults, false );
+  }
+
+  /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
    * 
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final boolean fillOptional )
   {
     if( featureType == null )
       throw new IllegalArgumentException( "must provide a featuretype" );
@@ -132,6 +140,7 @@ public class FeatureFactory
 
     final Feature feature = new Feature_Impl( parent, featureType, id, new Object[ftp.length] );
 
+    // TODO: shouldn't we move this to the Feature_Impl constructor?
     for( final IPropertyType pt : ftp )
     {
       if( pt.isList() )
@@ -149,69 +158,78 @@ public class FeatureFactory
 
     if( initializeWithDefaults )
     {
-      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-      for( final Map.Entry<IPropertyType, Object> entry : properties.entrySet() )
-      {
-        final IPropertyType pt = entry.getKey();
-        final Object value = entry.getValue();
-
-        if( value != null && pt.getMaxOccurs() == 1 )
-          feature.setProperty( pt, value );
-      }
+      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( feature, fillOptional );
+      FeatureHelper.setProperties( feature, properties );
     }
 
     return feature;
   }
 
-  /** Creates default feature, used by LegendView */
-  public static Feature createDefaultFeature( final Feature parent, final String id, final IFeatureType ft, final boolean createGeometry )
-  {
-    final IPropertyType[] propTypes = ft.getProperties();
-    final Map<IPropertyType, Object> props = createDefaultFeatureProperty( propTypes, createGeometry );
-
-    final Feature result = createFeature( parent, id, ft, false );
-    FeatureHelper.setProperties( result, props );
-
-    return result;
-  }
-
   /** Creates default FeatureProperties, used by LegendView */
-  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final IPropertyType[] propTypes, final boolean createGeometry )
+  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final Feature feature, final boolean fillOptional )
   {
-    // TODO handle occurency here and generate empty List or FeatureList as
-    // default
-    final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>();
-    for( int i = 0; i < propTypes.length; i++ )
+    final IPropertyType[] propTypes = feature.getFeatureType().getProperties();
+
+    final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>( propTypes.length );
+    for( final IPropertyType ftp : propTypes )
     {
-      final IPropertyType ftp = propTypes[i];
-
-      if( ftp instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = (IValuePropertyType) ftp;
-
-        Object value = null;
-
-        // get default value from schema if possible
-        final String defaultValue = vpt.getDefault();
-        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
-        if( typeHandler != null && defaultValue != null )
-        {
-          try
-          {
-            value = typeHandler.parseType( defaultValue );
-          }
-          catch( final ParseException e )
-          {
-            e.printStackTrace();
-          }
-        }
-        else
-          value = Mapper.defaultValueforJavaType( vpt, createGeometry );
-
+      final Object value = createDefaultFeatureProperty( feature, ftp, fillOptional );
+      if( value != null )
         results.put( ftp, value );
-      }
     }
     return results;
+  }
+
+  private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final boolean fillOptionals )
+  {
+    final int minOccurs = ftp.getMinOccurs();
+    final boolean isOptional = minOccurs == 0;
+
+    if( ftp instanceof IValuePropertyType )
+    {
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+
+      // get default value from schema if possible
+      final String defaultValue = vpt.getDefault();
+
+      // Only fill optional values if defaultValue is specified or fillOptionals is set
+      if( isOptional && !fillOptionals && defaultValue == null )
+        return null;
+
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+      if( typeHandler != null && defaultValue != null )
+      {
+        try
+        {
+          return typeHandler.parseType( defaultValue );
+        }
+        catch( final ParseException e )
+        {
+          e.printStackTrace();
+          return null;
+        }
+      }
+
+      return Mapper.defaultValueforJavaType( vpt );
+    }
+    else if( ftp instanceof IRelationType )
+    {
+      final IRelationType rt = (IRelationType) ftp;
+      if( ftp.isList() )
+        return FeatureFactory.createFeatureList( feature, rt );
+
+      if( /*isOptional && */!fillOptionals )
+        return null;
+
+      // we have a single internal feature here: create inner feature
+      final GMLWorkspace workspace = feature.getWorkspace();
+      if( workspace == null )
+        return null;
+
+      return workspace.createFeature( feature, rt.getTargetFeatureType() );
+    }
+
+    return null;
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )
@@ -244,8 +262,8 @@ public class FeatureFactory
 
     for( int i = 0; i < properties.length; i++ )
     {
-      IPropertyType ftp = properties[i];
-      IPropertyType[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
+      final IPropertyType ftp = properties[i];
+      final IPropertyType[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
       for( int j = 0; j < newFtp.length; j++ )
         result.add( newFtp[j] );
     }
@@ -260,8 +278,6 @@ public class FeatureFactory
   public static GMLWorkspace createGMLWorkspace( IGMLSchema schema, Feature rootFeature, URL context, String schemaLocation )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    // final URL url = schema.getUrl();
-    // final String href = url == null ? null : url.toExternalForm();
     return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, schemaLocation );
   }
 
@@ -291,8 +307,7 @@ public class FeatureFactory
     final IGMLSchema schema = rootFeatureType.getGMLSchema();
     final URL context = null;
     final String schemaLocation = null;
-    final Feature rootFeature = FeatureFactory.createDefaultFeature( null, "root", rootFeatureType, false );
+    final Feature rootFeature = FeatureFactory.createFeature( null, "root", rootFeatureType, true );
     return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation );
   }
-
 }

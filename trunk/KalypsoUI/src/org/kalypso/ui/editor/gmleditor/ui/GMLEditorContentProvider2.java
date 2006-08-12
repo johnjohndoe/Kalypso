@@ -55,11 +55,14 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   /**
    * remebers the child-parent relationship. This is nedded, because if we provide no parent, setExpandedElements
-   * doesn't work, which will lead to an unusable gui.
+   * doesn't work, which will lead to an unuseable gui.
    */
-  private Map<Object, Object> m_parentHash = new HashMap<Object, Object>();
+  private final Map<Object, Object> m_parentHash = new HashMap<Object, Object>();
 
   private TreeViewer m_viewer;
+
+  /** The objects which are currently at the top of the hierarchy. Used to implement 'go into'. */
+  private Object[] m_rootObjects = new Object[0];
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
@@ -148,7 +151,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     if( element == null )
       return false;
@@ -160,9 +163,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof GMLWorkspace )
-      return new Object[] { ((GMLWorkspace) inputElement).getRootFeature() };
-    return new Object[0];
+    return m_rootObjects;
   }
 
   /**
@@ -193,6 +194,11 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         m_workspace = (CommandableWorkspace) newInput;
       else
         m_workspace = null;
+
+      if( m_workspace == null )
+        m_rootObjects = new Object[0];
+      else
+        m_rootObjects = new Object[] { m_workspace.getRootFeature() };
     }
   }
 
@@ -223,5 +229,59 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     expandElement( getParent( element ) );
 
     m_viewer.setExpandedState( element, true );
+  }
+
+  public void goInto( final Object object )
+  {
+    final Object[] expandedElements = m_viewer.getExpandedElements();
+
+    try
+    {
+      final Object[] children = getChildren( object );
+      if( children != null && children.length > 0 )
+        m_rootObjects = children;
+    }
+    finally
+    {
+      m_viewer.refresh();
+      m_viewer.setExpandedElements( expandedElements );
+    }
+  }
+
+  public void goUp( )
+  {
+    final Object[] expandedElements = m_viewer.getExpandedElements();
+
+    try
+    {
+      if( m_rootObjects.length > 0 )
+      {
+        final Object parent = getParent( m_rootObjects[0] );
+        if( parent != null )
+        {
+          final Object parentParent = getParent( parent );
+          if( parentParent != null )
+          {
+            final Object[] sistersOfParent = getChildren( parentParent );
+            m_rootObjects = sistersOfParent;
+            return;
+          }
+        }
+      }
+
+      // something is wrong
+      m_rootObjects = new Object[] { m_workspace.getRootFeature() };
+    }
+    finally
+    {
+      m_viewer.setExpandedElements( expandedElements );
+      m_viewer.refresh();
+    }
+
+  }
+
+  public boolean canGoUp( )
+  {
+    return !(m_rootObjects.length == 1) || m_rootObjects[0] != m_workspace.getRootFeature();
   }
 }

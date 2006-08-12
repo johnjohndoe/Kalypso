@@ -747,8 +747,20 @@ public class FeatureHelper
     // this can happen when we import a shape-file.
     if( annotation == null )
       return "no-label";
+
     final String label = annotation.getValue( annotationKey );
     return tokenReplace( feature, label );
+  }
+
+  public static boolean hasReplaceTokens( final Feature feature, final String annotationKey )
+  {
+    final IFeatureType featureType = feature.getFeatureType();
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
+    if( annotation == null )
+      return false;
+
+    final String label = annotation.getValue( annotationKey );
+    return label.contains( TokenReplacerEngine.TOKEN_START );
   }
 
   /** Performs the token replace for the methods {@link #getLabel(Feature)}, ... */
