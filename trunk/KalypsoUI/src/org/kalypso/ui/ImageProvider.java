@@ -42,12 +42,36 @@ package org.kalypso.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
 
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.
  */
 public class ImageProvider
 {
+  public static enum DESCRIPTORS implements ImageKey
+  {
+    FEATURE("icons/feature/gis_feature.gif"),
+    
+    FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" );
+
+    private final String m_imagePath;
+
+    private DESCRIPTORS( final String imagePath )
+    {
+      m_imagePath = imagePath;
+    }
+
+    /**
+     * @see org.kalypso.informdss.KalypsoInformDSSImages.ImageKey#getImagePath()
+     */
+    public String getImagePath( )
+    {
+      return m_imagePath;
+    }
+  }
+  
+  
   public static final ImageDescriptor id( final String pluginID, final String location )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
@@ -57,6 +81,10 @@ public class ImageProvider
   {
     return id( "org.kalypso.ui", location );
   }
+  
+  // DEPRECATED: The image constants below are deprecated
+  // Use the DESCRIPTOR enum above instead
+  
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = id( "icons/full/elcl16/remove.gif" );

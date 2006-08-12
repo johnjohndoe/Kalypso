@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IEncodedStorage;
@@ -18,21 +17,16 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -40,31 +34,25 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Küpferle
  */
 public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
-  protected GmlTreeView m_viewer = null;
+  private GmlTreeView m_viewer = null;
 
   @Override
   public void dispose( )
   {
     if( m_viewer != null )
       m_viewer.dispose();
+
     // unregister site selection provieder
     getSite().setSelectionProvider( null );
     super.dispose();
@@ -130,19 +118,18 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
-
         public void run( )
         {
           try
           {
-            if( m_viewer != null )
-              m_viewer.loadInput( r, context, monitor );
+            final GmlTreeView treeView = getTreeView();
+            if( treeView != null )
+              treeView.loadInput( r, context, monitor );
           }
-          catch( CoreException e )
+          catch( final CoreException e )
           {
             e.printStackTrace();
           }
-
         }
       } );
     }
@@ -192,60 +179,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     {
       public void menuAboutToShow( final IMenuManager manager )
       {
-        final MenuManager newMenuManager = new MenuManager( "&Neu" );
-        manager.add( newMenuManager );
-
-        final IStructuredSelection selection = (IStructuredSelection) m_viewer.getTreeViewer().getSelection();
-        final Object firstElement = selection.getFirstElement();
-        final CommandableWorkspace workspace = m_viewer.getWorkspace();
-        if( selection.size() == 1 && firstElement instanceof FeatureAssociationTypeElement )
-        {
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-          final Feature parentFeature = fate.getParentFeature();
-          final IRelationType fatp = fate.getAssociationTypeProperty();
-// TODO: should not work only for lists
-          if( fatp.isList() )
-          {
-            final List list = (List) parentFeature.getProperty( fatp );
-            final int maxOccurs = fatp.getMaxOccurs();
-            if( maxOccurs == -1 || list.size() < maxOccurs )
-            {
-              final IFeatureType featureType = fatp.getTargetFeatureType();
-              final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
-              for( final IFeatureType ft : featureTypes )
-              {
-                final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
-                final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_NAME );
-
-                final String actionLabel = name == null ? featureType.getQName().getLocalPart() : name;
-
-                // TODO: get feature individual img
-                final ImageDescriptor featureNewImg = ImageProvider.IMAGE_FEATURE_NEW;
-
-                final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
-
-                newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
-              }
-
-              final Action newfeatureFromExternalSchemaAction = new Action( "Feature aus zusätzlichem Schema..." )
-              {
-                /**
-                 * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-                 */
-                @Override
-                public void runWithEvent( final Event event )
-                {
-                  final Shell shell = event.widget.getDisplay().getActiveShell();
-                  MessageDialog.openInformation( shell, "Neues Feature aus zusätzlichem Schema", "Diese Operation ist noch nicht implementiert.\nDer Anwender sollte hier zuerst ein GML-Schema auswählen und danach einen passenden Feature-Typ." );
-                }
-              };
-              newMenuManager.add( newfeatureFromExternalSchemaAction );
-            }
-          }
-        }
-
-        // add additions seperator: if not, eclipse whines
-        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        handleMenuAboutToShow( manager );
       }
     } );
 
@@ -253,6 +187,20 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     final Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
     getSite().registerContextMenu( menuManager, m_viewer );
     treeViewer.getControl().setMenu( menu );
+  }
+
+  /** Add some special actions to the menuManager, dependend on the current selection. */
+  public void handleMenuAboutToShow( final IMenuManager manager )
+  {
+    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getTreeViewer().getSelection();
+    final CommandableWorkspace workspace = m_viewer.getWorkspace();
+    final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
+
+    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( selection, workspace, selectionManager );
+    manager.add( newMenuManager );
+
+    // add additions seperator: if not, eclipse whines
+    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
   /**
@@ -281,5 +229,4 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   {
     m_viewer.getTreeViewer().getControl().setFocus();
   }
-
 }

@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.EditorActionBarContributor;
 
 /**
@@ -52,6 +59,32 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 public class GmlEditorActionBarContributor extends EditorActionBarContributor
 {
   private ShowDescriptionStatusLineItem m_statusLineItem;
+
+  private IEditorPart m_targetEditor;
+
+  private ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
+  {
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      handleSelectionChanged( event.getSelectionProvider() );
+    }
+  };
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_targetEditor != null )
+    {
+      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
+      if( selectionProvider != null )
+        selectionProvider.removeSelectionChangedListener( m_selectionListener );
+    }
+
+    super.dispose();
+  }
 
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToStatusLine(org.eclipse.jface.action.IStatusLineManager)
@@ -69,8 +102,51 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
   @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
+    if( m_targetEditor != null )
+    {
+      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
+      if( selectionProvider != null )
+        selectionProvider.removeSelectionChangedListener( m_selectionListener );
+    }
+
+    m_targetEditor = targetEditor;
+
+    if( m_targetEditor != null )
+    {
+      final ISelectionProvider selectionProvider = m_targetEditor.getSite().getSelectionProvider();
+      if( selectionProvider != null )
+        selectionProvider.addSelectionChangedListener( m_selectionListener );
+    }
+
     if( m_statusLineItem != null )
       m_statusLineItem.setActiveEditor( targetEditor );
   }
 
+  protected void handleSelectionChanged( final ISelectionProvider provider )
+  {
+    final IActionBars actionBars = m_targetEditor.getEditorSite().getActionBars();
+    final IMenuManager menuManager = actionBars.getMenuManager();
+
+    final IMenuManager selectionMenuManager = findManagerForSelection( menuManager );
+    if( selectionMenuManager == null )
+      return;
+
+    ObjectActionContributorManager.getManager().contributeObjectActions( m_targetEditor, selectionMenuManager, provider );
+    ((GmlEditor) m_targetEditor).handleMenuAboutToShow( selectionMenuManager );
+
+    actionBars.updateActionBars();
+  }
+
+  private IMenuManager findManagerForSelection( final IMenuManager menuManager )
+  {
+    final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" );
+    if( manager == null )
+      return null;
+
+    manager.remove( "selectionMenuManager" );
+
+    final IMenuManager newSmm = new MenuManager( "&Selektion", "selectionMenuManager" );
+    manager.appendToGroup( "selection", newSmm );
+    return newSmm;
+  }
 }

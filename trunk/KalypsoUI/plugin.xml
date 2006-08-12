@@ -256,6 +256,7 @@
                id="org.kalypso.ui.editors.treeeditor.menu">
             <groupMarker name="edit"/>
             <separator name="navigate"/>
+            <separator name="selection"/>
             <separator name="additions"/>
          </menu>
          <action
@@ -293,7 +294,7 @@
          <action
                class="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate"
                icon="icons/util/tree_collapse_all.gif"
-               id="KalypsoUI.action1"
+               id="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate"
                label="Collapse all"
                menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate"
                style="push"
