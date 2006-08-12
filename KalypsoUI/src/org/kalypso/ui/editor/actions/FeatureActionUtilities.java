@@ -169,9 +169,8 @@ public class FeatureActionUtilities
       for( final IFeatureType ft : featureTypes )
       {
         final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
-        final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_NAME );
 
-        final String actionLabel = name == null ? featureType.getQName().getLocalPart() : name;
+        final String actionLabel = newFeatureActionLabel( featureType, pseudoFeature );
 
         // TODO: get feature individual img
         final ImageDescriptor featureNewImg = ImageProvider.IMAGE_FEATURE_NEW;
@@ -184,6 +183,40 @@ public class FeatureActionUtilities
     }
 
     return newMenuManager;
+  }
+
+  /**
+   * Search for a suitable name of the new feature action.
+   * <p>
+   * The name is searched as follow:
+   * </p>
+   * <p>
+   * First the name-annotations, if no token replace takes place.
+   * </p>
+   * <p>
+   * Second the label-annotations, if no token replace takes place.
+   * </p>
+   * <p>
+   * Last, the local part of the feature type qname.
+   * </p>
+   */
+  private static String newFeatureActionLabel( final IFeatureType featureType, final Feature pseudoFeature )
+  {
+    if( !FeatureHelper.hasReplaceTokens( pseudoFeature, IAnnotation.ANNO_NAME ) )
+    {
+      final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_NAME );
+      if( name != null )
+        return name;
+    }
+
+    if( !FeatureHelper.hasReplaceTokens( pseudoFeature, IAnnotation.ANNO_LABEL ) )
+    {
+      final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_LABEL );
+      if( name != null )
+        return name;
+    }
+
+    return featureType.getQName().getLocalPart();
   }
 
 }

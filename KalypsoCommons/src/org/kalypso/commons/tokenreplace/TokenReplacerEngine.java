@@ -50,6 +50,12 @@ import java.util.Map;
  */
 public class TokenReplacerEngine
 {
+  /** String with which the tokens start. */
+  public static final String TOKEN_START = "${";
+
+  /** String with which the tokens end. */
+  public static final String TOKEN_END = "}";
+
   private Map<String, ITokenReplacer> m_trMap = new HashMap<String, ITokenReplacer>();
 
   public TokenReplacerEngine( final ITokenReplacer[] trs )
@@ -67,11 +73,11 @@ public class TokenReplacerEngine
     int pos = 0;
     while( pos < buffer.length() )
     {
-      final int start = buffer.indexOf( "${", pos );
+      final int start = buffer.indexOf( TOKEN_START, pos );
       if( start == -1 || start == buffer.length() - 1 )
         break;
 
-      final int stop = buffer.indexOf( "}", start + 1 );
+      final int stop = buffer.indexOf( TOKEN_END, start + 1 );
       if( stop == -1 )
         break;
 

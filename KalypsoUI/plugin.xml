@@ -227,24 +227,26 @@
                id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
          </action>
          <action
-               label="%Extension.EditorActions.undo.label"
-               icon="icons/gistable/undo_edit.gif"
-               style="push"
-               tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.gistableeditor.actions.UndoDelegate"
+               disabledIcon="icons/gistable/undo_edit_disabled.gif"
+               icon="icons/gistable/undo_edit.gif"
+               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate"
+               label="%Extension.EditorActions.undo.label"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               style="push"
                toolbarPath="edit"
-               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate">
+               tooltip="%Extension.EditorActions.undo.tooltip">
          </action>
          <action
-               label="%Extension.EditorActions.redo.label"
-               icon="icons/gistable/redo_edit.gif"
-               style="push"
-               tooltip="%Extension.EditorActions.redo.tooltip"
                class="org.kalypso.ui.editor.gistableeditor.actions.RedoDelegate"
+               disabledIcon="icons/gistable/redo_edit_disabled.gif"
+               icon="icons/gistable/redo_edit.gif"
+               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate"
+               label="%Extension.EditorActions.redo.label"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
+               style="push"
                toolbarPath="edit"
-               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate">
+               tooltip="%Extension.EditorActions.redo.tooltip">
          </action>
       </editorContribution>
       <editorContribution
@@ -270,29 +272,32 @@
                menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
                id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
          </action>
+         <action
+               class="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate"
+               disabledIcon="icons/gistable/redo_edit_disabled.gif"
+               icon="icons/gistable/redo_edit.gif"
+               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate"
+               label="%Extension.EditorActions.redo.label"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
+               style="push"
+               toolbarPath="edit"
+               tooltip="%Extension.EditorActions.redo.tooltip">
+         </action>
 
          <action
-               label="%Extension.EditorActions.undo.label"
-               icon="icons/gistable/undo_edit.gif"
-               style="push"
-               tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate"
+               disabledIcon="icons/gistable/undo_edit_disabled.gif"
+               icon="icons/gistable/undo_edit.gif"
+               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate"
+               label="%Extension.EditorActions.undo.label"
                menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
-               toolbarPath="edit"
-               id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate">
-         </action>
-         <action
-               label="%Extension.EditorActions.redo.label"
-               icon="icons/gistable/redo_edit.gif"
                style="push"
-               tooltip="%Extension.EditorActions.redo.tooltip"
-               class="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate"
-               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
                toolbarPath="edit"
-               id="org.kalypso.ui.editor.gistableeditor.RedoActionDelegate">
+               tooltip="%Extension.EditorActions.undo.tooltip">
          </action>
          <action
                class="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate"
+               disabledIcon="icons/util/tree_collapse_all_disabled.gif"
                icon="icons/util/tree_collapse_all.gif"
                id="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate"
                label="Collapse all"
@@ -300,8 +305,26 @@
                style="push"
                toolbarPath="navigate"
                tooltip="Collapse All"/>
-
-
+         <action
+               class="org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate"
+               disabledIcon="icons/full/dlcl16/gointo.gif"
+               icon="icons/full/elcl16/gointo.gif"
+               id="org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate"
+               label="Go into"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate"
+               style="push"
+               toolbarPath="navigate"
+               tooltip="Go into the selected element"/>
+         <action
+               class="org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate"
+               disabledIcon="icons/full/dlcl16/up_nav.gif"
+               icon="icons/full/elcl16/up_nav.gif"
+               id="org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate"
+               label="Up"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate"
+               style="push"
+               toolbarPath="navigate"
+               tooltip="Go up"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
@@ -426,24 +449,26 @@
          </action>
 
          <action
-               label="%Extension.EditorActions.undo.label"
-               icon="icons/map/undo_edit.gif"
-               style="push"
-               tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
+               disabledIcon="icons/map/undo_edit_disabled.gif"
+               icon="icons/map/undo_edit.gif"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"
+               label="%Extension.EditorActions.undo.label"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               style="push"
                toolbarPath="karte/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
+               tooltip="%Extension.EditorActions.undo.tooltip">
          </action>
          <action
-               toolbarPath="karte/edit"
-               label="%Extension.EditorActions.redo.label"
-               tooltip="%Extension.EditorActions.redo.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
+               disabledIcon="icons/map/redo_edit_disabled.gif"
                icon="icons/map/redo_edit.gif"
-               style="push"
+               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"
+               label="%Extension.EditorActions.redo.label"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
+               style="push"
+               toolbarPath="karte/edit"
+               tooltip="%Extension.EditorActions.redo.tooltip">
          </action>
           <action
                toolbarPath="karte/tools"
@@ -497,7 +522,6 @@
                id="org.kalypso.ui.editor.mapeditor.action.CreatePoint"/>
          <action
                class="org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate"
-               disabledIcon="icons/map/geoInfo_gray.gif"
                icon="icons/filterdialog/filter_ps.gif"
                id="org.kalypso.ogc.filterdialog.actions.openfilterdialog"
                label="Feature selektieren.."
@@ -527,14 +551,14 @@
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
                id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"/>
          <action
-               toolbarPath="tabelle"
-               label="Tabelle Eigenschaften"
-               tooltip=""
-               icon="icons/util/settings.gif"
                class="org.kalypso.ui.editor.obstableeditor.actions.TablePropertiesAction"
-               style="push"
+               disabledIcon="icons/util/settings_disabled.gif"
+               icon="icons/util/settings.gif"
+               id="org.kalypso.ui.editor.obstableeditor.actions.TablePropertiesAction"
+               label="Tabelle Eigenschaften"
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
-               id="org.kalypso.ui.editor.obstableeditor.actions.TablePropertiesAction"/>
+               style="push"
+               toolbarPath="tabelle"/>
       </editorContribution>
       <editorContribution
             targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
@@ -548,14 +572,15 @@
             <groupMarker name="exports"/>
          </menu>
          <action
-               toolbarPath="diagramm"
-               label="%Extension.EditorActions.diagramEditor.preferences.label"
-               tooltip="%Extension.EditorActions.diagramEditor.preferences.tooltip"
-               icon="icons/util/settings.gif"
                class="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"
-               style="push"
+               disabledIcon="icons/util/settings_disabled.gif"
+               icon="icons/util/settings.gif"
+               id="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"
+               label="%Extension.EditorActions.diagramEditor.preferences.label"
                menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
-               id="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"/>
+               style="push"
+               toolbarPath="diagramm"
+               tooltip="%Extension.EditorActions.diagramEditor.preferences.tooltip"/>
          <action
                toolbarPath="diagramm"
                label="%Extension.EditorActions.diagramEditor.openGrafikTool.label"

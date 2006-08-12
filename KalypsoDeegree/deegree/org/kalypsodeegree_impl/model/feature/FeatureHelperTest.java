@@ -65,7 +65,7 @@ public final class FeatureHelperTest extends TestCase
     // zwei features erzeugen
     final Feature sourcefeature = FeatureFactory.createFeature( null, "source", sourceFTP, new Object[] { "Hallo", new Double( 3.14 ), new Integer( 1 ) } );
 
-    final Feature targetfeature = FeatureFactory.createDefaultFeature( null, "test", sourceFTP, false );
+    final Feature targetfeature = FeatureFactory.createFeature( null, "test", sourceFTP, true );
 
     // mapping erzeugen
     final Properties mapping = new Properties();
