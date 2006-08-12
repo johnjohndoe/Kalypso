@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
-//import java.text.DateFormat;
+// import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -49,6 +49,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.DateWithoutTime;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -87,7 +88,6 @@ public class CalendarFeatureDialog implements IFeatureDialog
       Date newDate = dialog.getDate();
       if( m_ftp.getValueClass() == DateWithoutTime.class )
         newDate = new DateWithoutTime( newDate );
-
       final GregorianCalendar cal = new GregorianCalendar();
       cal.setTime( newDate );
       m_change = new FeatureChange( m_feature, m_ftp, new XMLGregorianCalendarImpl( cal ) );
@@ -98,8 +98,12 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
   private Date getDate( )
   {
+    // If no calue is set, use today as default
     final XMLGregorianCalendar calendar = getCalendar();
-    return calendar.toGregorianCalendar().getTime();
+    if( calendar == null )
+      return new Date();
+    
+    return DateUtilities.toDate( calendar );
   }
 
   private XMLGregorianCalendar getCalendar( )
@@ -121,11 +125,11 @@ public class CalendarFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-//    final Date date = getDate();
-//    if( date == null )
-//      return "";
-//    
-//    return m_dateFormat.format( date );
+    // final Date date = getDate();
+    // if( date == null )
+    // return "";
+    //    
+    // return m_dateFormat.format( date );
     return "...";
   }
 }

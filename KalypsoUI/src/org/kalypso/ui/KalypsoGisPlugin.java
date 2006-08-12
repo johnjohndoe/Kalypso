@@ -68,6 +68,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
@@ -153,6 +154,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private static DefaultStyleFactory m_defaultStyleFactory;
 
+  private PluginImageProvider m_imgProvider = null;
+  
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
@@ -352,6 +355,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     super.start( context );
 
+    m_imgProvider = new PluginImageProvider( this );
+    m_imgProvider.resetTmpFiles();
+
     configureLogger();
 
     try
@@ -403,7 +409,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private void configureDefaultStyleFactory( )
   {
-
     final IPath stateLocation = getStateLocation();
     final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
     if( !defaultStyleDir.exists() )
@@ -493,6 +498,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     GMLSchemaCatalog.release();
 
     m_resourceBundle = null;
+    
+    m_imgProvider.resetTmpFiles();
+    m_imgProvider = null;
   }
 
   public static String getId( )
@@ -766,5 +774,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
+  }
+  
+  public static PluginImageProvider getImageProvider()
+  {
+    return getDefault().m_imgProvider;
   }
 }

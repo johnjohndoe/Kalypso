@@ -145,7 +145,7 @@ public class PluginImageProvider
    *          the path
    * @return the image descriptor
    */
-  public ImageDescriptor getImageDescriptor( String path )
+  public ImageDescriptor getImageDescriptor( final String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( m_plugin ), path );
   }
@@ -188,6 +188,17 @@ public class PluginImageProvider
     if( registry.getDescriptor( name ) != null )
       return registry.get( name );
 
+    final ImageDescriptor icon = getDecoratedImageDescriptor( baseImageKey, decorators );
+    registry.put( name, icon );
+    return registry.get( name );
+  }
+
+  /**
+   * @param decorators
+   *          Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
+   */
+  public ImageDescriptor getDecoratedImageDescriptor( final ImageKey baseImageKey, final ImageKey[] decorators )
+  {
     // else, create the OverlayIcon
     final Image baseImage = getImage( baseImageKey );
     final ImageDescriptor[] decoratorDescriptors = new ImageDescriptor[decorators.length];
@@ -199,8 +210,7 @@ public class PluginImageProvider
 
     // put it into the registry and return the image
     final ImageDescriptor icon = new DecoratorOverlayIcon( baseImage, decoratorDescriptors, size );
-    registry.put( name, icon );
-    return registry.get( name );
+    return icon;
   }
 
   /** This method writes the image to a temporary file and returns a file url pointing to it. */
