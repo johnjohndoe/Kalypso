@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <catalog:catalog id="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:" ns0:base="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:" xmlns:ns0="xml"
     xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
     <catalog:delegateURI uriStartString="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:"
         catalog="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState_catalog"/>
     <catalog:system uri="ProfileReachSegmentWspmTuhhSteadyState/catalog.xml" systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState_catalog"/>
+
+    <catalog:delegateURI uriStartString="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:"
+        catalog="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState_catalog"/>
+    <catalog:system uri="CalculationWspmTuhhSteadyState/catalog.xml" systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState_catalog"/>
+    
 </catalog:catalog>

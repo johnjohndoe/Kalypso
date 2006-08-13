@@ -87,7 +87,7 @@
    <extension
          point="org.kalypso.core.catalogContribution">
       <catalogContribution
-            class="org.kalypso.model.wspm.tuhh.ui.sld.WspmTuhhFeatureTypeStyleCatalogContribution"
+            class="org.kalypso.model.wspm.tuhh.ui.catalog.WspmTuhhFeatureTypeCatalogContribution"
             name="Wspm Tuhh Style Catalog"/>
    </extension>
    <extension
