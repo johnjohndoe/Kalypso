@@ -105,6 +105,7 @@ public class KalypsoCoreExtensions
       System.out.println( "Platform is not running, plugins are not available" );
       return;
     }
+    
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( CATALOG_CONTRIBUTIONS_EXTENSION_POINT );
@@ -114,7 +115,6 @@ public class KalypsoCoreExtensions
     {
       final IConfigurationElement element = configurationElements[i];
       final String name = element.getName();
-      String value = element.getValue();
       if( "catalogContribution".equals( name ) )
       {
         final Object createExecutableExtension = element.createExecutableExtension( "class" );

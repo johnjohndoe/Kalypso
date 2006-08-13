@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
@@ -61,6 +62,8 @@ public class GoUpActionDelegate implements IEditorActionDelegate
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = (GmlEditor) targetEditor;
+
+    refreshAction( action );
   }
 
   /**
@@ -68,9 +71,16 @@ public class GoUpActionDelegate implements IEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
-    contentProvider.goUp();
-    action.setEnabled( contentProvider.canGoUp() );
+    final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
+    if( cp instanceof GMLEditorContentProvider2 )
+    {
+      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
+      contentProvider.goUp();
+    }
+
+    refreshAction( action );
+
+    m_targetEditor.fireDirty();
   }
 
   /**
@@ -79,8 +89,25 @@ public class GoUpActionDelegate implements IEditorActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
-    action.setEnabled( contentProvider.canGoUp() );
+    refreshAction( action );
+  }
+
+  private void refreshAction( final IAction action )
+  {
+    if( m_targetEditor == null )
+    {
+      action.setEnabled( false );
+      return;
+    }
+
+    final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
+    if( cp instanceof GMLEditorContentProvider2 )
+    {
+      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) cp;
+      action.setEnabled( contentProvider.canGoUp() );
+    }
+    else
+      action.setEnabled( false );
   }
 
 }

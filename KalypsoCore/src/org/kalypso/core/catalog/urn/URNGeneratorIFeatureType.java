@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class URNGeneratorIFeatureType implements IURNGenerator
 {
-
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#getSupportingClass()
    */
@@ -74,7 +73,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
    */
-  public String generateURNFor( Object object )
+  public String generateURNFor( final Object object )
   {
     if( object instanceof IFeatureType )
     {

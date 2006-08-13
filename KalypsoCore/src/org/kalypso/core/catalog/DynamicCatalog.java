@@ -326,7 +326,7 @@ public class DynamicCatalog implements ICatalog
 
     final System catalogSystemEntry = CatalogManager.OBJECT_FACTORY_CATALOG.createSystem();
     catalogSystemEntry.setSystemId( newCatalogURN );
-    catalogSystemEntry.setUri( urnSection +"/" + CatalogUtilities.CATALOG_FILE_NAME );
+    catalogSystemEntry.setUri( urnSection + "/" + CatalogUtilities.CATALOG_FILE_NAME );
     publicOrSystemOrUri.add( CatalogManager.OBJECT_FACTORY_CATALOG.createSystem( catalogSystemEntry ) );
     // next time catalog will be available
     addEntry( uri, entryID, entryType, relative );
@@ -415,6 +415,7 @@ public class DynamicCatalog implements ICatalog
     return collector;
   }
 
+  @SuppressWarnings("unchecked")
   private List<String> internResolve( final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern, boolean local )
   {
     if( collector == null )
@@ -499,9 +500,9 @@ public class DynamicCatalog implements ICatalog
             {
               final DelegateURI delegateURI = (DelegateURI) item;
               final String uriStartString = delegateURI.getUriStartString();
-              if( (systemID.startsWith( uriStartString ) && systemID != null) //
+              if( (systemID != null && systemID.startsWith( uriStartString )) //
                   || // 
-                  (publicID.startsWith( uriStartString ) && publicID != null) )
+                  (publicID != null && publicID.startsWith( uriStartString )) )
               {
                 final String catalogHref = delegateURI.getCatalog();
                 collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );

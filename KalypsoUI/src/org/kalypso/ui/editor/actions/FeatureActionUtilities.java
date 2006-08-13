@@ -45,6 +45,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -60,6 +61,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.ImageProvider.DESCRIPTORS;
+import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction;
 import org.kalypsodeegree.model.feature.Feature;
@@ -172,14 +174,15 @@ public class FeatureActionUtilities
 
         final String actionLabel = newFeatureActionLabel( featureType, pseudoFeature );
 
-        // TODO: get feature individual img
-        final ImageDescriptor featureNewImg = ImageProvider.IMAGE_FEATURE_NEW;
+        final ImageDescriptor catalogDescriptor = FeatureTypeImageCatalog.getImage( null, ft.getQName() );
+
+        final ImageDescriptor featureNewImg = catalogDescriptor == null ? ImageProvider.IMAGE_FEATURE_NEW : catalogDescriptor;
 
         newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
       }
 
+      newMenuManager.add( new Separator( "additions" ) );
       newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
-
     }
 
     return newMenuManager;

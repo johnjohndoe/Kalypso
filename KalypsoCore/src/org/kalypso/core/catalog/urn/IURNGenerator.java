@@ -53,14 +53,14 @@ public interface IURNGenerator
   public Class getSupportingClass( );
 
   /**
-   * IURNGenerator can also generate URNs from objects of other classes that the supporting class, as long as they
+   * IURNGenerator can also generate URNs from objects of other classes than the supporting class, as long as they
    * support the supporting class. <br>
    * Example: <br>
    * URNGenerator for the class IFeatureType can produce URNs for objects of IFeatureType, but also for QNames
    * 
    * @return true if this is a urn-generator for the object
    */
-  public boolean isURNGeneratorFor( Object object );
+  public boolean isURNGeneratorFor( final Object object );
 
   /**
    * generates the proper URN for the object<br>
@@ -68,7 +68,7 @@ public interface IURNGenerator
    * 
    * @return urn for object
    */
-  public String generateURNFor( Object object );
+  public String generateURNFor( final Object object );
 
   /**
    * Generate a URNPattern for a related object<br>
@@ -80,7 +80,7 @@ public interface IURNGenerator
    * @param related
    * @return URNPattern
    */
-  public String generateURNPatternForRelated( Object related );
+  public String generateURNPatternForRelated( final Object related );
 
   /**
    * Generate a default URN for a related object<br>
@@ -92,7 +92,7 @@ public interface IURNGenerator
    * @param related
    * @return URNPattern
    */
-  public String generateDefaultURNForRelated( Object related );
+  public String generateDefaultURNForRelated( final Object related );
 
   // TODO pattern
 

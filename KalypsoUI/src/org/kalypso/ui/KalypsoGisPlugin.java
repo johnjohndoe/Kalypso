@@ -206,9 +206,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       InputStream stream = null;
 
+      final String location = locs[i].trim();
+      if( location.length() == 0 )
+        continue;
+      
       try
       {
-        final URL url = new URL( locs[i] );
+        final URL url = new URL( location );
 
         stream = new BufferedInputStream( url.openStream() );
 
@@ -247,7 +251,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         // do nothing, try with next location
         // e.printStackTrace();
 
-        String msg = "Konnte Konfigurationsdatei nicht laden: " + locs[i] + "\n";
+        String msg = "Konnte Konfigurationsdatei nicht laden: " + location + "\n";
 
         if( i == locs.length - 1 )
           msg += "Serverkonfiguration konnte nicht gefunden werden! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nAlterntiv, prüfen Sie die Liste der Server in den Applikationseinstellungen (Kalypso Seite).";

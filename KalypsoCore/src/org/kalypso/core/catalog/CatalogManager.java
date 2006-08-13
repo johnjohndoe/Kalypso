@@ -59,6 +59,7 @@ import javax.xml.namespace.QName;
 import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.KalypsoCoreExtensions;
@@ -66,14 +67,16 @@ import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
+ * TODO: This catalog manager does two things, managing the catalogs and also knowning about what things are managed (URNGenerator, ...)
+ * <p>In my opinion, this is already too much. We should rather split those two concepts for clarity. Gernot.</p> 
+ * 
  * @author doemming
  */
 public class CatalogManager
 {
-
   /**
    * the default-catalog is dynamic, but changes will not be saved <br>
-   * TODO put into .metadata-pluign-preferences
+   * TODO put into .metadata-plugin-preferences
    */
   private static CatalogManager DEFAULT_MANAGER = null;
 
@@ -92,12 +95,14 @@ public class CatalogManager
   }
 
   /**
-   * methode to get the singelton catalog, with default catalog location
+   * methode to get the singleton catalog, with default catalog location
    */
   public static CatalogManager getDefault( )
   {
     if( DEFAULT_MANAGER == null )
     {
+      // TODO: instead of tmp-dir, use KalypsoCorePlugin.getDefault().getStateLocation()
+      // this probably also solves the todo above
       final File catalogBaseDir = FileUtilities.createNewTempDir( "kalypso-default-catalog" );
       DEFAULT_MANAGER = getDefault( catalogBaseDir );
     }
@@ -222,17 +227,23 @@ public class CatalogManager
     final String href = CatalogUtilities.getPathForCatalog( baseURN );
     final URL catalogURL = new URL( m_baseDir.toURL(), href );
     final URI catalogURI = catalogURL.toURI();
-    if(m_openCatalogs.containsKey(catalogURI))
+    if( m_openCatalogs.containsKey( catalogURI ) )
       return;
     boolean exists = true;
+    InputStream stream = null;
     try
     {
-      InputStream stream = catalogURL.openStream();
+      stream = catalogURL.openStream();
     }
     catch( Exception e )
     {
       exists = false;
     }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
+
     if( exists )
       return;
     // create
@@ -240,7 +251,7 @@ public class CatalogManager
     final Catalog catalog = catalogFac.createCatalog();
     final Map<QName, String> attributes = catalog.getOtherAttributes();
     // convert URN to path
-    final String path = CatalogUtilities.getPathForCatalog( baseURN );
+    // final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
     attributes.put( CatalogUtilities.BASE, baseURN );
     catalog.setId( baseURN );
