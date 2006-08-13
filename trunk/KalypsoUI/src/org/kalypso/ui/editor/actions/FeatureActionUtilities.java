@@ -57,6 +57,8 @@ import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -139,51 +141,73 @@ public class FeatureActionUtilities
   {
     final IMenuManager newMenuManager = new MenuManager( "&Neu" );
 
-    final Object firstElement = selection.getFirstElement();
-    if( selection.size() == 1 && firstElement instanceof FeatureAssociationTypeElement )
+    if( selection.size() != 1 )
+      return newMenuManager;
+
+    final Object element = selection.getFirstElement();
+
+    final IRelationType fatp;
+    final Feature parentFeature;
+    final IFeatureType featureType;
+
+    if( element instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-      final Feature parentFeature = fate.getParentFeature();
-      final IRelationType fatp = fate.getAssociationTypeProperty();
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      parentFeature = fate.getParentFeature();
+      fatp = fate.getAssociationTypeProperty();
+      featureType = fatp.getTargetFeatureType();
+    }
+    else if( selection instanceof IFeatureSelection )
+    {
+      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+      fatp = featureSelection.getParentFeatureProperty( feature );
+      featureType = feature.getFeatureType();
+      parentFeature = feature.getParent();
+    }
+    else
+      return newMenuManager;
 
-      final IFeatureType featureType = fatp.getTargetFeatureType();
-      final int maxOccurs = fatp.getMaxOccurs();
+    if( fatp == null || parentFeature == null )
+      return newMenuManager;
+    
+    final int maxOccurs = fatp.getMaxOccurs();
 
-      /* Direct properties (maxoccurs = 1) can onl ybe added if not already there. */
-      if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
+    /* Direct properties (maxoccurs = 1) can only be added if not already there. */
+    if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
+    {
+      // Just return, hide menu
+      return newMenuManager;
+    }
+
+    /* If maxoccurs < 0 we have a list, and we may tet if the list is already full. */
+    else if( maxOccurs > 1 )
+    {
+      final List list = (List) parentFeature.getProperty( fatp );
+      if( list != null && list.size() >= maxOccurs )
       {
-        // Just return, hide menu
+        // Add an action which indicates, that the list is full
+        newMenuManager.add( new ListFullAction( maxOccurs ) );
         return newMenuManager;
       }
-      /* If maxoccurs < 0 we have a list, and we may tet if the list is already full. */
-      else if( maxOccurs > 1 )
-      {
-        final List list = (List) parentFeature.getProperty( fatp );
-        if( list != null && list.size() >= maxOccurs )
-        {
-          // Add an action which indicates, that the list is full
-          newMenuManager.add( new ListFullAction( maxOccurs ) );
-          return newMenuManager;
-        }
-      }
-
-      final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
-      for( final IFeatureType ft : featureTypes )
-      {
-        final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
-
-        final String actionLabel = newFeatureActionLabel( featureType, pseudoFeature );
-
-        final ImageDescriptor catalogDescriptor = FeatureTypeImageCatalog.getImage( null, ft.getQName() );
-
-        final ImageDescriptor featureNewImg = catalogDescriptor == null ? ImageProvider.IMAGE_FEATURE_NEW : catalogDescriptor;
-
-        newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
-      }
-
-      newMenuManager.add( new Separator( "additions" ) );
-      newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
     }
+
+    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
+    for( final IFeatureType ft : featureTypes )
+    {
+      final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
+
+      final String actionLabel = newFeatureActionLabel( featureType, pseudoFeature );
+
+      final ImageDescriptor catalogDescriptor = FeatureTypeImageCatalog.getImage( null, ft.getQName() );
+
+      final ImageDescriptor featureNewImg = catalogDescriptor == null ? ImageProvider.IMAGE_FEATURE_NEW : catalogDescriptor;
+
+      newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
+    }
+
+    newMenuManager.add( new Separator( "additions" ) );
+    newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
 
     return newMenuManager;
   }

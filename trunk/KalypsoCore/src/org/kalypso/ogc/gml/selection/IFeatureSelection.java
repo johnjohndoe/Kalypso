@@ -52,6 +52,8 @@ public interface IFeatureSelection extends IStructuredSelection
   public Feature getParentFeature( final Feature feature );
 
   /**
+   * Returns the property of the parent feature of the given feature, for which the given feature is the value (maybe inside a list).
+   * 
    * @param feature
    *          Must be an element of this selection
    */
