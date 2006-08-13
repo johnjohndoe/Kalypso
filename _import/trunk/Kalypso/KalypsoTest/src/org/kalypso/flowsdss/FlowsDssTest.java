@@ -40,22 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.flowsdss;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
-import org.kalypso.dss.calcjob.FlowsDSSResultGenerator;
-import org.kalypso.dss.calcjob.HTMLFragmentBean;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -94,7 +87,7 @@ public class FlowsDssTest extends TestCase
     final double affectedArea = area1 * percentage;
     double area2 = 0;
     double abs = 1d;
-    double grenze = 0.1d;
+//    double grenze = 0.1d;
     while( true )
     {
       final Geometry smallerGeom = designAreaJTS.buffer( buffer );
@@ -117,61 +110,74 @@ public class FlowsDssTest extends TestCase
 
   }
 
-  // TODO: please do not use tests with absoute pathes
+  /**
+   * If a test class contains no test methods, JUnit whines...
+   * <p>
+   * Throw away if method below is repaired.
+   */
+  public void testDummy( )
+  {
+
+  }
+
+  // TODO: please do not use tests with absolute pathes
   // if you want to run such code for testing purposes
-  // make a main() method
-  // Test should run ANYWHERE!!!
-//  public void testFlowsDSS( ) throws Exception
-//  {
-//    final File dssResultDirRun = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/dssResults/HQ1" );
-//    final File gmlFile = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcCase.gml" );
-//    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
-//    final Feature[] resultNodes = new Feature[] { workspace.getFeature( "Node715" ), workspace.getFeature( "Node719" ), workspace.getFeature( "Node721" ) };
-//    // [Feature Node#Node702, Feature Node#Node715, Feature Node#Node719, Feature Node#Node721, Feature Node#Node722,
-//    // Feature Node#Node724, Feature Node#Node9728, Feature Node#Node726
-//
-//    final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse" );
-//    String hqEventId = "HQ1";
-//    boolean doMeasures = false;
-//    // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
-//    final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
-//    {
-//
-//      public void dispose( )
-//      {
-//        // TODO Auto-generated method stub
-//      }
-//
-//      public boolean hasID( String id )
-//      {
-//        return false;
-//      }
-//
-//      public Object getInputForID( String id ) throws SimulationException
-//      {
-//        if( "lastResults".equals( id ) )
-//        {
-//          try
-//          {
-//            return (new File( "C:/TMP/testkdss/lastResults" )).toURL();
-//          }
-//          catch( MalformedURLException e )
-//          {
-//            // TODO Auto-generated catch block
-//            throw new SimulationException( "", e );
-//          }
-//        }
-//        return null;
-//      }
-//
-//    };
-//    final List<HTMLFragmentBean> fragments = new ArrayList<HTMLFragmentBean>();
-//    for( final Feature resultNode : resultNodes )
-//      FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode, doMeasures, fragments );
-//    final File analyseFile = new File( dssResultDirRun.getParentFile(), "analyse.html" );
-//    final File analyseHQFile = new File( dssResultDirRun.getParentFile(), "analyseHQ.html" );
-//    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, fragments, true );
-//    FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, fragments, false );
-//
-//  }
+  // make a class with a main() method
+  // REMARK: Tests should run ANYWHERE!!!
+  // public void testFlowsDSS( ) throws Exception
+  // {
+  // final File dssResultDirRun = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/dssResults/HQ1" );
+  // final File gmlFile = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcCase.gml" );
+  // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
+  // final Feature[] resultNodes = new Feature[] { workspace.getFeature( "Node715" ), workspace.getFeature( "Node719" ),
+  // workspace.getFeature( "Node721" ) };
+  // // [Feature Node#Node702, Feature Node#Node715, Feature Node#Node719, Feature Node#Node721, Feature Node#Node722,
+  // // Feature Node#Node724, Feature Node#Node9728, Feature Node#Node726
+  //
+  // final File rrmResultDir = new File( "C:/TMP/testkdss/CalcJob-0-1150587605160/hqJobs/HQ1/calcDir/results/Ergebnisse"
+  // );
+  // String hqEventId = "HQ1";
+  // boolean doMeasures = false;
+  // // final File inputBaseDir = new File( "C:/TMP/testkdss/CalcJobInputData1150587628613/" );
+  // final ISimulationDataProvider inputProvider = new ISimulationDataProvider()
+  // {
+  //
+  // public void dispose( )
+  // {
+  // // TODO Auto-generated method stub
+  // }
+  //
+  // public boolean hasID( String id )
+  // {
+  // return false;
+  // }
+  //
+  // public Object getInputForID( String id ) throws SimulationException
+  // {
+  // if( "lastResults".equals( id ) )
+  // {
+  // try
+  // {
+  // return (new File( "C:/TMP/testkdss/lastResults" )).toURL();
+  // }
+  // catch( MalformedURLException e )
+  // {
+  // // TODO Auto-generated catch block
+  // throw new SimulationException( "", e );
+  // }
+  // }
+  // return null;
+  // }
+  //
+  // };
+  // final List<HTMLFragmentBean> fragments = new ArrayList<HTMLFragmentBean>();
+  // for( final Feature resultNode : resultNodes )
+  // FlowsDSSResultGenerator.generateDssResultFor( dssResultDirRun, rrmResultDir, inputProvider, hqEventId, resultNode,
+  // doMeasures, fragments );
+  // final File analyseFile = new File( dssResultDirRun.getParentFile(), "analyse.html" );
+  // final File analyseHQFile = new File( dssResultDirRun.getParentFile(), "analyseHQ.html" );
+  // FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, fragments, true );
+  // FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, fragments, false );
+  //
+  // }
 }

@@ -34,51 +34,40 @@
  */
 package org.kalypso.test.kriging;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
+import org.kalypso.KalypsoTest;
 import org.kalypso.ant.KrigingTask;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 
 /**
  * GenerateObservationMappingKrigingTest
  * <p>
- * 
  * created by
  * 
  * @author doemming (01.06.2005)
  */
 public class KrigingTaskTest extends TestCase
 {
-  public void testExecute() throws TypeRegistryException
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
   {
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new ObservationLinkHandler() );
+    KalypsoTest.init();
+  }
 
-    // initalize urlcatalogs
-    final MultiUrlCatalog multiCatalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new UrlCatalogOGC(),
-        new UrlCatalogNA(),
-        new UrlCatalogUpdateObservationMapping(),
-        new DeegreeUrlCatalog() } );
-    final File cache = new File( "C:\\TMP\\schemaCatalog" );
-    if( !cache.exists() )
-      cache.mkdirs();
-    GMLSchemaCatalog.init( multiCatalog, cache );
+  /**
+   * @see junit.framework.TestCase#tearDown()
+   */
+  @Override
+  protected void tearDown( ) throws Exception
+  {
+    KalypsoTest.init();
+  }
 
+  public void testExecute( )
+  {
     final KrigingTask mappingKriging = new KrigingTask();
     // setting inputs
     // general

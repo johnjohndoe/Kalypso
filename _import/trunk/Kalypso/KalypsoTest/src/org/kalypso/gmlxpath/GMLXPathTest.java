@@ -55,8 +55,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * Test for GMLXPath validation<br>
- * test is intended to fail on corrupt GMLXpaths or on invalid results of GMLXPathes
+ * test is intended to fail on corrupt GMLXpaths or on invalid results of GMLXPathes TODO:
  * 
+ * @Andreas: why is this test class here, shouldn't it be better near GMLXPath ?
  * @author doemming
  */
 public class GMLXPathTest extends TestCase
@@ -147,6 +148,9 @@ public class GMLXPathTest extends TestCase
     catch( Exception e )
     {
       e.printStackTrace();
+      // If you do such a thing (i don't like it because the junit view already shows the
+      // stack trace), at least rethrow the exception, if not, the test is green!
+      throw e;
     }
   }
 }

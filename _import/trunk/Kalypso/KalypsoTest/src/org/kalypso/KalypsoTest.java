@@ -45,6 +45,7 @@ import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 
 /**
  * TODO: insert type comment here
@@ -97,12 +98,14 @@ public class KalypsoTest
     //
   }
 
-  private static MultiUrlCatalog getCatalog( )
+  protected static MultiUrlCatalog getCatalog( )
   {
     final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
         , new UrlCatalogOGC()//
         , new DeegreeUrlCatalog() //
         , new URLCatalogFlows() //
+        , new UrlCatalogUpdateObservationMapping() //
+
         // CAN'T use it here, because this catalog uses plugin mechanisms to find the schemas
         // , new org.kalypso.contribs.ogc31.UrlCatalogOGC() //
         } );
