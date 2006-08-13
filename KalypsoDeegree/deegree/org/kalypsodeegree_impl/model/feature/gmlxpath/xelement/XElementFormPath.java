@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -52,7 +56,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class XElementFormPath extends AbstractXElement
 {
-
   private final String m_propName;
 
   public XElementFormPath( String condition )
@@ -65,24 +68,34 @@ public class XElementFormPath extends AbstractXElement
    *      boolean)
    */
   @Override
-  public Object evaluateFeature( Feature contextFeature, boolean featureTypeLevel )
+  public Object evaluateFeature( final Feature contextFeature, final boolean featureTypeLevel )
   {
+    final IFeatureType featureType = contextFeature.getFeatureType();
+    
     if( featureTypeLevel )
     {
       // check featureType
-      if( "*".equals( m_propName ) || m_propName.equals( contextFeature.getFeatureType().getQName().getLocalPart() ) )
+      if( "*".equals( m_propName ) || m_propName.equals( featureType.getQName().getLocalPart() ) )
         return contextFeature;
       else
         return null;
     }
-    final IPropertyType pt = contextFeature.getFeatureType().getProperty( m_propName );
+
+    final QName qname = QNameUtilities.fromString( m_propName );
+    final IPropertyType pt;
+    if( qname == null )
+      pt = featureType.getProperty( m_propName );
+    else
+      pt = featureType.getProperty( qname );
+    
     if( pt == null )
       return null;
+    
     final Object value = contextFeature.getProperty( pt );
     if( pt instanceof IRelationType )
     {
       if( value instanceof String )
-        return null; // xPath would not follow linked associations
+        return null; // xPath would not follow linked associations; why not??
       return value;
     }
     return value;

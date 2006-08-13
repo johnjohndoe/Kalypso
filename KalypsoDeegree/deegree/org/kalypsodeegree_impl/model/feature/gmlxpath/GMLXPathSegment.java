@@ -40,22 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
 
 /**
- * each GMLXPathSegment represents the parts of the gmlxPath between two '/' <br>
+ * Each GMLXPathSegment represents the parts of the gmlxPath between two '/' <br>
  * 
  * @author doemming
  */
 final class GMLXPathSegment
 {
+  public static GMLXPathSegment[] addSegments( GMLXPathSegment[] segments, GMLXPathSegment segment )
+  {
+    final int parentLength = segments.length;
+    final GMLXPathSegment[] newSegments = new GMLXPathSegment[parentLength + 1];
+    System.arraycopy( segments, 0, newSegments, 0, parentLength );
+    newSegments[parentLength] = segment;
+    return newSegments;
+  }
+
+  public static GMLXPathSegment[] segmentsFromFeature( Feature feature ) throws GMLXPathException
+  {
+    final String id = feature.getId();
+    if( id == null || id.length() < 1 )
+      throw new GMLXPathException( "canot buil gmlxpath for feature with invalid id" );
+    else
+      return new GMLXPathSegment[] { new GMLXPathSegment( feature ) };
+  }
+
+  public static GMLXPathSegment[] segmentsFromPath( final String path )
+  {
+    if( path.trim().length() == 0 )
+      return new GMLXPathSegment[] {};
+
+    final String[] segments = path.split( "/" );
+    final GMLXPathSegment[] xSegments = new GMLXPathSegment[segments.length];
+    for( int i = 0; i < segments.length; i++ )
+      xSegments[i] = new GMLXPathSegment( segments[i] );
+
+    return xSegments;
+  }
 
   private final static XElementFactory m_fac = new XElementFactory();
 
-  private final IXElement m_addressXElement;
+  private transient final IXElement m_addressXElement;
 
-  private final IXElement m_conditionXElement;
+  private transient final IXElement m_conditionXElement;
 
   private final String m_segment;
 
@@ -80,11 +112,11 @@ final class GMLXPathSegment
       address = segmentString.substring( 0, index );
       condition = segmentString.substring( index );
     }
+
     m_addressXElement = m_fac.create( address );
+
     if( condition != null )
-    {
       m_conditionXElement = m_fac.create( condition );
-    }
     else
       m_conditionXElement = null;
   }
@@ -106,6 +138,24 @@ final class GMLXPathSegment
   public IXElement getConditionXElement( )
   {
     return m_conditionXElement;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    return EqualsBuilder.reflectionEquals( this, obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 
 }

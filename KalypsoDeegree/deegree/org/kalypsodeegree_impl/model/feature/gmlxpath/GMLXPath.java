@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -59,20 +61,17 @@ public class GMLXPath
   /** Something between two '/' */
   private final GMLXPathSegment[] m_segments;
 
+  private GMLXPath( final GMLXPathSegment[] segments )
+  {
+    m_segments = segments;
+  }
+
   /**
    * creates a GMLXPath from a string
    */
   public GMLXPath( final String path )
   {
-    if( path.trim().length() == 0 )
-      m_segments = new GMLXPathSegment[] {};
-    else
-    {
-      final String[] segments = path.split( "/" );
-      m_segments = new GMLXPathSegment[segments.length];
-      for( int i = 0; i < segments.length; i++ )
-        m_segments[i] = new GMLXPathSegment( segments[i] );
-    }
+    this( GMLXPathSegment.segmentsFromPath( path ) );
   }
 
   /**
@@ -80,20 +79,13 @@ public class GMLXPath
    */
   public GMLXPath( final Feature feature ) throws GMLXPathException
   {
-    final String id = feature.getId();
-    if( id == null || id.length() < 1 )
-      throw new GMLXPathException( "canot buil gmlxpath for feature with invalid id" );
-    else
-      m_segments = new GMLXPathSegment[] { new GMLXPathSegment( feature ) };
+    this( GMLXPathSegment.segmentsFromFeature( feature ) );
   }
 
-  // public GMLXPath( final GMLXPath parent, final String segment )
-  // {
-  // final int parentLength = parent.m_segments.length;
-  // m_segments = new GMLXPathSegment[parentLength + 1];
-  // System.arraycopy( parent.m_segments, 0, m_segments, 0, parentLength );
-  // m_segments[parentLength] = new GMLXPathSegment( segment );
-  // }
+  public GMLXPath( final GMLXPath parent, final String segment )
+  {
+    this( GMLXPathSegment.addSegments( parent.m_segments, new GMLXPathSegment( segment ) ) );
+  }
 
   /**
    * @see java.lang.Object#toString()
@@ -120,5 +112,30 @@ public class GMLXPath
   public GMLXPathSegment getSegment( int index )
   {
     return m_segments[index];
+  }
+
+  public GMLXPath getParentPath( )
+  {
+    final GMLXPathSegment[] segments = new GMLXPathSegment[m_segments.length - 1];
+    System.arraycopy( m_segments, 0, segments, 0, m_segments.length - 1 );
+    return new GMLXPath( segments );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    return EqualsBuilder.reflectionEquals( this, obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

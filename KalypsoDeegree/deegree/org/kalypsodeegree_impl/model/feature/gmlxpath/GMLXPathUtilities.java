@@ -41,7 +41,6 @@
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,7 +53,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
  */
 public class GMLXPathUtilities
 {
-
   /**
    * query xPath for GMLWorkspace
    */
@@ -71,7 +69,7 @@ public class GMLXPathUtilities
     return getResultForSegment( xPath, feature, 0, false );
   }
 
-  private static Object getResultForSegment( final GMLXPath xPath, final Object context, final int segmentIndex, boolean isFeatureTypeLevel ) throws GMLXPathException
+  private static Object getResultForSegment( final GMLXPath xPath, final Object context, final int segmentIndex, final boolean isFeatureTypeLevel ) throws GMLXPathException
   {
     if( segmentIndex >= xPath.getSegmentSize() )
       return context;
@@ -81,6 +79,7 @@ public class GMLXPathUtilities
 
     if( segmentIndex + 1 >= xPath.getSegmentSize() )
       return newContext;
+    
     // operate next level in xpath
     // recursion starts...
     if( newContext instanceof Feature )
@@ -88,13 +87,9 @@ public class GMLXPathUtilities
     if( newContext instanceof List )
     {
       final List contextList = (FeatureList) newContext;
-      final Iterator iterator = contextList.iterator();
-      // final FeatureList results = FeatureFactory.createFeatureList( fList.getParentFeature(),
-      // fList.getParentFeatureTypeProperty() );
       final List<Object> resultList = new ArrayList<Object>();
-      while( iterator.hasNext() )
+      for( final Object object : contextList )
       {
-        final Object object = iterator.next();
         if( object instanceof Feature )
         {
           final Object result = getResultForSegment( xPath, object, segmentIndex + 1, !isFeatureTypeLevel );
@@ -102,11 +97,17 @@ public class GMLXPathUtilities
             resultList.add( result );
         }
       }
+      
       if( resultList.size() == 1 )
         return resultList.get( 0 );
       return resultList;
     }
-    // everything else is a error, as only feaures and featurelists can have subelements
+    
+    // everything else is an error, as only feaures and featurelists can have subelements
+    // TODO: why? Can't we use xpath to retrieve value's of properties?
+    // Proposition: if we have reached the end of the xpath, return all values. If not
+    // we have an error, so throw an exception.
+    
     return null;
   }
 
@@ -130,6 +131,7 @@ public class GMLXPathUtilities
         return newContext;
       return null;
     }
+    
     throw new GMLXPathException();
   }
 
