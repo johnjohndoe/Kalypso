@@ -192,7 +192,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   /** Add some special actions to the menuManager, dependend on the current selection. */
   public void handleMenuAboutToShow( final IMenuManager manager )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getTreeViewer().getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
 
