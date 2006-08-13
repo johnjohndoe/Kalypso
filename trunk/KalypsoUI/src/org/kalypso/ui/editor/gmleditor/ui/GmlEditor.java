@@ -229,4 +229,13 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   {
     m_viewer.getTreeViewer().getControl().setFocus();
   }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
+   */
+  @Override
+  public boolean isDirty( )
+  {
+    return super.isDirty() || m_viewer.isDirty();
+  }
 }

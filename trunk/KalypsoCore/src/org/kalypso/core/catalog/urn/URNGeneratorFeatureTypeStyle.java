@@ -52,7 +52,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
  */
 public class URNGeneratorFeatureTypeStyle implements IURNGenerator
 {
-
   private final static String BASETYPE = "sld";
 
   /**
@@ -76,7 +75,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
    */
-  public String generateURNFor( Object object )
+  public String generateURNFor( final Object object )
   {
     if( object instanceof FeatureTypeStyle )
     {

@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.1.jar"/>
+	<classpathentry exported="true" sourcepath="lib/commons-lang-2.1-src.zip" kind="lib" path="lib/commons-lang-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-commons-resolver-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar"/>

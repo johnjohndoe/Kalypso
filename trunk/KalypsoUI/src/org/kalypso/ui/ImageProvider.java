@@ -91,7 +91,6 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_TOGGLESELECT = id( "icons/full/elcl16/kde_14_polyline.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
@@ -141,7 +140,6 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_NEW = id( "icons/feature/gis_feature_neu.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );
-  public static final ImageDescriptor IMAGE_FEATURE_RELATION_AGGREGATION = id( "icons/feature/feature_link_aggregation.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = id( "icons/feature/feature_link_composition.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_POINT = id( "icons/feature/geom_point.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOINT = id( "icons/feature/geom_multipoint.gif" );

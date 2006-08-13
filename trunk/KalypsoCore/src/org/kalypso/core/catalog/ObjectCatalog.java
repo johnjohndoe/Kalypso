@@ -60,7 +60,6 @@ import org.kalypso.core.repository.Storage;
  */
 public abstract class ObjectCatalog<O> extends Storage
 {
-
   private final CatalogManager m_manager;
 
   private final Class m_supportingClass;
@@ -83,9 +82,9 @@ public abstract class ObjectCatalog<O> extends Storage
 
       final IUrlResolver2 catalogResolver = new IUrlResolver2()
       {
-        public URL resolveURL( final String href_ ) throws MalformedURLException
+        public URL resolveURL( final String href ) throws MalformedURLException
         {
-          final String ref = baseCatalog.resolve( href_, href_ );
+          final String ref = baseCatalog.resolve( href, href );
           return UrlResolverSingleton.resolveUrl( urlFeatureStyle, ref );
         }
       };
@@ -93,8 +92,9 @@ public abstract class ObjectCatalog<O> extends Storage
       final O object = read( catalogResolver, urlFeatureStyle.openStream() );
       return object;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
+      // TODO: NEVER just eat an exception!
       // e.printStackTrace();
       return null;
       // TODO make new exceptionType CatalogException
@@ -129,6 +129,7 @@ public abstract class ObjectCatalog<O> extends Storage
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     if( generator == null )
       throw new UnsupportedOperationException();
+    
     store( object, storeLocation );
     final String objectURN = generator.generateURNFor( object );
     final String uriAsString = storeLocation.toString();
@@ -160,7 +161,7 @@ public abstract class ObjectCatalog<O> extends Storage
       return getValue( resolver, defaultURN, defaultURN );
     }
     catch( Exception e )
-    {
+    {// TODO: at least log it!
       return null;
     }
   }

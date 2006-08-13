@@ -37,9 +37,11 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -73,7 +75,12 @@ public class GMLEditorLabelProvider2 extends LabelProvider
   {
     ImageDescriptor descriptor = null;
     if( element instanceof Feature )
-      descriptor = ImageProvider.IMAGE_FEATURE;
+    {
+      final IFeatureType featureType = ((Feature) element).getFeatureType();
+      descriptor = FeatureTypeImageCatalog.getImage( null, featureType.getQName() );
+      if( descriptor == null )
+        descriptor = ImageProvider.IMAGE_FEATURE;
+    }
     else if( element instanceof FeatureAssociationTypeElement )
       descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
     else if( element instanceof LinkedFeatureElement2 )
@@ -143,6 +150,9 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     if( element instanceof GM_Object )
       return element.getClass().getName().replaceAll( ".+\\.", "" );
 
-    return "unknown";
+    if( element == null )
+      return "null";
+    
+    return element.toString();
   }
 }
