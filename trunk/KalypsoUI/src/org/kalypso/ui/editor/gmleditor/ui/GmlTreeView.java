@@ -27,13 +27,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
+import org.kalypso.contribs.eclipse.jface.viewers.ConstantLabelProvider;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -49,6 +52,7 @@ import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.gistreeview.ObjectFactory;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.ImageProvider.DESCRIPTORS;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
@@ -249,7 +253,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_composite.setLayout( layout );
 
     m_treeViewer = new TreeViewer( m_composite );
-    m_treeViewer.setLabelProvider( m_labelProvider );
     m_treeViewer.setUseHashlookup( true );
 
     // add drag and drop support
@@ -423,33 +426,49 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         return;
 
       final GMLEditorContentProvider2 contentProvider = m_contentProvider;
-      control.getDisplay().asyncExec( new Runnable()
+      final GMLEditorLabelProvider2 labelProvider = m_labelProvider;
+      final Display display = control.getDisplay();
+      display.asyncExec( new Runnable()
       {
         public void run( )
         {
           if( !control.isDisposed() )
           {
-            treeViewer.setContentProvider( contentProvider );
-            treeViewer.setInput( m_workspace );
+            if( m_workspace == null )
+            {
+              final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
+              treeViewer.setLabelProvider( new ConstantLabelProvider( status.getMessage(), failImg ) );
+              treeViewer.setContentProvider( new ArrayTreeContentProvider() );
+              treeViewer.getTree().setLinesVisible( false );
+              treeViewer.setInput( new Object[] { "" } );
+            }
+            else
+            {
+              treeViewer.setLabelProvider( labelProvider );
+              treeViewer.setContentProvider( contentProvider );
+              treeViewer.getTree().setLinesVisible( false );
+              treeViewer.setInput( m_workspace );
 
-            final GMLXPath rootPath = new GMLXPath( rootPathString );
-            contentProvider.setRootPath( rootPath );
+              final GMLXPath rootPath = new GMLXPath( rootPathString );
+              contentProvider.setRootPath( rootPath );
+            }
           }
         }
       } );
 
-      control.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
+      if( m_workspace != null )
+        display.asyncExec( new Runnable()
         {
-          if( !control.isDisposed() )
+          public void run( )
           {
-            final Object[] elements = contentProvider.getElements( m_workspace );
-            if( elements != null && elements.length > 0 )
-              treeViewer.setSelection( new StructuredSelection( elements[0] ) );
+            if( !control.isDisposed() )
+            {
+              final Object[] elements = contentProvider.getElements( m_workspace );
+              if( elements != null && elements.length > 0 )
+                treeViewer.setSelection( new StructuredSelection( elements[0] ) );
+            }
           }
-        }
-      } );
+        } );
     }
   }
 
@@ -458,8 +477,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
+    final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
+    m_treeViewer.setLabelProvider( new ConstantLabelProvider( "no data...", failImg ) );
     m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-    m_treeViewer.setInput( new String[] { "no data..." } );
+    m_treeViewer.getTree().setLinesVisible( false );
+    m_treeViewer.setInput( new Object[] { "" } );
   }
 
   protected void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
@@ -481,8 +503,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final GMLXPath rootPath = new GMLXPath( rootPathString );
       m_contentProvider.setRootPath( rootPath );
 
+      final Image waitImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.WAIT_LOADING_OBJ );
+      m_treeViewer.setLabelProvider( new ConstantLabelProvider( "Loading " + context + "...", waitImg ) );
       m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-      m_treeViewer.setInput( new String[] { "Loading " + context + "..." } );
+      m_treeViewer.getTree().setLinesVisible( false );
+      m_treeViewer.setInput( new Object[] { "" } );
 
       final String href = input.getHref();
       final String linktype = input.getLinktype();

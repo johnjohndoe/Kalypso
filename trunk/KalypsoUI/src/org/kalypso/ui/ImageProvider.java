@@ -53,6 +53,9 @@ public class ImageProvider
   {
     FEATURE("icons/feature/gis_feature.gif"),
     
+    WAIT_LOADING_OBJ( "icons/full/obj16/wait_loading.gif" ),
+    FAILED_LOADING_OBJ( "icons/full/obj16/failed_loading.gif" ),
+    
     FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" );
 
     private final String m_imagePath;

@@ -60,7 +60,7 @@ public class EditFeature implements IActionDelegate
      final IWorkbenchPage page = window.getActivePage();
      try
      {
-       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_ACTIVATE );
      }
      catch( final PartInitException e )
      {
