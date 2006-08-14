@@ -41,65 +41,82 @@
 package org.kalypso.ogc.gml.util;
 
 /**
- * This class is a rule for the MaxInclusiveRestriction.
+ * This class is a rule for the EnumerationRestriction.
  * 
  * @author albert
  */
-public class MaxInclusiveRule implements IRule
+public class EnumerationRule implements IRule
 {
   /**
-   * This variable stores a value, that should be checked against. This is a maximum inclusive value.
+   * This variable stores the list of allowed values in a enumeration.
    */
-  public Number m_checkagainst;
+  private Object[] m_enums;
 
-  public MaxInclusiveRule( Number checkagainst )
+  /**
+   * This variable stores the list of allowed values in a enumeration.
+   */
+  private Object[] m_labels;
+
+  public EnumerationRule( Object[] enums, Object[] labels )
   {
     super();
-    m_checkagainst = checkagainst;
+    m_enums = enums;
+    m_labels = labels;
   }
 
   /**
-   * RULE : MaxInclusiveRestriction
+   * RULE : EnumerationRestriction
    * 
-   * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
+   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public boolean isValid( Object object )
   {
     boolean ret = false;
 
-    /* If the object does not exist or is no number, return true. */
-    if( (object == null) || (!(object instanceof Number)) )
+    /* If the object does not exist, return true. */
+    if( object == null )
       return true;
 
-    /* Cast in a number. It must be one, because a restriction for a maximum could only work with numbers. */
-    Number number = (Number) object;
-
-    if( number.floatValue() <= m_checkagainst.floatValue() )
+    for( int i = 0; i < m_enums.length; i++ )
     {
-      ret = true;
+      if( object.equals( m_enums[i] ) )
+      {
+        ret = true;
+      }
     }
 
     return ret;
   }
 
   /**
-   * This function sets the parameter to check against.
+   * This function returns the list of allowed values for a enumeration.
    * 
-   * @param checkagainst
-   *          The max value.
+   * @return Allowed values for a enumeration.
    */
-  public void setCheckParameter( Number checkagainst )
+  public Object[] getEnums( )
   {
-    m_checkagainst = checkagainst;
+    return m_enums;
   }
 
   /**
-   * This function returns the parameter, against which is checked.
+   * This function sets the list of allowed values for a enumeration.
    * 
-   * @return The max value.
+   * @param enums
+   *          Allowed values for a enumeration.
    */
-  public Number getCheckParameter( )
+  public void setEnums( String[] enums )
   {
-    return m_checkagainst;
+    m_enums = enums;
   }
+
+  public Object[] getLabels( )
+  {
+    return m_labels;
+  }
+
+  public void setLabels( Object[] labels )
+  {
+    m_labels = labels;
+  }
+
 }

@@ -71,8 +71,30 @@ public class RegExpRule implements IRule
   {
     boolean ret = false;
 
-    /* Cast in a string. It must be one, because a restriction for a regexp should be made with a string. */
-    String txt = (String) object;
+    /* If the object does not exist, return true. */
+    if( object == null )
+      return true;
+
+    String txt = null;
+
+    if( object instanceof String )
+    {
+      /* Cast in a string. */
+      txt = (String) object;
+    }
+    else if( object instanceof char[] )
+    {
+      /* Cast in a char[]. */
+      char[] text = (char[]) object;
+
+      /* ToString. */
+      txt = String.copyValueOf( text );
+    }
+    else
+    {
+      /* Not a allowed class-type, return true. */
+      return true;
+    }
 
     for( int i = 0; i < m_patterns.length; i++ )
     {

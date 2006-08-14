@@ -69,7 +69,6 @@ import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -138,7 +137,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     // ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geoPt.getValueClass(), true );
     final ITypeHandler typeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1 );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1, false );
 
     int count = 1;
     for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
@@ -150,7 +149,7 @@ public class ShapeSerializer
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
       final ITypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1 );
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
       count++;
     }
 
@@ -231,12 +230,12 @@ public class ShapeSerializer
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1 );
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
     // root feature of shapefile does not need a boundingbox!
     // final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );
     // final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX,
     // envelopeTH.getTypeName(), envelopeTH, 1, 1 );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY, false );
 
     // final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, memberProp };

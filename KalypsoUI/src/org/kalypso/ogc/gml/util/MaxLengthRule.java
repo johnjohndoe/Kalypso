@@ -41,41 +41,60 @@
 package org.kalypso.ogc.gml.util;
 
 /**
- * This class is a rule for the MaxInclusiveRestriction.
+ * This class is a rule for the MaxLengthRestriction.
  * 
  * @author albert
  */
-public class MaxInclusiveRule implements IRule
+public class MaxLengthRule implements IRule
 {
   /**
-   * This variable stores a value, that should be checked against. This is a maximum inclusive value.
+   * This variable stores the max-length value.
    */
-  public Number m_checkagainst;
+  private int m_max;
 
-  public MaxInclusiveRule( Number checkagainst )
+  public MaxLengthRule( int max )
   {
     super();
-    m_checkagainst = checkagainst;
+    m_max = max;
   }
 
   /**
-   * RULE : MaxInclusiveRestriction
+   * RULE : MaxLengthRestriction
    * 
-   * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
+   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public boolean isValid( Object object )
   {
     boolean ret = false;
 
-    /* If the object does not exist or is no number, return true. */
-    if( (object == null) || (!(object instanceof Number)) )
+    /* If the object does not exist, return true. */
+    if( object == null )
       return true;
 
-    /* Cast in a number. It must be one, because a restriction for a maximum could only work with numbers. */
-    Number number = (Number) object;
-
-    if( number.floatValue() <= m_checkagainst.floatValue() )
+    /* The object given should be a char[] or a String. */
+    if( object instanceof char[] )
     {
+      char[] text = (char[]) object;
+
+      if( text.length <= m_max )
+      {
+        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
+        ret = true;
+      }
+    }
+    else if( object instanceof String )
+    {
+      String text = (String) object;
+
+      if( text.length() <= m_max )
+      {
+        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
+        ret = true;
+      }
+    }
+    else
+    {
+      /* If it is no char[] or String, return true. */
       ret = true;
     }
 
@@ -83,23 +102,24 @@ public class MaxInclusiveRule implements IRule
   }
 
   /**
-   * This function sets the parameter to check against.
+   * This function gets the maximum allowed length.
    * 
-   * @param checkagainst
-   *          The max value.
+   * @return The maximum.
    */
-  public void setCheckParameter( Number checkagainst )
+  public int getMax( )
   {
-    m_checkagainst = checkagainst;
+    return m_max;
   }
 
   /**
-   * This function returns the parameter, against which is checked.
+   * This function sets the maximum allowed length.
    * 
-   * @return The max value.
+   * @param min
+   *          The maximum.
    */
-  public Number getCheckParameter( )
+  public void setMax( int max )
   {
-    return m_checkagainst;
+    m_max = max;
   }
+
 }

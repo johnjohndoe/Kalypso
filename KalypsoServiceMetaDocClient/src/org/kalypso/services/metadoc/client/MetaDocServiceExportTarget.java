@@ -302,7 +302,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         e.printStackTrace();
         // typename = "java.lang.String";
       }
-      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), valueQName, handler, 0, 1 );
+      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), valueQName, handler, 0, 1, false );
       ftpColl.add( vpt );
       fpColl.put( vpt, realValue );
 
