@@ -41,65 +41,51 @@
 package org.kalypso.ogc.gml.util;
 
 /**
- * This class is a rule for the MaxInclusiveRestriction.
+ * This class is a rule for IsNillable.
  * 
  * @author albert
  */
-public class MaxInclusiveRule implements IRule
+public class IsNillableRule implements IRule
 {
-  /**
-   * This variable stores a value, that should be checked against. This is a maximum inclusive value.
-   */
-  public Number m_checkagainst;
+  private boolean m_isNillable;
 
-  public MaxInclusiveRule( Number checkagainst )
+  private int m_minOccurs;
+
+  public IsNillableRule( boolean isNillable, int minOccurs )
   {
     super();
-    m_checkagainst = checkagainst;
+    m_isNillable = isNillable;
+    m_minOccurs = minOccurs;
   }
 
   /**
-   * RULE : MaxInclusiveRestriction
+   * RULE : IsNillable
    * 
-   * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
+   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public boolean isValid( Object object )
   {
-    boolean ret = false;
-
-    /* If the object does not exist or is no number, return true. */
-    if( (object == null) || (!(object instanceof Number)) )
-      return true;
-
-    /* Cast in a number. It must be one, because a restriction for a maximum could only work with numbers. */
-    Number number = (Number) object;
-
-    if( number.floatValue() <= m_checkagainst.floatValue() )
-    {
-      ret = true;
-    }
-
-    return ret;
+    return !(m_isNillable == false && m_minOccurs > 0 && object == null);
   }
 
-  /**
-   * This function sets the parameter to check against.
-   * 
-   * @param checkagainst
-   *          The max value.
-   */
-  public void setCheckParameter( Number checkagainst )
+  public boolean isNillable( )
   {
-    m_checkagainst = checkagainst;
+    return m_isNillable;
   }
 
-  /**
-   * This function returns the parameter, against which is checked.
-   * 
-   * @return The max value.
-   */
-  public Number getCheckParameter( )
+  public void setNillable( boolean isNillable )
   {
-    return m_checkagainst;
+    m_isNillable = isNillable;
   }
+
+  public int getMinOccurs( )
+  {
+    return m_minOccurs;
+  }
+
+  public void setMinOccurs( int minOccurs )
+  {
+    m_minOccurs = minOccurs;
+  }
+
 }

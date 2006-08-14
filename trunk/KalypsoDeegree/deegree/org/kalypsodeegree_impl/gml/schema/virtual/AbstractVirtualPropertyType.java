@@ -230,4 +230,13 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   {
     return Platform.getAdapterManager().getAdapter( this, adapter );
   }
+  
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#isNillable()
+   */
+  public boolean isNillable( )
+  {
+    // TODO: at the moment, constant false. Maybe get value in constructor?
+    return false;
+  }
 }

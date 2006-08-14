@@ -76,7 +76,7 @@ public class MeshElement
   static
   {
     final IMarshallingTypeHandler geomTH = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( GeometryUtilities.getPolygonClass() );
-    final IValuePropertyType pt = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1 );
+    final IValuePropertyType pt = GMLSchemaFactory.createValuePropertyType( new QName( ns, "GEOM" ), geomTH.getTypeName(), geomTH, 1, 1, false );
     final IPropertyType[] pts = new IPropertyType[] { pt };
     m_featureType = GMLSchemaFactory.createFeatureType( new QName( ns, "MeshElement" ), pts );
   }

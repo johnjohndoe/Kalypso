@@ -67,6 +67,10 @@ public class MaxExclusiveRule implements IRule
   {
     boolean ret = false;
 
+    /* If the object does not exist or is no number, return true. */
+    if( (object == null) || (!(object instanceof Number)) )
+      return true;
+
     /* Cast in a number. It must be one, because a restriction for a maximum could only work with numbers. */
     Number number = (Number) object;
 

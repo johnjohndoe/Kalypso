@@ -425,6 +425,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    // TODO: why doesn't the feature composite itself is a modelllisztener and reacts to the changes?
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
     {
       final Group mainGroup = m_mainGroup;

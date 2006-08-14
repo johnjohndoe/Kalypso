@@ -677,6 +677,12 @@ public class FeatureHelper
    * <p>
    * If the property is not yet set, the feature is generated and set.
    * </p>
+   * <p>
+   * This method creates directly a feature of the target feature type of the given property.
+   * </p>
+   * 
+   * @throws IllegalArgumentException
+   *           If the target feature type of the given property is abstract.
    */
   public static Feature getSubFeature( final Feature parent, final QName propertyName )
   {
@@ -691,6 +697,9 @@ public class FeatureHelper
 
     final IRelationType rt = (IRelationType) property;
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+
+    if( targetFeatureType.isAbstract() )
+      throw new IllegalArgumentException( "Cannot instantiate an abstract feature" );
 
     // neues machen
     final GMLWorkspace workspace = parent.getWorkspace();

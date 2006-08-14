@@ -44,15 +44,15 @@ import java.util.Vector;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MaxLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
+import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -95,55 +95,73 @@ public abstract class RuleFactory
         /* MaxExclusiveRestriction. */
         if( restriction instanceof MaxExclusiveRestriction )
         {
+          /* Add the Rule. */
           MaxExclusiveRestriction maxexclusiverestriction = (MaxExclusiveRestriction) restriction;
-
-          /* For security reasons check for Number. On other types, this rule would be unnecessary. */
-          if( vpt.getValueClass() == Double.class )
-            rules.add( new MaxExclusiveRule( maxexclusiverestriction.getMaxExclusive() ) );
+          rules.add( new MaxExclusiveRule( maxexclusiverestriction.getMaxExclusive() ) );
         }
 
         /* MinExclusvieRestriction. */
         if( restriction instanceof MinExclusiveRestriction )
         {
+          /* Add the Rule. */
           MinExclusiveRestriction minexclusiverestriction = (MinExclusiveRestriction) restriction;
-
-          /* For security reasons check for Number. On other types, this rule would be unnecessary. */
-          if( vpt.getValueClass() == Double.class )
-            rules.add( new MinExclusiveRule( minexclusiverestriction.getMinExclusive() ) );
+          rules.add( new MinExclusiveRule( minexclusiverestriction.getMinExclusive() ) );
         }
 
         /* MaxInclusiveRestriction. */
         if( restriction instanceof MaxInclusiveRestriction )
         {
+          /* Add the Rule. */
           MaxInclusiveRestriction maxinclusiverestriction = (MaxInclusiveRestriction) restriction;
-
-          /* For security reasons check for Number. On other types, this rule would be unnecessary. */
-          if( vpt.getValueClass() == Double.class )
-            rules.add( new MaxInclusiveRule( maxinclusiverestriction.getMaxInclusive() ) );
+          rules.add( new MaxInclusiveRule( maxinclusiverestriction.getMaxInclusive() ) );
         }
 
         /* MinInclusvieRestriction. */
         if( restriction instanceof MinInclusiveRestriction )
         {
+          /* Add the Rule. */
           MinInclusiveRestriction mininclusiverestriction = (MinInclusiveRestriction) restriction;
-
-          /* For security reasons check for Number. On other types, this rule would be unnecessary. */
-          if( vpt.getValueClass() == Double.class )
-            rules.add( new MinInclusiveRule( mininclusiverestriction.getMinInclusive() ) );
+          rules.add( new MinInclusiveRule( mininclusiverestriction.getMinInclusive() ) );
         }
 
         /* RegExpRestriction. */
         if( restriction instanceof RegExpRestriction )
         {
-          RegExpRestriction regexprestriction = (RegExpRestriction) restriction;
-
           /* Add the Rule. */
+          RegExpRestriction regexprestriction = (RegExpRestriction) restriction;
           rules.add( new RegExpRule( regexprestriction.getPatterns() ) );
+        }
+
+        /* MaxLengthRestriction. */
+        if( restriction instanceof MaxLengthRestriction )
+        {
+          /* Add the Rule. */
+          MaxLengthRestriction maxlengthrestriction = (MaxLengthRestriction) restriction;
+          rules.add( new MaxLengthRule( maxlengthrestriction.getMaxLength() ) );
+        }
+
+        /* MinLengthRestriction. */
+        if( restriction instanceof MinLengthRestriction )
+        {
+          /* Add the Rule. */
+          MinLengthRestriction minlengthrestriction = (MinLengthRestriction) restriction;
+          rules.add( new MinLengthRule( minlengthrestriction.getMinLength() ) );
+        }
+
+        /* EnumerationRestriction. */
+        if( restriction instanceof EnumerationRestriction )
+        {
+          /* Add the Rule. */
+          EnumerationRestriction enumerationrestriction = (EnumerationRestriction) restriction;
+          rules.add( new EnumerationRule( enumerationrestriction.getEnumeration(), enumerationrestriction.getLabels() ) );
         }
 
         /* TODO: Add new rules here. */
       }
     }
+
+    /* IsNillableRule. */
+    rules.add( new IsNillableRule( ftp.isNillable(), ftp.getMinOccurs() ) );
 
     return rules.toArray( new IRule[] {} );
   }
