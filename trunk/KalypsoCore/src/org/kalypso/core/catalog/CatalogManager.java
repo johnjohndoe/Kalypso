@@ -67,8 +67,11 @@ import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
- * TODO: This catalog manager does two things, managing the catalogs and also knowning about what things are managed (URNGenerator, ...)
- * <p>In my opinion, this is already too much. We should rather split those two concepts for clarity. Gernot.</p> 
+ * TODO: This catalog manager does two things, managing the catalogs and also knowning about what things are managed
+ * (URNGenerator, ...)
+ * <p>
+ * In my opinion, this is already too much. We should rather split those two concepts for clarity. Gernot.
+ * </p>
  * 
  * @author doemming
  */
@@ -168,6 +171,7 @@ public class CatalogManager
   @SuppressWarnings("unchecked")
   public ICatalog getCatalog( final URI catalogURI )
   {
+    InputStream is = null;
     try
     {
       if( !m_openCatalogs.containsKey( catalogURI ) )
@@ -175,7 +179,13 @@ public class CatalogManager
         // load existing
         final URL catalogURL = catalogURI.toURL();
         final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
-        final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( catalogURL );
+
+        // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
+        // It does leave the stream open
+        is = catalogURL.openStream();
+        final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
+        is.close();
+
         final Catalog catalog = object.getValue();
 
         final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, catalogURL, catalog );
@@ -185,9 +195,13 @@ public class CatalogManager
     }
     catch( Exception e )
     {
-      // e.printStackTrace();
+      e.printStackTrace();
       // TODO generate new type of exception CatalogException
       throw new UnsupportedOperationException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
     }
   }
 

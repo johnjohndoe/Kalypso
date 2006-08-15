@@ -533,7 +533,6 @@ public class DynamicCatalog implements ICatalog
 
   void save( final File baseDir ) throws Exception
   {
-
     final Marshaller marshaller = JaxbUtilities.createMarshaller( CatalogManager.JAX_CONTEXT_CATALOG );
     final String catalogBaseURN = getBase();
     final String path = CatalogUtilities.getPathForCatalog( catalogBaseURN );
