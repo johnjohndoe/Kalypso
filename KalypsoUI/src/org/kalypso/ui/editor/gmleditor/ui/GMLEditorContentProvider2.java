@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -45,6 +48,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
+import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -156,11 +161,11 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     TreeViewerUtilities.accept( m_viewer, visitor );
 
     final Object parent = visitor.getParent();
-    
+
     // Something like that, but this wont work
-//    if( parent == null && parent instanceof Feature )
-//      ((Feature)parent).getParent();
-    
+    // if( parent == null && parent instanceof Feature )
+    // ((Feature)parent).getParent();
+
     if( parent != null )
       m_parentHash.put( element, parent );
 
@@ -174,7 +179,29 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   {
     if( element == null )
       return false;
-    return getChildren( element ).length > 0;
+
+    final int childCount = getChildren( element ).length;
+    if( childCount == 0 )
+      return false;
+
+    final QName qname;
+    if( element instanceof Feature )
+      qname = ((Feature) element).getFeatureType().getQName();
+    else if( element instanceof FeatureAssociationTypeElement )
+      qname = ((FeatureAssociationTypeElement) element).getAssociationTypeProperty().getQName();
+    else
+      qname = null;
+
+    if( qname != null )
+    {
+      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
+      final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
+      final boolean showChildren = Boolean.parseBoolean( showChildrenString );
+      return showChildren;
+    }
+
+    // if we don't know the qname, return true because we have children
+    return true;
   }
 
   /**
@@ -184,7 +211,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   {
     if( m_workspace == null )
       return new Object[] {};
-    
+
     final Object[] rootFeatureObjects = new Object[] { m_workspace.getRootFeature() };
 
     try

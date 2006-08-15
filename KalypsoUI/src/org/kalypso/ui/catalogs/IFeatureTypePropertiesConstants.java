@@ -40,22 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.catalogs;
 
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-import org.eclipse.jface.resource.ImageDescriptor;
-
 /**
+ * Constants used in the ui-properties for qnames.
+ * 
  * @author Gernot Belger
  */
-public class FeatureTypeImageCatalog extends FeatureTypeCatalog
+public interface IFeatureTypePropertiesConstants
 {
-  private static final String BASETYPE = "swtimage";
-
-  public static ImageDescriptor getImage( final URL context, final QName qname )
-  {
-    final URL imgUrl = getURL( BASETYPE, context, qname );
-    return imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
-  }
+  /** Show children of this element, defaults to true */
+  public final static String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren";
+  public final static String GMLTREE_SHOW_CHILDREN_DEFAULT = "true";
 }

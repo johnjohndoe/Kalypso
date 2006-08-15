@@ -40,22 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.catalogs;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
+ * Returns properties for qnames.
+ * 
  * @author Gernot Belger
  */
-public class FeatureTypeImageCatalog extends FeatureTypeCatalog
+public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
 {
-  private static final String BASETYPE = "swtimage";
+  private static final String BASETYPE = "uiproperties";
 
-  public static ImageDescriptor getImage( final URL context, final QName qname )
+  public static Properties getProperties( final URL context, final QName qname )
   {
-    final URL imgUrl = getURL( BASETYPE, context, qname );
-    return imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
+    final Properties properties = new Properties();
+
+    final URL url = getURL( BASETYPE, context, qname );
+    if( url == null )
+      return properties;
+
+    InputStream is = null;
+    try
+    {
+      is = url.openStream();
+      properties.load( is );
+      is.close();
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
+    return properties;
   }
 }
