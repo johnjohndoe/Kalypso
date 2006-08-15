@@ -48,17 +48,20 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
  * @author dömming,belger
@@ -135,6 +138,8 @@ public class ResourcePool
   {
     synchronized( m_keyInfos )
     {
+      final Map<KeyInfo, Object> objectsToSave = new HashMap<KeyInfo, Object>();
+
       for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
         final Map.Entry entry = (Entry) iter.next();
@@ -144,9 +149,35 @@ public class ResourcePool
         if( info.removeListener( l ) && info.isEmpty() )
         {
           m_logger.info( "Releasing key (no more listeners): " + key );
-          info.dispose();
+
+          /* If object is dirty mark it for save */
+          final Object object = info.getObject();
+          if( object != null && info.isDirty() )
+            objectsToSave.put( info, object );
+          else
+            objectsToSave.put( info, null );
+
           iter.remove();
         }
+      }
+
+      final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
+      for( final Entry<KeyInfo, Object> entry : objectsToSave.entrySet() )
+      {
+        final KeyInfo info = entry.getKey();
+        final Object value = entry.getValue();
+
+        final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
+        final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
+        if( askForSave )
+        {
+          final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", value, info );
+          job.setUser( true );
+          job.setRule( mutex );
+          job.schedule();
+        }
+        else
+          System.out.println( "Should save pool object: " + value );
       }
     }
   }
@@ -170,13 +201,31 @@ public class ResourcePool
       if( object == null )
         return;
 
-      final Collection values = m_keyInfos.values();
-      for( final Iterator iter = values.iterator(); iter.hasNext(); )
+      final Collection<KeyInfo> values = m_keyInfos.values();
+      for( final KeyInfo info : values )
       {
-        final KeyInfo info = (KeyInfo) iter.next();
         if( info.getObject() == object )
           info.saveObject( monitor );
       }
+    }
+  }
+
+  /** Get the key info which is responsible for a given object. */
+  public KeyInfo getInfo( final Object object )
+  {
+    synchronized( m_keyInfos )
+    {
+      if( object == null )
+        return null;
+
+      final Collection<KeyInfo> values = m_keyInfos.values();
+      for( final KeyInfo info : values )
+      {
+        if( info.getObject() == object )
+          return info;
+      }
+
+      return null;
     }
   }
 

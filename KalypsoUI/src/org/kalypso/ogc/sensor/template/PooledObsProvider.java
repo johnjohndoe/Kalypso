@@ -171,4 +171,12 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   {
     return m_isDisposed;
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+  {
+    // TODO Auto-generated method stub
+  }
 }

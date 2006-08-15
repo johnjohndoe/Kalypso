@@ -467,4 +467,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     return m_selectionManager;
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
+  {
+    // TODO Change label, showing if dirty or not
+  }
 }

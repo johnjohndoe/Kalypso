@@ -163,4 +163,12 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     return m_styleKey;
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+  {
+    // TODO change label according to dirty
+  }
 }

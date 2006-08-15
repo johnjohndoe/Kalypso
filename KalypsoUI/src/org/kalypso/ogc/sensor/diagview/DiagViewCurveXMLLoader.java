@@ -172,4 +172,12 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       }
     }
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
+  {
+    // TODO Auto-generated method stub
+  }
 }

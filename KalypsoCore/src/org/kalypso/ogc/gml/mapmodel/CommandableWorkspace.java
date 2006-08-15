@@ -118,7 +118,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   /**
    * @see org.kalypso.commons.command.ICommandManager#postCommand(org.kalypso.commons.command.ICommand)
    */
-  public void postCommand( ICommand command ) throws Exception
+  public void postCommand( final ICommand command ) throws Exception
   {
     m_commandManager.postCommand( command );
   }
@@ -400,6 +400,11 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public IGMLSchema getGMLSchema( )
   {
     return m_workspace.getGMLSchema();
+  }
+
+  public ICommandManager getCommandManager( )
+  {
+    return m_commandManager;
   }
 
 }

@@ -65,16 +65,21 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   private final List<Object> m_objectList = new ArrayList<Object>();
 
-  public AbstractLoader()
+  public AbstractLoader( )
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
   }
 
+  public Object[] getObjects()
+  {
+    return m_objectList.toArray( new Object[m_objectList.size()] );
+  }
+  
   /**
    * @see org.kalypso.loader.ILoader#load(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -90,8 +95,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   /**
    * This method should be overriden by clients extending this class.
    */
-  protected abstract Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
-      throws LoaderException;
+  protected abstract Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException;
 
   /**
    * @see org.kalypso.loader.ILoader#addLoaderListener(org.kalypso.loader.ILoaderListener)
@@ -120,7 +124,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
       final ILoaderListener listener = ls[i];
       Platform.run( new SafeRunnable()
       {
-        public void run() throws Exception
+        public void run( ) throws Exception
         {
           listener.onLoaderObjectInvalid( oldObject, bCannotReload );
         }
@@ -128,15 +132,17 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     }
   }
 
-  protected void beforeObjectInvalid()
+  protected void beforeObjectInvalid( )
   {
-  // overwrite it
+    // overwrite it
   }
 
   /**
+   * Always call super implementation if overwritten.
+   * 
    * @see org.kalypso.loader.ILoader#release(java.lang.Object)
    */
-  public final void release( final Object object )
+  public void release( final Object object )
   {
     m_objectList.remove( object );
 
@@ -176,8 +182,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
-      throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
   }

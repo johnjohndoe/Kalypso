@@ -81,24 +81,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 {
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  private GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
-
-  private GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
-
-  protected CommandableWorkspace m_workspace = null;
-
-  protected final Composite m_composite;
-
-  private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
-
-  private PoolableObjectType m_key = null;
-
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
-
-  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
-
-  private TreeViewer m_treeViewer = null;
-
   private final IFeatureSelectionListener m_globalSelectionChangedListener = new IFeatureSelectionListener()
   {
     public void selectionChanged( final IFeatureSelection selection )
@@ -107,23 +89,15 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   };
 
-  final ISelectionChangedListener m_treeSelectionChangedListener = new ISelectionChangedListener()
+  private final ISelectionChangedListener m_treeSelectionChangedListener = new ISelectionChangedListener()
   {
     public void selectionChanged( final SelectionChangedEvent event )
     {
       handleTreeSelectionChanged( event );
     }
   };
-
-  public static final int DEFAULT_EXPATIONA_LEVEL = 3;
-
-  protected final IFeatureSelectionManager m_selectionManager;
-
-  private Gistreeview m_gisTreeview;
-
-  private boolean m_disposed = false;
-
-  private IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
+  
+  private final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
     public void doubleClick( final DoubleClickEvent event )
     {
@@ -143,9 +117,30 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       }
     }
   };
+  
+  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
 
-  /** If true, the tree won't get reloaded at the next {@link #objectLoaded(IPoolableObjectType, Object, IStatus)}. */
-  private boolean m_reloadLock = false;
+  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+
+  private final GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
+
+  private final GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
+
+  private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
+
+  protected CommandableWorkspace m_workspace = null;
+
+  protected Composite m_composite = null;
+
+  private PoolableObjectType m_key = null;
+
+  private TreeViewer m_treeViewer = null;
+
+  protected final IFeatureSelectionManager m_selectionManager;
+
+  private Gistreeview m_gisTreeview;
+
+  private boolean m_disposed = false;
 
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
@@ -342,8 +337,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       if( m_workspace != null )
       {
-        // Normally, saving causes the tree to reload. We set a lock to suppress the next reload.
-        m_reloadLock = true;
         KalypsoGisPlugin.getDefault().getPool().saveObject( m_workspace, monitor );
       }
     }
@@ -401,13 +394,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
     {
-      if( m_reloadLock )
-      {
-        // If reloading is locked, do nothing, but reset the lock.
-        m_reloadLock = false;
-        return;
-      }
-
       if( m_workspace != null )
       {
         m_workspace.removeModellListener( this );
@@ -675,6 +661,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final GMLXPath rootPath = new GMLXPath( rootPathString );
 
     return !rootPath.equals( currentRootPath );
+  }
+  
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
+  {
+    // TODO propagate dirty change to GmlEditor if present
   }
 
 }
