@@ -6,7 +6,7 @@
          point="org.eclipse.ui.views">
       <view
             class="org.kalypso.featureview.views.FeatureView"
-            icon="icons/sample.gif"
+            icon="icons/obj16/feature_view.gif"
             category="org.kalypso.ui.kalypso"
             name="%org.kalypso.featureview.views.FeatureView.name"
             id="org.kalypso.featureview.views.FeatureView"/>

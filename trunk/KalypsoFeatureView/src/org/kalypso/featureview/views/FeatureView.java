@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
@@ -60,10 +61,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.INullSelectionListener;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -72,6 +77,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.KalypsoFeatureViewPlugin;
 import org.kalypso.gmlschema.adapter.IAnnotation;
@@ -175,15 +181,27 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
-  private ISchedulingRule m_mutextRule = new MutexRule();
+  private final ISchedulingRule m_mutextRule = new MutexRule();
 
-  private ISelectionListener m_selectionListener = new ISelectionListener()
+  private final ISelectionListener m_selectionListener = new INullSelectionListener()
   {
     public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
     {
       // controls of my feature composite may create events, don't react
-      if( selection != null )
-        FeatureView.this.selectionChanged( selection );
+      if( part != null && part != FeatureView.this && selection instanceof IFeatureSelection )
+        FeatureView.this.handleSelectionChanged( part, selection );
+    }
+  };
+
+  private final IPartListener2 m_partListener = new PartAdapter2()
+  {
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partClosed( final IWorkbenchPartReference partRef )
+    {
+      handlePartClosed( partRef.getPart( false ) );
     }
   };
 
@@ -192,6 +210,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
   private Action m_showTablesAction = null;
 
   private FormToolkit m_toolkit;
+
+  /**
+   * The part from which the last selection was retrieved.
+   */
+  private IWorkbenchPart m_selectionSourcePart;
 
   public FeatureView( )
   {
@@ -218,6 +241,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     final IWorkbenchPage page = site.getPage();
     page.getWorkbenchWindow().getSelectionService().addPostSelectionListener( m_selectionListener );
+    page.addPartListener( m_partListener );
   }
 
   /**
@@ -230,6 +254,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
+    page.removePartListener( m_partListener );
     page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
   }
 
@@ -247,8 +272,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return m_featureComposite.isShowTables();
   }
 
-  protected void selectionChanged( final ISelection selection )
+  protected void handleSelectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
+    m_selectionSourcePart = part;
+
     if( selection instanceof IFeatureSelection )
     {
       final IFeatureSelection featureSel = (IFeatureSelection) selection;
@@ -262,6 +289,13 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_commandManager = null;
       activateFeature( null, false );
     }
+  }
+
+
+  protected void handlePartClosed( final IWorkbenchPart part )
+  {
+    if( part == m_selectionSourcePart )
+      FeatureView.this.handleSelectionChanged( null, StructuredSelection.EMPTY );
   }
 
   private Feature featureFromSelection( final IFeatureSelection featureSel )
@@ -314,10 +348,14 @@ public class FeatureView extends ViewPart implements ModellEventListener
       }
     };
     m_showTablesAction.setChecked( isShowTables() );
-    getViewSite().getActionBars().getMenuManager().add( m_showTablesAction );
+    final IViewSite viewSite = getViewSite();
+    viewSite.getActionBars().getMenuManager().add( m_showTablesAction );
 
-    final ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
-    selectionChanged( selection );
+    final IWorkbenchWindow workbenchWindow = viewSite.getWorkbenchWindow();
+    final IWorkbenchPage activePage = workbenchWindow.getActivePage();
+    final ISelection selection = workbenchWindow.getSelectionService().getSelection();
+    final IWorkbenchPart activePart = activePage == null ? null : activePage.getActivePart();
+    handleSelectionChanged( activePart, selection );
   }
 
   /**
@@ -338,17 +376,17 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
 
-    final Feature oldFeature = m_featureComposite.getFeature();
-    final GMLWorkspace oldWorkspace = oldFeature == null ? null : oldFeature.getWorkspace();
-    final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
-    if( !force && oldWorkspace == workspace && oldFeature == feature )
-      return;
-
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        final Feature oldFeature = m_featureComposite.getFeature();
+        final GMLWorkspace oldWorkspace = oldFeature == null ? null : oldFeature.getWorkspace();
+        final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
+
+        if( !force && oldWorkspace == workspace && oldFeature == feature )
+          return Status.OK_STATUS;
 
         if( oldWorkspace != null )
         {
