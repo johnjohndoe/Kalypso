@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:ogc:gml:featuretype:" ns0:base="urn:ogc:gml:featuretype:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <catalog:delegateURI uriStartString="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:" catalog="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh_catalog"/>
-    <catalog:system uri="org.kalypso.model.wspm.tuhh/catalog.xml" systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh_catalog"/>
-</catalog:catalog>

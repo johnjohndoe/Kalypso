@@ -10,7 +10,7 @@ public class WspmTuhhFeatureTypeCatalogContribution implements ICatalogContribut
 {
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "resources/urn/catalog.xml" );
+    final URL catalogURL = getClass().getResource( "resources/catalog.xml" );
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }

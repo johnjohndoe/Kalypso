@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+    <!-- org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:default" uri="profileReachSegmentWspmTuhhSteadyState.xml" />
+	
+    <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:swtimage:default" uri="CalculationWspmTuhhSteadyState.gif"/>
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:uiproperties:default" uri="CalculationWspmTuhhSteadyState.properties"/>
+</catalog:catalog>
+
