@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 /**
  * This class is a rule for IsNillable.
  * 
@@ -63,9 +67,16 @@ public class IsNillableRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
-  public boolean isValid( Object object )
+  public IStatus isValid( Object object )
   {
-    return !(m_isNillable == false && m_minOccurs > 0 && object == null);
+    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "IsNillableRule: Validation OK.", null );
+
+    if( m_isNillable == false && m_minOccurs > 0 && object == null )
+    {
+      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "IsNillableRule: Ausdruck darf nicht leer sein.", null );
+    }
+
+    return status;
   }
 
   public boolean isNillable( )

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -776,5 +777,45 @@ public class FeatureHelper
   private static String tokenReplace( final Feature feature, final String tokenString )
   {
     return FEATURE_TOKEN_REPLACE.replaceTokens( feature, tokenString );
+  }
+
+  /**
+   * This function creates a feature list of the given rootFeature.
+   */
+  public static HashMap<QName, ArrayList<Feature>> sortType( final Feature rootFeature, final QName propertyQName )
+  {
+    /* Get a list of all features in the given property. */
+    final FeatureList list = (FeatureList) rootFeature.getProperty( propertyQName );
+
+    /* Create a map QName->Features. */
+    HashMap<QName, ArrayList<Feature>> featureMap = new HashMap<QName, ArrayList<Feature>>();
+
+    Iterator iterator = list.iterator();
+
+    while( iterator.hasNext() )
+    {
+      /* Get the feature. */
+      Feature feature = (Feature) iterator.next();
+
+      /* Get the qname of the feature. */
+      QName qname = feature.getFeatureType().getQName();
+
+      /* Wenn der QName bereits in der Liste existiert, hänge das Feature an dessen Liste. */
+      if( featureMap.containsKey( qname ) )
+      {
+        ArrayList<Feature> sub_list = featureMap.get( qname );
+        sub_list.add( feature );
+        featureMap.put( qname, sub_list );
+      }
+      else
+      {
+        /* Add the qname as a new key, with a new List. */
+        ArrayList<Feature> sub_list = new ArrayList<Feature>();
+        sub_list.add( feature );
+        featureMap.put( qname, sub_list );
+      }
+    }
+
+    return featureMap;
   }
 }

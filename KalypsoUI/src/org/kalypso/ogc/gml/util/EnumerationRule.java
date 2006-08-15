@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 /**
  * This class is a rule for the EnumerationRestriction.
  * 
@@ -69,23 +73,23 @@ public class EnumerationRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
-  public boolean isValid( Object object )
+  public IStatus isValid( Object object )
   {
-    boolean ret = false;
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "EnumerationRule: Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return true;
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK (null).", null );
 
     for( int i = 0; i < m_enums.length; i++ )
     {
       if( object.equals( m_enums[i] ) )
       {
-        ret = true;
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK.", null );
       }
     }
 
-    return ret;
+    return status;
   }
 
   /**

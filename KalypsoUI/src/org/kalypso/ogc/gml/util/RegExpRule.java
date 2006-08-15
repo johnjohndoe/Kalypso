@@ -43,6 +43,10 @@ package org.kalypso.ogc.gml.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 /**
  * This class is a rule for the RegExpRestriction.
  * 
@@ -67,13 +71,13 @@ public class RegExpRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
-  public boolean isValid( Object object )
+  public IStatus isValid( Object object )
   {
-    boolean ret = false;
+    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "RegExpRule: Validation OK.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return true;
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "RegExpRule: Validation OK (null).", null );
 
     String txt = null;
 
@@ -93,7 +97,7 @@ public class RegExpRule implements IRule
     else
     {
       /* Not a allowed class-type, return true. */
-      return true;
+      return status;
     }
 
     for( int i = 0; i < m_patterns.length; i++ )
@@ -101,16 +105,17 @@ public class RegExpRule implements IRule
       Pattern p = Pattern.compile( m_patterns[i] );
       Matcher m = p.matcher( txt );
 
-      ret = m.matches();
+      boolean ret = m.matches();
 
       /* If one pattern fails, there is no need to check the other patterns. */
       if( ret == false )
       {
+        status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "RegExpRule: Ausdruck entspricht nicht den gegebenen Pattern.", null );
         break;
       }
     }
 
-    return ret;
+    return status;
   }
 
   /**
