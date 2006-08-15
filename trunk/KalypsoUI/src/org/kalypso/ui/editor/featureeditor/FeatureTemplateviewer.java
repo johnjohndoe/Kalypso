@@ -417,4 +417,12 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   {
     return m_disposed;
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
+   */
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
+  {
+    // TODO Auto-generated method stub
+  }
 }

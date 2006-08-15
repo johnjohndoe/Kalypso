@@ -50,6 +50,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -59,6 +61,8 @@ import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
@@ -74,13 +78,33 @@ public class GmlLoader extends AbstractLoader
 {
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
+  /** A special command listener, which sets the dirty flag on the corresponding KeyInfo for the loaded workspace. */
+  private final ICommandManagerListener m_commandManagerListener = new ICommandManagerListener()
+  {
+    public void onCommandManagerChanged( final ICommandManager source )
+    {
+      final Object[] objects = getObjects();
+      for( int i = 0; i < objects.length; i++ )
+      {
+        final CommandableWorkspace workspace = (CommandableWorkspace) objects[i];
+        final ICommandManager cm = workspace.getCommandManager();
+        if( cm == source )
+        {
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final KeyInfo info = pool.getInfo( workspace );
+          if( info != null )
+            info.setDirty( source.isDirty() );
+        }
+      }
+    }
+  };
+
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
-      throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
@@ -88,8 +112,9 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL,
-          m_urlResolver ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
+
+      workspace.addCommandManagerListener( m_commandManagerListener );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -111,8 +136,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
 
-      throw new LoaderException( "GML konnte nicht geladen werden: " + source + ". Grund: " + e.getLocalizedMessage(),
-          e );
+      throw new LoaderException( "GML konnte nicht geladen werden: " + source + ". Grund: " + e.getLocalizedMessage(), e );
     }
     finally
     {
@@ -123,7 +147,7 @@ public class GmlLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "GML Layer";
   }
@@ -133,12 +157,11 @@ public class GmlLoader extends AbstractLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
-      throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     try
     {
-      final GMLWorkspace workspace = (GMLWorkspace)data;
+      final GMLWorkspace workspace = (GMLWorkspace) data;
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
@@ -179,5 +202,17 @@ public class GmlLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
     }
+  }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#release(java.lang.Object)
+   */
+  @Override
+  public void release( final Object object )
+  {
+    final CommandableWorkspace workspace = (CommandableWorkspace) object;
+    workspace.removeCommandManagerListener( m_commandManagerListener );
+
+    super.release( object );
   }
 }

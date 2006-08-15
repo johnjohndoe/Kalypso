@@ -67,6 +67,9 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   private final IPoolableObjectType m_key;
 
+  /** Flag, indicating if the associated object needs saving. */
+  private boolean m_isDirty = false;
+
   public KeyInfo( final IPoolableObjectType key, final ILoader loader, final ISchedulingRule rule )
   {
     super( "Lade Resource: " + key.toString() );
@@ -125,6 +128,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       {
         LOGGER.info( "Object " + object + " invalid for key: " + m_key );
 
+        m_loader.release( m_object );
         m_object = null;
 
         // nur Objekt invalidieren, wenn nicht neu geladen werden kann
@@ -215,6 +219,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     synchronized( this )
     {
       m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
+      setDirty( false );
     }
   }
 
@@ -246,5 +251,25 @@ public final class KeyInfo extends Job implements ILoaderListener
   public Object getObject( )
   {
     return m_object;
+  }
+
+  public boolean isDirty( )
+  {
+    return m_isDirty;
+  }
+
+  public void setDirty( final boolean isDirty )
+  {
+    if( m_isDirty == isDirty )
+      return;
+
+    m_isDirty = isDirty;
+
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+
+    // TRICKY: objectInvalid may add/remove PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    for( int i = 0; i < ls.length; i++ )
+      ls[i].dirtyChanged( m_key, isDirty );
   }
 }

@@ -47,7 +47,7 @@ import javax.swing.event.EventListenerList;
 /**
  * Standardimplementierung von {@link ICommandManager}.
  * 
- * @author von D?mming
+ * @author von Dömming
  */
 public class DefaultCommandManager implements ICommandManager
 {

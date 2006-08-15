@@ -51,6 +51,8 @@ public interface IPoolListener
 
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue );
 
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty );
+  
   /**
    * used by ResourcePool.register(IPoolListener), pool should never register a disposed IPoollistener
    * 
