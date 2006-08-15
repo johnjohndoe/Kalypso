@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 /**
  * This class is a rule for the MinLengthRestriction.
  * 
@@ -63,13 +67,13 @@ public class MinLengthRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
-  public boolean isValid( Object object )
+  public IStatus isValid( Object object )
   {
-    boolean ret = false;
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "MinLengthRule: Die Zeichenkette muß mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return true;
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK (null).", null );
 
     /* The object given should be a char[] or a String. */
     if( object instanceof char[] )
@@ -79,7 +83,7 @@ public class MinLengthRule implements IRule
       if( text.length >= m_min )
       {
         /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        ret = true;
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
       }
     }
     else if( object instanceof String )
@@ -89,16 +93,16 @@ public class MinLengthRule implements IRule
       if( text.length() >= m_min )
       {
         /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        ret = true;
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
       }
     }
     else
     {
       /* If it is no char[] or String, return true. */
-      ret = true;
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
     }
 
-    return ret;
+    return status;
   }
 
   /**

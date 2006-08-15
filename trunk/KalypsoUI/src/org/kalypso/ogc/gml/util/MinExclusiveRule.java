@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 /**
  * This class is a rule for the MinExclusiveRestriction.
  * 
@@ -63,23 +67,23 @@ public class MinExclusiveRule implements IRule
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
-  public boolean isValid( Object object )
+  public IStatus isValid( Object object )
   {
-    boolean ret = false;
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "MinExclusiveRule: Wert muss größer " + m_checkagainst.toString() + " sein.", null );
 
     /* If the object does not exist or is no number, return true. */
     if( (object == null) || (!(object instanceof Number)) )
-      return true;
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinExclusiveRule: Validation OK (null).", null );
 
     /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
     Number number = (Number) object;
 
     if( number.floatValue() > m_checkagainst.floatValue() )
     {
-      ret = true;
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinExclusiveRule: Validation OK.", null );
     }
 
-    return ret;
+    return status;
   }
 
   /**

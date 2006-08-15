@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.util.Vector;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
@@ -152,28 +158,44 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
       if( ftp != null )
       {
         /* Check for validation here. */
-        boolean ret = false;
+        Vector<IStatus> status = new Vector<IStatus>();
 
         for( int i = 0; i < m_rules.length; i++ )
         {
-          ret = m_rules[i].isValid( feature.getProperty( ftp ) );
-
-          if( ret == false )
-          {
-            /* There is no need to check the other rules, because there was already an error. */
-            break;
-          }
+          status.add( m_rules[i].isValid( feature.getProperty( ftp ) ) );
         }
 
-        /* Set the image. */
-        if( ret == true )
+        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null );
+
+        /* Set the image and a tooltip. */
+        if( mstatus.isOK() == true )
         {
           if( m_showok == true )
+          {
             m_label.setImage( image_ok );
+
+            String message = "OK Status:\r\n\r\n";
+
+            for( int i = 0; i < status.size(); i++ )
+            {
+              message = message + status.get( i ).getMessage() + "\r\n";
+            }
+
+            m_label.setToolTipText( message );
+          }
         }
         else
         {
           m_label.setImage( image_error );
+
+          String message = "Fehler Status:\r\n\r\n";
+
+          for( int i = 0; i < status.size(); i++ )
+          {
+            message = message + status.get( i ).getMessage() + "\r\n";
+          }
+
+          m_label.setToolTipText( message );
         }
       }
     }

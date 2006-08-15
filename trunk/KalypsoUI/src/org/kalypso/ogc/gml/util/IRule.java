@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * This class represents the interface for a rule.
  * 
@@ -52,6 +54,7 @@ public interface IRule
    * 
    * @param object
    *          The object, that should be checked.
+   * @return The status of the rule.
    */
-  public boolean isValid( final Object object );
+  public IStatus isValid( final Object object );
 }
