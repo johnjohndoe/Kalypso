@@ -47,7 +47,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
@@ -72,7 +71,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   private TreeViewer m_viewer;
 
-  private CommandableWorkspace m_workspace;
+  private GMLWorkspace m_workspace;
 
   /**
    * The x-path to the currently (not visible) root element. Its children are the root elements of the tree.
@@ -120,9 +119,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   {
     final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof GMLWorkspace )
-    {
       return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
-    }
+
     if( parentElement instanceof Feature )
     {
       Feature parentFE = (Feature) parentElement;
@@ -284,8 +282,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       if( oldInput != null )
         m_workspace = null;
 
-      if( newInput instanceof CommandableWorkspace )
-        m_workspace = (CommandableWorkspace) newInput;
+      if( newInput instanceof GMLWorkspace )
+        m_workspace = (GMLWorkspace) newInput;
       else
         m_workspace = null;
 
