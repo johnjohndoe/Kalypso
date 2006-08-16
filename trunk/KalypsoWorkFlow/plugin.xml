@@ -3,6 +3,8 @@
 <plugin>
    <extension-point id="urlCommandActionContribution" name="urlcommandaction" schema="schema/urlCommandActionContribution.exsd"/>
    <extension
+         id="org.kalypso.workflow.views"
+         name="kalypsoworkflowviews"
          point="org.eclipse.ui.views">
       <view
             allowMultiple="true"

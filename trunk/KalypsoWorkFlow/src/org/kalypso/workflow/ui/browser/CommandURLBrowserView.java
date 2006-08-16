@@ -182,4 +182,9 @@ public class CommandURLBrowserView extends AbstractBrowserView
     setURL( m_workflowContext.getContextHome().toExternalForm() );
 
   }
+
+  public WorkflowContext getWorkflowContext( )
+  {
+    return m_workflowContext;
+  }
 }
