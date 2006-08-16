@@ -50,11 +50,11 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.model.xml.DataType;
-import org.kalypso.model.xml.Modelspec;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.simspec.DataType;
+import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author belger
