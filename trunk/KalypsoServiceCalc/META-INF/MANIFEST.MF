@@ -11,7 +11,8 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.jwsdp,
  org.kalypso.commons,
  org.kalypso.services.core,
- org.kalypso.core
+ org.kalypso.core,
+ org.kalypso.simulation.core
 Export-Package: org.kalypso.services.calculation.common,
  org.kalypso.services.calculation.job,
  org.kalypso.services.calculation.job.impl,
