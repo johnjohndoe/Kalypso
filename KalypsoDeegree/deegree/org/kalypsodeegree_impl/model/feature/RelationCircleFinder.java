@@ -105,6 +105,7 @@ public class RelationCircleFinder
         {
           // TODO: is this really intended? The list is added, not its content!
           final Feature[] links = m_workspace.resolveLinks( feature, linkPT );
+          // This can't work, should lead to an exception if converted to array below
           result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
                                                           // java.util.Arrays: check if this is ok
         }

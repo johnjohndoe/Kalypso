@@ -81,7 +81,7 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
       final IRelationType ftp = m_selection.getParentFeatureProperty( firstFeature );
 
       int pos = 0; // TODO get pos from somewhere
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureType(),parentFeature, ftp, pos, null, null );
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureType(),parentFeature, ftp, pos, null, null, 0 );
       try
       {
         workspace.postCommand( command );

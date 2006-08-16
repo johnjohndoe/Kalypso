@@ -267,6 +267,15 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.feature.IFeatureType, int)
+   */
+  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth )
+  {
+    return m_workspace.createFeature( parent, type, depth );
+  }
+
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */

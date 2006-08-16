@@ -47,6 +47,18 @@ package org.kalypso.ui.catalogs;
  */
 public interface IFeatureTypePropertiesConstants
 {
+  //
+  // Common feature constants
+  //
+  
+  /** How many levels of children should be created if a feature is created (-1 means infinite, 0 means none) */
+  public final static String FEATURE_CREATION_DEPTH = "feature.creationDepth";
+  public final static String FEATURE_CREATION_DEPTH_DEFAULT = "0";
+  
+  //
+  // GmlTree Constants
+  //
+  
   /** Show children of this element, defaults to true */
   public final static String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren";
   public final static String GMLTREE_SHOW_CHILDREN_DEFAULT = "true";

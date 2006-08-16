@@ -121,7 +121,7 @@ public class FeatureFactory
    */
   public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
   {
-    return createFeature( parent, id, featureType, initializeWithDefaults, false );
+    return createFeature( parent, id, featureType, initializeWithDefaults, 0 );
   }
 
   /**
@@ -131,7 +131,7 @@ public class FeatureFactory
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final boolean fillOptional )
+  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
     if( featureType == null )
       throw new IllegalArgumentException( "must provide a featuretype" );
@@ -158,7 +158,7 @@ public class FeatureFactory
 
     if( initializeWithDefaults )
     {
-      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( feature, fillOptional );
+      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( feature, depth );
       FeatureHelper.setProperties( feature, properties );
     }
 
@@ -166,23 +166,24 @@ public class FeatureFactory
   }
 
   /** Creates default FeatureProperties, used by LegendView */
-  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final Feature feature, final boolean fillOptional )
+  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final Feature feature, final int depth )
   {
     final IPropertyType[] propTypes = feature.getFeatureType().getProperties();
 
     final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>( propTypes.length );
     for( final IPropertyType ftp : propTypes )
     {
-      final Object value = createDefaultFeatureProperty( feature, ftp, fillOptional );
+      final Object value = createDefaultFeatureProperty( feature, ftp, depth );
       if( value != null )
         results.put( ftp, value );
     }
     return results;
   }
 
-  private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final boolean fillOptionals )
+  private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final int depth )
   {
     final int minOccurs = ftp.getMinOccurs();
+    // maybe also look at 'nillable'?
     final boolean isOptional = minOccurs == 0;
 
     if( ftp instanceof IValuePropertyType )
@@ -192,8 +193,8 @@ public class FeatureFactory
       // get default value from schema if possible
       final String defaultValue = vpt.getDefault();
 
-      // Only fill optional values if defaultValue is specified or fillOptionals is set
-      if( isOptional && !fillOptionals && defaultValue == null )
+      // Only fill non optional values with default value set
+      if( isOptional || defaultValue == null )
         return null;
 
       final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
@@ -218,15 +219,16 @@ public class FeatureFactory
       if( ftp.isList() )
         return FeatureFactory.createFeatureList( feature, rt );
 
-      if( /*isOptional && */!fillOptionals )
+      if( depth == 0 || minOccurs == 0 || !rt.isInlineAble())
         return null;
 
-      // we have a single internal feature here: create inner feature
+      // we have a single, non-optional, inlinable feature here: create inner feature
       final GMLWorkspace workspace = feature.getWorkspace();
       if( workspace == null )
         return null;
 
-      return workspace.createFeature( feature, rt.getTargetFeatureType() );
+      final int subDepth = depth == -1 ? -1 : depth -1;
+      return workspace.createFeature( feature, rt.getTargetFeatureType(), subDepth );
     }
 
     return null;
