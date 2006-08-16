@@ -143,17 +143,17 @@ public class ImportWfsFilterWizardPage extends WizardPage
       {
         if( m_bufferButton.getSelection() )
         {
-          m_bufferDistance.setVisible( true );
+          m_bufferDistance.setEditable( true );
           updateMessage();
         }
         else
-          m_bufferDistance.setVisible( false );
+          m_bufferDistance.setEditable( false );
         setPageComplete( validate() );
       }
     } );
     m_bufferDistance = new Text( topGroup, SWT.SINGLE | SWT.BORDER );
-    m_bufferDistance.setText( "0" );
-    m_bufferDistance.setVisible( false );
+    m_bufferDistance.setText( "in Meter" );
+    m_bufferDistance.setEditable( false );
     m_bufferDistance.addFocusListener( new FocusAdapter()
     {
       /**
@@ -162,7 +162,6 @@ public class ImportWfsFilterWizardPage extends WizardPage
       @Override
       public void focusLost( FocusEvent e )
       {
-        String text = m_bufferDistance.getText();
         setPageComplete( validate() );
       }
 
