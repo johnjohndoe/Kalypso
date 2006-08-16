@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +51,6 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.configuration.SystemConfiguration;
-import org.apache.commons.lang.SystemUtils;
-import org.jfree.ui.about.SystemProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
