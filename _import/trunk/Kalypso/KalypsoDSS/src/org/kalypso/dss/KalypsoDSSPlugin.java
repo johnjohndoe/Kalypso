@@ -1,15 +1,14 @@
 package org.kalypso.dss;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.*;
-import org.osgi.framework.BundleContext;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -56,6 +55,7 @@ public class KalypsoDSSPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
+  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
@@ -64,6 +64,7 @@ public class KalypsoDSSPlugin extends AbstractUIPlugin
   /**
    * This method is called when the plug-in is stopped
    */
+  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );
