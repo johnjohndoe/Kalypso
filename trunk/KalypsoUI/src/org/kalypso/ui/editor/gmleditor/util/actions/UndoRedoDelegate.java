@@ -112,7 +112,6 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
       }
     }
 
-    if( getAction() != null )
-      getAction().setEnabled( bEnabled );
+    action.setEnabled( bEnabled );
   }
 }

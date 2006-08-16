@@ -62,12 +62,7 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
  */
 public class SldLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver;
-
-  public SldLoader( )
-  {
-    m_urlResolver = new UrlResolver();
-  }
+  private final UrlResolver m_urlResolver = new UrlResolver();
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()

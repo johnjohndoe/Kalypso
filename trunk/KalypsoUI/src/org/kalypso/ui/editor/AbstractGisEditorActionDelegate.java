@@ -103,8 +103,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
     }
 
     // update action state
-    // TODO: why refresh with null and not with m_action??
-    refreshAction( null );
+    refreshAction( action );
   }
 
   /**
@@ -113,18 +112,12 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // m_action = action;
-    // TODO: refresh action??
+    refreshAction( action );
   }
 
   protected WidgetActionPart getPart( )
   {
     return m_part;
-  }
-
-  protected IAction getAction( )
-  {
-    return m_action;
   }
 
   /**

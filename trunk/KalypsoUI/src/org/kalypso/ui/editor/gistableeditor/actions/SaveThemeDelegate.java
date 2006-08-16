@@ -137,7 +137,6 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       }
     }
 
-    if( getAction() != null )
-      getAction().setEnabled( enabled );
+    action.setEnabled( enabled );
   }
 }

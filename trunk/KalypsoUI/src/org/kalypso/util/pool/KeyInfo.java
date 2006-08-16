@@ -134,8 +134,6 @@ public final class KeyInfo extends Job implements ILoaderListener
         // nur Objekt invalidieren, wenn nicht neu geladen werden kann
         // ansonsten einfach neu laden, dann werden die listener ja auch
         // informiert
-
-        // TODO allways invalidate, let Poollistener decide to ignore it or not
         if( bCannotReload )
           oldObject = object;
         else
@@ -148,10 +146,9 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     if( oldObject != null )
     {
-      final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-
       // TRICKY: objectInvalid may add/remove PoolListener for this key,
       // so we cannot iterate over m_listeners
+      final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
       for( int i = 0; i < ls.length; i++ )
         ls[i].objectInvalid( m_key, oldObject );
     }
@@ -171,9 +168,9 @@ public final class KeyInfo extends Job implements ILoaderListener
       o = m_object;
     }
 
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
     // TRICKY: objectLoaded may add a new PoolListener for this key,
     // so we cannot iterate over m_listeners
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
     for( int i = 0; i < ls.length; i++ )
       ls[i].objectLoaded( m_key, o, status );
 

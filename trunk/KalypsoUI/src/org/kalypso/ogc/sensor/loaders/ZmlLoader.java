@@ -64,12 +64,7 @@ import org.kalypso.zml.Observation;
  */
 public class ZmlLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver;
-
-  public ZmlLoader( )
-  {
-    m_urlResolver = new UrlResolver();
-  }
+  private final UrlResolver m_urlResolver = new UrlResolver();
 
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,

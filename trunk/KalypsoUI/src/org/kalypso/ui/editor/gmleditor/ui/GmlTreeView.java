@@ -56,6 +56,7 @@ import org.kalypso.ui.ImageProvider.DESCRIPTORS;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
+import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
@@ -670,6 +671,17 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return !rootPath.equals( currentRootPath );
   }
 
+  public boolean isDataDirty()
+  {
+    if( m_workspace != null )
+    {
+      final KeyInfo info = m_pool.getInfo(m_workspace);
+      return info != null && info.isDirty();
+    }
+    
+    return false;
+  }
+  
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
