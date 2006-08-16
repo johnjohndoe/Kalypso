@@ -149,8 +149,6 @@ public class KalypsoPlanerClientActionBuilder extends ActionBarAdvisor
 
   private IWorkbenchAction m_aboutAction;
 
-  private IPageListener m_pageListener;
-
   private IPropertyChangeListener m_propPrefListener;
 
   private boolean m_isDisposed;
@@ -422,6 +420,7 @@ public class KalypsoPlanerClientActionBuilder extends ActionBarAdvisor
   /**
    * Creates and returns the Navigate menu.
    */
+  @SuppressWarnings("synthetic-access")
   private MenuManager createNavigateMenu( )
   {
     MenuManager menu = new MenuManager( IDEWorkbenchMessages.Workbench_navigate, IWorkbenchActionConstants.M_NAVIGATE );

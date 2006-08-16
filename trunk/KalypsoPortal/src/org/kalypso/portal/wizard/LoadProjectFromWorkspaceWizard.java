@@ -12,10 +12,6 @@ import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 public class LoadProjectFromWorkspaceWizard extends Wizard implements INewWizard, IProjectProvider
 {
 
-  private IWorkbench m_workbench;
-
-  private IStructuredSelection m_selection;
-
   private ContainerSelectionWizardPage mainPage;
 
   private IWorkspaceRoot m_root;
@@ -52,8 +48,7 @@ public class LoadProjectFromWorkspaceWizard extends Wizard implements INewWizard
 
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    m_workbench = workbench;
-    m_selection = selection;
+    // nothing to initialize
   }
 
   public IProject getProject( )
