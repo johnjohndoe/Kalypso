@@ -58,11 +58,8 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( final IAction action )
   {
-    super.refreshAction( action );
-    if( action == null )
-      return;
     action.setEnabled( false );
 
     final WidgetActionPart part = getPart();
@@ -72,8 +69,11 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
       if( mapPanel != null )
       {
         final IMapModell mapModell = mapPanel.getMapModell();
-        IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
+        if( mapModell != null )
+        {
+          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+          action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
+        }
       }
     }
   }

@@ -87,7 +87,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
   }
 
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( final IAction action )
   {
     boolean bEnabled = false;
 
@@ -109,7 +109,6 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
       }
     }
 
-    if( getAction() != null )
-      getAction().setEnabled( bEnabled );
+    action.setEnabled( bEnabled );
   }
 }

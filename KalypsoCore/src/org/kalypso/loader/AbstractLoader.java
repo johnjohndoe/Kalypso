@@ -51,15 +51,18 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author belger
  */
 public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 {
-  final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
+  private final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
 
   private final List<ILoaderListener> m_listener = new ArrayList<ILoaderListener>();
 
@@ -67,19 +70,26 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   public AbstractLoader( )
   {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
+    ResourcesPlugin.getWorkspace().addResourceChangeListener( this, IResourceChangeEvent.POST_CHANGE );
   }
 
+  /**
+   * TODO: this will never be called. The resource pool caches the loaders and reuse them, but never disposes them.
+   * Maybe it would better to use one loader per resource, in order to do so we should refaktor the loaders as well.
+   * Each loader should be responsible for exakt one object.
+   */
   public void dispose( )
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
+    m_listener.clear();
+    m_objectList.clear();
   }
 
-  public Object[] getObjects()
+  public Object[] getObjects( )
   {
     return m_objectList.toArray( new Object[m_objectList.size()] );
   }
-  
+
   /**
    * @see org.kalypso.loader.ILoader#load(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -149,16 +159,12 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     m_visitor.releaseResources( object );
   }
 
-  protected final boolean hasObject( final Object oldValue )
-  {
-    return m_objectList.contains( oldValue );
-  }
-
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
   public final void resourceChanged( final IResourceChangeEvent event )
   {
+    // allways true, because of the bitmask set on adding this listener
     if( event.getType() == IResourceChangeEvent.POST_CHANGE )
     {
       final IResourceDelta delta = event.getDelta();
@@ -168,7 +174,8 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
   }

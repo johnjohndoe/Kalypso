@@ -55,9 +55,9 @@ import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
  * <pre>
- *  Changes:
- *  2004-11-09 - schlienger - uses now the path of the resource as key in the map
- *  						     Path should be taken using the pathFor( IResource ) method
+ *   Changes:
+ *   2004-11-09 - schlienger - uses now the path of the resource as key in the map
+ *   						     Path should be taken using the pathFor( IResource ) method
  * </pre>
  * 
  * @author belger
@@ -65,14 +65,15 @@ import org.kalypso.core.IKalypsoCoreConstants;
 public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 {
   /** resource -> object */
-  private Map<String, Object> m_resourceMap = new HashMap<String, Object>();
+  private final Map<String, Object> m_resourceMap = new HashMap<String, Object>();
 
   /** object -> resource */
   private final Map<Object, IResource> m_objectMap = new HashMap<Object, IResource>();
 
-  private final AbstractLoader m_loader;
+  /** Resources in this list will be ignored at the next resource change event. */
+  private final Collection<String> m_ignoreOneTimeList = new HashSet<String>();
 
-  private Collection<IResource> m_ignoreOneTimeList = new HashSet<IResource>();
+  private final AbstractLoader m_loader;
 
   public AbstractLoaderResourceDeltaVisitor( final AbstractLoader loader )
   {
@@ -118,10 +119,11 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   /**
    * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
    */
-  public boolean visit( IResourceDelta delta ) throws CoreException
+  public boolean visit( final IResourceDelta delta ) throws CoreException
   {
     final IResource resource = delta.getResource();
-    if( m_ignoreOneTimeList.contains( resource ) )
+
+    if( m_ignoreOneTimeList.contains( pathFor( resource ) ) )
     {
       m_ignoreOneTimeList.remove( resource );
       return true;
@@ -134,7 +136,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       {
         case IResourceDelta.REMOVED:
           // todo: sollte eigentlich auch behandelt werden
-          // aber so, dass och die chance auf ein add besteht
+          // aber so, dass noch die chance auf ein add besteht
           break;
 
         case IResourceDelta.ADDED:
@@ -163,6 +165,6 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
    */
   public void ignoreResourceOneTime( final IResource resource )
   {
-    m_ignoreOneTimeList.add( resource );
+    m_ignoreOneTimeList.add( pathFor( resource ) );
   }
 }
