@@ -107,7 +107,7 @@ public class FeatureviewHelper
     if( ftp instanceof IValuePropertyType )
     {
       /* It is a IValuePropertyType, that means, a validator could be needed. */
-      addValidator = true; // TODO
+      // addValidator = true; // TODO
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
       // ignore 'boundedBy' and value lists
