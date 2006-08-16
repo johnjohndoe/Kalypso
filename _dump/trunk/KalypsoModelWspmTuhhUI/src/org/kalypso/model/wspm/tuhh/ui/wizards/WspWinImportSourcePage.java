@@ -54,10 +54,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author albert This wizard-page imports the hydraulic data for a spezific InformDSS project.
+ * This wizard page lets the user choose a wspwin project.
+ * 
+ * @author Gernot Belger
  */
 public class WspWinImportSourcePage extends WizardPage
 {
@@ -70,6 +73,8 @@ public class WspWinImportSourcePage extends WizardPage
   protected static String HYDRAULIC_PRPOPERTIES_FILE = "hydraulic.properties";
 
   private File m_dir;
+
+  private static final String STR_TOOLTIP_PATH = "Pfad auf ein WspWin Projektverzeichnis. Das Verzeichnis muss die Unterverzeichnisse 'prof' und 'dath' enthalten.";
 
   public WspWinImportSourcePage( final String pageName )
   {
@@ -89,13 +94,19 @@ public class WspWinImportSourcePage extends WizardPage
     final Composite group = new Composite( parent, SWT.NONE );
 
     /* Configuring the group. */
-    group.setLayout( new GridLayout( 2, false ) );
+    group.setLayout( new GridLayout( 3, false ) );
 
-    /* The label for the path. */
+    /* The label for the path */
+    final Label label = new Label( group, SWT.NONE );
+    label.setText( "Projekt-Pfad: " );
+    label.setToolTipText( STR_TOOLTIP_PATH );
+    
+    /* The text field for the path. */
     final Text text = new Text( group, SWT.BORDER );
     m_text = text;
     m_text.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
     m_text.setText( "" );
+    m_text.setToolTipText( STR_TOOLTIP_PATH );
 
     /* The button for opening the FileDialog. */
     final Button button = new Button( group, SWT.NONE );
