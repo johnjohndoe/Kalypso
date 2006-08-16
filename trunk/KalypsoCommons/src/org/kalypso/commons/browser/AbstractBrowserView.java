@@ -380,6 +380,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     if( adapter == Browser.class )
       return m_viewer.getBrowser();
     
+    if( adapter == BrowserViewer.class )
+      return m_viewer;
+    
     return super.getAdapter( adapter );
   }
 }
