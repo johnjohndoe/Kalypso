@@ -43,7 +43,6 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;

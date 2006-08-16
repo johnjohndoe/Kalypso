@@ -76,7 +76,9 @@ public class AddFeatureCommand implements ICommand
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager )
+  private final int m_depth;
+
+  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -85,6 +87,7 @@ public class AddFeatureCommand implements ICommand
     m_props = properties;
     m_type = type;
     m_selectionManager = selectionManager;
+    m_depth = depth;
   }
 
   /**
@@ -100,7 +103,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    newFeature = m_workspace.createFeature( m_parentFeature, m_type );
+    newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
     if( m_props != null )
       addProperties();
     addFeature();

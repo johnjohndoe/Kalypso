@@ -44,12 +44,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -98,20 +98,7 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
     }
 
     final TreeViewer treeViewer = m_targetEditor.getTreeView().getTreeViewer();
-    final IContentProvider cp = treeViewer.getContentProvider();
-    if( cp instanceof GMLEditorContentProvider2 )
-    {
-      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) cp;
-
-      final Object firstElement = structSel.getFirstElement();
-      // REMARK: at the moment, GmlXPath does not support properties, so we can only go
-      // into features at the moment.
-      if( firstElement instanceof Feature )
-      {
-        action.setEnabled( structSel.size() == 1 && contentProvider.getChildren( firstElement ).length > 0 );
-        return;
-      }
-    }
-    action.setEnabled( false );
+    final ITreeContentProvider cp = (ITreeContentProvider) treeViewer.getContentProvider();
+    action.setEnabled( structSel.size() == 1 && cp.hasChildren( structSel.getFirstElement() ) );
   }
 }

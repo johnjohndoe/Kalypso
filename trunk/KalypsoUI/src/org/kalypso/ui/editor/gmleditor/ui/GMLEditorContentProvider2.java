@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.FindParentTreeVisitor;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -54,6 +55,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -62,8 +64,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLEditorContentProvider2 implements ITreeContentProvider
 {
-  private CommandableWorkspace m_workspace;
-
   /**
    * remebers the child-parent relationship. This is nedded, because if we provide no parent, setExpandedElements
    * doesn't work, which will lead to an unuseable gui.
@@ -71,6 +71,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   private final Map<Object, Object> m_parentHash = new HashMap<Object, Object>();
 
   private TreeViewer m_viewer;
+
+  private CommandableWorkspace m_workspace;
 
   /**
    * The x-path to the currently (not visible) root element. Its children are the root elements of the tree.
@@ -86,6 +88,24 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object[] getChildren( final Object parentElement )
   {
+    // Test first if we should show children
+    final QName qname;
+    if( parentElement instanceof Feature )
+      qname = ((Feature) parentElement).getFeatureType().getQName();
+    else if( parentElement instanceof FeatureAssociationTypeElement )
+      qname = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty().getQName();
+    else
+      qname = null;
+
+    if( qname != null )
+    {
+      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
+      final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
+      final boolean showChildren = Boolean.parseBoolean( showChildrenString );
+      if( !showChildren )
+        return new Object[] {};
+    }
+
     final Object[] children = getChildrenInternal( parentElement );
     if( children == null )
       return null;
@@ -154,7 +174,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     if( object != null )
       return object;
 
-    // brute force search TODO: not always successfull, because the tree
+    // brute force search
+    // TODO: not always successfull, because the tree
     // may now start at an arbitrary element.
     // We should combine with a search throug the GMLWorkspace
     final FindParentTreeVisitor visitor = new FindParentTreeVisitor( element );
@@ -181,27 +202,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       return false;
 
     final int childCount = getChildren( element ).length;
-    if( childCount == 0 )
-      return false;
-
-    final QName qname;
-    if( element instanceof Feature )
-      qname = ((Feature) element).getFeatureType().getQName();
-    else if( element instanceof FeatureAssociationTypeElement )
-      qname = ((FeatureAssociationTypeElement) element).getAssociationTypeProperty().getQName();
-    else
-      qname = null;
-
-    if( qname != null )
-    {
-      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
-      final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
-      final boolean showChildren = Boolean.parseBoolean( showChildrenString );
-      return showChildren;
-    }
-
-    // if we don't know the qname, return true because we have children
-    return true;
+    return childCount > 0;
   }
 
   /**
@@ -216,7 +217,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     try
     {
-      final Object object = GMLXPathUtilities.query( m_rootPath, m_workspace );
+      final Object object = findObjectForPath();
       if( object == m_workspace )
         return rootFeatureObjects;
 
@@ -229,6 +230,34 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
       return rootFeatureObjects;
     }
+  }
+
+  private Object findObjectForPath( ) throws GMLXPathException
+  {
+    if( m_rootPath.getSegmentSize() == 0 )
+      return m_workspace;
+
+    final GMLXPath parentPath = m_rootPath.getParentPath();
+    final Object parent = GMLXPathUtilities.query( parentPath, m_workspace );
+    if( parent instanceof Feature )
+    {
+      final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
+      final QName childName = QNameUtilities.fromString( segment.toString() );
+      final Object[] children = getChildren( parent );
+      for( int i = 0; i < children.length; i++ )
+      {
+        final Object object = children[i];
+        if( object instanceof FeatureAssociationTypeElement )
+        {
+          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+          final QName name = fate.getAssociationTypeProperty().getQName();
+          if( name.equals( childName ) )
+            return object;
+        }
+      }
+    }
+
+    return GMLXPathUtilities.query( m_rootPath, m_workspace );
   }
 
   /**
@@ -295,6 +324,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   public void goInto( final Object object )
   {
+    m_viewer.getSelection();
     final Object[] expandedElements = m_viewer.getExpandedElements();
 
     // prepare for exception
@@ -307,7 +337,6 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         final Feature feature = (Feature) object;
         m_rootPath = new GMLXPath( feature );
       }
-      // REMARK: does not work at the moment, as GMLXPath does not support properties
       else if( object instanceof FeatureAssociationTypeElement )
       {
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
@@ -334,13 +363,12 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     try
     {
-      final Object object = GMLXPathUtilities.query( m_rootPath, m_workspace );
+      final Object object = findObjectForPath();
 
       final Object parent = getParent( object );
       if( parent != null )
       {
-        final Object parent2 = getParent( parent );
-        goInto( parent2 );
+        goInto( parent );
         return; // do not refresh, we already did so
       }
     }

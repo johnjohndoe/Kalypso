@@ -29,6 +29,8 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -40,6 +42,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
+import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -79,7 +83,11 @@ public class NewFeatureAction extends Action
   {
     try
     {
-      final ICommand command = new AddFeatureCommand( m_workspace, m_targetType, m_parentFeature, m_fatp, 0, null, m_selectionManager );
+      final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), m_targetType.getQName() );
+      final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH_DEFAULT );
+      final int depth = Integer.parseInt(depthStr);
+
+      final ICommand command = new AddFeatureCommand( m_workspace, m_targetType, m_parentFeature, m_fatp, 0, null, m_selectionManager, depth );
       m_workspace.postCommand( command );
     }
     catch( final Exception e )

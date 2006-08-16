@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
  * 
  * @author doemming
  */
-final class GMLXPathSegment
+public final class GMLXPathSegment
 {
   public static GMLXPathSegment[] addSegments( GMLXPathSegment[] segments, GMLXPathSegment segment )
   {

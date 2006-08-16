@@ -82,7 +82,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       e.printStackTrace();
     }
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
    */
@@ -480,16 +480,28 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature createFeature( final Feature parent, final IFeatureType type )
   {
+    return createFeature( parent, type, 0 );
+  }
+
+  /**
+   * Creates a new feature and registers it with this workspace.
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
+   */
+  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth )
+  {
     if( type.isAbstract() )
     {
       // TODO: throw an exception?
       // throw new IllegalArgumentException( "Cannot create feature from abstract type: " + type );
       System.out.println( "Creating feature from abstract type: " + type );
     }
-    
+
     // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
-    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, true, false );
+    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, true, depth );
+    // TODO: because we nowadys recurse, another feature might be created meanwhile
+    // so there is a chance, that an id is used twice
     m_indexMap.put( newId, newFeature );
     return newFeature;
   }

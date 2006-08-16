@@ -96,7 +96,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       handleTreeSelectionChanged( event );
     }
   };
-  
+
   private final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
     public void doubleClick( final DoubleClickEvent event )
@@ -117,7 +117,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       }
     }
   };
-  
+
   private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
@@ -294,6 +294,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         {
           public void run( )
           {
+            final Object[] expandedElements = treeViewer.getExpandedElements();
+
             if( parentFeature == null )
               treeViewer.refresh();
             else
@@ -304,6 +306,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
                 treeViewer.refresh( feature );
               }
             }
+
+            treeViewer.setExpandedElements( expandedElements );
           }
         } );
       }
@@ -385,7 +389,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     if( m_treeViewer.getContentProvider() != m_contentProvider )
       return m_treeViewer.getSelection();
-    
+
     return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
   }
 
@@ -665,7 +669,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     return !rootPath.equals( currentRootPath );
   }
-  
+
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */

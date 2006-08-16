@@ -2,7 +2,6 @@ package org.kalypsodeegree.model.feature;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -106,7 +105,25 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public String getSchemaLocationString( );
 
+  /**
+   * Creates a feature an puts it into this workspace.
+   * <p>
+   * Generates a unique id througout this workspace.
+   * </p>
+   */
   public Feature createFeature( final Feature parent, final IFeatureType type );
+
+  /**
+   * Creates a feature an puts it into this workspace. Also create subfeatures where apropriate.
+   * <p>
+   * Generates a unique id througout this workspace.
+   * </p>
+   * 
+   * @param depth
+   *          Number of levels of subfeatures which shall be created. -1 means infinite, 0 means none (only normal
+   *          properties are filled with default values).
+   */
+  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth );
 
   public Feature getParentFeature( final Feature toFindParentFrom );
 
