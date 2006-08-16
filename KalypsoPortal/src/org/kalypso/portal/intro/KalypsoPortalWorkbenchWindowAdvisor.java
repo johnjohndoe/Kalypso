@@ -1,18 +1,22 @@
 package org.kalypso.portal.intro;
 
 import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
+import org.eclipse.ui.internal.ide.IDEWorkbenchWindowAdvisor;
 import org.eclipse.ui.intro.IIntroManager;
 
-public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
+public class KalypsoPortalWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
 
-  public ApplicationWorkbenchWindowAdvisor( IWorkbenchWindowConfigurer configurer )
+
+  public KalypsoPortalWorkbenchWindowAdvisor(  IWorkbenchWindowConfigurer configurer )
   {
     super( configurer );
   }
@@ -20,7 +24,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   @Override
   public ActionBarAdvisor createActionBarAdvisor( IActionBarConfigurer configurer )
   {
-    return new ApplicationActionBarAdvisor( configurer );
+    return new KalypsoPlanerClientActionBuilder( configurer );
   }
 
   @Override
@@ -28,21 +32,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   {
     IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
     configurer.setInitialSize( new Point( 700, 550 ) );
-    configurer.setShowStatusLine( true );
-    configurer.setShowProgressIndicator( true );
-    configurer.setShowMenuBar( true );
     configurer.setShowPerspectiveBar( false );
+    configurer.setShowProgressIndicator( true );
+    configurer.setShowFastViewBars( true );
+    configurer.setShowStatusLine( true );
     configurer.setTitle( "FLOWS Planer Portal" );
-    configureCoolBar( configurer );
-
-  }
-
-  private void configureCoolBar( IWorkbenchWindowConfigurer configurer )
-  {
-    configurer.setShowCoolBar( true );
-    final IActionBarConfigurer actionBarConfigurer = configurer.getActionBarConfigurer();
-    final ICoolBarManager coolBarManager = actionBarConfigurer.getCoolBarManager();
-    coolBarManager.removeAll();
 
   }
 
@@ -53,10 +47,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
   public void openIntro( )
   {
     final IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
-    final IIntroManager introManager = workbench.getIntroManager();
+    final IIntroManager intromanager = workbench.getIntroManager();
     // starts the welcome page
-    introManager.showIntro( workbench.getActiveWorkbenchWindow(), false );
-    // makes shure the Welcome page is always maximized
+    intromanager.showIntro( workbench.getActiveWorkbenchWindow(), false );
+    // makes shure the welcome page is always maximized
     workbench.getActiveWorkbenchWindow().getShell().setMaximized( true );
+
   }
 }

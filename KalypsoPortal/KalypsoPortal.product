@@ -13,8 +13,9 @@
    <configIni use="default"/>
 
    <launcherArgs>
-      <programArgs>-data workspace
+      <programArgs>-data %WORKSPACE%
 -nl de_DE
+-PortalURL %URL%
 -consolelog</programArgs>
       <vmArgs>-Xmx450m</vmArgs>
    </launcherArgs>
@@ -95,7 +96,6 @@
       <plugin id="org.kalypso.contribs.ogc31"/>
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.dcadapter"/>
-      <plugin id="org.kalypso.debug"/>
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.dss"/>
       <plugin id="org.kalypso.dwd"/>
@@ -111,21 +111,14 @@
       <plugin id="org.kalypso.optimize"/>
       <plugin id="org.kalypso.portal"/>
       <plugin id="org.kalypso.product"/>
-      <plugin id="org.kalypso.raster.import"/>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
       <plugin id="org.kalypso.services.core"/>
       <plugin id="org.kalypso.services.core.client"/>
-      <plugin id="org.kalypso.services.metadoc"/>
-      <plugin id="org.kalypso.services.metadoc.client"/>
       <plugin id="org.kalypso.services.observation"/>
       <plugin id="org.kalypso.services.observation.client"/>
-      <plugin id="org.kalypso.services.user"/>
-      <plugin id="org.kalypso.services.user.client"/>
       <plugin id="org.kalypso.simulation.core"/>
       <plugin id="org.kalypso.simulation.ui"/>
-      <plugin id="org.kalypso.tecdoc"/>
-      <plugin id="org.kalypso.tuhhmanual"/>
       <plugin id="org.kalypso.ui"/>
       <plugin id="org.kalypso.ui.addlayer"/>
       <plugin id="org.kalypso.ui.observationimport"/>

@@ -45,12 +45,14 @@ public class ContainerSelectionWizardPage extends WizardPage
   {
     super( pageName );
     m_root = root;
+    setPageComplete( false );
   }
 
   public ContainerSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage, IContainer root )
   {
     super( pageName, title, titleImage );
     m_root = root;
+    setPageComplete( false );
   }
 
   public void createControl( Composite parent )
@@ -61,7 +63,6 @@ public class ContainerSelectionWizardPage extends WizardPage
     m_group = new ContainerSelectionGroup( top, m_listener, false, "Bitte ein Wizard auswählen...", true );
     m_group.pack();
     setControl( top );
-
   }
 
   public IProject getSelectedProject( )

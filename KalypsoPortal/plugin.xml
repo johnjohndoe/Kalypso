@@ -8,7 +8,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="org.kalypso.portal.intro.Application">
+               class="org.kalypso.portal.intro.KalypsoPortalApplication">
          </run>
       </application>
    </extension>
