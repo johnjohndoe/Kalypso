@@ -12,6 +12,7 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
 
   // The shared instance.
   private static KalypsoPortalPlugin plugin;
+
   private static String m_id = "org.kalypso.portal";
 
   /**
@@ -20,7 +21,6 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   public KalypsoPortalPlugin( )
   {
     plugin = this;
-    System.out.println("constuctor " + m_id );
   }
 
   /**
@@ -30,8 +30,6 @@ public class KalypsoPortalPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-    System.out.println("startBundle " + m_id );
-    
   }
 
   /**

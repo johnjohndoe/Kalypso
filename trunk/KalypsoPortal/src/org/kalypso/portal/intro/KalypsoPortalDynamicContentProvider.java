@@ -18,7 +18,7 @@ import org.w3c.dom.Text;
  * 
  * @author kuepfer
  */
-public class DynamicContentProvider implements IIntroXHTMLContentProvider
+public class KalypsoPortalDynamicContentProvider implements IIntroXHTMLContentProvider
 {
 
   public void init( IIntroContentProviderSite site )
@@ -38,9 +38,9 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
   public void createContent( String id, Element parent )
   {
     final Document domOwner = parent.getOwnerDocument();
-    // final String urlFromConfig = "http://localhost:8080/webdav/dss/intro/intropage.html";
-    // final String urlFromConfig = "http://134.28.87.41:8080/webdav/dss/intro/intropage.html";
-    // final File file = new File( "C:\\Tomcat 5.0\\webapps\\webdav\\dss\\intro\\intropage.xhtml" );
+    // get the first welcome page from the specified URL (the argument is included in the *.ini file)
+    // entry must be after the eclipse args-list: 
+    // eg: -PortalURL http://localhost:8080/directory/firstpage.html 
     final String portalURLArgument = "-portalurl";
     String urlFromConfig = null;
     final String[] applicationArgs = Platform.getApplicationArgs();
@@ -52,19 +52,6 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
         break;
       }
     }
-    // final String[] commandLineArgs = Platform.getCommandLineArgs();
-
-    // final File file = new File( "C:/eclipse3.1_workspace/KalypsoFlowsData/dss/intro/intropage.html" );
-    // String urlFromConfig = null;
-    // try
-    // {
-    // urlFromConfig = file.toURL().toString();
-    // }
-    // catch( MalformedURLException e1 )
-    // {
-    // // TODO Auto-generated catch block
-    // e1.printStackTrace();
-    // }
     if( "headID".equals( id ) )
     {
       final Comment comment = domOwner.createComment( "headID" );
@@ -91,7 +78,6 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider
           // important: must allways follow openURL-introActions to stay in securityContext for excecuting
           // runAction-introActions
           final URL url = new URL( "http://org.eclipse.ui.intro/openURL?url=" + urlFromConfig );
-          // final URL url = new URL( "http://org.eclipse.ui.intro/runAction?goto=" + urlFromConfig +"&");
           // tricky: generate frame, otherwise relative urls can not be resolved !
           final Element frameSetE = domOwner.createElement( "frameset" );
           parent.appendChild( frameSetE );

@@ -7,10 +7,10 @@ import org.eclipse.ui.PlatformUI;
 /**
  * This class controls all aspects of the application's execution
  */
-public class Application implements IPlatformRunnable
+public class KalypsoPortalApplication implements IPlatformRunnable
 {
 
-  private static final ApplicationWorkbenchAdvisor APPLICATION_WORKBENCH_ADVISOR = new ApplicationWorkbenchAdvisor();
+  private static final KalypsoPortalWorkbenchAdvisor APPLICATION_WORKBENCH_ADVISOR = new KalypsoPortalWorkbenchAdvisor();
 
   /*
    * (non-Javadoc)
@@ -21,14 +21,12 @@ public class Application implements IPlatformRunnable
   {
     Display display = PlatformUI.createDisplay();
     boolean auth = authenticate();
-    System.out.println("application.run: Display created"  );
     if( auth )
       configure();
 
     try
     {
       int returnCode = PlatformUI.createAndRunWorkbench( display, APPLICATION_WORKBENCH_ADVISOR );
-      System.out.println("application.run: createAndRunWorkbench"  );
       if( returnCode == PlatformUI.RETURN_RESTART )
       {
         return IPlatformRunnable.EXIT_RESTART;
