@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.util.RuleFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author albert
+ * @author albert This class controls the ValidatorLabel and its behavior.
  */
 public class ValidatorFeatureControl extends AbstractFeatureControl
 {
