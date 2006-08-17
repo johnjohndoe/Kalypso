@@ -92,7 +92,7 @@ public class FeatureviewHelper
   /**
    * Erzeugt eine Zeile der GUI.
    */
-  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue, final boolean showTables )
+  private static void addDefaultFeatureControlTypeForProperty( final List<JAXBElement< ? extends ControlType>> controlList, final IPropertyType ftp, final Object propertyValue, final boolean showTables, boolean shouldAddValidator )
   {
     /* The variable for adding a validator label. */
     boolean addValidator = false;
@@ -107,7 +107,9 @@ public class FeatureviewHelper
     if( ftp instanceof IValuePropertyType )
     {
       /* It is a IValuePropertyType, that means, a validator could be needed. */
-      // addValidator = true; // TODO
+      if( shouldAddValidator == true )
+        addValidator = true;
+
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
       // ignore 'boundedBy' and value lists
@@ -175,7 +177,8 @@ public class FeatureviewHelper
         // sometimes null and sometimes not, the result depends on the first visited feature
 
         /* RelationType, a validator could be needed. */
-        // addValidator = true; //TODO
+        if( shouldAddValidator == true )
+          addValidator = true;
       }
       else
       {
@@ -312,7 +315,7 @@ public class FeatureviewHelper
    *          the type (e.g. linked features)
    * @return featureview
    */
-  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type, final Feature feature, final boolean showTables )
+  public static FeatureviewType createFeatureviewFromFeatureType( final IFeatureType type, final Feature feature, final boolean showTables, boolean shouldAddValidator )
   {
     final FeatureviewType featureview = FACTORY.createFeatureviewType();
     featureview.setTypename( type.getQName() );
@@ -332,7 +335,7 @@ public class FeatureviewHelper
     for( final IPropertyType ftp : type.getProperties() )
     {
       final Object value = feature == null ? null : feature.getProperty( ftp );
-      addDefaultFeatureControlTypeForProperty( controlList, ftp, value, showTables );
+      addDefaultFeatureControlTypeForProperty( controlList, ftp, value, showTables, shouldAddValidator );
     }
 
     return featureview;

@@ -138,6 +138,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private FormToolkit m_formToolkit = null;
 
+  private boolean m_shouldAddValidator = false;
+
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
   {
     this( feature, selectionManager, new URL[] {} );
@@ -236,7 +238,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return compabilityView;
     // REMARK end
 
-    return m_defaultViews.get( featureType, getFeature() );
+    return m_defaultViews.get( featureType, getFeature(), m_shouldAddValidator );
   }
 
   public Control createControl( final Composite parent, final int style, final IFeatureType ft )
@@ -754,5 +756,26 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public void set_formToolkit( FormToolkit formToolkit )
   {
     m_formToolkit = formToolkit;
+  }
+
+  /**
+   * Returns, whether a ValidatorLabel should be added or not.
+   * 
+   * @return True, if a ValidatorLabel should be added, otherwise false.
+   */
+  public boolean isShouldAddValidator( )
+  {
+    return m_shouldAddValidator;
+  }
+
+  /**
+   * Sets, whether a ValidatorLabel should be added or not.
+   * 
+   * @param shouldAddValidator
+   *          Set this to true, if you want a ValidatorLabel, to validate the input of a feature.
+   */
+  public void setShouldAddValidator( boolean shouldAddValidator )
+  {
+    m_shouldAddValidator = shouldAddValidator;
   }
 }
