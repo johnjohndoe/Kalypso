@@ -66,20 +66,20 @@ public class FeatureViewManager
     m_showTables = showTable;
     reset();
   }
-  
+
   public boolean isShowTables( )
   {
     return m_showTables;
   }
 
   /** Return a view tmeplate for the given featureType. If no cached templae is present, a new von is generated. */
-  public FeatureviewType get( final IFeatureType featureType, final Feature feature )
+  public FeatureviewType get( final IFeatureType featureType, final Feature feature, boolean shouldAddValidator )
   {
     final QName qname = featureType.getQName();
     if( m_templates.containsKey( qname ) )
       return m_templates.get( qname );
 
-    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType, feature, m_showTables );
+    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType, feature, m_showTables, shouldAddValidator );
     m_templates.put( qname, newView );
 
     return newView;
