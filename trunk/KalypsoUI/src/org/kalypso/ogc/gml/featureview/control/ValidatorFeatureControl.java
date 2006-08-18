@@ -113,7 +113,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
     m_showok = showok;
 
     /* Get the specific rules for this PropertyType. */
-    m_rules = RuleFactory.getRules( feature, ftp );
+    m_rules = RuleFactory.getRules( ftp );
   }
 
   /**
