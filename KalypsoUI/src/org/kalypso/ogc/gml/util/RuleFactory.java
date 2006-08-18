@@ -53,7 +53,6 @@ import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinLengthRestriction;
 import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This class serves as factory class. It shall provide created rules from a property. An other aspect is the check if
@@ -71,12 +70,10 @@ public abstract class RuleFactory
   /**
    * This function creates a list of rules for a property, if it have any restrictions.
    * 
-   * @param feature -
-   *          The GML that represents the feature.
    * @param ftp
    *          The GML schema that represents a feature property.
    */
-  public static IRule[] getRules( final Feature feature, final IPropertyType ftp )
+  public static IRule[] getRules( final IPropertyType ftp )
   {
     Vector<IRule> rules = new Vector<IRule>();
 
