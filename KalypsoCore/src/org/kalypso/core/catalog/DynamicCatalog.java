@@ -462,6 +462,7 @@ public class DynamicCatalog implements ICatalog
             {
               final NextCatalog nextCatalog = (NextCatalog) item;
               final String catalogHref = nextCatalog.getCatalog();
+              //TODO: @Andreas: is it ok to stop here if we find something? What, if we have some public/system entries after the nextCatalog entry?
               collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );
               if( !doCollectURN && collector.size() > 0 )
                 return collector;

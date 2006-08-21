@@ -38,46 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.repository;
+package org.kalypso.ogc.gml.dict;
 
-import java.io.File;
+import java.net.URL;
 
-/**
- * @author doemming
- */
-public class Storage
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.core.catalog.ICatalogContribution;
+
+public class KalypsoCoreDictionaryCatalogContribution implements ICatalogContribution
 {
-  private final File m_repositoryBase;
-
-  public Storage( File repositoryBase )
+  public void contributeTo( final CatalogManager catalogManager )
   {
-    m_repositoryBase = repositoryBase;
-    if( !m_repositoryBase.exists() )
-      m_repositoryBase.mkdirs();
-  }
-
-  protected File getStorageBase( )
-  {
-    return m_repositoryBase;
-  }
-
-  /**
-   * applies a storage (File) for the object with the id of URN <br>
-   * TODO move to abstract class storage
-   */
-  protected String getStorageHref( String entryURN )
-  {
-    int i = 1;
-    File storage = null;
-    String href = null;
-    do
-    {
-      href = "storage-" + i + ".dat";
-      i++;
-      storage = new File( m_repositoryBase, href );
-    }
-    // TODO remember
-    while( storage.exists() );
-    return href;
+    final URL catalogURL = getClass().getResource( "resources/catalog.xml" );
+    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+    baseCatalog.addNextCatalog( catalogURL );
   }
 }

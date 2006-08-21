@@ -50,23 +50,17 @@ import org.kalypso.loader.LoaderException;
 
 final class SaveAndDisposeInfoJob extends UIJob
 {
-  private final Object m_value;
-
   private final KeyInfo m_info;
 
-  public SaveAndDisposeInfoJob( String name, Object value, KeyInfo info )
+  public SaveAndDisposeInfoJob( final String name, final KeyInfo info )
   {
     super( name );
-    m_value = value;
     m_info = info;
   }
 
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    if( m_value == null )
-      return Status.OK_STATUS;
-
     try
     {
       final String location = m_info.getKey().getLocation();

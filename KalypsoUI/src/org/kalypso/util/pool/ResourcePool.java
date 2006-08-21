@@ -40,9 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -138,7 +140,7 @@ public class ResourcePool
   {
     synchronized( m_keyInfos )
     {
-      final Map<KeyInfo, Object> objectsToSave = new HashMap<KeyInfo, Object>();
+      final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
 
       for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
@@ -150,34 +152,33 @@ public class ResourcePool
         {
           m_logger.info( "Releasing key (no more listeners): " + key );
 
-          /* If object is dirty mark it for save */
-          final Object object = info.getObject();
-          if( object != null && info.isDirty() )
-            objectsToSave.put( info, object );
-          else
-            objectsToSave.put( info, null );
-
           iter.remove();
+          
+          infosToDispose.add( info );
         }
       }
-
+      
       final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
-      for( final Entry<KeyInfo, Object> entry : objectsToSave.entrySet() )
+      
+      for( final KeyInfo info : infosToDispose )
       {
-        final KeyInfo info = entry.getKey();
-        final Object value = entry.getValue();
-
         final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
         final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
-        if( askForSave )
+
+        if( !info.isDirty() )
+          info.dispose();
+        else if( askForSave )
         {
-          final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", value, info );
+          final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", info );
           job.setUser( true );
           job.setRule( mutex );
           job.schedule();
         }
         else
-          System.out.println( "Should save pool object: " + value );
+        {
+          System.out.println( "Should save pool object: " + info.getObject() );
+          info.dispose();
+        }
       }
     }
   }

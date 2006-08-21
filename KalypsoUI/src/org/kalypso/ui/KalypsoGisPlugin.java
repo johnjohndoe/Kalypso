@@ -82,6 +82,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -153,6 +154,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private static final String DEFAULT_CRS = "EPSG:31469";
 
   private static DefaultStyleFactory m_defaultStyleFactory;
+
+  private DictionaryCatalog m_dictionaryCatalog;
 
   private PluginImageProvider m_imgProvider = null;
   
@@ -362,6 +365,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     m_imgProvider = new PluginImageProvider( this );
     m_imgProvider.resetTmpFiles();
 
+    m_dictionaryCatalog = new DictionaryCatalog();
+    
     configureLogger();
 
     try
@@ -505,6 +510,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
+    
+    m_dictionaryCatalog = null;
   }
 
   public static String getId( )
@@ -783,5 +790,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public static PluginImageProvider getImageProvider()
   {
     return getDefault().m_imgProvider;
+  }
+
+  public static DictionaryCatalog getDictionaryCatalog( )
+  {
+    return getDefault().m_dictionaryCatalog;
   }
 }
