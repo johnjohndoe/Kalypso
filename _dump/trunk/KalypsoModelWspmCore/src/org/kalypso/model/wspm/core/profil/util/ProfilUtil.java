@@ -92,7 +92,7 @@ public class ProfilUtil
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final int leftPos = (leftDevider != null) ? points.indexOf( leftDevider.getPoint() ) : 0;
-    final int rightPos = (rightDevider != null) ? points.indexOf( rightDevider.getPoint() )  : 0;
+    final int rightPos = (rightDevider != null) ? points.indexOf( rightDevider.getPoint() ) : 0;
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
 
   }
@@ -202,4 +202,19 @@ public class ProfilUtil
     return points.get( i + 1 );
   }
 
+  public static Double getMaxValueFor( final IProfil profil, final IProfilPoint.POINT_PROPERTY property ) throws ProfilDataException
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points.isEmpty() )
+      return null;
+
+    Double maxValue = points.getFirst().getValueFor( property );
+    for( IProfilPoint point : points )
+    {
+      final Double value = point.getValueFor( property );
+      if(value != null &&  value > maxValue )
+        maxValue = value;
+    }
+    return maxValue;
+  }
 }

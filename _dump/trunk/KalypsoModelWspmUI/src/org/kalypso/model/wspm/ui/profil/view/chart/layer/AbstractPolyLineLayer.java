@@ -142,7 +142,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     gc.drawOval( rightPoint.x - 2, rightPoint.y - 2, 4, 4 );
 
     if( m_drawStationLines )
-      drawStationline( gc, rightPoint.x, getValueRange().getScreenFrom(), rightPoint.x, rightPoint.y );
+      drawStationline( gc, rightPoint.x, getValueRange().getScreenFrom()+getValueRange().getGapSpace(), rightPoint.x, rightPoint.y );
   }
 
   /**
@@ -199,16 +199,18 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
       final Point2D[] points = getPoints2D( getPoints(), next );
 
       if( bounds == null && points.length > 0 )
-        bounds = new Rectangle2D.Double( points[0].getX(), points[0].getY(), 0, 0 );
+        bounds = new Rectangle2D.Double( points[0].getX(), points[0].getY(), 0,0);
 
       for( int i = 0; i < points.length; i++ )
         bounds.add( points[i] );
     }
-    if( bounds != null )
-    {
-      double height = bounds.getHeight();
-      bounds.setRect( bounds.getMinX(), bounds.getMinY() - height * 0.1, bounds.getWidth(), height * 1.2 );
-    }
+//    if( bounds != null )
+//    {
+//      double height = bounds.getHeight();
+//      double width = bounds.getWidth();
+//      bounds.setRect( bounds.getMinX()-width*0.1, bounds.getMinY() - height * 0.1, width*1.2, height * 1.2 );    
+//      //bounds.add(bounds.getMinX() ,bounds.getMaxX() +  height * 0.1);
+//    }
     // KIM
     // double width = bounds.getWidth();
     // final AxisRange domainRange = getDomainRange();

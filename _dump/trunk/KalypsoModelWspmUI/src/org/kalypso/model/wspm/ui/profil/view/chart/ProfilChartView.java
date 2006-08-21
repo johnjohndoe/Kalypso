@@ -197,7 +197,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   public Control doCreateControl( final Composite parent, final int style )
   {
     m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true );
+    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true,5,1.0 );
     m_valueRangeRight = new AxisRange( "[ks]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
     m_chart = new ChartCanvas( parent, style, new Insets( 20, 0, 0, 0 ) );
@@ -210,7 +210,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_chart.setAxisRenderer( m_domainRange, domainrenderer );
     m_chart.setAxisRenderer( m_valueRangeLeft, leftrenderer );
     m_chart.setAxisRenderer( m_valueRangeRight, rightrenderer );
-    m_chart.setFixAspectRatio( null );
+    m_chart.setFixAspectRatio(null );
     try
     {
       createLayer();
@@ -375,11 +375,11 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           m_chart.repaint();
           break;
         case FIX_RATIO_2:
-          m_chart.setFixAspectRatio( 2.0 );
+          m_chart.setFixAspectRatio( 2.0);
           m_chart.repaint();
           break;
         case FIX_RATIO_3:
-          m_chart.setFixAspectRatio( 5.0 );
+          m_chart.setFixAspectRatio( 10.0);
           m_chart.repaint();
           break;
 

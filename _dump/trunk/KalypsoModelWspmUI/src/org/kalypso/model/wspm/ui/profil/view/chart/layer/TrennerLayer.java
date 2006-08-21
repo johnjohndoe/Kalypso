@@ -159,7 +159,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
             return String.format( "%s%n%s%n%s: %10.4f", new Object[] { m_label, "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ),
                 (Double) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT ) } );
           case TRENNFLAECHE:
-            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) ? "Böschungsfuss" : "Sohle",
+            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) ? "Böschungsfuss" : "Vorland",
                 devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
         }
       }
@@ -204,10 +204,10 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final IProfil m_profil = getProfil();
 
-      final double maxval = getMaxval();
-      final double maxscreen = getValueRange().logical2screen( maxval );
-      final int bottom = getValueRange().getScreenFrom();
-      final int top = (int) maxscreen;
+      // final double maxval = getMaxval();
+      // final double maxscreen = getValueRange().logical2screen( maxval );
+      final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+      final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();// (int) maxscreen;
       gc.setLineWidth( 3 );
       gc.setLineStyle( SWT.LINE_SOLID );
 
@@ -244,10 +244,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
       final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
-
-      if( (l > 0) && (r > 0) )
-
-        drawLine( gc, l, top, r, top );
+      drawLine( gc, l, top, r, top );
     }
 
   }
@@ -323,7 +320,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     final double maxval = getMaxval();
     final double maxscreen = getValueRange().logical2screen( maxval );
     final int bottom = (int) maxscreen + dev.getTopOffset();// (maxscreen + (m_isclosed ? ((screenTop - maxscreen) / 2)
-                                                            // : 0));
+    // : 0));
     try
     {
       final IProfilPoint destinationPoint = getProfil().findNearestPoint( screen2logical( editing ).getX() );
@@ -467,6 +464,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    
+
   }
 }

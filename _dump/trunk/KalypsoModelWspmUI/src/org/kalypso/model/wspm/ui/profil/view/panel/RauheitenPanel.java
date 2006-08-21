@@ -178,7 +178,6 @@ public class RauheitenPanel extends AbstractProfilView
       @Override
       public void focusLost( final FocusEvent e )
       {
-
         updateProperty( profil );
       }
 
@@ -242,7 +241,7 @@ public class RauheitenPanel extends AbstractProfilView
         changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value2 ) );
       }
     }
-    if( !value2.isNaN() && Math.abs( oldvalue2 - value1 ) > prec )
+    if( !value2.isNaN() && Math.abs( oldvalue2 - value2 ) > prec )
     {
       changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2 ) );
     }
@@ -263,7 +262,7 @@ public class RauheitenPanel extends AbstractProfilView
         changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value3 ) );
       }
     }
-    if( !value3.isNaN() && Math.abs( oldvalue3 - value1 ) > prec )
+    if( !value3.isNaN() && Math.abs( oldvalue3 - value3 ) > prec )
     {
       changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3 ) );
     }
@@ -296,7 +295,6 @@ public class RauheitenPanel extends AbstractProfilView
       m_VL.setEnabled( isBlockSetting && m_enablePanel );
       if( (devider != null) && (devider.length > 0) )
         setBlockValue( m_VL, devider[0] );
-
     }
     if( !m_HF.isDisposed() )
     {
@@ -323,7 +321,7 @@ public class RauheitenPanel extends AbstractProfilView
     }
     catch( ProfilDataException e )
     {
-      text.setText( "error" );
+      text.setText( "" );
     }
     if( text.isFocusControl() )
       text.selectAll();

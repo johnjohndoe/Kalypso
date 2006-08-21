@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
@@ -110,7 +111,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
         final double x = p.getValueFor( POINT_PROPERTY.BREITE );
 
         final double rauheit = p.getValueFor( POINT_PROPERTY.RAUHEIT );
-        final Rectangle2D area = new Rectangle2D.Double( x, 0.0, 0.0, rauheit );
+        final Rectangle2D area = new Rectangle2D.Double( x, rauheit, 0, 0 );
 
         if( bounds == null )
           bounds = area;
@@ -124,6 +125,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       e.printStackTrace();
     }
 
+    // bounds.add( bounds.getMinX(), bounds.getMinY() - bounds.getHeight() * 0.1 );
     return bounds;
   }
 
@@ -145,14 +147,14 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       int i = 0;
       for( IProfilDevider dev : deviders )
       {
-        final Double value = (Double)dev.getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT );
+        final Double value = (Double) dev.getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT );
         try
         {
-          values[i++] = value == null ? dev.getPoint().getValueFor(IProfilPoint.POINT_PROPERTY.RAUHEIT ) :value;
+          values[i++] = value == null ? dev.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT ) : value;
         }
         catch( ProfilDataException e )
         {
-          values[i++] =0.0;
+          values[i++] = 0.0;
         }
         points.add( dev.getPoint() );
       }
@@ -162,14 +164,14 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       points = getProfil().getPoints();
       try
       {
-        values = getProfil().getValuesFor(POINT_PROPERTY.RAUHEIT);
+        values = getProfil().getValuesFor( POINT_PROPERTY.RAUHEIT );
       }
       catch( ProfilDataException e )
       {
         values = new double[points.size()];
       }
     }
-   
+
     IProfilPoint lastP = null;
     int i = 0;
     for( final Iterator<IProfilPoint> pIt = points.iterator(); pIt.hasNext(); )
@@ -182,8 +184,8 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
         {
           final double x1 = lastP.getValueFor( POINT_PROPERTY.BREITE );
           final double x2 = p.getValueFor( POINT_PROPERTY.BREITE );
-          //final double y1 = 0;
-          //final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
+          // final double y1 = 0;
+          // final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
           final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, values[i++] ) );
           box.width += 1;
           fillRectangle( gc, box );
@@ -285,19 +287,27 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       return;
     final AxisRange valueRange = getValueRange();
     final double max = valueRange.getLogicalTo();
-    double maxProfilValue = 0;
-    for( IProfilChange change : changes )
+    Double maxProfilValue;
+    try
     {
-      if( change.getPointProperty() == POINT_PROPERTY.RAUHEIT )
-      {
-        final double newValue = change.getValue();
-        if( newValue > maxProfilValue )
-          maxProfilValue = newValue;
-      }
+      maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
     }
-    final double newMax = 1.05 * maxProfilValue;
-    if( Math.abs( maxProfilValue - max ) > max * 0.05 )
-      valueRange.setLogicalRange( new LogicalRange( valueRange.getLogicalFrom(), newMax ) );
+    catch( ProfilDataException e )
+    {
+      maxProfilValue = 0.0;
+    }
+    // for( IProfilChange change : changes )
+    // {
+    // if( change.getPointProperty() == POINT_PROPERTY.RAUHEIT )
+    // {
+    // final double newValue = change.getValue();
+    // if( newValue > maxProfilValue )
+    // maxProfilValue = newValue;
+    // }
+    // }
+    // final double newMax = 1.05 * ;
+    if( Math.abs( maxProfilValue - max ) > 0.1 )
+      valueRange.setLogicalRange( new LogicalRange( valueRange.getLogicalFrom(), 1.05 * maxProfilValue ) );
 
   }
 }
