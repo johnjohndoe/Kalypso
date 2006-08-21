@@ -161,6 +161,9 @@ public class FeatureActionUtilities
     {
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+      // to avoid NullPointerException: the first feature is null ( e.g. a linked feature is selected )
+      if( feature == null )
+        return newMenuManager;
       fatp = featureSelection.getParentFeatureProperty( feature );
       featureType = feature.getFeatureType();
       parentFeature = feature.getParent();
@@ -170,7 +173,7 @@ public class FeatureActionUtilities
 
     if( fatp == null || parentFeature == null )
       return newMenuManager;
-    
+
     final int maxOccurs = fatp.getMaxOccurs();
 
     /* Direct properties (maxoccurs = 1) can only be added if not already there. */

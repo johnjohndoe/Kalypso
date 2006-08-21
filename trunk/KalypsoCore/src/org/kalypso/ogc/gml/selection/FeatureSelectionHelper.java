@@ -66,7 +66,12 @@ public class FeatureSelectionHelper
   }
 
   /**
-   * Return all features contained in the selection which live in the given workspace.
+   * Return all features contained in the selection which live in the given workspace. This does NOT include linked
+   * features. <br>
+   * TODO make this method work for linked features as well. Problem: the LinkedFeatureElement2 returned by the
+   * GMLEditorContentProvider2 is defined in the KalypsoUI plugin and this helper lives in KalypsoCore. adding the
+   * linked Element Support would add a new dependency. do we still need the LinkedFeatureElement2 object or can we
+   * model it differnetly since the GMLWorkspace api changed considerably?
    * 
    * @param filterWorkspace
    *          if null, all features are returned
@@ -128,13 +133,13 @@ public class FeatureSelectionHelper
     }
     return result.toArray( new Feature[result.size()] );
   }
-  
+
   public static Feature[] getAllFeaturesOfType( IFeatureSelection selection, QName substitueeName )
   {
     final EasyFeatureWrapper[] features = selection.getAllFeatures();
 
     final List<Feature> resFeatures = new ArrayList<Feature>();
-    
+
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i].getFeature();
@@ -142,8 +147,8 @@ public class FeatureSelectionHelper
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), substitueeName ) )
         resFeatures.add( feature );
     }
-    
-    return resFeatures.toArray( new Feature[resFeatures.size() ] );
+
+    return resFeatures.toArray( new Feature[resFeatures.size()] );
   }
 
   /**
