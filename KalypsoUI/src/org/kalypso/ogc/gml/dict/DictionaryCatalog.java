@@ -47,6 +47,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -154,7 +155,7 @@ public class DictionaryCatalog
   private URL resolveUrn( final String urn ) throws MalformedURLException
   {
     // search for url
-    final CatalogManager catalogManager = CatalogManager.getDefault();
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     final String uri = baseCatalog.resolve( urn, urn );
     return new URL( uri );

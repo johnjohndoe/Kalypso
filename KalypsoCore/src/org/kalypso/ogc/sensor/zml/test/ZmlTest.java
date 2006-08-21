@@ -40,10 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.test;
 
-import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -74,23 +73,18 @@ public class ZmlTest extends TestCase
   private final DoubleComparator dc = new DoubleComparator( 0 );
 
   // contains the list of ZMLs to test
-  private final static String[] ZMLs =
-  {
-      "./etc/schemas/zml/beispiel.zml",
-      "./etc/schemas/zml/inline_ex.zml" };
+  private final static String[] ZMLs = { "resources/beispiel.zml", "resources/inline_ex.zml" };
 
-  public void testZmls() throws MalformedURLException, SensorException, ParseException
+  public void testZmls( ) throws SensorException, ParseException
   {
     for( int i = 0; i < ZMLs.length; i++ )
     {
       System.out.println( "Testing: " + ZMLs[i] );
 
-      final File zmlFile = new File( ZMLs[i] );
-      assertTrue( zmlFile.exists() );
+      final String obsID = ZMLs[i];
+      final URL zmlURL = getClass().getResource( ZMLs[i] );
 
-      final String obsID = zmlFile.getAbsolutePath();
-
-      final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), obsID );
+      final IObservation obs = ZmlFactory.parseXML( zmlURL, obsID );
 
       _testGetName( obs );
       _testGetTarget( obs );
@@ -227,12 +221,11 @@ public class ZmlTest extends TestCase
   /**
    * Tests the new mechanism ('data'-Element) for storing Metadata stuff
    */
-  public void testMetadataEx() throws MalformedURLException, SensorException, FactoryException, JAXBException
+  public void testMetadataEx( ) throws SensorException, FactoryException, JAXBException
   {
-    final File zmlFile = new File( "./etc/schemas/zml/beispiel-metadata.zml" );
-    assertTrue( zmlFile.exists() );
+    final URL zmlURL = getClass().getResource( "resources/beispiel-metadata.zml" );
 
-    final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), zmlFile.getAbsolutePath() );
+    final IObservation obs = ZmlFactory.parseXML( zmlURL, "beispiel-metadata.zml" );
 
     final Observation xml = ZmlFactory.createXML( obs, null );
     final StringWriter writer = new StringWriter();

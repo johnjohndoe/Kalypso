@@ -57,6 +57,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.loader.IPooledObject;
@@ -300,8 +301,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             final IFeatureType featureType = getFeatureType();
             if( featureType != null )
             {
-
-              final CatalogSLD styleCatalog = CatalogSLD.getDefault();
+              final CatalogSLD styleCatalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
               final URL context = m_layerKey.getContext();
               final IUrlResolver2 resolver = new IUrlResolver2()
               {

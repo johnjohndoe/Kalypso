@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.urn.IURNGenerator;
@@ -83,7 +84,7 @@ public class FeatureTypeCatalog
   public static String getLocation( final String urn )
   {
     // search for url
-    final CatalogManager catalogManager = CatalogManager.getDefault();
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     final String uri = baseCatalog.resolve( urn, urn );
     return uri;
@@ -93,7 +94,8 @@ public class FeatureTypeCatalog
   {
     // REMARK: catalog is registered for feature type, not for qname
     // Hint for a refaktoring on the CatalogManager
-    final IURNGenerator generator = CatalogManager.getDefault().getURNGeneratorFor( IFeatureType.class );
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+    final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
     if( generator == null )
       return null;
 

@@ -40,20 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.catalog.test;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
-import org.apache.commons.io.FileUtils;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
 
 /**
  * @author doemming
  */
 public class CatalogTest extends TestCase
 {
-  private File m_catalogBase;
+  // private File m_catalogBase;
 
   /**
    * @see junit.framework.TestCase#setUp()
@@ -62,10 +59,12 @@ public class CatalogTest extends TestCase
   protected void setUp( ) throws Exception
   {
     super.setUp();
-    m_catalogBase = new File( "C:/TMP/test-catalog" );
-    if( m_catalogBase.exists() )
-      FileUtils.deleteDirectory( m_catalogBase );
-    m_catalogBase.mkdirs();
+
+    // PLEASE: do not such a thing in a JUNit Test without deleting everything n the tearDown method!
+    // m_catalogBase = new File( "C:/TMP/test-catalog" );
+    // if( m_catalogBase.exists() )
+    // FileUtils.deleteDirectory( m_catalogBase );
+    // m_catalogBase.mkdirs();
   }
 
   public void testCatalog( ) throws Exception
@@ -73,8 +72,8 @@ public class CatalogTest extends TestCase
     try
     {
       // final DynamicCatalog baseCatalog = DynamicCatalog.getBaseCatalog();
-      final CatalogManager manager = CatalogManager.getDefault();
-//      final ICatalog catalogForURN = manager.getCatalogForURN( "urn:ogc:sld:" );
+      final CatalogManager manager = KalypsoCorePlugin.getDefault().getCatalogManager();
+      // final ICatalog catalogForURN = manager.getCatalogForURN( "urn:ogc:sld:" );
       manager.saveAll();
 
       // final Vector vector = new Vector<String>();
