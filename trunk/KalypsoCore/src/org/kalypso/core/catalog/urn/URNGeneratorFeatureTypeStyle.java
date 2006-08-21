@@ -42,6 +42,7 @@ package org.kalypso.core.catalog.urn;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.URNUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -81,7 +82,8 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
     {
       final FeatureTypeStyle fts = (FeatureTypeStyle) object;
       final QName featureTypeName = fts.getFeatureTypeName();
-      final IURNGenerator generator = CatalogManager.getDefault().getURNGeneratorFor( IFeatureType.class );
+      final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+      final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
       if( generator == null )
         return null;
       final String baseURN = generator.generateURNFor( featureTypeName );
@@ -96,7 +98,8 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateURNPatternForRelated( Object related )
   {
-    final IURNGenerator generator = CatalogManager.getDefault().getURNGeneratorFor( IFeatureType.class );
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+    final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
     if( generator == null )
       return null;
     final String baseURN =generator.generateURNFor( related );
@@ -110,7 +113,8 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateDefaultURNForRelated( Object related )
   {
-    final IURNGenerator generator = CatalogManager.getDefault().getURNGeneratorFor( IFeatureType.class );
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+    final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
     if( generator == null )
       return null;
     final String baseURN = generator.generateURNFor( related );

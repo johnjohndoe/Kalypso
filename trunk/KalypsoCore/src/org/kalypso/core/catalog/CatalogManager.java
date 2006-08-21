@@ -60,9 +60,6 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.jwsdp.JaxbUtilities;
 
@@ -72,22 +69,32 @@ import org.kalypso.jwsdp.JaxbUtilities;
  * <p>
  * In my opinion, this is already too much. We should rather split those two concepts for clarity. Gernot.
  * </p>
+ * <p>
+ * the default-catalog is dynamic, but changes will not be saved
+ * </p>
  * 
  * @author doemming
  */
 public class CatalogManager
 {
-  /**
-   * the default-catalog is dynamic, but changes will not be saved <br>
-   * TODO put into .metadata-plugin-preferences
-   */
-  private static CatalogManager DEFAULT_MANAGER = null;
-
   public final static JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public final static ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
 
   public final Hashtable<Class, IURNGenerator> m_urnGenerators = new Hashtable<Class, IURNGenerator>();
+
+  private final File m_baseDir;
+
+  private final Hashtable<URI, DynamicCatalog> m_openCatalogs = new Hashtable<URI, DynamicCatalog>();
+
+  /**
+   * Normally you should not instantiate this manager yourself but get it via
+   * {@link org.kalypso.core.KalypsoCorePlugin#getCatalogManager()}
+   */
+  public CatalogManager( final File baseDir )
+  {
+    m_baseDir = baseDir;
+  }
 
   public void register( final IURNGenerator urnGenerator )
   {
@@ -97,60 +104,8 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
-  /**
-   * methode to get the singleton catalog, with default catalog location
-   */
-  public static CatalogManager getDefault( )
-  {
-    if( DEFAULT_MANAGER == null )
-    {
-      // TODO: instead of tmp-dir, use KalypsoCorePlugin.getDefault().getStateLocation()
-      // this probably also solves the todo above
-      final File catalogBaseDir = FileUtilities.createNewTempDir( "kalypso-default-catalog" );
-      DEFAULT_MANAGER = getDefault( catalogBaseDir );
-    }
-    return DEFAULT_MANAGER;
-  }
-
-  /**
-   * methode to get the singelton catalog, but sets the location of the base catalog<br>
-   * use this methode for tests
-   */
-  public static CatalogManager getDefault( final File catalogBaseDir )
-  {
-    if( DEFAULT_MANAGER != null )
-      throw new UnsupportedOperationException( "catalog is alllready initialized" );
-    DEFAULT_MANAGER = new CatalogManager( catalogBaseDir );
-    DEFAULT_MANAGER.loadExtensions();
-    return DEFAULT_MANAGER;
-  }
-
-  private void loadExtensions( )
-  {
-    try
-    {
-      KalypsoCoreExtensions.loadXMLCatalogs( this );
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-  private final File m_baseDir;
-
-  private final Hashtable<URI, DynamicCatalog> m_openCatalogs = new Hashtable<URI, DynamicCatalog>();
-
-  private CatalogManager( final File baseDir )
-  {
-    m_baseDir = baseDir;
-  }
-
   public ICatalog getBaseCatalog( )
   {
-    // if( !m_baseDir.exists() )
-    // throw new UnsupportedOperationException( "unknown catalog base" );
     final String baseURN = new String( "urn:" );
     final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
