@@ -88,6 +88,9 @@
          point="org.kalypso.core.catalogContribution">
       <urnGenerator class="org.kalypso.core.catalog.urn.URNGeneratorFeatureTypeStyle"/>
       <urnGenerator class="org.kalypso.core.catalog.urn.URNGeneratorIFeatureType"/>
+      <catalogContribution
+            class="org.kalypso.ogc.gml.dict.KalypsoCoreDictionaryCatalogContribution"
+            name="KalypsoDictionaryCatalogContribution"/>
    </extension>
 
 </plugin>

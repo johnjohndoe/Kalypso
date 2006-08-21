@@ -39,19 +39,14 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 /**
  * CopyObservationFeatureVisitorTest
  * <p>
- * 
  * this is not actually a test on the CopyObservationFeatureVisitor, but it calls the ZmlFactory in the same way as the
- * CopyObservationFeatureVisitor
- * 
- * created by
+ * CopyObservationFeatureVisitor created by
  * 
  * @author doemming (14.06.2005)
- *  
  */
 public class CopyObservationFeatureVisitorTest extends TestCase
 {
-
-  public void testObservationWithComplexFilter() throws Exception
+  public void testObservationWithComplexFilter( ) throws Exception
   {
     try
     {
@@ -72,13 +67,13 @@ public class CopyObservationFeatureVisitorTest extends TestCase
           + "<from>1995-08-30T17:00:00</from>" //
           + "<to>1995-09-07T17:00:00</to>";
       // @marc: hier meine Überlegungen:
-      //     Problem: wie sollte ein filter aussehen, der in einer href (URL)
+      // Problem: wie sollte ein filter aussehen, der in einer href (URL)
       // codiert ist ?
       // <br>
-      //      der context muss irgendwie drin sein, da im filter relative pfade
+      // der context muss irgendwie drin sein, da im filter relative pfade
       // verwendet werden können. <br>
       //
-      //      bisher:
+      // bisher:
       // file://DIRa/DIRb/zeitreihe.zml?<from>...</from><to>...</to>
       // kein Problem, der filter wird einfach auf die existierende URL
       // angewendet.
@@ -108,6 +103,16 @@ public class CopyObservationFeatureVisitorTest extends TestCase
       // file://foo/bar/script.foo?<filter>blablabla</filter>...#useascontext
       final String strUrl = getClass().getResource( "contextFake.txt" ).toExternalForm() + ref + "#useascontext";
       final URL url = new URL( strUrl );
+
+      // REMARK: we test here it the reference part has been parsed. This will not happen
+      // for some kinds of protocol, especially 'bunderesource'.
+      // So this test cannot be used whithin the scope of the eclipse runtime environment.
+      if( url.getRef() == null )
+        return;
+      
+      // REMARK: in the view of this, it doesn't seem to be so good an idea to work with the
+      // #useascontext flag. Maybe it would be better instead of marking the url directly to start
+      // evaluating the filter expression (before opening the url) and always using the url as context.
       final IObservation observation = ZmlFactory.parseXML( url, "id" );
       assertNotNull( observation );
     }

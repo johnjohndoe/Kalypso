@@ -227,7 +227,7 @@ public class ZmlFactory
       }
 
       final String scheme = ZmlURL.getSchemePart( url );
-      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) || scheme.startsWith( "jar" ) )
+      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) || scheme.startsWith( "jar" ) || scheme.startsWith( "bundleresource" ) )
       {
         /*
          * if this is a local url, we remove the query part because Eclipse Platform's URLStreamHandler cannot deal with
