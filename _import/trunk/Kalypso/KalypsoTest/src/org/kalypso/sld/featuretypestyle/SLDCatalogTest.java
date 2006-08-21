@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.sld.featuretypestyle;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -54,10 +53,9 @@ import junit.framework.TestCase;
 
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
-import org.kalypso.core.catalog.urn.URNGeneratorFeatureTypeStyle;
-import org.kalypso.core.catalog.urn.URNGeneratorIFeatureType;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -94,11 +92,15 @@ public class SLDCatalogTest extends TestCase
   protected void setUp( ) throws Exception
   {
     super.setUp();
-    final File repository = new File( "C:/TMP/sld_repository" );
-    m_manager = CatalogManager.getDefault( repository );
-    m_manager.register( new URNGeneratorFeatureTypeStyle() );
-    m_manager.register( new URNGeneratorIFeatureType() );
-    m_catalogSLD = new CatalogSLD( m_manager, repository );
+    
+    m_manager =  KalypsoCorePlugin.getDefault().getCatalogManager();
+    m_catalogSLD = KalypsoCorePlugin.getDefault().getSLDCatalog();
+
+//    final File repository = new File( "C:/TMP/sld_repository" );
+//    m_manager = CatalogManager.getDefault( repository );
+//    m_manager.register( new URNGeneratorFeatureTypeStyle() );
+//    m_manager.register( new URNGeneratorIFeatureType() );
+//    m_catalogSLD = new CatalogSLD( m_manager, repository );
   }
 
   /**
