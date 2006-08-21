@@ -66,14 +66,14 @@ import org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffObject;
 
 public class CheckNewNAVersionTest extends TestCase
 {
-  private final static String BASE_DIR = "D://Daten//ReferenzModell//KollauModell"; // "C://temp//NAModell";
+  private final static String BASE_DIR = "C://Dokumente und Einstellungen//kuepfer//Local Settings//Temp"; // "C://temp//NAModell";
 
-  private final static String BASE_DIR_OLD = BASE_DIR.concat( "//results//VorUmbau//ergebnisse//lz_dt24h_4562" );// "//old"
-                                                                                                            // );
+  private final static String BASE_DIR_OLD = BASE_DIR.concat( "//CalcJob-2-Nullvariante//hqJobs//HQ1//calcDir//out_we.nat" );// "//old"
+
+  // );
 
   // private final static String BASE_DIR_OLD = BASE_DIR.concat( "//out_we.nat" );// "//old" );
-
-  private final static String BASE_DIR_NEW = BASE_DIR.concat( "//out_we.nat" );
+  private final static String BASE_DIR_NEW = BASE_DIR.concat( "//CalcJob-4-XPlanung//hqJobs//HQ1//calcDir//out_we.nat" );
 
   private final static String FILENAME_CONTROL = BASE_DIR.concat( "//start//we_nat_start.txt" );
 
@@ -145,11 +145,11 @@ public class CheckNewNAVersionTest extends TestCase
           final BlockTimeSeriesDiffObject diff2 = new BlockTimeSeriesDiffObject( newFile );
           // make diff
           DiffUtils.diff( logger, diff1, diff2, null );
-          }
-
         }
 
       }
+
+    }
     else
     {
       System.out.println( "Die Anzahl der Dateien ist nicht identisch!\nAnzahl(1): " + oldFiles.length + "\tAnzahl(2): " + newFiles.length );
