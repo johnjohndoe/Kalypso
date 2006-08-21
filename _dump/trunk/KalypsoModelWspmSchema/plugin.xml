@@ -7,5 +7,11 @@
             class="org.kalypso.model.wspm.schema.WspmUrlCatalog"
             id="org.kalypso.model.wspm.schema.urlcatalog"/>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.wspm.schema.WspmDictionaryCatalogContribution"
+            name="WspmDictionaryCatalogContribution"/>
+   </extension>
 
 </plugin>

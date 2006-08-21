@@ -40,51 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+import java.net.URL;
 
-/**
- * The main plugin class to be used in the desktop.
- */
-public class KalypsoModelWspmSchemaPlugin extends Plugin
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.core.catalog.ICatalogContribution;
+
+public class WspmDictionaryCatalogContribution implements ICatalogContribution
 {
-
-  // The shared instance.
-  private static KalypsoModelWspmSchemaPlugin plugin;
-
-  /**
-   * The constructor.
-   */
-  public KalypsoModelWspmSchemaPlugin( )
+  public void contributeTo( final CatalogManager catalogManager )
   {
-    plugin = this;
+    final URL catalogURL = getClass().getResource( "dict/catalog.xml" );
+    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+    baseCatalog.addNextCatalog( catalogURL );
   }
-
-  /**
-   * This method is called upon plug-in activation
-   */
-  @Override
-  public void start( BundleContext context ) throws Exception
-  {
-    super.start( context );
-  }
-
-  /**
-   * This method is called when the plug-in is stopped
-   */
-  @Override
-  public void stop( BundleContext context ) throws Exception
-  {
-    super.stop( context );
-    plugin = null;
-  }
-
-  /**
-   * Returns the shared instance.
-   */
-  public static KalypsoModelWspmSchemaPlugin getDefault( )
-  {
-    return plugin;
-  }
-
 }

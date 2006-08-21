@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -71,9 +70,6 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
-
-    // HACK: initialize KalypsoUI
-    KalypsoGisPlugin.getDefault();
   }
 
   /**
