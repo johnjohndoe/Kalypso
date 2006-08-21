@@ -7,7 +7,11 @@ Bundle-Activator: org.kalypso.services.observation.client.KalypsoServiceObsClien
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services.observation.client,
- org.kalypso.services.sensor.impl
+ org.kalypso.services.ocs,
+ org.kalypso.services.ocs.repository,
+ org.kalypso.services.sensor.impl,
+ org.kalypso.ui.wizard.ocs,
+ org.kalypso.ui.wizard.ocs.idtable
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,
  org.kalypso.commons,
