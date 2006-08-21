@@ -72,6 +72,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
@@ -341,7 +342,7 @@ public class SHP2WKS
    */
   public GM_Surface[] transformPolygon( CS_CoordinateSystem crs, SHPPolygon shppolygon )
   {
-    final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
+    // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.numRings );
     final ArrayList<LinearRing> inner_rings = new ArrayList<LinearRing>( shppolygon.numRings );
 
@@ -352,42 +353,58 @@ public class SHP2WKS
       for( int k = 0; k < shppolygon.m_rings.points[i].length; k++ )
         ring[k] = new Coordinate( shppolygon.m_rings.points[i][k].x, shppolygon.m_rings.points[i][k].y );
 
+      // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
+      double area = GeometryUtilities.calcSignedAreaOfRing( ring );
+      double esriArea = -area;
+
       final LinearRing linearRing = GF.createLinearRing( ring );
-      pirs.put( linearRing, new SIRtreePointInRing( linearRing ) );
+      if( esriArea >= 0 )
+        outer_rings.add( linearRing );
+      else
+        inner_rings.add( linearRing );
+
+      // pirs.put( linearRing, new SIRtreePointInRing( linearRing ) );
+
     }
 
-    // for every outer ring
-    for( final Entry<LinearRing, PointInRing> outEntry : pirs.entrySet() )
-    {
-      final LinearRing out_ring = outEntry.getKey();
-
-      boolean in = false;
-      for( final Entry<LinearRing, PointInRing> inEntry : pirs.entrySet() )
-      {
-        final LinearRing inring = inEntry.getKey();
-        if( out_ring == inring )
-          continue;
-
-        // check if one or more points of a inner ring are
-        // within the actual outer ring
-        try
-        {
-          final PointInRing pir = inEntry.getValue();
-          if( pir.isInside( out_ring.getCoordinateN( 0 ) ) )
-          {
-            in = true;
-            inner_rings.add( out_ring );
-            break;
-          }
-        }
-        catch( final Exception e )
-        {
-          System.out.println( "Error: " + e.toString() );
-        }
-      }
-      if( !in )
-        outer_rings.add( out_ring );
-    }
+    // // for every outer ring
+    // for( final Entry<LinearRing, PointInRing> inEntry : pirs.entrySet() )
+    // {
+    // final LinearRing test_inner_ring = inEntry.getKey();
+    // for( final Entry<LinearRing, PointInRing> outEntry : pirs.entrySet() )
+    // {
+    // final LinearRing test_outer_ring = outEntry.getKey();
+    // if( test_outer_ring == test_inner_ring )
+    // continue;
+    // boolean in = false;
+    // // check if one or more points of a inner ring are
+    // // within the actual outer ring
+    // try
+    // {
+    // final PointInRing test_outer_pir = outEntry.getValue();
+    //
+    // for( int n = 0; n < test_inner_ring.getNumPoints(); n++ )
+    // {
+    // if( !test_outer_pir.isInside( test_inner_ring.getCoordinateN( n ) ) )
+    // break;
+    //
+    // }
+    //
+    // if( test_inner_pir.isInside( test_outer_ring.getCoordinateN( 0 ) ) )
+    // {
+    // in = true;
+    // inner_rings.add( test_outer_ring );
+    // break;
+    // }
+    // }
+    // catch( final Exception e )
+    // {
+    // System.out.println( "Error: " + e.toString() );
+    // }
+    // }
+    // if( !in )
+    // outer_rings.add( test_outer_ring );
+    // }
 
     final ArrayList<GM_Surface> wkslp = new ArrayList<GM_Surface>();
     for( int i = 0; i < outer_rings.size(); i++ )
@@ -397,13 +414,19 @@ public class SHP2WKS
       int count = inner_rings.size() - 1;
       final ArrayList<LinearRing> list = new ArrayList<LinearRing>( count + 2 );
       // find inner rings of the current outter ring
+      final PointInRing pir = new SIRtreePointInRing( out_ring );
+      // pirs.get( out_ring );
+
       for( int k = count; k >= 0; k-- )
       {
         final LinearRing in_ring = inner_rings.get( k );
-        final PointInRing pir = pirs.get( out_ring );
         if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )
-          list.add( inner_rings.remove( k ) );
+        {
+          list.add( inner_rings.get( k ) );
+        }
       }
+      for( LinearRing ring : list )
+        inner_rings.remove( ring );
       final LinearRing[] inrings = list.toArray( new LinearRing[list.size()] );
 
       try

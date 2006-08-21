@@ -59,6 +59,8 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * @author doemming
  */
@@ -579,5 +581,30 @@ public class GeometryUtilities
       return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface) geomToCheck }, ((GM_Surface) geomToCheck).getCoordinateSystem() );
     else
       throw new GM_Exception( "This geometry can not be a MultiPolygon..." );
+  }
+
+  /**
+   * @param ring
+   *          array of ordered coordinates, last must equal first one
+   * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
+   */
+  public static double calcSignedAreaOfRing( final Coordinate[] ring )
+  {
+    if( ring.length < 4 ) // 3 points and 4. is repetition of first point
+      throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
+    final Coordinate a = ring[0]; // base
+    double area = 0;
+    for( int i = 1; i < ring.length - 2; i++ )
+    {
+      final Coordinate b = ring[i];
+      final Coordinate c = ring[i + 1];
+      area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
+           
+          -((a.x - b.x) * (b.y - a.y)//
+              + (b.x - c.x) * (b.y - c.y)//
+          + (a.x - c.x) * (c.y - a.y)//
+          ) / 2d;
+    }
+    return area;
   }
 }
