@@ -46,14 +46,13 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * TODO: Remove this class. However this is still not easy because the parentFeatureProperty is still not
+ * known via the api and the workspace of a feature is not a Commandableworkspace
+ * 
  * @author belger
  */
 public final class EasyFeatureWrapper
 {
-  /*
-   * TODO !! remove this shit, refactor the featureAPI so that this is not necessary, PLEASE !!!!
-   */
-
   private final CommandableWorkspace m_workspace;
 
   private final Feature m_feature;

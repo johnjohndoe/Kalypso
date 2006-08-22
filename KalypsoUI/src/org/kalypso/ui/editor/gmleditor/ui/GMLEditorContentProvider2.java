@@ -30,9 +30,7 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -42,8 +40,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.FindParentTreeVisitor;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -63,12 +59,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLEditorContentProvider2 implements ITreeContentProvider
 {
-  /**
-   * remebers the child-parent relationship. This is nedded, because if we provide no parent, setExpandedElements
-   * doesn't work, which will lead to an unuseable gui.
-   */
-  private final Map<Object, Object> m_parentHash = new HashMap<Object, Object>();
-
   private TreeViewer m_viewer;
 
   private GMLWorkspace m_workspace;
@@ -105,25 +95,18 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         return new Object[] {};
     }
 
-    final Object[] children = getChildrenInternal( parentElement );
-    if( children == null )
-      return null;
-
-    for( int i = 0; i < children.length; i++ )
-      m_parentHash.put( children[i], parentElement );
-
-    return children;
+    return getChildrenInternal( parentElement );
   }
 
   private Object[] getChildrenInternal( final Object parentElement )
   {
-    final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof GMLWorkspace )
       return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
 
+    final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof Feature )
     {
-      Feature parentFE = (Feature) parentElement;
+      final Feature parentFE = (Feature) parentElement;
       final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
       for( int i = 0; i < properties.length; i++ )
@@ -141,6 +124,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       }
       return result.toArray();
     }
+
     if( parentElement instanceof FeatureAssociationTypeElement )
     {
       final Feature parentFeature = ((FeatureAssociationTypeElement) parentElement).getParentFeature();
@@ -159,6 +143,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       }
       return result.toArray();
     }
+
     // this should never happen
     return result.toArray();
   }
@@ -168,27 +153,49 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object getParent( final Object element )
   {
-    final Object object = m_parentHash.get( element );
-    if( object != null )
-      return object;
+    /* search is orderd from fast to slow */
 
-    // brute force search
-    // TODO: not always successfull, because the tree
-    // may now start at an arbitrary element.
-    // We should combine with a search throug the GMLWorkspace
-    final FindParentTreeVisitor visitor = new FindParentTreeVisitor( element );
-    TreeViewerUtilities.accept( m_viewer, visitor );
+    /* If its an association we know the parent */
+    if( element instanceof FeatureAssociationTypeElement )
+    {
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      return fate.getParentFeature();
+    }
 
-    final Object parent = visitor.getParent();
+    /* Is it one of the root elements? */
+    final Object[] elements = getElements( m_workspace );
+    for( final Object object : elements )
+    {
+      if( object == element )
+        return null;
+    }
 
-    // Something like that, but this wont work
-    // if( parent == null && parent instanceof Feature )
-    // ((Feature)parent).getParent();
+    if( element instanceof Feature )
+    {
+      final Feature feature = (Feature) element;
+      final Feature parent = feature.getParent();
+      if( parent != null )
+      {
+        final Object[] parentChildren = getChildren( parent );
+        for( final Object object : parentChildren )
+        {
+          /* Must be of type FeatureAssociationTypeElement, if not something is wrong. */
+          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+          final IRelationType associationTypeProperty = fate.getAssociationTypeProperty();
+          final Object property = parent.getProperty( associationTypeProperty );
+          if( property == feature )
+            return fate;
+          else if( property instanceof List )
+          {
+            if( ((List) property).contains( feature ) )
+              return fate;
+          }
+        }
+      }
+    }
 
-    if( parent != null )
-      m_parentHash.put( element, parent );
-
-    return parent;
+    /* May happen if we have gone-into the tree. */
+    return null;
   }
 
   /**
@@ -263,8 +270,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void dispose( )
   {
-    m_parentHash.clear();
     m_viewer = null;
+    m_workspace = null;
   }
 
   /**
@@ -277,8 +284,6 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     if( oldInput != newInput )
     {
-      m_parentHash.clear();
-
       if( oldInput != null )
         m_workspace = null;
 
@@ -289,15 +294,6 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
       m_rootPath = new GMLXPath( "" );
     }
-  }
-
-  public Feature getParentFeature( final Feature feature )
-  {
-    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
-    if( parent == null )
-      return null;
-
-    return parent.getParentFeature();
   }
 
   public IRelationType getParentFeatureProperty( final Feature feature )
