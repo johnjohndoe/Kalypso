@@ -80,6 +80,7 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
@@ -96,6 +97,8 @@ import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import sun.security.krb5.internal.crypto.f;
 
 /**
  * @author kuepfer
@@ -146,15 +149,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName(), lineStringTH, 0, 1, false );
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName(), lineStringTH, 0, 1 );
 
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName(), stringTH, 1, 1 );
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName(), stringTH, 1, 1 );
 
     final ITypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName(), integerTH, 0, 1, false );
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName(), integerTH, 0, 1 );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( new QName( "wizard.kalypso.na", "Gewässer" ), pts );
@@ -195,8 +198,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     GMLSchema schema = null;
     try
     {
-      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String)null ); //$NON-NLS-1$
-      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String)null ); //$NON-NLS-1$
+      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String) null ); //$NON-NLS-1$
+      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String) null ); //$NON-NLS-1$
       setNeedsProgressMonitor( true );
     }
     catch( Exception e1 )
@@ -270,12 +273,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    // TODO: 
+    // TODO:
     // - put all code into a WorkspaceModifyOperation
     // - run it with RunnableContextHelper on getContainer()
     // - remove cathes and show resulting status in errod dialog
     // - use operation's monitor to show progress (dont give null to Project.create and so on)
-    
+
     m_workspacePath = m_createProjectPage.getLocationPath();
     m_projectHandel = m_createProjectPage.getProjectHandle();
 
@@ -402,22 +405,43 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final IPropertyType targetPT = hydFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         Object so = sourceFeature.getProperty( sourcekey );
+        IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
 
-        final double area;
-        if( so instanceof GM_Object )
+        if( so instanceof GM_MultiSurface )
         {
-          area = GeometryUtilities.calcArea( (GM_Object) so );
+          targetFeature.setProperty( targetPT, so );
+          final double area = GeometryUtilities.calcArea( (GM_Object) so );
           targetFeature.setProperty( flaechPT, new Double( area ) );
         }
-        if( so instanceof GM_Surface )        
+        else if( so instanceof GM_Surface )
         {
           final GM_Surface surface = (GM_Surface) so;
           final GM_Surface[] surfaces = new GM_Surface[] { surface };
           GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
           so = MultiSurface;
+          targetFeature.setProperty( targetPT, so );
+          final double area = GeometryUtilities.calcArea( (GM_Object) so );
+          targetFeature.setProperty( flaechPT, new Double( area ) );
         }
-        targetFeature.setProperty( targetPT, so );
-
+        else if( pt instanceof IValuePropertyType)
+        {
+          IValuePropertyType vpt = (IValuePropertyType) pt;
+          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          {
+            targetFeature.setProperty( targetkey, so );
+          }
+          else
+          {
+            try
+            {
+              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
       }
       // TODO: delete if default values in schema!
       // if factor of the sealing rate isn´t set, then the factor will be set as 1.0 (instead of default 0.0)
@@ -465,7 +489,17 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     String fid;
     if( idColKey != null )
     {
-      String idKey = (sourceFeature.getProperty( idColKey )).toString();
+      String idKey = null;
+      try
+      {
+        idKey = SpecialPropertyMapper.map( (sourceFeature.getProperty( idColKey )).getClass(), Integer.class, sourceFeature.getProperty( idColKey ) ).toString();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      // String idKey = (sourceFeature.getProperty( idColKey )).toString();
       if( !m_IDMap.containsKey( IDText + idKey ) )
       {
         fid = IDText + idKey;
@@ -514,12 +548,31 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         final Object so = sourceFeature.getProperty( sourcekey );
+        IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
         if( so instanceof GM_Surface )
         {
           final Long area = new Long( (long) ((GM_Surface) so).getArea() );
           targetFeature.setProperty( flaechPT, area );
         }
-        targetFeature.setProperty( targetPT, so );
+        else if( pt instanceof IValuePropertyType )
+        {
+          IValuePropertyType vpt = (IValuePropertyType) pt;
+          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          {
+            targetFeature.setProperty( targetkey, so );
+          }
+          else
+          {
+            try
+            {
+              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
       }
       // Bodenkorrekturparameter erstellen
       final List list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
@@ -573,7 +626,28 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         final Object so = sourceFeature.getProperty( sourcekey );
-        targetFeature.setProperty( targetPT, so );
+        IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+        if( so instanceof GM_Object )
+          targetFeature.setProperty( targetkey, so );
+        else if( pt instanceof IValuePropertyType )
+        {
+          IValuePropertyType vpt = (IValuePropertyType) pt;
+          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          {
+            targetFeature.setProperty( targetkey, so );
+          }
+          else
+          {
+            try
+            {
+              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
       }
       nodeList.add( targetFeature );
     }
@@ -591,7 +665,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final String idColKey;
     if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
     {
-      idColKey = (String) mapping.get( "name" ); //$NON-NLS-1$
+      idColKey = (String) mapping.get( "name" ); //$NON-NLS-1$ 
     }
     else
       idColKey = null;
@@ -676,8 +750,28 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         if( "StrangArt".equals( targetkey ) )
           continue;
         final Object so = sourceFeature.getProperty( sourcekey );
-        targetFeature.setProperty( targetkey, so );
-
+        IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+        if( so instanceof GM_Object )
+          targetFeature.setProperty( targetkey, so );
+        else if( pt instanceof IValuePropertyType )
+        {
+          IValuePropertyType vpt = (IValuePropertyType) pt;
+          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          {
+            targetFeature.setProperty( targetkey, so );
+          }
+          else
+          {
+            try
+            {
+              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
       }
       channelList.add( targetFeature );
 
