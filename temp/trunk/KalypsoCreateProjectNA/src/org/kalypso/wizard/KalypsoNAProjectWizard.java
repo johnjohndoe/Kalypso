@@ -98,8 +98,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import sun.security.krb5.internal.crypto.f;
-
 /**
  * @author kuepfer
  */
@@ -149,15 +147,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName(), lineStringTH, 0, 1 );
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH.getTypeName(), lineStringTH, 0, 1, false );
 
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName(), stringTH, 1, 1 );
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH.getTypeName(), stringTH, 1, 1, false );
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName(), stringTH, 1, 1 );
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH.getTypeName(), stringTH, 1, 1, false );
 
     final ITypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName(), integerTH, 0, 1 );
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH.getTypeName(), integerTH, 0, 1, false );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( new QName( "wizard.kalypso.na", "Gewässer" ), pts );
