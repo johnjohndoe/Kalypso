@@ -46,6 +46,8 @@ public interface IFeatureSelection extends IStructuredSelection
   public CommandableWorkspace getWorkspace( final Feature feature );
 
   /**
+   * TODO: remove this method from the interface, it is not needed anymore
+   * 
    * @param feature
    *          Must be an element of this selection
    */

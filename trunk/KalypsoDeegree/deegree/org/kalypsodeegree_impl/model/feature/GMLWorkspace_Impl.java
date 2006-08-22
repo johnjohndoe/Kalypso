@@ -136,9 +136,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final List<Feature> result = new ArrayList<Feature>();
     final List linkList = (List) srcFeature.getProperty( linkProperty );
 
-    for( final Iterator iter = linkList.iterator(); iter.hasNext(); )
+    for( final Object linkValue : linkList )
     {
-      final Object linkValue = iter.next();
       if( linkValue instanceof Feature )
       {
         if( !(resolveMode == RESOLVE_LINK) )
@@ -152,7 +151,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( getFeature( linkID ) );
       }
     }
-    // broken Link
+
     return result.toArray( new Feature[result.size()] );
   }
 
@@ -376,7 +375,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
       // TODO: better generate new ids and remember wich ones are generated (because
       // we dont want to write the gernerated ones)
+      // IDEA: put an prefix before the generated id (a 'strong' prefix which will not be in any other id)
+      // When writing the gml, we then can quickly determine if the id is generated
 
+      // TODO: do not put null-ids into this map ? What sideeffects do we expect
       m_indexMap.put( id, f );
       return true;
     }
@@ -726,6 +728,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * TODO: this method does not use any members of this class and so does not depends on this specific implementation.
+   * Move it into a utility class.
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
@@ -737,6 +742,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       // else must be a list
       final List list = (List) value;
+      // TODO: test for 0 does not suffice, test also if length < pos
       if( list.size() == 0 )
         return false;
       final Object object = list.get( pos );

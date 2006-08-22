@@ -104,16 +104,24 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       if( event.getSelection() instanceof IStructuredSelection )
       {
+        final TreeViewer treeViewer = getTreeViewer();
+
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Object obj = selection.getFirstElement();
         if( obj instanceof LinkedFeatureElement2 )
         {
+          // Jump to linked element
           final Feature feature = ((LinkedFeatureElement2) obj).getDecoratedFeature();
           final StructuredSelection ss = new StructuredSelection( feature );
-          final TreeViewer treeViewer = getTreeViewer();
           treeViewer.setSelection( ss, true );
           treeViewer.expandToLevel( feature, 1 );
           treeViewer.reveal( feature );
+        }
+        else
+        {
+          // Toggle expansion state
+          final boolean expandedState = treeViewer.getExpandedState( obj );
+          treeViewer.setExpandedState( obj, !expandedState );
         }
       }
     }
@@ -207,7 +215,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       for( int i = 0; i < toAdd.length; i++ )
       {
         final Feature feature = features[i];
-        final Feature parent = m_contentProvider.getParentFeature( feature );
+        final Feature parent = feature.getParent();
         final IRelationType parentProperty = m_contentProvider.getParentFeatureProperty( feature );
 
         toAdd[i] = new EasyFeatureWrapper( workspace, feature, parent, parentProperty );
@@ -605,8 +613,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     public Feature getParentFeature( final Feature feature )
     {
-      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) getTreeViewer().getContentProvider();
-      return contentProvider.getParentFeature( feature );
+      return feature.getParent();
     }
 
     public IRelationType getParentFeatureProperty( final Feature feature )
@@ -671,17 +678,17 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return !rootPath.equals( currentRootPath );
   }
 
-  public boolean isDataDirty()
+  public boolean isDataDirty( )
   {
     if( m_workspace != null )
     {
-      final KeyInfo info = m_pool.getInfo(m_workspace);
+      final KeyInfo info = m_pool.getInfo( m_workspace );
       return info != null && info.isDirty();
     }
-    
+
     return false;
   }
-  
+
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */

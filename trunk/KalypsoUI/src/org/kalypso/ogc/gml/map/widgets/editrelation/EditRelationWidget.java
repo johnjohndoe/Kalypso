@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -634,7 +635,15 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           {
             boolean status = m_contentProvider.isChecked( element );
 
-            TreeViewerUtilities.accept( m_contentProvider, element, new SetCheckedTreeVisitor( !status ) );
+            // Strange: this visitor is used for only one element. Is this really intended?
+            try
+            {
+              TreeViewerUtilities.accept( m_contentProvider, element, new SetCheckedTreeVisitor( !status ) );
+            }
+            catch( final TreeVisiterAbortException ex )
+            {
+              // as only one element is visited, we just ignore it
+            }
 
             viewer.refresh( element, true );
           }
