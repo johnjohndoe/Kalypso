@@ -256,7 +256,9 @@ public class ObservationViewer extends Composite
                 if( href == null )
                   m_txtHref.setText( "" );
                 else
-                  m_txtHref.setText( href );
+                  // there was a change in the method getRelativePathTo, the effect was a slash at the beginning of the
+                  // href. this is not valid, so change the string and substract the first character
+                  m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
                 setInput( m_txtHref.getText(), m_txtFilter.getText() );
               }
@@ -443,26 +445,27 @@ public class ObservationViewer extends Composite
 
   void setInput( final String href, final String filter )
   {
-//    try
-//    {
-      // 1. basic href
-      String hereHref = href;
+    // try
+    // {
+    // 1. basic href
+    String hereHref = href;
 
-      // 2. plus filter stuff
-      if( href.length() > 0 )
-        hereHref = ZmlURL.insertFilter( hereHref, filter );
+    // 2. plus filter stuff
+    if( href.length() > 0 )
+      hereHref = ZmlURL.insertFilter( hereHref, filter );
 
-      // // 3. always insert date-range info
-      // if( href.length() > 0 )
-      // hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
+    // // 3. always insert date-range info
+    // if( href.length() > 0 )
+    // hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
 
-      setInput( hereHref );
-//    }
-//    catch( final SensorException e )
-//    {
-//      e.printStackTrace();
-//      MessageDialog.openError( getShell(), "Fehler beim Laden, Zeitreihe oder Verknüpfung ist fehlerhaft", e.getLocalizedMessage() );
-//    }
+    setInput( hereHref );
+    // }
+    // catch( final SensorException e )
+    // {
+    // e.printStackTrace();
+    // MessageDialog.openError( getShell(), "Fehler beim Laden, Zeitreihe oder Verknüpfung ist fehlerhaft",
+    // e.getLocalizedMessage() );
+    // }
   }
 
   private void updateViewer( )
