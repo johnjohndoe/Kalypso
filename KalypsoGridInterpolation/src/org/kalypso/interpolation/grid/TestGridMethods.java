@@ -21,10 +21,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
- * Templates
+ * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Style - Code Templates
  */
 public class TestGridMethods extends TestCase
 {
@@ -41,11 +39,10 @@ public class TestGridMethods extends TestCase
 
   static KalypsoGridTools tools = new KalypsoGridTools();
 
-  public static Grid createGrid() throws Exception
+  public static Grid createGrid( ) throws Exception
   {
     Random generator = new Random();
-    Grid grid = (Grid)GridFactory.getInstance().createGrid( GeometryFactory.createGM_Position( 0, 0 ), cs, 300, 200,
-        1, null );
+    Grid grid = (Grid) GridFactory.getInstance().createGrid( GeometryFactory.createGM_Position( 0, 0 ), cs, 300, 200, 1, null );
     for( int r = 0; r < grid.getRows(); r++ )
     {
       for( int c = 0; c < grid.getCols(); c++ )
@@ -56,7 +53,7 @@ public class TestGridMethods extends TestCase
     return grid;
   }
 
-  public static IGrid testRandomAccessFile() throws Exception
+  public static IGrid testRandomAccessFile( ) throws Exception
   {
     Grid grid = createGrid();
     GM_Position pos1 = GeometryFactory.createGM_Position( 0.5, 0.5 );
@@ -78,47 +75,58 @@ public class TestGridMethods extends TestCase
     GM_Position pos12 = grid.getPosition( row2, col2 );
     GM_Position pos13 = grid.getPosition( row3, col3 );
 
-    /*double v1 = */grid.readGridValue( pos1 );
-    /*double v2 = */grid.readGridValue( pos2 );
-    /*double v3 = */grid.readGridValue( pos3 );
+    /* double v1 = */grid.readGridValue( pos1 );
+    /* double v2 = */grid.readGridValue( pos2 );
+    /* double v3 = */grid.readGridValue( pos3 );
 
-    /*double v111 = */grid.readGridValue( pos11 );
-    /*double v121 = */grid.readGridValue( pos12 );
-    /*double v131 = */grid.readGridValue( pos13 );
+    /* double v111 = */grid.readGridValue( pos11 );
+    /* double v121 = */grid.readGridValue( pos12 );
+    /* double v131 = */grid.readGridValue( pos13 );
     grid.export( new File( originalGrid ) );
     return grid;
 
-  }//testRandomAccsessFile
-  public static void testRandomGrid() throws Exception
+  }// testRandomAccsessFile
+
+  // TODO: this test depends on external data. Please never do such a thing
+  // If you want to test something for yourself, please write a main() Method
+  public static void testRandomGrid( ) throws Exception
   {
-    IGrid grid1 = testRandomAccessFile();
-    grid1.export( new File( originalGrid ) );
-    IGrid grid2 = tools.importGrid( new File( originalGrid ), cs );
-    IGrid grid3 = tools.subtract( grid1, grid2 );
-    grid3.export( new File( operation ) );
-    GridFactory.getInstance().clearFactory();
+    fail( "This test depends on external data, so it fails!" );
+
+    // IGrid grid1 = testRandomAccessFile();
+    // grid1.export( new File( originalGrid ) );
+    // IGrid grid2 = tools.importGrid( new File( originalGrid ), cs );
+    // IGrid grid3 = tools.subtract( grid1, grid2 );
+    // grid3.export( new File( operation ) );
+    // GridFactory.getInstance().clearFactory();
   }
 
-  public static void testArithmetics() throws Exception
+  // TODO: this test depends on external data. Please never do such a thing
+  // If you want to test something for yourself, please write a main() Method
+  public static void testArithmetics( ) throws Exception
   {
-    IGrid grid1 = null;
-    IGrid grid2 = null;
-    IGrid grid3 = null;
-    grid1 = tools.importGrid( new File( testFile ), cs );
-    grid2 = tools.importGrid( new File( testFile ), cs );
-    grid3 = tools.subtract( grid1, grid2 );
-    grid3.export( new File( operation ) );
-    GridFactory.getInstance().clearFactory();
+    fail( "This test depends on external data, so it fails!" );
+
+    // IGrid grid1 = null;
+    // IGrid grid2 = null;
+    // IGrid grid3 = null;
+    // grid1 = tools.importGrid( new File( testFile ), cs );
+    // grid2 = tools.importGrid( new File( testFile ), cs );
+    // grid3 = tools.subtract( grid1, grid2 );
+    // grid3.export( new File( operation ) );
+    // GridFactory.getInstance().clearFactory();
   }
 
-
-  public static void testImportESRIasc() throws Exception
+  // TODO: this test depends on external data. Please never do such a thing
+  // If you want to test something for yourself, please write a main() Method
+  public static void testImportESRIasc( ) throws Exception
   {
-    IGrid grid1 = tools.importGrid( new File( testFile ), cs );
-    grid1.export( new File( copiedGrid ) );
+    fail( "This test depends on external data, so it fails!" );
+    // IGrid grid1 = tools.importGrid( new File( testFile ), cs );
+    // grid1.export( new File( copiedGrid ) );
   }
 
-  public static void testPosition()
+  public static void testPosition( )
   {
     GM_Position point1 = GeometryFactory.createGM_Position( 10, 4 );
     GM_Position point2 = GeometryFactory.createGM_Position( 10, 4 );
@@ -126,16 +134,12 @@ public class TestGridMethods extends TestCase
     System.out.println( test );
   }
 
-  public static void testOnEdge() throws GM_Exception
+  public static void testOnEdge( ) throws GM_Exception
   {
     GM_Position pointOn = GeometryFactory.createGM_Position( 10, 4 );
     GM_Position pointOff = GeometryFactory.createGM_Position( 14, 9 );
 
-    GM_Position[] array =
-    {
-        GeometryFactory.createGM_Position( 3, 0, 0 ),
-        GeometryFactory.createGM_Position( 20, 0, 0 ),
-        GeometryFactory.createGM_Position( 15, 10, 0 ),
+    GM_Position[] array = { GeometryFactory.createGM_Position( 3, 0, 0 ), GeometryFactory.createGM_Position( 20, 0, 0 ), GeometryFactory.createGM_Position( 15, 10, 0 ),
         GeometryFactory.createGM_Position( 3, 0, 0 ) };
 
     Element e = new Element( "1", null, array, null );
@@ -145,15 +149,11 @@ public class TestGridMethods extends TestCase
 
   }
 
-  public static void testContains()
+  public static void testContains( )
   {
     GM_Position point = GeometryFactory.createGM_Position( 5, 5 );
 
-    GM_Position[] array =
-    {
-        GeometryFactory.createGM_Position( 3, 0, 0 ),
-        GeometryFactory.createGM_Position( 20, 0, 0 ),
-        GeometryFactory.createGM_Position( 15, 10, 0 ),
+    GM_Position[] array = { GeometryFactory.createGM_Position( 3, 0, 0 ), GeometryFactory.createGM_Position( 20, 0, 0 ), GeometryFactory.createGM_Position( 15, 10, 0 ),
         GeometryFactory.createGM_Position( 3, 0, 0 ) };
 
     GM_Surface surface;
@@ -169,19 +169,19 @@ public class TestGridMethods extends TestCase
       fail( "fehler in contains" );
     }
 
-  }//testContains
+  }// testContains
 
-  public static void testPositionGrid() throws Exception
+  public static void testPositionGrid( ) throws Exception
   {
-    Grid grid = (Grid)testRandomAccessFile();
+    Grid grid = (Grid) testRandomAccessFile();
     GM_Position position = GeometryFactory.createGM_Position( 11.5, 10.5 );
-    /*boolean onGridpos = */grid.isPointOnGrid( position, true );
+    /* boolean onGridpos = */grid.isPointOnGrid( position, true );
     System.out.println( position );
     int testc = grid.getColIndex( position );
     int testr = grid.getRowIndex( position );
     System.out.println( "row: " + testr + "\tcol: " + testc );
     GM_Position test3 = grid.getPosition( testr, testc );
     System.out.println( test3 );
-  }//testPositionGrid
+  }// testPositionGrid
 
 }

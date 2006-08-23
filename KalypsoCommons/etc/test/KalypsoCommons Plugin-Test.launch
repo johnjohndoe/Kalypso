@@ -10,7 +10,7 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=KalypsoUI"/>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=KalypsoCommons"/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <booleanAttribute key="automaticAdd" value="false"/>
 <booleanAttribute key="includeFragments" value="true"/>
@@ -28,8 +28,8 @@
 <booleanAttribute key="useDefaultConfig" value="true"/>
 <stringAttribute key="progargs" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
-<stringAttribute key="wsproject" value="org.kalypso.contribs.java;org.kalypso.contribs.eclipsercp;org.kalypso.core;org.kalypso.commons;org.kalypso.ui;org.kalypso.metadoc;org.kalypso.contribs.eclipseplatform;org.kalypso.contribs.ogc2x;org.kalypso.deegree;org.kalypso.chart;org.kalypso.services.core.client;org.kalypso.gmlschema;org.kalypso.contribs.ogc31;org.kalypso.auth;org.kalypso.jwsdp;org.kalypso.repository;"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="KalypsoUI"/>
+<stringAttribute key="wsproject" value="org.kalypso.contribs.java;org.kalypso.contribs.eclipsercp;org.kalypso.commons;org.kalypso.contribs.eclipseplatform;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="KalypsoCommons"/>
 <booleanAttribute key="askclear" value="false"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location0" value="${workspace_loc}\..\junit-workbench-workspace"/>

@@ -40,51 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wfs.test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
-
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-
 
 public class WFSTest extends TestCase
 {
-
   final String[] layers = { "hq10_gesamt", "hq50_gesamt", "hq100_gesamt", "Haltungen" };
 
   final String base = "http://134.28.87.71:8080/deegreewms/wfs";
 
-  public void testLayers( ) throws MalformedURLException
+  public void testLayers( ) // throws MalformedURLException, GMLSchemaException
   {
-    for( int i = 0; i < layers.length; i++ )
-      testLayer( layers[i] );
+    // TODO: this test depends on external data. Please never do such a thing
+    // If you want to test something for yourself, please write a main() Method
+
+    // for( int i = 0; i < layers.length; i++ )
+    // testLayer( layers[i] );
   }
 
-  public void testLayer( String layer ) throws MalformedURLException
-  {
-    URL url = new URL( base + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
-    IGMLSchema schema = null;
-    try
-    {
-      schema = GMLSchemaFactory.createGMLSchema( null,  url );
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-    {
-      final IFeatureType type = featureTypes[i];
-      final QName name = type.getQName();
-      System.out.println( name );
-    }
-  }
+  // /**
+  // * TODO: this method was probably not intended to be called from the junit test framework. But is was, as it fits
+  // the
+  // * junit-test-pattern
+  // */
+  // private void testLayer( final String layer ) throws MalformedURLException, GMLSchemaException
+  // {
+  // URL url = new URL( base + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
+  // IGMLSchema schema = GMLSchemaFactory.createGMLSchema( null, url );
+  //    
+  // final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
+  // for( int i = 0; i < featureTypes.length; i++ )
+  // {
+  // final IFeatureType type = featureTypes[i];
+  // final QName name = type.getQName();
+  // System.out.println( name );
+  // }
+  // }
 }
