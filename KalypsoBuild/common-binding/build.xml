@@ -30,7 +30,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     </patternset>
 
 	-->
-	
+
 	<dirname property="commonbinding.basedir" file="${ant.file.commonbinding}" />
 	<property file="${commonbinding.basedir}/../common.properties" />
 
@@ -56,18 +56,15 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	</target>
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
-		<echo message="Generating binding sources für ${project}" />
-<!--
-	<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
--->
-		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true" >
+		<echo message="Generating binding sources für ${project}" />	
+		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
 			<!-- stackSize="60mb"> -->
-			
+			<arg line="${xjc-args}" />
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />
 			</schema>
 
-<!--
+			<!--
 			<classpath>
 			      <pathelement path="${classpath}"/>
 			      <pathelement location="lib/helper.jar"/>
@@ -96,7 +93,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			-->
 		</xjc>
 	</target>
-	
+
 	<target name="compile" depends="generate">
 		<echo message="Compiling binding sources for ${project-name}" />
 		<javac srcdir="${gen.srcbind}" destdir="${project.bin}" classpathref="binding.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
