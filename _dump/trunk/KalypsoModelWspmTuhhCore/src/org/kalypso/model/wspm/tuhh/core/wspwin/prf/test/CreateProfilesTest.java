@@ -71,22 +71,27 @@ public class CreateProfilesTest extends TestCase
 {
   final String dir = "c:\\PrfTest\\Prof\\";
 
+  // TODO: This test depends on external data, so it is commented out and always fails
+  // Please put the data into the sources so that the test runs everywhere
+  // If this test is not intended for automatic testing, please write a main() method instead
   public void testRunTest( ) throws Exception
   {
-    final ArrayList<IProfil> p = new ArrayList<IProfil>();
-
-    p.add( createMinProf() );
-    p.add( createWspWinProf() );
-    p.add( createBruecke() );
-    p.add( createWehr() );
-    p.add( createBewuchs() );
-    p.add( createGeoCoord() );
-    p.add( createDurchlass( BUILDING_TYP.EI ) );
-    p.add( createDurchlass( BUILDING_TYP.KREIS ) );
-    p.add( createDurchlass( BUILDING_TYP.MAUL ) );
-    p.add( createDurchlass( BUILDING_TYP.TRAPEZ ) );
-    writePrf( p );
-    writeStr( p );
+    fail( "This test depends on external data, so it fails!" );
+//
+//    final ArrayList<IProfil> p = new ArrayList<IProfil>();
+//
+//    p.add( createMinProf() );
+//    p.add( createWspWinProf() );
+//    p.add( createBruecke() );
+//    p.add( createWehr() );
+//    p.add( createBewuchs() );
+//    p.add( createGeoCoord() );
+//    p.add( createDurchlass( BUILDING_TYP.EI ) );
+//    p.add( createDurchlass( BUILDING_TYP.KREIS ) );
+//    p.add( createDurchlass( BUILDING_TYP.MAUL ) );
+//    p.add( createDurchlass( BUILDING_TYP.TRAPEZ ) );
+//    writePrf( p );
+//    writeStr( p );
 
   }
 
