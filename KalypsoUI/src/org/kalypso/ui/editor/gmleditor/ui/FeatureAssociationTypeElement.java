@@ -29,6 +29,8 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -47,13 +49,38 @@ public class FeatureAssociationTypeElement
     m_featureAssociattionTypeProp = property;
   }
 
-  public Feature getParentFeature()
+  public Feature getParentFeature( )
   {
     return m_parent;
   }
 
-  public IRelationType getAssociationTypeProperty()
+  public IRelationType getAssociationTypeProperty( )
   {
     return m_featureAssociattionTypeProp;
+  }
+
+  /**
+   * Implemented in order to make to TreeViewer work.
+   * <p>
+   * While refreshing the tree we may have different instances of this class reflecting the same node of the tree, if
+   * they are not equal, strange things happen.
+   * </p>
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    return EqualsBuilder.reflectionEquals( this, obj );
+  }
+
+  /**
+   * @see #equals(Object)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class AddFeatureCommand implements ICommand
 {
@@ -67,7 +67,7 @@ public class AddFeatureCommand implements ICommand
 
   private final IFeatureType m_type;
 
-  private Feature newFeature = null;
+  private Feature m_newFeature = null;
 
   private final CommandableWorkspace m_workspace;
 
@@ -103,18 +103,17 @@ public class AddFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
+    m_newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
+
     if( m_props != null )
-      addProperties();
+      setProperties();
+
     addFeature();
   }
 
-  /**
-   *  
-   */
-  private void addProperties( )
+  private void setProperties( )
   {
-    IPropertyType[] properties = newFeature.getFeatureType().getProperties();
+    IPropertyType[] properties = m_newFeature.getFeatureType().getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       IPropertyType ftp = properties[i];
@@ -123,7 +122,7 @@ public class AddFeatureCommand implements ICommand
       if( ftp instanceof IRelationType )
         continue;
       if( property != null )
-        newFeature.setProperty( ftp, property );
+        m_newFeature.setProperty( ftp, property );
     }
   }
 
@@ -132,8 +131,9 @@ public class AddFeatureCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    if( newFeature == null )
+    if( m_newFeature == null )
       return;
+
     addFeature();
   }
 
@@ -142,25 +142,17 @@ public class AddFeatureCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    if( newFeature == null )
+    if( m_newFeature == null )
       return;
 
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
-
-    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
-
-    if( pt.isList() )
+    if( m_propName.isList() )
     {
-      List list = (List) prop;
-      list.remove( newFeature );
+      final List list = (List) m_parentFeature.getProperty( m_propName );
+      list.remove( m_newFeature );
     }
     else
-      properties[propIndex] = null;
+      m_parentFeature.setProperty( m_propName, null );
+
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
@@ -174,11 +166,11 @@ public class AddFeatureCommand implements ICommand
 
   private void addFeature( ) throws Exception
   {
-    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
+    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
+      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
 
   }
 }
