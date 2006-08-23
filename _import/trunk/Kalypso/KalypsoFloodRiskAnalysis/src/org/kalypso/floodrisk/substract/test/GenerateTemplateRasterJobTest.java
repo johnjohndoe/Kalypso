@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class GenerateTemplateRasterJobTest extends TestCase
 {
 
-  public void testRun( )
+  public void testRun( ) throws SimulationException, TypeRegistryException
   {
     // initialize schemaCatalog
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(), new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
@@ -74,21 +74,14 @@ public class GenerateTemplateRasterJobTest extends TestCase
 
     // register typeHandler
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    try
-    {
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-    }
-    catch( TypeRegistryException e )
-    {
-      e.printStackTrace();
-    }
+    registry.registerTypeHandler( new RangeSetTypeHandler() );
+    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
 
     GenerateTemplateRasterJob job = new GenerateTemplateRasterJob();
     testGenerateTemplateRaster( job );
   }
 
-  private void testGenerateTemplateRaster( GenerateTemplateRasterJob job )
+  private void testGenerateTemplateRaster( GenerateTemplateRasterJob job ) throws SimulationException
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     // Input
@@ -108,19 +101,7 @@ public class GenerateTemplateRasterJobTest extends TestCase
 
     SimulationInfo jobBean = new SimulationInfo( "", "", "GenerateTemplateRasterJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
-    try
-    {
-      job.run( null, inputProvider, resultEater, jobBean );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void testGetSpezifikation( )
-  {
-    System.out.println( "testGetSpezifikation" );
+    job.run( null, inputProvider, resultEater, jobBean );
   }
 
 }

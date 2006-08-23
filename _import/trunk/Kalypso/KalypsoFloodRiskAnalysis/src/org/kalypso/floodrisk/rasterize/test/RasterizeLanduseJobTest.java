@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class RasterizeLanduseJobTest extends TestCase
 {
 
-  public void testRun( )
+  public void testRun( ) throws SimulationException
   {
     // initialize schemaCatalog
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] {new UrlCatalogOGC(), new DeegreeUrlCatalog(), new UrlCatalogFloodRisk() } );
@@ -91,7 +91,7 @@ public class RasterizeLanduseJobTest extends TestCase
     testGetSpezifikation( job );
   }
 
-  private void testRasterizeLanduse( RasterizeLanduseJob job )
+  private void testRasterizeLanduse( RasterizeLanduseJob job ) throws SimulationException
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     // Input
@@ -113,14 +113,7 @@ public class RasterizeLanduseJobTest extends TestCase
 
     SimulationInfo jobBean = new SimulationInfo( "", "", "RasterizeLanduseJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
-    try
-    {
-      job.run( null, inputProvider, resultEater, jobBean );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
+    job.run( null, inputProvider, resultEater, jobBean );
   }
 
   public void testGetSpezifikation( RasterizeLanduseJob job )

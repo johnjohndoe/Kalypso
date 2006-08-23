@@ -66,75 +66,45 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 public class CalculateFloodRiskJobTest extends TestCase
 {
 
-  public void testRun()
+  public void testRun( ) throws TypeRegistryException, SimulationException
   {
-    //  initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogOGC(),
-        new UrlCatalogFloodRisk() } );
+    // initialize schemaCatalog
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogOGC(), new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
-    //  register typeHandler
+    // register typeHandler
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    try
-    {
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-    }
-    catch( TypeRegistryException e )
-    {
-      e.printStackTrace();
-    }
+    registry.registerTypeHandler( new RangeSetTypeHandler() );
+    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
 
     CalculateFloodRiskJob job = new CalculateFloodRiskJob();
     testCalculateFloodRisk( job );
   }
 
-  private void testCalculateFloodRisk( CalculateFloodRiskJob job )
+  private void testCalculateFloodRisk( CalculateFloodRiskJob job ) throws SimulationException
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
-    //Input
+    // Input
     int numInputBeans = 3;
     SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
-    SimulationDataPath input1 = new SimulationDataPath( CalculateFloodRiskJob.AnnualDamageRasterDataID, base
-        + "Damage//annualDamage.gml" );
+    SimulationDataPath input1 = new SimulationDataPath( CalculateFloodRiskJob.AnnualDamageRasterDataID, base + "Damage//annualDamage.gml" );
     input[0] = input1;
-    SimulationDataPath input2 = new SimulationDataPath( CalculateFloodRiskJob.LanduseRasterDataID, base
-        + "Landuse//landuseData.gml" );
+    SimulationDataPath input2 = new SimulationDataPath( CalculateFloodRiskJob.LanduseRasterDataID, base + "Landuse//landuseData.gml" );
     input[1] = input2;
-    SimulationDataPath input3 = new SimulationDataPath( CalculateFloodRiskJob.RiskContextModelID, base
-        + "Control//riskContextModell.gml" );
+    SimulationDataPath input3 = new SimulationDataPath( CalculateFloodRiskJob.RiskContextModelID, base + "Control//riskContextModell.gml" );
     input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
-    //Output
+    // Output
     int numOutputBeans = 2;
     SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
-    SimulationDataPath output1 = new SimulationDataPath( CalculateFloodRiskJob.FloodRiskRasterDataID, base
-        + "Risk//floodrisk.gml" );
+    SimulationDataPath output1 = new SimulationDataPath( CalculateFloodRiskJob.FloodRiskRasterDataID, base + "Risk//floodrisk.gml" );
     output[0] = output1;
-    SimulationDataPath output2 = new SimulationDataPath( CalculateFloodRiskJob.FloodRiskRasterStyleID, base
-        + ".styles//floodrisk.sld" );
+    SimulationDataPath output2 = new SimulationDataPath( CalculateFloodRiskJob.FloodRiskRasterStyleID, base + ".styles//floodrisk.sld" );
     output[1] = output2;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    SimulationInfo jobBean = new SimulationInfo( "", "", "CalculateFloodRiskJob", ISimulationConstants.STATE.RUNNING, -1,
-        "" );
+    SimulationInfo jobBean = new SimulationInfo( "", "", "CalculateFloodRiskJob", ISimulationConstants.STATE.RUNNING, -1, "" );
 
-    try
-    {
-      job.run( null, inputProvider, resultEater, jobBean );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-    }
+    job.run( null, inputProvider, resultEater, jobBean );
   }
-
-  public void testGetSpezifikation()
-  {
-    System.out.println( "testGetSpezifikation" );
-  }
-
 }
