@@ -303,6 +303,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         {
           public void run( )
           {
+            // This does not work nicely. In order to refresh the tree in a nice way,
+            // the modell event should also provide which festures where added/removed
             final Object[] expandedElements = treeViewer.getExpandedElements();
 
             if( parentFeature == null )
