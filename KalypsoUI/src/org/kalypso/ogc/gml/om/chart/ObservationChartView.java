@@ -60,10 +60,12 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.AbstractObservationView;
+/*
 import org.kalypso.swtchart.chart.Chart;
 import org.kalypso.swtchart.chart.Diagram;
 import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
+*/
 
 /**
  * @author schlienger
@@ -81,7 +83,7 @@ public class ObservationChartView extends AbstractObservationView
 
  // private Composite m_composite;
 
-  private Diagram m_diagram;
+  //private Diagram m_diagram;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -89,8 +91,8 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   public void dispose( )
   {
-    if( m_diagram != null )
-      m_diagram.dispose();
+   // if( m_diagram != null )
+   //   m_diagram.dispose();
 
     super.dispose();
   }
@@ -107,7 +109,7 @@ public class ObservationChartView extends AbstractObservationView
     fillLayout.type = SWT.VERTICAL;
     m_composite.setLayout( fillLayout);
 */
-    m_diagram=new Diagram(parent, SWT.FILL);
+  //  m_diagram=new Diagram(parent, SWT.FILL);
     //m_diagram.setLayoutData(new FillData());
     
     addDropSupport( DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, new Transfer[] { LocalSelectionTransfer.getInstance() } );
@@ -148,17 +150,21 @@ public class ObservationChartView extends AbstractObservationView
   @Override
   public void setFocus( )
   {
-    ((Composite) m_diagram).setFocus();
+   // ((Composite) m_diagram).setFocus();
   }
 
   /**
    * @see org.kalypso.ogc.gml.om.views.AbstractObservationView#getControl()
    */
+  
+  
   @Override
   protected Control getControl( )
   {
-    return m_diagram;
+    //return m_diagram;
+    return null;
   }
+  
 
   /**
    * @see org.kalypso.ogc.gml.om.views.AbstractObservationView#handleDrop(org.kalypso.observation.IObservation)
