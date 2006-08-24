@@ -109,7 +109,7 @@ public class NaSimulationDataProvieder implements ISimulationDataProvider
       }
       if( id.equals( NaModelConstants.LZSIM_IN_ID ) )
       {
-        return new URL( m_calcDir.toURL(), "Anfangswerte/lzsim.gml" );
+        return new URL( m_calcDir.toURL(), "Anfangswerte" );
       }
       if( id.equals( NaModelConstants.IN_RESULTS_DIR_ID ) )
       {
