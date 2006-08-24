@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <observation editable="false" xmlns="zml.kalypso.org">
-    <name>TS-Wendefurth-Zulauf</name>
+    <name>HWR Kalte Bode-Zulauf</name>
     <metadataList>
         <metadata name="Kennziffer" value="579306"/>
-        <metadata name="Name" value="HWR Kalte Bode -Zulauf"/>
+        <metadata name="Name" value="HWR Kalte Bode-Zulauf"/>
         <metadata name="Beschreibung" value=""/>
         <metadata name="Zeitzone" value="GMT"/>
         <metadata name="Gewässer" value="Kalte Bode"/>
-        <metadata name="Koordinatensystem" value="EPSG:31469"/>
-        <metadata name="Rechtswert" value="5204800"/>
-        <metadata name="Hochwert" value="5742900"/>
+        <metadata name="Koordinatensystem" value="EPSG:31468"/>
+        <metadata name="Rechtswert" value="4412075"/>
+        <metadata name="Hochwert" value="5734974"/>
+        <metadata name="Entstehung" value="Vorlagendatei"/>
     </metadataList>
     <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
         <valueArray separator=";"></valueArray>
@@ -22,3 +23,4 @@
     </axis>
 </observation>
 
+		
