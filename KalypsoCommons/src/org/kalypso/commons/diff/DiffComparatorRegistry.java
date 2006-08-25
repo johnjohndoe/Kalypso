@@ -38,7 +38,6 @@ import java.util.Map;
  */
 public class DiffComparatorRegistry
 {
-
   private static DiffComparatorRegistry m_instance = null;
 
   private final Map<String, IDiffComparator> m_comparators = new HashMap<String, IDiffComparator>();

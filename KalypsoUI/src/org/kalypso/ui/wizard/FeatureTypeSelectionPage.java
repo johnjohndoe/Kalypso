@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
@@ -151,7 +152,8 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        final GMLSchema schema = GMLSchemaCatalog.getSchema( namespace, (String) null );
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        final GMLSchema schema = schemaCatalog.getSchema( namespace, (String) null );
         viewer.setInput( schema.getAllFeatureTypes() );
         return Status.OK_STATUS;
       }

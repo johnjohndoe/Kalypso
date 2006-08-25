@@ -762,9 +762,8 @@ public class FeatureHelper
     return tokenReplace( feature, label );
   }
 
-  public static boolean hasReplaceTokens( final Feature feature, final String annotationKey )
+  public static boolean hasReplaceTokens( final IFeatureType featureType, final String annotationKey )
   {
-    final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
     if( annotation == null )
       return false;

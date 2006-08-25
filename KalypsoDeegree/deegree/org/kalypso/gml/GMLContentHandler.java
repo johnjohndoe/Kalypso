@@ -55,6 +55,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -344,7 +345,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       try
       {
         if( m_useSchemaCatalog )
-          schema = GMLSchemaCatalog.getSchema( null, m_schemaLocationHint );
+        {
+          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+          schema = schemaCatalog.getSchema( null, m_schemaLocationHint );
+        }
         else
           schema = GMLSchemaFactory.createGMLSchema( null, m_schemaLocationHint );
       }
@@ -363,7 +367,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final URL schemaLocation = namespaces.get( uri );
 
         if( m_useSchemaCatalog )
-          schema = GMLSchemaCatalog.getSchema( uri, null, schemaLocation );
+        {
+          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+          schema = schemaCatalog.getSchema( uri, null, schemaLocation );
+        }
         else if( schemaLocation != null )
           schema = GMLSchemaFactory.createGMLSchema( null, schemaLocation );
       }
@@ -379,7 +386,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     if( schema == null && m_useSchemaCatalog )
       try
       {
-        schema = GMLSchemaCatalog.getSchema( uri.toString(), (String) null );
+        new GMLSchemaException( "" );
+        
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        schema = schemaCatalog.getSchema( uri.toString(), (String) null );
       }
       catch( Exception e )
       {

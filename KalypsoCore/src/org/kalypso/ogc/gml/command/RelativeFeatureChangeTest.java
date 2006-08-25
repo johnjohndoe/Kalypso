@@ -40,29 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 /**
  * This class tests the relative feature change on some test data
@@ -84,23 +73,11 @@ public class RelativeFeatureChangeTest extends TestCase
 
   private final CommandableWorkspace m_workspace;
 
-  private final ITypeRegistry<IMarshallingTypeHandler> m_typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
   /**
    * Initializes some features for the test
    */
   public RelativeFeatureChangeTest( ) throws Exception
   {
-    TypeHandlerUtilities.registerXSDSimpleTypeHandler( m_typeRegistry );
-    TypeHandlerUtilities.registerTypeHandlers( m_typeRegistry );
-
-    final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogOGC(), new DeegreeUrlCatalog() } );
-    final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
-    if( !cacheDirectory.exists() )
-      cacheDirectory.mkdirs();
-    cacheDirectory.deleteOnExit();
-    GMLSchemaCatalog.init( catalog, cacheDirectory );
-
     final URL modelFile = getClass().getResource( "resources/testFeature.gml" );
     m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile ) );
 

@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -686,11 +687,11 @@ public class ImportWfsWizardPage extends WizardPage
    * @throws MalformedURLException
    */
   public String guessFeaturePath( String layer ) throws MalformedURLException, Exception, OperationNotSupportedException
-
   {
     // FIXME this method is not working properly, it has to be adjusted
     // when the Schema parser is adjusted!!!!!!
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( null, getSchemaURL( layer ) );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( null, getSchemaURL( layer ) );
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     if( featureTypes.length == 1 )
       return featureTypes[0].getQName().getLocalPart();

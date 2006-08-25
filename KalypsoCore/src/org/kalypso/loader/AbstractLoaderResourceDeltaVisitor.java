@@ -125,7 +125,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 
     if( m_ignoreOneTimeList.contains( pathFor( resource ) ) )
     {
-      m_ignoreOneTimeList.remove( resource );
+      m_ignoreOneTimeList.remove( pathFor(resource ) );
       return true;
     }
 

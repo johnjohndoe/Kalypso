@@ -56,6 +56,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 
 /**
  * @author Gernot
@@ -82,7 +83,8 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
     final ArrayContentProvider provider = new ArrayContentProvider();
     m_viewer.setContentProvider( provider );
     m_viewer.setLabelProvider( new LabelProvider() );
-    final Set<String> namespaces = GMLSchemaCatalog.getDefaultCatalog().getCatalog().keySet();
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final Set<String> namespaces = schemaCatalog.getDefaultCatalog().getCatalog().keySet();
     m_viewer.setInput( namespaces );
     ViewerSorter sorter = new ViewerSorter();
     m_viewer.setSorter( sorter );
