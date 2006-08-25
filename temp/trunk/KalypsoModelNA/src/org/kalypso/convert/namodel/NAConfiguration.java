@@ -52,6 +52,7 @@ import java.util.TreeSet;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
@@ -162,9 +163,10 @@ public class NAConfiguration
     m_gmlBaseDir = gmlBaseDir;
     m_gmlModelURL = modelURL;
 
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
-    final GMLSchema synthNSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
+    final GMLSchema paraSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
+    final GMLSchema synthNSchema = schemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );

@@ -62,6 +62,7 @@ import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.convert.namodel.manager.SwaleAndTrenchManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -139,7 +140,8 @@ public class NAModellConverter
     insertSHPGeometries( modelRootFeature, shapeDir );
 
     File modelGmlFile = new File( gmlBaseDir, "modell.gml" );
-    final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema modelGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
     // final Document modelSchema = modelGmlSchema.getSchema();
 
     // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
@@ -216,8 +218,10 @@ public class NAModellConverter
   public NAModellConverter( NAConfiguration conf ) throws Exception
   {
     m_conf = conf;
-    m_modelSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
-    GMLSchema m_parameterSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
+
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    m_modelSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String)null );
+    GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );

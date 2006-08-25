@@ -78,6 +78,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -196,8 +197,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     GMLSchema schema = null;
     try
     {
-      schema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String) null ); //$NON-NLS-1$
-      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String) null ); //$NON-NLS-1$
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      schema = schemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA", (String) null ); //$NON-NLS-1$
+      m_hydrotopSchema = schemaCatalog.getSchema( "http://www.tuhh.de/hydrotop", (String) null ); //$NON-NLS-1$
       setNeedsProgressMonitor( true );
     }
     catch( Exception e1 )

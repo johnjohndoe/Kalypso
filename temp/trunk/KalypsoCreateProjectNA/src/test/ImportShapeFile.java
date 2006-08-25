@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -97,7 +98,8 @@ public class ImportShapeFile
 
       final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-      GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( null, schemaURL );
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final GMLSchema gmlSchema = schemaCatalog.getSchema( null, schemaURL );
       final IFeatureType targetFT = gmlSchema.getFeatureType( "Node" );
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( targetFT );
       String label = annotation.getLabel();

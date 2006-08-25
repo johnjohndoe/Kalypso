@@ -39,6 +39,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -132,7 +133,8 @@ public class DWDRasterGeoLayer
 
   private void init( CS_CoordinateSystem targetCS ) throws Exception
   {
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String)null );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
     final Feature rootFE = FeatureFactory.createFeature( null,"main", layerFT, true );
