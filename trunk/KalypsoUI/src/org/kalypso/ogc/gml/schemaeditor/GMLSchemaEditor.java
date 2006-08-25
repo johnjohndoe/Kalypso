@@ -28,6 +28,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -158,8 +159,11 @@ public class GMLSchemaEditor extends EditorPart
 
       // if we have a context, load the schema via the cache
       if( context != null )
+      {
         // this does not load the schema from the cache but puts it at least into the cache
-        return GMLSchemaCatalog.getSchema( null, context );
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        return schemaCatalog.getSchema( null, context );
+      }
       else
       {
         InputStream contents = null;
@@ -180,7 +184,8 @@ public class GMLSchemaEditor extends EditorPart
 
       try
       {
-        return GMLSchemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        return schemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
       }
       catch( final InvocationTargetException e )
       {

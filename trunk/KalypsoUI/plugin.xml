@@ -1079,4 +1079,10 @@
                tooltip="Ausschnitt vergrössern"/>
       </viewContribution>
    </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.ui.catalogs.ServerPropertiesUrlCatalog"
+            id="org.kalypso.ui.catalogs.ServerPropertiesUrlCatalog"/>
+   </extension>
  </plugin>

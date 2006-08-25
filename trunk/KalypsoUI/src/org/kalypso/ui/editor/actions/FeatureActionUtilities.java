@@ -56,6 +56,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -67,7 +68,6 @@ import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -198,9 +198,7 @@ public class FeatureActionUtilities
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, null, false, true );
     for( final IFeatureType ft : featureTypes )
     {
-      final Feature pseudoFeature = FeatureFactory.createFeature( null, "xxx", ft, true );
-
-      final String actionLabel = newFeatureActionLabel( featureType, pseudoFeature );
+      final String actionLabel = newFeatureActionLabel( ft );
 
       final ImageDescriptor catalogDescriptor = FeatureTypeImageCatalog.getImage( null, ft.getQName() );
 
@@ -230,18 +228,20 @@ public class FeatureActionUtilities
    * Last, the local part of the feature type qname.
    * </p>
    */
-  private static String newFeatureActionLabel( final IFeatureType featureType, final Feature pseudoFeature )
+  private static String newFeatureActionLabel( final IFeatureType featureType )
   {
-    if( !FeatureHelper.hasReplaceTokens( pseudoFeature, IAnnotation.ANNO_NAME ) )
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
+
+    if( !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_NAME ) )
     {
-      final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_NAME );
+      final String name = annotation.getValue( IAnnotation.ANNO_NAME );
       if( name != null )
         return name;
     }
 
-    if( !FeatureHelper.hasReplaceTokens( pseudoFeature, IAnnotation.ANNO_LABEL ) )
+    if( !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_LABEL ) )
     {
-      final String name = FeatureHelper.getAnnotationValue( pseudoFeature, IAnnotation.ANNO_LABEL );
+      final String name = annotation.getValue( IAnnotation.ANNO_LABEL );
       if( name != null )
         return name;
     }

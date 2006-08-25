@@ -20,7 +20,8 @@ Require-Bundle: org.kalypso.commons,
  org.kalypso.contribs.java,
  org.junit,
  org.kalypso.gmlschema;visibility:=reexport,
- org.kalypso.contribs.ogc2x
+ org.kalypso.contribs.ogc2x,
+ org.kalypso.contribs.ogc31
 Eclipse-AutoStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: Acme,

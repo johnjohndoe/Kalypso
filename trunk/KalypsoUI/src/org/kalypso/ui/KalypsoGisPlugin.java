@@ -69,17 +69,11 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
-import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
-import org.kalypso.core.RefactorThis;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
@@ -99,7 +93,6 @@ import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -158,7 +151,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private DictionaryCatalog m_dictionaryCatalog;
 
   private PluginImageProvider m_imgProvider = null;
-  
+
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
@@ -212,7 +205,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String location = locs[i].trim();
       if( location.length() == 0 )
         continue;
-      
+
       try
       {
         final URL url = new URL( location );
@@ -366,7 +359,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     m_imgProvider.resetTmpFiles();
 
     m_dictionaryCatalog = new DictionaryCatalog();
-    
+
     configureLogger();
 
     try
@@ -380,9 +373,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       ex.printStackTrace();
     }
 
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    registerTypeHandler( marshallingRegistry, guiRegistry );
+    registerGuiTypeHandler(  );
     registerVirtualFeatureTypeHandler();
 
     try
@@ -410,7 +401,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     configureServiceProxyFactory( m_mainConf );
 
     // muss NACH dem proxy und dem streamHandler konfiguriert werden!
-    configureSchemaCatalog();
     configureDefaultStyleFactory();
 
     deleteTempDirs();
@@ -434,7 +424,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   }
 
-  private void configureSchemaCatalog( )
+  public IUrlCatalog loadRemoteSchemaCatalog( )
   {
     final Properties catalog = new Properties();
     InputStream is = null;
@@ -443,19 +433,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     try
     {
       catalogLocation = m_mainConf.getProperty( SCHEMA_CATALOG );
-      if( catalogLocation == null )
-        return; // finally wird noch ausgeführt...
+      if( catalogLocation != null )
+      {
+        LOGGER.info( SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
+        url = new URL( catalogLocation );
+        is = new BufferedInputStream( url.openStream() );
 
-      LOGGER.info( SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
-      url = new URL( catalogLocation );
-      is = new BufferedInputStream( url.openStream() );
+        catalog.load( is );
+        is.close();
 
-      catalog.load( is );
-      is.close();
-      final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
-      JavaApiContributionsExtension.registerCatalog( url, serverUrlCatalog );
+        return new PropertyUrlCatalog( url, catalog );
+      }
     }
-    catch( final Exception e )
+    catch( final IOException e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
       LOGGER.info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
@@ -463,23 +453,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     finally
     {
       IOUtils.closeQuietly( is );
-      // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
-      try
-      {
-        final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
-        final IPath stateLocation = getStateLocation();
-        final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
-        cacheDir.mkdir();
-        GMLSchemaCatalog.init( theCatalog, cacheDir );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-
-        // at least log it
-        getLog().log( StatusUtilities.statusFromThrowable( e, "Error while initializing schema catalog" ) );
-      }
     }
+
+    // If no catalog could be loaded, return an empty catalog
+    return new PropertyUrlCatalog( null, catalog );
   }
 
   /**
@@ -504,13 +481,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
 
-    GMLSchemaCatalog.release();
-
     m_resourceBundle = null;
-    
+
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
-    
+
     m_dictionaryCatalog = null;
   }
 
@@ -606,7 +581,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return m_tsRepositoryContainer;
   }
 
-  public static void registerTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry, final ITypeRegistry<IGuiTypeHandler> guiRegistry )
+  public void registerGuiTypeHandler(  )
   {
     try
     {
@@ -615,16 +590,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
       final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
 
-      if( marshallingRegistry != null )
-      {
-        TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-        TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
-        RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
-        marshallingRegistry.registerTypeHandler( wvqInline );
-        marshallingRegistry.registerTypeHandler( taInline );
-        marshallingRegistry.registerTypeHandler( wtKcLaiInline );
-        marshallingRegistry.registerTypeHandler( tnInline );
-      }
+      final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+
       if( guiRegistry != null )
       {
         GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
@@ -786,8 +753,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
   }
-  
-  public static PluginImageProvider getImageProvider()
+
+  public static PluginImageProvider getImageProvider( )
   {
     return getDefault().m_imgProvider;
   }

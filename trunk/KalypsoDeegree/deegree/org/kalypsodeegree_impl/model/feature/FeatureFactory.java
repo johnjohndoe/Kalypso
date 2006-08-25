@@ -73,6 +73,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.Mapper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -219,10 +220,10 @@ public class FeatureFactory
       if( ftp.isList() )
         return FeatureFactory.createFeatureList( feature, rt );
 
-      if( depth == 0 || minOccurs == 0 || !rt.isInlineAble())
+      if( depth == 0 || minOccurs == 0 || !rt.isInlineAble() || rt.isLinkAble() )
         return null;
 
-      // we have a single, non-optional, inlinable feature here: create inner feature
+      // we have a single, non-optional, inlinable, not-linkable feature here: create inner feature
       final GMLWorkspace workspace = feature.getWorkspace();
       if( workspace == null )
         return null;
@@ -296,7 +297,8 @@ public class FeatureFactory
    */
   public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion ) throws InvocationTargetException
   {
-    final IGMLSchema schema = GMLSchemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
     final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
     return createGMLWorkspace( rootFeatureType );
   }

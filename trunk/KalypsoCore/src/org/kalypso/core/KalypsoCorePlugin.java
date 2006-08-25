@@ -44,10 +44,18 @@ package org.kalypso.core;
 import java.io.File;
 
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -60,7 +68,7 @@ public class KalypsoCorePlugin extends Plugin
   private IFeatureSelectionManager m_selectionManager = null;
 
   private CatalogManager m_catalogManager = null;
-  
+
   private CatalogSLD m_sldCatalog = null;
 
   public static String getID( )
@@ -86,24 +94,42 @@ public class KalypsoCorePlugin extends Plugin
   {
     super.start( context );
 
-    final File stateLocation = getStateLocation().toFile();
-
-    //
-    // Create and initialize the Default-Catalog-Manager
-    //
-    final File managerDir = new File( stateLocation, "catalogManager" );
-    managerDir.mkdirs();
-    m_catalogManager = new CatalogManager( managerDir );
-    KalypsoCoreExtensions.loadXMLCatalogs( m_catalogManager );
-    
-    //
-    // Create and initialize the Default SLD-Catalog
-    //
-    final File styleCatalogDir = new File( stateLocation, "style-catalog" );
-    styleCatalogDir.mkdirs();
-    m_sldCatalog = new CatalogSLD( m_catalogManager, styleCatalogDir );
+    registerTypeHandler();
   }
-  
+
+  /** TODO: still not at the right position: use extension point instead */
+  public void registerTypeHandler( )
+  {
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
+    try
+    {
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
+
+      if( marshallingRegistry != null )
+      {
+        TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
+        TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
+        RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
+        marshallingRegistry.registerTypeHandler( wvqInline );
+        marshallingRegistry.registerTypeHandler( taInline );
+        marshallingRegistry.registerTypeHandler( wtKcLaiInline );
+        marshallingRegistry.registerTypeHandler( tnInline );
+      }
+    }
+    catch( final Exception e ) // generic exception caught for simplicity
+    {
+      e.printStackTrace();
+      // this method is also used in headless mode
+      if( PlatformUI.isWorkbenchRunning() )
+        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+    }
+
+  }
+
   /**
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
@@ -113,20 +139,37 @@ public class KalypsoCorePlugin extends Plugin
     m_catalogManager = null;
     m_sldCatalog = null;
     m_selectionManager = null;
-    
+
     super.stop( context );
   }
-  
+
   public CatalogManager getCatalogManager( )
   {
-    return getDefault().m_catalogManager;
+    if( m_catalogManager == null )
+    {
+      final File stateLocation = getStateLocation().toFile();
+      final File managerDir = new File( stateLocation, "catalogManager" );
+      managerDir.mkdirs();
+      m_catalogManager = new CatalogManager( managerDir );
+      KalypsoCoreExtensions.loadXMLCatalogs( m_catalogManager );
+    }
+
+    return m_catalogManager;
   }
 
   public CatalogSLD getSLDCatalog( )
   {
+    if( m_sldCatalog == null )
+    {
+      final File stateLocation = getStateLocation().toFile();
+      final File styleCatalogDir = new File( stateLocation, "style-catalog" );
+      styleCatalogDir.mkdirs();
+      m_sldCatalog = new CatalogSLD( m_catalogManager, styleCatalogDir );
+    }
+
     return m_sldCatalog;
   }
-  
+
   public IFeatureSelectionManager getSelectionManager( )
   {
     if( m_selectionManager == null )
