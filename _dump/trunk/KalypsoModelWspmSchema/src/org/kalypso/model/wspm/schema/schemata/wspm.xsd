@@ -112,6 +112,7 @@
 	<element name="Reach" type="wspm:ReachType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Gewässerstrang</name>
 				<label>Gewässerstrang</label>
 				<tooltip>Gewässerstrang</tooltip>
 				<description>Gewässerstrang</description>
@@ -136,6 +137,7 @@
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Zufluss-Strangsegment</name>
 				<label>Zufluss-Strangsegment</label>
 				<tooltip>Zufluss-Strangsegment</tooltip>
 				<description>Zufluss-Strangsegment</description>
@@ -146,6 +148,7 @@
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Profil-Strangsegment</name>
 				<label>Profil-Strangsegment</label>
 				<tooltip>Profil-Strangsegment</tooltip>
 				<description>Profil-Strangsegment</description>
@@ -158,9 +161,9 @@
 		type="wspm:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Rauheiten</label>
-				<tooltip>Rauheiten</tooltip>
-				<description>Rauheiten</description>
+				<label>Rauheitsklassen-Listen</label>
+				<tooltip>Rauheitsklassen-Listen</tooltip>
+				<description>Rauheitsklassen-Listen</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -168,9 +171,10 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Rauheiten</label>
-				<tooltip>Rauheiten</tooltip>
-				<description>Rauheiten</description>
+				<name>Rauheitsklassen-Liste</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -180,9 +184,9 @@
 		substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Rauheit</label>
-				<tooltip>Rauheit</tooltip>
-				<description>Rauheit</description>
+				<label>Rauheitsklassen</label>
+				<tooltip>Rauheitsklassen</tooltip>
+				<description>Rauheitsklassen</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -190,9 +194,10 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Rauheit</label>
-				<tooltip>Rauheit</tooltip>
-				<description>Rauheit</description>
+				<name>Rauheitsklasse</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -202,9 +207,9 @@
 		type="wspm:VegetationDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bewuchs</label>
-				<tooltip>Bewuchs</tooltip>
-				<description>Bewuchs</description>
+				<label>Bewuchsklassen-Listen</label>
+				<tooltip>Bewuchsklassen-Listen</tooltip>
+				<description>Bewuchsklassen-Listen</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -212,9 +217,10 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bewuchs</label>
-				<tooltip>Bewuchs</tooltip>
-				<description>Bewuchs</description>
+				<name>Bewuchsklassen-Liste</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -224,9 +230,9 @@
 		substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bewuchs</label>
-				<tooltip>Bewuchs</tooltip>
-				<description>Bewuchs</description>
+				<label>Bewuchsklassen</label>
+				<tooltip>Bewuchsklassen</tooltip>
+				<description>Bewuchsklassen</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -234,9 +240,10 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Bewuchs</label>
-				<tooltip>Bewuchs</tooltip>
-				<description>Bewuchs</description>
+				<name>Bewuchsklasse</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -255,6 +262,7 @@
 	<element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Info zur Erstellung der Berechnung</name>
 				<label>Erstellung</label>
 				<tooltip>Erstellung der Berechnung</tooltip>
 				<description>Erstellung der Berechnung</description>

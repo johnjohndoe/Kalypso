@@ -29,6 +29,7 @@
 	<element name="WspmProject" type="wspmproj:WspmProjectType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>WSPM-Projekt</name>
 				<label>WSPM-Projekt</label>
 				<tooltip>WSPM-Projekt</tooltip>
 				<description>WSPM-Projekt</description>

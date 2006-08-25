@@ -1,7 +1,0 @@
-Für manuell editierte Kataloge halte ich diese Strenge hierarchisierung nicht für sinvoll und hab sie deshalb einfach aufgehoben.
-
-Hoffe das war in Deinem Sinne.
-
-Im Moment gibts gar keine Struktur, weil ich mich nicht entscheiden konnte, ob ich zuerst nach resourcen-typ (sld, icon, ...) oder zuerst nach qname sortieren sollte. Vielleicht gehts ja auch flach, wenn nicht so gross wird. 
-
-Kanst die Datei llschen wenn Dus gelesen hast.

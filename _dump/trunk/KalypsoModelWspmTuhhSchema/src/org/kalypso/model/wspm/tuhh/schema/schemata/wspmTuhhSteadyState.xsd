@@ -27,6 +27,7 @@
 		substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Berechnungsvariante - stationär (TU-HH)</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>Berechnungsvariante
@@ -48,6 +49,7 @@
 	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Untere Randbedingung (1. Profil) - stationär (TU-HH)</name>
 				<label>Untere Randbedingung (1. Profil)</label>
 				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
 				<description>Untere Randbedingung (am 1. Profil)</description>
@@ -69,6 +71,7 @@
 	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Abflussintervall - stationär (TU-HH)</name>
 				<label>Abflussintervall</label>
 				<tooltip>Abflussintervall</tooltip>
 				<description>Abflussintervall</description>
@@ -91,6 +94,7 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Numerische Parameter - stationär (TU-HH)</name>
 				<label>Numerische Parameter</label>
 				<tooltip>Numerische Parameter</tooltip>
 				<description>Numerische Parameter</description>
@@ -112,6 +116,7 @@
 		substitutionGroup="wspm:Reach">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Gewässerstrang - stationär (TU-HH)</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>${property:http://www.opengis.net/gml#name}</description>
@@ -136,6 +141,7 @@
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Zufluss-Strangsegment - stationär (TU-HH)</name>				
 				<label>huhu???influentReachSegmentWspmTuhhSteadyState</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>
@@ -160,6 +166,7 @@
 		substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Profil-Strangsegment - stationär (TU-HH)</name>
 				<label>Profil Station km - ${property:org.kalypso.model.wspm#station}</label>
 				<tooltip>Profil Station km - ${property:org.kalypso.model.wspm#station}</tooltip>
 				<description>Profil Station km -
@@ -183,6 +190,7 @@
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Berechnungsabschnitt - stationär (TU-HH)</name>
 				<label>Berechnungsabschnitt</label>
 				<tooltip>Berechnungsabschnitt</tooltip>
 				<description>Berechnungsabschnitt</description>
@@ -204,6 +212,7 @@
 	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Zusatzoptionen - stationär (TU-HH)</name>
 				<label>Zusatzoptionen</label>
 				<tooltip>Zusatzoptionen</tooltip>
 				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
