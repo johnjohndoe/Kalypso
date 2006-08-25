@@ -48,6 +48,7 @@ import java.net.URL;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -116,9 +117,9 @@ public class RasterDataModel
    */
   public void toFile( File rasterDataModelGML, RectifiedGridCoverage grid ) throws Exception
   {
-
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL, (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL, (String)null );
 
     // create feature and workspace gml
     final IFeatureType[] types = schema.getAllFeatureTypes();

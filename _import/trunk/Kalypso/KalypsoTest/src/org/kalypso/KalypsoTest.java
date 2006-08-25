@@ -31,21 +31,7 @@ package org.kalypso;
 
 import java.io.File;
 
-import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.flows.URLCatalogFlows;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 
 /**
  * TODO: insert type comment here
@@ -56,36 +42,16 @@ public class KalypsoTest
 {
   private static File tmpDir = null;
 
-  /** Returns the temporarily used directory to allow clients to delete it. */
+  /**
+   * Returns the temporarily used directory to allow clients to delete it.
+   * 
+   * @deprecated Should be no more necessary to call, start your test as plug-in test. Method is only there to register DiffComaparater
+   */
   public synchronized static void init( ) throws Exception
-  {
-    init( getCatalog() );
-  }
-
-  /** Returns the temporarily used directory to allow clients to delete it. */
-  public synchronized static void init( final IUrlCatalog catalog ) throws Exception
   {
     try
     {
-      if( tmpDir != null )
-        return;
-
-      // System.setProperty( "proxySet", "true" );
-      // System.setProperty( "proxyHost", "proxy.bce01.de" );
-      // System.setProperty( "proxyPort", "8080" );
-
-      final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
-      KalypsoGisPlugin.registerTypeHandler( marshallingregistry, null );
-      final File cacheDirectory = FileUtilities.createNewTempDir( "kalypsoschemacache" );
-      if( !cacheDirectory.exists() )
-        cacheDirectory.mkdirs();
-      cacheDirectory.deleteOnExit();
-      GMLSchemaCatalog.init( catalog, cacheDirectory );
-
-      DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
-
-      tmpDir = cacheDirectory;
+      // DiffComparatorRegistry.getInstance().register( ".zml", new ZMLDiffComparator() );
 
       return;
     }
@@ -98,25 +64,10 @@ public class KalypsoTest
     //
   }
 
-  protected static MultiUrlCatalog getCatalog( )
-  {
-    final MultiUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new UrlCatalogNA()//
-        , new UrlCatalogOGC()//
-        , new DeegreeUrlCatalog() //
-        , new URLCatalogFlows() //
-        , new UrlCatalogUpdateObservationMapping() //
-
-        // CAN'T use it here, because this catalog uses plugin mechanisms to find the schemas
-        // , new org.kalypso.contribs.ogc31.UrlCatalogOGC() //
-        } );
-    return catalog;
-  }
-
   /** Release the by init taken resources. */
   public synchronized static void release( )
   {
     FileUtilities.deleteRecursive( tmpDir );
-    GMLSchemaCatalog.release();
     tmpDir = null;
   }
 }

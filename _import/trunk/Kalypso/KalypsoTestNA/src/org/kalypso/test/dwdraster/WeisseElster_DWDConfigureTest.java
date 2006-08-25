@@ -41,9 +41,6 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.DWDRasterGeoLayer;
 import org.kalypso.dwd.DWDRasterHelper;
@@ -53,22 +50,13 @@ import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
-import org.kalypso.dwd.schema.UrlCatalogDWD;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -91,22 +79,6 @@ public class WeisseElster_DWDConfigureTest extends TestCase
 
   public void testDWDRaster() throws Exception
   {
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-
-    // initalize urlcatalogs
-    final MultiUrlCatalog multiCatalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new UrlCatalogOGC(),
-        new UrlCatalogNA(),
-        new UrlCatalogDWD(),
-        new UrlCatalogUpdateObservationMapping(),
-        new DeegreeUrlCatalog() } );
-    final File cache = new File( "C:\\TMP\\schemaCatalog" );
-    if( !cache.exists() )
-      cache.mkdirs();
-    GMLSchemaCatalog.init( multiCatalog, cache );
-
     //    LM1:
     //    final URL lmBaseURL = getClass().getResource( "resources/LM1/lm_inv_slug" );
     //    final URL lmObsURL = getClass().getResource( "resources/LM1/lm_2004_11_09_00" );

@@ -39,12 +39,12 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 
-import org.kalypso.KalypsoTest;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -59,15 +59,6 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public class ImportNA extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    KalypsoTest.init();
-  }
-  
   public void testImport( ) throws Exception
   {
     final File asciiBaseDir = new File( "C:\\TMP\\na" );
@@ -83,7 +74,8 @@ public class ImportNA extends TestCase
     final File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" );
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
-    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema paraGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null, " project:/.model/schema/parameter.xsd" );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );

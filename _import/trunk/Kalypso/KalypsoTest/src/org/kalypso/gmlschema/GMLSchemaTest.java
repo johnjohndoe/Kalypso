@@ -34,19 +34,17 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.gmlschema.basics.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.basics.GMLSchemaTreeContentProvider;
 import org.kalypso.gmlschema.basics.GmlTreePrintVisitor;
 import org.kalypso.gmlschema.basics.ITreeContentProviderVisitor;
 import org.kalypso.test.TestUtilities;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * this test parses GML application schemas and produces a ASCII-Tree-output. this output is compared by validated
@@ -56,50 +54,33 @@ import org.kalypso.test.TestUtilities;
  */
 public class GMLSchemaTest extends TestCase
 {
-  public static final String NS_GML2 = "http://www.opengis.net/gml";
+  // public static final String NS_GML2 = "http://www.opengis.net/gml";
 
-  private File m_tmpFileCache;
+  // private File m_tmpFileCache;
 
-  /*
+  /**
    * @see TestCase#setUp()
    */
   @Override
   protected void setUp( ) throws Exception
   {
-    KalypsoTest.init();
-    // final Map<String, URL> map;
-    // map = new HashMap<String, URL>();
+    KalypsoGisPlugin.getDefault();
+    // REMARK: KalypsoTest is not needed any more as we run the tests as plug-in test.
+    // Instead we must start the KalypsoGisPlugin to init the schema catalog
 
-    // map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
-    final IUrlCatalog defaultCatalog = GMLSchemaCatalog.getDefaultCatalog();
-    final Map<String, URL> map = defaultCatalog.getCatalog();
-    // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
-    map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
-
-    final IUrlCatalog newURLCatalog = new IUrlCatalog()
-    {
-
-      public Map<String, URL> getCatalog( )
-      {
-        return map;
-      }
-
-      public URL getURL( String namespace )
-      {
-        return map.get( namespace );
-      }
-
-      public String getPreferedNamespacePrefix( String namespace )
-      {
-        return null;
-      }
-
-    };
-
-    m_tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
-    m_tmpFileCache.deleteOnExit();
-    GMLSchemaCatalog.init( newURLCatalog, m_tmpFileCache );
+    // KalypsoTest.init();
+    // // final Map<String, URL> map;
+    // // map = new HashMap<String, URL>();
+    //
+    // // map.put( NS_GML2, getClass().getResource( "resources/feature.xsd" ) );
+    // final IUrlCatalog defaultCatalog = GMLSchemaCatalog.getDefaultCatalog();
+    // final Map<String, URL> map = defaultCatalog.getCatalog();
+    // // map.put( "http://www.tuhh.de/kalypsoNA", getClass().getResource( "resources/namodell2.xsd" ) );
+    // map.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ) );
+    //
+    // final IUrlCatalog newURLCatalog = new IUrlCatalog()
     // {
+    //
     // public Map<String, URL> getCatalog( )
     // {
     // return map;
@@ -110,9 +91,30 @@ public class GMLSchemaTest extends TestCase
     // return map.get( namespace );
     // }
     //
-    // }, tmpFileCache );
-
-    // m_listToTest
+    // public String getPreferedNamespacePrefix( String namespace )
+    // {
+    // return null;
+    // }
+    //
+    // };
+    //
+    // m_tmpFileCache = FileUtilities.createNewTempDir( "kalypsoSchemaCache" );
+    // m_tmpFileCache.deleteOnExit();
+    // GMLSchemaCatalog.init( newURLCatalog, m_tmpFileCache );
+    // // {
+    // // public Map<String, URL> getCatalog( )
+    // // {
+    // // return map;
+    // // }
+    // //
+    // // public URL getURL( String namespace )
+    // // {
+    // // return map.get( namespace );
+    // // }
+    // //
+    // // }, tmpFileCache );
+    //
+    // // m_listToTest
   }
 
   /**
@@ -121,9 +123,9 @@ public class GMLSchemaTest extends TestCase
   @Override
   protected void tearDown( ) throws Exception
   {
-    KalypsoTest.release();
-
-    FileUtilities.deleteRecursive( m_tmpFileCache );
+    // KalypsoTest.release();
+    //
+    // FileUtilities.deleteRecursive( m_tmpFileCache );
   }
 
   public void testBPlan( ) throws Exception
@@ -161,21 +163,21 @@ public class GMLSchemaTest extends TestCase
 
   // TODO: wspm Schema still changing at the moment, please
   // comment in if stable
-//  public void testWspm( ) throws Exception
-//  {
-//    try
-//    {
-//      loadAndTestSchema( //
-//          getClass().getResource( "resources/GML3_wspm/wspm.xsd" ), //
-//          getClass().getResource( "resources/GML3_wspm/schematree.txt" )//
-//          , false );
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//      throw e;
-//    }
-//  }
+  // public void testWspm( ) throws Exception
+  // {
+  // try
+  // {
+  // loadAndTestSchema( //
+  // getClass().getResource( "resources/GML3_wspm/wspm.xsd" ), //
+  // getClass().getResource( "resources/GML3_wspm/schematree.txt" )//
+  // , false );
+  // }
+  // catch( Exception e )
+  // {
+  // e.printStackTrace();
+  // throw e;
+  // }
+  // }
 
   public static void loadAndTestSchema( URL schemaLocationURL, URL testResource, boolean writeCompareFile ) throws Exception
   {
@@ -191,15 +193,22 @@ public class GMLSchemaTest extends TestCase
       provider.accept( gmlSchema, visitor, 0 );
       if( writeCompareFile )
       {
-        File file = null;
         Writer writer = null;
         try
         {
-          file = new File( testResource.toURI() );
+          // Cannot use resource uri because it is probably no file
+          // final File file = new File( testResource.toURI() ) ;
+          // REMARK: In this case we do not clean up this file, because the user needs it.
+          // Also, he has set the writeCompareFile to true manually, so he probably
+          // knows what he is doing
+          final String fileName = FileUtilities.nameFromPath( testResource.getPath() );
+          final File file = new File( FileUtilities.TMP_DIR, fileName );
+
           // use UTF-8 because TestUtilities allways uses UTF-8
           writer = new OutputStreamWriter( new FileOutputStream( file ), "UTF-8" );
           writer.write( buffer.toString() );
-          System.out.println( " wrote schema to " + file.toString() + "\n next run you can compare" );
+          writer.close();
+          System.out.println( "Wrote schema to " + file.toString() + "\n next run you can compare" );
         }
         finally
         {

@@ -84,6 +84,7 @@ import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -405,11 +406,11 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private HashSet createLanduseDataGML( ) throws IOException, GmlSerializeException, InvocationTargetException
   {
-
     File landuseDataGML = m_workspacePath.append( m_projectHandel.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile();
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String)null );
 
     String rootFeatureTypeName = "VectorDataCollection";
     String featureTypePropertyName = "FeatureMember";
@@ -604,7 +605,8 @@ public class CreateFloodRiskProjectJob extends Job
     File waterlevelDataFile = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toFile();
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String)null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String)null );
 
     final IFeatureType[] types = schema.getAllFeatureTypes();
 

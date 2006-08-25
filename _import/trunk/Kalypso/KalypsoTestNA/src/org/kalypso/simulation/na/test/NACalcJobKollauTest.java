@@ -45,43 +45,20 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
 
 
 public class NACalcJobKollauTest extends TestCase
 {
-
-  public void testKollau() throws TypeRegistryException, SimulationException
+  public void testKollau() throws SimulationException
   {
-
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
-    {
-        new DeegreeUrlCatalog(),
-        new UrlCatalogOGC(),
-        new UrlCatalogNA() } );
-    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-//    registry.registerTypeHandler( new DiagramTypeHandler() );
     try
     {
       kollau();

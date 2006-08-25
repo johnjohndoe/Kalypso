@@ -38,10 +38,10 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.KalypsoTest;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
@@ -54,14 +54,14 @@ import org.w3c.dom.Document;
  */
 public class GMLSerializerTest extends TestCase
 {
-
   /**
    * @see junit.framework.TestCase#setUp()
    */
   @Override
   protected void setUp( ) throws Exception
   {
-    KalypsoTest.init();
+    // KalypsoTest.init();
+    KalypsoGisPlugin.getDefault();
   }
 
   /**
@@ -70,7 +70,7 @@ public class GMLSerializerTest extends TestCase
   @Override
   protected void tearDown( ) throws Exception
   {
-    KalypsoTest.release();
+    // KalypsoTest.release();
   }
 
   public void testNAModell( ) throws Exception
@@ -87,11 +87,11 @@ public class GMLSerializerTest extends TestCase
 
   // not working at the moment as the schemacatalog is not available in test
   // TODO reactivate test soon
-  // public void testWspmTuhhModel( ) throws Exception
-  // {
-  // final URL resource = getClass().getResource( "resources/wspmTuhhModel.gml" );
-  // multiLoadAndSaveGMLWorkspace( resource );
-  // }
+  public void testWspmTuhhModel( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/wspmTuhhModel.gml" );
+    multiLoadAndSaveGMLWorkspace( resource );
+  }
 
   /**
    * Class under test for GMLWorkspace createGMLWorkspace(URL)
@@ -133,9 +133,9 @@ public class GMLSerializerTest extends TestCase
       IOUtils.closeQuietly( writerParsed );
       IOUtils.closeQuietly( writerParsed2 );
 
-      // testFileOrg.delete();
-      // testFileParsed.delete();
-      // testFileParsed2.delete();
+      testFileOrg.delete();
+      testFileParsed.delete();
+      testFileParsed2.delete();
     }
   }
 

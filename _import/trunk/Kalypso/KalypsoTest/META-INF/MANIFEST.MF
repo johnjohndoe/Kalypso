@@ -17,7 +17,8 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.simulation.core,
  org.kalypso.ui,
  org.kalypso.dss,
- org.kalypso.model.KalypsoModelFlows
+ org.kalypso.model.KalypsoModelFlows,
+ org.kalypso.contribs.ogc31
 Export-Package: org.kalypso,
  org.kalypso.gml,
  org.kalypso.gmlschema,

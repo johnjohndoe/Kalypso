@@ -42,41 +42,19 @@ package org.kalypso.floodrisk.riskAnalysis.test;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.floodrisk.process.impl.ProcessDataProvider;
 import org.kalypso.floodrisk.process.impl.ProcessResultEater;
 import org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob;
-import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 public class CalculateFloodRiskJobTest extends TestCase
 {
-
   public void testRun( ) throws TypeRegistryException, SimulationException
   {
-    // initialize schemaCatalog
-    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogOGC(), new UrlCatalogFloodRisk() } );
-    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-
-    // register typeHandler
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new RangeSetTypeHandler() );
-    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-
     CalculateFloodRiskJob job = new CalculateFloodRiskJob();
     testCalculateFloodRisk( job );
   }

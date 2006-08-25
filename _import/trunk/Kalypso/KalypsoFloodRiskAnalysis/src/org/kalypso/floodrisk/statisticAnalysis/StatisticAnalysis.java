@@ -54,6 +54,7 @@ import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -261,7 +262,8 @@ public class StatisticAnalysis
   public static void exportStatisticAsXML( Hashtable statistics, Hashtable landuseTypeList, URL statisticDataURL ) throws Exception
   {
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
     String rootFeatureName = "StatisticData";
@@ -550,7 +552,8 @@ public class StatisticAnalysis
   public static void exportStatisticAsXML( Hashtable statistics, Hashtable administrationUnitList, Hashtable landuseTypeList, URL statisticDataURL ) throws IOException, GmlSerializeException, InvocationTargetException
   {
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
     String rootFeatureName = "StatisticData";
