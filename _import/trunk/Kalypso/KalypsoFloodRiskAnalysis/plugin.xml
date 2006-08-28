@@ -2,8 +2,8 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="AddProcess" name="AddProcess" schema="schema/AddProcess.exsd"/>
-
+   <extension-point id="AddProcess" name="AddProcess" schema="schema/AddProcess.exsd"/>
+     
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet

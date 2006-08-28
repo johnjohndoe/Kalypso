@@ -76,6 +76,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   //private CheckAutoGenerateWizardPage checkAutoGenerateWizardPage;
 
+
   public KalypsoFloodRiskProjectWizard()
   {
     super();
@@ -91,8 +92,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     try
     {
       createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      createProjectPage.setDescription( "Dieser Dialog erstellt ein neues Hochwasserrisiko Projekt." );
-      createProjectPage.setTitle( "Neues Hochwasserrisiko Projekt" );
+      createProjectPage.setDescription( WizardMessages.getString("KalypsoFloodRiskProjectWizard.AddPages.Description") );
+      createProjectPage.setTitle( WizardMessages.getString("KalypsoFloodRiskProjectWizard.AddPages.Title") );
       createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( createProjectPage );
     }
@@ -121,7 +122,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   public boolean performFinish()
   {
 
-    final Job job = new CreateFloodRiskProjectJob( "Projekt erstellen", createProjectPage.getLocationPath(),
+    final Job job = new CreateFloodRiskProjectJob( WizardMessages.getString("KalypsoFloodRiskProjectWizard.PerformFinish.Title"), createProjectPage.getLocationPath(),
         createProjectPage.getProjectHandle(), selectLanduseWizardPage.getLanduseDataFile(), selectLanduseWizardPage
             .getPropertyName(), selectLanduseWizardPage.getSelectedCoordinateSystem(), selectLanduseWizardPage
             .isCheck(), selectWaterlevelWizardPage.getWaterlevelGrids(), selectWaterlevelWizardPage

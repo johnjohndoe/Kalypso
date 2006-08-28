@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:rd="http://elbe.wb.tu-harburg.de/rasterData" targetNamespace="http://elbe.wb.tu-harburg.de/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema targetNamespace="http://elbe.wb.tu-harburg.de/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:rd="http://elbe.wb.tu-harburg.de/rasterData">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
 	<import namespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" schemaLocation="rectifiedGridCoverage.xsd"/>
 	<!-- =========================================================== -->
 	<!-- RasterDataModel=========================================================== -->
@@ -11,7 +11,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType"/>
+					<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType" substitutionGroup="gml:_Coverage"/>
 				</sequence>
 			</extension>
 		</complexContent>

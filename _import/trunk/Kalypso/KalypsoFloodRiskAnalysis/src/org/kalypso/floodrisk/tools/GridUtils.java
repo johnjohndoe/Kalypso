@@ -144,85 +144,53 @@ public abstract class GridUtils
    *          the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs )
+  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs ) throws Exception
   {
-    int nCols = 0;
-    int nRows = 0;
-    GM_Point origin = null;
+    BufferedReader br = new BufferedReader( new FileReader( in ) );
+    String[] data   = new String[6];
+    String line;
+    // reading header data
+    for( int i = 0; i < 6; i++ )
+    {
+      line = br.readLine();
+      int index = line.indexOf( " " );
+      String subString = line.substring( index );
+      data[i] = subString.trim();
+    }
+    int nCols = new Integer( data[0] ).intValue();
+    int nRows = new Integer( data[1] ).intValue();
+    double originX = new Double( data[2] ).doubleValue();
+    double originY = new Double( data[3] ).doubleValue();
+    //double originZ = 0;
+    GM_Point origin = GeometryFactory.createGM_Point( originX, originY, cs );
     double[] offset = new double[2];
-    String nodata = null;
-    Vector<Vector<Double>> rangeSetData = new Vector<Vector<Double>>();
-    //StringBuffer rangeData = new StringBuffer();
-    Vector<String> rangeData = new Vector<String>();
-    try
+    offset[0] = ( new Double( data[4] ) ).doubleValue();
+    offset[1] = ( new Double( data[4] ) ).doubleValue();
+    //offset[2] = 0;
+    Vector<Vector<Double>> rangeDomain = new Vector<Vector<Double>>(nRows);
+    Vector<Double> rangeRow = new Vector<Double>(nCols);
+    //double[][] rangeData = new double[nRows][nCols];
+    Double singleValue;
+    Double nodataValue = new Double( data[5] );
+    //double nodataDoublevalue = Double.parseDouble(data[5]);
+    while( ( line = br.readLine() ) != null )
     {
-      BufferedReader br = new BufferedReader( new FileReader( in ) );
-      String[] data = new String[6];
-      String line;
-      for( int i = 0; i < data.length; i++ )
+      String[] dataAsString = line.split( " " );
+      for( int i = 0; i < dataAsString.length; i++ )
       {
-        line = br.readLine();
-        int index = line.indexOf( " " );
-        String subString = line.substring( index );
-        data[i] = subString.trim();
-        System.out.println( data[i] );
+        singleValue = new Double(dataAsString[i]);
+        //rangeData[lineCnt][i] = (singleValue != nodataDoublevalue) ? singleValue : RangeSet.NaN;
+        rangeRow.add( nodataValue.equals(singleValue)?null:singleValue );
       }
-      nCols = new Integer( data[0] ).intValue();
-      nRows = new Integer( data[1] ).intValue();
-      double originX = new Double( data[2] ).doubleValue();
-      double originY = new Double( data[3] ).doubleValue();
-      //double originZ = 0;
-      origin = GeometryFactory.createGM_Point( originX, originY, cs );
-      offset[0] = ( new Double( data[4] ) ).doubleValue();
-      offset[1] = ( new Double( data[4] ) ).doubleValue();
-      //offset[2] = 0;
-      nodata = data[5];
-      while( ( line = br.readLine() ) != null )
-      {
-        //rangeData.append(line);
-        String[] dataAsString = line.split( " " );
-        //System.out.println("...");
-        for( int i = 0; i < dataAsString.length; i++ )
-        {
-          rangeData.addElement( dataAsString[i] );
-        }
-      }
+      //lineCnt++;
+      rangeDomain.add(rangeRow);
     }
-    catch( Exception e )
-    {
-      System.out.println( e );
-    }
-    double[] low =
-    {
-        0.0,
-        0.0 };
-    double[] high =
-    {
-        nCols,
-        nRows };
+    double[] low =  { 0.0, 0.0 };
+    double[] high = { nCols, nRows };
     GridRange gridRange = new GridRange_Impl( low, high );
     RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset, gridRange );
-    //String[] dataAsString = rangeData.toString().split(" ");
-    for( int i = 0; i < nRows; i++ )
-    {
-      Vector<Double> rowData = new Vector<Double>();
-      for( int n = 0; n < nCols; n++ )
-      {
-        if( rangeData.get( n + ( i * nCols ) ).equals( nodata ) )
-        {
-          rowData.addElement( null );
-        }
-        else
-        {
-          double actualValue = Double.parseDouble( rangeData.get( n + ( i * nCols ) ) );
-          rowData.addElement( new Double( actualValue ) );
-        }
-      }
-      //System.out.println(rowData);
-      //System.out.println(i+" of "+nRows+"calculated");
-      rangeSetData.addElement( rowData );
-    }
-    RangeSet rangeSet = new RangeSet( rangeSetData, null );
+    RangeSet rangeSet = new RangeSet( rangeDomain, null );
+    //RangeSet rangeSet = new RangeSet( rangeData, null);
     RectifiedGridCoverage grid = new RectifiedGridCoverage( gridDomain, rangeSet );
     return grid;
   }

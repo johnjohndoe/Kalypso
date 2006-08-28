@@ -77,7 +77,7 @@ public class ContextModel
    */
   public ContextModel( URL gmlURL )
   {
-    //System.out.println( "Read " + gmlURL.getPath() + "..." );
+    System.out.println( "/n/n/nDejan: Read " + gmlURL.getPath() + ".../n/n/n" );
     try
     {
       workspace = GmlSerializer.createGMLWorkspace( gmlURL );

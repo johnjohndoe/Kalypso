@@ -127,6 +127,8 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
+import javax.xml.namespace.QName;
+
 /**
  * CreateFloodRiskProjectJob
  * <p>
@@ -163,6 +165,10 @@ public class CreateFloodRiskProjectJob extends Job
   private Vector m_waterlevelGrids;
 
   private CS_CoordinateSystem m_waterlevelCooSystem;
+  
+  
+  private final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+
 
   /**
    * Constructor, gets all information needed for creating the project
@@ -211,7 +217,7 @@ public class CreateFloodRiskProjectJob extends Job
   protected IStatus createProject( IProgressMonitor monitor )
   {
     int totalWork = 100;
-    monitor.beginTask( "Erstelle Hochwasserrisiko Projekt...", totalWork );
+    monitor.beginTask( WizardMessages.getString("CreateFloodRiskProjectJob.CreateProject.Title"), totalWork );
 
     try
     {
@@ -277,9 +283,9 @@ public class CreateFloodRiskProjectJob extends Job
       {
         autogenerateLanduseCollection( landuseTypeSet );
       }
-
       // create waterlevelGrids and defaultStyles
       Vector targetFiles = createWaterlevelGrids( monitor );
+      
       if( targetFiles == null )
       {
         performCancle();
@@ -291,10 +297,10 @@ public class CreateFloodRiskProjectJob extends Job
         performCancle();
         return Status.CANCEL_STATUS;
       }
-
+      
       gismapview.setExtent( extent );
       gismapview.setLayers( layers );
-
+      
       final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       FileWriter fw = new FileWriter( path );
@@ -406,28 +412,31 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private HashSet createLanduseDataGML( ) throws IOException, GmlSerializeException, InvocationTargetException
   {
+
     File landuseDataGML = m_workspacePath.append( m_projectHandel.getFullPath() + "/Landuse/LanduseVectorData.gml" ).toFile();
 
     // load schema
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String)null );
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "3.1" );
+    //final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, (String) null );
 
-    String rootFeatureTypeName = "VectorDataCollection";
-    String featureTypePropertyName = "FeatureMember";
-    String shapeFeatureTypePropertyName = "featureMember";
-    String shapeGeomPropertyName = "GEOM";
+    QName rootFeatureTypeName           = new QName(UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "VectorDataCollection");
+    QName  featureTypePropertyName      = new QName(UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "FeatureMember");
+    QName  shapeFeatureTypePropertyName = new QName("namespace", "featureMember");
+    QName  shapeGeomPropertyName        = new QName("namespace", "GEOM");
+    QName  propertyName                 = new QName("namespace", m_landusePropertyName);
 
     // create feature and workspace gml
     final IFeatureType[] types = schema.getAllFeatureTypes();
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
+    
     Feature rootFeature = FeatureFactory.createFeature( null, rootFeatureTypeName + "0", rootFeatureType, true );
     IPropertyType ftp_feature = rootFeatureType.getProperty( featureTypePropertyName );
 
     // create features: Feature
     Feature shapeRootFeature = m_landuseShapeWS.getRootFeature();
+    
     List featureList = (List) shapeRootFeature.getProperty( shapeFeatureTypePropertyName );
-    String propertyName = m_landusePropertyName;
     final HashSet<String> landuseTypeSet = new HashSet<String>();
     for( int i = 0; i < featureList.size(); i++ )
     {
@@ -463,26 +472,40 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private void autogenerateLanduseCollection( HashSet landuseTypeSet ) throws Exception
   {
-    URL contextModelURL = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL();
+    URL contextModelURL     = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL();
     URL riskContextModelURL = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/riskContextModell.gml" ).toFile().toURL();
 
-    String landuseFeatureType = "Landuse";
-    String parentFeatureName = "LanduseCollectionMember";
+    QName landuseFeatureType        = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Landuse");
+    QName landuseCollectionType     = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollection");
+    QName parentFeatureName         = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollectionMember");
+    QName propertyName              = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Name");
+    QName propertyLanduseMember     = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseMember");
+    QName landuseFeatureTypeRisk    = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Landuse");
+    QName landuseCollectionTypeRisk = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollection");
+    QName parentFeatureNameRisk     = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseCollectionMember");
+    QName propertyNameRisk          = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "Name");
+    QName propertyLanduseMemberRisk = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseMember");
 
     // contextModel
     GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL );
-    IFeatureType ftLanduse = contextModel.getFeatureType( landuseFeatureType );
-    final IPropertyType featureProperty = ftLanduse.getProperty( "Name" );
-
+    
+    final GMLSchema schema      = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "3.1" );
+    IFeatureType ftLanduse = schema.getFeatureType(landuseFeatureType);
+    IFeatureType ftLanduseCollection = schema.getFeatureType(landuseCollectionType);
+    final IPropertyType featureProperty = ftLanduse.getProperty( propertyName );
     Feature rootFeature = contextModel.getRootFeature();
     Feature parentFeature = (Feature) rootFeature.getProperty( parentFeatureName );
-    final IRelationType featurePropertyName = (IRelationType) parentFeature.getProperty( "LanduseMember" );
-
+    IRelationType featurePropertyName = (IRelationType) ftLanduseCollection.getProperty(propertyLanduseMember);
+    
     // riskContextModel
+    final GMLSchema schemaRisk = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "3.1" );
+    IFeatureType ftLanduseRisk = schemaRisk.getFeatureType( landuseFeatureTypeRisk );
+    IFeatureType ftLanduseCollectionRisk = schemaRisk.getFeatureType(landuseCollectionTypeRisk);
+    final IPropertyType featurePropertyRisk = ftLanduseRisk.getProperty( propertyNameRisk );
     GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL );
-    IFeatureType ftLanduse_risk = riskContextModel.getFeatureType( landuseFeatureType );
     Feature rootFeature_risk = riskContextModel.getRootFeature();
-    Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureName );
+    Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureNameRisk );
+    IRelationType featurePropertyNameRisk = (IRelationType) ftLanduseCollectionRisk.getProperty(propertyLanduseMemberRisk);
 
     Iterator it = landuseTypeSet.iterator();
     while( it.hasNext() )
@@ -493,9 +516,9 @@ public class CreateFloodRiskProjectJob extends Job
       landuseFeature.setProperty( featureProperty, landusePropertyName );
       contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
       // riskContextModel
-      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, ftLanduse_risk );
-      landuseFeature_risk.setProperty( featureProperty, landusePropertyName );
-      riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyName, 0, landuseFeature_risk );
+      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, ftLanduseRisk );
+      landuseFeature_risk.setProperty( featurePropertyRisk, landusePropertyName );
+      riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyNameRisk, 0, landuseFeature_risk );
     }
     // save changes
     // contextModel
@@ -605,24 +628,31 @@ public class CreateFloodRiskProjectJob extends Job
     File waterlevelDataFile = m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toFile();
 
     // load schema
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String)null );
+    //final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, (String)null );
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "3.1" );
 
-    final IFeatureType[] types = schema.getAllFeatureTypes();
+    //final IFeatureType[] types = schema.getAllFeatureTypes();
 
     // create rootFeature
-    String rootFeatureName = "WaterlevelData";
+    QName rootFeatureName = new QName(UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelData");
+    QName rootFeatureProp = new QName(UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelMember");
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
     Feature rootFeature = FeatureFactory.createFeature( null, "WaterlevelData0", rootFeatureType, true );
-    final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( "WaterlevelMember" );
+    final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( rootFeatureProp );
     // create waterlevelFeature(s)
-    String waterlevelFeatureName = "Waterlevel";
+    QName waterlevelFeatureName = new QName(UrlCatalogFloodRisk.NS_WATERLEVELDATA, "Waterlevel");
+    QName waterlevelFeatureProp = new QName(UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelRasterData");
     IFeatureType waterlevelFeatureType = schema.getFeatureType( waterlevelFeatureName );
-    final IPropertyType featureProperty = waterlevelFeatureType.getProperty( "WaterlevelRasterData" );
+    final IPropertyType featureProperty = waterlevelFeatureType.getProperty( waterlevelFeatureProp );
     int identifier = 0;
+
+    //final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
+    //final IMarshallingTypeHandler wlTH = registry.getTypeHandlerFor(featureProperty);
+
     for( int i = 0; i < targetFiles.size(); i++ )
     {
-      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName + identifier, waterlevelFeatureType, true );
+      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName.getLocalPart() + identifier, waterlevelFeatureType, true );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
       waterlevelFeature.setProperty( featureProperty, waterlevelFile );
       FeatureHelper.addProperty( rootFeature, waterlevelMember, waterlevelFeature );
@@ -630,9 +660,13 @@ public class CreateFloodRiskProjectJob extends Job
     }
 
     // create workspace
+    IFeatureType[] types = schema.getAllFeatureTypes();
     final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "" );
+    
+    //IPath m_modelPath = new Path( m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toString() );
+    //URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
 
-    // serialize Workspace
+    //final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver() );
     FileWriter fw = new FileWriter( waterlevelDataFile );
     GmlSerializer.serializeWorkspace( fw, workspace );
     fw.close();

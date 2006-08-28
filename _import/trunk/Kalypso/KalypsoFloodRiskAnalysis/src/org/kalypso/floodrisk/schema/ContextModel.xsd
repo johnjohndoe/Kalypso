@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.tuhh.de/floodrisk/contextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://www.tuhh.de/floodrisk/contextModel">
+<schema targetNamespace="http://www.tuhh.de/floodrisk/contextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.1.1" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://www.tuhh.de/floodrisk/contextModel">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
 	<!-- =========================================================== -->
 	<!-- ContextModel=========================================================== -->
 	<element name="ContextModel" type="hws:ContextModelType"/>
@@ -24,7 +24,7 @@
 	<!-- LanduseCollectionMember=========================================================== -->
 	<complexType name="LanduseCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:LanduseCollection"/>
 				</sequence>
@@ -44,7 +44,7 @@
 	<!-- LanduseMember=========================================================== -->
 	<complexType name="LanduseMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:Landuse"/>
 				</sequence>
@@ -65,7 +65,7 @@
 	<!-- AdministrationUnitCollectionMember=========================================================== -->
 	<complexType name="AdministrationUnitCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AdministrationUnitCollection"/>
 				</sequence>
@@ -85,7 +85,7 @@
 	<!-- AdministrationUnitMember=========================================================== -->
 	<complexType name="AdministrationUnitMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AdministrationUnit"/>
 				</sequence>
@@ -107,7 +107,7 @@
 	<!-- DamageFunctionCollectionMember=========================================================== -->
 	<complexType name="DamageFunctionCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:DamageFunctionCollection"/>
 				</sequence>
@@ -127,7 +127,7 @@
 	<!-- DamageFunctionMember=========================================================== -->
 	<complexType name="DamageFunctionAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:DamageFunction"/>
 				</sequence>
@@ -148,7 +148,7 @@
 	<!-- AssetValueCollectionMember=========================================================== -->
 	<complexType name="AssetValueCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AssetValueCollection"/>
 				</sequence>
@@ -168,7 +168,7 @@
 	<!-- AssetValueMember=========================================================== -->
 	<complexType name="AssetValueAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AssetValue"/>
 				</sequence>
@@ -189,7 +189,7 @@
 	<!-- DamageFunctionMappingCollectionMember=========================================================== -->
 	<complexType name="DamageFunctionMappingCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:DamageFunctionMappingCollection"/>
 				</sequence>
@@ -209,7 +209,7 @@
 	<!-- DamageFunctionMappingMember=========================================================== -->
 	<complexType name="DamageFunctionMappingMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:DamageFunctionMapping"/>
 				</sequence>
@@ -231,7 +231,7 @@
 	<!-- AssetValueMappingCollectionMember=========================================================== -->
 	<complexType name="AssetValueMappingCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AssetValueMappingCollection"/>
 				</sequence>
@@ -251,7 +251,7 @@
 	<!-- AssetValueMappingMember=========================================================== -->
 	<complexType name="AssetValueMappingMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:AssetValueMapping"/>
 				</sequence>
@@ -274,7 +274,7 @@
 	<!-- =========================================================== -->
 	<complexType name="DamageFunctionLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:DamageFunction"/>
 				</sequence>
@@ -284,7 +284,7 @@
 	<!-- =========================================================== -->
 	<complexType name="AssetValueLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:AssetValue"/>
 				</sequence>
@@ -294,7 +294,7 @@
 	<!-- =========================================================== -->
 	<complexType name="LanduseLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:Landuse"/>
 				</sequence>
@@ -304,7 +304,7 @@
 	<!-- =========================================================== -->
 	<complexType name="AdministrationUnitLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:AdministrationUnit"/>
 				</sequence>

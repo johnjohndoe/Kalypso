@@ -2,7 +2,7 @@
 <schema targetNamespace="http://www.tuhh.de/floodrisk/riskContextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://www.tuhh.de/floodrisk/riskContextModel">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
 	<!-- =========================================================== -->
 	<!-- RiskContextModel=========================================================== -->
 	<element name="RiskContextModel" type="hws:RiskContextModelType"/>
@@ -22,7 +22,7 @@
 	<!-- LanduseCollectionMember=========================================================== -->
 	<complexType name="LanduseCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:LanduseCollection"/>
 				</sequence>
@@ -42,7 +42,7 @@
 	<!-- LanduseMember=========================================================== -->
 	<complexType name="LanduseMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:Landuse"/>
 				</sequence>
@@ -63,7 +63,7 @@
 	<!-- RiskClassCollectionMember=========================================================== -->
 	<complexType name="RiskClassCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:RiskClassCollection"/>
 				</sequence>
@@ -83,7 +83,7 @@
 	<!-- RiskClassMember=========================================================== -->
 	<complexType name="RiskClassMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:RiskClass"/>
 				</sequence>
@@ -104,7 +104,7 @@
 	<!-- IntervalCollectionMember=========================================================== -->
 	<complexType name="IntervalCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:IntervalCollection"/>
 				</sequence>
@@ -116,7 +116,7 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="IntervalMember" type="hws:IntervalMemberAssociationType" minOccurs="1" maxOccurs="3"/>
+					<element name="IntervalMember" type="hws:IntervalMemberAssociationType" maxOccurs="3"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -124,7 +124,7 @@
 	<!--  IntervalMember=========================================================== -->
 	<complexType name="IntervalMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:Interval"/>
 				</sequence>
@@ -147,7 +147,7 @@
 	<!-- IntervalMappingCollectionMember=========================================================== -->
 	<complexType name="IntervalMappingCollectionMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:IntervalMappingCollection"/>
 				</sequence>
@@ -167,7 +167,7 @@
 	<!-- IntervalMappingMember=========================================================== -->
 	<complexType name="IntervalMappingMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:IntervalMapping"/>
 				</sequence>
@@ -189,7 +189,7 @@
 	<!-- =========================================================== -->
 	<complexType name="LanduseLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:Landuse"/>
 				</sequence>
@@ -199,7 +199,7 @@
 	<!-- =========================================================== -->
 	<complexType name="IntervalCollectionLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:IntervalCollection"/>
 				</sequence>
@@ -207,9 +207,9 @@
 		</complexContent>
 	</complexType>
 	<!-- =========================================================== -->
-		<complexType name="RiskClassLinkType">
+	<complexType name="RiskClassLinkType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence minOccurs="0">
 					<element ref="hws:RiskClass"/>
 				</sequence>

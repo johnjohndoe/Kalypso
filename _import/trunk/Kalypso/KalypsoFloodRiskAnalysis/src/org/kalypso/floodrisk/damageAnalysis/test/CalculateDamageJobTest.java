@@ -62,7 +62,8 @@ public class CalculateDamageJobTest extends TestCase
 
   private void testCalculateDamage( CalculateDamageJob job ) throws SimulationException
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
+    //String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
+    String base = "D://Dejan//eclipse3.1.2//runtime_workspace//Test_Risikoanalyse//:";
     // Input
     int numInputBeans = 3;
     SimulationDataPath[] input = new SimulationDataPath[numInputBeans];

@@ -29,22 +29,15 @@
 		<complexContent>
 			<restriction base="gml:RangeSetType">
 				<sequence>
-					<element ref="rgc:File"/>
+					<element name="File" type="rgc:FileType"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
 	<!-- =========================================================== -->
-	<element name="File">
-		<complexType name="FileType">
+	<complexType name="FileType">
 			<sequence>
-				<element ref="gml:rangeParameters"/>
 				<element name="fileName" type="anyURI"/>
-				<element name="fileDate" type="date"/>
-				<element name="fileStructure" type="gml:FileValueModelType"/>
-				<element name="mimeType" type="anyURI" minOccurs="0"/>
-				<element name="compression" type="anyURI" minOccurs="0"/>
 			</sequence>
-		</complexType>
-	</element>
+	</complexType>
 </schema>

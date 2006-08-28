@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
 	<!-- =========================================================== -->
 	<!-- WaterlevelDataModel=========================================================== -->
 	<element name="WaterlevelData" type="hws:WaterlevelDataType"/>
@@ -18,7 +18,7 @@
 	<!-- WaterlevelMember=========================================================== -->
 	<complexType name="WaterlevelMemberAssociationType">
 		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
+			<restriction base="gml:FeaturePropertyType">
 				<sequence>
 					<element ref="hws:Waterlevel"/>
 				</sequence>
