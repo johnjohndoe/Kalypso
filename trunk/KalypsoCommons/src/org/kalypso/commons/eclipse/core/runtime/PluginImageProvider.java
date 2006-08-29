@@ -87,7 +87,7 @@ public class PluginImageProvider
     m_plugin = plugin;
 
     final File stateLocation = plugin.getStateLocation().toFile();
-    m_imageTmpDir = new File( stateLocation, getClass().getName() );
+    m_imageTmpDir = new File( stateLocation, "pluginImages" );
   }
 
   /**
@@ -217,7 +217,7 @@ public class PluginImageProvider
   public URL getTmpURL( final ImageKey key )
   {
     final URL url = PluginUtilities.findResource( PluginUtilities.id( m_plugin ), key.getImagePath() );
-    return getTmpUrl( key.getClass().getName(), key.getImagePath(), url );
+    return getTmpUrl( key.getImagePath(), url );
   }
 
   /**
@@ -231,17 +231,17 @@ public class PluginImageProvider
    */
   public URL getTmpUrl( final Class< ? > clazz, final String path )
   {
-    return getTmpUrl( clazz.getName(), path, clazz.getResource( path ) );
+    return getTmpUrl( path, clazz.getResource( path ) );
   }
 
-  private URL getTmpUrl( final String classname, final String path, final URL url )
+  private URL getTmpUrl( final String path, final URL url )
   {
     if( url == null )
       return null;
     try
     {
       final File imageDir = m_imageTmpDir;
-      final File classDir = new File( imageDir, classname );
+      final File classDir = new File( imageDir, "resources" );
       final File imageFile = new File( classDir, path );
       if( imageFile.exists() )
         return imageFile.toURL();
