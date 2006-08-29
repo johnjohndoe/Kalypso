@@ -789,12 +789,10 @@ public class FeatureHelper
     /* Create a map QName->Features. */
     HashMap<QName, ArrayList<Feature>> featureMap = new HashMap<QName, ArrayList<Feature>>();
 
-    Iterator iterator = list.iterator();
-
-    while( iterator.hasNext() )
+    for( final Object o : list )
     {
       /* Get the feature. */
-      Feature feature = (Feature) iterator.next();
+      final Feature feature = (Feature) o;
 
       /* Get the qname of the feature. */
       QName qname = feature.getFeatureType().getQName();
