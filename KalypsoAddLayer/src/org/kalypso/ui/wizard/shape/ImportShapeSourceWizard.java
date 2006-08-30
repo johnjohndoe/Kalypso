@@ -2,6 +2,7 @@ package org.kalypso.ui.wizard.shape;
 
 import java.rmi.RemoteException;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -77,10 +78,15 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       // Add Layer to mapModell
-      IMapModell mapModell = m_outlineviewer.getMapModell();
-      String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
-      String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
-      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, themeName, "shape", "featureMember", fileName );
+      final IMapModell mapModell = m_outlineviewer.getMapModell();
+      final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
+      final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
+      
+      final IPath stylePath = m_page.getStylePath();
+      final String styleLocation = stylePath == null ? null : stylePath.toString();
+      final String styleName = m_page.getStyleName();
+      
+      final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, themeName, "shape", "featureMember", fileName, "sld", styleName, styleLocation, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
 

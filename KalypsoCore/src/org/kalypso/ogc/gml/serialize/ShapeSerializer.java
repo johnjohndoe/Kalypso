@@ -62,13 +62,17 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -196,9 +200,11 @@ public class ShapeSerializer
 
   public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
   {
+    ShapeFile sf = null;
+    
     try
     {
-      final ShapeFile sf = new ShapeFile( fileBase );
+      sf = new ShapeFile( fileBase );
       final IFeatureType featureType = sf.getFeatureType();
 
       final Feature rootFeature = createShapeRootFeature( featureType );
@@ -215,14 +221,19 @@ public class ShapeSerializer
           list.add( fe );
       }
 
-      // TODO transform it!
-      sf.close();
       final GMLSchema schema = null;
-      return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null );
+      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null );
+      
+      return workspace;
     }
     catch( final Exception e )
     {
       throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
+    }
+    finally
+    {
+      if( sf != null )
+        sf.close();
     }
   }
 
