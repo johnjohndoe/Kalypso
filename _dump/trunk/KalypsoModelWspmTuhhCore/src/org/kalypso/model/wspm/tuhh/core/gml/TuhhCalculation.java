@@ -41,12 +41,15 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -110,12 +113,11 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   private final Feature m_calcFeature;
 
-
   public TuhhCalculation( final Feature calcFeature )
   {
     if( calcFeature == null )
       throw new IllegalStateException( "calcFeature is null" );
-    
+
     if( !QNAME_TUHH_CALC.equals( calcFeature.getFeatureType().getQName() ) )
       throw new IllegalStateException( "calcfeature is not of type: " + QNAME_TUHH_CALC );
 
@@ -127,14 +129,22 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     return m_calcFeature;
   }
 
+  @SuppressWarnings("unchecked")
   public String getName( )
   {
-    return NamedFeatureHelper.getName( getFeature() );
+    final List<String> nameList = (List<String>) getFeature().getProperty( new QName( NS.GML3, "name" ) );
+    if( nameList == null || nameList.isEmpty() )
+      return "";
+
+    final String name = nameList.get( 0 );
+    return name == null ? "" : (String) name;
   }
 
   public void setName( final String name )
   {
-    NamedFeatureHelper.setName( getFeature(), name );
+    final ArrayList<String> nameList = new ArrayList<String>( 1 );
+    nameList.add( name );
+    getFeature().setProperty( new QName( NS.GML3, "name" ), nameList );
   }
 
   public String getDescription( )

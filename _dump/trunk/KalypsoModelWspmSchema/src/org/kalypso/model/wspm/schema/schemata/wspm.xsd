@@ -285,11 +285,11 @@
 	</complexType>
 	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<!--extension base="wspmcommon:NamedFeatureBaseType"-->
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element ref="wspm:calcCreationMember"/>
-					<!--					<element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/>
--->
+					<!--element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/-->
 				</sequence>
 			</extension>
 		</complexContent>

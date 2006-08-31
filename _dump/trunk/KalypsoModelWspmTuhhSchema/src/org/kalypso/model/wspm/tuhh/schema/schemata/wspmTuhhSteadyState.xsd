@@ -28,10 +28,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Berechnungsvariante - stationär (TU-HH)</name>
-				<label>${property:http://www.opengis.net/gml#name}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>Berechnungsvariante
-				'${property:http://www.opengis.net/gml#name}'</description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0}</tooltip>
+				<description><![CDATA[Berechnungsvariante '${property:http://www.opengis.net/gml#name;0}']]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -141,7 +140,7 @@
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
-				<name>Zufluss-Strangsegment - stationär (TU-HH)</name>				
+				<name>Zufluss-Strangsegment - stationär (TU-HH)</name>
 				<label>huhu???influentReachSegmentWspmTuhhSteadyState</label>
 				<tooltip>???tooltip</tooltip>
 				<description>???description</description>

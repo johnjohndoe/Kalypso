@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.util.ArrayList;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
@@ -62,6 +64,7 @@ public class NamedFeatureHelper
   public static String getName( final Feature namedFeature )
   {
     final Object name = namedFeature.getProperty( GML_NAME );
+    
     return name == null ? "" : (String) name;
   }
 
