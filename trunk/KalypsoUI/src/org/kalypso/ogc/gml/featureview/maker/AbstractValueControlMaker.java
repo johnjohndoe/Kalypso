@@ -84,7 +84,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       return false;
     final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
     controlElement.getValue().setLayoutData( jaxbgriddata );
-    
+
     /* Some common values i need */
     final QName property = ftp.getQName();
     final IAnnotation annotation = getAnnotation( ftp );
@@ -126,11 +126,28 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       controlList.add( controlElement );
     }
 
+    /* Fill the rest of the line */
+    final GridLayout gridLayout = (GridLayout) parentLayout;
+
+    /* Only fill to getNumColumns - 1, because the last column is always filled with the validator or an empty label. */
+    final int numColumns = gridLayout.getNumColumns() - 1;
+    for( int i = cellCount; i < numColumns; i++ )
+    {
+      final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
+      label.setStyle( "SWT.NONE" );
+      label.setVisible( false );
+
+      final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
+      labelGridData.setGrabExcessHorizontalSpace( false );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
+
+      controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
+    }
+
     /* If a validator is needed, it is added here. */
     if( m_addValidator )
     {
-      cellCount++;
-
       final ValidatorLabelType validatorLabel = FeatureviewHelper.FACTORY.createValidatorLabelType();
       validatorLabel.setStyle( "SWT.NONE" );
 
@@ -143,12 +160,9 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       validatorLabel.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
       controlList.add( FeatureviewHelper.FACTORY.createValidatorlabel( validatorLabel ) );
     }
-
-    /* Fill the rest of the line */
-    final GridLayout gridLayout = (GridLayout) parentLayout;
-    final int numColumns = gridLayout.getNumColumns();
-    for( int i = cellCount; i < numColumns; i++ )
+    else
     {
+      /* Empty label. */
       final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
       label.setStyle( "SWT.NONE" );
       label.setVisible( false );
