@@ -38,10 +38,9 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview;
+package org.kalypso.ogc.gml.featureview.control;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,8 +50,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
@@ -80,22 +77,14 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.RadioFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
-import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.ValidatorFeatureControl;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.LabelType;
@@ -113,18 +102,12 @@ import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
-  /* Used for the compability-hack. Is it possible to get this from the binding classes? */
-  public static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
-
-  /** Map of especially added view-templates. */
-  private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
-
-  /** This member manages the generated view-templates. */
-  private FeatureViewManager m_defaultViews = new FeatureViewManager();
+  /** Used for the compability-hack. Is it possible to get this from the binding classes? */
+  private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
 
@@ -138,41 +121,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private FormToolkit m_formToolkit = null;
 
-  private boolean m_shouldAddValidator = false;
+  private final IFeatureviewFactory m_featureviewFactory;
 
-  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager )
-  {
-    this( feature, selectionManager, new URL[] {} );
-  }
-
-  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final URL[] templateURL )
-  {
-    super( feature, null );
-    m_selectionManager = selectionManager;
-
-    for( int i = 0; i < templateURL.length; i++ )
-      addView( templateURL[i] );
-  }
-
-  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
+  public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory featureviewFactory )
   {
     super( feature, null );
 
     m_selectionManager = selectionManager;
-
-    for( int i = 0; i < views.length; i++ )
-      addView( views[i] );
-  }
-
-  public void setShowTables( final boolean showTables )
-  {
-    m_defaultViews.setShowTables( showTables );
-    updateControl();
-  }
-
-  public boolean isShowTables( )
-  {
-    return m_defaultViews.isShowTables();
+    m_featureviewFactory = featureviewFactory;
   }
 
   /**
@@ -196,7 +152,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     disposeControl();
 
     m_modifyListeners.clear();
-    m_viewMap.clear();
   }
 
   /**
@@ -215,35 +170,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return true;
   }
 
-  /**
-   * Gibt zu einem TypNamen eine FeatureView zurück. Existiert keine solche wird ein Default erzeugt.
-   * 
-   * @param featureType
-   * @return featureview
-   */
-  public FeatureviewType getFeatureview( final IFeatureType featureType )
-  {
-    final QName typename = featureType.getQName();
-    final FeatureviewType view = m_viewMap.get( typename );
-    if( view != null )
-      return view;
-
-    // REMARK: this code section is for backwards compability. Before, for the typename, only
-    // the local part was given in the featureViewType (type xs:string). Now it is of type xs:qname.
-    // So old entries are interpretated against the namespace of the featureview, which allows us
-    // to try against this namespace uri.
-    final QName compabilityName = new QName( FEATUREVIEW_NAMESPACE, typename.getLocalPart(), typename.getPrefix() );
-    final FeatureviewType compabilityView = m_viewMap.get( compabilityName );
-    if( compabilityView != null )
-      return compabilityView;
-    // REMARK end
-
-    return m_defaultViews.get( featureType, getFeature(), m_shouldAddValidator );
-  }
-
   public Control createControl( final Composite parent, final int style, final IFeatureType ft )
   {
-    final FeatureviewType view = getFeatureview( ft );
+    final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
 
     m_control = createControl( parent, style, view );
 
@@ -393,33 +322,33 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Combo comboType = (Combo) controlType;
 
       final List<Entry> entryList = comboType.getEntry();
-      final String[] labels = new String[entryList.size()];
-      final Object[] values = new Object[entryList.size()];
+      final Map<Object, String> comboEntries = new HashMap<Object, String>( entryList.size() );
 
-      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( ftp );
-
-      for( int i = 0; i < labels.length; i++ )
+      if( ftp instanceof IValuePropertyType )
       {
-        final Entry entry = entryList.get( i );
-        labels[i] = entry.getLabel();
+        final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+        final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( ftp );
 
-        final String any = entry.getValue();
-        try
+        for( final Entry entry : entryList )
         {
-          final Object object = typeHandler.parseType( any );
-          values[i] = object;
-        }
-        catch( final ParseException e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen eines Wertes auf der Feature-View Vorlage: " + any );
-          KalypsoGisPlugin.getDefault().getLog().log( status );
+          final String label = entry.getLabel();
+          final String any = entry.getValue();
+          try
+          {
+            final Object object = typeHandler.parseType( any );
+            comboEntries.put( object, label );
+          }
+          catch( final ParseException e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen eines Wertes auf der Feature-View Vorlage: " + any );
+            KalypsoGisPlugin.getDefault().getLog().log( status );
+          }
         }
       }
 
       final int comboStyle = SWTUtilities.createStyleFromString( comboType.getStyle() );
 
-      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, labels, values );
+      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries );
 
       final Control control = cfc.createControl( parent, comboStyle );
 
@@ -446,7 +375,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final SubcompositeType compoType = (SubcompositeType) controlType;
 
-      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_viewMap.values().toArray( new FeatureviewType[0] ), m_formToolkit );
+      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_featureviewFactory );
 
       fc.setFeature( feature );
 
@@ -567,40 +496,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IFeatureControl fc = (IFeatureControl) iter.next();
       fc.setFeature( feature );
     }
-  }
-
-  public void addView( final URL url )
-  {
-    try
-    {
-      final Unmarshaller unmarshaller = FeatureviewHelper.JC.createUnmarshaller();
-      Object unmarshal = unmarshaller.unmarshal( url );
-      if( unmarshal instanceof JAXBElement )
-        unmarshal = ((JAXBElement) unmarshal).getValue();
-
-      if( unmarshal instanceof FeatureviewType )
-        addView( (FeatureviewType) unmarshal );
-      else if( unmarshal instanceof Featuretemplate )
-      {
-        final Featuretemplate ftt = (Featuretemplate) unmarshal;
-        final List view = ftt.getView();
-        for( final Iterator vIt = view.iterator(); vIt.hasNext(); )
-          addView( (FeatureviewType) vIt.next() );
-      }
-      else
-        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void addView( final FeatureviewType view )
-  {
-    final QName typename = view.getTypename();
-
-    m_viewMap.put( typename, view );
   }
 
   public void disposeControl( )
@@ -733,7 +628,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( feature == null )
       return;
 
-    types.add( getFeatureview( feature.getFeatureType() ) );
+    final FeatureviewType type = m_featureviewFactory.get( feature.getFeatureType(), feature );
+    types.add( type );
 
     for( final IFeatureControl control : m_featureControls )
     {
@@ -748,34 +644,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
   }
 
-  public FormToolkit get_formToolkit( )
+  public FormToolkit getFormToolkit( )
   {
     return m_formToolkit;
   }
 
-  public void set_formToolkit( FormToolkit formToolkit )
+  public void setFormToolkit( final FormToolkit formToolkit )
   {
     m_formToolkit = formToolkit;
-  }
-
-  /**
-   * Returns, whether a ValidatorLabel should be added or not.
-   * 
-   * @return True, if a ValidatorLabel should be added, otherwise false.
-   */
-  public boolean isShouldAddValidator( )
-  {
-    return m_shouldAddValidator;
-  }
-
-  /**
-   * Sets, whether a ValidatorLabel should be added or not.
-   * 
-   * @param shouldAddValidator
-   *          Set this to true, if you want a ValidatorLabel, to validate the input of a feature.
-   */
-  public void setShouldAddValidator( boolean shouldAddValidator )
-  {
-    m_shouldAddValidator = shouldAddValidator;
   }
 }

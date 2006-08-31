@@ -84,8 +84,10 @@ import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -163,7 +165,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
-  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, KalypsoCorePlugin.getDefault().getSelectionManager() );
+  private final FeatureviewHelper m_fvFactory = new FeatureviewHelper();
+
+  private final CachedFeatureviewFactory m_cfvFactory = new CachedFeatureviewFactory( m_fvFactory );
+
+  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, KalypsoCorePlugin.getDefault().getSelectionManager(), m_cfvFactory );
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -228,7 +234,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_settings.put( STORE_SHOW_TABLES, true );
     }
 
-    m_featureComposite.setShowTables( m_settings.getBoolean( STORE_SHOW_TABLES ) );
+    m_fvFactory.setShowTables( m_settings.getBoolean( STORE_SHOW_TABLES ) );
+    m_cfvFactory.reset();
   }
 
   /**
@@ -261,7 +268,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
   public void setShowTables( final boolean showTables )
   {
     final Feature currentFeature = getCurrentFeature();
-    m_featureComposite.setShowTables( showTables );
+
+    m_fvFactory.setShowTables( showTables );
+    m_cfvFactory.reset();
+
     m_settings.put( STORE_SHOW_TABLES, showTables );
 
     activateFeature( currentFeature, true );
@@ -269,7 +279,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   public boolean isShowTables( )
   {
-    return m_featureComposite.isShowTables();
+    return m_fvFactory.isShowTables();
   }
 
   protected void handleSelectionChanged( final IWorkbenchPart part, final ISelection selection )
@@ -290,7 +300,6 @@ public class FeatureView extends ViewPart implements ModellEventListener
       activateFeature( null, false );
     }
   }
-
 
   protected void handlePartClosed( final IWorkbenchPart part )
   {
@@ -319,7 +328,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // Comment this in, if you want to use the FormToolkit for FeatureView.
     // m_toolkit = new FormToolkit( parent.getDisplay() );
 
-    m_featureComposite.set_formToolkit( m_toolkit );
+    m_featureComposite.setFormToolkit( m_toolkit );
 
     m_mainGroup = new Group( parent, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout() );
@@ -499,7 +508,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return m_featureComposite.getFeature();
   }
 
-  /** Returns the view template of the current feature composite and its children. */
+  /** Returns the view template of the current k composite and its children. */
   public FeatureviewType[] getCurrentViewTemplates( )
   {
     final Feature feature = getCurrentFeature();

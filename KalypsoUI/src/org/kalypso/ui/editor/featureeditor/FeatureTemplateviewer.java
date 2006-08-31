@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.featureeditor;
 
 import java.io.Reader;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -67,8 +66,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -96,17 +97,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  protected Composite m_panel;
+  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
 
-  private IPoolableObjectType m_key;
-
-  private CommandableWorkspace m_workspace;
-
-  private String m_featurePath;
-
-  private FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), new URL[] {} );
-
-  private Label m_label;
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
 
   private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
   {
@@ -120,6 +113,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       // TODO: open Dialog?
     }
   };
+
+  protected Composite m_panel;
+
+  private IPoolableObjectType m_key;
+
+  private CommandableWorkspace m_workspace;
+
+  private String m_featurePath;
+
+  private Label m_label;
 
   private final JobExclusiveCommandTarget m_commandtarget;
 
@@ -176,16 +179,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      // final Object object1 = unmarshaller.unmarshal( is );
-      // final JAXBElement element = (JAXBElement) object1;
-      // final Featuretemplate m_template = (Featuretemplate) element.getValue();
       final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
-      List<FeatureviewType> view = m_template.getView();
-      // final List views = m_template.getView();
-      for( final Iterator<FeatureviewType> iter = view.iterator(); iter.hasNext(); )
-      {
-        m_featureComposite.addView( iter.next() );
-      }
+      final List<FeatureviewType> view = m_template.getView();
+      for( final FeatureviewType featureviewType : view )
+        m_fvFactory.addView( featureviewType );
+
       final Layer layer = m_template.getLayer();
       final String href;
       final String linktype;

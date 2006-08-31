@@ -112,7 +112,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     }
 
     // Enumeration will get a Combo-Box
-    final Map<String, String> comboEntries = PropertyUtils.createComboEntries( vpt );
+    final Map<Object, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     if( comboEntries.size() > 0 )
     {
       final Combo combo = factory.createCombo();

@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.featureview.modfier;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -50,9 +52,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -63,35 +63,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StringModifier implements IFeatureModifier
 {
-  // TODO put a default dateformat into the preferences and special formats into the gml-applications-schemas !
-
-  // Es gibt jetzt GuiTypeHandler für Datums-Typen.
-  //
-  // private final static DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
-  // static
-  // {
-  // DATE_FORMATTER.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-  // }
-
-  private final NumberFormat NUMBER_FORMAT;
-
   private final IValuePropertyType m_ftp;
 
   private final IGuiTypeHandler m_guiTypeHandler;
 
-  private final IMarshallingTypeHandler m_marshallingTypeHandler;
-
   public StringModifier( final IValuePropertyType ftp )
   {
-    NUMBER_FORMAT = getNumberFormat( ftp );
     m_ftp = ftp;
 
     // we need both registered type handler types
     final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
-
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    m_marshallingTypeHandler = marshallingTypeRegistry.getTypeHandlerFor( m_ftp );
   }
 
   public NumberFormat getNumberFormat( final IPropertyType ftp )
@@ -144,19 +126,27 @@ public class StringModifier implements IFeatureModifier
    */
   private String toText( final Object data )
   {
-    // Es gibt jetzt GuiTypeHandler für Datums-Typen.
-    //
-    // if( data instanceof XMLGregorianCalendar )
-    // {
-    // final XMLGregorianCalendar cal = (XMLGregorianCalendar) data;
-    // final Date date = DateUtilities.toDate( cal );
-    // return DATE_FORMATTER.format( date );
-    // }
+    final Object value;
+
+    // REMARK: In order to also allow (basic) editing of lists we consider the edited
+    // element to be the element with index = 0. Problem: all other elements of the list
+    // get deleted when edited. This is ok for example for the gml:name property, where
+    // we normally only want to edit the first entry.
+    if( data instanceof List )
+    {
+      final List list = (List) data;
+      if( list.isEmpty() )
+        return "";
+
+      value = list.get( 0 );
+    }
+    else
+      value = data;
 
     if( m_guiTypeHandler != null )
-      return m_guiTypeHandler.getText( data );
+      return m_guiTypeHandler.getText( value );
 
-    return data == null ? "" : data.toString();
+    return value == null ? "" : value.toString();
   }
 
   /**
@@ -187,25 +177,23 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    // Es gibt jetzt GuiTypeHandler für Datums-Typen.
-    //
-    // final Class clazz = m_ftp.getValueClass();
-    // if( clazz == XMLGregorianCalendar.class )
-    // {
-    // final Date date = DATE_FORMATTER.parse( text );
-    // try
-    // {
-    // return DateUtilities.toXMLGregorianCalendar( date );
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // throw new ParseException( e.getMessage(), 0 );
-    // }
-    // }
-
     if( m_guiTypeHandler != null )
-      return m_guiTypeHandler.fromText( text );
+    {
+      final Object value = m_guiTypeHandler.fromText( text );
+
+      // REMARK: In order to also allow (basic) editing of lists we consider the edited
+      // element to be the element with index = 0. Problem: all other elements of the list
+      // get deleted when edited. This is ok for example for the gml:name property, where
+      // we normally only want to edit the first entry.
+      if( m_ftp.isList() )
+      {
+        final List<Object> list = new ArrayList<Object>( 1 );
+        list.add( value );
+        return list;
+      }
+
+      return value;
+    }
 
     return null;
   }

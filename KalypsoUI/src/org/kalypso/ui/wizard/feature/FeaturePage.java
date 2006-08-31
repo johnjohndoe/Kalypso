@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.feature;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -54,8 +53,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -97,7 +98,9 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( null, m_selectionManager, new URL[] {} );
+    final CachedFeatureviewFactory factory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+    
+    m_featureComposite = new FeatureComposite( null, m_selectionManager, factory );
     m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
