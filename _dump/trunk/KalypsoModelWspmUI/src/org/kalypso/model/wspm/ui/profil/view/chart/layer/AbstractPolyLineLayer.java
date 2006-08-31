@@ -52,10 +52,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -164,7 +164,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         {
           final POINT_PROPERTY pprop = m_lineProperties.get( line );
           final Color pcol = m_colors.get( line );
-          final Point pt = logical2screen( convertPoint( pp, pprop ) );
+          final Point pt = logical2screen( ProfilUtil.getPoint2D( pp, pprop ) );
 
           drawSegment( gc, lastP[i], pt, lastPP != null && lastPP == activePoint, pcol );
 
@@ -173,7 +173,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
             gc.setLineStyle( SWT.LINE_SOLID );
             gc.setLineWidth( 2 );
             gc.setForeground( m_editColor );
-            final Rectangle markRect = RectangleUtils.buffer( logical2screen( convertPoint( activePoint, pprop ) ) );
+            final Rectangle markRect = RectangleUtils.buffer( logical2screen( ProfilUtil.getPoint2D( activePoint, pprop ) ) );
             gc.drawRectangle( markRect );
           }
           lastP[i] = pt;
@@ -196,7 +196,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     Rectangle2D bounds = null;
     for( final POINT_PROPERTY next : m_lineProperties )
     {
-      final Point2D[] points = getPoints2D( getPoints(), next );
+      final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), next );
 
       if( bounds == null && points.length > 0 )
         bounds = new Rectangle2D.Double( points[0].getX(), points[0].getY(), 0,0);
@@ -223,32 +223,32 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   public abstract List<IProfilPoint> getPoints( );
 
-  private Point2D[] getPoints2D( List<IProfilPoint> ppoints, final POINT_PROPERTY pointProperty )
-  {
-    try
-    {
-      // final List<IProfilPoint> ppoints = getPoints();
-      final Point2D[] points = new Point2D[ppoints.size()];
-      int i = 0;
-      for( final IProfilPoint p : ppoints )
-        points[i++] = convertPoint( p, pointProperty );
+//  private Point2D[] getPoints2D( List<IProfilPoint> ppoints, final POINT_PROPERTY pointProperty )
+//  {
+//    try
+//    {
+//      // final List<IProfilPoint> ppoints = getPoints();
+//      final Point2D[] points = new Point2D[ppoints.size()];
+//      int i = 0;
+//      for( final IProfilPoint p : ppoints )
+//        points[i++] = convertPoint( p, pointProperty );
+//
+//      return points;
+//    }
+//    catch( final Exception e )
+//    {
+//      e.printStackTrace();
+//
+//      return new Point2D[0];
+//    }
+//  }
 
-      return points;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return new Point2D[0];
-    }
-  }
-
-  private Point2D.Double convertPoint( final IProfilPoint p, final POINT_PROPERTY pointProperty ) throws ProfilDataException
-  {
-    final double x = p.getValueFor( POINT_PROPERTY.BREITE );
-    final double y = p.getValueFor( pointProperty );
-    return new Point2D.Double( x, y );
-  }
+//  private Point2D.Double convertPoint( final IProfilPoint p, final POINT_PROPERTY pointProperty ) throws ProfilDataException
+//  {
+//    final double x = p.getValueFor( POINT_PROPERTY.BREITE );
+//    final double y = p.getValueFor( pointProperty );
+//    return new Point2D.Double( x, y );
+//  }
 
   @Override
   public final void editProfil( final Point moveTo, final Object data )
@@ -279,14 +279,14 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     for( int lineCount = 0; lineCount < m_lineProperties.size(); lineCount++ )
     {
       final POINT_PROPERTY property = m_lineProperties.get( lineCount );
-      final Point2D[] points = getPoints2D( getPoints(), property );
+      final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), property );
       for( int i = 0; i < points.length; i++ )
       {
         final Point p = logical2screen( points[i] );
         final Rectangle hover = RectangleUtils.buffer( p );
         if( hover.contains( mousePos ) )
         {
-          final IProfilPoint point = getProfil().findPoint( points[i].getX(), points[i].getY(), property );
+          final IProfilPoint point = ProfilUtil.findPoint (getProfil(), points[i].getX(), points[i].getY(), property );
           final int index = getProfil().getPoints().indexOf( point );
           return new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { POINT_PROPERTY.BREITE.toString(), points[i].getX(), property.toString(),
               points[i].getY() } ) );
@@ -325,7 +325,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     final EditData editData = (EditData) data;
     final int index = editData.getIndex();
 
-    final Point2D[] points = getPoints2D( getProfil().getPoints(), editData.getProperty() );
+    final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), editData.getProperty() );
 
     drawEditLine( gc, editing, points, points[index], index - 1 );
     drawEditLine( gc, editing, points, points[index], index + 1 );

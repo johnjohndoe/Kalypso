@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,6 +54,9 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
 
+/**
+ * @author kimwerner
+ */
 /**
  * @author kimwerner
  */
@@ -202,19 +206,129 @@ public class ProfilUtil
     return points.get( i + 1 );
   }
 
-  public static Double getMaxValueFor( final IProfil profil, final IProfilPoint.POINT_PROPERTY property ) throws ProfilDataException
+  public static Double getMaxValueFor( final IProfil profil, final IProfilPoint.POINT_PROPERTY property )
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points.isEmpty() )
       return null;
-
-    Double maxValue = points.getFirst().getValueFor( property );
+    Double maxValue = Double.MIN_VALUE;
     for( IProfilPoint point : points )
     {
-      final Double value = point.getValueFor( property );
-      if(value != null &&  value > maxValue )
-        maxValue = value;
+      try
+      {
+        maxValue = Math.max( maxValue, point.getValueFor( property ) );
+      }
+      catch( ProfilDataException e )
+      {
+        return null;
+      }
     }
     return maxValue;
+  }
+
+  public static Point2D getPoint2D( final IProfilPoint p, final POINT_PROPERTY pointProperty )
+  {
+    try
+    {
+      final double x = p.getValueFor( POINT_PROPERTY.BREITE );
+      final double y = p.getValueFor( pointProperty );
+      return new Point2D.Double( x, y );
+    }
+    catch( ProfilDataException e )
+    {
+      return null;
+    }
+  }
+
+  /**
+   * @return null if profil has no points or property does not exists
+   * @return always one point (first point if no match)
+   */
+  public static IProfilPoint findNearestPoint( final IProfil profil, final double breite, final double value, final POINT_PROPERTY property )
+  {
+    LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points.isEmpty() )
+      return null;
+    IProfilPoint bestPoint = points.getFirst();
+    for( IProfilPoint point : points )
+    {
+      try
+      {
+        if( (Math.abs( bestPoint.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( point.getValueFor( POINT_PROPERTY.BREITE ) - breite ))
+            || (Math.abs( bestPoint.getValueFor( property ) - value ) > Math.abs( point.getValueFor( property ) - value )) )
+          bestPoint = point;
+      }
+      catch( ProfilDataException e )
+      {
+        return null;
+      }
+    }
+    return bestPoint;
+  }
+
+  /**
+   * @return null if profil has no points or property does not exists or nomatch
+   */
+  public static IProfilPoint findPoint(final IProfil profil, final double breite, final double value, final POINT_PROPERTY property )
+  {
+    final IProfilPoint pkt = findNearestPoint(profil, breite, value, property );
+    final Double delta = (Double) property.getParameter( PARAMETER.PRECISION );
+    try
+    {
+      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
+      final double ypos = pkt.getValueFor( property );
+      if( (Math.abs( xpos - breite ) <= delta) && (Math.abs( ypos - value ) <= delta) )
+      {
+        return pkt;
+      }
+      else
+        return null;
+
+    }
+    catch( ProfilDataException e )
+    {
+      return null;
+    }
+  }
+
+  public static Point2D[] getPoints2D( final IProfil profil, final POINT_PROPERTY pointProperty )
+  {
+    final List<IProfilPoint> points = profil.getPoints();
+    final Point2D[] points2D = new Point2D[points.size()];
+    int i = 0;
+    for( final IProfilPoint p : points )
+    {
+      try
+      {
+        final double x = p.getValueFor( POINT_PROPERTY.BREITE );
+        final double y = p.getValueFor( pointProperty );
+        points2D[i++] = new Point2D.Double( x, y );
+      }
+      catch( ProfilDataException e )
+      {
+        return null;
+      }
+    }
+    return points2D;
+  }
+
+  public static Double getMinValueFor( final IProfil profil, final IProfilPoint.POINT_PROPERTY property )
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points.isEmpty() )
+      return null;
+    Double minValue = Double.MAX_VALUE;
+    for( IProfilPoint point : points )
+    {
+      try
+      {
+        minValue = Math.min( minValue, point.getValueFor( property ) );
+      }
+      catch( ProfilDataException e )
+      {
+        return null;
+      }
+    }
+    return minValue;
   }
 }

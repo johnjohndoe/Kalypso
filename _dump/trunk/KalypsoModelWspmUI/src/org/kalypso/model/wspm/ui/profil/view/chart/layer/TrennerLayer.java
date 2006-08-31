@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
@@ -249,24 +250,24 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
   }
 
-  protected double getMaxval( )
-  {
-    try
-    {
-      final List<IProfilPoint> points = getProfil().getPoints();
-      double maxval = Double.MIN_VALUE;
-      for( final IProfilPoint p : points )
-        maxval = Math.max( maxval, p.getValueFor( POINT_PROPERTY.HOEHE ) );
-      return maxval;
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-
-      return 0;
-    }
-
-  }
+//  protected double getMaxval( )
+//  {
+//    try
+//    {
+//      final List<IProfilPoint> points = getProfil().getPoints();
+//      double maxval = Double.MIN_VALUE;
+//      for( final IProfilPoint p : points )
+//        maxval = Math.max( maxval, p.getValueFor( POINT_PROPERTY.HOEHE ) );
+//      return maxval;
+//    }
+//    catch( Exception e )
+//    {
+//      e.printStackTrace();
+//
+//      return 0;
+//    }
+//
+//  }
 
   private void drawLine( final GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
   {
@@ -317,7 +318,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setForeground( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) );
     final m_deviders dev = m_deviders.getDevider( ((IProfilDevider) hoverData).getTyp() );
     final int top = getValueRange().getScreenFrom();
-    final double maxval = getMaxval();
+    final double maxval = ProfilUtil.getMaxValueFor(getProfil(),POINT_PROPERTY.HOEHE);
     final double maxscreen = getValueRange().logical2screen( maxval );
     final int bottom = (int) maxscreen + dev.getTopOffset();// (maxscreen + (m_isclosed ? ((screenTop - maxscreen) / 2)
     // : 0));
@@ -423,7 +424,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     if( devider == null )
       return null;
     final IProfilPoint deviderPos = devider.getPoint();
-    final double maxval = getMaxval();
+    final double maxval = ProfilUtil.getMaxValueFor(getProfil(),POINT_PROPERTY.HOEHE);
     final int maxscreen = (int) getValueRange().logical2screen( maxval );
     final int bottom = getValueRange().getScreenFrom();
     final int top = maxscreen + dev.getTopOffset();

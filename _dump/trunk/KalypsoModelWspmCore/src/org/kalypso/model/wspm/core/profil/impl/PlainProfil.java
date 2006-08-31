@@ -161,26 +161,26 @@ public class PlainProfil implements IProfilConstants, IProfil
     return pkt;
   }
 
-  public IProfilPoint findNearestPoint( final double breite, final double hoehe, final POINT_PROPERTY property )
-  {
-    IProfilPoint pkt = m_points.getFirst();
-
-    for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
-    {
-      try
-      {
-        IProfilPoint p = ptIt.next();
-        if( (Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p.getValueFor( POINT_PROPERTY.BREITE ) - breite ))
-            || (Math.abs( pkt.getValueFor( property ) - hoehe ) > Math.abs( p.getValueFor( property ) - hoehe )) )
-          pkt = p;
-      }
-      catch( ProfilDataException e )
-      {
-        // sollte nie passieren da Breite immer vorhanden ist
-      }
-    }
-    return pkt;
-  }
+//  public IProfilPoint findNearestPoint( final double breite, final double value, final POINT_PROPERTY property )
+//  {
+//    IProfilPoint pkt = m_points.getFirst();
+//
+//    for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
+//    {
+//      try
+//      {
+//        IProfilPoint p = ptIt.next();
+//        if( (Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p.getValueFor( POINT_PROPERTY.BREITE ) - breite ))
+//            || (Math.abs( pkt.getValueFor( property ) - value ) > Math.abs( p.getValueFor( property ) - value )) )
+//          pkt = p;
+//      }
+//      catch( ProfilDataException e )
+//      {
+//        // sollte nie passieren da Breite immer vorhanden ist
+//      }
+//    }
+//    return pkt;
+//  }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#findPoint(double, double)
@@ -200,28 +200,27 @@ public class PlainProfil implements IProfilConstants, IProfil
     }
   }
 
-  public IProfilPoint findPoint( final double breite, final double hoehe, final POINT_PROPERTY property )
-  {
-    final IProfilPoint pkt = findNearestPoint( breite, hoehe, property );
-    final Double delta = (Double) property.getParameter( PARAMETER.PRECISION );
-    try
-    {
-      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
-      final double ypos = pkt.getValueFor( property );
-      if( (Math.abs( xpos - breite ) <= delta) && (Math.abs( ypos - hoehe ) <= delta) )
-      {
-        return pkt;
-      }
-      else
-        return null;
-
-    }
-    catch( ProfilDataException e1 )
-    {
-      // sollte nie passieren da Breite immer vorhanden ist
-      return null;
-    }
-  }
+//  public IProfilPoint findPoint( final double breite, final double value, final POINT_PROPERTY property )
+//  {
+//    final IProfilPoint pkt = findNearestPoint( breite, value, property );
+//    final Double delta = (Double) property.getParameter( PARAMETER.PRECISION );
+//    try
+//    {
+//      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
+//      final double ypos = pkt.getValueFor( property );
+//      if( (Math.abs( xpos - breite ) <= delta) && (Math.abs( ypos - value ) <= delta) )
+//      {
+//        return pkt;
+//      }
+//      else
+//        return null;
+//
+//    }
+//    catch( ProfilDataException e )
+//    {
+//       return null;
+//    }
+//  }
 
   public IProfilPoint findPoint( int index, double breite, double delta )
   {

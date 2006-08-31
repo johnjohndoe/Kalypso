@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -58,14 +61,17 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer.EditData;
 import org.kalypso.model.wspm.ui.profil.view.panel.RauheitenPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -125,8 +131,8 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       e.printStackTrace();
     }
 
-    // bounds.add( bounds.getMinX(), bounds.getMinY() - bounds.getHeight() * 0.1 );
-    return bounds;
+    bounds.add(bounds.getX(),bounds.getMinY()*0.9);
+    return  bounds;
   }
 
   /**
@@ -216,6 +222,22 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public EditInfo getHoverInfo( final Point point )
   {
+    final IProfil profil = getProfil();
+    final Point2D[] points = ProfilUtil.getPoints2D( profil, POINT_PROPERTY.RAUHEIT );
+    if( points == null || points.length < 2 )
+      return null;
+    Rectangle hover = null;
+    final int baseLine = logical2screen( new Point2D.Double( 0, 0 ) ).y;
+    for( int i = 0; i < points.length - 1; i++ )
+    {
+      final Point lp = logical2screen( points[i] );
+      final Point rp = logical2screen( points[i + 1] );
+
+      hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, baseLine - lp.y );
+      if( hover.contains( point ) )
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, POINT_PROPERTY.RAUHEIT ), String.format( "%.4f[" + profil.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ).toString()
+            + "]", points[i].getY() ) );
+    }
     return null;
   }
 
@@ -272,8 +294,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   protected void editProfil( Point point, Object data )
   {
-    // TODO Auto-generated method stub
-
+    // no operation available
   }
 
   /**
@@ -283,31 +304,31 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
+    
     if( !hint.isPointValuesChanged() )
       return;
     final AxisRange valueRange = getValueRange();
-    final double max = valueRange.getLogicalTo();
-    Double maxProfilValue;
-    try
-    {
-      maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
-    }
-    catch( ProfilDataException e )
-    {
-      maxProfilValue = 0.0;
-    }
-    // for( IProfilChange change : changes )
-    // {
-    // if( change.getPointProperty() == POINT_PROPERTY.RAUHEIT )
-    // {
-    // final double newValue = change.getValue();
-    // if( newValue > maxProfilValue )
-    // maxProfilValue = newValue;
-    // }
-    // }
-    // final double newMax = 1.05 * ;
-    if( Math.abs( maxProfilValue - max ) > 0.1 )
-      valueRange.setLogicalRange( new LogicalRange( valueRange.getLogicalFrom(), 1.05 * maxProfilValue ) );
+    final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
+    final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
+    if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 ||minProfilValue<valueRange.getLogicalFrom())
+      valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
+  }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer#setActivePoint(java.lang.Object)
+   */
+  @Override
+  public void setActivePoint( Object data )
+  {
+    if( data instanceof EditData )
+    {
+      final EditData editData = (EditData) data;
+      final IProfilPoint activePoint = getProfil().getPoints().get( editData.getIndex() );
+      final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
+      final IStatus status = operation.execute( new NullProgressMonitor(), null );
+      operation.dispose();
+      if( !status.isOK() )
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+    }
   }
 }

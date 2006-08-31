@@ -120,7 +120,7 @@ public interface IProfil
    */
   public IProfilPoint findPoint( final double breite, final double delta );
 
-  public IProfilPoint findPoint( final double breite, final double hoehe, final POINT_PROPERTY property );
+ // public IProfilPoint findPoint( final double breite, final double value, final POINT_PROPERTY property );
 
   /**
    * @param index
