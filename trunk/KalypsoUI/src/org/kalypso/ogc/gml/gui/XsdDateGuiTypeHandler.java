@@ -55,9 +55,9 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
@@ -124,7 +124,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     final IValuePropertyType vpt = (IValuePropertyType) property;
 
     // Enumeration will get a Combo-Box
-    final Map<String, String> comboEntries = PropertyUtils.createComboEntries( vpt );
+    final Map<Object, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     if( comboEntries.size() > 0 )
       return super.createFeatureviewControl( property, factory );
 

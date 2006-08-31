@@ -42,20 +42,32 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor;
 
 /**
  * This feature control is a combo box, which just sets the feature-value to the given value when selected.
@@ -67,53 +79,69 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ComboFeatureControl extends AbstractFeatureControl
 {
-  private final SelectionListener m_listener = new SelectionListener()
+  private final ISelectionChangedListener m_listener = new ISelectionChangedListener()
   {
-    public void widgetSelected( final SelectionEvent e )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
-      comboSelected();
-    }
-
-    public void widgetDefaultSelected( final SelectionEvent e )
-    {
-      comboSelected();
+      comboSelected( (IStructuredSelection) event.getSelection() );
     }
   };
 
   private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
 
-  private Combo m_combo = null;
+  private ComboViewer m_comboViewer = null;
 
-  private final String[] m_labels;
+  private final Map<Object, String> m_fixedEntries = new HashMap<Object, String>();
 
-  private final Object[] m_values;
+  private final Map<Object, String> m_entries = new HashMap<Object, String>();
 
-  public ComboFeatureControl( final IPropertyType ftp, final String[] labels, final Object[] values )
+  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries )
   {
-    this( null, ftp, labels, values );
+    this( null, ftp, entries );
   }
 
-  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final String[] labels, final Object[] values )
+  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries )
   {
     super( feature, ftp );
 
-    if( (labels == null || labels.length == 0) && ftp instanceof IValuePropertyType )
+    if( entries != null )
+      m_fixedEntries.putAll( entries );
+  }
+
+  private void updateEntries( final IPropertyType ftp )
+  {
+    m_entries.clear();
+
+    if( ftp instanceof IValuePropertyType )
     {
-      final Map<String, String> entries = PropertyUtils.createComboEntries( (IValuePropertyType) ftp );
-      m_labels = new String[entries.size()];
-      m_values = new String[entries.size()];
-      int count = 0;
-      for( final Map.Entry<String, String> entry : entries.entrySet() )
-      {
-        m_labels[count] = entry.getKey();
-        m_values[count] = entry.getValue();
-        count++;
-      }
+      final Map<Object, String> createComboEntries = PropertyUtils.createComboEntries( (IValuePropertyType) ftp );
+      m_entries.putAll( createComboEntries );
+      return;
     }
-    else
+
+    if( ftp instanceof IRelationType )
     {
-      m_labels = labels;
-      m_values = values;
+      final IRelationType rt = (IRelationType) ftp;
+      if( !rt.isInlineAble() && rt.isLinkAble() )
+      {
+        /* Null entry to delete link if this is allowed */
+        if( rt.isNillable() )
+          m_entries.put( null, "" );
+
+        /* Find all substituting features. */
+        final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+        final Feature feature = getFeature();
+        final GMLWorkspace workspace = feature.getWorkspace();
+        final CollectorVisitor collectorVisitor = new CollectorVisitor();
+        final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
+        workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+        final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
+        
+        final Feature[] features = collectorVisitor.getResults( true );
+        for( final Feature foundFeature : features )
+          m_entries.put( foundFeature.getId(), labelProvider.getText( foundFeature ) );
+      }
     }
   }
 
@@ -123,8 +151,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
   @Override
   public void dispose( )
   {
-    if( m_combo != null && !m_combo.isDisposed() )
-      m_combo.removeSelectionListener( m_listener );
+    if( m_comboViewer != null && !m_comboViewer.getControl().isDisposed() )
+      m_comboViewer.removeSelectionChangedListener( m_listener );
   }
 
   /**
@@ -132,24 +160,42 @@ public class ComboFeatureControl extends AbstractFeatureControl
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_combo = new Combo( parent, style );
+    m_comboViewer = new ComboViewer( parent, style );
 
-    m_combo.setItems( m_labels );
+    m_comboViewer.setContentProvider( new ArrayContentProvider() );
 
-    m_combo.addSelectionListener( m_listener );
+    final Map<Object, String> entries = m_entries;
+    m_comboViewer.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        if( entries.containsKey( element ) )
+          return entries.get( element );
+
+        return super.getText( element );
+      }
+    } );
+
+    m_comboViewer.setInput( m_entries.keySet() );
+
+    m_comboViewer.addSelectionChangedListener( m_listener );
 
     updateControl();
 
-    return m_combo;
+    return m_comboViewer.getControl();
   }
 
-  protected void comboSelected( )
+  protected void comboSelected( final IStructuredSelection selection )
   {
     final Feature feature = getFeature();
     final IPropertyType pt = getFeatureTypeProperty();
 
     final Object oldValue = getCurrentFeatureValue();
-    final Object newValue = m_values[m_combo.getSelectionIndex()];
+    final Object newValue = selection.isEmpty() ? null : selection.getFirstElement();
 
     if( !newValue.equals( oldValue ) )
       fireFeatureChange( new FeatureChange( feature, pt, newValue ) );
@@ -162,12 +208,15 @@ public class ComboFeatureControl extends AbstractFeatureControl
   {
     final Object currentFeatureValue = getCurrentFeatureValue();
 
-    for( int i = 0; i < m_values.length; i++ )
+    updateEntries( getFeatureTypeProperty() );
+
+    m_comboViewer.refresh();
+
+    for( final Object value : m_entries.keySet() )
     {
-      if( m_values[i].equals( currentFeatureValue ) )
+      if( value.equals( currentFeatureValue ) )
       {
-        if( i != m_combo.getSelectionIndex() )
-          m_combo.select( i );
+        m_comboViewer.setSelection( new StructuredSelection( value ), true );
         break;
       }
     }

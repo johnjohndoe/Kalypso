@@ -38,11 +38,12 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview;
+package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

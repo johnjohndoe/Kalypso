@@ -38,55 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview;
+package org.kalypso.ogc.gml.featureview.maker;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.bind.JAXBElement;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.GridDataType;
 
 /**
- * Helper class to manage generated feature-view-templates.
+ * Displays a simple button to edit the property.
  * 
- * @author Belger
+ * @author Gernot Belger
  */
-public class FeatureViewManager
+public class ButtonControlMaker extends AbstractValueControlMaker
 {
-  private Map<QName, FeatureviewType> m_templates = new HashMap<QName, FeatureviewType>();
-
-  private boolean m_showTables = true;
-
-  /** Generate new templates with or without tables. Cache is cleared. */
-  public void setShowTables( final boolean showTable )
+  public ButtonControlMaker( final boolean addValidator )
   {
-    m_showTables = showTable;
-    reset();
+    super( addValidator );
   }
 
-  public boolean isShowTables( )
+  /**
+   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  @Override
+  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType fpt, final GridDataType griddata )
   {
-    return m_showTables;
+    final Button button = FeatureviewHelper.FACTORY.createButton();
+    button.setStyle( "SWT.PUSH" );
+    button.setProperty( fpt.getQName() );
+
+    griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+    griddata.setHorizontalSpan( 2 );
+
+    return FeatureviewHelper.FACTORY.createButton( button );
   }
 
-  /** Return a view tmeplate for the given featureType. If no cached templae is present, a new von is generated. */
-  public FeatureviewType get( final IFeatureType featureType, final Feature feature, boolean shouldAddValidator )
-  {
-    final QName qname = featureType.getQName();
-    if( m_templates.containsKey( qname ) )
-      return m_templates.get( qname );
-
-    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType, feature, m_showTables, shouldAddValidator );
-    m_templates.put( qname, newView );
-
-    return newView;
-  }
-
-  private void reset( )
-  {
-    m_templates.clear();
-  }
 }

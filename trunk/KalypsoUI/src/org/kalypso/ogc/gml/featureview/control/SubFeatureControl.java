@@ -7,32 +7,31 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.IFeatureControl;
+import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class SubFeatureControl extends AbstractFeatureControl
 {
   private IFeatureControl m_fc;
 
-  private final FeatureviewType[] m_views;
-
   private final IFeatureSelectionManager m_selectionManager;
 
   private final FormToolkit m_formToolkit;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views, FormToolkit formToolkit )
+  private final IFeatureviewFactory m_featureviewFactory;
+
+  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final IFeatureviewFactory featureviewFactory )
   {
     super( ftp );
+    
     m_selectionManager = selectionManager;
-    m_views = views;
     m_formToolkit = formToolkit;
+    m_featureviewFactory = featureviewFactory;
   }
 
   /**
@@ -44,10 +43,10 @@ public class SubFeatureControl extends AbstractFeatureControl
     final Object property = feature.getProperty( getFeatureTypeProperty() );
     if( property instanceof Feature )
     {
-      FeatureComposite fc = new FeatureComposite( (Feature) property, m_selectionManager, m_views );
+      final FeatureComposite fc = new FeatureComposite( (Feature) property, m_selectionManager, m_featureviewFactory );
 
       /* Set the toolkit to the FeatureComposite. The check for null is perfomrmed in FeatureComposite. */
-      fc.set_formToolkit( m_formToolkit );
+      fc.setFormToolkit( m_formToolkit );
 
       m_fc = fc;
     }

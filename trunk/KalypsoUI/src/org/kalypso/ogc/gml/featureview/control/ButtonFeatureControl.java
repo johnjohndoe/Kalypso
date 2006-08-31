@@ -82,14 +82,15 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private IFeatureDialog m_dialog = null;
 
-  private Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
+  private final Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
+
+  private final IFeatureChangeListener m_listener;
 
   public ButtonFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
 
-    // fake listener, which just informs my own listeners
-    final IFeatureChangeListener listener = new IFeatureChangeListener()
+    m_listener = new IFeatureChangeListener()
     {
       public void featureChanged( final FeatureChange change )
       {
@@ -101,8 +102,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }
     };
-
-    m_dialog = chooseDialog( feature, ftp, listener );
   }
 
   public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener )
@@ -244,6 +243,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    */
   public void updateControl( )
   {
+    m_dialog = chooseDialog( getFeature(), getFeatureTypeProperty(), m_listener );
+
     m_button.setText( m_dialog.getLabel() );
   }
 }

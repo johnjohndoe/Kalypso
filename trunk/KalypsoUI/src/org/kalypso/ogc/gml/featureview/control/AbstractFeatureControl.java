@@ -48,7 +48,6 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
