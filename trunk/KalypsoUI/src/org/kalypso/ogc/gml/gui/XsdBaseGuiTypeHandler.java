@@ -126,7 +126,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     
     // everything else will be edited in a text field
     final Text editor = factory.createText();
-    editor.setStyle( "SWT.NONE" );
+    editor.setStyle( "SWT.BORDER" );
     editor.setEditable( true );
     editor.setProperty( qname );
 

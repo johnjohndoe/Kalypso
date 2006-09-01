@@ -157,8 +157,8 @@ public class StringModifier implements IFeatureModifier
   {
     Object result = null;
     final String text = editedStringValue == null ? "" : editedStringValue.toString();
-    if( text.length() == 0 )
-      return null;
+    // if( text.length() == 0 )
+    // return null;
 
     try
     {
@@ -179,12 +179,13 @@ public class StringModifier implements IFeatureModifier
   {
     if( m_guiTypeHandler != null )
     {
-      final Object value = m_guiTypeHandler.fromText( text );
+      final Object value = text.length() == 0 ? null : m_guiTypeHandler.fromText( text );
 
       // REMARK: In order to also allow (basic) editing of lists we consider the edited
       // element to be the element with index = 0. Problem: all other elements of the list
       // get deleted when edited. This is ok for example for the gml:name property, where
       // we normally only want to edit the first entry.
+      // For other list-properties, where this behaviour is not intended, this string-modifier should not be used.
       if( m_ftp.isList() )
       {
         final List<Object> list = new ArrayList<Object>( 1 );
