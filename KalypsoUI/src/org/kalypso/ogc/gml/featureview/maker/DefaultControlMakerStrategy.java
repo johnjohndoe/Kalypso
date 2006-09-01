@@ -61,8 +61,8 @@ public class DefaultControlMakerStrategy implements IControlMaker
 
   public DefaultControlMakerStrategy( final boolean addValidator, final boolean showTables )
   {
-    m_makers.add( new DefaultControlMaker( addValidator ) );
-    // m_makers.add( new DefaultFeatureControlMaker( addValidator ) );
+    // m_makers.add( new DefaultControlMaker( addValidator ) );
+    m_makers.add( new DefaultFeatureControlMaker( addValidator ) );
     m_makers.add( new GuiHandlerControlMaker( addValidator ) );
 
     m_makers.add( new LinkedFeatureControlMaker( addValidator ) );

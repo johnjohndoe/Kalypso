@@ -64,8 +64,18 @@ public class FeatureHelper
     {
       final Feature feature = (Feature) value;
 
-      final QName qname = QNameUtilities.createQName( argument );
+      final String[] strings = argument.split( ";" );
+      if( strings.length == 0 )
+        return "No argument for property. Must be _qname_;[null-value]";
+
+      final String propName = strings[0];
+      final String nullValue = strings.length > 1 ? strings[1] : null;
+      
+      final QName qname = QNameUtilities.createQName( propName );
       final Object property = feature.getProperty( qname );
+      
+      if( property == null )
+        return "" + nullValue;
 
       return "" + property;
     }
@@ -83,15 +93,20 @@ public class FeatureHelper
       final Feature feature = (Feature) value;
 
       final String[] strings = argument.split( ";" );
-      if( strings.length != 2 )
-        return "Wrong argument for listProperty. Must be _qname_;listindex";
+      if( strings.length < 2 )
+        return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
 
       final QName qname = QNameUtilities.createQName( strings[0] );
       final int listindex = Integer.parseInt( strings[1] );
+      final String nullValue = strings.length > 2 ? strings[2] : null;
 
       final List property = (List) feature.getProperty( qname );
 
-      return "" + property.get( listindex );
+      final Object propertyValue = property.get( listindex );
+      if( propertyValue == null )
+        return "" + nullValue;
+      
+      return "" + propertyValue;
     }
 
     public String getToken( )

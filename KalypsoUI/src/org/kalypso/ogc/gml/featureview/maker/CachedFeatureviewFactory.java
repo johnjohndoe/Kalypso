@@ -50,9 +50,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -92,6 +96,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
    */
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
+    /* Is there a special view already registered for this type? */
     final QName qname = featureType.getQName();
     final FeatureviewType view = m_viewMap.get( qname );
     if( view != null )
@@ -111,7 +116,23 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     if( m_cache.containsKey( qname ) )
       return m_cache.get( qname );
 
-    final FeatureviewType newView = m_delegateFactory.get( featureType, feature );
+    FeatureviewType newView = null;
+
+    /* Maybe the catalog has a view for this type. */
+    try
+    {
+      newView = FeatureTypeFeatureviewCatalog.getFeatureview( null, qname );
+    }
+    catch( final JAXBException e )
+    {
+      // we only log it to the plugin, if we have a problem we create a default view
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
+    }
+
+    /* Last thing to do: ask the delegate. */
+    if( newView == null )
+      newView = m_delegateFactory.get( featureType, feature );
 
     m_cache.put( qname, newView );
 
