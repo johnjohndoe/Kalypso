@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspm"
-	elementFormDefault="qualified" version="0.1">
+	xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmprofile="org.kalypso.model.wspmprofile"
+	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -92,9 +92,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässer</name>
-				<label>${property:org.kalypso.model.wspm#name}</label>
-				<tooltip>${property:org.kalypso.model.wspm#name}</tooltip>
-				<description>${property:org.kalypso.model.wspm#name}</description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>Gewässer</tooltip>
+				<description>${property:http://www.opengis.net/gml#description}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -174,7 +174,8 @@
 				<name>Rauheitsklassen-Liste</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
+				<description>Rauheitsklassen-Liste
+				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -197,7 +198,8 @@
 				<name>Rauheitsklasse</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</description>
+				<description>Rauheitsklasse
+				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -220,7 +222,8 @@
 				<name>Bewuchsklassen-Liste</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
+				<description>Bewuchsklassen-Liste
+				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -466,26 +469,8 @@
 	</complexType>
 	<complexType name="WaterBodyType">
 		<complexContent>
-			<extension base="wspmcommon:EmptyFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="name" type="string" default="&lt;Gewässername&gt;">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Name</label>
-								<tooltip>Bezeichnung des Gewässers</tooltip>
-								<description>Bezeichnung des Gewässers</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="description" type="string" default="&lt;Beschreibung&gt;">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Beschreibung</label>
-								<tooltip>Beschreibung des Gewässers</tooltip>
-								<description>Zusätzlicher Kommentar für das Gewässer</description>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="refNr" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -515,8 +500,7 @@
 						</annotation>
 					</element>
 					<!-- TODO hier kommt noch das neue Profil rein -->
-					<element name="profileMember" type="om:AbstractObservationPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<element name="profileMember" minOccurs="0" maxOccurs="unbounded" type="wspm:ProfileInlinePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profile</label>
@@ -559,6 +543,13 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
+	<complexType name="ProfileInlinePropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="wspmprofile:Profile"/>
+		</sequence>
+	</complexType>
+	
 	<!-- Overwritten to have a nice annotation.
 	HM, geht nicht, wie muss mans machen?
 	 -->

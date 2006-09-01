@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+    <!-- org.kalypso.model.wspmboundary:Boundary -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmboundary:Boundary:sld:default" uri="org.kalypso.model.wspmboundary.Boundary.sld" />
+
+    <!-- org.kalypso.model.wspmboundary:WspPoint -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmboundary:WspPoint:sld:default" uri="org.kalypso.model.wspmboundary.WspPoint.sld" />
+
+    <!-- org.kalypso.model.wspmprofile.Profile -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:featureview:default" uri="org.kalypso.model.wspmprofile.Profile.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:uiproperties:default" uri="org.kalypso.model.wspmprofile.Profile.properties" />
+    
+    
+</catalog:catalog>
+

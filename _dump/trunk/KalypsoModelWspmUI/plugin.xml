@@ -258,7 +258,7 @@
      <extension
            point="org.kalypso.core.catalogContribution">
         <catalogContribution
-              class="org.kalypso.model.wspm.ui.sld.WspmFeatureTypeStyleCatalogContribution"
+              class="org.kalypso.model.wspm.ui.catalog.WspmFeatureTypeCatalogContribution"
               name="Wspm Style Catalog"/>
      </extension>
      <extension

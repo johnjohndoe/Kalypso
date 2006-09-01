@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
-	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-	<catalog:delegateURI uriStartString="urn:ogc:"
-		catalog="urn:ogc_catalog" />
-	<catalog:system uri="ogc/catalog.xml" systemId="urn:ogc_catalog" />
-</catalog:catalog>
-

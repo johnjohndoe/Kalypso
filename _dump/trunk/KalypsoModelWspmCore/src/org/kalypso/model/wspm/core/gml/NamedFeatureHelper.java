@@ -41,15 +41,17 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class NamedFeatureHelper
 {
@@ -61,17 +63,38 @@ public class NamedFeatureHelper
   {
   }
 
+  /** Gets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
   public static String getName( final Feature namedFeature )
   {
-    final Object name = namedFeature.getProperty( GML_NAME );
-    
-    return name == null ? "" : (String) name;
+    final Object value = namedFeature.getProperty( GML_NAME );
+
+    if( value instanceof String )
+      return (String) value;
+    else if( value instanceof List )
+    {
+      final List<String> nameList = (List<String>) value;
+      if( nameList == null || nameList.isEmpty() )
+        return "";
+
+      final String name = nameList.get( 0 );
+      return name == null ? "" : (String) name;
+    }
+
+    return "";
   }
 
+  /** Sets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
   public static void setName( final Feature namedFeature, final String name )
   {
-    final IPropertyType gmlNameProp = namedFeature.getFeatureType().getProperty( GML_NAME );
-    namedFeature.setProperty( gmlNameProp, name );
+    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getProperty( GML_NAME );
+    if( vpt.isList() )
+    {
+      final ArrayList<String> nameList = new ArrayList<String>( 1 );
+      nameList.add( name );
+      namedFeature.setProperty( GML_NAME, nameList );
+    }
+    else
+      namedFeature.setProperty( GML_NAME, name );
   }
 
   public static String getDescription( final Feature namedFeature )

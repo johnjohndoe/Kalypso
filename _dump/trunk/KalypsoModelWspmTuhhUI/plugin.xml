@@ -131,4 +131,10 @@
          <newWizardShortcut id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"/>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.kalypso.model.product.configId"
+            content="content/ext.xml"/>
+   </extension>
 </plugin>

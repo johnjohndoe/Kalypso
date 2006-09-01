@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:ogc:gml:" ns0:base="urn:ogc:gml:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <catalog:delegateURI uriStartString="urn:ogc:gml:featuretype:" catalog="urn:ogc:gml:featuretype_catalog"/>
-    <catalog:system uri="featuretype/catalog.xml" systemId="urn:ogc:gml:featuretype_catalog"/>
-</catalog:catalog>

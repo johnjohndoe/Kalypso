@@ -41,15 +41,12 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -129,22 +126,14 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     return m_calcFeature;
   }
 
-  @SuppressWarnings("unchecked")
   public String getName( )
   {
-    final List<String> nameList = (List<String>) getFeature().getProperty( new QName( NS.GML3, "name" ) );
-    if( nameList == null || nameList.isEmpty() )
-      return "";
-
-    final String name = nameList.get( 0 );
-    return name == null ? "" : (String) name;
+    return NamedFeatureHelper.getName( getFeature() );
   }
 
   public void setName( final String name )
   {
-    final ArrayList<String> nameList = new ArrayList<String>( 1 );
-    nameList.add( name );
-    getFeature().setProperty( new QName( NS.GML3, "name" ), nameList );
+    NamedFeatureHelper.setName( getFeature(), name );
   }
 
   public String getDescription( )

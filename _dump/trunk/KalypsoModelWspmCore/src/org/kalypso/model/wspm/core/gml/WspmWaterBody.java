@@ -67,24 +67,22 @@ public class WspmWaterBody implements IWspmConstants
 
   public String getName( )
   {
-    final Object name = m_water.getProperty( new QName( NS_WSPM, "name" ) );
-    return name == null ? "" : (String) name;
+    return NamedFeatureHelper.getName( getFeature() );
   }
 
   public void setName( final String name )
   {
-    m_water.setProperty( new QName( NS_WSPM, "name" ), name );
+    NamedFeatureHelper.setName( getFeature(), name );
   }
 
   public String getDescription( )
   {
-    final Object desc = m_water.getProperty( new QName( NS_WSPM, "description" ) );
-    return desc == null ? "" : (String) desc;
+    return NamedFeatureHelper.getDescription( getFeature() );
   }
 
   public void setDescription( final String desc )
   {
-    m_water.setProperty( new QName( NS_WSPM, "description" ), desc );
+    NamedFeatureHelper.setDescription( getFeature(), desc );
   }
 
   public Feature getFeature( )
@@ -92,7 +90,7 @@ public class WspmWaterBody implements IWspmConstants
     return m_water;
   }
 
-  public WspmProfile createNewProfile(  ) throws GMLSchemaException
+  public WspmProfile createNewProfile( ) throws GMLSchemaException
   {
     final Feature profile = FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "profileMember" ), new QName( NS_WSPMPROF, "Profile" ) );
 

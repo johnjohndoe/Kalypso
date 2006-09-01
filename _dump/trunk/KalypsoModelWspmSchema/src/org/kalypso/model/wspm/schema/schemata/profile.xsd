@@ -19,9 +19,10 @@
 	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</label>
-				<tooltip>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</tooltip>
-				<description>Profil Station km - ${property:org.kalypso.model.wspmprofile#station}</description>
+				<name>Profil</name>
+				<label>Profil Station km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description}</description>
 			</documentation>
 		</annotation>
 	</element>
