@@ -70,6 +70,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
@@ -90,6 +91,7 @@ import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -211,6 +213,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
+  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup();
+
   private IDialogSettings m_settings;
 
   private Action m_showTablesAction = null;
@@ -249,6 +253,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final IWorkbenchPage page = site.getPage();
     page.getWorkbenchWindow().getSelectionService().addPostSelectionListener( m_selectionListener );
     page.addPartListener( m_partListener );
+
+    m_featureSelectionActionGroup.setPart( this );
+    m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
+    m_featureSelectionActionGroup.fillActionBars( site.getActionBars() );
   }
 
   /**
@@ -263,6 +271,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final IWorkbenchPage page = getSite().getPage();
     page.removePartListener( m_partListener );
     page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
+
+    m_featureSelectionActionGroup.dispose();
   }
 
   public void setShowTables( final boolean showTables )
@@ -299,6 +309,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_commandManager = null;
       activateFeature( null, false );
     }
+
+    m_featureSelectionActionGroup.getContext().setSelection( selection );
+    m_featureSelectionActionGroup.updateActionBars();
   }
 
   protected void handlePartClosed( final IWorkbenchPart part )
@@ -440,10 +453,18 @@ public class FeatureView extends ViewPart implements ModellEventListener
         else
           groupLabel = _KEIN_FEATURE_SELEKTIERT_;
 
-        if( !mainGroup.isDisposed() )
+        if( mainGroup != null && !mainGroup.isDisposed() )
         {
           mainGroup.setText( groupLabel );
           mainGroup.layout();
+
+          // TRICKY: fixes the bug, that after calling 'Edit feature' from the tree,
+          // the tree has still the focus but this part is active (so you could change
+          // the seleciton in the tree, but we could not react to it).
+          // The reason for this was this job, which causes the gui to be created after the call
+          // to 'setFocus'.
+          if( FeatureView.this == getViewSite().getPage().getActivePart() )
+            mainGroup.setFocus();
         }
 
         return Status.OK_STATUS;

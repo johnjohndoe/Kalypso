@@ -46,10 +46,12 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 
 /**
  * Contributes to the actions bars of the {@link org.kalypso.ui.editor.gmleditor.GmlEditor}.
@@ -58,17 +60,49 @@ import org.eclipse.ui.part.EditorActionBarContributor;
  */
 public class GmlEditorActionBarContributor extends EditorActionBarContributor
 {
-  private ShowDescriptionStatusLineItem m_statusLineItem;
+  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup()
+  {
+    /**
+     * @see org.kalypso.ui.editor.actions.FeatureSelectionActionGroup#createSubMenuManager(org.eclipse.jface.action.IMenuManager)
+     */
+    @Override
+    protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
+    {
+      final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" );
+      if( manager == null )
+        return null;
 
-  private IEditorPart m_targetEditor;
+      manager.remove( "selectionMenuManager" );
 
-  private ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
+      final IMenuManager newSmm = new MenuManager( "&Selektion", "selectionMenuManager" );
+      manager.appendToGroup( "selection", newSmm );
+      return newSmm;
+    }
+  };
+
+  private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {
     public void selectionChanged( final SelectionChangedEvent event )
     {
       handleSelectionChanged( event.getSelectionProvider() );
     }
   };
+
+  private ShowDescriptionStatusLineItem m_statusLineItem;
+
+  private IEditorPart m_targetEditor;
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
+   */
+  @Override
+  public void init( final IActionBars bars )
+  {
+    super.init( bars );
+
+    m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
+    m_featureSelectionActionGroup.fillActionBars( bars );
+  }
 
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
@@ -82,6 +116,8 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
       if( selectionProvider != null )
         selectionProvider.removeSelectionChangedListener( m_selectionListener );
     }
+
+    m_featureSelectionActionGroup.dispose();
 
     super.dispose();
   }
@@ -110,6 +146,7 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
     }
 
     m_targetEditor = targetEditor;
+    m_featureSelectionActionGroup.setPart( m_targetEditor );
 
     if( m_targetEditor != null )
     {
@@ -120,33 +157,13 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
 
     if( m_statusLineItem != null )
       m_statusLineItem.setActiveEditor( targetEditor );
+
+    m_featureSelectionActionGroup.updateActionBars();
   }
 
   protected void handleSelectionChanged( final ISelectionProvider provider )
   {
-    final IActionBars actionBars = m_targetEditor.getEditorSite().getActionBars();
-    final IMenuManager menuManager = actionBars.getMenuManager();
-
-    final IMenuManager selectionMenuManager = findManagerForSelection( menuManager );
-    if( selectionMenuManager == null )
-      return;
-
-    ObjectActionContributorManager.getManager().contributeObjectActions( m_targetEditor, selectionMenuManager, provider );
-    ((GmlEditor) m_targetEditor).handleMenuAboutToShow( selectionMenuManager );
-
-    actionBars.updateActionBars();
-  }
-
-  private IMenuManager findManagerForSelection( final IMenuManager menuManager )
-  {
-    final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" );
-    if( manager == null )
-      return null;
-
-    manager.remove( "selectionMenuManager" );
-
-    final IMenuManager newSmm = new MenuManager( "&Selektion", "selectionMenuManager" );
-    manager.appendToGroup( "selection", newSmm );
-    return newSmm;
+    m_featureSelectionActionGroup.getContext().setSelection( provider.getSelection() );
+    m_featureSelectionActionGroup.updateActionBars();
   }
 }

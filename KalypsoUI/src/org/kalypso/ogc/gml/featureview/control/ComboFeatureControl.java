@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -179,6 +180,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
         return super.getText( element );
       }
     } );
+
+    m_comboViewer.setSorter( new ViewerSorter() );
 
     m_comboViewer.setInput( m_entries.keySet() );
 
