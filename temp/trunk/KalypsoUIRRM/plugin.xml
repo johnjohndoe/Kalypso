@@ -22,7 +22,7 @@
                label="UpdateKMParameter"
                menubarPath="KalypsoUIRRM.menu1"
                style="push"
-               tooltip="tooltip"/>
+               />
       </objectContribution>
    </extension>
    <extension

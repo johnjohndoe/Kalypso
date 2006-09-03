@@ -99,8 +99,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import sun.security.krb5.internal.crypto.f;
-
 /**
  * @author kuepfer
  */
