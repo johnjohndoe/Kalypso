@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmprofile="org.kalypso.model.wspmprofile"
-	targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
+	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
 	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+	<import namespace="org.kalypso.model.wspmrunoff" schemaLocation="runOff.xsd"/>
 	<import namespace="http://www.opengis.net/gml"
 		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om"
@@ -88,13 +90,23 @@
 			</documentation>
 		</annotation>
 	</element>
+	<!-- same as waterBodyMember, but supports only linked waterBodies -->
+	<element name="waterBodyLinkMember" type="wspm:WaterBodyLinkPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässer</label>
+				<tooltip>Gewässer</tooltip>
+				<description>Gewässer</description>
+			</documentation>
+		</annotation>
+	</element>
 	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässer</name>
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
 				<tooltip>Gewässer</tooltip>
-				<description>${property:http://www.opengis.net/gml#description}</description>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -113,9 +125,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang</name>
-				<label>Gewässerstrang</label>
-				<tooltip>Gewässerstrang</tooltip>
-				<description>Gewässerstrang</description>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -149,9 +161,10 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil-Strangsegment</name>
-				<label>Profil-Strangsegment</label>
-				<tooltip>Profil-Strangsegment</tooltip>
-				<description>Profil-Strangsegment</description>
+				<label>Station km ${property:org.kalypso.model.wspm#station;-nicht gesetzt-}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-nicht gesetzt-}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station;-nicht
+				gesetzt-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -312,7 +325,7 @@
 		<complexContent>
 			<extension base="wspmcommon:NamedFeatureBaseType">
 				<sequence>
-					<element ref="wspm:waterBodyMember">
+					<element ref="wspm:waterBodyLinkMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässer</label>
@@ -321,8 +334,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="gml:lineStringMember">
+					<element name="waterAxis" type="gml:LineStringPropertyType">
 						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember)
+								itself.</appinfo>
 							<documentation xml:lang="de">
 								<label>Gewässerachse</label>
 								<tooltip>(generierte) Gewässerachse</tooltip>
@@ -401,7 +416,17 @@
 			</annotation>
 			<extension base="wspm:AbstractReachSegmentType">
 				<sequence>
-					<element name="geometry" type="gml:LineStringPropertyType">
+					<!-- TODO hier kommt noch das neue Profil rein -->
+					<element name="profileMember" type="wspm:ProfileLinkPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Profil</label>
+								<tooltip>Referenz auf Profil</tooltip>
+								<description>Referenz auf Profil</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="profileLocation" type="gml:LineStringPropertyType">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the
 								referenced profile-observation and can be a line or a point</appinfo>
@@ -437,16 +462,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!-- TODO hier kommt noch das neue Profil rein -->
-					<element name="profileMember" type="om:AbstractObservationPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Profil</label>
-								<tooltip>Referenz auf Profil</tooltip>
-								<description>Referenz auf Profil</description>
-							</documentation>
-						</annotation>
-					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -455,15 +470,13 @@
 	-->
 	<complexType name="WaterBodyPropertyType">
 		<sequence minOccurs="0">
-			<element ref="wspm:WaterBody">
-				<annotation>
-					<documentation xml:lang="de">
-						<label>Gewässer</label>
-						<tooltip>Gewässer</tooltip>
-						<description>Gewässer</description>
-					</documentation>
-				</annotation>
-			</element>
+			<element ref="wspm:WaterBody"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+	<complexType name="WaterBodyLinkPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="wspm:WaterBody"/>
 		</sequence>
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
@@ -500,7 +513,8 @@
 						</annotation>
 					</element>
 					<!-- TODO hier kommt noch das neue Profil rein -->
-					<element name="profileMember" minOccurs="0" maxOccurs="unbounded" type="wspm:ProfileInlinePropertyType">
+					<element name="profileMember" minOccurs="0" maxOccurs="unbounded"
+						type="wspm:ProfileInlinePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profile</label>
@@ -518,7 +532,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="runOffEventMember" type="om:AbstractObservationPropertyType"
+					<element name="runOffEventMember" type="runoff:RunOffEventInlinePropertyType"
 						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -543,13 +557,21 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
+
+
 	<complexType name="ProfileInlinePropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
 			<element ref="wspmprofile:Profile"/>
 		</sequence>
 	</complexType>
-	
+
+	<complexType name="ProfileLinkPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="wspmprofile:Profile"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+
 	<!-- Overwritten to have a nice annotation.
 	HM, geht nicht, wie muss mans machen?
 	 -->

@@ -11,7 +11,10 @@
     <!-- org.kalypso.model.wspmprofile.Profile -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:featureview:default" uri="org.kalypso.model.wspmprofile.Profile.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:uiproperties:default" uri="org.kalypso.model.wspmprofile.Profile.properties" />
-    
+
+    <!-- org.kalypso.model.wspmrunoff.RunOffEvent -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:featureview:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:uiproperties:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.properties" />
     
 </catalog:catalog>
 

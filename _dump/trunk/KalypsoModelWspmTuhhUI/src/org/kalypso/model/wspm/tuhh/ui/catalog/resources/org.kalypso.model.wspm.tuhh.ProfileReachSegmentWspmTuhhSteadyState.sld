@@ -11,7 +11,7 @@
         <MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
         <LineSymbolizer>
             <Geometry>
-                <ogc:PropertyName>geometry</ogc:PropertyName>
+                <ogc:PropertyName>profileLocation</ogc:PropertyName>
             </Geometry>
             <Stroke>
                 <CssParameter name="stroke">#ff8040</CssParameter>

@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
  * @author Gernot Belger
@@ -133,7 +134,10 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      // also log it, because 'performFinish' won't catch it any more
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log(status);
+      throw new CoreException( status );
     }
 
     return resultFile;

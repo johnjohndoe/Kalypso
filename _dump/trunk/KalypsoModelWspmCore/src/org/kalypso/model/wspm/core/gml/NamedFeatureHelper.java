@@ -86,7 +86,7 @@ public class NamedFeatureHelper
   /** Sets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
   public static void setName( final Feature namedFeature, final String name )
   {
-    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getProperty( GML_NAME );
+    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getFeatureType().getProperty( GML_NAME );
     if( vpt.isList() )
     {
       final ArrayList<String> nameList = new ArrayList<String>( 1 );

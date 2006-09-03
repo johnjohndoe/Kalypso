@@ -121,7 +121,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public Feature createRunOffEvent( ) throws GMLSchemaException
   {
-    return createObsFeature( "runOffEventMember" );
+    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) );
   }
 
   public Feature createWspFix( ) throws GMLSchemaException

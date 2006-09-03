@@ -55,6 +55,8 @@ public interface IWspmConstants
 
   public static String NS_WSPMPROF = "org.kalypso.model.wspmprofile";
 
+  public static String NS_WSPMRUNOFF = "org.kalypso.model.wspmrunoff";
+
   public static String NS_WSPMPROJ = "org.kalypso.model.wspmproj";
 
   public static String NS_NA_WSPM = "org.kalypso.model.wspm.nawspm";

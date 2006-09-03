@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
-	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:runoff="org.kalypso.model.wspmrunoff"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
@@ -12,6 +12,8 @@
 		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd"/>
 	<import namespace="org.kalypso.model.wspmcommon"
 		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspmCommons.xsd"/>
+	<import namespace="org.kalypso.model.wspmrunoff"
+		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/runOff.xsd"/>
 	<import namespace="http://www.opengis.net/gml"
 		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om"
@@ -102,15 +104,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Gewässerstränge</label>
-				<tooltip>Gewässerstränge</tooltip>
-				<description>Gewässerstränge</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:Reach">
 		<annotation>
@@ -118,7 +111,7 @@
 				<name>Gewässerstrang - stationär (TU-HH)</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#name}</description>
+				<description>${property:http://www.opengis.net/gml#description}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -166,10 +159,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil-Strangsegment - stationär (TU-HH)</name>
-				<label>Profil Station km - ${property:org.kalypso.model.wspm#station}</label>
-				<tooltip>Profil Station km - ${property:org.kalypso.model.wspm#station}</tooltip>
-				<description>Profil Station km -
-				${property:org.kalypso.model.wspm#station}</description>
+				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -322,7 +314,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element ref="tuhh:reachWspmTuhhSteadyStateMember">
+					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
@@ -337,7 +329,7 @@
 					<element ref="tuhh:waterlevelParameterMember"/>
 					<element ref="tuhh:startConditionMember"/>
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
-					<element name="runOffEventMember" type="om:AbstractObservationPropertyType">
+					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussereignis</label>
@@ -617,6 +609,8 @@
 		</sequence>
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
+
+	<!-- TODO: copy of wspm:ReachType, nothing is changed -->
 	<complexType name="ReachWspmTuhhSteadyStateType">
 		<complexContent>
 			<restriction base="wspm:ReachType">
@@ -624,7 +618,7 @@
 					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
 					<element ref="gml:description"/>
 					<element ref="gml:name"/>
-					<element ref="wspm:waterBodyMember">
+					<element ref="wspm:waterBodyLinkMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässer</label>
@@ -633,7 +627,17 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="gml:lineStringMember"/>
+					<element name="waterAxis" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember)
+								itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>Gewässerachse</label>
+								<tooltip>(generierte) Gewässerachse</tooltip>
+								<description>(generierte) Gewässerachse</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
 					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
 					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">

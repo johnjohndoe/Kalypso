@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="runoff:RunOffEvent" style="SWT.NONE"
+    xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gft="featureview.template.kalypso.org"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
+        grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+    <gft:gridLayout numColumns="4"/>
+    <gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+        <gft:gridData verticalAlignment="GridData.BEGINNING"
+            horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER"
+        xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING"/>
+    </gft:text>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+        <gft:gridData verticalAlignment="GridData.BEGINNING"
+            horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:text editable="true" property="gml:description" tooltip="Beschreibung"
+        style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+        <gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="1"
+            horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
+    </gft:text>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+    <gft:label visible="false" style="SWT.NONE">
+        <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+    </gft:label>
+</gft:featureview>

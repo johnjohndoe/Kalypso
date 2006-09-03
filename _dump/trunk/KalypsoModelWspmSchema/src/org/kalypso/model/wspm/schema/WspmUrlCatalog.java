@@ -66,6 +66,9 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
     catalog.put( NS_WSPMPROF, myClass.getResource( "schemata/profile.xsd" ) );
     prefixes.put( NS_WSPMPROF, "prof" );
 
+    catalog.put( NS_WSPMRUNOFF, myClass.getResource( "schemata/runOff.xsd" ) );
+    prefixes.put( NS_WSPMRUNOFF, "runoff" );
+
     catalog.put( NS_NA_WSPM, myClass.getResource( "schemata/couplingNaWspm.xsd" ) );
     prefixes.put( NS_NA_WSPM, "wspmna" );
 

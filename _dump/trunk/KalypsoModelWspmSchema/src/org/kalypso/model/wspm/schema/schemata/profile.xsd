@@ -20,9 +20,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil</name>
-				<label>Profil Station km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description}</description>
+				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-leer-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
 			</documentation>
 		</annotation>
 	</element>

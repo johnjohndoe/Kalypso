@@ -85,13 +85,13 @@ public abstract class WspmReach implements IWspmConstants
 
   public void setWaterBody( final WspmWaterBody body )
   {
-    final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
+    final IPropertyType waterProp = m_reach.getFeatureType().getProperty( new QName( NS_WSPM, "waterBodyLinkMember" ) );
     m_reach.setProperty( waterProp, body.getFeature().getId() );
   }
 
   public WspmWaterBody getWaterBody( )
   {
-    final Object body = m_reach.getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
+    final Object body = m_reach.getProperty( new QName( NS_WSPM, "waterBodyLinkMember" ) );
     if( body instanceof Feature )
       return new WspmWaterBody( (Feature) body );
     else
