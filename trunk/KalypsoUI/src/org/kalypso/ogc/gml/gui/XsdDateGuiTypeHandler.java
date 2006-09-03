@@ -141,7 +141,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.NONE" );
+    text.setStyle( "SWT.BORDER" );
     text.setEditable( true );
     text.setProperty( qname );
 

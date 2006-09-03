@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
   private GmlTreeView m_viewer = null;
-
+  
   @Override
   public void dispose( )
   {
@@ -189,7 +189,9 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     treeViewer.getControl().setMenu( menu );
   }
 
-  /** Add some special actions to the menuManager, dependend on the current selection. */
+  /**
+   * Add some special actions to the menuManager, dependend on the current selection.
+   */
   public void handleMenuAboutToShow( final IMenuManager manager )
   {
     final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();

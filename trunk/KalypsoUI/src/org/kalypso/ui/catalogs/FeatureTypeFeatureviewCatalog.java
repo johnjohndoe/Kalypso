@@ -57,6 +57,7 @@ public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "featureview";
 
+  @SuppressWarnings("unchecked")
   public static FeatureviewType getFeatureview( final URL context, final QName qname ) throws JAXBException
   {
     final URL url = getURL( BASETYPE, context, qname );
