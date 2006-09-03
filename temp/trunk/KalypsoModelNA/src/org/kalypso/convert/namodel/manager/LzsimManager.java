@@ -62,8 +62,6 @@ import java.util.regex.Pattern;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
@@ -72,8 +70,6 @@ import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationResultEater;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -95,36 +91,7 @@ public class LzsimManager
 
   private static final int STATUS_READ_QGS = 4;
 
-  /**
-   * @deprecated ?? it is not used anyway, so why just we dont delete it (dont be afraid to loos it, the cvs still keeps it)
-   */
-  @Deprecated
-  private void loadIniValues( final File tmpDir, final Logger logger, final ISimulationResultEater resultEater )
-  {
-    try
-    {
-      final String[] wildcards = new String[] { "*" + "lzs", "*" + "lzg" };
-      File lzsimDir = new File( tmpDir, "lzsim" );
-      final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
-      final File[] lzsimFiles = lzsimDir.listFiles( filter );
-      File lzsimZIP = new File( tmpDir, "lzsim.zip" );
-      try
-      {
-        ZipUtilities.zip( lzsimZIP, lzsimFiles, lzsimDir );
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-      resultEater.addResult( NaModelConstants.LZSIM_OUT_ID, lzsimZIP );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
-  }
-
+  
   public static void initialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir, NAConfiguration conf ) throws Exception
   {
     final DateFormat formatFileName = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd(HH)" ) );
