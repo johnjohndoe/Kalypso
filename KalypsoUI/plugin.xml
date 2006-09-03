@@ -481,10 +481,11 @@
 				id="org.kalypso.objectclass.feature.action.remove">
 			</action>
 			<action
-				label="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.label.edit"
-				icon="icons/feature/gis_feature_edit.gif"
-				class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
-				id="org.kalypso.objectclass.feature.editfeature" />
+         class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
+         icon="icons/feature/gis_feature_edit.gif"
+         id="org.kalypso.objectclass.feature.editfeature"
+         label="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.label.edit"
+         tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.tooltip"/>
 			<action enablesFor="0"
 				label="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.label"
 				tooltip="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.tooltip"
