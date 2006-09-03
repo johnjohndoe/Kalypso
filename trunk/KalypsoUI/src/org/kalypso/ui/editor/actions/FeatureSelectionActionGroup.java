@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -81,7 +82,8 @@ public class FeatureSelectionActionGroup extends ActionGroup
 
     public ISelection getSelection( )
     {
-      return getContext().getSelection();
+      final ActionContext context = getContext();
+      return context == null ? null : context.getSelection();
     }
 
     public void removeSelectionChangedListener( ISelectionChangedListener listener )
@@ -112,32 +114,8 @@ public class FeatureSelectionActionGroup extends ActionGroup
   @Override
   public void fillActionBars( final IActionBars actionBars )
   {
+    /* Just remember the action bars. The real business is done in update action bars */
     m_actionBars = actionBars;
-
-    final IMenuManager menuManager = actionBars.getMenuManager();
-    fillMenu( menuManager );
-
-    fillToolbar( actionBars.getToolBarManager() );
-    fillStatusLine( actionBars.getStatusLineManager() );
-
-    actionBars.updateActionBars();
-  }
-
-  private void fillMenu( final IMenuManager menuManager )
-  {
-  }
-
-  private void fillToolbar( final IToolBarManager toolBarManager )
-  {
-    /* Shoudl be called only once */
-    if( m_toolbarSubManager != null )
-      throw new IllegalStateException( "Call this class only once" );
-
-    m_toolbarSubManager = createSubToolbarManager( toolBarManager );
-  }
-
-  private void fillStatusLine( final IStatusLineManager statusLineManager )
-  {
   }
 
   /**
@@ -153,11 +131,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
   private void updateMenu( )
   {
     if( m_menuSubManager == null )
-    {
-      final IMenuManager menuManager = m_actionBars.getMenuManager();
-      m_menuSubManager = createSubMenuManager( menuManager );
-
-    }
+      m_menuSubManager = createSubMenuManager( m_actionBars.getMenuManager() );
 
     if( m_menuSubManager == null )
       return;
@@ -192,6 +166,9 @@ public class FeatureSelectionActionGroup extends ActionGroup
   private void updateToolbar( )
   {
     if( m_toolbarSubManager == null )
+      m_toolbarSubManager = createSubToolbarManager( m_actionBars.getToolBarManager() );
+
+    if( m_toolbarSubManager == null )
       return;
 
     m_toolbarSubManager.removeAll();
@@ -200,11 +177,22 @@ public class FeatureSelectionActionGroup extends ActionGroup
       return;
 
     /* first, fill the actions into a fake manager */
-    final MenuManager fakeManager = new MenuManager();
+    final IMenuManager fakeManager = new MenuManager();
     ObjectActionContributorManager.getManager().contributeObjectActions( m_part, fakeManager, m_provider );
 
-    /* now translate the contributions from the manager into the toolbar */
-    final IContributionItem[] items = fakeManager.getItems();
+    translateIntoToolbar( fakeManager, m_toolbarSubManager );
+
+    /* release the fake manager */
+    fakeManager.removeAll();
+    fakeManager.dispose();
+
+    m_toolbarSubManager.update( true );
+  }
+
+  /** Translates the contributions from the manager into the toolbar. */
+  private static void translateIntoToolbar( final IMenuManager menuManager, final IToolBarManager toolbarManager )
+  {
+    final IContributionItem[] items = menuManager.getItems();
     for( final IContributionItem item : items )
     {
       if( item instanceof ActionContributionItem )
@@ -218,16 +206,10 @@ public class FeatureSelectionActionGroup extends ActionGroup
           final ActionContributionItem newAci = new ActionContributionItem( action );
           newAci.setMode( aci.getMode() );
           newAci.setVisible( aci.isVisible() );
-          m_toolbarSubManager.add( newAci );
+          toolbarManager.add( newAci );
         }
       }
     }
-
-    /* release the fake manager */
-    fakeManager.removeAll();
-    fakeManager.dispose();
-
-    m_toolbarSubManager.update( true );
   }
 
   /**
@@ -261,6 +243,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
    * Intended to be overwritten by clients.
    * </p>
    */
+  @SuppressWarnings("unused")
   protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
   {
     return null;
