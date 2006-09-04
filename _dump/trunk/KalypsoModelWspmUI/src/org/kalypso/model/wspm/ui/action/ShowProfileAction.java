@@ -43,10 +43,16 @@ package org.kalypso.model.wspm.ui.action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.model.wspm.ui.product.ProfileditorPerspective;
+import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
 
 /**
  * @author Gernot Belger
@@ -60,16 +66,29 @@ public class ShowProfileAction extends ActionDelegate
   @Override
   public void runWithEvent( final IAction action, final Event event )
   {
-    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
+    if( activeWindow == null )
+      return;
+
+    final IWorkbenchPage activePage = activeWindow.getActivePage();
+    if( activePage == null )
+      return;
+
     try
     {
+      /* Set the perspective. */
+      final IPerspectiveRegistry reg = workbench.getPerspectiveRegistry();
+      final IPerspectiveDescriptor finalPersp = reg.findPerspectiveWithId( ProfileditorPerspective.ID );
+      if( finalPersp != null )
+        activePage.setPerspective( finalPersp );
+
+      /* Make sure that the diagram view is visible. */
       activePage.showView( "org.kalypso.model.wspm.ui.view.chart.ChartView" );
     }
     catch( final PartInitException e )
     {
       ErrorDialog.openError( event.display.getActiveShell(), "Profil anzeigen", "Profil konnte nicht angezeigt werden.", e.getStatus() );
     }
-
   }
-
 }

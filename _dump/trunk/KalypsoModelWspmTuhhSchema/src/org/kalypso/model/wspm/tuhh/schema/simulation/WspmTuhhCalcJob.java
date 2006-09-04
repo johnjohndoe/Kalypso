@@ -99,7 +99,7 @@ public class WspmTuhhCalcJob implements ISimulation
    */
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    long lTimeout = PROCESS_TIMEOUT;
+    final long lTimeout = PROCESS_TIMEOUT;
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
     final String epsThinning = (String) inputProvider.getInputForID( "EPS_THINNING" );

@@ -49,6 +49,8 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public class WspmPerspectiveFactory implements IPerspectiveFactory
 {
+  public static final String ID = "org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory";
+  
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */

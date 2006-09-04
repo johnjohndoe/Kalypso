@@ -265,16 +265,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="calcCreationMember" type="wspm:calcCreationPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Erstellung</label>
-				<tooltip>Erstellung der Berechnung</tooltip>
-				<description>Erstellung der Berechnung</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -301,10 +291,17 @@
 	</complexType>
 	<complexType name="AbstractCalculationType" abstract="true">
 		<complexContent>
-			<!--extension base="wspmcommon:NamedFeatureBaseType"-->
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="wspm:calcCreationMember"/>
+					<element name="calcCreationMember" type="wspm:calcCreationInlinePropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellung</label>
+								<tooltip>Erstellung der Berechnung</tooltip>
+								<description>Erstellung der Berechnung</description>
+							</documentation>
+						</annotation>
+					</element>
 					<!--element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/-->
 				</sequence>
 			</extension>
@@ -832,14 +829,10 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="calcCreationPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="wspm:CalcCreation"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+	<complexType name="calcCreationInlinePropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="wspm:CalcCreation"/>
+		</sequence>
 	</complexType>
 	<complexType name="calcCreationType">
 		<complexContent>

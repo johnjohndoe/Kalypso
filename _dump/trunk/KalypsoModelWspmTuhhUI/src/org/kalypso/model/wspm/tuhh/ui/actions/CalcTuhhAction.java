@@ -42,29 +42,42 @@ package org.kalypso.model.wspm.tuhh.ui.actions;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
-
-
 
 /**
  * @author belger
@@ -79,6 +92,12 @@ public class CalcTuhhAction implements IActionDelegate
   public void run( final IAction action )
   {
     final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
+
+    /* Save the workspace first: we assume that all features are from the same workspace */
+    final Shell activeShell = Display.getCurrent().getActiveShell();
+    if( !saveFeatures( activeShell, features ).isOK() )
+      return;
+
     for( final Feature feature : features )
     {
       final TuhhCalculation calculation = new TuhhCalculation( feature );
@@ -106,7 +125,7 @@ public class CalcTuhhAction implements IActionDelegate
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
             if( nature == null )
               return StatusUtilities.createWarningStatus( "Das Projekt ist kein Simulationsprojekt. D.h. Die Modelnature existiert nicht: " + ModelNature.ID );
-            
+
             final Map<String, Object> properties = new HashMap<String, Object>();
             properties.put( "calc.xpath", calcxpath );
             properties.put( "result.path", resultPath );
@@ -121,6 +140,79 @@ public class CalcTuhhAction implements IActionDelegate
       };
       calcJob.schedule();
     }
+  }
+
+  /**
+   * Asks the user which corresponding workspaces should be saved.
+   */
+  private IStatus saveFeatures( final Shell shell, final Feature[] features )
+  {
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
+    final Set<CommandableWorkspace> objectsToSave = new HashSet<CommandableWorkspace>( features.length );
+    for( final Feature feature : features )
+    {
+      final CommandableWorkspace workspace = m_selection.getWorkspace( feature );
+      final KeyInfo info = pool.getInfo( workspace );
+      if( info.isDirty() )
+        objectsToSave.add( workspace );
+    }
+
+    if( objectsToSave.size() == 0 )
+      return Status.OK_STATUS;
+
+    final StringBuffer msg = new StringBuffer( "Die Daten wurden verändert und müssen vor der Rechnung gespeichert werden.\nWollen Sie die folgenden Resourcen jetzt speichern?\n" );
+    for( final CommandableWorkspace workspace : objectsToSave )
+    {
+      final KeyInfo info = pool.getInfo( workspace );
+      msg.append( info.getKey().getLocation() );
+      msg.append( "\n" );
+    }
+
+    if( MessageDialog.openConfirm( shell, "Berechnung durchführen", msg.toString() ) )
+    {
+      final Job job = new Job( "Daten speichern" )
+      {
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          final MultiStatus resultStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() ), 0, "", null );
+
+          monitor.beginTask( "Daten werden gespeichert", objectsToSave.size() );
+
+          for( final CommandableWorkspace workspace : objectsToSave )
+          {
+            try
+            {
+              pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
+            }
+            catch( final LoaderException e )
+            {
+              final IStatus status = StatusUtilities.statusFromThrowable( e );
+              resultStatus.add( status );
+            }
+          }
+
+          return resultStatus;
+        }
+
+      };
+      job.setUser( true );
+      job.schedule();
+      try
+      {
+        job.join();
+      }
+      catch( final InterruptedException e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
+      }
+
+      return job.getResult();
+    }
+
+    return Status.CANCEL_STATUS;
   }
 
   protected void addInput( final List<Input> list, final String id, final String path, final boolean relative )

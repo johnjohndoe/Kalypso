@@ -209,8 +209,10 @@
                value="org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprofile#Profile"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="Profil anzeigen"/>
+               label="Profil anzeigen"
+               tooltip="In die Profileditor Ansicht wechseln"/>
       </objectContribution>
    </extension>
      <extension
@@ -280,5 +282,10 @@
               icon="icons/obj16/wspmPerspective.gif"
               id="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"
               name="Spiegellinienberechnung"/>
+        <perspective
+              class="org.kalypso.model.wspm.ui.product.ProfileditorPerspective"
+              icon="icons/eview16/wsp16.gif"
+              id="org.kalypso.model.wspm.ui.product.ProfileditorPerspective"
+              name="Profileditor"/>
      </extension>
 </plugin>

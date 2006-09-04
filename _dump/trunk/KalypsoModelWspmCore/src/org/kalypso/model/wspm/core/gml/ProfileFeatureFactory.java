@@ -406,12 +406,18 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final IObservation<TupleResult> buildingObs = ObservationFeatureFactory.toObservation( buildingFeature );
 
-    final String phenomenon = buildingObs.getPhenomenon();
+    final String phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
+    if( phenomenon == null )
+      return null;
+    
     final BUILDING_TYP bType = BUILDING_TYP.valueOf( phenomenon.substring( URN_PHENOMENON_BUILDING.length() ) );
-
+    
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( bType );
 
     final TupleResult result = buildingObs.getResult();
+    if( result == null )
+      return null;
+    
     final IRecord record = result.get( 0 );
     for( final IComponent component : result.getComponents() )
     {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
-	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:runoff="org.kalypso.model.wspmrunoff"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -30,23 +31,14 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Berechnungsvariante - stationär (TU-HH)</name>
-				<label>${listProperty:http://www.opengis.net/gml#name;0}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name;0}</tooltip>
-				<description><![CDATA[Berechnungsvariante '${property:http://www.opengis.net/gml#name;0}']]></description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;0;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
 	<!-- 
 	-->
-	<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Untere Randbedingung (1. Profil)</label>
-				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
-				<description>Untere Randbedingung (am 1. Profil)</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -59,16 +51,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Abflussintervall</label>
-				<tooltip>Abflussintervall</tooltip>
-				<description>Abflussintervall</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -81,16 +63,6 @@
 	</element>
 	<!--
 	-->
-	<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Numerische Parameter</label>
-				<tooltip>Numerische Parameter</tooltip>
-				<description>Numerische Parameter</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
@@ -167,16 +139,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Berechnungsabschnitt</label>
-				<tooltip>Berechnungsabschnitt</tooltip>
-				<description>Berechnungsabschnitt</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
@@ -190,16 +152,6 @@
 	</element>
 	<!-- 
 	-->
-	<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Zusatzoptionen</label>
-				<tooltip>Zusatzoptionen</tooltip>
-				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -314,7 +266,8 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
+					<element name="reachWspmTuhhSteadyStateMember"
+						type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
@@ -323,11 +276,38 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tuhh:subReachDefinitionMember"/>
-					<element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/>
-					<element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/>
-					<element ref="tuhh:waterlevelParameterMember"/>
-					<element ref="tuhh:startConditionMember"/>
+					<element name="subReachDefinitionMember"
+						type="tuhh:subReachDefinitionPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnungsabschnitt</label>
+								<tooltip>Berechnungsabschnitt</tooltip>
+								<description>Berechnungsabschnitt</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO: not used at this moment -->
+					<!--element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/-->
+					<!--element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/-->
+					<element name="waterlevelParameterMember"
+						type="tuhh:WaterlevelParameterPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Numerische Parameter</label>
+								<tooltip>Numerische Parameter</tooltip>
+								<description>Numerische Parameter</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Randbedingung (1. Profil)</label>
+								<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
+								<description>Untere Randbedingung (am 1. Profil)</description>
+							</documentation>
+						</annotation>
+					</element>
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
 					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType">
 						<annotation>
@@ -338,7 +318,15 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tuhh:runOffIntervalMember"/>
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussintervall</label>
+								<tooltip>Abflussintervall</tooltip>
+								<description>Abflussintervall</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -424,13 +412,9 @@
 	<!-- 
 	-->
 	<complexType name="RunOffIntervalPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:RunOffInterval"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:RunOffInterval"/>
+		</sequence>
 	</complexType>
 	<complexType name="RunOffIntervalType">
 		<complexContent>
@@ -474,13 +458,9 @@
 	<!-- 
 	-->
 	<complexType name="WaterlevelParameterPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:WaterlevelParameter"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:WaterlevelParameter"/>
+		</sequence>
 	</complexType>
 	<complexType name="WaterlevelParameterType">
 		<complexContent>
@@ -596,7 +576,16 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element ref="tuhh:specialOptionsMember"/>
+					<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zusatzoptionen</label>
+								<tooltip>Zusatzoptionen</tooltip>
+								<description>Zusatzoptionen (Berechnung von
+								Sonderbauwerken)</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -718,13 +707,9 @@
 	<!-- 
 	-->
 	<complexType name="subReachDefinitionPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:SubReachDefinition"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:SubReachDefinition"/>
+		</sequence>
 	</complexType>
 	<complexType name="subReachDefinitionType">
 		<complexContent>
@@ -755,13 +740,9 @@
 	<!-- 
 	-->
 	<complexType name="specialOptionsPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="tuhh:SpecialOptions"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:SpecialOptions"/>
+		</sequence>
 	</complexType>
 	<complexType name="specialOptionsType">
 		<complexContent>
