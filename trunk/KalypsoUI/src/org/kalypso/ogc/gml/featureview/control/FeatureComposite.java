@@ -95,6 +95,7 @@ import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -314,6 +315,19 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
       addFeatureControl( bfc );
+
+      return control;
+    }
+    else if( controlType instanceof TupleResult )
+    {
+      final TupleResult editorType = (TupleResult) controlType;
+
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt );
+
+      final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
+
+      addFeatureControl( tfc );
 
       return control;
     }
