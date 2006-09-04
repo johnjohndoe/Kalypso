@@ -40,10 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -51,6 +62,8 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class TupleResultContentProvider implements IStructuredContentProvider
 {
+  private final Map<String, IComponent> m_componentMap = new HashMap<String, IComponent>();
+
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
@@ -69,16 +82,58 @@ public class TupleResultContentProvider implements IStructuredContentProvider
     if( oldInput != null )
       tableViewer.removeAllColumns();
 
-    if( newInput == null )
+    m_componentMap.clear();
+
+    if( !(newInput instanceof TupleResult) )
       return;
 
     final TupleResult result = (TupleResult) newInput;
 
     final IComponent[] components = result.getComponents();
-    for( int i = 0; i < components.length; i++ )
-      tableViewer.addColumn( components[i].getName(), components[i].getName(), 100, true );
+    final List<CellEditor> cellEditors = new ArrayList<CellEditor>( components.length );
+    for( final IComponent component : components )
+    {
+      final String id = component.getName();
+      tableViewer.addColumn( id, component.getName(), 100, true );
+      m_componentMap.put( id, component );
+      cellEditors.add( new TextCellEditor( tableViewer.getTable(), SWT.NONE ) );
+    }
+    // TODO: make member
+    final ICellModifier modifier = new ICellModifier()
+    {
+      public boolean canModify( final Object element, String property )
+      {
+        return true;
+      }
 
+      public Object getValue( final Object element, final String property )
+      {
+        final IRecord record = (IRecord) element;
+        final IComponent component = getComponent( property );
+
+        final Object value = record.getValue( component );
+
+        return "" + value;
+      }
+
+      public void modify( final Object element, final String property, final Object value )
+      {
+        final TableItem item = (TableItem) element;
+        final IRecord record = (IRecord) item.getData();
+        final IComponent component = getComponent( property );
+
+        final Double valueToSet = new Double( value.toString() );
+
+        record.setValue( component, valueToSet );
+
+        tableViewer.update( record, new String[] { property } );
+        // TODO: propagate changes to gml-model
+      }
+    };
+
+    tableViewer.setCellModifier( modifier );
     tableViewer.refreshColumnProperties();
+    tableViewer.setCellEditors( cellEditors.toArray( new CellEditor[cellEditors.size()] ) );
   }
 
   /**
@@ -94,5 +149,10 @@ public class TupleResultContentProvider implements IStructuredContentProvider
     }
 
     return null;
+  }
+
+  protected IComponent getComponent( final String property )
+  {
+    return m_componentMap.get( property );
   }
 }

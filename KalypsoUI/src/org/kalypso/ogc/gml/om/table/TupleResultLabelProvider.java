@@ -54,7 +54,7 @@ public class TupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void addListener( ILabelProviderListener listener )
+  public void addListener( final ILabelProviderListener listener )
   {
     // empty
   }
@@ -70,15 +70,16 @@ public class TupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
-  public boolean isLabelProperty( Object element, String property )
+  public boolean isLabelProperty( final Object element, final String property )
   {
-    return false;
+    // TODO: ask content provider if this is a valid property
+    return true;
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void removeListener( ILabelProviderListener listener )
+  public void removeListener( final ILabelProviderListener listener )
   {
     // empty
   }
@@ -86,7 +87,7 @@ public class TupleResultLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
     return null;
   }
@@ -104,10 +105,10 @@ public class TupleResultLabelProvider implements ITableLabelProvider
         return null;
 
       final IComponent comp = comps[columnIndex];
-      
+
       return record.getValue( comp ).toString();
     }
-    
+
     return null;
   }
 }
