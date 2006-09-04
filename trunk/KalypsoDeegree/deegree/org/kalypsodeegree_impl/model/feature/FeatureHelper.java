@@ -100,9 +100,12 @@ public class FeatureHelper
       final int listindex = Integer.parseInt( strings[1] );
       final String nullValue = strings.length > 2 ? strings[2] : null;
 
-      final List property = (List) feature.getProperty( qname );
+      final List list = (List) feature.getProperty( qname );
+      
+      if( listindex >= list.size())
+        return "" + nullValue;
 
-      final Object propertyValue = property.get( listindex );
+      final Object propertyValue = list.get( listindex );
       if( propertyValue == null )
         return "" + nullValue;
       

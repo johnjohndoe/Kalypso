@@ -157,7 +157,7 @@ public class KalypsoCorePlugin extends Plugin
     return m_catalogManager;
   }
 
-  public CatalogSLD getSLDCatalog( )
+  public CatalogSLD getSLDCatalog( )    
   {
     if( m_sldCatalog == null )
     {
