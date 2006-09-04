@@ -86,6 +86,9 @@ public class FeatureTypeCatalog
     // search for url
     final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+    if( baseCatalog == null )
+      return null;
+    
     final String uri = baseCatalog.resolve( urn, urn );
     return uri;
   }
