@@ -64,6 +64,7 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -277,5 +278,13 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     {
       throw new FilterEvaluationException( "Can not apply operation '" + getOperatorName() + "' to " + "different datatypes!" );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor, org.kalypsodeegree.filterencoding.Operation, int)
+   */
+  public void accept( FilterVisitor fv, Operation operation, int depth )
+  {
+    fv.visit( this );
   }
 }

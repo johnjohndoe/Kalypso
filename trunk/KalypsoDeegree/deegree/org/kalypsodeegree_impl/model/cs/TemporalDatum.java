@@ -114,12 +114,13 @@ public class TemporalDatum extends Datum
    * Note: return type will be changed to {@link DatumType.Temporal}when we will be able to use generic types (with JDK
    * 1.5).
    */
+  @Override
   public DatumType/* .Temporal */getDatumType()
   {
     return (DatumType.Temporal)super.getDatumType();
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )

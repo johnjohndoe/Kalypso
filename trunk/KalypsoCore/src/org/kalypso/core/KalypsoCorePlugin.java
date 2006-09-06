@@ -164,7 +164,7 @@ public class KalypsoCorePlugin extends Plugin
       final File stateLocation = getStateLocation().toFile();
       final File styleCatalogDir = new File( stateLocation, "style-catalog" );
       styleCatalogDir.mkdirs();
-      m_sldCatalog = new CatalogSLD( m_catalogManager, styleCatalogDir );
+      m_sldCatalog = new CatalogSLD( getCatalogManager(), styleCatalogDir );
     }
 
     return m_sldCatalog;

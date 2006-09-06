@@ -235,6 +235,7 @@ public class OperationDefines
     addOperationInfo( OR, "Or", TYPE_LOGICAL );
     addOperationInfo( NOT, "Not", TYPE_LOGICAL );
   }
+  
 }
 
 class OperationInfo

@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -321,5 +322,14 @@ public class PropertyIsLikeOperation extends ComparisonOperation
         return true;
     }
     return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
+   */
+  public void accept( FilterVisitor fv, Operation operation, int depth )
+  {
+    fv.visit( this );
   }
 }

@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -95,17 +94,17 @@ public class LocalCoordinateSystem extends CoordinateSystem
   /**
    * The local datum.
    */
-  private final LocalDatum datum;
+  private final LocalDatum m_datum;
 
   /**
    * Units used along all axis.
    */
-  private final Unit[] units;
+  private final Unit[] m_units;
 
   /**
    * Axes details.
    */
-  private final AxisInfo[] axes;
+  private final AxisInfo[] m_axes;
 
   /**
    * Creates a local coordinate system. The dimension of the local coordinate system is determined by the size of the
@@ -128,13 +127,13 @@ public class LocalCoordinateSystem extends CoordinateSystem
     ensureNonNull( "datum", datum );
     ensureNonNull( "unit", unit );
     ensureNonNull( "axes", axes );
-    this.datum = datum;
-    this.units = new Unit[axes.length];
-    this.axes = (AxisInfo[])axes.clone();
-    for( int i = 0; i < this.axes.length; i++ )
+    this.m_datum = datum;
+    this.m_units = new Unit[axes.length];
+    this.m_axes = axes.clone();
+    for( int i = 0; i < this.m_axes.length; i++ )
     {
-      this.units[i] = unit;
-      ensureNonNull( "axes", this.axes, i );
+      this.m_units[i] = unit;
+      ensureNonNull( "axes", this.m_axes, i );
     }
     checkAxis( datum.getDatumType() );
   }
@@ -154,15 +153,16 @@ public class LocalCoordinateSystem extends CoordinateSystem
   LocalCoordinateSystem( final Map properties, final LocalDatum datum, final Unit[] units, final AxisInfo[] axes )
   {
     super( properties );
-    this.datum = datum;
-    this.units = units;
-    this.axes = axes;
+    this.m_datum = datum;
+    this.m_units = units;
+    this.m_axes = axes;
     // Accept null values.
   }
 
   /**
    * Override {@link CoordinateSystem#getDatum()}.
    */
+  @Override
   final Datum getDatum()
   {
     return getLocalDatum();
@@ -175,7 +175,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
    */
   public LocalDatum getLocalDatum()
   {
-    return datum;
+    return m_datum;
   }
 
   /**
@@ -183,9 +183,10 @@ public class LocalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_LocalCoordinateSystem#getDimension()
    */
+  @Override
   public int getDimension()
   {
-    return axes.length;
+    return m_axes.length;
   }
 
   /**
@@ -196,9 +197,10 @@ public class LocalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_LocalCoordinateSystem#getAxis(int)
    */
+  @Override
   public AxisInfo getAxis( final int dimension )
   {
-    return axes[dimension];
+    return m_axes[dimension];
   }
 
   /**
@@ -209,9 +211,10 @@ public class LocalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_LocalCoordinateSystem#getUnits(int)
    */
+  @Override
   public Unit getUnits( final int dimension )
   {
-    return units[dimension];
+    return m_units[dimension];
   }
 
   /**
@@ -225,6 +228,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
+  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -232,25 +236,25 @@ public class LocalCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final LocalCoordinateSystem that = (LocalCoordinateSystem)cs;
-      return Utilities.equals( this.datum, that.datum ) && Arrays.equals( this.units, that.units )
-          && Arrays.equals( this.axes, that.axes );
+      return Utilities.equals( this.m_datum, that.m_datum ) && Arrays.equals( this.m_units, that.m_units )
+          && Arrays.equals( this.m_axes, that.m_axes );
     }
     return false;
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( datum );
+    buffer.append( m_datum );
     buffer.append( ", " );
     addUnit( buffer, getUnits() );
-    for( int i = 0; i < axes.length; i++ )
+    for( int i = 0; i < m_axes.length; i++ )
     {
       buffer.append( ", " );
-      buffer.append( axes[i] );
+      buffer.append( m_axes[i] );
     }
     return "LOCAL_CS";
   }
@@ -260,6 +264,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
+  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -290,9 +295,9 @@ public class LocalCoordinateSystem extends CoordinateSystem
     /**
      * Gets the local datum.
      */
-    public CS_LocalDatum getLocalDatum() throws RemoteException
+    public CS_LocalDatum getLocalDatum()
     {
-      return adapters.export( LocalCoordinateSystem.this.getLocalDatum() );
+      return m_adapters.export( LocalCoordinateSystem.this.getLocalDatum() );
     }
   }
 }

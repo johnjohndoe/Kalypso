@@ -100,13 +100,13 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
   final private TreeSet<String> m_allSupportedOps = new TreeSet<String>();
 
-  private TreeSet<String> m_supportedOps;
+  private String[] m_supportedOps;
 
   boolean m_secondRowTextModified;
 
   private ComboViewer m_propViewer;
 
-  public PropertyIsCOMPOperationComposite( final Composite parent, final int style, final PropertyIsCOMPOperation operation, TreeSet<String> supportedOperations, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
+  public PropertyIsCOMPOperationComposite( final Composite parent, final int style, final PropertyIsCOMPOperation operation, String[] supportedOperations, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
     super( parent, style, errorMessageReciever, ft );
     m_operation = operation;
@@ -115,9 +115,9 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     setControl();
   }
 
-  private void setSupportedOperations( TreeSet<String> supportedOps )
+  private void setSupportedOperations( String[] supportedOps )
   {
-    if( supportedOps != null && !supportedOps.isEmpty() )
+    if( supportedOps != null && supportedOps.length > 0 )
       m_supportedOps = supportedOps;
     else
     {
@@ -156,10 +156,10 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     m_supportedOpsCombo.setLayoutData( data1 );
     String[] namesOps = null;
-    if( m_supportedOps == null || m_supportedOps.isEmpty() )
+    if( m_supportedOps == null || m_supportedOps.length == 0 )
       namesOps = m_allSupportedOps.toArray( new String[m_allSupportedOps.size()] );
     else
-      namesOps = m_supportedOps.toArray( new String[m_allSupportedOps.size()] );
+      namesOps = m_supportedOps;
 
     int j = ArrayUtils.indexOf( namesOps, m_operation.getOperatorName() );
     m_supportedOpsCombo.setItems( namesOps );

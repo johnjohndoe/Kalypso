@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KaylpsoAddLayer
 Bundle-SymbolicName: org.kalypso.ui.addlayer; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: KaylpsoAddLayerPlugin.jar
 Bundle-Activator: org.kalypso.ui.KalypsoAddLayerPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

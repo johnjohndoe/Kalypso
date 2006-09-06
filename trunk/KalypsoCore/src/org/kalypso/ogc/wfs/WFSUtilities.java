@@ -30,8 +30,6 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -44,9 +42,9 @@ import java.net.URLConnection;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -75,7 +73,9 @@ public class WFSUtilities
       final InputStream isGetCap = conGetCap.getInputStream();
       final Reader reader = new InputStreamReader( isGetCap );
       final WFSCapabilities capabilities = WFSCapabilitiesFactory.createCapabilities( reader );
-      return new WFSCapabilitiesDeegree1( capabilities );
+      final Document dom = XMLHelper.getAsDOM( urlGetCap, false );
+      // return new WFSCapabilitiesDeegree1( capabilities );
+      return new WFSCapabilitiesVersion1( capabilities, dom );
     }
     catch( Exception e )
     {
@@ -96,6 +96,36 @@ public class WFSUtilities
       multiExcepts.addException( e );
     }
     throw multiExcepts;
+  }
+
+  public static String buildGetFeatureRequestGET( final IWFSCapabilities wfsCaps, final QName ftQName, final String filter, final String maxFeatureAsString )
+  {
+    final StringBuffer sb = new StringBuffer();
+    sb.append( "SERVICE=WFS&REQUEST=GetFeature" );
+    if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
+      sb.append( "&maxFeatures=" + maxFeatureAsString );
+    sb.append( "&version=" + wfsCaps.getVersion() );
+    sb.append( "&typename=" + ftQName.getLocalPart() );
+    String[] outFormats = wfsCaps.getGetFeatureOutputFormats();
+    String oFormat = null;
+    if( outFormats.length > 0 )
+    {
+      for( int i = 0; i < outFormats.length; i++ )
+      {
+        if( outFormats[i].equalsIgnoreCase( "gml2" ) )
+        {
+          oFormat = outFormats[i];
+          break;
+        }
+      }
+      if( oFormat == null )
+        oFormat = "GML2";
+    }
+    if( oFormat != null )
+      sb.append( "&outputFormat=" + oFormat );
+    if( filter != null && filter.length() > 0 )
+      sb.append( "&filter=" + filter );
+    return sb.toString();
   }
 
   public static String buildGetFeatureRequestPOST( final IWFSCapabilities wfsCaps, final QName ftQName, final String filter, final String maxFeatureAsString )
@@ -155,7 +185,7 @@ public class WFSUtilities
     }
     sb.append( "</wfs:Query>\n" );
     sb.append( "</wfs:GetFeature>" );
-    System.out.println(sb.toString());
+    System.out.println( sb.toString() );
     return sb.toString();
   }
 
@@ -194,15 +224,15 @@ public class WFSUtilities
 
         // read response from the WFS server and create a GMLWorkspace
         inputStream = new BufferedInputStream( con.getInputStream() );
-//
-//        // Hack for testing, please leave this comments in the sources (doemming)
-////         final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
-//         final File tmpFile = new File( "F:/eclipse3.1/tmp/gmlEnvelope.gml" );
-////         final File tmpFile = new File( "C:/TMP/xplanung.gml" );
-//         final OutputStream outStream = new FileOutputStream( tmpFile );
-//         StreamUtilities.streamCopy( inputStream, outStream );
-//         IOUtils.closeQuietly( inputStream );
-//         IOUtils.closeQuietly( outStream );
+        //
+        // // Hack for testing, please leave this comments in the sources (doemming)
+        // // final File tmpFile = new File( "D:/eclipse3.1/tmp/gml.gml" );
+        // final File tmpFile = new File( "F:/eclipse3.1/tmp/gmlEnvelope.gml" );
+        // // final File tmpFile = new File( "C:/TMP/xplanung.gml" );
+        // final OutputStream outStream = new FileOutputStream( tmpFile );
+        // StreamUtilities.streamCopy( inputStream, outStream );
+        // IOUtils.closeQuietly( inputStream );
+        // IOUtils.closeQuietly( outStream );
 
         final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
@@ -217,7 +247,31 @@ public class WFSUtilities
 
         return workspace;
       }
-      throw new UnsupportedOperationException( "GetFeature-Request: HTTP/Get is not supportet" );
+      else
+      {
+        final URL[] baseURLGetCapabilitiesRequestGET = wfsCaps.getBaseURLGetFeatureRequest( IWFSCapabilities.METHODE_HTTP_GET );
+        if( baseURLGetCapabilitiesRequestGET.length > 0 )
+        {
+
+          final URL url = new URL( baseURLGetCapabilitiesRequestGET[0] + WFSUtilities.buildGetFeatureRequestGET( wfsCaps, featureTypeToLoad, filter, maxFeatureAsString ) );
+          final InputStream stream = url.openStream();
+
+          inputStream = new BufferedInputStream( stream );
+          final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
+
+          final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false );
+          inputStream.close();
+          IOUtils.closeQuietly( inputStream );
+
+          if( targetCRS != null )
+            workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+          workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+          return workspace;
+        }
+        throw new UnsupportedOperationException( "GetFeature-Request: HTTP/Get is not supportet" );
+      }
+
     }
     finally
     {
@@ -281,5 +335,14 @@ public class WFSUtilities
       }
     }
     throw new UnsupportedOperationException();
+  }
+
+  public static String[] getAllFilterCapabilitesOperations( final IWFSCapabilities capabilities )
+  {
+    Object[] operators = ArrayUtils.addAll( capabilities.getLogicalOperators(), capabilities.getSpatialOperators() );
+    ArrayUtils.addAll( operators, capabilities.getGeometryOperands() );
+    ArrayUtils.addAll( operators, capabilities.getComparisonOperators() );
+    ArrayUtils.addAll( operators, capabilities.getFunctionArithmetics() );
+    return (String[]) operators;
   }
 }

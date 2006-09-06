@@ -61,6 +61,7 @@
 
 package org.kalypsodeegree.filterencoding;
 
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -90,5 +91,7 @@ public interface Filter
   public StringBuffer toXML( );
 
   public Filter clone( ) throws CloneNotSupportedException;
+
+//  public void accept( final FilterVisitor visitor, Operation operation, int depth );
 
 }

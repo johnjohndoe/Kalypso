@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.units.Unit;
@@ -95,12 +94,12 @@ public class PrimeMeridian extends Info
   /**
    * The angular units.
    */
-  private final Unit unit;
+  private final Unit m_unit;
 
   /**
    * The longitude value relative to the Greenwich Meridian.
    */
-  private final double longitude;
+  private final double m_longitude;
 
   /**
    * Creates a prime meridian, relative to Greenwich.
@@ -116,8 +115,8 @@ public class PrimeMeridian extends Info
   public PrimeMeridian( final String name, final Unit unit, final double longitude )
   {
     super( name );
-    this.unit = unit;
-    this.longitude = longitude;
+    m_unit = unit;
+    m_longitude = longitude;
     ensureNonNull( "unit", unit );
     ensureAngularUnit( unit );
   }
@@ -135,8 +134,8 @@ public class PrimeMeridian extends Info
   PrimeMeridian( final Map properties, final Unit unit, final double longitude )
   {
     super( properties );
-    this.unit = unit;
-    this.longitude = longitude;
+    this.m_unit = unit;
+    this.m_longitude = longitude;
     // Accept null values.
   }
 
@@ -148,7 +147,7 @@ public class PrimeMeridian extends Info
    */
   public double getLongitude()
   {
-    return longitude;
+    return m_longitude;
   }
 
   /**
@@ -171,39 +170,41 @@ public class PrimeMeridian extends Info
    */
   public Unit getAngularUnit()
   {
-    return unit;
+    return m_unit;
   }
 
   /**
    * Returns a hash value for this prime meridian.
    */
+  @Override
   public int hashCode()
   {
-    final long code = Double.doubleToLongBits( longitude );
+    final long code = Double.doubleToLongBits( m_longitude );
     return super.hashCode() * 37 + ( (int)( code >>> 32 ) ^ (int)code );
   }
 
   /**
    * Compares the specified object with this prime meridian for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( super.equals( object ) )
     {
       final PrimeMeridian that = (PrimeMeridian)object;
-      return Double.doubleToLongBits( this.longitude ) == Double.doubleToLongBits( that.longitude )
-          && Utilities.equals( this.unit, that.unit );
+      return Double.doubleToLongBits( this.m_longitude ) == Double.doubleToLongBits( that.m_longitude )
+          && Utilities.equals( this.m_unit, that.m_unit );
     }
     return false;
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( Unit.DEGREE.convert( longitude, unit ) );
+    buffer.append( Unit.DEGREE.convert( m_longitude, m_unit ) );
     return "PRIMEM";
   }
 
@@ -212,6 +213,7 @@ public class PrimeMeridian extends Info
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
+  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -242,7 +244,7 @@ public class PrimeMeridian extends Info
     /**
      * Returns the longitude value relative to the Greenwich Meridian.
      */
-    public double getLongitude() throws RemoteException
+    public double getLongitude()
     {
       return PrimeMeridian.this.getLongitude();
     }
@@ -253,9 +255,9 @@ public class PrimeMeridian extends Info
      * @throws RemoteException
      *           if a remote method call failed.
      */
-    public CS_AngularUnit getAngularUnit() throws RemoteException
+    public CS_AngularUnit getAngularUnit()
     {
-      return (CS_AngularUnit)adapters.export( PrimeMeridian.this.getAngularUnit() );
+      return (CS_AngularUnit)m_adapters.export( PrimeMeridian.this.getAngularUnit() );
     }
   }
 }

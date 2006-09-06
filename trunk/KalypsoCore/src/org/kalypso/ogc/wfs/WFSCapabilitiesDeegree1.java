@@ -140,6 +140,7 @@ public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
         final FeatureType ft = featureTypes[i];
         final String name = ft.getName();
         final String title = ft.getTitle();
+        final String srs = ft.getSrs();
         QName qName = new QName( name );
         URL url = null;
         try
@@ -150,7 +151,7 @@ public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
         {
           e.printStackTrace();
         }
-        list.add( new WFSLayer( qName, title, url ) );
+        list.add( new WFSLayer( qName, title, url, srs ) );
       }
       m_layers = list.toArray( new IWFSLayer[list.size()] );
     }
@@ -165,6 +166,54 @@ public class WFSCapabilitiesDeegree1 implements IWFSCapabilities
   public String[] getGetFeatureOutputFormats( )
   {
     return m_capabilities.getCapability().getRequest().getGetFeature().getResultFormat();
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getSpatialOperators()
+   */
+  public String[] getSpatialOperators( )
+  {
+    return new String[0];
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getLogicalOperators()
+   */
+  public String[] getLogicalOperators( )
+  {
+    return new String[0];
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getComparisonOperators()
+   */
+  public String[] getComparisonOperators( )
+  {
+    return new String[0];
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getGeometryOperands()
+   */
+  public String[] getGeometryOperands( )
+  {
+    return new String[0];
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getSimpleArithmetics()
+   */
+  public boolean canDoSimpleArithmetics( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getFunctionArithmetics()
+   */
+  public String[] getFunctionArithmetics( )
+  {
+    return new String[0];
   }
 
 }

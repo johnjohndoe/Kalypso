@@ -334,7 +334,7 @@ public class RuleTabItem
           {
             ex.printStackTrace();
           }
-        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, false );
+        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, null, false );
         int open = dialog.open();
         if( open == Window.OK )
         {

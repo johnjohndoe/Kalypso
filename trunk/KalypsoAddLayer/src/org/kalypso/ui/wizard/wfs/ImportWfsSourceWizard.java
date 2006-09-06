@@ -45,8 +45,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import javax.naming.OperationNotSupportedException;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
@@ -64,8 +66,12 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.visitor.TransformSRSVisitor;
+import org.kalypsodeegree.tools.FilterUtilites;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
+import org.kalypsodeegree_impl.model.ct.TransformException;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Kuepferle, doemming
@@ -90,23 +96,20 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-
         final IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
         for( int i = 0; i < layers.length; i++ )
         {
           final IWFSLayer layer = layers[i];
-          Filter filter = m_importWFSPage.getFilter( layer );
-          if( filter == null )
-          {
-            filter = m_filterWFSPage.getFilter( layer.getFeatureType() );
-          }
+          final Filter complexFilter = m_importWFSPage.getFilter( layer );
+          final Filter simpleFilter = m_filterWFSPage.getFilter( layer );
+          final Filter mergedFilter = FilterUtilites.mergeFilters( complexFilter, simpleFilter );
           final String xml;
-          if( filter instanceof ComplexFilter )
-            xml = ((ComplexFilter) filter).toXML().toString();
-          else if( filter instanceof FeatureFilter )
-            xml = ((FeatureFilter) filter).toXML().toString();
-          else if( filter instanceof ElseFilter )
-            xml = ((ElseFilter) filter).toXML().toString();
+          if( mergedFilter instanceof ComplexFilter )
+            xml = transformToRemoteCRS( (ComplexFilter) mergedFilter, layer.getSRS() );
+          else if( mergedFilter instanceof FeatureFilter )
+            xml = ((FeatureFilter) mergedFilter).toXML().toString();
+          else if( mergedFilter instanceof ElseFilter )
+            xml = ((ElseFilter) mergedFilter).toXML().toString();
           else
             xml = null;
           // TODO here the featurePath is set to featureMember because this is
@@ -143,9 +146,22 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           // }
         }
       }
-      catch( Exception e )
+      catch( TransformException e )
       {
         e.printStackTrace();
+        m_filterWFSPage.setErrorMessage( e.getMessage() );
+        return false;
+      }
+      catch( OperationNotSupportedException e )
+      {
+        e.printStackTrace();
+        m_filterWFSPage.setErrorMessage( e.getMessage() );
+        return false;
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+        m_filterWFSPage.setErrorMessage( e.getMessage() );
         return false;
       }
     m_importWFSPage.removeListeners();
@@ -179,10 +195,10 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_outlineviewer );
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    addPage( m_filterWFSPage );
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_outlineviewer );
     addPage( m_importWFSPage );
+    addPage( m_filterWFSPage );
   }
 
   @Override
@@ -220,5 +236,14 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     while( line != null );
 
     m_catalog = catalog;
+  }
+
+  private String transformToRemoteCRS( ComplexFilter filter, CS_CoordinateSystem remoteCrs )
+  {
+    String xml = null;
+    final TransformSRSVisitor visitor = new TransformSRSVisitor( remoteCrs );
+    visitor.visit( filter.getOperation() );
+    xml = filter.toXML().toString();
+    return xml;
   }
 }

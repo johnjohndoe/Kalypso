@@ -63,4 +63,16 @@ public interface IWFSCapabilities
 
   public String[] getGetFeatureOutputFormats( );
 
+  public String[] getSpatialOperators( );
+
+  public String[] getLogicalOperators( );
+
+  public String[] getComparisonOperators( );
+
+  public boolean canDoSimpleArithmetics( );
+
+  public String[] getFunctionArithmetics( );
+
+  public String[] getGeometryOperands( );
+
 }

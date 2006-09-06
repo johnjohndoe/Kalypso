@@ -98,7 +98,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   TreeSet<String> m_allsupportedSpatialOps = new TreeSet<String>();
 
-  private TreeSet<String> m_supportedOps;
+  private String[] m_supportedOps;
 
   final Feature m_newGeometryOp;
 
@@ -114,13 +114,13 @@ class SpatialComposite extends AbstractFilterComposite
 
   private ComboViewer m_propViewer;
 
-  public SpatialComposite( final Composite parent, final int style, final SpatialOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft, Feature spatialOperators )
+  public SpatialComposite( final Composite parent, final int style, final SpatialOperation operation, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft, Feature spatialOperators, String[] supportedOps )
   {
     super( parent, style, errorMessageReciever, ft );
     m_operation = operation;
     m_newGeometryOp = spatialOperators;
     m_oldGeometryOp = m_operation.getGeometryLiteral();
-    setSupportedOps( new TreeSet<String>() );
+    setSupportedOps( supportedOps );
     setControl();
   }
 
@@ -146,7 +146,7 @@ class SpatialComposite extends AbstractFilterComposite
     if( m_supportedOps == null )
       namesOps = m_allsupportedSpatialOps.toArray( new String[m_allsupportedSpatialOps.size()] );
     else
-      namesOps = m_supportedOps.toArray( new String[m_supportedOps.size()] );
+      namesOps = m_supportedOps;
     m_supportedOpsCombo.setItems( namesOps );
     // set the selection to the current operation type, if not availabel a blank is selected by default (Combo)
     int j = ArrayUtils.indexOf( namesOps, opsName );
@@ -287,9 +287,9 @@ class SpatialComposite extends AbstractFilterComposite
     return index;
   }
 
-  private void setSupportedOps( TreeSet<String> supportedOps )
+  private void setSupportedOps( String[] supportedOps )
   {
-    if( supportedOps != null && !supportedOps.isEmpty() )
+    if( supportedOps != null && supportedOps.length > 0 )
       m_supportedOps = supportedOps;
     else
     {

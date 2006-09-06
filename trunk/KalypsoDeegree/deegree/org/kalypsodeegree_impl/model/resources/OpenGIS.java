@@ -112,9 +112,9 @@ public final class OpenGIS
   public static int getDimensionOf( final CoordinateSystem cs, final AxisInfo axis )
   {
     final int dimension = cs.getDimension();
-    final AxisOrientation orientation = axis.orientation.absolute();
+    final AxisOrientation orientation = axis.m_orientation.absolute();
     for( int i = 0; i < dimension; i++ )
-      if( orientation.equals( cs.getAxis( i ).orientation.absolute() ) )
+      if( orientation.equals( cs.getAxis( i ).m_orientation.absolute() ) )
         return i;
     return -1;
   }

@@ -63,6 +63,7 @@ package org.kalypsodeegree_impl.filterencoding;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -70,7 +71,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
 import org.kalypsodeegree_impl.model.geometry.AdapterGmlIO;
 import org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -507,4 +507,14 @@ public class SpatialOperation extends AbstractOperation
   {
     m_distance = distance;
   }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
+   */
+  public void accept( FilterVisitor fv, Operation operation, int depth )
+  {
+    fv.visit( this );
+  }
+
 }

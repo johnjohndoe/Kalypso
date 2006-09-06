@@ -205,7 +205,7 @@ public class Datum extends Info
      */
     public CS_DatumType getDatumType()
     {
-      return adapters.export( Datum.this.getDatumType() );
+      return m_adapters.export( Datum.this.getDatumType() );
     }
   }
 }

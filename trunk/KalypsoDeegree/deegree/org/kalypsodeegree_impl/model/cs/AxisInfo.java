@@ -126,14 +126,14 @@ public class AxisInfo implements Serializable
    * 
    * @see org.opengis.cs.CS_AxisInfo#name
    */
-  public final String name;
+  public final String m_name;
 
   /**
    * Enumerated value for orientation.
    * 
    * @see org.opengis.cs.CS_AxisInfo#orientation
    */
-  public final AxisOrientation orientation;
+  public final AxisOrientation m_orientation;
 
   /**
    * Construct an AxisInfo.
@@ -146,8 +146,8 @@ public class AxisInfo implements Serializable
    */
   public AxisInfo( final String name, final AxisOrientation orientation )
   {
-    this.name = name;
-    this.orientation = orientation;
+    m_name = name;
+    m_orientation = orientation;
     Info.ensureNonNull( "name", name );
     Info.ensureNonNull( "orientation", orientation );
   }
@@ -162,31 +162,33 @@ public class AxisInfo implements Serializable
   public String getName( final Locale locale )
   {
     locale.getClass();
-    return name;
+    return m_name;
   }
 
   /**
    * Returns a hash value for this axis.
    */
+  @Override
   public int hashCode()
   {
     int code = 36972167;
-    if( orientation != null )
-      code = code * 37 + orientation.hashCode();
-    if( name != null )
-      code = code * 37 + name.hashCode();
+    if( m_orientation != null )
+      code = code * 37 + m_orientation.hashCode();
+    if( m_name != null )
+      code = code * 37 + m_name.hashCode();
     return code;
   }
 
   /**
    * Compares the specified object with this axis for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && object.getClass().equals( getClass() ) )
     {
       final AxisInfo that = (AxisInfo)object;
-      return Utilities.equals( this.orientation, that.orientation ) && Utilities.equals( this.name, that.name );
+      return Utilities.equals( this.m_orientation, that.m_orientation ) && Utilities.equals( this.m_name, that.m_name );
     }
 
     return false;
@@ -196,15 +198,16 @@ public class AxisInfo implements Serializable
    * Returns the Well Know Text (WKT) for this axis. The WKT is part of OpenGIS's specification and looks like
    * <code>AXIS["name",NORTH]</code>.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "AXIS[\"" );
-    buffer.append( name );
+    buffer.append( m_name );
     buffer.append( '"' );
-    if( orientation != null )
+    if( m_orientation != null )
     {
       buffer.append( ',' );
-      buffer.append( orientation.getName() );
+      buffer.append( m_orientation.getName() );
     }
     buffer.append( ']' );
     return buffer.toString();
@@ -226,7 +229,7 @@ public class AxisInfo implements Serializable
     /**
      * The key for localization.
      */
-    private final int key;
+    private final int m_key;
 
     /**
      * Construct a localized axis info.
@@ -234,15 +237,16 @@ public class AxisInfo implements Serializable
     public Localized( final String name, final int key, final AxisOrientation orientation )
     {
       super( name, orientation );
-      this.key = key;
+      m_key = key;
     }
 
     /**
      * Returns a localized string.
      */
+    @Override
     public String getName( final Locale locale )
     {
-      return Resources.getResources( locale ).getString( key );
+      return Resources.getResources( locale ).getString( m_key );
     }
   }
 }

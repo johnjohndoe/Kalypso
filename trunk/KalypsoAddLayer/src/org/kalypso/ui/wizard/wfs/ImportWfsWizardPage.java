@@ -50,7 +50,13 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -60,9 +66,10 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -76,6 +83,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -112,19 +122,15 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected static final String bufferDefault = "10";
 
-  // private HashMap<String, IFeatureType> m_featureTypes = new HashMap<String, IFeatureType>();
-
   private ListViewer m_listLeftSide;
 
   private Button m_addLayer;
 
   private Button m_removeLayer;
 
-  private ListViewer m_listRightSide;
+  ListViewer m_listRightSide;
 
   private Group m_layerGroup;
-
-  // private Composite m_buttonComposite;
 
   Label m_labelUser;
 
@@ -133,12 +139,6 @@ public class ImportWfsWizardPage extends WizardPage
   Button m_authentification;
 
   private Label m_labelUrl;
-
-  // private static final int MIN_LIST_WITH = 150;
-  //
-  // private static final int MIN_DIALOG_WIDTH = 400;
-  //
-  // private static final int MIN_LIST_HIGHT = 150;
 
   private IWFSCapabilities m_wfsCapabilites = null;
 
@@ -305,6 +305,17 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Composite m_leftsideButtonC;
 
+  protected HashMap<URL, IWFSCapabilities> m_capabilites = new HashMap<URL, IWFSCapabilities>();
+
+  final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
+  {
+
+    public void doubleClick( DoubleClickEvent event )
+    {
+      addButtonPressed();
+    }
+  };
+
   // private Label m_authLabel;
 
   public ImportWfsWizardPage( final String pageName )
@@ -367,6 +378,19 @@ public class ImportWfsWizardPage extends WizardPage
     m_url.setLayoutData( gridData );
     m_url.addSelectionListener( m_urlSelectionListener );
     m_url.addModifyListener( m_urlModifyListener );
+//    m_url.addFocusListener( new FocusAdapter()
+//    {
+//
+//      /**
+//       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+//       */
+//      @Override
+//      public void focusLost( FocusEvent e )
+//      {
+//        reloadServer();
+//      }
+//
+//    } );
 
     // add spacer
     final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
@@ -429,7 +453,6 @@ public class ImportWfsWizardPage extends WizardPage
     m_layerGroup.setLayout( gridLayout );
     m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    // = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
     m_listLeftSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
 
     m_listLeftSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -437,7 +460,7 @@ public class ImportWfsWizardPage extends WizardPage
     m_listLeftSide.setContentProvider( contentProvider );
 
     m_listLeftSide.addSelectionChangedListener( m_leftSelectionListener );
-    // addSelectionListener( m_leftSelectionListener );
+    m_listLeftSide.addDoubleClickListener( m_doubleClickListener );
 
     m_addLayer = new Button( m_layerGroup, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
@@ -587,100 +610,11 @@ public class ImportWfsWizardPage extends WizardPage
     return new URL( getUrl() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
   }
 
-  private IWFSCapabilities getCapabilites( ) throws MalformedURLException, IOException, Exception
-  {
-
-    final URL urlGetCap = new URL( getUrl().toString().trim() );
-    // + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-    // final URLConnection conGetCap = urlGetCap.openConnection();
-    // conGetCap.addRequestProperty( "SERVICE", "WFS" );
-    // conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-    // conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-    return WFSUtilities.getCapabilites( urlGetCap );
-    // InputStream isGetCap = conGetCap.getInputStream();
-    // return WFSCapabilitiesFactory.createCapabilities( new InputStreamReader( isGetCap ) );
-  }
-
-  // /**
-  // * This method returns the layer names in a sorted array
-  // *
-  // * @return an array of strings sorted alphabetically
-  // */
-  // private String[] getLayerNamesFromCapabilities( )
-  // {
-  // if( m_wfsCapabilites != null )
-  // {
-  // final TreeSet<String> list = new TreeSet<String>();
-  // final IWFSLayer[] featureTypes = m_wfsCapabilites.getFeatureTypes();
-  // // org.deegree.services.wfs.capabilities.FeatureType[] featureTypes =
-  // // m_wfsCapabilites.getFeatureTypeList().getFeatureTypes();
-  // for( int i = 0; i < featureTypes.length; i++ )
-  // {
-  // list.add( featureTypes[i].getTitle() );
-  // }
-  // return list.toArray( new String[list.size()] );
-  // }
-  // return new String[0];
-  // }
-
-  // public String[] getSelectedFeatureNames( )
-  // {
-  // return m_listRightSide.getItems();
-  // }
-
-  // public IFeatureType[] getSelectedFeatureTypes( ) throws Exception
-  // {
-  // String[] selectedFeatureNames = getSelectedFeatureNames();
-  // return getFeatureTypes( selectedFeatureNames );
-  // }
-
   public URL getUrl( ) throws MalformedURLException
   {
     return new URL( m_url.getText().trim() );
   }
 
-  /**
-   * This method returns a featureType from a specific feature property passed as a java.lang.Class object.
-   * 
-   * @param layer
-   *          name of layer to get the IFeatureType
-   * @return returns a hash set of feature type properties that is passed trough <em>clazz</em> parameter.
-   */
-  // private IFeatureType[] getFeatureTypes( String[] layer )
-  //
-  // {
-  // HashSet<IFeatureType> res = new HashSet<IFeatureType>();
-  // GMLSchema featureTypeSchema = null;
-  // for( int i = 0; i < layer.length; i++ )
-  // {
-  // final String l = layer[i];
-  // if( !m_featureTypes.containsKey( l ) )
-  // {
-  // try
-  // {
-  // final URL url = new URL( getUrl().toString().trim() +
-  // "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
-  // featureTypeSchema = GMLSchemaCatalog.getSchema( url );
-  // final IFeatureType featureType = featureTypeSchema.getFeatureType( l );
-  // if( featureType != null )
-  // m_featureTypes.put( l, featureType );
-  // else if( l.indexOf( ":" ) >= 0 )
-  // {
-  // final String hackName = l.replaceAll( "^.+:", "" );
-  // m_featureTypes.put( l, featureTypeSchema.getFeatureType( hackName ) );
-  // }
-  // }
-  // catch( Exception e )
-  // {
-  // setMessage( e.getMessage() );
-  // setPageComplete( false );
-  // }
-  // }
-  // final IFeatureType featureType = m_featureTypes.get( l );
-  // res.add( featureType );
-  // }
-  // return res.toArray( new IFeatureType[res.size()] );
-  // }
   /**
    * @throws Exception,
    *           OperationNotSupportedException
@@ -741,13 +675,13 @@ public class ImportWfsWizardPage extends WizardPage
     catch( IOException e )
     {
       e.printStackTrace();
-      setErrorMessage( "Die Verbindung zum WFS-Dienst konnte nicht hergestellt werden" );
+      setErrorMessage( "Die Verbindung zum WFS-Dienst konnte nicht hergestellt werden:\n" + e.getMessage() );
       setPageComplete( false );
     }
-    catch( Exception e )
+    catch( Throwable e )
     {
       e.printStackTrace();
-      setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes" );
+      setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes:\n" + e.getMessage() );
       setPageComplete( false );
     }
     final IWFSLayer[] featureTypes = m_wfsCapabilites.getFeatureTypes();
@@ -767,9 +701,11 @@ public class ImportWfsWizardPage extends WizardPage
       {
         IWFSLayer wfsFT = (IWFSLayer) original[i];
         final List<IWFSLayer> input = getLayerList();
-        input.add( wfsFT );
-        m_listRightSide.add( wfsFT );
-        // if( !ArrayUtils.contains( original, item ) )
+        if( !input.contains( wfsFT ) )
+        {
+          input.add( wfsFT );
+          m_listRightSide.add( wfsFT );
+        }
       }
       updateButtons();
     }
@@ -777,7 +713,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   /** Just for casting the list and suppress the warning */
   @SuppressWarnings("unchecked")
-  private List<IWFSLayer> getLayerList( )
+  List<IWFSLayer> getLayerList( )
   {
     return (List<IWFSLayer>) m_listRightSide.getInput();
   }
@@ -802,22 +738,16 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void filterPressed( )
   {
-    // the add filter button is only enabled if the selection size == 1
+    // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
     final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
     final IWFSLayer wfsFT = (IWFSLayer) selection.getFirstElement();
-    // TODO: wenn es schon filter gibt zwischen erster Seite und dieser Seite auswählen
-    Filter oldFilter = m_filter.get( wfsFT );
+    final Filter oldFilter = m_filter.get( wfsFT );
     final IFeatureType ft = wfsFT.getFeatureType();
-    final IWizardPage startingPage = getWizard().getStartingPage();
-    if( startingPage instanceof ImportWfsFilterWizardPage )
-      oldFilter = ((ImportWfsFilterWizardPage) startingPage).getFilter( ft );
-
-    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, false );
+    final String[] supportedOperations = WFSUtilities.getAllFilterCapabilitesOperations( m_wfsCapabilites );
+    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, supportedOperations, false );
     int open = dialog.open();
     if( open == Window.OK )
-    {
       m_filter.put( wfsFT, dialog.getFilter() );
-    }
     revalidatePage();
   }
 
@@ -852,9 +782,58 @@ public class ImportWfsWizardPage extends WizardPage
 
   }
 
-  // private IFeatureType getFeatureType( String layerName )
-  // {
-  // IFeatureType[] featureTypes = getFeatureTypes( new String[] { layerName } );
-  // return featureTypes[0];
-  // }
+  private final class CapabilitiesGetter implements ICoreRunnableWithProgress
+  {
+    private final URL m_service;
+
+    private IWFSCapabilities m_capas = null;
+
+    private CapabilitiesGetter( URL service )
+    {
+      super();
+      m_service = service;
+    }
+
+    public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+    {
+      final IWFSCapabilities capabilities;
+      try
+      {
+        capabilities = WFSUtilities.getCapabilites( m_service );
+        m_capabilites.put( m_service, capabilities );
+        m_capas = capabilities;
+      }
+      catch( CoreException e )
+      {
+        throw e;
+      }
+      catch( Exception e )
+      {
+        return StatusUtilities.statusFromThrowable( e.getCause() );
+      }
+
+      // store url and capabilites in a map so it is only loaded once
+
+      return Status.OK_STATUS;
+    }
+
+    public IWFSCapabilities getCapabilities( )
+    {
+      return m_capas;
+    }
+  }
+
+  private synchronized IWFSCapabilities getCapabilites( ) throws Throwable
+  {
+    final URL service = new URL( getUrl().toString().trim() );
+    if( m_capabilites.containsKey( service ) )
+      return m_capabilites.get( service );
+
+    final CapabilitiesGetter runnable = new CapabilitiesGetter( service );
+
+    IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+    if( status.getSeverity() == IStatus.ERROR )
+      throw status.getException();
+    return runnable.getCapabilities();
+  }
 }

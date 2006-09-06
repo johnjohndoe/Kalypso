@@ -139,7 +139,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     final int dimension = getDimension();
     for( int i = 0; i < dimension; i++ )
     {
-      AxisOrientation check = getAxis( i ).orientation;
+      AxisOrientation check = getAxis( i ).m_orientation;
       if( type != null && !type.isCompatibleOrientation( check ) )
       {
         throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_AXIS_ORIENTATION_$2, check
@@ -150,10 +150,10 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
       {
         for( int j = i + 1; j < dimension; j++ )
         {
-          if( check.equals( getAxis( j ).orientation.absolute() ) )
+          if( check.equals( getAxis( j ).m_orientation.absolute() ) )
           {
-            final String nameI = getAxis( i ).orientation.getName( null );
-            final String nameJ = getAxis( j ).orientation.getName( null );
+            final String nameI = getAxis( i ).m_orientation.getName( null );
+            final String nameJ = getAxis( j ).m_orientation.getName( null );
             throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_COLINEAR_AXIS_$2, nameI, nameJ ) );
           }
         }
@@ -255,6 +255,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   /**
    * Compares the specified object with this coordinate system for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object == this )
@@ -262,7 +263,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     return super.equals( object ) && equivalents( (CoordinateSystem)object );
   }
 
-  /**
+  @Override /**
    * Returns an OpenGIS interface for this coordinate system. The returned object is suitable for RMI use.
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
@@ -309,7 +310,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
      */
     public CS_AxisInfo getAxis( final int dimension )
     {
-      return adapters.export( CoordinateSystem.this.getAxis( dimension ) );
+      return m_adapters.export( CoordinateSystem.this.getAxis( dimension ) );
     }
 
     /**
@@ -317,7 +318,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
      */
     public CS_Unit getUnits( final int dimension )
     {
-      return adapters.export( CoordinateSystem.this.getUnits( dimension ) );
+      return m_adapters.export( CoordinateSystem.this.getUnits( dimension ) );
     }
 
     /**
@@ -325,7 +326,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
      */
     public PT_Envelope getDefaultEnvelope()
     {
-      return adapters.PT.export( CoordinateSystem.this.getDefaultEnvelope() );
+      return m_adapters.PT.export( CoordinateSystem.this.getDefaultEnvelope() );
     }
   }
 }
