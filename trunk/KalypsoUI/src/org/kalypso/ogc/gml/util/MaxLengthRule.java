@@ -69,7 +69,7 @@ public class MaxLengthRule implements IRule
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "MaxLengthRule: Die Zeichenkette darf höchstens " + Integer.toString( m_max ) + " Zeichen lang sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette darf höchstens " + Integer.toString( m_max ) + " Zeichen lang sein.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )

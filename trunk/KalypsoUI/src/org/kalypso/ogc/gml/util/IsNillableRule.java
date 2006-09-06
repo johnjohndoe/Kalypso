@@ -73,7 +73,7 @@ public class IsNillableRule implements IRule
 
     if( m_isNillable == false && m_minOccurs > 0 && object == null )
     {
-      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "IsNillableRule: Ausdruck darf nicht leer sein.", null );
+      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck darf nicht leer sein.", null );
     }
 
     return status;

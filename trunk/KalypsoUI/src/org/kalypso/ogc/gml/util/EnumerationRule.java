@@ -75,7 +75,7 @@ public class EnumerationRule implements IRule
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "EnumerationRule: Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )

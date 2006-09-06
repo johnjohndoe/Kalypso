@@ -124,7 +124,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_text;
   }
 
-  protected void onTextModified()
+  protected void onTextModified( )
   {
     m_currentValue = m_text.getText();
     updateValid();
@@ -144,7 +144,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid()
+  public boolean isValid( )
   {
     return m_isValid;
   }
@@ -158,7 +158,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl()
+  public void updateControl( )
   {
     if( m_text == null || m_text.isDisposed() )
       return;
@@ -180,34 +180,37 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_modifier.getLabel( getFeature() );
   }
 
-  protected FeatureChange getChange()
+  protected FeatureChange getChange( )
   {
-    updateValid();
-    if( !isValid() )
-      return null;
-
     final Feature feature = getFeature();
-
-    final String text = m_currentValue;
-
-    final Object newData = m_modifier.parseInput( getFeature(), text );
-    
     final IPropertyType pt = getFeatureTypeProperty();
     final Object oldData = feature.getProperty( pt );
 
+    updateValid();
+
+    final Object newData;
+    if( !isValid() )
+      newData = null;
+    else
+    {
+      final String text = m_currentValue;
+
+      newData = m_modifier.parseInput( getFeature(), text );
+    }
+
     // nur ändern, wenn sich wirklich was geändert hat
-    if( ( newData == null && oldData != null ) || ( newData != null && !m_modifier.equals( newData, oldData ) ) )
+    if( (newData == null && oldData != null) || (newData != null && !m_modifier.equals( newData, oldData )) )
       return new FeatureChange( feature, pt, newData );
 
     return null;
   }
 
-  protected void updateValid()
+  protected void updateValid( )
   {
     final String text = m_currentValue;
     setValid( m_modifier.isValid( text ) == null );

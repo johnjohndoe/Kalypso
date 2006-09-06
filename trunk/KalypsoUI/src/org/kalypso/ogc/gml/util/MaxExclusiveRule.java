@@ -69,7 +69,7 @@ public class MaxExclusiveRule implements IRule
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "MaxExclusiveRule: Wert muss kleiner " + m_checkagainst.toString() + " sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss kleiner " + m_checkagainst.toString() + " sein.", null );
 
     /* If the object does not exist or is no number, return true. */
     if( (object == null) || (!(object instanceof Number)) )

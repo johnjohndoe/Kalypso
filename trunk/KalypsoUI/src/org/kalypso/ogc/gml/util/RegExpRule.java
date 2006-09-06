@@ -110,7 +110,7 @@ public class RegExpRule implements IRule
       /* If one pattern fails, there is no need to check the other patterns. */
       if( ret == false )
       {
-        status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "RegExpRule: Ausdruck entspricht nicht den gegebenen Pattern.", null );
+        status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck entspricht nicht den gegebenen Pattern.", null );
         break;
       }
     }
