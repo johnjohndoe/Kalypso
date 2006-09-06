@@ -88,12 +88,12 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     {
       // TODO what is to be done??
       e.printStackTrace();
-      
+
       // at least do not continue to initialize
       m_scrabLayerTheme = null;
       return;
     }
-    
+
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager );
     // add styles for visualisation
@@ -111,8 +111,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public CommandableWorkspace getWorkspace( )
   {
-    return m_scrabLayerTheme.getWorkspace();
-
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getWorkspace();
+    return null;
   }
 
   /**
@@ -120,7 +121,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public ISchedulingRule getSchedulingRule( )
   {
-    return m_scrabLayerTheme.getSchedulingRule();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getSchedulingRule();
+    return null;
   }
 
   /**
@@ -128,7 +131,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public IFeatureType getFeatureType( )
   {
-    return m_scrabLayerTheme.getFeatureType();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getFeatureType();
+    return null;
   }
 
   /**
@@ -136,7 +141,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void addStyle( KalypsoUserStyle style )
   {
-    m_scrabLayerTheme.addStyle( style );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.addStyle( style );
   }
 
   /**
@@ -144,7 +150,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void removeStyle( KalypsoUserStyle style )
   {
-    m_scrabLayerTheme.removeStyle( style );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.removeStyle( style );
 
   }
 
@@ -153,7 +160,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public UserStyle[] getStyles( )
   {
-    return m_scrabLayerTheme.getStyles();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getStyles();
+    return new UserStyle[0];
   }
 
   /**
@@ -161,7 +170,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public FeatureList getFeatureList( )
   {
-    return m_scrabLayerTheme.getFeatureList();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getFeatureList();
+    return null;
   }
 
   /**
@@ -169,7 +180,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public FeatureList getFeatureListVisible( GM_Envelope env )
   {
-    return m_scrabLayerTheme.getFeatureListVisible( env );
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getFeatureListVisible( env );
+    return null;
   }
 
   /**
@@ -177,7 +190,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void dispose( )
   {
-    m_scrabLayerTheme.dispose();
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.dispose();
   }
 
   /**
@@ -187,7 +201,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
   {
-    m_scrabLayerTheme.paint( g, p, scale, bbox, selected );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.paint( g, p, scale, bbox, selected );
 
   }
 
@@ -196,7 +211,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public String getName( )
   {
-    return m_scrabLayerTheme.getName();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getName();
+    return null;
   }
 
   /**
@@ -212,7 +229,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void setName( String name )
   {
-    m_scrabLayerTheme.setName( name );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.setName( name );
   }
 
   /**
@@ -220,7 +238,9 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public GM_Envelope getBoundingBox( )
   {
-    return m_scrabLayerTheme.getBoundingBox();
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getBoundingBox();
+    return null;
   }
 
   /**
@@ -228,7 +248,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void addModellListener( ModellEventListener listener )
   {
-    m_scrabLayerTheme.addModellListener( listener );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.addModellListener( listener );
   }
 
   /**
@@ -236,7 +257,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void removeModellListener( ModellEventListener listener )
   {
-    m_scrabLayerTheme.removeModellListener( listener );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.removeModellListener( listener );
   }
 
   /**
@@ -244,7 +266,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void fireModellEvent( ModellEvent event )
   {
-    m_scrabLayerTheme.fireModellEvent( event );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.fireModellEvent( event );
   }
 
   /**
@@ -252,7 +275,8 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    m_scrabLayerTheme.onModellChange( modellEvent );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.onModellChange( modellEvent );
   }
 
   /**
@@ -261,11 +285,14 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
    */
   public void postCommand( ICommand command, Runnable runnable )
   {
-    m_scrabLayerTheme.postCommand( command, runnable );
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.postCommand( command, runnable );
   }
 
   public IFeatureSelectionManager getSelectionManager( )
   {
-    return m_selectionManager;
+    if( m_scrabLayerTheme != null )
+      return m_selectionManager;
+    return null;
   }
 }
