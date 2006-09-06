@@ -91,6 +91,8 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
   private final ICalculationService m_service;
 
+  private GMLSchemaCatalog m_schemaCatalog;
+
   public QueuedCalcJobServiceWrapper( ) throws RemoteException
   {
     // Logger initialisieren
@@ -201,7 +203,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
       cacheDir.mkdir();
 
-      GMLSchemaCatalog.init( catalog, cacheDir );
+      m_schemaCatalog = new GMLSchemaCatalog( catalog, cacheDir );
 
       m_service = new QueuedCalcJobService( factory, catalog, maxThreads, schedulingPeriod );
     }
