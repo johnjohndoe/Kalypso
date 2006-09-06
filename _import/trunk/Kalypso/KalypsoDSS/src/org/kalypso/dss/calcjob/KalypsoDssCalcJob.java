@@ -97,6 +97,10 @@ public class KalypsoDssCalcJob implements ISimulation
 
   List<String> m_featruesWithResults = new ArrayList<String>();
 
+  private String m_initValueFilePrefix = "lzsim";
+
+  private String m_initValueFileSuffix = ".gml";
+
   /** assures to return only directories for a file.list() call */
   ISimulationResultEater m_resultEater;
 
@@ -136,7 +140,7 @@ public class KalypsoDssCalcJob implements ISimulation
       choiseCalcCase = MeasuresConstants.METADATA_CALCCASE_ENUM_ALL;
     }
 
-    final URL calcCases = getClass().getResource( "../resources/hq1_bis_hq100.zip" );
+    final URL calcCases = KalypsoDssCalcJob.class.getResource( "resources/hq1_bis_hq100.zip" );
 
     // list of dataproviders for each hq-case
     final ArrayList<CalcDataProviderDecorater> dataProvider = new ArrayList<CalcDataProviderDecorater>();
@@ -190,7 +194,7 @@ public class KalypsoDssCalcJob implements ISimulation
       {
         final String hqIdentifier = hqIdentifierToCalculate[i];
         final File baseDir = new File( tmpdirAsString + "\\" + hqIdentifier );
-        final NaSimulationDataProvieder naSimulationDataProvider = new NaSimulationDataProvieder( baseDir );
+        final NaSimulationDataProvider naSimulationDataProvider = new NaSimulationDataProvider( baseDir );
         final CalcDataProviderDecorater rrmInputProvider = new CalcDataProviderDecorater( naSimulationDataProvider );
 
         monitor.setMessage( "Füge die Maßnahmen in das Model ein..." );
@@ -229,7 +233,7 @@ public class KalypsoDssCalcJob implements ISimulation
         monitor.setMessage( "Maßnahmen erfogreich in das Model eingefügt..." );
         final NaModelCalcJob calcJob = new NaModelCalcJob();
         m_naCalcJobs.add( calcJob );
-        final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+        final File calcDirUrl = (File) rrmInputProvider.getInputForID( NaSimulationDataProvider.CALC_DIR );
         monitor.setMessage( "Starte Berechnungdurchlauf " + i + " von " + dataProvider.size() );
         calcJob.run( calcDirUrl, rrmInputProvider, naJobResultEater, monitor );
         monitor.setMessage( "Berechnungslauf " + i + " beendet" );
@@ -285,8 +289,8 @@ public class KalypsoDssCalcJob implements ISimulation
 
     final URL modelURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL hydrotopURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
-    final URL initValueURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
-    final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvieder.CALC_DIR );
+    final URL initValueURLDir = (URL) rrmInputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+    final File calcDir = (File) rrmInputProvider.getInputForID( NaSimulationDataProvider.CALC_DIR );
 
     GMLWorkspace modelWorkspace = null;
     GMLWorkspace hydrotopWorkspace = null;
@@ -298,7 +302,8 @@ public class KalypsoDssCalcJob implements ISimulation
       {
 
         hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
-        initValuesWorkspace = GmlSerializer.createGMLWorkspace( initValueURL );
+        // TODO: fix depenency of initial values file name to NaModelInnerCalcJob
+        initValuesWorkspace = GmlSerializer.createGMLWorkspace( new URL( initValueURLDir, m_initValueFilePrefix.concat( m_initValueFileSuffix ) ) );
         // insert measure
         MeasuresHelper.insertPlanningMeasure( planningMeasureURL, hydrotopWorkspace, initValuesWorkspace, rrmInputProvider, logger );
         writeNewHydrotopFile = true;
@@ -367,10 +372,11 @@ public class KalypsoDssCalcJob implements ISimulation
         // inital value file
         if( writeNewInitalValueFile )
         {
-          final File initValueFile = File.createTempFile( "measured_initValues", ".gml", calcDir );
+          final File initValueFile = new File( calcDir, m_initValueFilePrefix.concat( m_initValueFileSuffix ) );
+          initValueFile.deleteOnExit();
           writerInitValue = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( initValueFile ), MeasuresConstants.DEFAULT_ENCONDING ) );
           GmlSerializer.serializeWorkspace( writerInitValue, initValuesWorkspace, MeasuresConstants.DEFAULT_ENCONDING );
-          rrmInputProvider.addURL( NaModelConstants.LZSIM_IN_ID, initValueFile.toURL() );
+          rrmInputProvider.addURL( NaModelConstants.LZSIM_IN_ID, new File( initValueFile.getParent() ).toURL() );
         }
         // hydrotop file
         if( writeNewHydrotopFile )
@@ -423,7 +429,7 @@ public class KalypsoDssCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "../resources/dsscalcjob_spec.xml" );
+    return KalypsoDssCalcJob.class.getResource( "resources/dsscalcjob_spec.xml" );
   }
 
   public boolean isSucceeded( )
@@ -437,7 +443,6 @@ public class KalypsoDssCalcJob implements ISimulation
     }
     return true;
   }
-
 
   /**
    * Visits all features in the workspace and sets the <genereateResults/> property.
