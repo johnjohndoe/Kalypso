@@ -40,26 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import javax.xml.namespace.QName;
-
 /**
- * @author schlienger
+ * Default implementation of {@link org.kalypso.observation.result.ITupleResultChangedListener}, does nothing.
+ * 
+ * @author Gernot Belger
  */
-public interface IComponent
+public class TupleResultChangeAdapter implements ITupleResultChangedListener
 {
-  public int getPosition();
-  
-  public String getName( );
-  
-  public String getDescription();
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
+   */
+  public void valuesChanged( ValueChange[] changes )
+  {
+  }
 
-  public QName getValueTypeName();
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
+   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+   */
+  public void recordsChanged( IRecord[] records, TYPE type )
+  {
+  }
 
-  public Object getDefaultValue( );
-  
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode();
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
+   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+   */
+  public void componentsChanged( IComponent[] components, TYPE type )
+  {
+  }
 }
