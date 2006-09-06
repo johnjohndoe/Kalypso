@@ -64,6 +64,7 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -246,5 +247,14 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     double d3 = ((Number) thisValue).doubleValue();
     return d1 <= d3 && d3 <= d2;
 
+  }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
+   */
+  public void accept( FilterVisitor fv, Operation operation, int depth )
+  {
+    fv.visit( this );
   }
 }

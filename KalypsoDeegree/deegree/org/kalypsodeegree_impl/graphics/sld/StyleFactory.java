@@ -61,8 +61,6 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -308,7 +306,7 @@ public class StyleFactory
    */
   public static Stroke createStroke( Color color, double width, double opacity, float[] dashArray, String lineJoin, String lineCap )
   {
-    HashMap cssParams = new HashMap();
+    HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
 
     CssParameter stroke = createCssParameter( "stroke", getColorAsHex( color ) );
     cssParams.put( "stroke", stroke );
@@ -349,7 +347,7 @@ public class StyleFactory
    */
   public static Stroke createStroke( Color color, double width, float[] dashArray )
   {
-    HashMap cssParams = new HashMap();
+    HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
 
     CssParameter stroke = createCssParameter( "stroke", getColorAsHex( color ) );
     cssParams.put( "stroke", stroke );
@@ -442,7 +440,7 @@ public class StyleFactory
    */
   public static Fill createFill( Color color, double opacity, GraphicFill fill )
   {
-    HashMap cssParams = new HashMap();
+    HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
     CssParameter fillCo = createCssParameter( "fill", getColorAsHex( color ) );
     cssParams.put( "fill", fillCo );
     CssParameter fillOp = createCssParameter( "fill-opacity", opacity );
@@ -817,7 +815,7 @@ public class StyleFactory
    */
   public static Font createFont( String fontFamily, boolean italic, boolean bold, double fontSize )
   {
-    HashMap cssParams = new HashMap();
+    HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
 
     cssParams.put( "font-family", createCssParameter( "font-family", fontFamily ) );
     cssParams.put( "font-size", createCssParameter( "font-size", "" + fontSize ) );
@@ -1134,7 +1132,7 @@ public class StyleFactory
    */
   public static RasterSymbolizer createRasterSymbolizer( )
   {
-    TreeMap colorMap = new TreeMap();
+    TreeMap<Double,ColorMapEntry> colorMap = new TreeMap<Double,ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     return new RasterSymbolizer_Impl( colorMap );

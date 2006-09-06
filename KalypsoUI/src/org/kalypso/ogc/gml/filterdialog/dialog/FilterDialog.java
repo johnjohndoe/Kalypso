@@ -32,7 +32,6 @@ package org.kalypso.ogc.gml.filterdialog.dialog;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import org.apache.tools.ant.filters.StringInputStream;
 import org.deegree.services.wfs.filterencoding.FilterConstructionException;
@@ -137,7 +136,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private ToolBar m_toolBar;
 
-  Feature m_spatialOperators;
+  Feature m_spatialOperator;
 
   AbstractFilterComposite m_newOpsComposite;
 
@@ -147,16 +146,19 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private final boolean RESTOREABLE;
 
+  final String[] m_supportedOperations;
+
   /**
    * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
    * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
    */
-  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final KalypsoUserStyle style, final Filter filter, final Feature spatialOperator, final boolean restorable )
+  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final KalypsoUserStyle style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
   {
     super( parent );
     m_userStyle = style;
     m_ft = ftToSelectFrom;
-    m_spatialOperators = spatialOperator;
+    m_supportedOperations = supportedOperations;
+    m_spatialOperator = spatialOperator;
     RESTOREABLE = restorable;
     m_root = new FilterRootElement();
     if( filter != null )
@@ -301,7 +303,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
               if( !m_newOpsComposite.isDisposed() )
                 m_newOpsComposite.dispose();
             }
-            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, new TreeSet<String>(), m_ft, m_spatialOperators );
+            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, m_ft, m_spatialOperator );
             if( m_newOpsComposite != null )
             {
               m_newOpsComposite.addModellListener( new ModellEventListener()

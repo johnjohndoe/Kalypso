@@ -388,21 +388,49 @@ public class GeometryUtilities
   }
 
   /**
-   * @param ftp
-   * @return <code>true</code> if feature property type equals this type of geometry
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
    */
-  public static boolean isMultiPointGeometry( IValuePropertyType ftp )
+  public static boolean isPointGeometry( final Object o )
   {
-    return ftp.getValueClass().equals( getMultiPointClass() );
+    return o.getClass().equals( getPointClass() );
   }
 
   /**
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isLineStringGeometry( IValuePropertyType ftp )
+  public static boolean isMultiPointGeometry( final IValuePropertyType ftp )
+  {
+    return ftp.getValueClass().equals( getMultiPointClass() );
+  }
+
+  /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isMultiPointGeometry( final Object o )
+  {
+    return o.getClass().equals( getMultiPointClass() );
+  }
+
+  /**
+   * @param ftp
+   * @return <code>true</code> if feature property type equals this type of geometry
+   */
+  public static boolean isLineStringGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getLineStringClass() );
+  }
+
+  /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+
+  public static boolean isLineStringGeometry( final Object o )
+  {
+    return o.getClass().equals( getLineStringClass() );
   }
 
   /**
@@ -415,12 +443,31 @@ public class GeometryUtilities
   }
 
   /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isMultiLineStringGeometry( final Object o )
+  {
+    return o.getClass().equals( getMultiLineStringClass() );
+  }
+
+  /**
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
   public static boolean isPolygonGeometry( IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getPolygonClass() );
+  }
+
+  /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isPolygonGeometry( final Object o )
+  {
+    Class< ? extends Object> class1 = o.getClass();
+    return getPolygonClass().isAssignableFrom( class1 );
   }
 
   /**
@@ -433,12 +480,30 @@ public class GeometryUtilities
   }
 
   /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isMultiPolygonGeometry( final Object o )
+  {
+    return o.getClass().equals( getMultiPolygonClass() );
+  }
+
+  /**
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isUndefinedGeometry( IValuePropertyType ftp )
+  public static boolean isUndefinedGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getUndefinedGeometryClass() );
+  }
+
+  /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isUndefinedGeometry( final Object o )
+  {
+    return o.getClass().equals( getUndefinedGeometryClass() );
   }
 
   /**
@@ -454,6 +519,15 @@ public class GeometryUtilities
   public static boolean isEnvelopeGeometry( final IValuePropertyType ftp )
   {
     return getEnvelopeClass().equals( ftp.getValueClass() );
+  }
+
+  /**
+   * @param o
+   * @return <code>true</code> if object type equals this type of geometry
+   */
+  public static boolean isEnvelopeGeometry( final Object o )
+  {
+    return getEnvelopeClass().equals( o.getClass() );
   }
 
   public static Class getEnvelopeClass( )
@@ -599,8 +673,8 @@ public class GeometryUtilities
       final Coordinate b = ring[i];
       final Coordinate c = ring[i + 1];
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
-           
-          -((a.x - b.x) * (b.y - a.y)//
+
+          - ((a.x - b.x) * (b.y - a.y)//
               + (b.x - c.x) * (b.y - c.y)//
           + (a.x - c.x) * (c.y - a.y)//
           ) / 2d;

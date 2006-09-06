@@ -29,7 +29,7 @@
  */
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
-import java.util.TreeSet;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -39,6 +39,7 @@ import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
@@ -57,7 +58,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
     return m_factory;
   }
 
-  public static AbstractFilterComposite createFilterElementComposite( final Composite parent, final IErrorMessageReciever errorMessageReciever, final Operation operation, final TreeSet<String> supportedOperations, final IFeatureType ft, Feature spatialOperator )
+  public static AbstractFilterComposite createFilterElementComposite( final Composite parent, final IErrorMessageReciever errorMessageReciever, final Operation operation, final String[] supportedOperations, final IFeatureType ft, Feature spatialOperator )
   {
     AbstractFilterComposite c = null;
 
@@ -69,7 +70,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
         if( operatorName == null )
           operatorName = "Unbekannter Comperator";
         ((Group) parent).setText( "Eigenschaften-" + operatorName );
-        c = new PropertyIsCOMPOperationComposite( parent, SWT.NULL, (PropertyIsCOMPOperation) operation, supportedOperations, errorMessageReciever, ft );
+        c = new PropertyIsCOMPOperationComposite( parent, SWT.NULL, (PropertyIsCOMPOperation) operation, getSupportedCOMPOps( supportedOperations ), errorMessageReciever, ft );
       }
       else if( operation instanceof PropertyIsLikeOperation )
       {
@@ -92,7 +93,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
         if( operatorName == null )
           operatorName = "Unbekannter Spatial Operator";
         ((Group) parent).setText( "Eigenschaften-" + operatorName );
-        c = new SpatialComposite( parent, SWT.NULL, (SpatialOperation) operation, errorMessageReciever, ft, spatialOperator );
+        c = new SpatialComposite( parent, SWT.NULL, (SpatialOperation) operation, errorMessageReciever, ft, spatialOperator, getSupportedSpatialOps( supportedOperations ) );
       }
       else if( operation instanceof PropertyIsNullOperation )
       {
@@ -103,5 +104,38 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       }
     }
     return c;
+  }
+
+  private static String[] getSupportedSpatialOps( String[] supportedOperations )
+  {
+    ArrayList<String> result = new ArrayList<String>();
+    for( String ops : supportedOperations )
+    {
+      if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_SPATIAL )
+        result.add( ops );
+    }
+    return result.toArray( new String[result.size()] );
+  }
+
+  // private static String[] getSupportedLogicalOps( String[] supportedOperations )
+  // {
+  // ArrayList<String> result = new ArrayList<String>();
+  // for( String ops : supportedOperations )
+  // {
+  // if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_LOGICAL )
+  // result.add( ops );
+  // }
+  // return result.toArray( new String[result.size()] );
+  //  }
+
+  private static String[] getSupportedCOMPOps( String[] supportedOperations )
+  {
+    ArrayList<String> result = new ArrayList<String>();
+    for( String ops : supportedOperations )
+    {
+      if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_COMPARISON )
+        result.add( ops );
+    }
+    return result.toArray( new String[result.size()] );
   }
 }

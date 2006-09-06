@@ -43,16 +43,42 @@ package org.kalypso.ogc.wfs;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree_impl.model.ct.TransformException;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
  */
 public interface IWFSLayer
 {
+  /**
+   * Returns the qualified name of this layer namespace:element_name.
+   * 
+   * @return qName
+   */
   public QName getQName( );
 
+  /**
+   * Returns the title of this layer.
+   * 
+   * @return title as String
+   */
   public String getTitle( );
 
+  /**
+   * Returns the IFeatureType of this layer.
+   * 
+   * @return featureType
+   */
+
   public IFeatureType getFeatureType( );
+
+  /**
+   * Returns the coordinate system of this layer
+   * 
+   * @return crs
+   */
+
+  public CS_CoordinateSystem getSRS( ) throws TransformException;
 
 }

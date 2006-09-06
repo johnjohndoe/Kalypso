@@ -80,6 +80,18 @@ public class WFSCapabilitiesFromDOM implements IWFSCapabilities
 
   private String[] m_getFeatureOutputFormats;
 
+  private String[] m_spatialOperators;
+
+  private String[] m_logicalOperators;
+
+  private String[] m_comparisonOperators;
+
+  private String[] m_geometryOperands;
+
+  private boolean m_simpleArithmetics = false;
+
+  private String[] m_functionArithmetics;
+
   public WFSCapabilitiesFromDOM( Document dom )
   {
     m_dom = dom;
@@ -92,6 +104,7 @@ public class WFSCapabilitiesFromDOM implements IWFSCapabilities
     {
       // init version
       m_version = getAsText( "wfs:WFS_Capabilities/@version" );
+      // String[] m_filter = getAsTexts( "ogc:Filter_Capabilities/ogc:Spatial_Capabilities/ogc:Spatial_Operators");
       // init urls
       m_baseGetCapabilitiesRequestGET = getURLS( "GetCapabilities", METHODE_HTTP_GET );
       m_baseGetCapabilitiesRequestPOST = getURLS( "GetCapabilities", METHODE_HTTP_POST );
@@ -104,12 +117,21 @@ public class WFSCapabilitiesFromDOM implements IWFSCapabilities
       // init layers
 
       final QName[] ftQNames = getAsQNames( "wfs:WFS_Capabilities/wfs:FeatureTypeList/wfs:FeatureType/wfs:Name" );
+      final String[] srs = getAsTexts( "wfs:WFS_Capabilities/wfs:FeatureTypeList/wfs:FeatureType/wfs:DefaultSRS" );
       m_ftLayers = new IWFSLayer[ftQNames.length];
       for( int i = 0; i < ftQNames.length; i++ )
       {
         URL url = WFSUtilities.createDescribeFeatureTypeRequestURL( this, ftQNames[i] );
-        m_ftLayers[i] = new WFSLayer( ftQNames[i], ftQNames[i].getLocalPart(), url );
+        m_ftLayers[i] = new WFSLayer( ftQNames[i], ftQNames[i].getLocalPart(), url, srs[i] );
       }
+      m_geometryOperands = getAsTexts( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Spatial_Capabilities/ogc:GeometryOperands/ogc:GeometryOperand" );
+      m_spatialOperators = getAsTexts( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Spatial_Capabilities/ogc:SpatialOperators/ogc:SpatialOperator" );
+      m_logicalOperators = getAsTexts( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Scalar_Capabilities/ogc:LogicalOperators/ogc:LogicalOperator" );
+      m_comparisonOperators = getAsTexts( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Scalar_Capabilities/ogc:ComparisonOperators/ogc:ComparisonOperator" );
+      if( getAsText( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Scalar_Capabilities/ogc:ArithmeticOperators/ogc:SimpleArithmetic" ) != null )
+        m_simpleArithmetics = true;
+      m_functionArithmetics = getAsTexts( "wfs:WFS_Capabilities/ogc:Filter_Capabilities/ogc:Scalar_Capabilities/ogc:ArithmeticOperators/ogc:Functions/ogc:FunctionNames" );
+
     }
     catch( Exception e )
     {
@@ -260,6 +282,54 @@ public class WFSCapabilitiesFromDOM implements IWFSCapabilities
   public String[] getGetFeatureOutputFormats( )
   {
     return m_getFeatureOutputFormats;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getSpatialOperators()
+   */
+  public String[] getSpatialOperators( )
+  {
+    return m_spatialOperators;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getLogicalOperators()
+   */
+  public String[] getLogicalOperators( )
+  {
+    return m_logicalOperators;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getComparisonOperators()
+   */
+  public String[] getComparisonOperators( )
+  {
+    return m_comparisonOperators;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getGeometryOperands()
+   */
+  public String[] getGeometryOperands( )
+  {
+    return m_geometryOperands;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getSimpleArithmetics()
+   */
+  public boolean canDoSimpleArithmetics( )
+  {
+    return m_simpleArithmetics;
+  }
+
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSCapabilities#getFunctionArithmetics()
+   */
+  public String[] getFunctionArithmetics( )
+  {
+    return m_functionArithmetics;
   }
 
 }

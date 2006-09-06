@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -116,22 +115,22 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   /**
    * The linear unit.
    */
-  private final Unit unit;
+  private final Unit m_unit;
 
   /**
    * The horizontal datum.
    */
-  private final HorizontalDatum datum;
+  private final HorizontalDatum m_datum;
 
   /**
    * The prime meridian.
    */
-  private final PrimeMeridian meridian;
+  private final PrimeMeridian m_meridian;
 
   /**
    * The axis infos.
    */
-  private final AxisInfo[] axis;
+  private final AxisInfo[] m_axis;
 
   /**
    * Construct a geocentric coordinate system with default axis. Unit are metres and prime meridian is greenwich.
@@ -183,15 +182,15 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
       final PrimeMeridian meridian, final AxisInfo[] axis )
   {
     super( name );
-    this.unit = unit;
-    this.datum = datum;
-    this.meridian = meridian;
+    m_unit = unit;
+    m_datum = datum;
+    m_meridian = meridian;
     ensureNonNull( "axis", axis );
     ensureNonNull( "unit", unit );
     ensureNonNull( "datum", datum );
     ensureNonNull( "meridian", meridian );
     ensureLinearUnit( unit );
-    this.axis = clone( axis );
+    this.m_axis = clone( axis );
   }
 
   /**
@@ -212,10 +211,10 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
       final PrimeMeridian meridian, final AxisInfo[] axis )
   {
     super( properties );
-    this.unit = unit;
-    this.datum = datum;
-    this.meridian = meridian;
-    this.axis = clone( axis );
+    m_unit = unit;
+    m_datum = datum;
+    m_meridian = meridian;
+    m_axis = clone( axis );
   }
 
   /**
@@ -231,14 +230,16 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_GeocentricCoordinateSystem#getDimension()
    */
+  @Override
   public int getDimension()
   {
-    return axis.length;
+    return m_axis.length;
   }
 
   /**
    * Override {@link CoordinateSystem#getDatum()}.
    */
+  @Override
   final Datum getDatum()
   {
     return getHorizontalDatum();
@@ -252,7 +253,7 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    */
   public HorizontalDatum getHorizontalDatum()
   {
-    return datum;
+    return m_datum;
   }
 
   /**
@@ -264,10 +265,11 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_GeocentricCoordinateSystem#getUnits(int)
    */
+  @Override
   public Unit getUnits( final int dimension )
   {
     if( dimension >= 0 && dimension < getDimension() )
-      return unit;
+      return m_unit;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -281,9 +283,10 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_CoordinateSystem#getAxis(int)
    */
+  @Override
   public AxisInfo getAxis( final int dimension )
   {
-    return axis[dimension];
+    return m_axis[dimension];
   }
 
   /**
@@ -293,7 +296,7 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    */
   public PrimeMeridian getPrimeMeridian()
   {
-    return meridian;
+    return m_meridian;
   }
 
   /**
@@ -307,6 +310,7 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
+  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -314,27 +318,27 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final GeocentricCoordinateSystem that = (GeocentricCoordinateSystem)cs;
-      return Utilities.equals( this.unit, that.unit ) && Utilities.equals( this.datum, that.datum )
-          && Utilities.equals( this.meridian, that.meridian );
+      return Utilities.equals( this.m_unit, that.m_unit ) && Utilities.equals( this.m_datum, that.m_datum )
+          && Utilities.equals( this.m_meridian, that.m_meridian );
     }
     return false;
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( datum );
+    buffer.append( m_datum );
     buffer.append( ", " );
-    buffer.append( meridian );
+    buffer.append( m_meridian );
     buffer.append( ", " );
-    addUnit( buffer, unit );
-    for( int i = 0; i < axis.length; i++ )
+    addUnit( buffer, m_unit );
+    for( int i = 0; i < m_axis.length; i++ )
     {
       buffer.append( ", " );
-      buffer.append( axis[i] );
+      buffer.append( m_axis[i] );
     }
     return "GEOCCS";
   }
@@ -344,6 +348,7 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
+  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -374,25 +379,25 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
     /**
      * Gets the local datum.
      */
-    public CS_HorizontalDatum getHorizontalDatum() throws RemoteException
+    public CS_HorizontalDatum getHorizontalDatum()
     {
-      return adapters.export( GeocentricCoordinateSystem.this.getHorizontalDatum() );
+      return m_adapters.export( GeocentricCoordinateSystem.this.getHorizontalDatum() );
     }
 
     /**
      * Gets the units used along all the axes.
      */
-    public CS_LinearUnit getLinearUnit() throws RemoteException
+    public CS_LinearUnit getLinearUnit()
     {
-      return (CS_LinearUnit)adapters.export( GeocentricCoordinateSystem.this.getUnits() );
+      return (CS_LinearUnit)m_adapters.export( GeocentricCoordinateSystem.this.getUnits() );
     }
 
     /**
      * Returns the PrimeMeridian.
      */
-    public CS_PrimeMeridian getPrimeMeridian() throws RemoteException
+    public CS_PrimeMeridian getPrimeMeridian()
     {
-      return adapters.export( GeocentricCoordinateSystem.this.getPrimeMeridian() );
+      return m_adapters.export( GeocentricCoordinateSystem.this.getPrimeMeridian() );
     }
   }
 }

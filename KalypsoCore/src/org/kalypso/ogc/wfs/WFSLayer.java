@@ -48,6 +48,10 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.ct.TransformException;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -63,11 +67,16 @@ public class WFSLayer implements IWFSLayer
 
   private IGMLSchema m_gmlSchema = null;
 
-  public WFSLayer( final QName qName, final String title, final URL describeFeatureTypeURL )
+  private final String m_remoteCRS;
+
+  private final ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
+
+  public WFSLayer( final QName qName, final String title, final URL describeFeatureTypeURL, final String remoteCRS )
   {
     m_qName = qName;
     m_title = title;
     m_describeFeatureTypeURL = describeFeatureTypeURL;
+    m_remoteCRS = remoteCRS;
   }
 
   /**
@@ -106,4 +115,13 @@ public class WFSLayer implements IWFSLayer
     return m_gmlSchema.getFeatureType( m_qName );
   }
 
+  /**
+   * @see org.kalypso.ogc.wfs.IWFSLayer#getSRS()
+   */
+  public CS_CoordinateSystem getSRS( ) throws TransformException
+  {
+    if( m_csFac.isKnownCS( m_remoteCRS ) )
+      return Adapters.getDefault().export( m_csFac.getCSByName( m_remoteCRS ) );
+    throw new TransformException( "Unsupported Coordination System." );
+  }
 }

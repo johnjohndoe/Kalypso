@@ -163,6 +163,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
    * Returns a hash value for this object. This value need not remain consistent between different implementations of
    * the same class.
    */
+  @Override
   public int hashCode()
   {
     long code = 14698129;
@@ -179,6 +180,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
   /**
    * Returns a copy of this object.
    */
+  @Override
   public Object clone()
   {
     try
@@ -199,6 +201,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
   /**
    * Compares the specified object with this object for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object instanceof WGS84ConversionInfo )
@@ -221,6 +224,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
    * Returns the Well Know Text (WKT) for this object. The WKT is part of OpenGIS's specification and looks like
    * <code>TOWGS84[dx, dy, dz, ex, ey, ez, ppm]</code>.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "TOWGS84[\"" );

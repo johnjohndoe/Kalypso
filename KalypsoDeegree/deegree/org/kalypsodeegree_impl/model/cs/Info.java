@@ -115,13 +115,13 @@ public class Info implements Serializable
   /**
    * The non-localized object name.
    */
-  private final String name;
+  private final String m_name;
 
   /**
    * Properties for all methods except {@link #getName}. For example the method {@link #getAuthorityCode}returns the
    * value of property <code>"authorityCode"</code>. May be null if there is no properties for this object.
    */
-  private final Map properties;
+  private final Map m_properties;
 
   /**
    * OpenGIS object returned by {@link #cachedOpenGIS}. It may be a hard or a weak reference.
@@ -136,8 +136,8 @@ public class Info implements Serializable
    */
   public Info( final String name )
   {
-    this.name = name;
-    this.properties = null;
+    m_name = name;
+    m_properties = null;
     ensureNonNull( "name", name );
   }
 
@@ -160,8 +160,8 @@ public class Info implements Serializable
   Info( final Map properties )
   {
     ensureNonNull( "properties", properties );
-    this.properties = properties;
-    this.name = (String)properties.get( "name" );
+    this.m_properties = properties;
+    this.m_name = (String)properties.get( "name" );
     this.proxy = properties.get( "proxy" );
   }
 
@@ -182,7 +182,7 @@ public class Info implements Serializable
       // todo: use interface instead
     }
     
-    return name;
+    return m_name;
   }
 
   /**
@@ -205,7 +205,7 @@ public class Info implements Serializable
       // todo: use interface instead
     }
 
-    return ( properties != null ) ? (String)properties.get( "authority" ) : null;
+    return ( m_properties != null ) ? (String)m_properties.get( "authority" ) : null;
   }
 
   /**
@@ -228,7 +228,7 @@ public class Info implements Serializable
       // todo: use interface instead
     }
 
-    return ( properties != null ) ? (String)properties.get( "authorityCode" ) : null;
+    return ( m_properties != null ) ? (String)m_properties.get( "authorityCode" ) : null;
   }
 
   /**
@@ -248,7 +248,7 @@ public class Info implements Serializable
       // todo: use interface instead
     }
 
-    return ( properties != null ) ? (String)properties.get( "alias" ) : null;
+    return ( m_properties != null ) ? (String)m_properties.get( "alias" ) : null;
   }
 
   /**
@@ -268,7 +268,7 @@ public class Info implements Serializable
       // todo: use interface instead
     }
 
-    return ( properties != null ) ? (String)properties.get( "abbreviation" ) : null;
+    return ( m_properties != null ) ? (String)m_properties.get( "abbreviation" ) : null;
   }
 
   /**
@@ -288,12 +288,13 @@ public class Info implements Serializable
       // todo: use interface instead
     }
 
-    return ( properties != null ) ? (String)properties.get( "remarks" ) : null;
+    return ( m_properties != null ) ? (String)m_properties.get( "remarks" ) : null;
   }
 
   /**
    * Returns a hash value for this info.
    */
+  @Override
   public int hashCode()
   {
     final String n = getName( null );
@@ -303,12 +304,13 @@ public class Info implements Serializable
   /**
    * Compares the specified object with this info for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
       final Info that = (Info)object;
-      return Utilities.equals( this.name, that.name ) && Utilities.equals( this.properties, that.properties );
+      return Utilities.equals( this.m_name, that.m_name ) && Utilities.equals( this.m_properties, that.m_properties );
     }
     return false;
   }
@@ -316,6 +318,7 @@ public class Info implements Serializable
   /**
    * Returns a <em>Well Know Text</em> (WKT) for this info. "Well know text" are part of OpenGIS's specification.
    */
+  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( 40 );
@@ -323,9 +326,9 @@ public class Info implements Serializable
     buffer.append( getName( null ) );
     buffer.append( '"' );
     buffer.insert( 0, addString( buffer ) );
-    if( properties != null )
+    if( m_properties != null )
     {
-      final Object authority = properties.get( "authority" );
+      final Object authority = m_properties.get( "authority" );
       if( authority != null )
       {
         buffer.append( ", AUTHORITY[" );
@@ -525,11 +528,11 @@ public class Info implements Serializable
     /**
      * The originating adapter.
      */
-    protected final transient Adapters adapters;
+    protected final transient Adapters m_adapters;
 
     public Export()
     {
-      adapters = Adapters.getDefault();
+      m_adapters = Adapters.getDefault();
     }
 
     /**
@@ -537,7 +540,7 @@ public class Info implements Serializable
      */
     protected Export( final Object adapters )
     {
-      this.adapters = (Adapters)adapters;
+      this.m_adapters = (Adapters)adapters;
     }
 
     /**
@@ -615,6 +618,7 @@ public class Info implements Serializable
     /**
      * Returns a string representation of this info.
      */
+    @Override
     public String toString()
     {
       return Info.this.toString();
@@ -643,6 +647,7 @@ public class Info implements Serializable
     }
 
     /** Returns a Well Know Text for this unit */
+    @Override
     public String toString()
     {
       return "UNIT[\"metre\"," + scale + ']';
@@ -671,6 +676,7 @@ public class Info implements Serializable
     }
 
     /** Returns a Well Know Text for this unit */
+    @Override
     public String toString()
     {
       return "UNIT[\"radian\"," + scale + ']';

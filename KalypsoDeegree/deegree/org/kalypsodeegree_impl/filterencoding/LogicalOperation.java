@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -214,6 +215,28 @@ public class LogicalOperation extends AbstractOperation
       {
         throw new FilterEvaluationException( "Unknown LogicalOperation encountered: '" + getOperatorName() + "'" );
       }
+    }
+  }
+
+  /**
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
+   */
+  public void accept( FilterVisitor fv, Operation operation, int depth )
+  {
+    final ArrayList<Operation> ops = getArguments();
+
+    if( operation != null && OperationDefines.getTypeById( operation.getOperatorId() ) == OperationDefines.TYPE_LOGICAL )
+    {
+      for( Operation o : ops )
+      {
+        boolean recurse = fv.visit( o );
+        if( recurse && depth != FilterVisitor.DEPTH_ZERO )
+        {
+          accept( fv, o, depth );
+        }
+      }
+
     }
   }
 }

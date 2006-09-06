@@ -53,7 +53,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
@@ -125,7 +127,7 @@ public class ImportWmsWizardPage extends WizardPage
   private Composite m_layerSelection;
 
   /** capabilites cache in this wizard */
-  protected final  HashMap<URL, WMSCapabilities> m_capabilites = new HashMap<URL, WMSCapabilities>();
+  protected final HashMap<URL, WMSCapabilities> m_capabilites = new HashMap<URL, WMSCapabilities>();
 
   private static final String MSG_BASEURL_ERROR = "Die gewählte URL ist ungültig ";
 
@@ -193,6 +195,14 @@ public class ImportWmsWizardPage extends WizardPage
     final WMSCapabilitiesLabelProvider wmsCapabilitiesLabelProvider = new WMSCapabilitiesLabelProvider();
     m_capabilitiesTree.setContentProvider( contentProvider );
     m_capabilitiesTree.setLabelProvider( wmsCapabilitiesLabelProvider );
+    m_capabilitiesTree.addDoubleClickListener( new IDoubleClickListener()
+    {
+
+      public void doubleClick( DoubleClickEvent event )
+      {
+        handleAddLayer();
+      }
+    } );
 
     // 2. column
     final Button buttonAddLayer = new Button( m_layerSelection, SWT.PUSH );
@@ -202,36 +212,7 @@ public class ImportWmsWizardPage extends WizardPage
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
-        final List<Layer> input = getLayers();
-        List<Layer> selectableLayer = new ArrayList<Layer>();
-        for( Iterator iter = selection.iterator(); iter.hasNext(); )
-        {
-          final Layer layer = (Layer) iter.next();
-          selectableLayer = getSelectableLayer( selectableLayer, layer );
-        }
-        input.addAll( selectableLayer );
-        m_selectedLayers.setInput( input );
-        m_multiLayerButton.setEnabled( input.size() > 1 );
-        setPageComplete( !input.isEmpty() );
-      }
-
-      private List<Layer> getSelectableLayer( final List<Layer> resultCollector, final Layer layer )
-      {
-        List<Layer> resultList;
-        if( resultCollector == null )
-          resultList = new ArrayList<Layer>();
-        else
-          resultList = resultCollector;
-        final Layer[] subLayers = layer.getLayer();
-        if( subLayers.length > 0 )
-        {
-          for( int i = 0; i < subLayers.length; i++ )
-            resultList = getSelectableLayer( resultList, subLayers[i] );
-        }
-        else
-          resultList.add( layer );
-        return resultList;
+        handleAddLayer();
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
@@ -496,7 +477,10 @@ public class ImportWmsWizardPage extends WizardPage
   @SuppressWarnings("unchecked")
   protected List<Layer> getLayers( )
   {
-    return (List<Layer>) m_selectedLayers.getInput();
+    Object input = m_selectedLayers.getInput();
+    if( input == null )
+      input = new ArrayList<Layer>();
+    return (List<Layer>) input;
   }
 
   /**
@@ -505,5 +489,44 @@ public class ImportWmsWizardPage extends WizardPage
   public boolean isMultiLayer( )
   {
     return m_multiLayerButton.getSelection();
+  }
+
+  protected void handleAddLayer( )
+  {
+    final IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
+    final List<Layer> input = getLayers();
+    List<Layer> selectableLayer = new ArrayList<Layer>();
+    for( Iterator iter = selection.iterator(); iter.hasNext(); )
+    {
+      final Layer layer = (Layer) iter.next();
+      selectableLayer = getSelectableLayer( selectableLayer, layer );
+    }
+    // only add layers that are not already in the selected layer viewer
+    for( Layer layer : selectableLayer )
+    {
+      if( !input.contains( layer ) )
+        input.add( layer );
+    }
+    m_selectedLayers.setInput( input );
+    m_multiLayerButton.setEnabled( input.size() > 1 );
+    setPageComplete( !input.isEmpty() );
+  }
+
+  private List<Layer> getSelectableLayer( final List<Layer> resultCollector, final Layer layer )
+  {
+    List<Layer> resultList;
+    if( resultCollector == null )
+      resultList = new ArrayList<Layer>();
+    else
+      resultList = resultCollector;
+    final Layer[] subLayers = layer.getLayer();
+    if( subLayers.length > 0 )
+    {
+      for( int i = 0; i < subLayers.length; i++ )
+        resultList = getSelectableLayer( resultList, subLayers[i] );
+    }
+    else
+      resultList.add( layer );
+    return resultList;
   }
 }

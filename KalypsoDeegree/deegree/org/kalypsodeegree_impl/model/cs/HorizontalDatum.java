@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import org.kalypsodeegree_impl.model.resources.Utilities;
@@ -94,12 +93,12 @@ public class HorizontalDatum extends Datum
   /**
    * The ellipsoid for this datum.
    */
-  private final Ellipsoid ellipsoid;
+  private final Ellipsoid m_ellipsoid;
 
   /**
    * Preferred parameters for a Bursa Wolf transformation.
    */
-  private final WGS84ConversionInfo parameters;
+  private final WGS84ConversionInfo m_parameters;
 
   /**
    * Creates horizontal datum from an ellipsoid. The datum type will be {@link DatumType.Horizontal#OTHER}.
@@ -131,8 +130,8 @@ public class HorizontalDatum extends Datum
       final WGS84ConversionInfo parameters )
   {
     super( name, type );
-    this.ellipsoid = ellipsoid;
-    this.parameters = ( parameters != null ) ? (WGS84ConversionInfo)parameters.clone() : null;
+    this.m_ellipsoid = ellipsoid;
+    this.m_parameters = ( parameters != null ) ? (WGS84ConversionInfo)parameters.clone() : null;
     ensureNonNull( "ellipsoid", ellipsoid );
   }
 
@@ -152,8 +151,8 @@ public class HorizontalDatum extends Datum
       final WGS84ConversionInfo parameters )
   {
     super( properties, type );
-    this.ellipsoid = ellipsoid;
-    this.parameters = parameters;
+    this.m_ellipsoid = ellipsoid;
+    this.m_parameters = parameters;
     // Accept null values.
   }
 
@@ -165,6 +164,7 @@ public class HorizontalDatum extends Datum
    * 
    * @see org.opengis.cs.CS_HorizontalDatum#getDatumType()
    */
+  @Override
   public DatumType/* .Horizontal */getDatumType()
   {
     return (DatumType.Horizontal)super.getDatumType();
@@ -177,7 +177,7 @@ public class HorizontalDatum extends Datum
    */
   public Ellipsoid getEllipsoid()
   {
-    return ellipsoid;
+    return m_ellipsoid;
   }
 
   /**
@@ -190,21 +190,21 @@ public class HorizontalDatum extends Datum
    */
   public WGS84ConversionInfo getWGS84Parameters()
   {
-    return ( parameters != null ) ? (WGS84ConversionInfo)parameters.clone() : null;
+    return ( m_parameters != null ) ? (WGS84ConversionInfo)m_parameters.clone() : null;
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     super.addString( buffer );
     buffer.append( ", " );
-    buffer.append( ellipsoid );
-    if( parameters != null )
+    buffer.append( m_ellipsoid );
+    if( m_parameters != null )
     {
       buffer.append( ", " );
-      buffer.append( parameters );
+      buffer.append( m_parameters );
     }
     return "DATUM";
   }
@@ -212,12 +212,13 @@ public class HorizontalDatum extends Datum
   /**
    * Compares the specified object with this datum for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( super.equals( object ) )
     {
       final HorizontalDatum that = (HorizontalDatum)object;
-      return Utilities.equals( this.ellipsoid, that.ellipsoid ) && Utilities.equals( this.parameters, that.parameters );
+      return Utilities.equals( this.m_ellipsoid, that.m_ellipsoid ) && Utilities.equals( this.m_parameters, that.m_parameters );
     }
     return false;
   }
@@ -227,6 +228,7 @@ public class HorizontalDatum extends Datum
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
+  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -257,17 +259,17 @@ public class HorizontalDatum extends Datum
     /**
      * Returns the Ellipsoid.
      */
-    public CS_Ellipsoid getEllipsoid() throws RemoteException
+    public CS_Ellipsoid getEllipsoid()
     {
-      return adapters.export( HorizontalDatum.this.getEllipsoid() );
+      return m_adapters.export( HorizontalDatum.this.getEllipsoid() );
     }
 
     /**
      * Gets preferred parameters for a Bursa Wolf transformation into WGS84.
      */
-    public CS_WGS84ConversionInfo getWGS84Parameters() throws RemoteException
+    public CS_WGS84ConversionInfo getWGS84Parameters()
     {
-      return adapters.export( HorizontalDatum.this.getWGS84Parameters() );
+      return m_adapters.export( HorizontalDatum.this.getWGS84Parameters() );
     }
   }
 }

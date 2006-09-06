@@ -80,6 +80,14 @@ public class AddThemeAction implements PluginMapOutlineAction
   public void selectionChanged( IAction action, ISelection selection )
   {
     m_selection = selection;
+    if( action instanceof PluginMapOutlineActionDelegate )
+    {
+      final GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();
+      if( viewer == null )
+        action.setEnabled( false );
+      else
+        action.setEnabled( true );
+    }
   }
 
 }

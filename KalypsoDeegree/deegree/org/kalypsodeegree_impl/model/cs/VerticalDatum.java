@@ -123,12 +123,13 @@ public class VerticalDatum extends Datum
    * 
    * @see org.opengis.cs.CS_VerticalDatum#getDatumType()
    */
+  @Override
   public DatumType/* .Vertical */getDatumType()
   {
     return (DatumType.Vertical)super.getDatumType();
   }
 
-  /**
+  @Override /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
@@ -142,6 +143,7 @@ public class VerticalDatum extends Datum
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
+  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );

@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wfs;
 
-import java.lang.Double;
+import java.util.ArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -68,15 +73,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
-import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
-import org.kalypso.ogc.gml.filterdialog.model.GeometryPropertyFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -88,6 +90,7 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author kuepfer
@@ -101,11 +104,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   GM_Object m_selectedGeom;
 
-  private Button m_activeSelectionButton;
+  Button m_activeSelectionButton;
 
   GisMapOutlineViewer m_gisMapOutlineViewer;
 
-  GM_Surface m_BBox;
+  // GM_Surface m_BBox;
 
   private Button m_BBoxButton;
 
@@ -119,13 +122,13 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   String m_themeName;
 
-  boolean m_doFilterMaxFeature = true;
+  boolean m_doFilterMaxFeature = false;
 
   String m_maxFeaturesAsString = "500";
 
   int m_maxFeaturesAsInt = 500;
 
-  private ComboViewer m_geomComboViewer;
+  ComboViewer m_geomComboViewer;
 
   public ImportWfsFilterWizardPage( String pageName, String title, ImageDescriptor titleImage, GisMapOutlineViewer viewer )
   {
@@ -179,7 +182,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
 
     } );
-    m_activeSelectionButton = new Button( topGroup, SWT.CHECK );
+    m_activeSelectionButton = new Button( topGroup, SWT.RADIO );
     m_activeSelectionButton.setText( "Active Selektion aus der Karte:" );
     m_activeSelectionButton.addSelectionListener( new SelectionAdapter()
     {
@@ -190,46 +193,39 @@ public class ImportWfsFilterWizardPage extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        final IMapModell mapModell = m_gisMapOutlineViewer.getMapModell();
+        if( m_activeSelectionButton.getSelection() )
+          m_geomComboViewer.getCombo().setEnabled( true );
+        else
+          m_geomComboViewer.getCombo().setEnabled( false );
 
-        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
-        {
-          final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
-          if( firstElement instanceof Feature && firstElement != null )
-          {
-            final Feature feature = ((Feature) firstElement);
-            final GM_Object[] geomProps = feature.getGeometryProperties();
-
-            m_selectedGeom = feature.getDefaultGeometryProperty();
-            m_themeName = activeTheme.getName();
-          }
-        }
         setPageComplete( validate() );
       }
     } );
     Combo geomCombo = new Combo( topGroup, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    geomCombo.setEnabled( false );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     // data.widthHint = STANDARD_WIDTH_FIELD;
     geomCombo.setLayoutData( data );
     m_geomComboViewer = new ComboViewer( geomCombo );
-//    m_geomComboViewer.setContentProvider( new GMLEditorContentProvider2() );
-//    m_geomComboViewer.setLabelProvider( new GMLEditorLabelProvider2() );
-//    m_geomComboViewer.addFilter( new GeometryPropertyFilter() );
-
-    m_geomComboViewer.add( new Object() );
+    m_geomComboViewer.setLabelProvider( new FeaturePropertyLabelProvider() );
+    m_geomComboViewer.setContentProvider( new FeaturePropertyContentProvider() );
+    m_geomComboViewer.addFilter( new GeometryPropertyFilter() );
+    m_geomComboViewer.add( getSelectedFeatureProperties() );
     m_geomComboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       public void selectionChanged( SelectionChangedEvent event )
       {
-        System.out.println();
         ISelection selection = event.getSelection();
-
+        if( selection instanceof IStructuredSelection )
+        {
+          IStructuredSelection ss = (IStructuredSelection) selection;
+          m_selectedGeom = (GM_Object) ss.getFirstElement();
+        }
+        setPageComplete( validate() );
       }
     } );
-
-    m_BBoxButton = new Button( topGroup, SWT.CHECK );
+    m_BBoxButton = new Button( topGroup, SWT.RADIO );
     m_BBoxButton.setText( "aktueller Kartenausschnitt (BBOX)" );
     m_BBoxButton.addSelectionListener( new SelectionAdapter()
     {
@@ -240,26 +236,8 @@ public class ImportWfsFilterWizardPage extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        // if this Wizard is activated we assume there is always a map (GisMapEditor) open.
-        IEditorPart activeEditor = activePage.getActiveEditor();
-        if( activeEditor instanceof GisMapEditor )
-        {
-          final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
-          final MapPanel mapPanel = gisMapEditor.getMapPanel();
-          GM_Envelope boundingBox = mapPanel.getBoundingBox();
-          if( boundingBox != null )
-            try
-            {
-              m_BBox = GeometryFactory.createGM_Surface( boundingBox, mapPanel.getMapModell().getCoordinatesSystem() );
-            }
-            catch( GM_Exception ex )
-            {
-              ex.printStackTrace();
-              setPageComplete( validate() );
-            }
-          setPageComplete( validate() );
-        }
+        getBBoxFromActiveMap();
+        setPageComplete( validate() );
       }
     } );
     final GridData data1 = new GridData();
@@ -385,35 +363,30 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setErrorMessage( "Es ist kein Element selektiert" );
         return false;
       }
-      // else if( !(m_selectedGeom instanceof GM_Object) )
-      // {
-      // setErrorMessage( "Das selektierte Element ist keine bekannte Geometrie" );
-      // return false;
-      // }
     }
     // the bbox can not be null
     if( m_BBoxButton.getSelection() )
     {
-      if( m_BBox == null )
+      if( getBBoxFromActiveMap() == null )
       {
         setErrorMessage( "Die active bbox ist Null" );
         return false;
       }
     }
 
-    // the selection bbox and active selection is not valid, all other combinations are OK.
-    if( m_BBoxButton.getSelection() && m_activeSelectionButton.getSelection() )
-    {
-      // TODO use radio buttons (@christoph)
-      setErrorMessage( "Es kann nur die BBOX-Option ODER eine die active Selektion-Option ausgewählt sein und nicht beides gleichzeitig" );
-      return false;
-    }
+//    // the selection bbox and active selection is not valid, all other combinations are OK.
+//    if( m_BBoxButton.getSelection() && m_activeSelectionButton.getSelection() )
+//    {
+//      // TODO use radio buttons (@christoph)
+//      setErrorMessage( "Es kann nur die BBOX-Option ODER eine die active Selektion-Option ausgewählt sein und nicht beides gleichzeitig" );
+//      return false;
+//    }
     updateMessage();
     setErrorMessage( null );
     return true;
   }
 
-  Filter getFilter( IFeatureType ft )
+  Filter getFilter( final IWFSLayer layer )
   {
     // TODO check checkboxes, maybe no filter at all is wanted
     int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
@@ -426,6 +399,9 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( item.equals( OPS_TOUCHES ) )
       ops = OperationDefines.TOUCHES;
     // TODO wählen des Poperties wenn mehrere gibt, zur Zeit wird nur das defautltGeometryProperty genommen
+    final IFeatureType ft = layer.getFeatureType();
+    if( ft == null )
+      return null;
     final IValuePropertyType geom = ft.getDefaultGeometryProperty();
     if( geom == null )
       return null;
@@ -442,9 +418,9 @@ public class ImportWfsFilterWizardPage extends WizardPage
       final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_selectedGeom, distance );
       return new ComplexFilter( operation );
     }
-    else if( m_BBox != null )
+    else if( m_BBoxButton.getSelection() )
     {
-      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_BBox, distance );
+      final SpatialOperation operation = new SpatialOperation( ops, propertyName, getBBoxFromActiveMap(), distance );
       return new ComplexFilter( operation );
     }
     return null;
@@ -460,21 +436,153 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return m_maxFeaturesAsInt;
   }
 
-  private Feature getSelectedFeature( )
+  private Object[] getSelectedFeatureProperties( )
   {
+    m_themeName = "Thema ohne Namen";
+    if( m_gisMapOutlineViewer == null )
+      return new Object[0];
     final IMapModell mapModell = m_gisMapOutlineViewer.getMapModell();
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
+      m_themeName = activeTheme.getName();
       if( firstElement instanceof Feature && firstElement != null )
-        return ((Feature) firstElement);
-      // final GM_Object[] geomProps = feature.getGeometryProperties();
-      //
-      // m_selectedGeom = feature.getDefaultGeometryProperty();
-      // m_themeName = activeTheme.getName();
+      {
+        final Feature feature = (Feature) firstElement;
+        final Object[] properties = feature.getProperties();
+        final ArrayList<Object> list = new ArrayList<Object>();
+        for( Object prop : properties )
+        {
+          if( prop != null )
+            list.add( prop );
+        }
+        return list.toArray();
+      }
+    }
+    return new Object[0];
+  }
+
+  GM_Surface getBBoxFromActiveMap( )
+  {
+    IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    // if this Wizard is activated we assume there is always a map (GisMapEditor) open.
+    IEditorPart activeEditor = activePage.getActiveEditor();
+    if( activeEditor instanceof GisMapEditor )
+    {
+      final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
+      final MapPanel mapPanel = gisMapEditor.getMapPanel();
+      GM_Envelope boundingBox = mapPanel.getBoundingBox();
+      if( boundingBox != null )
+        try
+        {
+          return GeometryFactory.createGM_Surface( boundingBox, mapPanel.getMapModell().getCoordinatesSystem() );
+        }
+        catch( GM_Exception ex )
+        {
+          ex.printStackTrace();
+          setPageComplete( validate() );
+        }
     }
     return null;
+  }
+
+  class FeaturePropertyLabelProvider extends LabelProvider
+  {
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText( Object element )
+    {
+
+      if( element == null )
+        return null;
+      if( GeometryUtilities.isPolygonGeometry( element ) )
+        return "Polygon";
+      if( GeometryUtilities.isPointGeometry( element ) )
+        return "Point";
+      if( GeometryUtilities.isLineStringGeometry( element ) )
+        return "Line";
+      if( element instanceof Number )
+        return ("Number: " + ((Number) element).toString());
+      if( element instanceof TimeseriesLinkType )
+        return ("TimeSeriesLink: " + ((TimeseriesLinkType) element).getHref());
+      if( element instanceof String )
+        return (String) element;
+      if( element instanceof Boolean )
+        return ((Boolean) element).toString();
+      return "unknown-element";
+    }
+  }
+
+  class FeaturePropertyContentProvider implements IStructuredContentProvider
+  {
+
+    @SuppressWarnings("unused")
+    private ComboViewer m_viewer;
+
+    @SuppressWarnings("unused")
+    private Feature m_feature;
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+     */
+    public Object[] getElements( Object inputElement )
+    {
+      if( inputElement instanceof Feature )
+      {
+        return ((Feature) inputElement).getProperties();
+      }
+      return new Object[0];
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
+    public void dispose( )
+    {
+      m_viewer = null;
+      m_feature = null;
+
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+    {
+      m_viewer = (ComboViewer) viewer;
+
+      if( oldInput != newInput )
+      {
+        if( oldInput != null )
+          m_feature = null;
+
+        if( newInput instanceof IFeatureType )
+          m_feature = (Feature) newInput;
+        else
+          m_feature = null;
+      }
+
+    }
+
+  }
+
+  class GeometryPropertyFilter extends ViewerFilter
+  {
+
+    /**
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    @Override
+    public boolean select( Viewer viewer, Object parentElement, Object element )
+    {
+      return GeometryUtilities.isGeometry( element );
+    }
+
   }
 }

@@ -80,18 +80,18 @@ public class FeatureFilter extends AbstractFilter
 {
 
   /** FeatureIds the FeatureFilter is based on */
-  ArrayList<FeatureId> featureIds = new ArrayList<FeatureId>();
+  ArrayList<FeatureId> m_featureIds = new ArrayList<FeatureId>();
 
   /** Adds a FeatureId constraint. */
   public void addFeatureId( FeatureId featureId )
   {
-    featureIds.add( featureId );
+    m_featureIds.add( featureId );
   }
 
   /** Returns the contained FeatureIds. */
   public ArrayList<FeatureId> getFeatureIds( )
   {
-    return featureIds;
+    return m_featureIds;
   }
 
   /**
@@ -105,9 +105,9 @@ public class FeatureFilter extends AbstractFilter
   public boolean evaluate( Feature feature )
   {
     String id = feature.getId();
-    for( int i = 0; i < featureIds.size(); i++ )
+    for( int i = 0; i < m_featureIds.size(); i++ )
     {
-      FeatureId featureId = featureIds.get( i );
+      FeatureId featureId = m_featureIds.get( i );
       if( id.equals( featureId.getValue() ) )
         return true;
     }
@@ -120,9 +120,9 @@ public class FeatureFilter extends AbstractFilter
   {
     StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
-    for( int i = 0; i < featureIds.size(); i++ )
+    for( int i = 0; i < m_featureIds.size(); i++ )
     {
-      FeatureId fid = featureIds.get( i );
+      FeatureId fid = m_featureIds.get( i );
       sb.append( fid.toXML() );
     }
     sb.append( "</ogc:Filter>" );
@@ -149,5 +149,10 @@ public class FeatureFilter extends AbstractFilter
       e.printStackTrace();
     }
     throw new CloneNotSupportedException();
+  }
+
+  public void removeFeatureId( FeatureId id )
+  {
+    m_featureIds.remove( id );
   }
 }
