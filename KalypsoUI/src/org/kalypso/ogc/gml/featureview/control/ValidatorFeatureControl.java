@@ -173,26 +173,20 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
           if( m_showok == true )
           {
             m_label.setImage( image_ok );
-
-            String message = "OK Status:\r\n\r\n";
-
-            for( int i = 0; i < status.size(); i++ )
-            {
-              message = message + status.get( i ).getMessage() + "\r\n";
-            }
-
-            m_label.setToolTipText( message );
           }
+
+          m_label.setToolTipText( "" );
         }
         else
         {
           m_label.setImage( image_error );
 
-          String message = "Fehler Status:\r\n\r\n";
+          String message = "";
 
           for( int i = 0; i < status.size(); i++ )
           {
-            message = message + status.get( i ).getMessage() + "\r\n";
+            if( !status.get( i ).isOK() )
+              message = message + status.get( i ).getMessage() + "\r\n";
           }
 
           m_label.setToolTipText( message );

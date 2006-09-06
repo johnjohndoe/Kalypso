@@ -69,7 +69,7 @@ public class MinLengthRule implements IRule
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "MinLengthRule: Die Zeichenkette muﬂ mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette muﬂ mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
