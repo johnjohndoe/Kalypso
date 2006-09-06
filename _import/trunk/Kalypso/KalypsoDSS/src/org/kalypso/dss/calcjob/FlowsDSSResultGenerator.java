@@ -625,7 +625,7 @@ public class FlowsDSSResultGenerator
 
   private static URL getStatusQuo( String hqEventId, Feature resultNode ) throws MalformedURLException
   {
-    final URL statusQuoZipURL = KalypsoDSSPlugin.class.getResource( "resources/resultsStatusQuo.zip" );
+    final URL statusQuoZipURL = FlowsDSSResultGenerator.class.getResource( "resources/resultsStatusQuo.zip" );
     final String relativePath = hqEventId + "/Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( resultNode, "name", "qgs", null );
     return new URL( new URL( "jar:" + statusQuoZipURL.toString() + "!/" ), relativePath );
   }

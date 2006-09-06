@@ -19,4 +19,10 @@ for( Iterator iter = listFiles.iterator(); iter.hasNext(); )
    }
 
 System.out.println("test");
+
+java.io.File testfile = new java.io.File( "c:/temp/test.gml");
+System.out.println(testfile.getPath());
+System.out.println(testfile.getParent());
                 
+java.net.URL url = new java.net.URL("file:///c:/test/gml.tml" );
+System.out.println(url.getPath());
