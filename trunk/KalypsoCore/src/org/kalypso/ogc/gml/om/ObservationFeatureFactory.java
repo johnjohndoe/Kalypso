@@ -217,7 +217,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
+  public static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
   {
     final IComponent[] components = result.getComponents();
 
@@ -273,7 +273,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
-  protected static Feature buildRecordDefinition( final Feature targetObsFeature, final Map<IComponent, ComponentDefinition> map )
+  public static Feature buildRecordDefinition( final Feature targetObsFeature, final Map<IComponent, ComponentDefinition> map )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
@@ -300,7 +300,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return featureRD;
   }
 
-  private static String serializeResultAsString( final TupleResult result, final Map<IComponent, ComponentDefinition> map )
+  public static String serializeResultAsString( final TupleResult result, final Map<IComponent, ComponentDefinition> map )
   {
     final StringBuffer buffer = new StringBuffer();
 

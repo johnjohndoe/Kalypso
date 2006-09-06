@@ -40,26 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import javax.xml.namespace.QName;
-
 /**
- * @author schlienger
+ * Listener which will be informed of changes of a {@link org.kalypso.observation.result.TupleResult}.
+ * 
+ * @author Gernot Belger
  */
-public interface IComponent
+public interface ITupleResultChangedListener
 {
-  public int getPosition();
-  
-  public String getName( );
-  
-  public String getDescription();
+  public static class ValueChange
+  {
+    private final IRecord m_record;
 
-  public QName getValueTypeName();
+    private final IComponent m_component;
 
-  public Object getDefaultValue( );
-  
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
+    private final Object m_newValue;
 
-  /** override hashCode according to equals */
-  public int hashCode();
+    public ValueChange( final IRecord record, final IComponent component, final Object newValue )
+    {
+      m_record = record;
+      m_component = component;
+      m_newValue = newValue;
+    }
+
+    public IComponent getComponent( )
+    {
+      return m_component;
+    }
+
+    public Object getNewValue( )
+    {
+      return m_newValue;
+    }
+
+    public IRecord getRecord( )
+    {
+      return m_record;
+    }
+  }
+
+  public enum TYPE
+  {
+    ADDED,
+    REMOVED;
+  }
+
+  public void valuesChanged( final ValueChange[] changes );
+
+  public void recordsChanged( final IRecord[] records, final TYPE type );
+
+  public void componentsChanged( final IComponent[] components, final TYPE type );
 }

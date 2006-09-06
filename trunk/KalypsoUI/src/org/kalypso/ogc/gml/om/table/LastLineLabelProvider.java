@@ -40,23 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
- * @author schlienger
+ * A delegate for {@link org.eclipse.jface.viewers.ITableLabelProvider}s which adds an (empty) which just ignored the
+ * empty element of the {@link LastLineLabelProvider}
+ * <p>
+ * Should be used in union with {@link org.kalypso.ogc.gml.om.table.LastLineContentProvider}.
+ * 
+ * @author Gernot Belger
  */
-public class TupleResultLabelProvider implements ITableLabelProvider
+public class LastLineLabelProvider implements ITableLabelProvider, IColorProvider
 {
+  private final ITableLabelProvider m_provider;
+  private Color m_backgroundColor;
+
+  public LastLineLabelProvider( final ITableLabelProvider provider, final Color background )
+  {
+    m_provider = provider;
+    m_backgroundColor = background;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // empty
+    m_provider.addListener( listener );
   }
 
   /**
@@ -64,24 +78,7 @@ public class TupleResultLabelProvider implements ITableLabelProvider
    */
   public void dispose( )
   {
-    // empty
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-   */
-  public boolean isLabelProperty( final Object element, final String property )
-  {
-    // TODO: ask content provider if this is a valid property
-    return true;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-   */
-  public void removeListener( final ILabelProviderListener listener )
-  {
-    // empty
+    m_provider.dispose();
   }
 
   /**
@@ -89,7 +86,10 @@ public class TupleResultLabelProvider implements ITableLabelProvider
    */
   public Image getColumnImage( final Object element, final int columnIndex )
   {
-    return null;
+    if( element == LastLineContentProvider.DUMMY_ELEMENT )
+      return null;
+    
+    return m_provider.getColumnImage( element, columnIndex );
   }
 
   /**
@@ -97,19 +97,48 @@ public class TupleResultLabelProvider implements ITableLabelProvider
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
-    if( element instanceof IRecord )
-    {
-      final IRecord record = (IRecord) element;
-      final IComponent[] comps = record.getOwner().getComponents();
-      if( columnIndex > comps.length )
-        return null;
+    if( element == LastLineContentProvider.DUMMY_ELEMENT )
+      return "Zeile hinzufügen";
 
-      final IComponent comp = comps[columnIndex];
+    return m_provider.getColumnText( element, columnIndex );
+  }
 
-      final Object value = record.getValue( comp );
-      return value == null ? "" : value.toString();
-    }
+  /**
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+   */
+  public boolean isLabelProperty( final Object element, final String property )
+  {
+    if( element == LastLineContentProvider.DUMMY_ELEMENT )
+      return true;
 
+    return m_provider.isLabelProperty( element, property );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+   */
+  public void removeListener( final ILabelProviderListener listener )
+  {
+    m_provider.removeListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+   */
+  public Color getForeground( final Object element )
+  {
     return null;
   }
+
+  /**
+   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+   */
+  public Color getBackground( final Object element )
+  {
+    if( element == LastLineContentProvider.DUMMY_ELEMENT )
+      return m_backgroundColor;
+    
+    return null;
+  }
+
 }

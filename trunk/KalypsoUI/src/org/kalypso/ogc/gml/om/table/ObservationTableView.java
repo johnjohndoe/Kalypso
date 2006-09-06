@@ -59,6 +59,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ObservationTableView extends ViewPart implements IFeatureSelectionListener
 {
   protected DefaultTableViewer m_viewer;
+  private TupleResultContentProvider m_tupleResultContentProvider;
+  private TupleResultLabelProvider m_tupleResultLabelProvider;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -71,8 +73,11 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer.getTable().setHeaderVisible( true );
     m_viewer.getTable().setLinesVisible( true );
-    m_viewer.setContentProvider( new TupleResultContentProvider() );
-    m_viewer.setLabelProvider( new TupleResultLabelProvider() );
+    m_tupleResultContentProvider = new TupleResultContentProvider();
+    m_viewer.setContentProvider( m_tupleResultContentProvider );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider();
+    m_viewer.setLabelProvider( m_tupleResultLabelProvider );
+    m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
     
     selectionChanged( KalypsoCorePlugin.getDefault().getSelectionManager() );
   }
@@ -84,6 +89,9 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
   public void dispose( )
   {
     KalypsoCorePlugin.getDefault().getSelectionManager().removeSelectionListener( this );
+    
+    m_tupleResultContentProvider.dispose();
+    m_tupleResultLabelProvider.dispose();
     
     super.dispose();
   }

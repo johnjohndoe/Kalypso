@@ -49,26 +49,36 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
+import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+
 /**
- * @author schlienger
+ * TODO: propagate all events to listeners
+ * 
+ * @author Marc Schlienger
  */
 public class TupleResult implements List<IRecord>
 {
   private final List<IRecord> m_records = new ArrayList<IRecord>();
 
-  private Set<IComponent> m_components = new HashSet<IComponent>();
+  private final Set<IComponent> m_components = new HashSet<IComponent>();
 
-  public TupleResult()
+  private final Set<ITupleResultChangedListener> m_listeners = new HashSet<ITupleResultChangedListener>();
+
+  public TupleResult( )
   {
     // default constructor
   }
-  
+
   public TupleResult( final IComponent[] comps )
   {
     for( int i = 0; i < comps.length; i++ )
       addComponent( comps[i] );
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -77,45 +87,59 @@ public class TupleResult implements List<IRecord>
   {
     return "TupleResult: " + getComponents();
   }
-  
+
   /**
    * @see java.util.List#add(int, E)
    */
-  public void add( int index, IRecord element )
+  public void add( final int index, final IRecord element )
   {
     checkRecord( element );
 
     m_records.add( index, element );
+
+    fireRecordsChanged( new IRecord[] { element }, TYPE.ADDED );
   }
 
   /**
    * @see java.util.List#add(E)
    */
-  public boolean add( IRecord o )
+  public boolean add( final IRecord o )
   {
     checkRecord( o );
 
-    return m_records.add( o );
+    final boolean result = m_records.add( o );
+
+    fireRecordsChanged( new IRecord[] { o }, TYPE.ADDED );
+
+    return result;
   }
 
   /**
    * @see java.util.List#addAll(java.util.Collection)
    */
-  public boolean addAll( Collection< ? extends IRecord> c )
+  public boolean addAll( final Collection< ? extends IRecord> c )
   {
     checkRecords( c );
 
-    return m_records.addAll( c );
+    final boolean result = m_records.addAll( c );
+
+    fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
+
+    return result;
   }
 
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
-  public boolean addAll( int index, Collection< ? extends IRecord> c )
+  public boolean addAll( final int index, final Collection< ? extends IRecord> c )
   {
     checkRecords( c );
 
-    return m_records.addAll( index, c );
+    final boolean result = m_records.addAll( index, c );
+
+    fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
+
+    return result;
   }
 
   /**
@@ -123,7 +147,11 @@ public class TupleResult implements List<IRecord>
    */
   public void clear( )
   {
+    final IRecord[] oldRecords = m_records.toArray( new IRecord[m_records.size()] );
+
     m_records.clear();
+
+    fireRecordsChanged( oldRecords, TYPE.REMOVED );
   }
 
   /**
@@ -167,6 +195,8 @@ public class TupleResult implements List<IRecord>
   }
 
   /**
+   * Carefull: removing via this iterator does not inform the listeners.
+   * 
    * @see java.util.List#iterator()
    */
   public Iterator<IRecord> iterator( )
@@ -183,6 +213,8 @@ public class TupleResult implements List<IRecord>
   }
 
   /**
+   * Carefull: removing via this iterator does not inform the listeners.
+   * 
    * @see java.util.List#listIterator()
    */
   public ListIterator<IRecord> listIterator( )
@@ -191,6 +223,8 @@ public class TupleResult implements List<IRecord>
   }
 
   /**
+   * Carefull: removing via this iterator does not inform the listeners.
+   * 
    * @see java.util.List#listIterator(int)
    */
   public ListIterator<IRecord> listIterator( int index )
@@ -201,40 +235,61 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#remove(int)
    */
-  public IRecord remove( int index )
+  public IRecord remove( final int index )
   {
-    return m_records.remove( index );
+    final IRecord result = m_records.remove( index );
+
+    fireRecordsChanged( new IRecord[] { result }, TYPE.REMOVED );
+
+    return result;
   }
 
   /**
    * @see java.util.List#remove(java.lang.Object)
    */
-  public boolean remove( Object o )
+  public boolean remove( final Object o )
   {
-    return m_records.remove( o );
+    final boolean result = m_records.remove( o );
+
+    if( result )
+      fireRecordsChanged( new IRecord[] { (IRecord) o }, TYPE.REMOVED );
+
+    return result;
   }
 
   /**
    * @see java.util.List#removeAll(java.util.Collection)
    */
-  public boolean removeAll( Collection< ? > c )
+  public boolean removeAll( final Collection< ? > c )
   {
-    return m_records.removeAll( c );
+    final boolean removeAll = m_records.removeAll( c );
+
+    final Object[] objects = c.toArray();
+    final IRecord[] removedRecords = new IRecord[objects.length];
+    for( int i = 0; i < objects.length; i++ )
+      removedRecords[i] = (IRecord) objects[i];
+    fireRecordsChanged( removedRecords, TYPE.REMOVED );
+
+    return removeAll;
   }
 
   /**
    * @see java.util.List#retainAll(java.util.Collection)
    */
-  public boolean retainAll( Collection< ? > c )
+  public boolean retainAll( final Collection< ? > c )
   {
+    // TODO: inform listeners
+
     return m_records.retainAll( c );
   }
 
   /**
    * @see java.util.List#set(int, E)
    */
-  public IRecord set( int index, IRecord element )
+  public IRecord set( final int index, final IRecord element )
   {
+    // TODO: inform listeners
+
     return m_records.set( index, element );
   }
 
@@ -289,15 +344,17 @@ public class TupleResult implements List<IRecord>
   {
     final TreeSet<IComponent> set = new TreeSet<IComponent>( ComponentPositionComparator.getInstance() );
     set.addAll( m_components );
-    
+
     if( m_components.size() != set.size() )
-      throw new IllegalStateException("Achtung da ist noch was schief: Komponente werden ignoriert weil sie die gleiche Position haben");
+      throw new IllegalStateException( "Achtung da ist noch was schief: Komponente werden ignoriert weil sie die gleiche Position haben" );
 
     return set.toArray( new IComponent[m_components.size()] );
   }
 
   public final void addComponent( final IComponent comp )
   {
+    fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
+
     m_components.add( comp );
   }
 
@@ -313,6 +370,8 @@ public class TupleResult implements List<IRecord>
       }
     }
 
+    fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
+
     return b;
   }
 
@@ -321,9 +380,28 @@ public class TupleResult implements List<IRecord>
     return record.getValue( comp );
   }
 
+  /**
+   * Sets the value of a record and informs the listeners if the value has really changed.
+   * <p>
+   * In order to change several records you should call {@link IRecord#setValue(IComponent, Object)} directly and then
+   * call {@link #fireTupleChanged(IRecord, IComponent, Object)}.
+   * </p>
+   */
   public void setValue( final IRecord record, final IComponent comp, final Object value )
   {
+    final Object oldValue = record.getValue( comp );
+    if( oldValue == null )
+    {
+      if( value == null )
+        return;
+    }
+    else if( oldValue.equals( value ) )
+      return;
+
     record.setValue( comp, value );
+
+    final ValueChange[] changes = new ValueChange[] { new ValueChange( record, comp, value ) };
+    fireValuesChanged( changes );
   }
 
   /** This method creates, but DOES NOT adds a record. */
@@ -335,5 +413,67 @@ public class TupleResult implements List<IRecord>
   public boolean hasComponent( final IComponent comp )
   {
     return m_components.contains( comp );
+  }
+
+  /**
+   * Add a listener to the list of listeners which will be informed of changes to tuples. Has no effect if the same
+   * listener is already registered.
+   */
+  public void addChangeListener( final ITupleResultChangedListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeChangeListener( final ITupleResultChangedListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  public void fireValuesChanged( final ValueChange[] changes )
+  {
+    for( final ITupleResultChangedListener l : m_listeners )
+    {
+      try
+      {
+        l.valuesChanged( changes );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+      }
+    }
+  }
+
+  public void fireRecordsChanged( final IRecord[] records, final TYPE type )
+  {
+    for( final ITupleResultChangedListener l : m_listeners )
+    {
+      try
+      {
+        l.recordsChanged( records, type );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+      }
+    }
+  }
+
+  public void fireComponentsChanged( final IComponent[] components, final TYPE type )
+  {
+    for( final ITupleResultChangedListener l : m_listeners )
+    {
+      try
+      {
+        l.componentsChanged( components, type );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+      }
+    }
   }
 }

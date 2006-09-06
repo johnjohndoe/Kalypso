@@ -1,0 +1,93 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.om.table;
+
+import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+
+public class TupleResultCellModifier implements ICellModifier
+{
+  private final TupleResultContentProvider m_provider;
+
+  public TupleResultCellModifier( final TupleResultContentProvider provider )
+  {
+    m_provider = provider;
+  }
+
+  public boolean canModify( final Object element, String property )
+  {
+    return true;
+  }
+
+  public Object getValue( final Object element, final String property )
+  {
+    final IRecord record = (IRecord) element;
+    final IComponent component = m_provider.getComponent( property );
+
+    final Object value = record.getValue( component );
+
+    return "" + value;
+  }
+
+  public void modify( final Object element, final String property, final Object value )
+  {
+    final TableItem item = (TableItem) element;
+    final IRecord record = (IRecord) item.getData();
+    final IComponent component = m_provider.getComponent( property );
+
+    final String valueStr = value.toString();
+    Double valueToSet = null;
+    try
+    {
+      if( valueStr.length() > 0 )
+        valueToSet = new Double( valueStr );
+    }
+    catch( NumberFormatException e )
+    {
+      // ignore it
+    }
+
+    /* Set value and inform listeners */
+    m_provider.getResult().setValue( record, component, valueToSet );
+  }
+}
