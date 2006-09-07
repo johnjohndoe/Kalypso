@@ -1,0 +1,25 @@
+- .templates/calcCase/berichtDiagW.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geändert, Texte geändert und Einheit Niederschlag angepasst)
+- .templates/calcCase/berichtDiagQ.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geändert, Texte geändert und Einheit Niederschlag angepasst)
+
+Folgende Vorlagen werden nicht mehr benutzt und könnten somit entfernt werden (bei Spree aber noch mal prüfen, diese Vorlagen nur bei Schwarze Elster geprüft):
+-.templates/calcCase/diag1.odt
+-.templates/calcCase/results.odt
+-.templates/calcCase/flutungen.odt
+-.templates/calcCase/niederschlag.odt
+-.templates/calcCase/table1.ott
+-.templates/calcCase/wsp.odt
+-.templates/calcCase/zufluss.odt
+-.templates/calcCase/berichtDiagObereSpree.odt
+
+Tippfehler in calcWizard.xml: "Abfluß" bei der Konfiguration der Berichte
+
+create-target (build.xml) wie bei Schwarze Elster (Kopieren von Vorlagen aus Unterverzeichnissen funktionierte nicht)
+Außerdem auch Vorlagen für Ergebnistabellen erstellen (.templates/Ergebnisse/Zeitreihen)
+
+
+
+potentielle Dinge, die im Rahmen der Pflege getrieben werden könnten (gilt ggf. auch für die Weiße Elster):
+-------------------------------------------------------------------------------------------------------------------------------
+- neue Berichtstypen (insb. Scheitelwerte)
+- HTML-Navigation
+- zusätzliche Vorlagen?

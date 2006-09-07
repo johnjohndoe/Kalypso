@@ -56,6 +56,8 @@
 				<include name="*.gft"/>
 				<include name="*.ott"/>
 				<include name="*.odt"/>
+				<include name="Zeitreihen/*.ott"/>
+				<include name="Ergebnisse/Zeitreihen/*.ott"/>
 			</fileset>
 		</copy>
 	</target>
