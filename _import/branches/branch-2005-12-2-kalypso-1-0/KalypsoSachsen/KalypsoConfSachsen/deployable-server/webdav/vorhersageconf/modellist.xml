@@ -4,4 +4,5 @@
 	<logoImage imageUrl="bceLogo.png" linkUrl="http://www.bjoernsen.de"/> 
     <model name="Spree" icon="spree_icon.gif" image="EZG_Spree.jpg" label="Spree"/>
     <model name="WeisseElster" icon="we_icon.gif" image="EZG_W_E.jpg" label="Weisse Elster"/>
+    <model name="SchwarzeElster" icon="se_icon.gif" image="EZG_S_E.jpg" label="Schwarze Elster"/>
 </modellist>
