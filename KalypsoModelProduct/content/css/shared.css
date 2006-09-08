@@ -28,18 +28,47 @@ h4 {
 	color:#787878;
 	}	
 	
-a {
-	display:block;
-	font-family:Tahoma;
-	font-size: 12px;
-	color:#000000;
-	font-weight:normal;
-	text-decoration:none;
-	padding-bottom:20px;
-	}
-	
 p {
 	padding-left:14px;
 	}
-	
 
+<!-- added by Albert -->
+
+img.link {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+}
+
+a.link {
+  vertical-align:middle;
+  font-family:tahoma, arial, serif;
+  font-weight:normal;
+  display:block;
+  color:#000000;
+  font-size:18px;
+  text-decoration:none;
+}
+
+div.list{
+  margin-top:25px;
+  margin-bottom:25px;
+  font-family:tahoma, arial, serif;
+  font-size:20px;
+  font-weight:bold;
+  text-align:middle;
+}
+
+img.icon {
+  vertical-align: middle;
+}
+
+a.icon {
+  vertical-align:middle;
+  font-family:tahoma, arial, serif;
+  font-weight:bold;
+  display:block;
+  color:#000099;
+  font-size:14px;
+  text-decoration:none;
+}
