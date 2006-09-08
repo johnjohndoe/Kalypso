@@ -67,6 +67,7 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.visitor.TransformSRSVisitor;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.tools.FilterUtilites;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
@@ -159,6 +160,12 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
         return false;
       }
       catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+        m_filterWFSPage.setErrorMessage( e.getMessage() );
+        return false;
+      }
+      catch( GM_Exception e )
       {
         e.printStackTrace();
         m_filterWFSPage.setErrorMessage( e.getMessage() );
