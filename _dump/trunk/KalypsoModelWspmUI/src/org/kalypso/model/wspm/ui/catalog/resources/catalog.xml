@@ -10,11 +10,33 @@
 
     <!-- org.kalypso.model.wspmprofile.Profile -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:featureview:default" uri="org.kalypso.model.wspmprofile.Profile.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:swtimage:default" uri="org.kalypso.model.wspmprofile.Profile.gif" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:profileMember:swtimage:default" uri="org.kalypso.model.wspmprofile.Profile.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:uiproperties:default" uri="org.kalypso.model.wspmprofile.Profile.properties" />
 
     <!-- org.kalypso.model.wspmrunoff.RunOffEvent -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:featureview:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:swtimage:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gif" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:runOffEventMember:swtimage:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:uiproperties:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.properties" />
+
+    <!-- org.kalypso.model.wspmrunoff.WaterlevelFixation -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:featureview:default" uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:swtimage:default" uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.gif" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:waterlevelFixationMember:swtimage:default" uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.gif" />
+    <!-- REMARK: we reuse some of the RunOffEvent resources; maybe we should split this if needed -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:uiproperties:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.properties" />
+    
+    <!-- org.kalypso.model.wspm.WaterBody -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:waterBodyMember:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
+
+    <!-- {org.kalypso.model.wspm}calculationMember -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:calculationMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif" />
+        
+     <!-- {org.kalypso.model.wspm}reachMember -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:reachMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif" />
+    
     
 </catalog:catalog>
 

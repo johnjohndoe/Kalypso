@@ -8,5 +8,8 @@
     <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif"/>
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.properties"/>
+
+    <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif"/>
 </catalog:catalog>
 

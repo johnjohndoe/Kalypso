@@ -540,7 +540,7 @@
 						</annotation>
 					</element>
 					<element name="waterlevelFixationMember"
-						type="om:AbstractObservationPropertyType" minOccurs="0"
+						type="runoff:WaterlevelFixationInlinePropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">

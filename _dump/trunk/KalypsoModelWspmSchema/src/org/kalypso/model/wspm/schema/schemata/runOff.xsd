@@ -14,6 +14,8 @@
     <import namespace="http://www.opengis.net/swe"
         schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
 
+    <!-- Abflussereignisse -->
+
     <complexType name="RunOffEventInlinePropertyType">
         <sequence minOccurs="1" maxOccurs="1">
             <element ref="runoff:RunOffEvent"/>
@@ -49,5 +51,45 @@
             <extension base="om:ObservationType"/>
         </complexContent>
     </complexType>
+
+    <!-- Wasserspiegelfixierung -->
+    <complexType name="WaterlevelFixationInlinePropertyType">
+        <sequence minOccurs="1" maxOccurs="1">
+            <element ref="runoff:WaterlevelFixation"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="WaterlevelFixationLinkPropertyType">
+        <sequence minOccurs="0" maxOccurs="0">
+            <element ref="runoff:WaterlevelFixation"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    </complexType>
+
+    <element name="WaterlevelFixation" type="runoff:WaterlevelFixationType"
+        substitutionGroup="om:Observation">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Wasserspiegelfixierung</name>
+                <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+                <tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
+                <description>${property:http://www.opengis.net/gml#description;-keine Beschreibung
+                    vorhanden-}</description>
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="WaterlevelFixationType">
+        <annotation>
+            <documentation>Wir definieren einen eigenen Observation Typ für
+                Wasserspiegelfixierungen. Ein Wasserspiegelfixierungen leitet von CommonObservation
+                ab und beinhaltet also die Tupel. Sie werden anhand von resultDefinition angegeben.
+                TODO: es sollte eine feste resultDefinition für Wasserspiegelfixierungen vorgegeben
+                sein..</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="om:ObservationType"/>
+        </complexContent>
+    </complexType>
+
 
 </schema>
