@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.core,
  org.kalypso.jwsdp,
  org.kalypso.rrm.kalininmiljukov,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.eclipse.ui.intro
 Eclipse-AutoStart: true
 Bundle-ClassPath: kalypsoUI_RRM.jar

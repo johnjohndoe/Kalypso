@@ -31,5 +31,11 @@
             class="org.kalypso.ui.styles.RRMFeatureTypeStyleCatalogContribution"
             name="RRM-Style-Catalog"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.kalypso.model.product.configId"
+            content="content/ext.xml"/>
+   </extension>
 
 </plugin>
