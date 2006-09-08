@@ -96,7 +96,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
   // JaxbUtilities.createQuiet( gml2Fac.getClass() );
 
-private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs ) throws TransformException
+  private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs ) throws TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
     int i = 0;
@@ -114,7 +114,9 @@ private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSys
       i++;
     }
     return GeometryFactory.createGM_MultiPoint( resultPoints, co );
-  }  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType multiLineStringType, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  }
+
+  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType multiLineStringType, CS_CoordinateSystem cs ) throws GM_Exception, TransformException
   {
     final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, multiLineStringType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiLineStringType.getGeometryMember();
@@ -272,9 +274,16 @@ private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSys
     final String srsName = geom.getSrsName();
     if( srsName == null )
       return defaultCS;
-    if( !m_csFac.isKnownCS( srsName ) )
+    final CoordinateSystem csByName;
+    if( srsName.startsWith( "http://www.opengis.net/gml/srs/epsg.xml#" ) )
+    {
+      String[] split = srsName.split( "#" );
+      csByName = m_csFac.getCSByName( "EPSG:" + split[1] );
+    }
+    else
+      csByName = m_csFac.getCSByName( srsName );
+    if( csByName == null )
       throw new TransformException( "The coordinate system: " + srsName + " is not known" );
-    final CoordinateSystem csByName = m_csFac.getCSByName( srsName );
     return m_csAdapter.export( csByName );
   }
 
