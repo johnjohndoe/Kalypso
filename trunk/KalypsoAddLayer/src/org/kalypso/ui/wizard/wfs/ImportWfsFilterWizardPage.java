@@ -46,9 +46,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -73,12 +71,13 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyContentProvider;
+import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -90,7 +89,10 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuepfer
@@ -197,7 +199,6 @@ public class ImportWfsFilterWizardPage extends WizardPage
           m_geomComboViewer.getCombo().setEnabled( true );
         else
           m_geomComboViewer.getCombo().setEnabled( false );
-
         setPageComplete( validate() );
       }
     } );
@@ -374,19 +375,20 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     }
 
-//    // the selection bbox and active selection is not valid, all other combinations are OK.
-//    if( m_BBoxButton.getSelection() && m_activeSelectionButton.getSelection() )
-//    {
-//      // TODO use radio buttons (@christoph)
-//      setErrorMessage( "Es kann nur die BBOX-Option ODER eine die active Selektion-Option ausgewählt sein und nicht beides gleichzeitig" );
-//      return false;
-//    }
+    // // the selection bbox and active selection is not valid, all other combinations are OK.
+    // if( m_BBoxButton.getSelection() && m_activeSelectionButton.getSelection() )
+    // {
+    // // TODO use radio buttons (@christoph)
+    // setErrorMessage( "Es kann nur die BBOX-Option ODER eine die active Selektion-Option ausgewählt sein und nicht
+    // beides gleichzeitig" );
+    // return false;
+    // }
     updateMessage();
     setErrorMessage( null );
     return true;
   }
 
-  Filter getFilter( final IWFSLayer layer )
+  Filter getFilter( final IWFSLayer layer ) throws GM_Exception
   {
     // TODO check checkboxes, maybe no filter at all is wanted
     int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
@@ -399,6 +401,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( item.equals( OPS_TOUCHES ) )
       ops = OperationDefines.TOUCHES;
     // TODO wählen des Poperties wenn mehrere gibt, zur Zeit wird nur das defautltGeometryProperty genommen
+    // dies muss mit einer TreeView gelöst werden -> Label und ContentProvider anpassen 
     final IFeatureType ft = layer.getFeatureType();
     if( ft == null )
       return null;
@@ -413,14 +416,20 @@ public class ImportWfsFilterWizardPage extends WizardPage
     else
       val = m_bufferDistance.getText();
     final double distance = Double.parseDouble( val );
+
     if( m_selectedGeom != null )
     {
-      final SpatialOperation operation = new SpatialOperation( ops, propertyName, m_selectedGeom, distance );
+      final Geometry jtsGeom = JTSAdapter.export( m_selectedGeom );
+      final Geometry jtsBufferedGeom = jtsGeom.buffer( distance );
+      final SpatialOperation operation = new SpatialOperation( ops, propertyName, JTSAdapter.wrap( jtsBufferedGeom ), distance );
       return new ComplexFilter( operation );
     }
     else if( m_BBoxButton.getSelection() )
     {
-      final SpatialOperation operation = new SpatialOperation( ops, propertyName, getBBoxFromActiveMap(), distance );
+
+      final Geometry jtsGeom = JTSAdapter.export( getBBoxFromActiveMap() );
+      final Geometry jtsBufferedGeom = jtsGeom.buffer( distance );
+      final SpatialOperation operation = new SpatialOperation( ops, propertyName, JTSAdapter.wrap( jtsBufferedGeom ), distance );
       return new ComplexFilter( operation );
     }
     return null;
@@ -486,89 +495,6 @@ public class ImportWfsFilterWizardPage extends WizardPage
         }
     }
     return null;
-  }
-
-  class FeaturePropertyLabelProvider extends LabelProvider
-  {
-    /**
-     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-     */
-    @Override
-    public String getText( Object element )
-    {
-
-      if( element == null )
-        return null;
-      if( GeometryUtilities.isPolygonGeometry( element ) )
-        return "Polygon";
-      if( GeometryUtilities.isPointGeometry( element ) )
-        return "Point";
-      if( GeometryUtilities.isLineStringGeometry( element ) )
-        return "Line";
-      if( element instanceof Number )
-        return ("Number: " + ((Number) element).toString());
-      if( element instanceof TimeseriesLinkType )
-        return ("TimeSeriesLink: " + ((TimeseriesLinkType) element).getHref());
-      if( element instanceof String )
-        return (String) element;
-      if( element instanceof Boolean )
-        return ((Boolean) element).toString();
-      return "unknown-element";
-    }
-  }
-
-  class FeaturePropertyContentProvider implements IStructuredContentProvider
-  {
-
-    @SuppressWarnings("unused")
-    private ComboViewer m_viewer;
-
-    @SuppressWarnings("unused")
-    private Feature m_feature;
-
-    /**
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-     */
-    public Object[] getElements( Object inputElement )
-    {
-      if( inputElement instanceof Feature )
-      {
-        return ((Feature) inputElement).getProperties();
-      }
-      return new Object[0];
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
-    public void dispose( )
-    {
-      m_viewer = null;
-      m_feature = null;
-
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-     *      java.lang.Object)
-     */
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
-    {
-      m_viewer = (ComboViewer) viewer;
-
-      if( oldInput != newInput )
-      {
-        if( oldInput != null )
-          m_feature = null;
-
-        if( newInput instanceof IFeatureType )
-          m_feature = (Feature) newInput;
-        else
-          m_feature = null;
-      }
-
-    }
-
   }
 
   class GeometryPropertyFilter extends ViewerFilter
