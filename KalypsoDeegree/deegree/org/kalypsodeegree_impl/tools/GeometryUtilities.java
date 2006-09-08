@@ -530,7 +530,7 @@ public class GeometryUtilities
     return getEnvelopeClass().equals( o.getClass() );
   }
 
-  public static Class getEnvelopeClass( )
+  public static Class<? extends Object > getEnvelopeClass( )
   {
     return GM_Envelope.class;
   }
