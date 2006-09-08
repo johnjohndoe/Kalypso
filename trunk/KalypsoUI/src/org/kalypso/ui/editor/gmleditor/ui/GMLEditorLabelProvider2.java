@@ -32,6 +32,8 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -73,39 +75,11 @@ public class GMLEditorLabelProvider2 extends LabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    ImageDescriptor descriptor = null;
-    if( element instanceof Feature )
-    {
-      final IFeatureType featureType = ((Feature) element).getFeatureType();
-      descriptor = FeatureTypeImageCatalog.getImage( null, featureType.getQName() );
-      if( descriptor == null )
-        descriptor = ImageProvider.IMAGE_FEATURE;
-    }
-    else if( element instanceof FeatureAssociationTypeElement )
-      descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
-    else if( element instanceof LinkedFeatureElement2 )
-      descriptor = ImageProvider.IMAGE_FEATURE_LINKED;
-    else if( element instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
-      if( GeometryUtilities.isPointGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_POINT;
-      if( GeometryUtilities.isMultiPointGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
-      if( GeometryUtilities.isLineStringGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_LINE;
-      if( GeometryUtilities.isMultiLineStringGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
-      if( GeometryUtilities.isPolygonGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
-      if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
-        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
-    }
-    else if( GeometryUtilities.getPolygonClass().isAssignableFrom( element.getClass() ) )
-      descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
-    else
-      return null;
+    final ImageDescriptor descriptor = getDescriptor( element );
 
+    if( descriptor == null )
+      return null;
+    
     if( m_images.containsKey( descriptor ) )
       return m_images.get( descriptor );
 
@@ -113,6 +87,48 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     m_images.put( descriptor, createImage );
 
     return createImage;
+  }
+
+  private ImageDescriptor getDescriptor( final Object element )
+  {
+    final QName qname = getQName( element );
+    if( qname != null )
+    {
+      final ImageDescriptor catalogImage = FeatureTypeImageCatalog.getImage( null, qname );
+      if( catalogImage != null )
+        return catalogImage;
+    }
+
+    if( element instanceof Feature )
+      return ImageProvider.IMAGE_FEATURE;
+    
+    if( element instanceof FeatureAssociationTypeElement )
+      return ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
+    
+    if( element instanceof LinkedFeatureElement2 )
+      return ImageProvider.IMAGE_FEATURE_LINKED;
+    
+    if( element instanceof IValuePropertyType )
+    {
+      final IValuePropertyType vpt = (IValuePropertyType) element;
+      if( GeometryUtilities.isPointGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_POINT;
+      if( GeometryUtilities.isMultiPointGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
+      if( GeometryUtilities.isLineStringGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_LINE;
+      if( GeometryUtilities.isMultiLineStringGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
+      if( GeometryUtilities.isPolygonGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_POLYGON;
+      if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
+        return ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
+    }
+    
+    if( GeometryUtilities.getPolygonClass().isAssignableFrom( element.getClass() ) )
+      return ImageProvider.IMAGE_GEOM_PROP_POLYGON;
+
+    return null;
   }
 
   /**
@@ -152,7 +168,27 @@ public class GMLEditorLabelProvider2 extends LabelProvider
 
     if( element == null )
       return "null";
-    
+
     return element.toString();
+  }
+
+  private QName getQName( final Object element )
+  {
+    if( element instanceof Feature )
+    {
+      final IFeatureType featureType = ((Feature) element).getFeatureType();
+      return featureType.getQName();
+    }
+    else if( element instanceof FeatureAssociationTypeElement )
+    {
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      return fate.getAssociationTypeProperty().getQName();
+    }
+    else if( element instanceof LinkedFeatureElement2 )
+    {
+      return null;
+    }
+
+    return null;
   }
 }

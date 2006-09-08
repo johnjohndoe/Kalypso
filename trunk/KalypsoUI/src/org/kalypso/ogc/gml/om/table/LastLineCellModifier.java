@@ -96,10 +96,7 @@ public abstract class LastLineCellModifier implements ICellModifier
         {
           item.setData( newElement );
 
-          // delegate new value to modifier on new element
-          m_modifier.modify( element, property, value );
-
-          addElement( newElement );
+          addElement( newElement, property, value );
         }
       }
     }
@@ -109,5 +106,5 @@ public abstract class LastLineCellModifier implements ICellModifier
 
   protected abstract Object createNewElement( );
 
-  protected abstract void addElement( final Object newElement );
+  protected abstract void addElement( final Object newElement, final String property, final Object value );
 }
