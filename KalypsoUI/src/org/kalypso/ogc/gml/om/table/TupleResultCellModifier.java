@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 public class TupleResultCellModifier implements ICellModifier
 {
@@ -73,6 +74,15 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final TableItem item = (TableItem) element;
     final IRecord record = (IRecord) item.getData();
+    final IComponent component = modifyRecord( record, property, value );
+
+    final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, value ) };
+    m_provider.getResult().fireValuesChanged( changes );
+  }
+
+  /** Does not inform any listeners */
+  public IComponent modifyRecord( final IRecord record, final String property, final Object value )
+  {
     final IComponent component = m_provider.getComponent( property );
 
     final String valueStr = value.toString();
@@ -88,6 +98,8 @@ public class TupleResultCellModifier implements ICellModifier
     }
 
     /* Set value and inform listeners */
-    m_provider.getResult().setValue( record, component, valueToSet );
+    record.setValue( component, valueToSet );
+    
+    return component;
   }
 }

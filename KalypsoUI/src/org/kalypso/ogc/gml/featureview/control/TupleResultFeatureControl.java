@@ -44,16 +44,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -72,7 +68,6 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -127,12 +122,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     final TupleResultCellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
+
+    final TupleResultContentProvider tupleResultContentProvider = m_tupleResultContentProvider;
     final LastLineCellModifier lastLineCellModifier = new LastLineCellModifier( tupleResultCellModifier )
     {
       @Override
       protected Object createNewElement( )
       {
-        final TupleResult result = m_tupleResultContentProvider.getResult();
+        final TupleResult result = tupleResultContentProvider.getResult();
         if( result != null )
           return result.createRecord();
 
@@ -140,10 +137,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       }
 
       @Override
-      protected void addElement( final Object newElement )
+      protected void addElement( final Object newElement, final String property, final Object value )
       {
-        final TupleResult result = m_tupleResultContentProvider.getResult();
-        result.add( (IRecord) newElement );
+        final TupleResult result = tupleResultContentProvider.getResult();
+
+        final IRecord record = (IRecord) newElement;
+        tupleResultCellModifier.modifyRecord( record, property, value );
+
+        result.add( record );
       }
     };
 
@@ -192,7 +193,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       m_ignoreNextUpdateControl = false;
       return;
     }
-    
+
     final Feature feature = getFeature();
 
     if( m_tupleResult != null )
@@ -236,8 +237,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public void valuesChanged( final ValueChange[] changes )
   {
-    fireChanges(false);
-//    fireModified();
+    fireChanges( false );
+    // fireModified();
   }
 
   /**
@@ -246,8 +247,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public void recordsChanged( final IRecord[] records, TYPE type )
   {
-    fireChanges(false);
-//    fireModified();
+    fireChanges( false );
+    // fireModified();
   }
 
   /**
@@ -256,32 +257,32 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    fireChanges(true);
-//    fireModified();
+    fireChanges( true );
+    // fireModified();
   }
 
-  private void fireModified( )
-  {
-    final Event event = new Event();
-    event.display = m_viewer.getTable().getDisplay();
-    event.item = m_viewer.getTable();
-
-    final ModifyEvent modifyEvent = new ModifyEvent( event );
-
-    for( final ModifyListener l : m_listener )
-    {
-      try
-      {
-        l.modifyText( modifyEvent );
-      }
-      catch( final Throwable e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoGisPlugin.getDefault().getLog().log( status );
-      }
-    }
-  }
-
+  /** Should we forward events from the cell-editors here? */
+  // private void fireModified( )
+  // {
+  // final Event event = new Event();
+  // event.display = m_viewer.getTable().getDisplay();
+  // event.item = m_viewer.getTable();
+  //
+  // final ModifyEvent modifyEvent = new ModifyEvent( event );
+  //
+  // for( final ModifyListener l : m_listener )
+  // {
+  // try
+  // {
+  // l.modifyText( modifyEvent );
+  // }
+  // catch( final Throwable e )
+  // {
+  // final IStatus status = StatusUtilities.statusFromThrowable( e );
+  // KalypsoGisPlugin.getDefault().getLog().log( status );
+  // }
+  // }
+  // }
   private void fireChanges( final boolean definitionChanged )
   {
     final Map<IComponent, ComponentDefinition> map = ObservationFeatureFactory.buildComponentDefinitions( m_tupleResult );
@@ -298,7 +299,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final String strResult = ObservationFeatureFactory.serializeResultAsString( m_tupleResult, map );
 
     // PROBLEM: we have 2 changes, so we get entries to the undo queue here
-    // TODO: refaktor so that we can send multiple changes at one go
+    // TODO: refaktor so that we may send multiple changes at one go
     if( definitionChanged )
     {
       final FeatureChange change = new FeatureChange( obsFeature, resultDefPT, rd );
