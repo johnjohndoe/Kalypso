@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Kalypso Simulation Platform">
+         <property
+               name="aboutImage"
+               value="etc/aboutKalypso.gif"/>
+         <property
+               name="aboutText"
+               value="%blurb"/>
+         <property
+               name="windowImages"
+               value="etc/kalypso16.gif,etc/kalypso32.gif"/>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.kalypso.model.product.introID">
+      </intro>
+      <introProductBinding
+            introId="org.kalypso.model.product.introID"
+            productId="org.kalypso.model.product.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.kalypso.model.product.introID"
+            content="content/introContent.xml"
+            id="org.kalypso.model.product.configId">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
+</plugin>

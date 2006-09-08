@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelProduct Plug-in
+Bundle-SymbolicName: org.kalypso.model.product; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: org.kalypso.model.product/
+Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.intro,
+ org.eclipse.ui.forms,
+ org.eclipse.swt,
+ org.kalypso.contribs.eclipsercp
+Eclipse-AutoStart: true
