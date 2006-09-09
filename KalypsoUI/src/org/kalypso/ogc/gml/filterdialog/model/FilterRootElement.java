@@ -49,7 +49,7 @@ public class FilterRootElement implements Filter
 {
   private transient ListenerList m_listeners = null;
 
-  private final String m_name = "FILTER";
+  private final String m_name = "FILTER"; //$NON-NLS-1$
 
   private Filter m_filter = null;
 

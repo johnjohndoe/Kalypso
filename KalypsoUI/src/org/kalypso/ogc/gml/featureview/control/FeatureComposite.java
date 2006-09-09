@@ -75,6 +75,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -108,7 +109,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
   /** Used for the compability-hack. Is it possible to get this from the binding classes? */
-  private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
+  private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org"; //$NON-NLS-1$
 
   private final Collection<IFeatureControl> m_featureControls = new ArrayList<IFeatureControl>();
 
@@ -354,7 +355,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           }
           catch( final ParseException e )
           {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen eines Wertes auf der Feature-View Vorlage: " + any );
+            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse") + any ); //$NON-NLS-1$
             KalypsoGisPlugin.getDefault().getLog().log( status );
           }
         }
@@ -413,7 +414,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "<could not create control>" );
+    label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.create") ); //$NON-NLS-1$
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -553,7 +554,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         {
           try
           {
-            final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } );
+            final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } ); //$NON-NLS-1$
             if( method != null )
               method.invoke( label, annotation.getLabel() );
           }
@@ -579,7 +580,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
    * So old entries are interpreted against the namespace of the featuretemplate.
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") //$NON-NLS-1$
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )
@@ -592,7 +593,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( property.getNamespaceURI().equals( FEATUREVIEW_NAMESPACE ) )
     {
       final String localPart = property.getLocalPart();
-      PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null );
+      PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null ); //$NON-NLS-1$ //$NON-NLS-2$
       return featureType.getProperty( localPart );
     }
 

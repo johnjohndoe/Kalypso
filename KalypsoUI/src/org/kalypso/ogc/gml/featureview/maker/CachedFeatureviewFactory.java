@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class CachedFeatureviewFactory implements IFeatureviewFactory
 {
   /** Used for the compability-hack. Is it possible to get this from the binding classes? */
-  private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org";
+  private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org"; //$NON-NLS-1$
 
   /** Map of especially added view-templates. */
   private final Map<QName, FeatureviewType> m_viewMap = new HashMap<QName, FeatureviewType>();
@@ -158,7 +158,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
           addView( element );
       }
       else
-        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
+        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final JAXBException e )
     {

@@ -37,6 +37,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
@@ -80,7 +81,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
       inlineTypeHandler = (ZmlInlineTypeHandler) m_typeHandler;
       final QName typeName = inlineTypeHandler.getTypeName();
 
-      if( !(typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) )
+      if( !(typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" )) ) //$NON-NLS-1$
         dialog = new ObservationViewerDialog( shell, false, true, true, ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE | ObservationViewerDialog.BUTTON_EXEL_IMPORT
             | ObservationViewerDialog.BUTTON_EXEL_EXPORT, inlineTypeHandler.getAxisTypes() );
       else
@@ -118,6 +119,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return "Diagramm...";
+    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog.diagram"); //$NON-NLS-1$
   }
 }

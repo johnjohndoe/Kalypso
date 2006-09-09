@@ -45,6 +45,7 @@ import java.util.Collection;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 
 /**
@@ -66,8 +67,8 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
   public NotImplementedFeatureDialog()
   {
     super();
-    m_userInfoMessage = "Die Operation ist noch nicht implementiert.";
-    m_cellInfoMessage = "<nicht editierbar>";
+    m_userInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
+    m_cellInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable"); //$NON-NLS-1$
   }
 
   /**
@@ -75,7 +76,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    MessageDialog.openInformation( shell, "Feature editieren", m_userInfoMessage );
+    MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit"), m_userInfoMessage ); //$NON-NLS-1$
     return Window.CANCEL;
   }
 

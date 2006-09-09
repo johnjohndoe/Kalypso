@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -100,7 +101,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return "...";
+    return "..."; //$NON-NLS-1$
   }
 
   public RectifiedGridDomain getRectifiedGridDomain( )
@@ -120,7 +121,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
     @Override
     protected Control createDialogArea( final Composite parent )
     {
-      getShell().setText( "RectifiedGridDomain properties" );
+      getShell().setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.properties") ); //$NON-NLS-1$
 
       final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
@@ -163,49 +164,49 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       originLayout.numColumns = 2;
       originGroup.setLayout( originLayout );
       originGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
-      originGroup.setText( "Origin" );
+      originGroup.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.origin") ); //$NON-NLS-1$
       Label cooLabel = new Label( originGroup, SWT.NONE );
-      cooLabel.setText( "CoordinateSystem: " );
+      cooLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.cs") ); //$NON-NLS-1$
       Label cooValueLabel = new Label( originGroup, SWT.NONE );
       cooValueLabel.setText( gridDomain.getOrigin( null ).getCoordinateSystem().getName() );
       Label xLabel = new Label( originGroup, SWT.NONE );
-      xLabel.setText( "Coordinate X: " );
+      xLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.coordinate")+" X: " ); //$NON-NLS-1$ //$NON-NLS-2$
       Label xValueLabel = new Label( originGroup, SWT.NONE );
-      xValueLabel.setText( gridDomain.getOrigin( null ).getX() + "" );
+      xValueLabel.setText( gridDomain.getOrigin( null ).getX() + "" ); //$NON-NLS-1$
       Label yLabel = new Label( originGroup, SWT.NONE );
-      yLabel.setText( "Coordinate Y: " );
+      yLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.coordinate")+" Y: " ); //$NON-NLS-1$ //$NON-NLS-2$
       Label yValueLabel = new Label( originGroup, SWT.NONE );
-      yValueLabel.setText( gridDomain.getOrigin( null ).getY() + "" );
+      yValueLabel.setText( gridDomain.getOrigin( null ).getY() + "" ); //$NON-NLS-1$
 
       Group gridRangeGroup = new Group( mainComposite, style );
       GridLayout gridRangeLayout = new GridLayout();
       gridRangeLayout.numColumns = 2;
       gridRangeGroup.setLayout( gridRangeLayout );
       gridRangeGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
-      gridRangeGroup.setText( "GridRange" );
+      gridRangeGroup.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.range") ); //$NON-NLS-1$
       Label colLabel = new Label( gridRangeGroup, SWT.NONE );
-      colLabel.setText( "Number of columns: " );
+      colLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.columns") ); //$NON-NLS-1$
       Label colValueLabel = new Label( gridRangeGroup, SWT.NONE );
-      colValueLabel.setText( gridDomain.getNumColumns() + "" );
+      colValueLabel.setText( gridDomain.getNumColumns() + "" ); //$NON-NLS-1$
       Label rowLabel = new Label( gridRangeGroup, SWT.NONE );
-      rowLabel.setText( "Number of rows: " );
+      rowLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.rows") ); //$NON-NLS-1$
       Label rowValueLabel = new Label( gridRangeGroup, SWT.NONE );
-      rowValueLabel.setText( gridDomain.getNumRows() + "" );
+      rowValueLabel.setText( gridDomain.getNumRows() + "" ); //$NON-NLS-1$
 
       Group offsetGroup = new Group( mainComposite, style );
       GridLayout offsetLayout = new GridLayout();
       offsetLayout.numColumns = 2;
       offsetGroup.setLayout( offsetLayout );
       offsetGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
-      offsetGroup.setText( "Offset" );
+      offsetGroup.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.offset") ); //$NON-NLS-1$
       Label offsetXLabel = new Label( offsetGroup, SWT.NONE );
-      offsetXLabel.setText( "Offset X: " );
+      offsetXLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.offset")+" X: " ); //$NON-NLS-1$ //$NON-NLS-2$
       Label offsetXValueLabel = new Label( offsetGroup, SWT.NONE );
-      offsetXValueLabel.setText( gridDomain.getOffset()[0] + "" );
+      offsetXValueLabel.setText( gridDomain.getOffset()[0] + "" ); //$NON-NLS-1$
       Label offsetYLabel = new Label( offsetGroup, SWT.NONE );
-      offsetYLabel.setText( "Offset Y: " );
+      offsetYLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog.offset")+" Y: " ); //$NON-NLS-1$ //$NON-NLS-2$
       Label offsetYValueLabel = new Label( offsetGroup, SWT.NONE );
-      offsetYValueLabel.setText( gridDomain.getOffset()[1] + "" );
+      offsetYValueLabel.setText( gridDomain.getOffset()[1] + "" ); //$NON-NLS-1$
 
       return mainComposite;
     }

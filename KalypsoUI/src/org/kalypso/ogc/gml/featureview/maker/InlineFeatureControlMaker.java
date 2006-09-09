@@ -76,14 +76,14 @@ public class InlineFeatureControlMaker implements IControlMaker
       return false;
 
     final SubcompositeType compo = FeatureviewHelper.FACTORY.createSubcompositeType();
-    compo.setStyle( "SWT.NONE" );
+    compo.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     compo.setProperty( ftp.getQName() );
 
     final GridDataType griddata = FeatureviewHelper.FACTORY.createGridDataType();
     final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
 
-    griddata.setHorizontalAlignment( "GridData.FILL" );
-    griddata.setVerticalAlignment( "GridData.FILL" );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setGrabExcessHorizontalSpace( true );
     griddata.setGrabExcessVerticalSpace( true );
     griddata.setHorizontalSpan( 2 );
@@ -95,8 +95,8 @@ public class InlineFeatureControlMaker implements IControlMaker
     final GridDataType groupdata = FeatureviewHelper.FACTORY.createGridDataType();
     groupdata.setGrabExcessHorizontalSpace( true );
     groupdata.setGrabExcessVerticalSpace( true );
-    groupdata.setHorizontalAlignment( "GridData.FILL" );
-    groupdata.setVerticalAlignment( "GridData.FILL" );
+    groupdata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    groupdata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     groupdata.setHorizontalSpan( ((GridLayout)parentLayout).getNumColumns() );
 
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
@@ -106,7 +106,7 @@ public class InlineFeatureControlMaker implements IControlMaker
     group.setLayoutData( FeatureviewHelper.FACTORY.createGridData( groupdata ) );
     group.setText( text );
     group.setTooltip( tooltip );
-    group.setStyle( "SWT.NONE" );
+    group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     final GridLayout gridLayout = FeatureviewHelper.FACTORY.createGridLayout();
     gridLayout.setNumColumns( 2 );

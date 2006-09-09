@@ -51,10 +51,10 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 public class FeatureTypeContentProvider implements IStructuredContentProvider
 {
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   private ComboViewer m_viewer;
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   private IFeatureType m_ft;
 
   /**

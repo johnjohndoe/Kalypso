@@ -97,7 +97,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     /* Add a label */
     {
       final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
-      label.setStyle( "SWT.NONE" );
+      label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
       label.setText( text );
       label.setTooltip( tooltip );
@@ -105,7 +105,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
 
       final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
-      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       labelGridData.setVerticalAlignment( getLabelVerticalAlignment() );
       label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
 
@@ -134,12 +134,12 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     for( int i = cellCount; i < numColumns; i++ )
     {
       final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
-      label.setStyle( "SWT.NONE" );
+      label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
       label.setVisible( false );
 
       final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
-      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
 
       controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
@@ -149,14 +149,14 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     if( m_addValidator )
     {
       final ValidatorLabelType validatorLabel = FeatureviewHelper.FACTORY.createValidatorLabelType();
-      validatorLabel.setStyle( "SWT.NONE" );
+      validatorLabel.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
       validatorLabel.setVisible( true );
       validatorLabel.setProperty( property );
 
       final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
-      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       validatorLabel.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
       controlList.add( FeatureviewHelper.FACTORY.createValidatorlabel( validatorLabel ) );
     }
@@ -164,12 +164,12 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     {
       /* Empty label. */
       final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
-      label.setStyle( "SWT.NONE" );
+      label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
       label.setVisible( false );
 
       final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
-      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
 
       controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
@@ -180,7 +180,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
 
   protected String getLabelVerticalAlignment( )
   {
-    return "GridData.CENTER";
+    return "GridData.CENTER"; //$NON-NLS-1$
   }
 
   /**

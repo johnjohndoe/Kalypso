@@ -46,12 +46,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
@@ -60,12 +56,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.AbstractObservationView;
-/*
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.Diagram;
-import org.kalypso.swtchart.configuration.ChartLoader;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-*/
 
 /**
  * @author schlienger

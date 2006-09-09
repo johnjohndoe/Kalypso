@@ -45,6 +45,7 @@ import java.util.Collection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -80,7 +81,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
 
     if( envelope == null )
     {
-      values = new Double[] { new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ) };
+      values = new Double[] { new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     else
     {
@@ -117,7 +118,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return "Werte bearbeiten";
+    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog.editvalues"); //$NON-NLS-1$
   }
 
 }

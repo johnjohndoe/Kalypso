@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureTypeActionFilter implements IActionFilterEx
 {
-  public final static String ATTR_FEATURE_TYPE = "featureType";
+  public final static String ATTR_FEATURE_TYPE = "featureType"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
@@ -76,7 +76,7 @@ public class FeatureTypeActionFilter implements IActionFilterEx
 
     if( ATTR_FEATURE_TYPE.equals( name ) )
     {
-      final String[] strings = value.split( ";" );
+      final String[] strings = value.split( ";" ); //$NON-NLS-1$
       for( final String string : strings )
       {
         final QName qName = QNameUtilities.createQName( string );

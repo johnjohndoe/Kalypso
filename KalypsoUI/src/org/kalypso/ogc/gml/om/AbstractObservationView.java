@@ -52,7 +52,6 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;

@@ -56,7 +56,7 @@ import org.kalypso.template.featureview.GridDataType;
  */
 public class DefaultControlMaker extends AbstractValueControlMaker
 {
-  public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" );
+  public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" ); //$NON-NLS-1$
 
   public DefaultControlMaker( final boolean addValidator )
   {

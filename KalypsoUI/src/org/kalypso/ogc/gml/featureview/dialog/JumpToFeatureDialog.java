@@ -47,6 +47,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
@@ -97,14 +98,13 @@ public class JumpToFeatureDialog implements IFeatureDialog
   public String getLabel( )
   {
     if( m_feature == null )
-      return "<Link nicht gesetzt oder nicht gültig>";
-    
+      return "<" + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link") + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     final String label = FeatureHelper.getAnnotationValue( m_feature, IAnnotation.ANNO_LABEL );
 
-    return "'" + label + "' editieren";
-    
-    
-//    return m_feature == null ? "<Link nicht gesetzt oder nicht gültig>" : "Link zu Feature: " + m_feature.getId();
+    return "'" + label + "' " + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.edit"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    // return m_feature == null ? "<Link nicht gesetzt oder nicht gültig>" : "Link zu Feature: " + m_feature.getId();
   }
 
 }

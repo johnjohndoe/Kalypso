@@ -45,6 +45,7 @@ import java.util.Collection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -118,7 +119,7 @@ public class PointFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return "Werte bearbeiten";
+    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values"); //$NON-NLS-1$
   }
 
 }

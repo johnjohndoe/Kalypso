@@ -88,13 +88,13 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
     {
       // TODO Is it safe to remove the following two lines, because the composite should not grab more space than
       // needed. */
-      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setHorizontalSpan( 2 );
     }
     else
     {
-      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       griddata.setHorizontalSpan( 1 );
 
       // TODO is this ok for all controls?
