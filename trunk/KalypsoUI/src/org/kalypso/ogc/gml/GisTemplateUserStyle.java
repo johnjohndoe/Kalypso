@@ -83,7 +83,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
    */
   private static UserStyle createDummyStyle( )
   {
-    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] );
+    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public GisTemplateUserStyle( final UserStyle style, final String name )
@@ -151,11 +151,11 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     if( m_styleKey == null )
       return;
-    styleType.setActuate( "onRequest" );
+    styleType.setActuate( "onRequest" ); //$NON-NLS-1$
     styleType.setHref( m_styleKey.getLocation() );
     styleType.setLinktype( m_styleKey.getType() );
     styleType.setStyle( m_styleName );
-    styleType.setType( "simple" );
+    styleType.setType( "simple" ); //$NON-NLS-1$
     stylesList.add( styleType );
   }
 

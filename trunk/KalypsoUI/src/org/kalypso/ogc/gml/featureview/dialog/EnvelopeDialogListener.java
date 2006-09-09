@@ -79,7 +79,7 @@ final class EnvelopeDialogListener implements ModifyListener
     }
     catch( Exception ex )
     {
-      values[m_whichText] = new Double( "0.0" );
+      values[m_whichText] = new Double( "0.0" ); //$NON-NLS-1$
 
       m_envDialog.setValues( values );
     }

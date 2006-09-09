@@ -41,6 +41,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -71,7 +72,7 @@ public class ResourceFileDialog implements IFeatureDialog
     resultFile = getResourceFile();
     if( resultFile == null )
       resultFile = workspaceRoot;
-    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot, new ResourceSelectionValidator() );
+    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot, new ResourceSelectionValidator() ); //$NON-NLS-1$
     final int open;
     selectionDialog.open();
     Object[] result = selectionDialog.getResult();
@@ -108,7 +109,7 @@ public class ResourceFileDialog implements IFeatureDialog
 
   public String getLabel( )
   {
-    String label = "Choose...";
+    String label = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$
     if( getResourceFile() != null )
       label = getResourceFile().toString();
     return label;

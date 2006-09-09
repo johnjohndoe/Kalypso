@@ -127,7 +127,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       {
         /* Null entry to delete link if this is allowed */
         if( rt.isNillable() )
-          m_entries.put( null, "" );
+          m_entries.put( null, "" ); //$NON-NLS-1$
 
         /* Find all substituting features. */
         final IFeatureType targetFeatureType = rt.getTargetFeatureType();

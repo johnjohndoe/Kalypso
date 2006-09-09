@@ -84,6 +84,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -110,11 +111,11 @@ import org.w3c.dom.Element;
  */
 public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciever
 {
-  private static final String EMPTY_FEATURE_LIST = "-EMPTY FEATURE ID LIST-";
+  private static final String EMPTY_FEATURE_LIST = Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.empty"); //$NON-NLS-1$
 
   private static final int ID_BUTTON_APPLY = 100;
 
-  private static final String LABEL_BUTTON_APPLY = "Anwenden";
+  private static final String LABEL_BUTTON_APPLY = Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.apply"); //$NON-NLS-1$
 
   public static final int APPLY_FILTER = 101;
 
@@ -198,7 +199,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     }
     catch( Exception e )
     {
-      MessageDialog.openError( getShell(), "Filterfehler", "Fehler beim Anwenden des Filters, dieser Dialog hat keinen UserStyle" );
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.error"), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.error2") ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
 
@@ -240,7 +241,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
     /* tree-group */
     final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( "Filter für " );// + AnnotationUtilities.getAnnotation( m_featureType ).getLabel() );
+    treeGroup.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.filterfor") );// + AnnotationUtilities.getAnnotation( m_featureType ).getLabel() ); //$NON-NLS-1$
     GridData data3 = new GridData( GridData.FILL_BOTH );
     data3.grabExcessHorizontalSpace = true;
     data3.grabExcessVerticalSpace = true;
@@ -322,7 +323,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
           else if( firstElement instanceof FeatureFilter )
           {
             FeatureFilter filter = (FeatureFilter) firstElement;
-            m_propGroup.setText( "Eigenschaften-Feature Filter" );
+            m_propGroup.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.featfilter") ); //$NON-NLS-1$
             final Composite ffComposite = new Composite( m_propGroup, SWT.NONE );
             GridLayout ffGridLayout = new GridLayout();
             ffComposite.setLayout( ffGridLayout );
@@ -333,7 +334,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
             ffComposite.setLayoutData( ffGridData );
             ArrayList<FeatureId> featureIds = filter.getFeatureIds();
             Label featureFilterLabel = new Label( ffComposite, SWT.NULL );
-            featureFilterLabel.setText( "Feature-ID's: " );
+            featureFilterLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.featids") ); //$NON-NLS-1$
             final List idList = new List( ffComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
             GridData gridData = new GridData();
             gridData.widthHint = 150;
@@ -344,8 +345,8 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
             else
               idList.add( EMPTY_FEATURE_LIST );
             Button importSelectedFeatures = new Button( ffComposite, SWT.CHECK );
-            importSelectedFeatures.setText( "Selektion übernehmen" );
-            importSelectedFeatures.setToolTipText( "Übernimmt die aktuelle Selektion aus der Karte in den Feature-Filter" );
+            importSelectedFeatures.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.selection") ); //$NON-NLS-1$
+            importSelectedFeatures.setToolTipText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.selection2") ); //$NON-NLS-1$
             importSelectedFeatures.addSelectionListener( new SelectionAdapter()
             {
 
@@ -398,7 +399,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_viewer.expandAll();
     // property group
     m_propGroup = new Group( m_top, SWT.FILL );
-    m_propGroup.setText( "Filter-Eigenschaften" );
+    m_propGroup.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.properties") ); //$NON-NLS-1$
     m_propGroup.setLayout( new GridLayout( 2, true ) );
     GridData data = new GridData( GridData.FILL_BOTH );
     data.grabExcessHorizontalSpace = true;
@@ -410,14 +411,14 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     // toolbar
     m_toolBar = new ToolBar( m_top, SWT.NULL | SWT.FLAT );
     ToolItem m_loadFilterItem = new ToolItem( m_toolBar, SWT.NONE );
-    m_loadFilterItem.setToolTipText( "Filter aus dem Workspace laden" );
+    m_loadFilterItem.setToolTipText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.load") ); //$NON-NLS-1$
     m_loadFilterItem.setImage( ImageProvider.IMAGE_UTIL_IMPORT_WIZARD.createImage() );
     m_loadFilterItem.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(), "Filter auswählen", new String[] { "xml" }, workspace.getRoot(), new ResourceSelectionValidator() );
+        KalypsoResourceSelectionDialog dialog2 = new KalypsoResourceSelectionDialog( getShell(), workspace.getRoot(), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.choose"), new String[] { "xml" }, workspace.getRoot(), new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$
         int open = dialog2.open();
         if( open == Window.OK )
         {
@@ -447,7 +448,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       }
     } );
     ToolItem m_saveFilterItem = new ToolItem( m_toolBar, SWT.NONE );
-    m_saveFilterItem.setToolTipText( "Filter speichern" );
+    m_saveFilterItem.setToolTipText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.save") ); //$NON-NLS-1$
     m_saveFilterItem.setImage( ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage() );
     m_saveFilterItem.addSelectionListener( new SelectionListener()
     {
@@ -522,7 +523,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
       final Filter filter = getFilter();
-      String xml = "";
+      String xml = ""; //$NON-NLS-1$
       if( filter != null )
       {
         xml = filter.toXML().toString();
@@ -546,7 +547,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     shell.setSize( 650, 350 );
   }
 
-  protected Action m_action = new Action( "&Löschen", ImageProvider.IMAGE_STYLEEDITOR_REMOVE )
+  protected Action m_action = new Action( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.del"), ImageProvider.IMAGE_STYLEEDITOR_REMOVE ) //$NON-NLS-1$
   {
     @Override
     public void run( )
@@ -560,7 +561,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         setErrorMessage( null );
         if( m_newOpsComposite != null )
           m_newOpsComposite.dispose();
-        m_propGroup.setText( "Eigenschaften-Unbekannte Operation" );
+        m_propGroup.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.unknown") ); //$NON-NLS-1$
       }
     }
   };
@@ -602,12 +603,12 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     catch( FilterConstructionException e )
     {
       e.printStackTrace();
-      MessageDialog.openWarning( getShell(), "Filter-Dialog", "Fehler beim laden des Filters: " + e.getMessage() );
+      MessageDialog.openWarning( getShell(), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.dialog"), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.errorload") + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( Exception e )
     {
       e.printStackTrace();
-      MessageDialog.openWarning( getShell(), "Filter-Dialog", "Fehler beim laden des Filters: " + e.getMessage() );
+      MessageDialog.openWarning( getShell(), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.dialog"), Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.errorload") + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return filter;
   }

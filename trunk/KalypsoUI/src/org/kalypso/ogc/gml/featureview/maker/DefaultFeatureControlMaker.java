@@ -50,6 +50,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.adapter.DefaultAnnotation;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.LayoutType;
@@ -62,15 +63,15 @@ import org.kalypso.template.featureview.Text;
  */
 public class DefaultFeatureControlMaker extends AbstractValueControlMaker
 {
-  public final static QName QNAME_GML_METADATA = new QName( NS.GML3, "metaDataProperty" );
+  public final static QName QNAME_GML_METADATA = new QName( NS.GML3, "metaDataProperty" ); //$NON-NLS-1$
 
-  public final static QName QNAME_GML_LOCATION = new QName( NS.GML3, "location" );
+  public final static QName QNAME_GML_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
-  public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" );
+  public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" ); //$NON-NLS-1$
 
-  public final static QName QNAME_GML_DESCRIPTION = new QName( NS.GML3, "description" );
+  public final static QName QNAME_GML_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
 
-  public final static QName QNAME_GML_NAME = new QName( NS.GML3, "name" );
+  public final static QName QNAME_GML_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private final List<JAXBElement< ? extends ControlType>> m_descControls = new ArrayList<JAXBElement< ? extends ControlType>>();
 
@@ -127,13 +128,13 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     {
       // everything else will be edited in a text field
       final Text editor = FeatureviewHelper.FACTORY.createText();
-      editor.setStyle( "SWT.MULTI | SWT.BORDER" );
+      editor.setStyle( "SWT.MULTI | SWT.BORDER" ); //$NON-NLS-1$
       editor.setEditable( true );
       editor.setProperty( qname );
 
       griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
-      griddata.setHorizontalAlignment( "GridData.FILL" );
-      griddata.setVerticalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+      griddata.setVerticalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       // REMARK: this value is random: where do we get a good value (liek 2 times the normal height of a text field?).
       griddata.setHeightHint( new Integer( 30 ) );
       griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
@@ -146,11 +147,11 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     {
       // everything else will be edited in a text field
       final Text editor = FeatureviewHelper.FACTORY.createText();
-      editor.setStyle( "SWT.BORDER" );
+      editor.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
       editor.setEditable( true );
       editor.setProperty( qname );
 
-      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       griddata.setHorizontalSpan( 1 );
       griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
 
@@ -164,7 +165,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   @Override
   protected String getLabelVerticalAlignment( )
   {
-    return "GridData.BEGINNING";
+    return "GridData.BEGINNING"; //$NON-NLS-1$
   }
 
   /**
@@ -175,10 +176,10 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   {
     final QName qname = ftp.getQName();
     if( QNAME_GML_DESCRIPTION.equals( qname ) )
-      return new DefaultAnnotation( "de", "Beschreibung" );
+      return new DefaultAnnotation( "de", Messages.getString("org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.desc") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( QNAME_GML_NAME.equals( qname ) )
-      return new DefaultAnnotation( "de", "Name" );
+      return new DefaultAnnotation( "de", Messages.getString("org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.name") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return super.getAnnotation( ftp );
   }

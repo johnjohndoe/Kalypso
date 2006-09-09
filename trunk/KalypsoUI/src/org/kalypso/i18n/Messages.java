@@ -38,41 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.maker;
+package org.kalypso.i18n;
 
-import javax.xml.bind.JAXBElement;
-
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridDataType;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Displays a simple button to edit the property.
- * 
- * @author Gernot Belger
+ * @author w00t
+ *
  */
-public class ButtonControlMaker extends AbstractValueControlMaker
+public class Messages
 {
-  public ButtonControlMaker( final boolean addValidator )
+  private static final String BUNDLE_NAME = "org.kalypso.i18n.messages_de"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    super( addValidator );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
-   */
-  @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType fpt, final GridDataType griddata )
+  public static String getString( String key )
   {
-    final Button button = FeatureviewHelper.FACTORY.createButton();
-    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
-    button.setProperty( fpt.getQName() );
-
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-    griddata.setHorizontalSpan( 2 );
-
-    return FeatureviewHelper.FACTORY.createButton( button );
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
-
 }

@@ -41,7 +41,6 @@ import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -65,20 +64,19 @@ public abstract class AbstractCreateOperationActionDelegate implements IActionDe
     action.setEnabled( false );
     if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IStructuredSelection)selection;
+      m_selection = (IStructuredSelection) selection;
       Object firstElement = m_selection.getFirstElement();
       if( firstElement instanceof ComplexFilter )
       {
-        Operation operation = ( (ComplexFilter)firstElement ).getOperation();
+        Operation operation = ((ComplexFilter) firstElement).getOperation();
         if( operation == null )
           action.setEnabled( true );
       }
       if( firstElement instanceof LogicalOperation )
       {
-        int operatorId = ( (LogicalOperation)firstElement ).getOperatorId();
-        ArrayList arguments = ( (LogicalOperation)firstElement ).getArguments();
-        if( arguments == null || arguments.size() < 2
-            && ( operatorId == OperationDefines.AND || operatorId == OperationDefines.OR ) )
+        int operatorId = ((LogicalOperation) firstElement).getOperatorId();
+        ArrayList arguments = ((LogicalOperation) firstElement).getArguments();
+        if( arguments == null || arguments.size() < 2 && (operatorId == OperationDefines.AND || operatorId == OperationDefines.OR) )
           action.setEnabled( true );
         if( arguments == null || arguments.size() < 1 && operatorId == OperationDefines.NOT )
           action.setEnabled( true );

@@ -202,13 +202,13 @@ public class GisTemplateHelper
   public static void fillLayerType( final StyledLayerType layer, String id, String name, boolean visible, KalypsoWMSTheme wmsTheme )
   {
     layer.setName( name );
-    layer.setFeaturePath( "" );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
     layer.setVisible( visible );
     layer.setId( id );
     layer.setHref( wmsTheme.getSource() );
     layer.setLinktype( KalypsoWMSTheme.TYPE_NAME );
-    layer.setActuate( "onRequest" );
-    layer.setType( "simple" );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
   }
 
   /**

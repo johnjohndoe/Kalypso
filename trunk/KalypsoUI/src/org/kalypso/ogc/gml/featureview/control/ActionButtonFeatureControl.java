@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -95,7 +96,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     final Bundle bundle = Platform.getBundle( pluginId );
     if( bundle == null )
     {
-      log.log( StatusUtilities.createWarningStatus( "Plug-in id not found: " + pluginId ) );
+      log.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.idnotfound" ) + pluginId ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -106,22 +107,22 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     }
     catch( final ClassNotFoundException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Class not found: " + actionClassName, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.classnotfound" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final InstantiationException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Could not instantiate class: " + actionClassName, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.instantiate" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final IllegalAccessException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Could not access class: " + actionClassName, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.access" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final ClassCastException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Class does not implement org.eclipse.jface.action.IAction: " + actionClassName, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.implement" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
 
@@ -158,14 +159,16 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
     if( m_action == null )
     {
-      m_button.setText( "-Action invalid-" );
+      m_button.setText( "-" //$NON-NLS-1$
+          + Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.invalid" ) //$NON-NLS-1$ 
+          + "-" ); //$NON-NLS-1$
       m_button.setImage( null );
       m_button.setToolTipText( null );
     }
     else
     {
       m_button.setText( m_action.getText() );
-//      m_button.setImage( m_action.getImageDescriptor() );
+      // m_button.setImage( m_action.getImageDescriptor() );
       m_button.setToolTipText( m_action.getToolTipText() );
     }
 
@@ -194,7 +197,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
       e.width = e2.width;
       e.x = e2.x;
       e.y = e2.y;
-      
+
       m_action.runWithEvent( e );
     }
   }
@@ -239,6 +242,6 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
   public void updateControl( )
   {
     // Action is fixed, so nothing to do except enabling/disabling the button
-    
+
   }
 }

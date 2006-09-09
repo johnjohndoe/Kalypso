@@ -60,6 +60,7 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -126,7 +127,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager )
   {
-    super( "<no name>" );
+    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ) ); //$NON-NLS-1$
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final String source = layerType.getHref();
@@ -217,7 +218,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern" ) ); //$NON-NLS-1$
     }
   }
 
@@ -247,8 +248,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     layer.setId( id );
     layer.setHref( key.getLocation() );
     layer.setLinktype( key.getType() );
-    layer.setActuate( "onRequest" );
-    layer.setType( "simple" );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
     layer.setFeaturePath( m_featurePath );
     if( layer instanceof StyledLayerType )
     {
@@ -272,8 +273,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( m_disposed ) // if disposed, do not register any more objects at the pool
-      LOGGER.info( "Theme already disposed: " + this );
-    LOGGER.info( "Object loaded: " + key + "   -  Object: " + newValue );
+      LOGGER.info( "Theme already disposed: " + this ); //$NON-NLS-1$
+    LOGGER.info( "Object loaded: " + key + "   -  Object: " + newValue ); //$NON-NLS-1$ //$NON-NLS-2$
     try
     {
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
@@ -314,14 +315,16 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               final UserStyle userStyle;
               if( fts == null )
               {
-                System.out.println( "no default style found for " + featureType.getQName() );
-                userStyle = defaultStyleFactory.createUserStyle( featureType, " - generierter Standard-Stil -" );
+                System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
+                userStyle = defaultStyleFactory.createUserStyle( featureType, " - " //$NON-NLS-1$
+                    + Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.generatedstyle" ) //$NON-NLS-1$ 
+                    + " -" ); //$NON-NLS-1$
               }
               else
               {
-                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts );
+                userStyle = (UserStyle_Impl) StyleFactory.createStyle( "style", "style", " default style for " + featureType.getQName().getLocalPart(), fts ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
-              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, "default" );
+              final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, "default" ); //$NON-NLS-1$
               addStyle( kus );
             }
           }

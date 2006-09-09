@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -78,9 +79,9 @@ public class DictionaryCatalog
   {
     try
     {
-      final String[] strings = urnAndRef.split( "#" );
+      final String[] strings = urnAndRef.split( "#" ); //$NON-NLS-1$
       if( strings.length != 2 )
-        throw new IllegalArgumentException( "This catalog can only resolve entries of the form urn#ref: " + urnAndRef );
+        throw new IllegalArgumentException( "This catalog can only resolve entries of the form urn#ref: " + urnAndRef ); //$NON-NLS-1$
 
       final String urn = strings[0].trim();
       final String ref = strings[1].trim();
@@ -93,7 +94,7 @@ public class DictionaryCatalog
         return null;
 
       // load gml from url
-      final IPoolableObjectType key = new PoolableObjectType( "gml", location.toExternalForm(), null );
+      final IPoolableObjectType key = new PoolableObjectType( "gml", location.toExternalForm(), null ); //$NON-NLS-1$
       final DictionaryEntry dictionaryEntry = new DictionaryEntry( key );
 
       // wait for the gml to be loaded
@@ -137,12 +138,12 @@ public class DictionaryCatalog
   public void releaseEntry( final Feature entry )
   {
     if( !(entry instanceof DictionaryFeature) )
-      throw new IllegalArgumentException( "This was no feature got from this catalog: " + entry );
+      throw new IllegalArgumentException( "This was no feature got from this catalog: " + entry ); //$NON-NLS-1$
 
     final DictionaryEntry dictEntry = m_featureMap.get( entry );
     if( dictEntry == null )
     {
-      final IStatus status = StatusUtilities.createWarningStatus( "Trying to release unknown dictionary entry: " + entry );
+      final IStatus status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryCatalog.releaseunknownentry") + entry ); //$NON-NLS-1$
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return;
     }

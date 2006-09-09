@@ -67,7 +67,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
     final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp );
     dialog.setContext( m_feature.getWorkspace().getContext() );
-    dialog.setInput( tslink == null ? "" : tslink.getHref() );
+    dialog.setInput( tslink == null ? "" : tslink.getHref() ); //$NON-NLS-1$
 
     final int open = dialog.open();
     FeatureChange fChange = null;
@@ -102,6 +102,6 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return "...";
+    return "..."; //$NON-NLS-1$
   }
 }

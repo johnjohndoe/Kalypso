@@ -111,7 +111,7 @@ public class FilterLabelProvider extends LabelProvider
       }
       else if( element instanceof FeatureFilter )
       {
-        return "FEAUTER_FILTER";
+        return "FEATURE_FILTER";
       }
       else if( element instanceof ElseFilter )
       {
@@ -142,10 +142,10 @@ public class FilterLabelProvider extends LabelProvider
           if( id == OperationDefines.AND || id == OperationDefines.OR )
           {
             if( args == null || args.size() < 2 )
-              label = label + " *";
+              label = label + " *"; //$NON-NLS-1$
           }
           if( id == OperationDefines.NOT && (args == null || args.size() == 0) )
-            label = label + " *";
+            label = label + " *"; //$NON-NLS-1$
           return label;
         }
         // Comparision
@@ -156,7 +156,7 @@ public class FilterLabelProvider extends LabelProvider
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( firstExpression == null || secondExpression == null )
-            return OperationDefines.getNameById( id ) + " *";// "X = VALUE";
+            return OperationDefines.getNameById( id ) + " *";// "X = VALUE"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
 
           // if( id == OperationDefines.PROPERTYISEQUALTO )
@@ -180,7 +180,7 @@ public class FilterLabelProvider extends LabelProvider
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( literal == null )
-            return OperationDefines.getNameById( id ) + " *";// "TEXT isLike";
+            return OperationDefines.getNameById( id ) + " *";// "TEXT isLike"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
         }
 
@@ -190,7 +190,7 @@ public class FilterLabelProvider extends LabelProvider
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( expression == null )
-            return OperationDefines.getNameById( id ) + " *";// "X = NULL";
+            return OperationDefines.getNameById( id ) + " *";// "X = NULL"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
         }
         if( operation instanceof PropertyIsBetweenOperation )
@@ -200,7 +200,7 @@ public class FilterLabelProvider extends LabelProvider
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( upperBoundary == null || lowerBoundary == null )
-            return OperationDefines.getNameById( id ) + " *";
+            return OperationDefines.getNameById( id ) + " *"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );// "VALUE1 < X < VALUE2";
         }
       }
@@ -212,7 +212,7 @@ public class FilterLabelProvider extends LabelProvider
 
   protected RuntimeException unknownElement( Object element )
   {
-    return new RuntimeException( "Unknown type of element in tree of type " + element.getClass().getName() );
+    return new RuntimeException( "Unknown type of element in tree of type " + element.getClass().getName() ); //$NON-NLS-1$
   }
 
 }

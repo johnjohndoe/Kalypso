@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -65,7 +66,7 @@ public class DictionaryEntry extends Job implements IPoolListener
 
   public DictionaryEntry( final IPoolableObjectType key )
   {
-    super( "Waiting for resource to load: " + key.getLocation() );
+    super( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.waitingforresource") + key.getLocation() ); //$NON-NLS-1$
 
     m_key = key;
 
@@ -125,7 +126,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   protected IStatus run( final IProgressMonitor monitor )
   {
     if( isDisposed() )
-      return StatusUtilities.createErrorStatus( "This entry is already disposed." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.alreadyDisposed") ); //$NON-NLS-1$
 
     // Just waits until we first where called from the pool.
     while( m_status == null )

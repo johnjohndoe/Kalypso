@@ -119,7 +119,7 @@ public class FeatureTypeLabelProvider extends LabelProvider
       IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
       return annotation.getValue( m_annotationKey );
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
 }

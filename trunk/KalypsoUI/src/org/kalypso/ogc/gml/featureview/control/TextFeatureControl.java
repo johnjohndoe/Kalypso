@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
@@ -124,7 +125,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_text;
   }
 
-  protected void onTextModified( )
+  protected void onTextModified()
   {
     m_currentValue = m_text.getText();
     updateValid();
@@ -144,7 +145,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return m_isValid;
   }
@@ -158,7 +159,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
     if( m_text == null || m_text.isDisposed() )
       return;
@@ -166,7 +167,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     final Feature feature = getFeature();
 
     if( feature == null || getFeatureTypeProperty() == null )
-      m_text.setText( "<no data>" );
+      m_text.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.TextFeatureControl.nodata") ); //$NON-NLS-1$
     else
     {
       // compare with old to prevent loop
@@ -180,12 +181,12 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   }
 
   @Override
-  public String toString( )
+  public String toString()
   {
     return m_modifier.getLabel( getFeature() );
   }
 
-  protected FeatureChange getChange( )
+  protected FeatureChange getChange()
   {
     final Feature feature = getFeature();
     final IPropertyType pt = getFeatureTypeProperty();
@@ -198,19 +199,19 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
       newData = null;
     else
     {
-      final String text = m_currentValue;
+    final String text = m_currentValue;
 
       newData = m_modifier.parseInput( getFeature(), text );
     }
-
+    
     // nur ändern, wenn sich wirklich was geändert hat
-    if( (newData == null && oldData != null) || (newData != null && !m_modifier.equals( newData, oldData )) )
+    if( ( newData == null && oldData != null ) || ( newData != null && !m_modifier.equals( newData, oldData ) ) )
       return new FeatureChange( feature, pt, newData );
 
     return null;
   }
 
-  protected void updateValid( )
+  protected void updateValid()
   {
     final String text = m_currentValue;
     setValid( m_modifier.isValid( text ) == null );

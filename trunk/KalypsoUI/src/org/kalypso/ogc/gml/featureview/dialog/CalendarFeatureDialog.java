@@ -130,6 +130,6 @@ public class CalendarFeatureDialog implements IFeatureDialog
     // return "";
     //    
     // return m_dateFormat.format( date );
-    return "...";
+    return "..."; //$NON-NLS-1$
   }
 }

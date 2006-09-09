@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
@@ -103,12 +104,12 @@ public class PointDialog extends Dialog
 
     /* Configuring the composite. */
     final Shell shell = panel.getShell();
-    shell.setText( "Point-Daten" );
+    shell.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.data") ); //$NON-NLS-1$
 
     /* The label for the input data. */
     Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label.setText( "Geben Sie hier die Werte und das Koordinaten-System an." );
+    label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin") ); //$NON-NLS-1$
     label.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
@@ -137,13 +138,13 @@ public class PointDialog extends Dialog
       {
         if( i < getCS_CoordinateSystem().getDimension() )
         {
-          m_label[i].setText( "Achse " + getCS_CoordinateSystem().getAxis( i ).name + " [" + getCS_CoordinateSystem().getUnits( i ).getName() + "]" );
-          m_label[i].setToolTipText( "" );
+          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis") + getCS_CoordinateSystem().getAxis( i ).name + " [" + getCS_CoordinateSystem().getUnits( i ).getName() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          m_label[i].setToolTipText( "" ); //$NON-NLS-1$
         }
         else
         {
-          m_label[i].setText( "nicht unterstützt" );
-          m_label[i].setToolTipText( "Diese Achse wird von Koordinaten-System nicht unterstützt." );
+          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.supportedlabel") ); //$NON-NLS-1$
+          m_label[i].setToolTipText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.supportedtooltip") ); //$NON-NLS-1$
         }
       }
       catch( RemoteException e )
@@ -165,7 +166,7 @@ public class PointDialog extends Dialog
     /* The label for the input data. */
     Label label1 = new Label( panel, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label1.setText( "Geben Sie hier das Koordinaten-System an." );
+    label1.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs") ); //$NON-NLS-1$
     label1.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
@@ -178,7 +179,7 @@ public class PointDialog extends Dialog
     /* The label for the coordinate system. */
     Label label2 = new Label( combo_group, SWT.NONE );
     label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label2.setText( "Koordinaten-System: " );
+    label2.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.cs") ); //$NON-NLS-1$
     label2.setAlignment( SWT.LEFT );
 
     final ComboViewer combo = new ComboViewer( combo_group );
@@ -193,7 +194,7 @@ public class PointDialog extends Dialog
       {
         CoordinateSystem crs = (CoordinateSystem) element;
 
-        String name = "";
+        String name = ""; //$NON-NLS-1$
 
         name = crs.getName( Locale.getDefault() );
 

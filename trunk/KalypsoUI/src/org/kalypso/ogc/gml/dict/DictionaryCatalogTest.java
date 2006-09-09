@@ -82,7 +82,7 @@ public class DictionaryCatalogTest extends TestCase
 
   public void testDictionaryIsReady( )
   {
-    assertNotNull( "The KalypsoCore Plugin must provide a catalog.", m_catalog );
+    assertNotNull( "The KalypsoCore Plugin must provide a catalog.", m_catalog ); //$NON-NLS-1$
   }
 
   /**
@@ -90,7 +90,7 @@ public class DictionaryCatalogTest extends TestCase
    */
   public void testGetDictionaryEntry( )
   {
-    final String urn = "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag";
+    final String urn = "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag"; //$NON-NLS-1$
 
     final Feature entry = m_catalog.getEntry( urn );
     assertNotNull( entry );
@@ -109,12 +109,12 @@ public class DictionaryCatalogTest extends TestCase
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     final KeyInfo[] infosBeforeStart = pool.getInfos();
-    assertEquals( "Pool must be empty before start", 0, infosBeforeStart.length );
+    assertEquals( "Pool must be empty before start", 0, infosBeforeStart.length ); //$NON-NLS-1$
 
-    final Feature entry = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
+    final Feature entry = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
 
     final KeyInfo[] infos = pool.getInfos();
-    assertEquals( "Pool should have one object pooled at this point", 1, infos.length );
+    assertEquals( "Pool should have one object pooled at this point", 1, infos.length ); //$NON-NLS-1$
 
     // pool is working on the workspace of the feature
     final CommandableWorkspace cw = (CommandableWorkspace) infos[0].getObject();
@@ -123,7 +123,7 @@ public class DictionaryCatalogTest extends TestCase
     m_catalog.releaseEntry( entry );
 
     final KeyInfo[] infosAtEnd = pool.getInfos();
-    assertEquals( "Pool must be empty after we have finished", 0, infosAtEnd.length );
+    assertEquals( "Pool must be empty after we have finished", 0, infosAtEnd.length ); //$NON-NLS-1$
   }
 
   /**
@@ -140,27 +140,27 @@ public class DictionaryCatalogTest extends TestCase
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     final KeyInfo[] infosBeforeStart = pool.getInfos();
-    assertEquals( "Pool must be empty before start", 0, infosBeforeStart.length );
+    assertEquals( "Pool must be empty before start", 0, infosBeforeStart.length ); //$NON-NLS-1$
 
     // one and release it
-    final Feature entry1 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
+    final Feature entry1 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
     m_catalog.releaseEntry( entry1 );
 
-    assertEquals( "Pool should be empty now", 0, pool.getInfos().length );
+    assertEquals( "Pool should be empty now", 0, pool.getInfos().length ); //$NON-NLS-1$
 
     // two different features
-    final Feature entry2 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
-    final Feature entry3 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#wasserstand" );
+    final Feature entry2 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
+    final Feature entry3 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#wasserstand" ); //$NON-NLS-1$
     m_catalog.releaseEntry( entry2 );
     m_catalog.releaseEntry( entry3 );
 
     // one two times and release them, objet must be the same
-    final Feature entry4 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
-    final Feature entry5 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
+    final Feature entry4 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
+    final Feature entry5 = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
     m_catalog.releaseEntry( entry4 );
     m_catalog.releaseEntry( entry5 );
 
-    assertEquals( "Pool must be empty after we have finished", 0, pool.getInfos().length );
+    assertEquals( "Pool must be empty after we have finished", 0, pool.getInfos().length ); //$NON-NLS-1$
   }
 
   /**
@@ -173,10 +173,10 @@ public class DictionaryCatalogTest extends TestCase
   {
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
-    final Feature entry = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" );
+    final Feature entry = m_catalog.getEntry( "urn:ogc:gml:kalypso:dict:phenomenon:dont:know#niederschlag" ); //$NON-NLS-1$
 
     final KeyInfo[] infos = pool.getInfos();
-    assertEquals( "Pool should have one object pooled at this point", 1, infos.length );
+    assertEquals( "Pool should have one object pooled at this point", 1, infos.length ); //$NON-NLS-1$
     assertFalse( infos[0].isDirty() );
 
     m_catalog.releaseEntry( entry );

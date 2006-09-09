@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -130,14 +131,14 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
         if( ((String) property).length() < 1 )
-          return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
+          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
         final GMLWorkspace workspace = feature.getWorkspace();
         linkedFeature = workspace.getFeature( (String) property );
       }
       else if( property instanceof Feature )
         linkedFeature = (Feature) property;
       else
-        return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
+        return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return new JumpToFeatureDialog( listener, linkedFeature, null );
     }

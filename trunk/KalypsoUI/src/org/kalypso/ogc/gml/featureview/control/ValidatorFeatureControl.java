@@ -165,7 +165,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
           status.add( m_rules[i].isValid( feature.getProperty( ftp ) ) );
         }
 
-        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null );
+        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null ); //$NON-NLS-1$
 
         /* Set the image and a tooltip. */
         if( mstatus.isOK() == true )
@@ -180,11 +180,11 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
         else
         {
           m_label.setImage( image_error );
-
+          
           String message = "";
 
           for( int i = 0; i < status.size(); i++ )
-          {
+          {            
             if( !status.get( i ).isOK() )
               message = message + status.get( i ).getMessage() + "\r\n";
           }

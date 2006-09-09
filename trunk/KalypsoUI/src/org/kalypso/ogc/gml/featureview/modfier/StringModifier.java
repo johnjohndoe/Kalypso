@@ -82,18 +82,18 @@ public class StringModifier implements IFeatureModifier
     // maybe even in the appinfo of the schema
     final String namespace = ftp.getQName().getNamespaceURI();
     final String name = ftp.getQName().getLocalPart();
-    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
+    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" ); //$NON-NLS-1$
     // ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
 
-    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
+    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL //$NON-NLS-1$
     {
-      if( "flaech".equals( name ) )
+      if( "flaech".equals( name ) ) //$NON-NLS-1$
         return expFormat;
     }
-    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
+    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope //$NON-NLS-1$
     {
-      if( "m_perkm".equals( name ) || "area".equals( name ) )
+      if( "m_perkm".equals( name ) || "area".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return expFormat;
     }
     return normalFormat;
@@ -136,7 +136,7 @@ public class StringModifier implements IFeatureModifier
     {
       final List list = (List) data;
       if( list.isEmpty() )
-        return "";
+        return ""; //$NON-NLS-1$
 
       value = list.get( 0 );
     }
@@ -146,7 +146,7 @@ public class StringModifier implements IFeatureModifier
     if( m_guiTypeHandler != null )
       return m_guiTypeHandler.getText( value );
 
-    return value == null ? "" : value.toString();
+    return value == null ? "" : value.toString(); //$NON-NLS-1$
   }
 
   /**
@@ -156,7 +156,7 @@ public class StringModifier implements IFeatureModifier
   public Object parseInput( final Feature f, final Object editedStringValue )
   {
     Object result = null;
-    final String text = editedStringValue == null ? "" : editedStringValue.toString();
+    final String text = editedStringValue == null ? "" : editedStringValue.toString(); //$NON-NLS-1$
     // if( text.length() == 0 )
     // return null;
 
@@ -242,7 +242,7 @@ public class StringModifier implements IFeatureModifier
   public String getLabel( final Feature f )
   {
     final Object value = getValue( f );
-    return value == null ? "" : value.toString();
+    return value == null ? "" : value.toString(); //$NON-NLS-1$
   }
 
   /**

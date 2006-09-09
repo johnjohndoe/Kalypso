@@ -56,6 +56,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -112,13 +113,13 @@ public class FeatureviewDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Feature editieren" );
+    getShell().setText( Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.editfeature") ); //$NON-NLS-1$
 
     final Feature feature = m_featureComposite.getFeature();
     final IFeatureType featureType = feature.getFeatureType();
 
     final Group panel = new Group( parent, SWT.NONE );
-    panel.setText( featureType.getQName().getLocalPart() + " - " + feature.getId() );
+    panel.setText( featureType.getQName().getLocalPart() + " - " + feature.getId() ); //$NON-NLS-1$
     panel.setLayout( new GridLayout() );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -145,8 +146,8 @@ public class FeatureviewDialog extends Dialog
   {
     super.createButtonsForButtonBar( parent );
 
-    createButton( parent, APPLY_ID, "Übernehmen", false );
-    createButton( parent, RESET_ID, "Zurücksetzen", false );
+    createButton( parent, APPLY_ID, Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.apply"), false ); //$NON-NLS-1$
+    createButton( parent, RESET_ID, Messages.getString("org.kalypso.ogc.gml.featureview.FeatureviewDialog.revert"), false ); //$NON-NLS-1$
 
     updateButtons();
   }

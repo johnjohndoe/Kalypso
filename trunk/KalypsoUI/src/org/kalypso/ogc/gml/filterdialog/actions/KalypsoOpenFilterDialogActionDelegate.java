@@ -15,6 +15,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
@@ -65,7 +66,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( ft != null )
       open = dialog.open();
     else
-      MessageDialog.openError( shell, "Filter-Dialog", "Der gewählte FeatureType ist entweder leer oder ungültig" );
+      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.dialog"), Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.invalid") ); //$NON-NLS-1$ //$NON-NLS-2$
     if( open == Window.OK )
     {
 
@@ -92,7 +93,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       }
       if( multiStatus != null )
       {
-        MessageDialog.openWarning( shell, "Filter-Dialog-Fehler: sevirity code = " + multiStatus.getSeverity(), multiStatus.getException().getMessage() );
+        MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.error") + multiStatus.getSeverity(), multiStatus.getException().getMessage() ); //$NON-NLS-1$
         return;
       }
       // handle the new selection

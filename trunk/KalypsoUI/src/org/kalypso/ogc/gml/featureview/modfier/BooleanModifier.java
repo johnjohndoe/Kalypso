@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,7 +68,7 @@ public class BooleanModifier implements IFeatureModifier
     m_ftp = ftp;
 
     if( !(java.lang.Boolean.class==ftp.getValueClass() )) 
-      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" );
+      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$
   }
 
   /**
@@ -107,7 +108,7 @@ public class BooleanModifier implements IFeatureModifier
     if( value instanceof Boolean )
       return null;
 
-    return "Only Boolean values accepted";
+    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool"); //$NON-NLS-1$
   }
 
   /**
@@ -123,7 +124,7 @@ public class BooleanModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

@@ -193,7 +193,7 @@ public class DictionaryFeature implements Feature
    */
   public void setProperty( IPropertyType propertyType, Object value )
   {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   /**
@@ -201,7 +201,7 @@ public class DictionaryFeature implements Feature
    */
   public void setProperty( QName propQName, Object value )
   {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   /**
@@ -209,7 +209,7 @@ public class DictionaryFeature implements Feature
    */
   public void setProperty( final String propLocalName, final Object value )
   {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   /**
@@ -217,7 +217,7 @@ public class DictionaryFeature implements Feature
    */
   public void setWorkspace( final GMLWorkspace workspace )
   {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
 }

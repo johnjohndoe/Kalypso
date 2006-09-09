@@ -94,29 +94,29 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
     composite.setLayout( FeatureviewHelper.FACTORY.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" );
+    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    griddata.setHorizontalAlignment( "GridData.FILL" );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setGrabExcessHorizontalSpace( true );
     griddata.setHorizontalSpan( 2 );
     
     // Text
     final Combo combo = FeatureviewHelper.FACTORY.createCombo();
-    combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" );
+    combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" ); //$NON-NLS-1$
     combo.setProperty( qname );
 
     final GridDataType comboData = FeatureviewHelper.FACTORY.createGridDataType();
-    comboData.setHorizontalAlignment( "GridData.BEGINNING" );
+    comboData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     comboData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     combo.setLayoutData( FeatureviewHelper.FACTORY.createGridData( comboData ) );
 
     // Knopf
     final Button button = FeatureviewHelper.FACTORY.createButton();
     final GridDataType buttonData = FeatureviewHelper.FACTORY.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( qname );
 
-    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( FeatureviewHelper.FACTORY.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();

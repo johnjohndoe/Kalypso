@@ -99,7 +99,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
   {
     final FeatureviewType featureview = FACTORY.createFeatureviewType();
     featureview.setTypename( featureType.getQName() );
-    featureview.setStyle( "SWT.NONE" );
+    featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     final GridLayout gridLayout = FACTORY.createGridLayout();
     gridLayout.setNumColumns( 4 );
@@ -107,8 +107,8 @@ public class FeatureviewHelper implements IFeatureviewFactory
     final GridDataType griddata = FACTORY.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
     griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
-    griddata.setHorizontalAlignment( "GridData.FILL" );
-    griddata.setVerticalAlignment( "GridData.FILL" );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     featureview.setLayoutData( FACTORY.createGridData( griddata ) );
 
     // REMARK: it is importent that the maker is re-created each time. as the makers sometimes

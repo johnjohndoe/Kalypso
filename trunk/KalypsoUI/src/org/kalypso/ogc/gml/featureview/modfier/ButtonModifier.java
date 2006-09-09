@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -125,7 +126,7 @@ public class ButtonModifier implements IFeatureModifier
         final List<FeatureChange> col = new ArrayList<FeatureChange>();
         m_featureDialog.collectChanges( col );
         if( col.size() > 1 ) // TODO support more
-          throw new UnsupportedOperationException( "Dialog must provide exactly one change" );
+          throw new UnsupportedOperationException( "Dialog must provide exactly one change" ); //$NON-NLS-1$
         if( col.size() > 0 )
         {
           final Object change = col.get( 0 );
@@ -178,15 +179,15 @@ public class ButtonModifier implements IFeatureModifier
           return handler.getText( value );
       }
       if( value instanceof Feature )
-        return "<Element...>";
+        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.element"); //$NON-NLS-1$
       else if( value instanceof FeatureList )
-        return "<Elemente...>";
+        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.elements"); //$NON-NLS-1$
       else if( value instanceof GM_Object )
-        return "<Geometrie>";
+        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.geometry"); //$NON-NLS-1$
       else if( ftp instanceof IRelationType )
-        return "<Link auf Element...>";
+        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.link"); //$NON-NLS-1$
     }
-    return "<Editieren...>";
+    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.edit"); //$NON-NLS-1$
   }
 
   /**

@@ -87,14 +87,14 @@ public class TableControlMaker implements IControlMaker
     final GridLayout layout = (GridLayout) parentLayout;
 
     final Table table = FeatureviewHelper.FACTORY.createTable();
-    table.setStyle( "SWT.NONE" );
+    table.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     table.setProperty( propertyName );
 
     final GridDataType griddata = FeatureviewHelper.FACTORY.createGridDataType();
     final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
 
-    griddata.setHorizontalAlignment( "GridData.FILL" );
-    griddata.setVerticalAlignment( "GridData.FILL" );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setGrabExcessHorizontalSpace( true );
     griddata.setGrabExcessVerticalSpace( true );
     griddata.setHorizontalSpan( layout.getNumColumns() );
