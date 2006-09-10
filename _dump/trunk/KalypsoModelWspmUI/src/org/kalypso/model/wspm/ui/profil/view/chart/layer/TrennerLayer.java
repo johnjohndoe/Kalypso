@@ -160,8 +160,13 @@ public class TrennerLayer extends AbstractProfilChartLayer
             return String.format( "%s%n%s%n%s: %10.4f", new Object[] { m_label, "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ),
                 (Double) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT ) } );
           case TRENNFLAECHE:
-            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) ? "Böschungsfuss" : "Vorland",
+          {
+            final Boolean position = (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
+            final boolean pos = position == null ? false : position;
+            
+            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, pos ? "Böschungsfuss" : "Vorland",
                 devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
+          }
         }
       }
       catch( ProfilDataException e )

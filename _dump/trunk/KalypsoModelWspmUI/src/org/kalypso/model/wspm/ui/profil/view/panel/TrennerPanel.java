@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.ui.profil.view.panel;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -140,58 +140,13 @@ public class TrennerPanel extends AbstractProfilView
     m_fzl_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzl_text.addModifyListener( doubleModifyListener );
-    m_fzl_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
-        m_fzl_text.selectAll();
-      }
+    m_fzl_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.TRENNFLAECHE, 0 ) );
 
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-        final double value = NumberUtils.parseQuietDouble( m_fzl_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
-        {
-          setValue( value, devs[0] );
-        }
-        else
-          updateControls();
-      }
-    } );
     m_fzr_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzr_text.addModifyListener( doubleModifyListener );
-    m_fzr_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
-        m_fzr_text.selectAll();
-      }
+    m_fzr_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.TRENNFLAECHE, 1 ) );
 
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-
-        final double value = NumberUtils.parseQuietDouble( m_fzr_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
-        {
-          setValue( value, devs[1] );
-        }
-        else
-          updateControls();
-      }
-    } );
     m_fzl_combo = new Combo( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_fzl_combo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
 
@@ -262,60 +217,13 @@ public class TrennerPanel extends AbstractProfilView
     m_dbl_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbl_text.addModifyListener( doubleModifyListener );
-    m_dbl_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
+    m_dbl_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.DURCHSTROEMTE, 0 ) );
 
-        m_dbl_text.selectAll();
-
-      }
-
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-        final double value = NumberUtils.parseQuietDouble( m_dbl_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
-        {
-          setValue( value, devs[0] );
-        }
-        else
-          updateControls();
-      }
-    } );
     m_dbr_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbr_text.addModifyListener( doubleModifyListener );
-    m_dbr_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
-        m_dbr_text.selectAll();
-      }
+    m_dbr_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.DURCHSTROEMTE, 1 ) );
 
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-
-        final double value = NumberUtils.parseQuietDouble( m_dbr_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
-        {
-          setValue( value, devs[1] );
-        }
-        else
-          updateControls();
-      }
-    } );
     m_db_show = new Button( durchstroemteGroup, SWT.CHECK );
     final GridData db_showData = new GridData();
     db_showData.horizontalSpan = 2;
@@ -341,60 +249,12 @@ public class TrennerPanel extends AbstractProfilView
     m_bvl_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvl_text.addModifyListener( doubleModifyListener );
-    m_bvl_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
+    m_bvl_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.BORDVOLL, 0 ) );
 
-        m_bvl_text.selectAll();
-
-      }
-
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-        final double value = NumberUtils.parseQuietDouble( m_bvl_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.BORDVOLL );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 0 )
-        {
-          setValue( value, devs[0] );
-        }
-        else
-          updateControls();
-      }
-    } );
     m_bvr_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvr_text.addModifyListener( doubleModifyListener );
-    m_bvr_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusGained( FocusEvent e )
-      {
-        m_bvr_text.selectAll();
-      }
-
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-
-        final double value = NumberUtils.parseQuietDouble( m_bvr_text.getText() );
-        final IProfilDevider[] devs = getProfil().getDevider( DEVIDER_TYP.BORDVOLL );
-        if( !Double.isNaN( value ) && devs != null && devs.length > 1 )
-        {
-          setValue( value, devs[1] );
-        }
-        else
-          updateControls();
-      }
-    } );
+    m_bvr_text.addFocusListener( new TrennerFocusListener( DEVIDER_TYP.BORDVOLL, 1 ) );
 
     m_bv_show = new Button( bordvollGroup, SWT.CHECK );
     final GridData bv_showData = new GridData();
@@ -476,14 +336,15 @@ public class TrennerPanel extends AbstractProfilView
       if( (!m_fzl_text.isDisposed()) && (fz_devs != null) && (fz_devs.length > 0) )
         m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_fzl_text.setText( "unbekannt" );
+        m_fzl_text.setText( "unbekant" );
       if( !m_fzr_text.isDisposed() && (fz_devs != null) && (fz_devs.length > 1) )
         m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
       else
-        m_fzr_text.setText( "unbekannt" );
+        m_fzr_text.setText( "unbekant" );
       if( !m_fzl_combo.isDisposed() && (fz_devs != null) && (fz_devs.length > 0) )
       {
-        if( (Boolean) fz_devs[0].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) )
+        final Boolean valueFor = (Boolean) fz_devs[0].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
+        if( valueFor == null || valueFor )
         {
           m_fzl_combo.select( 0 );
         }
@@ -494,7 +355,8 @@ public class TrennerPanel extends AbstractProfilView
       }
       if( !m_fzr_combo.isDisposed() && (fz_devs != null) && (fz_devs.length > 1) )
       {
-        if( (Boolean) fz_devs[1].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG ) )
+        final Boolean valueFor = (Boolean) fz_devs[1].getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
+        if( valueFor == null || valueFor )
         {
           m_fzr_combo.select( 0 );
         }
@@ -569,25 +431,6 @@ public class TrennerPanel extends AbstractProfilView
 
   }
 
-  protected void setValue( final double value, final IProfilDevider key )
-  {
-    if( Double.isNaN( value ) )
-      return;
-
-    final IProfilPoint pointCloseTo = getProfil().findNearestPoint( value );
-    final IProfilPoint oldPos = key.getPoint();
-    if( oldPos == pointCloseTo )
-    {
-      updateControls();
-      return;
-    }
-    final ProfilOperation operation = new ProfilOperation( key.toString() + " verschieben", getProfilEventManager(), true );
-    operation.addChange( new DeviderMove( key, pointCloseTo ) );
-    operation.addChange( new ActiveObjectEdit( getProfil(), pointCloseTo, null ) );
-    new ProfilOperationJob( operation ).schedule();
-
-  }
-
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
     if( hint.isProfilPropertyChanged() || hint.isPointsChanged() || hint.isDeviderMoved() || hint.isDeviderDataChanged() )
@@ -603,6 +446,74 @@ public class TrennerPanel extends AbstractProfilView
             updateControls();
           }
         } );
+      }
+    }
+  }
+
+  public class TrennerFocusListener implements FocusListener
+  {
+    private DEVIDER_TYP m_type;
+
+    private final int m_pos;
+
+    public TrennerFocusListener( final DEVIDER_TYP type, final int pos )
+    {
+      m_type = type;
+      m_pos = pos;
+    }
+
+    /**
+     * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+     */
+    public void focusGained( final FocusEvent e )
+    {
+      if( e.widget instanceof Text )
+        ((Text) e.widget).selectAll();
+    }
+
+    /**
+     * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+     */
+    public void focusLost( final FocusEvent e )
+    {
+      if( e.widget instanceof Text )
+      {
+        final Text text = (Text) e.widget;
+
+        final double value = NumberUtils.parseQuietDouble( text.getText() );
+        final IProfilDevider[] devs = getProfil().getDevider( m_type );
+
+        if( Double.isNaN( value ) )
+        {
+          updateControls();
+          return;
+        }
+
+        final IProfilPoint pointCloseTo = getProfil().findNearestPoint( value );
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
+
+        if( devs == null || devs.length <= m_pos )
+        {
+          operation.setLabel( m_type.toString() + " hinzufügen" );
+          operation.addChange( new DeviderAdd( getProfil(), m_type, pointCloseTo ) );
+        }
+        else if( devs.length > m_pos )
+        {
+          final IProfilDevider key = devs[m_pos];
+
+          final IProfilPoint oldPos = key.getPoint();
+          if( oldPos == pointCloseTo )
+          {
+            updateControls();
+            return;
+          }
+
+          operation.setLabel( key.toString() + " verschieben" );
+          operation.addChange( new DeviderMove( key, pointCloseTo ) );
+          operation.addChange( new ActiveObjectEdit( getProfil(), pointCloseTo, null ) );
+        }
+
+        new ProfilOperationJob( operation ).schedule();
       }
     }
   }

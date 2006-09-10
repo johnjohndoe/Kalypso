@@ -179,7 +179,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
             case TRENNFLAECHE:
               final Boolean pos = (Boolean) devider.getValueFor( DEVIDER_PROPERTY.BOESCHUNG );
-              value = pos.booleanValue() ? "high" : "low";
+              value = pos == null || pos.booleanValue() ? "high" : "low";
               break;
 
             case BORDVOLL:
