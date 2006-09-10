@@ -405,15 +405,18 @@
 		</complexContent>
 	</complexType>
 	<complexType name="ProfileReachSegmentType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry"
+					kapp:property="wspm:profileLocation"/>
+			</appinfo>
+			<documentation>The profileLocation is in reality retrieved from the underlying
+			profile.</documentation>
+		</annotation>
 		<complexContent>
-			<annotation>
-				<appinfo>We have two properties (line, markers) here, which are backuped by another
-					property (profileMember). The time of last synchronization is stored in
-					'cacheDate'</appinfo>
-			</annotation>
 			<extension base="wspm:AbstractReachSegmentType">
 				<sequence>
-					<!-- TODO hier kommt noch das neue Profil rein -->
 					<element name="profileMember" type="wspm:ProfileLinkPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
@@ -444,18 +447,6 @@
 								<label>???marker</label>
 								<tooltip>???tooltip</tooltip>
 								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="cacheDate" type="dateTime">
-						<annotation>
-							<appinfo>This property represent the lastTime, when the cached
-								proeprties (line, markers) have been synchronized against the
-								profileMember</appinfo>
-							<documentation xml:lang="de">
-								<label>Cache Datum</label>
-								<tooltip>Cache Datum</tooltip>
-								<description>Cache Datum</description>
 							</documentation>
 						</annotation>
 					</element>

@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -94,7 +95,9 @@ public class WspmReachProfileSegment implements IWspmConstants
   public WspmProfile getProfileMember( )
   {
     final String href = (String) m_reachSegment.getProperty( new QName( NS_WSPM, "profileMember" ) );
-    return new WspmProfile( m_reachSegment.getWorkspace().getFeature( href ) );
+    final GMLWorkspace workspace = m_reachSegment.getWorkspace();
+    final Feature feature = workspace == null ? null : workspace.getFeature( href );
+    return feature == null ?  null : new WspmProfile( feature );
   }
 
   public void setStation( final double station )

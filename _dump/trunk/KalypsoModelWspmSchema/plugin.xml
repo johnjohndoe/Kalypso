@@ -13,5 +13,12 @@
             class="org.kalypso.model.wspm.schema.WspmDictionaryCatalogContribution"
             name="WspmDictionaryCatalogContribution"/>
    </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction"
+            id="org.kalypso.model.wspm.functionProperty.profileGeometry"
+            name="Profile-Location-Cacher"/>
+   </extension>
 
 </plugin>

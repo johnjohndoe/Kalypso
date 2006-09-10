@@ -399,7 +399,7 @@ public class WspWinImporter
     //
     // TEMPORARY: write geometries from profile into reach feature
     //
-    updateReachProperties( reach );
+//    updateReachProperties( reach );
 
     final WspmWaterBody waterBody = reach.getWaterBody();
 
@@ -603,62 +603,62 @@ public class WspWinImporter
     }
   }
 
-  private static void updateReachProperties( final TuhhReach reach )
-  {
-    final WspmReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    for( final WspmReachProfileSegment segment : reachProfileSegments )
-    {
-      try
-      {
-        final WspmProfile profileMember = segment.getProfileMember();
-        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-
-        segment.setStation( profil.getStation() );
-
-        final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
-        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
-        final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
-        // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT
-        // :
-        // POINT_PROPERTY.BREITE;
-        // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
-        // null;
-        final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
-
-        final GM_Curve curve;
-        if( ppRW == null || ppHW == null || ppH == null )
-          curve = null;
-        else
-        {
-          final LinkedList<IProfilPoint> points = profil.getPoints();
-          final GM_Position[] positions = new GM_Position[points.size()];
-          int count = 0;
-          for( final IProfilPoint point : points )
-          {
-            final double rw = point.getValueFor( ppRW );
-            final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
-            final double h = point.getValueFor( ppH );
-
-            positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
-          }
-          curve = GeometryFactory.createGM_Curve( positions, null );
-        }
-
-        segment.setGeometry( curve );
-      }
-      catch( final ProfilDataException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-
-  }
+//  private static void updateReachProperties( final TuhhReach reach )
+//  {
+//    final WspmReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+//    for( final WspmReachProfileSegment segment : reachProfileSegments )
+//    {
+//      try
+//      {
+//        final WspmProfile profileMember = segment.getProfileMember();
+//        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+//
+//        segment.setStation( profil.getStation() );
+//
+//        final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
+//        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
+//        final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
+//        // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT
+//        // :
+//        // POINT_PROPERTY.BREITE;
+//        // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
+//        // null;
+//        final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
+//
+//        final GM_Curve curve;
+//        if( ppRW == null || ppHW == null || ppH == null )
+//          curve = null;
+//        else
+//        {
+//          final LinkedList<IProfilPoint> points = profil.getPoints();
+//          final GM_Position[] positions = new GM_Position[points.size()];
+//          int count = 0;
+//          for( final IProfilPoint point : points )
+//          {
+//            final double rw = point.getValueFor( ppRW );
+//            final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
+//            final double h = point.getValueFor( ppH );
+//
+//            positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
+//          }
+//          curve = GeometryFactory.createGM_Curve( positions, null );
+//        }
+//
+//        segment.setGeometry( curve );
+//      }
+//      catch( final ProfilDataException e )
+//      {
+//        // TODO Auto-generated catch block
+//        e.printStackTrace();
+//      }
+//      catch( GM_Exception e )
+//      {
+//        // TODO Auto-generated catch block
+//        e.printStackTrace();
+//      }
+//    }
+//
+//  }
 
   private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
   {
