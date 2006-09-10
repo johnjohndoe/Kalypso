@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.test.testFeature" xmlns:test="org.kalypso.test.testFeature" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1"> 
-  <element name="TestFeatureCollection" type="test:_TestFeatureCollectionType" substitutionGroup="test:TestFeature"/>
-  <element name="TestFeature" type="test:_TestFeatureType"/>
+<schema targetNamespace="org.kalypso.test.testFeature" xmlns:test="org.kalypso.test.testFeature"
+  xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" version="0.1">
+  <import namespace="http://www.opengis.net/gml"
+    schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+  <element name="TestFeatureCollection" type="test:_TestFeatureCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+  <element name="TestFeature" type="test:_TestFeatureType" substitutionGroup="gml:_Feature"/>
   <complexType name="_TestFeatureCollectionType">
     <complexContent>
-      <restriction base="gml:AbstractFeatureCollectionType">      	
+      <restriction base="gml:AbstractFeatureCollectionType">
         <sequence>
-            <element name="testFeatureMember" type="test:_FeatureAssociationType" minOccurs="0" maxOccurs="unbounded"/>
-		</sequence>
+          <element name="testFeatureMember" type="test:_FeatureAssociationType" minOccurs="0"
+            maxOccurs="unbounded"/>
+        </sequence>
       </restriction>
     </complexContent>
   </complexType>
   <complexType name="_FeatureAssociationType">
-	<complexContent>
-		<restriction base="gml:FeatureAssociationType">
-			<sequence>
-				<element ref="test:TestFeature"/>
-			</sequence>
-		</restriction>
-	</complexContent>
-  </complexType>  
+    <sequence>
+      <element ref="test:TestFeature"/>
+    </sequence>
+  </complexType>
   <complexType name="_TestFeatureType">
     <complexContent>
       <extension base="gml:AbstractFeatureType">
-        <sequence>          	
-			<element name="duration" type="duration" />
-			<element name="string" type="string" />
-			<element name="ENTITIES" type="ENTITIES" />
-			<element name="boolean" type="boolean" />
-			<element name="base64Binary" type="base64Binary" />
-			<element name="float" type="float" />
-			<element name="decimal" type="decimal" />
-			<element name="integer" type="integer" />
-			<element name="long" type="long" />
-			<element name="int" type="int" />
-			<element name="short" type="short" />
-			<element name="byte" type="byte" />
-			<element name="double" type="double" />
-			<element name="QName" type="QName" />
-        </sequence>        
+        <sequence>
+          <element name="duration" type="duration"/>
+          <element name="string" type="string"/>
+          <element name="ENTITIES" type="ENTITIES"/>
+          <element name="boolean" type="boolean"/>
+          <element name="base64Binary" type="base64Binary"/>
+          <element name="float" type="float"/>
+          <element name="decimal" type="decimal"/>
+          <element name="integer" type="integer"/>
+          <element name="long" type="long"/>
+          <element name="int" type="int"/>
+          <element name="short" type="short"/>
+          <element name="byte" type="byte"/>
+          <element name="double" type="double"/>
+          <element name="QName" type="QName"/>
+        </sequence>
       </extension>
     </complexContent>
-  </complexType>  
+  </complexType>
 </schema>

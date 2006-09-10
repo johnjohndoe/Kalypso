@@ -80,16 +80,6 @@ public class DelegatedFeature_Impl extends AbstractFeature implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
-   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
-   *         java.util.List-objects
-   */
-  public Object getProperty( final int index )
-  {
-    return getFeature().getProperty( index );
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
    */
   public GM_Object[] getGeometryProperties( )

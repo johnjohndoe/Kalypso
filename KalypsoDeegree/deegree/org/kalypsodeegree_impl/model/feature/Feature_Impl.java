@@ -7,10 +7,9 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -94,17 +93,12 @@ public class Feature_Impl extends AbstractFeature implements Feature
       throw new IllegalArgumentException( "pt may not null" );
 
     final int pos = m_featureType.getPropertyPosition( pt );
-    return getProperty( pos );
-  }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
-   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
-   *         java.util.List-objects
-   */
-  public Object getProperty( int index )
-  {
-    return m_properties[index];
+    final IFeaturePropertyHandler fsh = getPropertyHandler();
+
+    final Object currentValue = m_properties[pos];
+
+    return fsh.getValue( this, pt, currentValue );
   }
 
   /**
@@ -114,11 +108,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
   {
     final List<GM_Object> result = new ArrayList<GM_Object>();
     final IPropertyType[] ftp = m_featureType.getProperties();
-    for( int p = 0; p < ftp.length; p++ )
+    for( final IPropertyType element : ftp )
     {
-      if( GeometryUtilities.isGeometry( ftp[p] ) )
+      if( GeometryUtilities.isGeometry( element ) )
       {
-        final Object o = getProperty( p );
+        final Object o = getProperty( element );
         if( o == null )
           continue;
         if( o instanceof List )
@@ -154,7 +148,9 @@ public class Feature_Impl extends AbstractFeature implements Feature
     int pos = m_featureType.getDefaultGeometryPropertyPosition();
     if( pos < 0 )
       return null;
-    Object prop = m_properties[pos];
+
+    final IPropertyType property = m_featureType.getProperties( pos );
+    final Object prop = getProperty( property );
     if( prop instanceof List )
     {
       List props = (List) prop;
@@ -220,40 +216,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public void setProperty( final IPropertyType pt, final Object value )
   {
-    if( pt == null )
-      throw new IllegalArgumentException( "pt may not null" );
-
-    // Check if value fits to property
-    // Example1: QName is xs:double -> value must be Double
-    // Exmaple2: property is list -> value must be a list
-    if( pt.isList() && !(value instanceof List) )
-      throw new IllegalArgumentException( "Value must be a list for qname: " + pt.getQName() );
-
-    if( !pt.isList() )
-    {
-      if( pt instanceof IValuePropertyType )
-      {
-        // TODO:This doesn´t work - what to do?
-        // REMARK: WHAT? does not work?? This is a test if thee value fits to
-        // the type of the property. Test here is necessary because if
-        // we do not test here we will get later ClassCastExceptions
-        // and there we do not know why.
-        // Next: please contact me instead of just commenting ist out. Gernot
-        // final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
-        // if( value != null && !valueClass.isAssignableFrom( value.getClass() ) )
-        // throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " +
-        // pt.getQName() );
-      }
-      else if( pt instanceof IRelationType )
-      {
-        if( value != null && !(value instanceof Feature) && !(value instanceof String) )
-          throw new IllegalArgumentException( "Wrong type of value (" + value.getClass() + ") for qname: " + pt.getQName() );
-      }
-    }
-
     final int pos = m_featureType.getPropertyPosition( pt );
-    m_properties[pos] = value;
-    
+
+    final IFeaturePropertyHandler fsh = getPropertyHandler();
+    m_properties[pos] = fsh.setValue( this, pt, value );
+
     if( GeometryUtilities.isGeometry( pt ) )
       invalidEnvelope();
   }
@@ -355,4 +322,10 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
     setProperty( prop, value );
   }
+
+  private IFeaturePropertyHandler getPropertyHandler( )
+  {
+    return FeaturePropertyHandlerFactory.getInstance().getHandler( getFeatureType() );
+  }
+
 }
