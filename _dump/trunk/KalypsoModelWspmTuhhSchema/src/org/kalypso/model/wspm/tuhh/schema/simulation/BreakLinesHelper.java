@@ -156,7 +156,7 @@ public class BreakLinesHelper implements IWspmConstants
     return wspMap;
   }
 
-  private static GM_Curve setValueZ( final GM_LineString newProfile, double value ) throws GM_Exception
+  private static GM_Curve setValueZ( final GM_LineString newProfile, final double value ) throws GM_Exception
   {
     final GM_Position[] positions = newProfile.getPositions();
     final CS_CoordinateSystem crs = newProfile.getCoordinateSystem();
@@ -178,7 +178,7 @@ public class BreakLinesHelper implements IWspmConstants
       // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
       return (GM_Curve) cloneObject;
     }
-    catch( CloneNotSupportedException e )
+    catch( final CloneNotSupportedException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

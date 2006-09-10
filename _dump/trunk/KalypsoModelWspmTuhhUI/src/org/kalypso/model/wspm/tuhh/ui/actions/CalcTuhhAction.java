@@ -64,6 +64,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -138,7 +139,13 @@ public class CalcTuhhAction implements IActionDelegate
           }
         }
       };
+      calcJob.setUser( true );
       calcJob.schedule();
+      
+      // Only one calculation may run at the same time
+      // Still a problem if the user start several task
+      // Setting a mutext does not help, because we already have a rule
+      break;
     }
   }
 
@@ -249,8 +256,7 @@ public class CalcTuhhAction implements IActionDelegate
   {
     m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
 
-    // TODO: enable/disable depending on selection
-    final boolean enable = selection != null && !selection.isEmpty();
+    final boolean enable = m_selection != null && m_selection.size() == 1;
     action.setEnabled( enable );
   }
 

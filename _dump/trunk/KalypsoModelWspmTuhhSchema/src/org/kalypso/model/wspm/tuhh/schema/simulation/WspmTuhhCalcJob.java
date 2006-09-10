@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
@@ -187,7 +188,7 @@ public class WspmTuhhCalcJob implements ISimulation
       PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
       pwBat.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe" + "\" < " + "\"" + fleInParams.getAbsolutePath() + "\"" );
       pwBat.close();
-      String sCmd = "\"" + fleBat.getAbsolutePath()+ "\"";
+      String sCmd = "\"" + fleBat.getAbsolutePath() + "\"";
 
       // String sCmd = "Kalypso-1D.exe";
 
@@ -308,6 +309,26 @@ public class WspmTuhhCalcJob implements ISimulation
               final String strStationierung = "Stationierung";
               final String strWsp = "Höhe WSP";
               final WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+
+              //
+              // Diagramm
+              //
+              try
+              {
+                final File diagFile = new File( tmpDir, "Längsschnitt.kod" );
+                
+                final WspmWaterBody waterBody = calculation.getReach().getWaterBody();
+                LaengsschnittHelper.createDiagram( diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
+                if( diagFile.exists() )
+                {
+                  resultEater.addResult( "LengthSectionDiag", diagFile );
+                  pwSimuLog.println( " - Längsschnitt-Diagramm erzeugt." );
+                }
+              }
+              catch( final Exception e )
+              {
+                pwSimuLog.println( "Längsschnitt-Diagramm konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+              }
 
               //
               // Breaklines
