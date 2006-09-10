@@ -54,6 +54,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
@@ -78,7 +79,6 @@ public class FileUtilities
    * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
    * 
    * @param charMode
-   * 
    * @param prefix
    *          prefix of new file name
    * @param suffix
@@ -87,16 +87,50 @@ public class FileUtilities
    *          data is read from this url
    * @param useCache
    *          if true tries to use an existing file with these prefix/suffix
-   * 
    * @return newly created file
-   * 
    * @throws IOException
    *           there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, URL url,
-      boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, final URL url, boolean useCache ) throws IOException
   {
-    return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
+    InputStream is = null;
+    try
+    {
+      is = url.openStream();
+      final File result = makeFileFromStream( charMode, prefix, suffix, is, useCache );
+      is.close();
+      return result;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+  /**
+   * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
+   * 
+   * @param charMode
+   * @param url
+   *          data is read from this url
+   * @param the
+   *          content of the url is written into this file
+   * @throws IOException
+   *           there are problems!
+   */
+  public static void makeFileFromUrl( final URL url, final File file, final boolean charMode ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = url.openStream();
+      makeFileFromStream( charMode, file, is );
+      is.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 
   /**
@@ -104,7 +138,6 @@ public class FileUtilities
    * into the file. The file will be deleted after the VM shuts down
    * 
    * @param charMode
-   * 
    * @param prefix
    *          prefix of file name
    * @param suffix
@@ -113,14 +146,11 @@ public class FileUtilities
    *          the input stream, that is the source
    * @param useCache
    *          if true tries to use an existing file with these prefix/suffix
-   * 
    * @return the newly created file or null if an exception was thrown.
-   * 
    * @throws IOException
    *           problems reading from stream or writing to temp. file
    */
-  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins,
-      boolean useCache ) throws IOException
+  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins, boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -132,7 +162,7 @@ public class FileUtilities
       catch( final FileNotFoundException ignored )
       {
         // ignored
-        //ignored.printStackTrace();
+        // ignored.printStackTrace();
       }
     }
 
@@ -154,8 +184,7 @@ public class FileUtilities
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins )
-      throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
   {
     if( charMode )
     {
@@ -183,12 +212,9 @@ public class FileUtilities
    * @param suffix
    *          name of the file should end with this suffix
    * @param path
-   * 
    * @return the (first) File found
-   * 
    * @throws FileNotFoundException
    *           when file was not found or path does not denote a directory
-   * 
    * @see PrefixSuffixFilter
    */
   public static File fileExistsInDir( String prefix, String suffix, String path ) throws FileNotFoundException
@@ -205,8 +231,7 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in "
-        + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in " + path );
   }
 
   /**
@@ -236,7 +261,6 @@ public class FileUtilities
    * 
    * @param prefix
    * @return temporary directory
-   * 
    * @see FileUtilities#createNewTempDir( String, File )
    */
   public static File createNewTempDir( final String prefix )
@@ -267,7 +291,6 @@ public class FileUtilities
    * 
    * @param basedir
    * @param absoluteFile
-   * 
    * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir
    *         von <code>absoluteFile</code> ist
    */
@@ -303,8 +326,8 @@ public class FileUtilities
     if( !absolute.startsWith( base ) )
     {
       if( base.lastIndexOf( "/" ) > -1 )
-        base = base.substring( 0, base.lastIndexOf( "/" )  );
-      //      base=base.replaceAll(File.separator+".+$","");
+        base = base.substring( 0, base.lastIndexOf( "/" ) );
+      // base=base.replaceAll(File.separator+".+$","");
       String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
         return null;
@@ -315,7 +338,7 @@ public class FileUtilities
       // TODO change regExp to "everything except fileseparator"
       String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
       if( x.length() > 0 )
-        return x + "/"+ difference;
+        return x + "/" + difference;
       return difference;
     }
     final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
@@ -373,10 +396,10 @@ public class FileUtilities
    * Example:
    * 
    * <pre>
-   * 
-   *  test.foo -- test
-   *  robert.tt -- robert
-   *  
+   *   
+   *    test.foo -- test
+   *    robert.tt -- robert
+   *    
    * </pre>
    * 
    * @param fileName
@@ -416,7 +439,7 @@ public class FileUtilities
     {
       final File file = files[i];
 
-      if( file.isFile() || ( file.isDirectory() && recurse ) )
+      if( file.isFile() || (file.isDirectory() && recurse) )
         accept( file, visitor, recurse );
     }
   }
