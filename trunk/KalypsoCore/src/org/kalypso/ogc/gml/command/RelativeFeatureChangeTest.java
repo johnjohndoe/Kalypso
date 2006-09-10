@@ -82,7 +82,7 @@ public class RelativeFeatureChangeTest extends TestCase
     m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile ) );
 
     final Feature m_feature = m_workspace.getRootFeature();
-    final FeatureList featureList = (FeatureList) m_feature.getProperty( 0 );
+    final FeatureList featureList = (FeatureList) m_feature.getProperty( m_feature.getFeatureType().getProperties()[0] );
 
     m_original = (Feature) featureList.get( 0 );
     for( int i = 0; i < COMMAND_COUNT; i++ )

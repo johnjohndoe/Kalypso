@@ -310,8 +310,27 @@ public class FeatureView extends ViewPart implements ModellEventListener
       activateFeature( null, false );
     }
 
-    m_featureSelectionActionGroup.getContext().setSelection( selection );
-    m_featureSelectionActionGroup.updateActionBars();
+    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
+
+    runAsync( new Runnable()
+    {
+      public void run( )
+      {
+        featureSelectionActionGroup.getContext().setSelection( selection );
+        featureSelectionActionGroup.updateActionBars();
+      }
+    } );
+  }
+
+  private void runAsync( final Runnable runnable )
+  {
+    final Group mainGroup = m_mainGroup;
+    final Control control = m_featureComposite.getControl();
+    if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
+    {
+      if( !control.isDisposed() )
+        control.getDisplay().asyncExec( runnable );
+    }
   }
 
   protected void handlePartClosed( final IWorkbenchPart part )
@@ -496,11 +515,12 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // TODO: why doesn't the feature composite itself is a modelllisztener and reacts to the changes?
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
     {
+      
       final Group mainGroup = m_mainGroup;
       final Control control = m_featureComposite.getControl();
       if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
       {
-        control.getDisplay().asyncExec( new Runnable()
+        final Runnable runnable = new Runnable()
         {
           public void run( )
           {
@@ -513,7 +533,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
             if( !control.isDisposed() )
               m_featureComposite.updateControl();
           }
-        } );
+        };
+        control.getDisplay().asyncExec( runnable );
       }
     }
   }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="functionProperty" name="functionProperty" schema="schema/functionProperty.exsd"/>
 
      <extension
          id="org.kalypso.deegree.catalog"
@@ -16,5 +17,12 @@
             class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping"
             id="org.kalypso.deegree.catalog.urlCatalogUpdateOpservatsionMapping"/>
    </extension>
+     <extension
+           point="org.kalypso.deegree.functionProperty">
+        <function
+              class="org.kalypsodeegree_impl.model.feature.ConstantFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.const"
+              name="Constant"/>
+     </extension>
 
 </plugin>

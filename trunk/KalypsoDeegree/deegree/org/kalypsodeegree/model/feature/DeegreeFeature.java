@@ -94,6 +94,8 @@ public interface DeegreeFeature
   IFeatureType getFeatureType( );
 
   /**
+   * @deprecated 
+   * 
    * returns the properties of the feature as array of Objects
    */
   Object[] getProperties( );
@@ -102,11 +104,6 @@ public interface DeegreeFeature
    * returns the property of the feature that matches the submitted propertytype
    */
   Object getProperty( IPropertyType propertyType );
-
-  /**
-   * returns the property of the feature that matches the submitted index
-   */
-  Object getProperty( int index );
 
   /**
    * returns all geometry properties of the feature. If no geometry could be found an <tt>GM_Object[]</tt> with zero

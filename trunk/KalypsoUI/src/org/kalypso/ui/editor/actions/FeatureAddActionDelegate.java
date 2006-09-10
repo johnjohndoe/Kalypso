@@ -125,14 +125,14 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
   {
     int maxOccurs = -1;
     int size = -1;
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
-    int[] pos = FeatureHelper.getPositionOfAllAssociations( feature );
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType[] properties = featureType.getProperties();
+    final int[] pos = FeatureHelper.getPositionOfAllAssociations( feature );
     if( pos.length > 0 )
     {
       for( int i = 0; i < pos.length; i++ )
       {
-        Object property = feature.getProperty( pos[i] );
+        Object property = feature.getProperty( properties[i] );
         IRelationType ftp = (IRelationType) properties[pos[i]];
         maxOccurs = ftp.getMaxOccurs();
         if( property instanceof Feature )

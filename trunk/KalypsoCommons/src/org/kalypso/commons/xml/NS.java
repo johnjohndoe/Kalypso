@@ -53,6 +53,11 @@ public interface NS
   public final static String XSD = "http://www.w3.org/2001/XMLSchema-instance";
 
   /**
+   * Namespace for kalypso appinfo elements inside gml schemas.
+   */
+  public final static String KALYPSO_APPINFO = "org.kalypso.appinfo";
+  
+  /**
    * namespace from namespacedefinitions e.g. xmlns:app="foobar"
    */
   public final static String XML_PREFIX_DEFINITION_XMLNS = "http://www.w3.org/2000/xmlns/";

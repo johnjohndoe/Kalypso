@@ -139,14 +139,6 @@ public class DictionaryFeature implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperty(int)
-   */
-  public Object getProperty( int index )
-  {
-    return m_feature.getProperty( index );
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
   public Object getProperty( IPropertyType propertyType )
