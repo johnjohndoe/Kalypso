@@ -222,7 +222,7 @@ public class ShapeSerializer
       }
 
       final GMLSchema schema = null;
-      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null );
+      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null );
       
       return workspace;
     }

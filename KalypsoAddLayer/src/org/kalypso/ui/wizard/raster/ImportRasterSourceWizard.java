@@ -107,7 +107,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       try
       {
         gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
-        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
         IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverageMember" );
         // IFeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
         styleName = ft.getName();

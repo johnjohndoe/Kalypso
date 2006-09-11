@@ -154,7 +154,7 @@ public class ObservationResolver extends AbstractTransformation
 
       final UrlResolver resolver = createResolver( project, targetFolder, startsimString, startforecastString, endsimString );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver, null );
       final IFeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
         throw new TransformationException( "Featurename unbekannt: " + featureName );

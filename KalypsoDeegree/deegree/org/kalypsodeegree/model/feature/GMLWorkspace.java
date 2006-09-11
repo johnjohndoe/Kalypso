@@ -11,6 +11,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author doemming
@@ -194,4 +195,7 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart );
+
+  /** Return the factory which creates feature providers used to load linked features. */ 
+  public IFeatureProviderFactory getFeatureProviderFactory( );
 }

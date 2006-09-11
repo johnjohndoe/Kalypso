@@ -130,7 +130,7 @@ public class GMLWeightingTask extends Task
 
       // 1. load srcgml
       logger.log( " lade Modell " + m_modelURL );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL, null );
 
       // 2. locate features to process
       final FeaturePath path = new FeaturePath( m_featurePathTarget );

@@ -90,6 +90,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -100,6 +101,7 @@ import org.xml.sax.XMLReader;
  */
 public final class GmlSerializer
 {
+  private final static IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
   private GmlSerializer( )
   {
@@ -170,7 +172,7 @@ public final class GmlSerializer
    * Liest einen GML-Workspace aus einer URL. Es wird kein Token-Replace durchgeführt, das Encoding wird anhand des
    * XML-Headers ermittelt. Sollte Client-Seitig nicht benutzt werden.
    */
-  public static GMLWorkspace createGMLWorkspace( final URL gmlURL ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
     InputStream stream = null;
     try
@@ -181,7 +183,7 @@ public final class GmlSerializer
       // richtige enconding im xml-header steht.
       stream = new BufferedInputStream( gmlURL.openStream() );
 
-      return createGMLWorkspace( new InputSource( stream ), gmlURL );
+      return createGMLWorkspace( new InputSource( stream ), gmlURL, factory );
     }
     finally
     {
@@ -192,7 +194,7 @@ public final class GmlSerializer
   /**
    * Liest ein GML aus einer URL und ersetzt dabei tokens gemäss dem URL-Resolver.
    */
-  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver, final IFeatureProviderFactory factory ) throws Exception
   {
     Reader reader = null;
 
@@ -221,7 +223,7 @@ public final class GmlSerializer
         rt.addConfiguredToken( token );
       }
 
-      return createGMLWorkspace( new InputSource( rt ), gmlURL );
+      return createGMLWorkspace( new InputSource( rt ), gmlURL, factory );
     }
     finally
     {
@@ -229,7 +231,7 @@ public final class GmlSerializer
     }
   }
 
-  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context ) throws Exception
+  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
@@ -247,11 +249,12 @@ public final class GmlSerializer
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
     final String schemaLocationString = contentHandler.getSchemaLocationString();
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString );
+    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString, providerFactory );
     return workspace;
   }
 
-  public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache, final IFeatureProviderFactory factory ) throws Exception
   {
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
@@ -263,15 +266,18 @@ public final class GmlSerializer
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
     final String schemaLocationString = contentHandler.getSchemaLocationString();
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString );
+    
+    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString, providerFactory );
     return workspace;
   }
 
-  public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor ) throws CoreException
+  public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException
   {
     monitor.beginTask( "Creating gml file", 2 );
 
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType );
+    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType, providerFactory );
     monitor.worked( 1 );
 
     final SetContentHelper contentHelper = new SetContentHelper()
@@ -286,11 +292,12 @@ public final class GmlSerializer
     monitor.worked( 1 );
   }
 
-  public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Creating gml file", 2 );
 
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName );
+    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName, providerFactory );
     
     // introduce further schemata into workspace
     final IGMLSchema schema = workspace.getGMLSchema();

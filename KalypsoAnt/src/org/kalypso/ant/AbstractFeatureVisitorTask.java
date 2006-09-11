@@ -234,7 +234,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       final IUrlResolver resolver = new UrlResolver();
       final URL gmlURL = resolver.resolveURL( m_context, m_gml );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
       final List<IStatus> stati = new ArrayList<IStatus>();
       for( int i = 0; i < m_featurePath.length; i++ )

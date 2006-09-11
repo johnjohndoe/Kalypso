@@ -53,4 +53,9 @@ public interface IFeatureProvider
   public IFeatureType getFeatureType( );
 
   public Feature getFeature( );
+
+  /** Returns the id, this is possible because the id must be the anchor-part of the reference. */
+  public String getId( );
+
+  public void dispose( );
 }

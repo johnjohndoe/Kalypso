@@ -237,7 +237,7 @@ public class WFSUtilities
         final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
         // final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema(schemaURL);
 
-        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false );
+        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false, null );
         inputStream.close();
         IOUtils.closeQuietly( inputStream );
 
@@ -259,7 +259,7 @@ public class WFSUtilities
           inputStream = new BufferedInputStream( stream );
           final URL schemaURLHint = createDescribeFeatureTypeRequestURL( wfsCaps, featureTypeToLoad );
 
-          final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false );
+          final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURLHint, false, null );
           inputStream.close();
           IOUtils.closeQuietly( inputStream );
 

@@ -38,43 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature;
+package org.kalypso.ogc.gml.actionfilters;
 
-import java.util.Map;
-
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 
 /**
- * Represents a function-property.
+ * A filter on {@link org.kalypsodeegree.model.feature.Feature} objects.
+ * <p>
+ * Tests the if the selected feature is of exactly one of the given feature types. Substition does not work here, use {@link org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter} instead.
+ * </p>
+ * <p>
+ * The value argument is one or more qnames (separated by semicolons ';' of the following for: namespace#localPart.
+ * <p>
+ * Example: org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprof#Profile
+ * </p>
  * 
- * @author Gernot Belger
+ * @author schlienger
  */
-public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler, IExecutableExtension
+public class FeatureTypeStrictActionFilter extends FeatureTypeActionFilter
 {
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    // read signature from config
-  }
+  public final static String ATTR_FEATURE_TYPE_STRICT = "featureTypeStrict"; //$NON-NLS-1$
 
-  /**
-   * Parses a schema fragement of this kind:
-   * 
-   * <pre>
-   *    &lt;kapp:functionProperty kapp:functionId=&quot;org.kalypso.gmlschema.functionProperty.const&quot; kapp:property=&quot;wspm:cacheDate&quot;&gt;
-   *       &lt;kapp:parameter&gt;
-   *          &lt;kapp:name&gt;-name&lt;/kapp:name&gt;
-   *          &lt;kapp:value&gt;-value-&lt;/kapp:value&gt;
-   *       &lt;/kapp:parameter&gt;
-   *    &lt;/kapp:functionProperty&gt;
-   * </pre>
-   * 
-   * @param properties the properties of the appinfo 
-   */
-  public abstract void init( final Map<String, String> properties );
+  public FeatureTypeStrictActionFilter( )
+  {
+    super( false, ATTR_FEATURE_TYPE_STRICT );
+  }
 }

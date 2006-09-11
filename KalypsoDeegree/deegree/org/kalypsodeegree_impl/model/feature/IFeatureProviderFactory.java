@@ -40,41 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.Map;
-
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
- * Represents a function-property.
- * 
  * @author Gernot Belger
  */
-public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler, IExecutableExtension
+public interface IFeatureProviderFactory
 {
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    // read signature from config
-  }
-
-  /**
-   * Parses a schema fragement of this kind:
-   * 
-   * <pre>
-   *    &lt;kapp:functionProperty kapp:functionId=&quot;org.kalypso.gmlschema.functionProperty.const&quot; kapp:property=&quot;wspm:cacheDate&quot;&gt;
-   *       &lt;kapp:parameter&gt;
-   *          &lt;kapp:name&gt;-name&lt;/kapp:name&gt;
-   *          &lt;kapp:value&gt;-value-&lt;/kapp:value&gt;
-   *       &lt;/kapp:parameter&gt;
-   *    &lt;/kapp:functionProperty&gt;
-   * </pre>
-   * 
-   * @param properties the properties of the appinfo 
-   */
-  public abstract void init( final Map<String, String> properties );
+  public IFeatureProvider createFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate );
 }

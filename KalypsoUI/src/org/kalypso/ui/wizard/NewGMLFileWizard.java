@@ -117,7 +117,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         final IContainer container = (IContainer) resource;
         final IFile file = container.getFile( new Path( fileName ) );
 
-        GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ) );
+        GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ), null );
 
         monitor.subTask( " - opening file for editing..." );
         getShell().getDisplay().asyncExec( new Runnable()

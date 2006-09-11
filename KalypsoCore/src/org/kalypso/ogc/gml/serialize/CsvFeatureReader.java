@@ -76,7 +76,7 @@ public final class CsvFeatureReader
     final GMLSchema schema = null;
     final URL context = null;
     final String schemaLocation = null;
-    return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation );
+    return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation, null );
   }
 
   private void loadCSVIntoList( Feature parent, IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException

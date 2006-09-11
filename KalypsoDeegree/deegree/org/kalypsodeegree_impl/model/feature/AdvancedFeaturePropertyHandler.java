@@ -41,8 +41,8 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -113,7 +113,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
           final IPropertyType pt = featureType.getProperty( propertyQName );
 
           final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
-          final Properties properties = parseParameters( parameters );
+          final Map<String, String> properties = parseParameters( parameters );
 
           final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, properties );
           m_handlers.put( pt, propertyFunction );
@@ -128,9 +128,10 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     }
   }
 
-  private Properties parseParameters( final XmlObject[] parameters )
+  private Map<String, String> parseParameters( final XmlObject[] parameters )
   {
-    final Properties properties = new Properties();
+    /* IMPORTENT: Use linked hash map in order to preserve parameter order. */
+    final Map<String, String> properties = new LinkedHashMap<String, String>();
 
     for( final XmlObject parameter : parameters )
     {
@@ -141,7 +142,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
       final String value = values.length == 0 ? null : values[0].newCursor().getTextValue();
 
       if( name != null && value != null )
-        properties.setProperty( name, value );
+        properties.put( name, value );
     }
 
     return properties;
