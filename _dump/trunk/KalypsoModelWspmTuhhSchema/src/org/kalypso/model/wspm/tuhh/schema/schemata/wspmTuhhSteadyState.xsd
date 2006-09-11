@@ -175,8 +175,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Fließgesetz</label>
-								<tooltip>Fließgesetz</tooltip>
-								<description>verwendetes Fließgesetz</description>
+								<tooltip>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</tooltip>
+								<description>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -226,8 +226,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnungsart</label>
-								<tooltip>Berechnungsart</tooltip>
-								<description>Berechnungsart</description>
+								<tooltip>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</tooltip>
+								<description>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -271,8 +271,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
-								<tooltip>Referenz auf Gewässerstrang</tooltip>
-								<description>Referenz auf Gewässerstrang</description>
+								<tooltip>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</tooltip>
+								<description>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -313,8 +313,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussereignis</label>
-								<tooltip>Referenz auf Abflussereignis</tooltip>
-								<description>Referenz auf Abflussereignis</description>
+								<tooltip>Auswahl des Abflussereignisses</tooltip>
+								<description>Auswahl des Abflussereignisses</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -322,8 +322,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussintervall</label>
-								<tooltip>Abflussintervall</tooltip>
-								<description>Abflussintervall</description>
+								<tooltip>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</tooltip>
+								<description>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -346,8 +346,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Art</label>
-								<tooltip>Art der Randbedingung</tooltip>
-								<description>Art der Randbedingung</description>
+								<tooltip>Auswahl der Randbedingung am ersten Profil (Unterlauf)</tooltip>
+								<description>Auswahl der Randbedingung am ersten Profil (Unterlauf)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -389,9 +389,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangswasserspiegel</label>
-								<tooltip>Anfangswasserspiegel</tooltip>
-								<description>Untere Randbedingung (1.Profil):
-								Anfangswasserspiegel</description>
+								<tooltip>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung </tooltip>
+								<description>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung </description>
 							</documentation>
 						</annotation>
 					</element>
@@ -399,9 +398,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>stationär-gleichförmiges Gefälle</label>
-								<tooltip>stationär-gleichförmiges Gefälle</tooltip>
-								<description>Untere Randbedingung (1.Profil):
-									stationär-gleichförmiges Gefälle</description>
+								<tooltip>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</tooltip>
+								<description>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -425,9 +423,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Minimaler Abfluss [m³/s]</label>
-								<tooltip>Minimaler Abfluss [m³/s]</tooltip>
-								<description>Minimaler Abfluss [m³/s] des
-								Abflussintervalls</description>
+								<tooltip>kleinster Wert des Abflussintervalls</tooltip>
+								<description>kleinster Wert des Abflussintervalls</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -435,9 +432,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Schrittbreite [m³/s]</label>
-								<tooltip>Schrittbreite [m³/s]</tooltip>
-								<description>Schrittbreite [m³/s] des
-								Abflussintervalls</description>
+								<tooltip>Schrittbreite des Abflussintervalls</tooltip>
+								<description>Schrittbreite des Abflussintervalls</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -445,9 +441,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Maximaler Abfluss [m³/s]</label>
-								<tooltip>Maximaler Abfluss [m³/s]</tooltip>
-								<description>Maximaler Abfluss [m³/s] des
-								Abflussintervalls</description>
+								<tooltip>Mgrößter Wert des Abflussintervalls </tooltip>
+								<description>größter Wert des Abflussintervalls</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -470,9 +465,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Iterationsgenauigkeit</label>
-								<tooltip>Iterationsgenauigkeit</tooltip>
-								<description>Iterationsgenauigkeit (Berechnung des
-								Wasserspiegels)</description>
+								<tooltip>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</tooltip>
+								<description>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -504,8 +498,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Verzögerungsverlust</label>
-								<tooltip>Verzögerungsverlust</tooltip>
-								<description>Verzögerungsverlust</description>
+								<tooltip>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</tooltip>
+								<description>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -547,8 +541,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnung von Reibungsverlusten</label>
-								<tooltip>Berechnung von Reibungsverlusten</tooltip>
-								<description>Berechnung von Reibungsverlusten</description>
+								<tooltip>Berechnung des Reibungsverlustes (Standard=Trapezformel)</tooltip>
+								<description>Berechnung des Reibungsverlustes (Standard=Trapezformel)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -611,8 +605,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässer</label>
-								<tooltip>Referenz auf Gewässer</tooltip>
-								<description>Referenz auf Gewässer</description>
+								<tooltip>Übergeordnetes Gewässer</tooltip>
+								<description>Übergeordnetes Gewässer</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -719,8 +713,9 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangsstation</label>
-								<tooltip>Anfangsstation</tooltip>
-								<description>Anfangsstation des Berechnungsabschnitts</description>
+								<tooltip>Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!</tooltip>
+								<description>Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!
+								</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -728,8 +723,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Endstation</label>
-								<tooltip>Endstation</tooltip>
-								<description>Endstation des Berechnungsabschnitts</description>
+								<tooltip>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</tooltip>
+								<description>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -752,8 +747,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Brücken mit berechnen</label>
-								<tooltip>Brücken mit berechnen</tooltip>
-								<description>Brücken mit berechnen</description>
+								<tooltip>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</tooltip>
+								<description>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -761,8 +756,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wehre mit berechnen</label>
-								<tooltip>Wehre mit berechnen</tooltip>
-								<description>Wehre mit berechnen</description>
+								<tooltip>falls aktiv, werden Wehre bei der Berechnung berücksichtigt.</tooltip>
+								<description>falls aktiv, werden Wehre bei der Berechnung berücksichtigt. </description>
 							</documentation>
 						</annotation>
 					</element>

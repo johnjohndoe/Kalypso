@@ -2,10 +2,10 @@
     <gft:featureview typename="prof:Profile" style="SWT.NONE" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="4"/>
-        <gft:label text="Kommentar" visible="true" tooltip="Name" style="SWT.NONE">
+        <gft:label text="Kommentar" visible="true" tooltip="Profilbezeichnung" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+        <gft:text editable="true" property="gml:name" tooltip="Profilbezeichnung" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
             <gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -14,10 +14,10 @@
         <gft:label visible="false" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+        <gft:label text="Beschreibung" visible="true" tooltip="Profilbeschreibung (optional)" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+        <gft:text editable="true" property="gml:description" tooltip="Profilbeschreibung (optional)" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
             <gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
@@ -26,10 +26,10 @@
         <gft:label visible="false" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:label text="Station [km]" visible="true" tooltip="station" style="SWT.NONE">
+        <gft:label text="Station [km]" visible="true" tooltip="Gewässerstation des Profils" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        <gft:text editable="true" property="prof:station" tooltip="station" style="SWT.BORDER">
+        <gft:text editable="true" property="prof:station" tooltip="Gewässerstation des Profils" style="SWT.BORDER">
             <gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING"/>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">

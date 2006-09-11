@@ -326,8 +326,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässer</label>
-								<tooltip>Gewässer</tooltip>
-								<description>Gewässer</description>
+								<tooltip>Übergeordnetes Gewässer</tooltip>
+								<description>Übergeordnetes Gewässer</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -373,8 +373,8 @@
 								itself.</appinfo>
 							<documentation xml:lang="de">
 								<label>Station km</label>
-								<tooltip>Station km</tooltip>
-								<description>Station km</description>
+								<tooltip>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</tooltip>
+								<description>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -421,8 +421,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profil</label>
-								<tooltip>Referenz auf Profil</tooltip>
-								<description>Referenz auf Profil</description>
+								<tooltip>Für Strangsegment verwendetes Profil</tooltip>
+								<description>Für Strangsegment verwendetes Profil</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -476,8 +476,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerkennziffer</label>
-								<tooltip>Gewässerkennziffer</tooltip>
-								<description>Gewässerkennziffer</description>
+								<tooltip>Gewässerkennziffer (optional)</tooltip>
+								<description>Gewässerkennziffer (optional)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -494,9 +494,11 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Stationierung beginnt an der Mündung</label>
-								<tooltip>Gewässerstationierung beginnt an der Mündung</tooltip>
-								<description>Beginnt die Gewässerstationierung an der
-								Mündung?</description>
+								<tooltip><![CDATA[ Angabe der Stationierungsrichtung. 
+Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]>
+								</tooltip>
+								<description><![CDATA[ Angabe der Stationierungsrichtung. 
+Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]></description>
 							</documentation>
 						</annotation>
 					</element>
