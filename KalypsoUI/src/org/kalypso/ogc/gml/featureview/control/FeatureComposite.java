@@ -331,7 +331,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       addFeatureControl( tfc );
 
       return control;
-    }
+   }
     else if( controlType instanceof Combo )
     {
       final Combo comboType = (Combo) controlType;
