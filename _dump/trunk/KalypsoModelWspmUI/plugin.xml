@@ -212,7 +212,7 @@
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                label="Profil anzeigen"
-               tooltip="In die Profileditor Ansicht wechseln"/>
+               tooltip="In die Profileditor Perspektive wechseln"/>
       </objectContribution>
    </extension>
      <extension

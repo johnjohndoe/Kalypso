@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.gml;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -126,12 +125,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return createObsFeature( "waterlevelFixationMember" );
-  }
-
-  private Feature createObsFeature( final String localName ) throws GMLSchemaException
-  {
-    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, localName ), new QName( NS.OM, "Observation" ) );
+    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "waterlevelFixationMember" ), new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
   }
 
   public boolean isDirectionUpstreams( )

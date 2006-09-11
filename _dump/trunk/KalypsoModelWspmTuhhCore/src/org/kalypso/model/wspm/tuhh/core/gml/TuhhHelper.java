@@ -114,7 +114,7 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       final IFile targetFile = wspmContainer.getFile( new Path( "modell.gml" ) );
       // Add the tuhh namespace to the known namespaces, so it is later known for adding new feature
       final String[] additionalNamespaces = new String[] { IWspmTuhhConstants.NS_WSPM_TUHH };
-      GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, new SubProgressMonitor( monitor, 900 ) );
+      GmlSerializer.createGmlFile( new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ), additionalNamespaces, targetFile, new SubProgressMonitor( monitor, 900 ), null );
 
       monitor.subTask( " - kopiere Modellstruktur" );
       final File containerDir = wspmContainer.getLocation().toFile();

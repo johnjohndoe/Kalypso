@@ -36,8 +36,8 @@ p {
 
 img.link {
   vertical-align: middle;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
 }
 
 a.link {
@@ -56,7 +56,7 @@ div.list{
   font-family:tahoma, arial, serif;
   font-size:20px;
   font-weight:bold;
-  text-align:middle;
+  text-align:left;
 }
 
 img.icon {

@@ -119,7 +119,7 @@ public class WspWinExporter
           // read gml workspace
           final URL modelGmlUrl = ResourceUtilities.createURL( resource );
 
-          final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl );
+          final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl, null );
           Feature rootFeat = gmlWrkSpce.getRootFeature();
 
           // featType holen
@@ -210,15 +210,15 @@ public class WspWinExporter
     for( final IComponent comp : components )
     {
       // TODO: get component via phenomenon
-      if( comp.getName().equals( "Abfluss" ) )
+      if( comp.getName().startsWith( "Abfluss" ) )
         abflussComp = comp;
-      if( comp.getName().equals( "Station" ) )
+      if( comp.getName().startsWith( "Station" ) )
         stationComp = comp;
     }
 
-    final Comparator<Double> comp = new Comparator<Double>()
+    final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
     {
-      public int compare( final Double o1, final Double o2 )
+      public int compare( final BigDecimal o1, final BigDecimal o2 )
       {
         if( isDirectionUpstreams )
           return o1.compareTo( o2 );
@@ -227,11 +227,11 @@ public class WspWinExporter
       }
     };
 
-    final Map<Double, Double> values = new TreeMap<Double, Double>( comp );
+    final Map<BigDecimal, BigDecimal> values = new TreeMap<BigDecimal, BigDecimal>( comp );
     for( final IRecord record : result )
     {
-      final Double station = (Double) record.getValue( stationComp );
-      final Double runOff = (Double) record.getValue( abflussComp );
+      final BigDecimal station = (BigDecimal) record.getValue( stationComp );
+      final BigDecimal runOff = (BigDecimal) record.getValue( abflussComp );
       values.put( station, runOff );
     }
 
@@ -247,14 +247,14 @@ public class WspWinExporter
       pw.println( result.size() );
 
       // write it sorted into the flle
-      for( final Map.Entry<Double, Double> entry : values.entrySet() )
+      for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
       {
-        final Double station = entry.getKey();
-        final Double runOff = entry.getValue();
+        final BigDecimal station = entry.getKey();
+        final BigDecimal runOff = entry.getValue();
 
-        pw.print( Double.toString( station ) );
+        pw.print( Double.toString( station.doubleValue() ) );
         pw.print( " " );
-        pw.print( Double.toString( runOff ) );
+        pw.print( Double.toString( runOff.doubleValue() ) );
         pw.println();
       }
     }

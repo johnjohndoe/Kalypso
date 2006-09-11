@@ -84,7 +84,7 @@ public class WspWinExportProjectFeatV implements FeatureVisitor, IWspmTuhhConsta
           // read gml workspace
           final URL modelGmlUrl = ResourceUtilities.createURL( resource );
 
-          final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl );
+          final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl, null );
 
           final WspWinExportProjectFeatV exportVisitor = new WspWinExportProjectFeatV( modelGml, wspwinDir, monitor );
           gmlWrkSpce.accept( exportVisitor, gmlWrkSpce.getRootFeature(), FeatureVisitor.DEPTH_INFINITE_LINKS );

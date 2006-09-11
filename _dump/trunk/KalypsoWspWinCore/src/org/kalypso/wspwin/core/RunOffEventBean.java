@@ -42,6 +42,7 @@ package org.kalypso.wspwin.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,12 +62,12 @@ public class RunOffEventBean
 {
   private final String m_name;
 
-  private final Map<Double, Double> m_entries;
+  private final Map<BigDecimal, BigDecimal> m_entries;
 
-  public RunOffEventBean( final String name, final Map<Double, Double> entries )
+  public RunOffEventBean( final String name, final Map<BigDecimal, BigDecimal> entries )
   {
     m_name = name;
-    m_entries = new TreeMap<Double, Double>( entries );
+    m_entries = new TreeMap<BigDecimal, BigDecimal>( entries );
   }
 
   public String getName( )
@@ -74,7 +75,7 @@ public class RunOffEventBean
     return m_name;
   }
 
-  public Map<Double, Double> getEntries( )
+  public Map<BigDecimal, BigDecimal> getEntries( )
   {
     return Collections.unmodifiableMap( m_entries );
   }
@@ -104,7 +105,7 @@ public class RunOffEventBean
         final int eventLength = Integer.parseInt( tokenizer.nextToken() );
 
         // read block: station -> value
-        final Map<Double, Double> entries = new HashMap<Double, Double>( eventLength );
+        final Map<BigDecimal, BigDecimal> entries = new HashMap<BigDecimal, BigDecimal>( eventLength );
         for( int i = 0; i < eventLength; i++ )
         {
           if( !lineIt.hasNext() )
@@ -118,7 +119,7 @@ public class RunOffEventBean
 
           final double station = Double.parseDouble( tz.nextToken() );
           final double value = Double.parseDouble( tz.nextToken() );
-          entries.put( station, value );
+          entries.put( BigDecimal.valueOf( station ), BigDecimal.valueOf( value ) );
         }
 
         beans.add( new RunOffEventBean( eventName, entries ) );

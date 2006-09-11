@@ -47,14 +47,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -66,9 +65,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -76,13 +73,9 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmProject;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -91,11 +84,9 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.START_KONDITION_KIND;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -113,11 +104,6 @@ import org.kalypso.wspwin.core.CalculationContentBean.ART_ANFANGS_WSP;
 import org.kalypso.wspwin.core.CalculationContentBean.FLIESSGESETZ;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
 
 /**
  * @author thuel2
@@ -155,7 +141,7 @@ public class WspWinImporter
       monitor.subTask( " - lade Grundmodell..." );
       final IFile modelFile = targetContainer.getFile( new Path( "modell.gml" ) );
       final URL url = ResourceUtilities.createURL( modelFile );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       monitor.worked( 200 );
 
       monitor.subTask( " - lade WspWin Projekt..." );
@@ -396,11 +382,6 @@ public class WspWinImporter
       }
     }
 
-    //
-    // TEMPORARY: write geometries from profile into reach feature
-    //
-//    updateReachProperties( reach );
-
     final WspmWaterBody waterBody = reach.getWaterBody();
 
     // base name for runOffEvents and calculations. Needed, because in WspWin the runOffs and calculations belonged
@@ -603,91 +584,44 @@ public class WspWinImporter
     }
   }
 
-//  private static void updateReachProperties( final TuhhReach reach )
-//  {
-//    final WspmReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-//    for( final WspmReachProfileSegment segment : reachProfileSegments )
-//    {
-//      try
-//      {
-//        final WspmProfile profileMember = segment.getProfileMember();
-//        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-//
-//        segment.setStation( profil.getStation() );
-//
-//        final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
-//        final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
-//        final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
-//        // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT
-//        // :
-//        // POINT_PROPERTY.BREITE;
-//        // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
-//        // null;
-//        final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
-//
-//        final GM_Curve curve;
-//        if( ppRW == null || ppHW == null || ppH == null )
-//          curve = null;
-//        else
-//        {
-//          final LinkedList<IProfilPoint> points = profil.getPoints();
-//          final GM_Position[] positions = new GM_Position[points.size()];
-//          int count = 0;
-//          for( final IProfilPoint point : points )
-//          {
-//            final double rw = point.getValueFor( ppRW );
-//            final double hw = ppHW == null ? 0.0 : point.getValueFor( ppHW );
-//            final double h = point.getValueFor( ppH );
-//
-//            positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
-//          }
-//          curve = GeometryFactory.createGM_Curve( positions, null );
-//        }
-//
-//        segment.setGeometry( curve );
-//      }
-//      catch( final ProfilDataException e )
-//      {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//      }
-//      catch( GM_Exception e )
-//      {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//      }
-//    }
-//
-//  }
-
-  private static void writeRunOffBeanIntoFeature( final int pos, final RunOffEventBean bean, final String name, final Feature runOffFeature, final IComponent valueComp )
+  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent stationComp = new ValueComponent( pos, "Station", "Station", XmlTypes.XS_DOUBLE, "km" );
-    final TupleResult result = new TupleResult( new IComponent[] { stationComp, valueComp } );
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( runOffFeature );
+    obs.setName( name );
+    obs.setDescription( "Importiert aus WspWin" );
 
-    final Map<Double, Double> values = bean.getEntries();
-    for( final Map.Entry<Double, Double> entry : values.entrySet() )
+    final TupleResult result = obs.getResult();
+    final IComponent[] components = result.getComponents();
+    
+    final IComponent stationComp;
+    final IComponent valueComp;
+    if( components[0].getName().startsWith( "Station" ) )
+    {
+      stationComp = components[0];
+      valueComp = components[1];
+    }
+    else
+    {
+      valueComp = components[0];
+      stationComp = components[1];
+    }
+    
+    final Map<BigDecimal, BigDecimal> values = bean.getEntries();
+    for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
     {
       final IRecord record = result.createRecord();
       result.add( record );
       record.setValue( stationComp, entry.getKey() );
       record.setValue( valueComp, entry.getValue() );
     }
+    
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( name, "Importiert aus WspWin", result, new ArrayList<MetadataObject>() );
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
-  }
-
-  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
-  {
-    final IComponent abflussComp = new ValueComponent( 2, "Abfluss", "Abfluss", XmlTypes.XS_DOUBLE, "m³/s" );
-    writeRunOffBeanIntoFeature( 1, bean, name, runOffFeature, abflussComp );
   }
 
   private static void writeWspFixBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
   {
-    final IComponent wspComp = new ValueComponent( 2, "Wasserstand", "Wasserstand", XmlTypes.XS_DOUBLE, "mNN" );
-    writeRunOffBeanIntoFeature( 1, bean, name, runOffFeature, wspComp );
+    writeRunOffBeanIntoFeature( bean, name, runOffFeature );
   }
 
   /** Returns the content of the prof/probez.txt file */
