@@ -122,7 +122,7 @@ public class UpdateModellKollau extends TestCase
   public void updateIt( ) throws Exception
   {
     final URL inputModel = getClass().getResource( "resources/modell.gml" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel, null );
     final Feature naModelFe = workspace.getRootFeature();
 
     // Catchments...

@@ -411,7 +411,7 @@ public class TubigExportParameter
 
     MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
 
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlurl );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlurl, null );
 
     // zum Schreiben
     // GmlSerializer.serializeWorkspace( aWriter, workspace );

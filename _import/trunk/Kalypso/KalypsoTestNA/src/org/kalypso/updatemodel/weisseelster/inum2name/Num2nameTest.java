@@ -61,7 +61,7 @@ public class Num2nameTest extends TestCase
   public void testUpdate( ) throws Exception
   {
     final URL modellURL = getClass().getResource( "resource/modell.gml" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, null );
     updateName( workspace, "inum", workspace.getFeatureType( "Catchment" ) );
     updateName( workspace, "inum", workspace.getFeatureType( "VirtualChannel" ) );
     updateName( workspace, "inum", workspace.getFeatureType( "KMChannel" ) );

@@ -452,7 +452,7 @@ public class CreateFloodRiskProjectJob extends Job
     }
 
     // create workspace
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "" );
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "", null );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( landuseDataGML );
@@ -487,7 +487,7 @@ public class CreateFloodRiskProjectJob extends Job
     QName propertyLanduseMemberRisk = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseMember");
 
     // contextModel
-    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL );
+    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL, null );
     
     final GMLSchema schema      = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_CONTEXTMODEL, "3.1" );
     IFeatureType ftLanduse = schema.getFeatureType(landuseFeatureType);
@@ -502,7 +502,7 @@ public class CreateFloodRiskProjectJob extends Job
     IFeatureType ftLanduseRisk = schemaRisk.getFeatureType( landuseFeatureTypeRisk );
     IFeatureType ftLanduseCollectionRisk = schemaRisk.getFeatureType(landuseCollectionTypeRisk);
     final IPropertyType featurePropertyRisk = ftLanduseRisk.getProperty( propertyNameRisk );
-    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL );
+    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL, null );
     Feature rootFeature_risk = riskContextModel.getRootFeature();
     Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureNameRisk );
     IRelationType featurePropertyNameRisk = (IRelationType) ftLanduseCollectionRisk.getProperty(propertyLanduseMemberRisk);
@@ -661,7 +661,7 @@ public class CreateFloodRiskProjectJob extends Job
 
     // create workspace
     IFeatureType[] types = schema.getAllFeatureTypes();
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "" );
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "", null );
     
     //IPath m_modelPath = new Path( m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toString() );
     //URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );

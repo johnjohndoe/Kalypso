@@ -127,7 +127,7 @@ public class TubigInputWorker
     final GMLWorkspace gmlWrkSpce;
     try
     {
-      gmlWrkSpce = GmlSerializer.createGMLWorkspace( urlGml );
+      gmlWrkSpce = GmlSerializer.createGMLWorkspace( urlGml, null );
     }
     catch( final Exception e1 )
     {

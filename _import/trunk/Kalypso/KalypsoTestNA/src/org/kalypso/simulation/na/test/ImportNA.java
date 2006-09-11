@@ -76,7 +76,7 @@ public class ImportNA extends TestCase
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema paraGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String)null );
-    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null, " project:/.model/schema/parameter.xsd" );
+    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema, paraGmlSchema.getAllFeatureTypes(), parameterRootFeature, null, " project:/.model/schema/parameter.xsd", null );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );
   }

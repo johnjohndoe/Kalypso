@@ -81,7 +81,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
   {
     final URL inputModel = getClass().getResource( "resources/modell.gml" );
     final File outputFile = new File( "C:\\TMP\\modell.gml" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputModel, null );
     final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] features = workspace.getFeatures( catchmentFT );
     for( int i = 0; i < features.length; i++ )
@@ -102,7 +102,7 @@ public class WeisseElsterUpdateModelTest extends TestCase
   {
     final URL inputMappingURL = getClass().getResource( "resources/ObsTGebMapping.gml" );
     final File outputFile = new File( "C:\\TMP\\ObsTGebMapping.gml" );
-    final GMLWorkspace mapWorkspace = GmlSerializer.createGMLWorkspace( inputMappingURL );
+    final GMLWorkspace mapWorkspace = GmlSerializer.createGMLWorkspace( inputMappingURL, null );
     final IFeatureType mapFT = mapWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapRootFeature = mapWorkspace.getRootFeature();
     final IFeatureType catchmentFT = modelWorkspace.getFeatureType( "Catchment" );

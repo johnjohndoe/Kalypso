@@ -77,7 +77,7 @@ public class SpreeInputWorker
       final Map map = parseControlFile( controlGmlURL, nativedir );
       props.putAll( map );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "GML" ) );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "GML" ), null );
 
       props.put( SpreeCalcJob.DATA_GML, workspace );
 
@@ -389,7 +389,7 @@ public class SpreeInputWorker
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, null ).getRootFeature();
 
       final Date startSimTime = (Date) controlFeature.getProperty( "startsimulation" );
       final Date startForecastTime = (Date) controlFeature.getProperty( "startforecast" );

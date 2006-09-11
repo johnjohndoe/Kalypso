@@ -128,7 +128,7 @@ public class KalypsoDssCalcJob implements ISimulation
     try
     {
       // read .calculation
-      final GMLWorkspace control = GmlSerializer.createGMLWorkspace( controlURL );
+      final GMLWorkspace control = GmlSerializer.createGMLWorkspace( controlURL, null );
       final Feature rootFeatureControl = control.getRootFeature();
       choiseCalcCase = (String) rootFeatureControl.getProperty( new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_CALCCASE_PROP ) );
       optimize = FeatureHelper.booleanIsTrue( rootFeatureControl, new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_OPTIMIZE_PROP ), false );
@@ -297,13 +297,13 @@ public class KalypsoDssCalcJob implements ISimulation
     GMLWorkspace initValuesWorkspace = null;
     try
     {
-      modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL );
+      modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
       if( planningMeasureURL != null )
       {
 
-        hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+        hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL, null );
         // TODO: fix depenency of initial values file name to NaModelInnerCalcJob
-        initValuesWorkspace = GmlSerializer.createGMLWorkspace( new URL( initValueURLDir, m_initValueFilePrefix.concat( m_initValueFileSuffix ) ) );
+        initValuesWorkspace = GmlSerializer.createGMLWorkspace( new URL( initValueURLDir, m_initValueFilePrefix.concat( m_initValueFileSuffix ) ), null );
         // insert measure
         MeasuresHelper.insertPlanningMeasure( planningMeasureURL, hydrotopWorkspace, initValuesWorkspace, rrmInputProvider, logger );
         writeNewHydrotopFile = true;
@@ -316,7 +316,7 @@ public class KalypsoDssCalcJob implements ISimulation
       if( measuresSealingURL != null && doMeasures )
       {
         if( hydrotopWorkspace == null )
-          hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL );
+          hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopURL, null );
         MeasuresHelper.insertSealingChangeMeasure( measuresSealingURL, hydrotopWorkspace, rrmInputProvider, logger );
         writeNewHydrotopFile = true;
       }
@@ -406,7 +406,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
   private Feature[] getAffectedChannels( GMLWorkspace modelWorkspace, URL designAreaURL ) throws Exception
   {
-    final GMLWorkspace designArea = GmlSerializer.createGMLWorkspace( designAreaURL );
+    final GMLWorkspace designArea = GmlSerializer.createGMLWorkspace( designAreaURL, null );
     FeatureList designAreaFEs = (FeatureList) designArea.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
     Feature designAreaFE = (Feature) designAreaFEs.get( 0 );
     final FeatureList catchmentList = (FeatureList) modelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
@@ -421,7 +421,7 @@ public class KalypsoDssCalcJob implements ISimulation
       if( resolvedLink != null )
         channelCollector.add( resolvedLink );
     }
-    return (Feature[]) channelCollector.toArray( new Feature[channelCollector.size()] );
+    return channelCollector.toArray( new Feature[channelCollector.size()] );
   }
 
   /**

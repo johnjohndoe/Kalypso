@@ -100,7 +100,7 @@ public class RasterizeLanduseJob implements ISimulation
       // landuseVectorData: featureList
       URL landuseVectorDataGML = (URL) inputProvider.getInputForID( LanduseVectorDataID );
       GMLWorkspace landuseVectorData;
-      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML );
+      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML, null );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
       List featureList = (List) featureMember.getFeature( landuseVectorData );
 

@@ -115,12 +115,12 @@ public class GMLSerializerTest extends TestCase
       XMLHelper.writeDOM( documentOrg, "UTF-8", writerOrg );
       writerOrg.close();
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resourceURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resourceURL, null );
       writerParsed = new OutputStreamWriter( new FileOutputStream( testFileParsed ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writerParsed, workspace, "UTF-8" );
       writerParsed.close();
 
-      final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( testFileParsed.toURL() );
+      final GMLWorkspace workspace2 = GmlSerializer.createGMLWorkspace( testFileParsed.toURL(), null );
       writerParsed2 = new OutputStreamWriter( new FileOutputStream( testFileParsed2 ), "UTF-8" );
       GmlSerializer.serializeWorkspace( writerParsed2, workspace2, "UTF-8" );
       writerParsed.close();

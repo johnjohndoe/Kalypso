@@ -79,7 +79,7 @@ public final class TubigCalculationData
       // TubigControl/.calculation)
       LOGGER.info( "GML-URL:" + urlGml.toString() );
 
-      featGes = GmlSerializer.createGMLWorkspace( urlGml ).getRootFeature();
+      featGes = GmlSerializer.createGMLWorkspace( urlGml, null ).getRootFeature();
       featCtrl = (Feature)featGes.getProperty( "ControlAssociation" );
       //      featMeta = (Feature)featGes.getProperty( "MetadataAssociation" );
 

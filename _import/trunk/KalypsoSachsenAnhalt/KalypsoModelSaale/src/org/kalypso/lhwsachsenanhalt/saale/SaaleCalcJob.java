@@ -196,7 +196,7 @@ public class SaaleCalcJob implements ISimulation
     // gml nur einmal lesen
     final URL gmlURL = (URL) inputProvider.getInputForID( "MODELL" );
     final URL controlURL = (URL) inputProvider.getInputForID( "CONTROL" );
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlURL );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
     // braucht mans?
     writeHwzugrStv( hwvordir );
@@ -218,7 +218,7 @@ public class SaaleCalcJob implements ISimulation
    */
   private Date readCurrentTime( final URL controlURL ) throws Exception
   {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( controlURL );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( controlURL, null );
     final FindPropertyByNameVisitor visitor = new FindPropertyByNameVisitor( "startforecast" );
     workspace.accept( visitor, "", FeatureVisitor.DEPTH_INFINITE );
     return (Date)visitor.getResult();

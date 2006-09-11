@@ -164,7 +164,7 @@ public class KTestGMLUpdaterTest extends TestCase
     //
     // -->
     final URL modelURL = getClass().getResource( "resources/weisseElster/modell.gml" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelURL );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelURL, null );
     final GMLWorkspace mappingWorkspace = createEmptyMappingWorkspace();
     final IFeatureType mappingFT = mappingWorkspace.getFeatureType( "MappingObservation" );
     final Feature mapColFE = mappingWorkspace.getRootFeature();
@@ -269,7 +269,7 @@ public class KTestGMLUpdaterTest extends TestCase
 
   private GMLWorkspace createEmptyMappingWorkspace( ) throws Exception
   {
-    return GmlSerializer.createGMLWorkspace( getClass().getResource( "resources/EmptyMapping.gml" ) );
+    return GmlSerializer.createGMLWorkspace( getClass().getResource( "resources/EmptyMapping.gml" ), null );
   }
 
   /**
@@ -281,7 +281,7 @@ public class KTestGMLUpdaterTest extends TestCase
    */
   private void updateFeatureForKTest( final URL input, final File output, final String realProp, final String kTestProp, final String featurePath ) throws Exception
   {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( input );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( input, null );
     final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
     if( featureFromPath instanceof Feature )
       updateFeature( (Feature) featureFromPath, realProp, kTestProp );

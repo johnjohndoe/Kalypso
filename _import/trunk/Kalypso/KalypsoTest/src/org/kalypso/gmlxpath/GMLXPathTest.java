@@ -110,7 +110,7 @@ public class GMLXPathTest extends TestCase
     try
     {
       final URL gmlURL = getClass().getResource( "resources/Bplan.xml" );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final String[] pathes = getXPathes();
       for( int i = 0; i < pathes.length; i++ )
       {

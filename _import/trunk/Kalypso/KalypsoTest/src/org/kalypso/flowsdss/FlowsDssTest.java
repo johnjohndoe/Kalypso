@@ -76,7 +76,7 @@ public class FlowsDssTest extends TestCase
   public void AtestGeometries( ) throws MalformedURLException, Exception
   {
     double percentage = 0.7;
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:///c:/temp/plangebiet.gml" ) );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:///c:/temp/plangebiet.gml" ), null );
     final FeatureList designAreaList = (FeatureList) workspace.getFeatureFromPath( "featureMember" );
     final Feature designAreaFe = (Feature) designAreaList.iterator().next();
     final GM_Object designAreaGEOM = (GM_Object) designAreaFe.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", "gebiet" ) );

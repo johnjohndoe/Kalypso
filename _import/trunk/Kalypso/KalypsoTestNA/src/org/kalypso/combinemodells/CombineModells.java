@@ -87,10 +87,10 @@ public class CombineModells extends TestCase
   public void combineIt( ) throws Exception
   {
     final URL baseModel = getClass().getResource( "resources/base.gml" );
-    final GMLWorkspace baseWorkspace = GmlSerializer.createGMLWorkspace( baseModel );
+    final GMLWorkspace baseWorkspace = GmlSerializer.createGMLWorkspace( baseModel, null );
 
     final URL additiveModel = getClass().getResource( "resources/additive.gml" );
-    GMLWorkspace additiveWorkspace = GmlSerializer.createGMLWorkspace( additiveModel );
+    GMLWorkspace additiveWorkspace = GmlSerializer.createGMLWorkspace( additiveModel, null );
 
     final HashMap<String, String> IDBase = collectIDs( baseWorkspace );
     final HashMap<String, String> IDAdditive = collectIDs( additiveWorkspace );

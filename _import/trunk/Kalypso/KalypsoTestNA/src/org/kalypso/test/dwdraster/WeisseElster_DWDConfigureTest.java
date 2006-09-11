@@ -149,7 +149,7 @@ public class WeisseElster_DWDConfigureTest extends TestCase
       conf.setDwdKey( dwdKey );
       conf.setNumberOfCells( geoRaster.getNumberOfCells() );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass().getResource(
-          "resources/modell_epsg31469.gml" ) );
+          "resources/modell_epsg31469.gml" ), null );
       final IFeatureType featureType = workspace.getFeatureType( "Catchment" );
       final Feature[] features = workspace.getFeatures( featureType );
       final List<Target> targetList = conf.getTarget();

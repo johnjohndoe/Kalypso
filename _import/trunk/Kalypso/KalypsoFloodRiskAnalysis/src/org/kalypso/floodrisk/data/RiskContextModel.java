@@ -79,7 +79,7 @@ public class RiskContextModel
     //System.out.println( "Read " + gmlFile.getName() + "..." );
     try
     {
-      workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+      workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       rootFeature = workspace.getRootFeature();
     }
     catch( Exception e )

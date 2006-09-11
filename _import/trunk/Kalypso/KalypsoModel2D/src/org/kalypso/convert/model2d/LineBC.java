@@ -103,7 +103,7 @@ public class LineBC
 
     try
     {
-      GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace( file2d);
+      GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace( file2d, null );
       final Feature rootFeature2d = ws2d.getRootFeature();
 
       for( int i = 0; i < list.size(); i++ )

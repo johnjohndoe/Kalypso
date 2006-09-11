@@ -87,7 +87,7 @@ public class FileVisitorTubig2Zml implements FileVisitor
 
     try
     {
-      m_gmlWrkSpce = GmlSerializer.createGMLWorkspace( urlGml );
+      m_gmlWrkSpce = GmlSerializer.createGMLWorkspace( urlGml, null );
     }
     catch( final Exception e )
     {
