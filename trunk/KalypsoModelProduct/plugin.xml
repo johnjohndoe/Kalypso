@@ -30,6 +30,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="etc/kalypso16.gif"
             id="org.kalypso.model.product.introID">
       </intro>
       <introProductBinding

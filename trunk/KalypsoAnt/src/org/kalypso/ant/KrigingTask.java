@@ -242,7 +242,7 @@ public class KrigingTask extends Task
       final URL modellURL = urlResolver.resolveURL( m_context, m_modellGML );
       if( modellURL == null )
         throw new Exception( "modell not sound" );
-      final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
+      final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, null );
       if( modellWorkspace == null )
         throw new Exception( "could not load modell" );
       modellWorkspace.accept( new TransformVisitor( targetCRS ), modellWorkspace.getRootFeature(),
@@ -259,7 +259,7 @@ public class KrigingTask extends Task
       if( m_sourceGML == null )
         throw new Exception( "source modell not set" );
       final URL srcModellURL = urlResolver.resolveURL( m_context, m_sourceGML );
-      final GMLWorkspace srcModellWorkspace = GmlSerializer.createGMLWorkspace( srcModellURL );
+      final GMLWorkspace srcModellWorkspace = GmlSerializer.createGMLWorkspace( srcModellURL, null );
       if( srcModellWorkspace == null )
         throw new Exception( "could not load source modell" );
       srcModellWorkspace.accept( new TransformVisitor( targetCRS ), srcModellWorkspace.getRootFeature(),

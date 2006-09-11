@@ -43,7 +43,6 @@ package org.kalypsodeegree;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -65,7 +64,7 @@ public class KalypsoDeegreeExtensions
 
   private static Map<String, IConfigurationElement> FUNCTION_MAP = null;
 
-  public static synchronized FeaturePropertyFunction createPropertyFunction( final String id, final Properties properties ) throws CoreException
+  public static synchronized FeaturePropertyFunction createPropertyFunction( final String id, final Map<String, String> properties ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 

@@ -169,6 +169,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       if( object == element )
         return null;
     }
+    
+    // TODO: there are also GeometryProperty-Elements
 
     if( element instanceof Feature )
     {
@@ -179,16 +181,18 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         final Object[] parentChildren = getChildren( parent );
         for( final Object object : parentChildren )
         {
-          /* Must be of type FeatureAssociationTypeElement, if not something is wrong. */
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-          final IRelationType associationTypeProperty = fate.getAssociationTypeProperty();
-          final Object property = parent.getProperty( associationTypeProperty );
-          if( property == feature )
-            return fate;
-          else if( property instanceof List )
+          if( object instanceof FeatureAssociationTypeElement )
           {
-            if( ((List) property).contains( feature ) )
+            final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+            final IRelationType associationTypeProperty = fate.getAssociationTypeProperty();
+            final Object property = parent.getProperty( associationTypeProperty );
+            if( property == feature )
               return fate;
+            else if( property instanceof List )
+            {
+              if( ((List) property).contains( feature ) )
+                return fate;
+            }
           }
         }
       }

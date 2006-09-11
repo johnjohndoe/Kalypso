@@ -79,7 +79,7 @@ public class RelativeFeatureChangeTest extends TestCase
   public RelativeFeatureChangeTest( ) throws Exception
   {
     final URL modelFile = getClass().getResource( "resources/testFeature.gml" );
-    m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile ) );
+    m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile, null ) );
 
     final Feature m_feature = m_workspace.getRootFeature();
     final FeatureList featureList = (FeatureList) m_feature.getProperty( m_feature.getFeatureType().getProperties()[0] );

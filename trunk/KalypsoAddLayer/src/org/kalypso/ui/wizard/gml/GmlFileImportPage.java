@@ -247,7 +247,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       try
       {
         final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
-        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
+        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, null ) );
       }
       catch( Exception e1 )
       {

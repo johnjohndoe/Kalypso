@@ -60,11 +60,13 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -112,7 +114,11 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
+//      final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
+      final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
+      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
+
+      final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       workspace.addCommandManagerListener( m_commandManagerListener );
 

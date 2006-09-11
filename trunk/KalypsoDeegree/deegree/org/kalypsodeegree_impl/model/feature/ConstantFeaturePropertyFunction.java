@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.Properties;
+import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.Feature;
  * The constant property function which always returns the same value.
  * 
  * @author Gernot Belger
- *
  */
 public class ConstantFeaturePropertyFunction extends FeaturePropertyFunction
 {
@@ -59,13 +58,14 @@ public class ConstantFeaturePropertyFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Properties)
    */
   @Override
-  public void init( final Properties properties )
+  public void init( final Map<String, String> properties )
   {
-    m_value = properties.getProperty( "value" , "<no value given for const funct>");
+    m_value = properties.get( "value" );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
@@ -73,7 +73,8 @@ public class ConstantFeaturePropertyFunction extends FeaturePropertyFunction
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {

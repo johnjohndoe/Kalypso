@@ -63,6 +63,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -220,25 +221,29 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else if( pt instanceof IRelationType )// its a relation
         {
-          int index = atts.getIndex( NS.XLINK, "href" );
-          if( index >= 0 )// its a xlink
+          final String href = getAttributeValue( atts, NS.XLINK, "href", null );
+          final String role = getAttributeValue( atts, NS.XLINK, "role", null );
+          final String arcrole = getAttributeValue( atts, NS.XLINK, "arcrole", null );
+          final String title = getAttributeValue( atts, NS.XLINK, "title", null );
+          final String show = getAttributeValue( atts, NS.XLINK, "show", "replace" );
+          final String actuate = getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
+
+          if( href != null )// its a xlink
           {
             final IRelationType rt = (IRelationType) pt;
 
-            final String href = atts.getValue( index );
-            // final String role = getAttributeValue( atts, NS.XLINK, "role", null );
-            // final String arcrole = getAttributeValue( atts, NS.XLINK, "arcrole", null );
-            // final String title = getAttributeValue( atts, NS.XLINK, "title", null );
-            // final String show = getAttributeValue( atts, NS.XLINK, "show", "replace" );
-            // final String actuate = getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
-
-            // TODO: replace String with ProxyFeature implementation
-            // final IFeatureProvider featureProvider = new XLinkFeatureProvider( feature, rt.getTargetFeatureType(),
-            // href, role, arcrole, title, show, actuate );
-            // new DelegatedFeature_Impl( feature, featureProvider );
-
-            final String refID2 = href.replaceAll( "^#", "" );
-            FeatureHelper.addChild( feature, rt, refID2 );
+            // REMARK: for backwards compability, we still set the href as property-value
+            // for internal links. This should be soon changed...
+            if( href.startsWith( "#" ) )
+            {
+              final String refID2 = href.replaceAll( "^#", "" );
+              FeatureHelper.addChild( feature, rt, refID2 );
+            }
+            else
+            {
+              final Feature childFeature = new XLinkedFeature_Impl( feature, rt.getTargetFeatureType(), href, role, arcrole, title, show, actuate );
+              FeatureHelper.addChild( feature, rt, childFeature );
+            }
           }
         }
         else
@@ -287,6 +292,15 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     }
   }
 
+  private String getAttributeValue( final Attributes atts, final String namespace, final String localPart, final String defaultValue )
+  {
+    final int index = atts.getIndex( namespace, localPart );
+    if( index != -1 )
+      return atts.getValue( index );
+
+    return defaultValue;
+  }
+
   /** Loads the main application schema and also all 8via xmlns) references schemas. */
   private void initGmlSchema( final String uri, final Attributes atts ) throws SAXException
   {
@@ -296,7 +310,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       // REMARK: schemaLocationHint only used for main schema
       m_gmlSchema = loadGMLSchema( uri, atts );
 
-      // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into 
+      // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
       // the main schema.
       // This allows to introduce necessary schemata (for example which introduce new elements
       // vis substitution).
@@ -387,7 +401,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       try
       {
         new GMLSchemaException( "" );
-        
+
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
         schema = schemaCatalog.getSchema( uri.toString(), (String) null );
       }

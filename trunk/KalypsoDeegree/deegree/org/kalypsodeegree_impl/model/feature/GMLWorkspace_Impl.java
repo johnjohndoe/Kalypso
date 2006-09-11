@@ -27,6 +27,10 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 
 /**
+ * In order to use this workspace with support of xlinks, a
+ * {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
+ * 
+ * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
 public class GMLWorkspace_Impl implements GMLWorkspace
@@ -44,6 +48,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final IGMLSchema m_schema;
 
+  private final IFeatureProviderFactory m_factory;
+
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
    */
@@ -52,17 +58,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_indexMap.get( id );
   }
 
-  // schema , featureTypes, rootFeature, context
-  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation )
+  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory )
   {
     m_schema = schema;
     m_featureTypes = featureTypes;
     m_context = context;
     m_schemaLocation = schemaLocation;
-    // m_schemaNamespace = schemaNamespace;
-    // m_nsMap = nsMap;
-
     m_rootFeature = feature;
+    m_factory = factory;
+
     if( m_rootFeature != null )
       m_rootFeature.setWorkspace( this );
     try
@@ -857,5 +861,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public IGMLSchema getGMLSchema( )
   {
     return m_schema;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureProviderFactory()
+   */
+  public IFeatureProviderFactory getFeatureProviderFactory( )
+  {
+    return m_factory;
   }
 }

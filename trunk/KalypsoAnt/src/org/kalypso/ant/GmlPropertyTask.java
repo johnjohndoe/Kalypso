@@ -43,7 +43,6 @@ package org.kalypso.ant;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class GmlPropertyTask extends Task
 
     try
     {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       for( final Iterator iter = m_properties.iterator(); iter.hasNext(); )
         addProperty( workspace, (Property) iter.next() );
     }

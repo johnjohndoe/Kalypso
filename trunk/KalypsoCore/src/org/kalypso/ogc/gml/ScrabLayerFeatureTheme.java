@@ -81,7 +81,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     CommandableWorkspace workspace = null;
     try
     {
-      final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL );
+      final GMLWorkspace createGMLWorkspace = GmlSerializer.createGMLWorkspace( scrabLayerURL, null );
       workspace = new CommandableWorkspace( createGMLWorkspace );
     }
     catch( Exception e )

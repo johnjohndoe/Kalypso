@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import java.text.ParseException;
+
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+import org.kalypso.ogc.gml.om.ComponentDefinition;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 public class TupleResultCellModifier implements ICellModifier
 {
@@ -66,7 +70,7 @@ public class TupleResultCellModifier implements ICellModifier
     final IComponent component = m_provider.getComponent( property );
 
     final Object value = record.getValue( component );
-
+    // TODO: use component definition to format string
     return "" + value;
   }
 
@@ -85,20 +89,19 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final IComponent component = m_provider.getComponent( property );
 
-    final String valueStr = value.toString();
-    Double valueToSet = null;
+    final ComponentDefinition definition = ComponentDefinition.create( component );
+    final XsdBaseTypeHandler<Object> typeHandler = definition.getTypeHandler();
     try
     {
-      if( valueStr.length() > 0 )
-        valueToSet = new Double( valueStr );
-    }
-    catch( NumberFormatException e )
-    {
-      // ignore it
-    }
+      final Object valueToSet = typeHandler.parseType( value.toString() );
 
-    /* Set value and inform listeners */
-    record.setValue( component, valueToSet );
+      /* Set value and inform listeners */
+      record.setValue( component, valueToSet );
+    }
+    catch( final ParseException e1 )
+    {
+      // ignore
+    }
     
     return component;
   }

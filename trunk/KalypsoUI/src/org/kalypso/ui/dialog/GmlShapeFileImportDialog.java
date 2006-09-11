@@ -534,7 +534,7 @@ public class GmlShapeFileImportDialog extends Dialog
         else if( isGml() )
         {
           m_crsGroup.setVisible( false );
-          m_workspace = GmlSerializer.createGMLWorkspace( file.toURL(), new UrlResolver() );
+          m_workspace = GmlSerializer.createGMLWorkspace( file.toURL(), new UrlResolver(), null );
         }
       }
     }

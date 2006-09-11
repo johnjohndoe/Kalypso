@@ -663,7 +663,7 @@
 		<objectContribution adaptable="false"
 			id="org.kalypso.objectclass.observationfeature"
 			objectClass="org.kalypsodeegree.model.feature.Feature">
-			<filter name="featureType"
+			<filter name="featureTypeStrict"
 				value="http://www.opengis.net/om#Observation" />
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction"
 				enablesFor="1" icon="icons/observation/zml-icon.gif"
@@ -812,8 +812,12 @@
 	<extension point="org.kalypso.contribs.eclipsercp.actionFilters">
 		<actionFilter
 			class="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter"
-			id="org.kalypso.ui.actionFilter.featureTypeFilter"
+			id="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter"
 			targetType="org.kalypsodeegree.model.feature.Feature" />
+  <actionFilter
+        class="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter"
+        id="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter"
+        targetType="org.kalypsodeegree.model.feature.Feature"/>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />

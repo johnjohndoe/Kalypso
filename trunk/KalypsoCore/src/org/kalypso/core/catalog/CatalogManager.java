@@ -191,10 +191,11 @@ public class CatalogManager
   public void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) )
-      throw new UnsupportedOperationException( "catalog uRN must end with ':' " + baseURN );
+      throw new UnsupportedOperationException( "catalog URN must end with ':' " + baseURN );
 
     final String href = CatalogUtilities.getPathForCatalog( baseURN );
     final URL catalogURL = new URL( m_baseDir.toURL(), href );
+    // TODO: problem: not all urls are uris (example: file with spaces), so we might get an URISyntaxException here
     final URI catalogURI = catalogURL.toURI();
     if( m_openCatalogs.containsKey( catalogURI ) )
       return;

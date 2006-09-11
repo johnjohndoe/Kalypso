@@ -88,7 +88,7 @@ public class GMLParser
     final GMLSchema schema = contentHandler.getGMLSchema();
 
     final Feature rootFeature = contentHandler.getRootFeature();
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, gmlURL, null );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, gmlURL, null, null );
     return workspace;
   }
 

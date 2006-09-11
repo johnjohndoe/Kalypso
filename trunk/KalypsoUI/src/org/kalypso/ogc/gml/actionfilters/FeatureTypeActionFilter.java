@@ -45,24 +45,40 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * A filter on {@link org.kalypsodeegree.model.feature.Feature} objects.
  * <p>
- * Tests the if the feature has a certain feature type.
+ * Tests the if the selected feature substitutes a certain feature type.
  * </p>
  * <p>
- * the value argument is one or more qnames (separated by semicolons ';' of the following for: namespace#localPart.
+ * The value argument is one or more qnames (separated by semicolons ';' of the following for: namespace#localPart.
  * <p>
  * Example: org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprof#Profile
  * </p>
  * 
- * @author schlienger
+ * @author Schlienger
  */
 public class FeatureTypeActionFilter implements IActionFilterEx
 {
   public final static String ATTR_FEATURE_TYPE = "featureType"; //$NON-NLS-1$
+
+  private final boolean m_allowSubstitues;
+
+  private final String m_attr_feature_type;
+
+  public FeatureTypeActionFilter( )
+  {
+    this( true, ATTR_FEATURE_TYPE );
+  }
+
+  protected FeatureTypeActionFilter( final boolean allowSubstitues, final String attr_feature_type )
+  {
+    m_allowSubstitues = allowSubstitues;
+    m_attr_feature_type = attr_feature_type;
+  }
 
   /**
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
@@ -74,13 +90,17 @@ public class FeatureTypeActionFilter implements IActionFilterEx
 
     final Feature f = (Feature) target;
 
-    if( ATTR_FEATURE_TYPE.equals( name ) )
+    if( m_attr_feature_type.equals( name ) )
     {
       final String[] strings = value.split( ";" ); //$NON-NLS-1$
       for( final String string : strings )
       {
         final QName qName = QNameUtilities.createQName( string );
-        if( GMLSchemaUtilities.substitutes( f.getFeatureType(), qName ) )
+
+        final IFeatureType featureType = f.getFeatureType();
+        if( m_allowSubstitues && GMLSchemaUtilities.substitutes( featureType, qName ) )
+          return true;
+        else if( !m_allowSubstitues && featureType.getQName().equals( qName ) )
           return true;
       }
     }
@@ -93,6 +113,6 @@ public class FeatureTypeActionFilter implements IActionFilterEx
    */
   public String[] getNames( )
   {
-    return new String[] { ATTR_FEATURE_TYPE };
+    return new String[] { m_attr_feature_type };
   }
 }

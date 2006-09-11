@@ -63,6 +63,7 @@ import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -126,7 +127,7 @@ public class GMLSAXFactory
     final Set<String> uriSet = new HashSet<String>();
     final GMLSchema[] additionalSchemas = gmlSchema.getAdditionalSchemas();
     for( final GMLSchema additionalSchema : additionalSchemas )
-     uriSet.add( additionalSchema.getTargetNamespace() ); 
+      uriSet.add( additionalSchema.getTargetNamespace() );
     for( final String uri : uriSet )
     {
       final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
@@ -285,21 +286,32 @@ public class GMLSAXFactory
   {
     final String uri = prefixedQName.getNamespaceURI();
     final String localPart = prefixedQName.getLocalPart();
-    if( next instanceof Feature )
+
+    if( next instanceof XLinkedFeature_Impl || next instanceof String )
+    {
+      String fid;
+      if( next instanceof String )
+      {
+        // local xlinks, used for backwards compability, should be changes soon
+        fid = (String) next;
+        if( m_idMap.containsKey( fid ) )
+          fid = m_idMap.get( fid );
+        
+        fid = "#" + fid;
+      }
+      else
+        fid = ((XLinkedFeature_Impl) next).getHref();
+
+      final AttributesImpl atts = new AttributesImpl();
+      atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", fid );
+      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
+      m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+    }
+    else if( next instanceof Feature )
     {
       m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
 
       process( (Feature) next, new AttributesImpl() );
-      m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
-    }
-    else if( next instanceof String ) // its a ID
-    {
-      String fid = (String) next;
-      if( m_idMap.containsKey( fid ) )
-        fid = m_idMap.get( fid );
-      final AttributesImpl atts = new AttributesImpl();
-      atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", "#" + fid );
-      m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
       m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
     else

@@ -23,22 +23,57 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
  * 
  * @author Gernot Belger
  */
-public class DelegatedFeature_Impl extends AbstractFeature implements Feature
+public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 {
-  private final IFeatureProvider m_provider;
-
   private final Feature m_parentFeature;
 
-  public DelegatedFeature_Impl( final Feature parentFeature, final IFeatureProvider provider )
+  private final IFeatureType m_featureType;
+
+  private final String m_href;
+
+  private final String m_role;
+
+  private final String m_arcrole;
+
+  private final String m_title;
+
+  private final String m_show;
+
+  private final String m_actuate;
+
+  private IFeatureProvider m_provider;
+
+  public XLinkedFeature_Impl( final Feature parentFeature, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_parentFeature = parentFeature;
-    m_provider = provider;
+    m_featureType = featureType;
+    m_href = href;
+    m_role = role;
+    m_arcrole = arcrole;
+    m_title = title;
+    m_show = show;
+    m_actuate = actuate;
   }
 
   /** Returns the linked feature. */
   private final Feature getFeature( )
   {
-    return m_provider.getFeature();
+    final GMLWorkspace workspace = m_parentFeature.getWorkspace();
+    if( workspace == null )
+      return null;
+
+    final IFeatureProvider provider = getProvider( workspace );
+    return provider == null ? null : provider.getFeature();
+  }
+
+  private IFeatureProvider getProvider( final GMLWorkspace workspace )
+  {
+    if( m_provider != null )
+      return m_provider;
+
+    final IFeatureProviderFactory featureProviderFactory = workspace.getFeatureProviderFactory();
+    m_provider = featureProviderFactory.createFeatureProvider( m_parentFeature, m_featureType, m_href, m_role, m_arcrole, m_title, m_show, m_actuate );
+    return m_provider;
   }
 
   /**
@@ -46,7 +81,8 @@ public class DelegatedFeature_Impl extends AbstractFeature implements Feature
    */
   public String getId( )
   {
-    return getFeature().getId();
+    final IFeatureProvider provider = getProvider( getWorkspace() );
+    return provider.getId();
   }
 
   /**
@@ -54,6 +90,9 @@ public class DelegatedFeature_Impl extends AbstractFeature implements Feature
    */
   public IFeatureType getFeatureType( )
   {
+    if( m_provider == null )
+    return m_featureType;
+    
     return m_provider.getFeatureType();
   }
 
@@ -100,7 +139,11 @@ public class DelegatedFeature_Impl extends AbstractFeature implements Feature
    */
   public GM_Envelope getEnvelope( )
   {
-    return getFeature().getEnvelope();
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+
+    return feature.getEnvelope();
   }
 
   /**
@@ -194,5 +237,10 @@ public class DelegatedFeature_Impl extends AbstractFeature implements Feature
   public void setProperty( final QName propQName, final Object value )
   {
     getFeature().setProperty( propQName, value );
+  }
+  
+  public String getHref( )
+  {
+    return m_href;
   }
 }
