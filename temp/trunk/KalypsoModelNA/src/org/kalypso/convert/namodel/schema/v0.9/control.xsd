@@ -174,9 +174,9 @@
 								<description>Wiederkehrzeit des synthetischen Niederschlagereignisses [a]</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>synth. P.</label>
-								<tooltip>synthetic Presipitation</tooltip>
-								<description>calculation based on synthetic precipitation</description>
+								<label>return period</label>
+								<tooltip>return period</tooltip>
+								<description>return period [a]</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -202,9 +202,9 @@
 								<description>Verteilung des synthetischen Niederschlagereignisses (block, linksschief,  zentral, rechtsschief)</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>synth. P.</label>
-								<tooltip>synthetic Precipitation</tooltip>
-								<description>calculation based on synthetic precipitation</description>
+								<label>Distribution</label>
+								<tooltip>precipitation distribution</tooltip>
+								<description>distribution of the synthetic precipitation</description>
 							</documentation>
 						</annotation>
 					</element>
