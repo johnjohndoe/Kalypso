@@ -196,7 +196,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     final File baseDir = new File( m_analyseDir, key );
     baseDir.mkdirs();
     final URL modellURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, null );
     modellWorkspace.accept( visitor, modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     final File modellFile = new File( baseDir, "modell" + key + ".gml" );
     FileWriter writer = null;

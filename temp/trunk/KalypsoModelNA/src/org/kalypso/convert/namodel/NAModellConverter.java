@@ -147,7 +147,7 @@ public class NAModellConverter
     // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
     IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
 
-    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, modelRootFeature, modelGmlFile.toURL(), " project:/.model/schema/namodell.xsd" );
+    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, modelRootFeature, modelGmlFile.toURL(), " project:/.model/schema/namodell.xsd", null );
     GmlSerializer.serializeWorkspace( new FileWriter( modelGmlFile ), modelWorkspace );
 
     System.out.println( "Conversion from ASCII to GML was successfull!!!" );

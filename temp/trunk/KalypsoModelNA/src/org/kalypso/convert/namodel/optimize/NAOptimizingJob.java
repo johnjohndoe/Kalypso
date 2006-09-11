@@ -140,7 +140,7 @@ public class NAOptimizingJob implements IOptimizingJob
     m_monitor = monitor;
 
     // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
     // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
@@ -148,7 +148,7 @@ public class NAOptimizingJob implements IOptimizingJob
     m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( "qberechnetZR" );
 
     // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();

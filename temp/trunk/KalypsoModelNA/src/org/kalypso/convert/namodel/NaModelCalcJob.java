@@ -84,7 +84,7 @@ public class NaModelCalcJob implements ISimulation
       // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
       // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) innerDataProvider.getInputForID(
       // NaModelConstants.IN_CONTROL_ID ) );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
       final Feature rootFeature = controlWorkspace.getRootFeature();
       final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 

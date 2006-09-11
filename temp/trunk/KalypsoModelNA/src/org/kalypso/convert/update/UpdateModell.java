@@ -96,7 +96,7 @@ public class UpdateModell
 
   public void updateIt( ) throws Exception
   {
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, null );
 
     // Catchments...
     final IFeatureType catchmentFT = workspace.getFeatureType( "Catchment" );

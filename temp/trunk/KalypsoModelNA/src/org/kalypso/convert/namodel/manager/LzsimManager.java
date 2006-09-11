@@ -108,7 +108,7 @@ public class LzsimManager
 
       // create new GMLworkspace for lzsim results
       File lzsimDir = new File( tmpDir, "lzsim" );
-      final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) );
+      final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ), null );
       final Feature lzRootFE = lzWorkspace.getRootFeature();
       XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
       lzRootFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ), xmlIniDate );

@@ -93,7 +93,6 @@ import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
-import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -250,12 +249,12 @@ public class NaModelInnerCalcJob implements ISimulation
       conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
       final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
       final URL naControlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-      final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL );
+      final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
       final URL iniValuesFolderURL = (URL) inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
       final File lzsimFile = new File( iniValuesFolderURL.getFile(), "lzsim.gml" );
       if( lzsimFile.exists() )
       {
-        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURL() );
+        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimFile.toURL(), null );
         LzsimManager.writeLzsimFiles( conf, tmpdir, iniValuesWorkspace );
       }
       else
@@ -474,21 +473,21 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
   {
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
 
     // model Parameter
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID ) );
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID ), null );
     else
       parameterWorkspace = null;
 
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL(), null );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
     // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
@@ -501,7 +500,7 @@ public class NaModelInnerCalcJob implements ISimulation
     final GMLWorkspace synthNWorkspace;
     final File synthNGML = new File( ((URL) dataProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID )).getFile(), "calcSynthN.gml" );
     if( synthNGML.exists() )
-      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURL() );
+      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURL(), null );
     else
       synthNWorkspace = null;
 
@@ -510,7 +509,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ) );
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ), null );
       final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
       CS_CoordinateSystem targetCS = null;
       for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
