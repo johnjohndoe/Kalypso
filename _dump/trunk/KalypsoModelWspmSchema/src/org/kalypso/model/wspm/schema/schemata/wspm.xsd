@@ -33,6 +33,11 @@
 				<tooltip>WSPM-Berechnungen</tooltip>
 				<description>WSPM-Berechnungen</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>WSPM calculations</label>
+				<tooltip>WSPM calculations</tooltip>
+				<description>WSPM calculations</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType"
@@ -88,6 +93,11 @@
 				<tooltip>Gewässer</tooltip>
 				<description>Gewässer</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Water bodies</label>
+				<tooltip>Water bodies</tooltip>
+				<description>Water bodies</description>
+			</documentation>			
 		</annotation>
 	</element>
 	<!-- same as waterBodyMember, but supports only linked waterBodies -->
@@ -98,6 +108,11 @@
 				<tooltip>Gewässer</tooltip>
 				<description>Gewässer</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Water body</label>
+				<tooltip>Water body</tooltip>
+				<description>Water body</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
@@ -107,6 +122,12 @@
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
 				<tooltip>Gewässer</tooltip>
 				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Water body</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>Water body</tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -119,12 +140,23 @@
 				<tooltip>Gewässerstrang</tooltip>
 				<description>Gewässerstrang</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Reach</label>
+				<tooltip>Reach</tooltip>
+				<description>Reach</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="Reach" type="wspm:ReachType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Reach</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>${property:http://www.opengis.net/gml#name}</description>
@@ -141,6 +173,11 @@
 				<tooltip>Gewässerstrangsegmente</tooltip>
 				<description>Gewässerstrangsegmente</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Reach segments</label>
+				<tooltip>Reach segments</tooltip>
+				<description>Reach segments</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="AbstractReachSegment" type="wspm:AbstractReachSegmentType" abstract="true"
@@ -154,6 +191,12 @@
 				<tooltip>Zufluss-Strangsegment</tooltip>
 				<description>Zufluss-Strangsegment</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Influent reach segment</name>
+				<label>Influent reach segment</label>
+				<tooltip>Influent reach segment</tooltip>
+				<description>Influent reach segment</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="ProfileReachSegment" type="wspm:ProfileReachSegmentType"
@@ -165,6 +208,12 @@
 				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-nicht gesetzt-}</tooltip>
 				<description>Station km ${property:org.kalypso.model.wspm#station;-nicht
 				gesetzt-}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Profile reach segment</name>
+				<label>Station km ${property:org.kalypso.model.wspm#station;-not set-}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-not set-}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station;-not set-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -178,6 +227,11 @@
 				<tooltip>Rauheitsklassen-Listen</tooltip>
 				<description>Rauheitsklassen-Listen</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Roughness definition lists</label>
+				<tooltip>Roughness definition lists</tooltip>
+				<description>Roughness definition lists</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="RoughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType"
@@ -188,6 +242,13 @@
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>Rauheitsklassen-Liste
+				${property:http://www.opengis.net/gml#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Roughness definition list</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Roughness definition list ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Roughness definition list
 				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
@@ -202,6 +263,11 @@
 				<tooltip>Rauheitsklassen</tooltip>
 				<description>Rauheitsklassen</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Roughness definitions</label>
+				<tooltip>Roughness definitions</tooltip>
+				<description>Roughness definitions</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="RoughnessDefinition" type="wspm:RoughnessDefinitionType"
@@ -212,6 +278,13 @@
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>Rauheitsklasse
+				${property:http://www.opengis.net/gml#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Roughness definition</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Roughness definition ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Roughness definition
 				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
@@ -226,6 +299,11 @@
 				<tooltip>Bewuchsklassen-Listen</tooltip>
 				<description>Bewuchsklassen-Listen</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Vegetation definition lists</label>
+				<tooltip>Vegetation definition lists</tooltip>
+				<description>Vegetation definition lists</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="VegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType"
@@ -236,6 +314,13 @@
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>Bewuchsklassen-Liste
+				${property:http://www.opengis.net/gml#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Vegetation definition list</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Vegetation definition list ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Vegetation definition list
 				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
@@ -250,6 +335,11 @@
 				<tooltip>Bewuchsklassen</tooltip>
 				<description>Bewuchsklassen</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Vegetation definitions</label>
+				<tooltip>Vegetation definitions</tooltip>
+				<description>Vegetation definitions</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="VegetationDefinition" type="wspm:VegetationDefinitionType"
@@ -260,6 +350,12 @@
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Vegetation definition</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>Vegetation definition ${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>Vegetation definition ${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -272,6 +368,12 @@
 				<label>Erstellung</label>
 				<tooltip>Erstellung der Berechnung</tooltip>
 				<description>Erstellung der Berechnung</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Information about calculation creation</name>
+				<label>Creation</label>
+				<tooltip>Calculation creation</tooltip>
+				<description>Calculation creation</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -299,6 +401,11 @@
 								<label>Erstellung</label>
 								<tooltip>Erstellung der Berechnung</tooltip>
 								<description>Erstellung der Berechnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Creation</label>
+								<tooltip>Calculation creation</tooltip>
+								<description>Calculation creation</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -329,6 +436,11 @@
 								<tooltip>Übergeordnetes Gewässer</tooltip>
 								<description>Übergeordnetes Gewässer</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Water body</label>
+								<tooltip>Superior water body</tooltip>
+								<description>Superior water body</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="waterAxis" type="gml:LineStringPropertyType">
@@ -339,6 +451,11 @@
 								<label>Gewässerachse</label>
 								<tooltip>(generierte) Gewässerachse</tooltip>
 								<description>(generierte) Gewässerachse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water axis</label>
+								<tooltip>(Generated) water axis</tooltip>
+								<description>(Generated) water axis</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -376,6 +493,11 @@
 								<tooltip>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</tooltip>
 								<description>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Station km</label>
+								<tooltip>Station in reach, where the profile selected below will be placed.</tooltip>
+								<description>Station in reach, where the profile selected below will be placed.</description>
+							</documentation>
 						</annotation>
 					</element>
 				</sequence>
@@ -397,6 +519,11 @@
 								<label>Position des Zulaufs</label>
 								<tooltip>Position des Zulaufs</tooltip>
 								<description>Position des Zulaufs</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Inflow location</label>
+								<tooltip>Inflow location</tooltip>
+								<description>Inflow location</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -424,6 +551,11 @@
 								<tooltip>Für Strangsegment verwendetes Profil</tooltip>
 								<description>Für Strangsegment verwendetes Profil</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile</label>
+								<tooltip>Reach segment profile</tooltip>
+								<description>Reach segment profile</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="profileLocation" type="gml:LineStringPropertyType">
@@ -434,6 +566,11 @@
 								<label>Profillinie</label>
 								<tooltip>Profillinie</tooltip>
 								<description>Profillinie</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile location</label>
+								<tooltip>Profile location</tooltip>
+								<description>Profile location</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -479,6 +616,11 @@
 								<tooltip>Gewässerkennziffer (optional)</tooltip>
 								<description>Gewässerkennziffer (optional)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Water body reference number</label>
+								<tooltip>Water body reference number (optional)</tooltip>
+								<description>Water body reference number (optional)</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
@@ -487,6 +629,11 @@
 								<label>Gewässerachse</label>
 								<tooltip>Gewässerachse</tooltip>
 								<description>Gewässerachse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water body center line</label>
+								<tooltip>Water body center line</tooltip>
+								<description>Water body center line</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -500,6 +647,14 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<description><![CDATA[ Angabe der Stationierungsrichtung. 
 Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]></description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Stationing starts at mouth</label>
+								<tooltip><![CDATA[ Stationing direction. 
+Selection means that stationing will be against flow direction. ]]>
+								</tooltip>
+								<description><![CDATA[ Stationing direction. 
+Selection means that stationing will be against flow direction. ]]></description>
+							</documentation>
 						</annotation>
 					</element>
 					<!-- TODO hier kommt noch das neue Profil rein -->
@@ -511,6 +666,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<tooltip>Profile</tooltip>
 								<description>Profile</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Profiles</label>
+								<tooltip>Profiles</tooltip>
+								<description>Profiles</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element ref="wspm:reachMember" minOccurs="0" maxOccurs="unbounded">
@@ -519,6 +679,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<label>Gewässerstränge</label>
 								<tooltip>Gewässerstränge</tooltip>
 								<description>Gewässerstränge</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reaches</label>
+								<tooltip>Reaches</tooltip>
+								<description>Reaches</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -530,6 +695,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<tooltip>Abflussereignisse</tooltip>
 								<description>Abflussereignisse</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Run-off events</label>
+								<tooltip>Run-off events</tooltip>
+								<description>Run-off events</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="waterlevelFixationMember"
@@ -540,6 +710,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<label>Wasserspiegelfixierungen</label>
 								<tooltip>Wasserspiegelfixierungen</tooltip>
 								<description>Wasserspiegelfixierungen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water line fixings</label>
+								<tooltip>Water line fixings</tooltip>
+								<description>Water line fixings</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -838,6 +1013,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<tooltip>Ersteller</tooltip>
 								<description>Ersteller</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Created by</label>
+								<tooltip>Creator</tooltip>
+								<description>Creator</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="date" type="dateTime">
@@ -846,6 +1026,11 @@ Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]
 								<label>Erstellt am</label>
 								<tooltip>Erstelldatum</tooltip>
 								<description>Erstelldatum</description>
+							</documentation>
+							<documentation xml:lang="de">
+								<label>Created on</label>
+								<tooltip>Date of creation</tooltip>
+								<description>Date of creation</description>
 							</documentation>
 						</annotation>
 					</element>

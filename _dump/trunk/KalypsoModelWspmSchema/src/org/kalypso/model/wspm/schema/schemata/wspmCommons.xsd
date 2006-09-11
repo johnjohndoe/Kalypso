@@ -36,6 +36,11 @@
 								<tooltip>Metadaten</tooltip>
 								<description>Metadaten</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Metadata</label>
+								<tooltip>Metadata</tooltip>
+								<description>Metadata</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element ref="gml:description">
@@ -45,6 +50,11 @@
 								<tooltip>Beschreibung</tooltip>
 								<description>Beschreibung</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>description</label>
+								<tooltip>description</tooltip>
+								<description>description</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element ref="gml:name" minOccurs="1" maxOccurs="1">
@@ -53,6 +63,11 @@
 								<label>Bezeichnung</label>
 								<tooltip>Bezeichnung</tooltip>
 								<description>Bezeichnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Name</label>
+								<tooltip>Name</tooltip>
+								<description>Name</description>
 							</documentation>
 						</annotation>
 					</element>

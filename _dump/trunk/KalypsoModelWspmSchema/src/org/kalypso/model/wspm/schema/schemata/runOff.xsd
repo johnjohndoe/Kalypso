@@ -38,6 +38,12 @@
                 <description>${property:http://www.opengis.net/gml#description;-keine Beschreibung
                     vorhanden-}</description>
             </documentation>
+            <documentation xml:lang="en">
+                <name>Run-off event</name>
+                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                <tooltip>${property:http://www.opengis.net/gml#name;-no name-}</tooltip>
+                <description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+            </documentation>
         </annotation>
     </element>
     <complexType name="RunOffEventType">
@@ -75,6 +81,12 @@
                 <tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
                 <description>${property:http://www.opengis.net/gml#description;-keine Beschreibung
                     vorhanden-}</description>
+            </documentation>
+            <documentation xml:lang="en">
+                <name>Water level fixing</name>
+                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                <tooltip>${property:http://www.opengis.net/gml#name;-no name-}</tooltip>
+                <description>${property:http://www.opengis.net/gml#description;-no description-}</description>
             </documentation>
         </annotation>
     </element>

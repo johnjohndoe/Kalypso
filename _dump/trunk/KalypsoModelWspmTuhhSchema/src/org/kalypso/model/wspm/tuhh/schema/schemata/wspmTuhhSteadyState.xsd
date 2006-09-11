@@ -35,6 +35,12 @@
 				<tooltip>${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</tooltip>
 				<description><![CDATA[${property:http://www.opengis.net/gml#description;0;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Calculation case - steady (TU-HH)</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;0;-no description-}]]></description>
+			</documentation>
 		</annotation>
 	</element>
 	<!-- 
@@ -47,6 +53,12 @@
 				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
 				<description>Untere Randbedingung (am 1. Profil)</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Lower boundary condition (1. profile) - steady (TU-HH)</name>
+				<label>Lower boundary condition (at 1. profile)</label>
+				<tooltip>Lower boundary condition (at 1. profile)</tooltip>
+				<description>Lower boundary condition (at 1. profile)</description>
+			</documentation>
 		</annotation>
 	</element>
 	<!-- 
@@ -58,6 +70,12 @@
 				<label>Abflussintervall</label>
 				<tooltip>Abflussintervall</tooltip>
 				<description>Abflussintervall</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Run-off interval - steady (TU-HH)</name>
+				<label>Run-off interval</label>
+				<tooltip>Run-off interval</tooltip>
+				<description>Run-off interval</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -72,6 +90,12 @@
 				<tooltip>Numerische Parameter</tooltip>
 				<description>Numerische Parameter</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Numeric parameters - steady (TU-HH)</name>
+				<label>Numeric parameters</label>
+				<tooltip>Numeric parameters</tooltip>
+				<description>Numeric parameters</description>
+			</documentation>
 		</annotation>
 	</element>
 	<!-- 
@@ -81,6 +105,12 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang - stationär (TU-HH)</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Reach - steady (TU-HH)</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>${property:http://www.opengis.net/gml#description}</description>
@@ -97,6 +127,11 @@
 				<label>Zufluss-Strangsegmente</label>
 				<tooltip>Zufluss-Strangsegmente</tooltip>
 				<description>Zufluss-Strangsegmente</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Influent reach segments</label>
+				<tooltip>Influent reach segments</tooltip>
+				<description>Influent reach segments</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -123,6 +158,11 @@
 				<tooltip>Profil-Strangsegmente</tooltip>
 				<description>Profil-Strangsegmente</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Profile reach segments</label>
+				<tooltip>Profile reach segments</tooltip>
+				<description>Profile reach segments</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="ProfileReachSegmentWspmTuhhSteadyState"
@@ -131,6 +171,12 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil-Strangsegment - stationär (TU-HH)</name>
+				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Profile reach segment - steady (TU-HH)</name>
 				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
 				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
 				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
@@ -148,6 +194,12 @@
 				<tooltip>Berechnungsabschnitt</tooltip>
 				<description>Berechnungsabschnitt</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Calculation segment - steady (TU-HH)</name>
+				<label>Calculation segment</label>
+				<tooltip>Calculation segment</tooltip>
+				<description>Calculation segment</description>
+			</documentation>
 		</annotation>
 	</element>
 	<!-- 
@@ -159,6 +211,12 @@
 				<label>Zusatzoptionen</label>
 				<tooltip>Zusatzoptionen</tooltip>
 				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Additional options - steady (TU-HH)</name>
+				<label>Additional options</label>
+				<tooltip>Additional options</tooltip>
+				<description>Additional options (calculation of special structures)</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -178,6 +236,11 @@
 								<tooltip>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</tooltip>
 								<description>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Fluid model</label>
+								<tooltip>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</tooltip>
+								<description>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -192,6 +255,11 @@
 												(Rohrströmungen, äquivalente Sandrauheiten,
 											ks)</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks)</label>
+											<tooltip>Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks)</tooltip>
+											<description>Darcy-Weisbach fluid model(pipe flows, equivalent sand roughnesses, ks)</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="DARCY_WEISBACH_MIT_FORMEINFLUSS">
@@ -205,6 +273,14 @@
 												Gerinne mit Formeinfluss, äquivalente Sandrauheiten,
 												ks)</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Darcy-Weisbach (open channels with profile impact,
+												equivalent sand roughnesses, ks)</label>
+											<tooltip>Darcy-Weisbach (open channels with profile impact,
+												equivalent sand roughnesses, ks)</tooltip>
+											<description>Darcy-Weisbach fluid model (open channels with profile impact,
+												equivalent sand roughnesses, ks)</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="MANNING_STRICKLER">
@@ -216,6 +292,14 @@
 												kst)</tooltip>
 											<description>Fließgesetz nach Gauckler-Manning-Strickler
 												(Rauheitsbeiwerte, kst)</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Gauckler-Manning-Strickler (roughness coefficients,
+												kst)</label>
+											<tooltip>Gauckler-Manning-Strickler (roughness coefficients,
+												kst)</tooltip>
+											<description>Gauckler-Manning-Strickler fluid model
+												(roughness coefficients, kst)</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -229,6 +313,11 @@
 								<tooltip>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</tooltip>
 								<description>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Type of calculation</label>
+								<tooltip>Choose type of calculation (water level or bank-full)</tooltip>
+								<description>Choose type of calculation (water level or bank-full)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -239,6 +328,11 @@
 											<tooltip>Wasserspiegellagenberechnung</tooltip>
 											<description>Wasserspiegellagenberechnung</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Water level calculation</label>
+											<tooltip>Water level calculation</tooltip>
+											<description>Water level calculation</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="BF_UNIFORM">
@@ -247,6 +341,11 @@
 											<label><![CDATA[Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse]]></label>
 											<tooltip><![CDATA[ Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse ]]></tooltip>
 											<description><![CDATA[ Bordvollberechnung -	stationär-gleichförmige Abflussverhältnisse ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[Bank-full - steady-uniform discharge]]></label>
+											<tooltip><![CDATA[ Bank-full - steady-uniform discharge ]]></tooltip>
+											<description><![CDATA[ Bank-full - steady-uniform discharge ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -261,6 +360,11 @@
 												stationär-ungleichförmige
 											Abflussverhältnisse</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Bank-full - steady-non-uniform discharge</label>
+											<tooltip>Bank-full - steady-non-uniform discharge</tooltip>
+											<description>Bank-full - steady-non-uniform discharge</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
@@ -274,6 +378,11 @@
 								<tooltip>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</tooltip>
 								<description>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Reach</label>
+								<tooltip>Selection of reach included in calculation.</tooltip>
+								<description>Selection of reach included in calculation.</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="subReachDefinitionMember"
@@ -283,6 +392,11 @@
 								<label>Berechnungsabschnitt</label>
 								<tooltip>Berechnungsabschnitt</tooltip>
 								<description>Berechnungsabschnitt</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Calculation segment</label>
+								<tooltip>Calculation segment</tooltip>
+								<description>Calculation segment</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -297,6 +411,11 @@
 								<tooltip>Numerische Parameter</tooltip>
 								<description>Numerische Parameter</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Numerical parameter</label>
+								<tooltip>Numerical parameter</tooltip>
+								<description>Numerical parameter</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
@@ -305,6 +424,11 @@
 								<label>Untere Randbedingung (1. Profil)</label>
 								<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
 								<description>Untere Randbedingung (am 1. Profil)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower boundary condition (1. profile)</label>
+								<tooltip>Lower boundary condition (1. profile)</tooltip>
+								<description>Lower boundary condition (1. profile)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -316,6 +440,11 @@
 								<tooltip>Auswahl des Abflussereignisses</tooltip>
 								<description>Auswahl des Abflussereignisses</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Run-off event</label>
+								<tooltip>Selection of run-off event</tooltip>
+								<description>Selection of run-off event</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
@@ -324,6 +453,11 @@
 								<label>Abflussintervall</label>
 								<tooltip>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</tooltip>
 								<description>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Run-off interval</label>
+								<tooltip>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</tooltip>
+								<description>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -349,6 +483,11 @@
 								<tooltip>Auswahl der Randbedingung am ersten Profil (Unterlauf)</tooltip>
 								<description>Auswahl der Randbedingung am ersten Profil (Unterlauf)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Type</label>
+								<tooltip>Selection of boundary condition for first profile (lower reaches)</tooltip>
+								<description>Selection of boundary condition for first profile (lower reaches)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -360,6 +499,12 @@
 											<description>Untere Randbedingung (1.Profil):
 											Grenztiefe</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Critical water depth</label>
+											<tooltip>Critical water depth</tooltip>
+											<description>Lower boundary condition (1. profile):
+											critical water depth</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="WATERLEVEL">
@@ -369,6 +514,12 @@
 											<tooltip>Anfangswasserspiegel</tooltip>
 											<description>Untere Randbedingung (1.Profil):
 												Anfangswasserspiegel</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Initial water level</label>
+											<tooltip>Initial water level</tooltip>
+											<description>Lower boundary condition (1. profile):
+											initial water level</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -380,6 +531,12 @@
 											<description>Untere Randbedingung (1.Profil):
 												stationär-gleichförmiges Gefälle</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Steady-uniform slope</label>
+											<tooltip>Steady-uniform slope</tooltip>
+											<description>Lower boundary condition (1. profile):
+											steady-uniform slope</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 							</restriction>
@@ -389,8 +546,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangswasserspiegel</label>
-								<tooltip>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung </tooltip>
-								<description>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung </description>
+								<tooltip>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung</tooltip>
+								<description>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial water level</label>
+								<tooltip>Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition</tooltip>
+								<description>Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -400,6 +562,11 @@
 								<label>stationär-gleichförmiges Gefälle</label>
 								<tooltip>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</tooltip>
 								<description>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Steady-uniform slope</label>
+								<tooltip>Slope of river bed (absolute!) at first profile (lower reaches), depending on type of boundary condition</tooltip>
+								<description>Slope of river bed (absolute!) at first profile (lower reaches), depending on type of boundary condition</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -426,6 +593,11 @@
 								<tooltip>kleinster Wert des Abflussintervalls</tooltip>
 								<description>kleinster Wert des Abflussintervalls</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Minimum discharge [m³/s]</label>
+								<tooltip>Minimum value of run-off interval</tooltip>
+								<description>Minimum value of run-off interval</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="runOffStep" type="double">
@@ -435,14 +607,24 @@
 								<tooltip>Schrittbreite des Abflussintervalls</tooltip>
 								<description>Schrittbreite des Abflussintervalls</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Step length [m³/s]</label>
+								<tooltip>Step length of run-off interval</tooltip>
+								<description>Step length of run-off interval</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="maximalRunOff" type="double">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Maximaler Abfluss [m³/s]</label>
-								<tooltip>Mgrößter Wert des Abflussintervalls </tooltip>
+								<tooltip>größter Wert des Abflussintervalls </tooltip>
 								<description>größter Wert des Abflussintervalls</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Maximum discharge [m³/s]</label>
+								<tooltip>Maximum value of run-off interval</tooltip>
+								<description>Maximum value of run-off interval</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -468,6 +650,11 @@
 								<tooltip>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</tooltip>
 								<description>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Iteration precision</label>
+								<tooltip>Iteration method for WSP calculation (standard=simple iteration)</tooltip>
+								<description>Iteration method for WSP calculation (standard=simple iteration)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -479,6 +666,11 @@
 											<description>Iterationsgenauigkeit: einfache
 											Iteration</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Simple iteration</label>
+											<tooltip>Simple iteration</tooltip>
+											<description>Iteration precision: simple iteration</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="EXACT">
@@ -488,6 +680,11 @@
 											<tooltip>genaue Berechnung durch Einschlussintervall</tooltip>
 											<description>Iterationsgenauigkeit: genaue Berechnung
 												durch Einschlussintervall</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Exact calculation using inclusion interval</label>
+											<tooltip>Exact calculation using inclusion interval</tooltip>
+											<description>Iteration precision: exact calculation using inclusion interval</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -501,6 +698,11 @@
 								<tooltip>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</tooltip>
 								<description>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Delay loss</label>
+								<tooltip>Type of delay loss (standard=DVWK)</tooltip>
+								<description>Type of delay loss (standard=DVWK)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -510,6 +712,12 @@
 											<label>nach DVWK (beta = 0.67)</label>
 											<tooltip>nach DVWK (beta = 0.67)</tooltip>
 											<description>Verzögerungsverlust nach DVWK (beta =
+											0.67)</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>according to DVWK (beta = 0.67)</label>
+											<tooltip>according to DVWK (beta = 0.67)</tooltip>
+											<description>Delay loss according to DVWK (beta =
 											0.67)</description>
 										</documentation>
 									</annotation>
@@ -522,6 +730,12 @@
 											<description>Verzögerungsverlust nach Björnsen (beta =
 												0.5)</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>according to Björnsen (beta = 0.5)</label>
+											<tooltip>according to Björnsen (beta = 0.5)</tooltip>
+											<description>Delay loss according to Björnsen (beta =
+												0.5)</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="DFG">
@@ -530,6 +744,12 @@
 											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
 											<tooltip>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
 											<description>Verzögerungsverlust nach DFG (beta = 2 /
+												(1+Ai + 1/Ai) )</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
+											<description>Delay loss according to DFG (beta = 2 /
 												(1+Ai + 1/Ai) )</description>
 										</documentation>
 									</annotation>
@@ -544,6 +764,11 @@
 								<tooltip>Berechnung des Reibungsverlustes (Standard=Trapezformel)</tooltip>
 								<description>Berechnung des Reibungsverlustes (Standard=Trapezformel)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Calculation of friction loss</label>
+								<tooltip>Calculation of friction loss (standard=trapezoidal)</tooltip>
+								<description>Calculation of friction loss (standard=trapezoidal)</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -555,6 +780,12 @@
 											<description>Berechnung von Reibungsverlusten nach
 												Trapezformel</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Trapezoidal</label>
+											<tooltip>Trapezoidal rule</tooltip>
+											<description>Calculation of friction losses according to
+												trapezoidal rule</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="GEOMETRIC_FORMULA">
@@ -564,6 +795,12 @@
 											<tooltip>durch geometrische Mittelung</tooltip>
 											<description>Berechnung von Reibungsverlusten durch
 												geometrische Mittelung</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Geometric averaging</label>
+											<tooltip>Geometric averaging</tooltip>
+											<description>Calculation of friction losses according to
+												geometric averaging</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -577,6 +814,11 @@
 								<tooltip>Zusatzoptionen</tooltip>
 								<description>Zusatzoptionen (Berechnung von
 								Sonderbauwerken)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Additional options</label>
+								<tooltip>Additional options</tooltip>
+								<description>Additional options (calculation of special structures)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -608,6 +850,11 @@
 								<tooltip>Übergeordnetes Gewässer</tooltip>
 								<description>Übergeordnetes Gewässer</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Water body</label>
+								<tooltip>Superior water body</tooltip>
+								<description>Superior water body</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="waterAxis" type="gml:LineStringPropertyType">
@@ -618,6 +865,11 @@
 								<label>Gewässerachse</label>
 								<tooltip>(generierte) Gewässerachse</tooltip>
 								<description>(generierte) Gewässerachse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water axis</label>
+								<tooltip>(Generated) water axis</tooltip>
+								<description>(Generated) water axis</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -717,6 +969,12 @@
 								<description>Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!
 								</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial station</label>
+								<tooltip>Initial station (lower reaches), value depending on profile stationing!</tooltip>
+								<description>Initial station (lower reaches), value depending on profile stationing!
+								</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="endStation" type="wspmcommon:stationDouble">
@@ -725,6 +983,11 @@
 								<label>Endstation</label>
 								<tooltip>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</tooltip>
 								<description>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Final station</label>
+								<tooltip>Final station (upper reaches), value depending on profile stationing!</tooltip>
+								<description>Final station (upper reaches), value depending on profile stationing!</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -750,6 +1013,11 @@
 								<tooltip>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Include bridges</label>
+								<tooltip>Bridges and passages are included in calculation.</tooltip>
+								<description>Bridges and passages are included in calculation.</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="doCalcBarrages" type="boolean">
@@ -758,6 +1026,11 @@
 								<label>Wehre mit berechnen</label>
 								<tooltip>falls aktiv, werden Wehre bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Wehre bei der Berechnung berücksichtigt. </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Include weirs</label>
+								<tooltip>Weirs are included in calculation.</tooltip>
+								<description>Weirs are included in calculation.</description>
 							</documentation>
 						</annotation>
 					</element>

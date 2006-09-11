@@ -22,14 +22,24 @@
 				<tooltip>Grenze</tooltip>
 				<description>Grenze</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Boundary</label>
+				<tooltip>Boundary</tooltip>
+				<description>Boundary</description>
+			</documentation>
 		</annotation>
 	</element>
 	<element name="wspPointMember" type="boundary:WspPointPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Punkt</label>
-				<tooltip>Punkt</tooltip>
-				<description>Punkt</description>
+				<label>Punkte</label>
+				<tooltip>Punkte</tooltip>
+				<description>Punkte</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Points</label>
+				<tooltip>Points</tooltip>
+				<description>Points</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -39,6 +49,11 @@
 				<label>Punkt</label>
 				<tooltip>Punkt</tooltip>
 				<description>Punkt</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Point</label>
+				<tooltip>Point</tooltip>
+				<description>Point</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -57,6 +72,11 @@
 								<label>Fläche</label>
 								<tooltip>Fläche</tooltip>
 								<description>Fläche</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>Geometry</tooltip>
+								<description>Geometry</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -87,11 +107,21 @@
 								<tooltip>Lage</tooltip>
 								<description>Lage</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Location</label>
+								<tooltip>Location</tooltip>
+								<description>Location</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="station" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
+								<label>Station</label>
+								<tooltip>Station</tooltip>
+								<description>Station</description>
+							</documentation>
+							<documentation xml:lang="en">
 								<label>Station</label>
 								<tooltip>Station</tooltip>
 								<description>Station</description>
@@ -105,6 +135,11 @@
 								<tooltip>Wasserspiegel</tooltip>
 								<description>Wasserspiegel</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Water level</label>
+								<tooltip>Water level</tooltip>
+								<description>Water level</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="ufer">
@@ -113,6 +148,11 @@
 								<label>Uferseite</label>
 								<tooltip>Uferseite</tooltip>
 								<description>Uferseite</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bank</label>
+								<tooltip>Bank</tooltip>
+								<description>Bank</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -124,6 +164,11 @@
 											<tooltip>rechtes Ufer</tooltip>
 											<description>rechtes Ufer</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Right bank</label>
+											<tooltip>Right bank</tooltip>
+											<description>Right bank</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="left">
@@ -132,6 +177,11 @@
 											<label>linkes Ufer</label>
 											<tooltip>linkes Ufer</tooltip>
 											<description>linkes Ufer</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Left bank</label>
+											<tooltip>Left bank</tooltip>
+											<description>Left bank</description>
 										</documentation>
 									</annotation>
 								</enumeration>

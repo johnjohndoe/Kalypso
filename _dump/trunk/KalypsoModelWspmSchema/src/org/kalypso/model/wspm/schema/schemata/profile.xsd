@@ -24,6 +24,12 @@
 				<tooltip>${property:http://www.opengis.net/gml#name;-leer-}</tooltip>
 				<description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<name>Profile</name>
+				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-not set-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-empty-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+			</documentation>
 		</annotation>
 	</element>
 	<complexType name="ProfileType">
@@ -37,12 +43,14 @@
 				<sequence>
 					<element name="station" type="swe:RelativeMeasureType" minOccurs="1" maxOccurs="1">
 						<annotation>
-							<documentation>Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
+							<documentation xml:lang="de">Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
+							<documentation xml:lang="en">The profile stationing, important for editing cross sections.</documentation>
 						</annotation>
 					</element>
 					<element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation>Die Liste der zusätzliche Observations: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden.</documentation>
+							<documentation xml:lang="de">Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden.</documentation>
+							<documentation xml:lang="en">List of additional observations: e.g. passages, arch, circular and trapezoidal profiles can be modelled.</documentation>
 						</annotation>
 					</element>
 					<element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
@@ -59,14 +67,24 @@
 				<tooltip>Verlustbeiwerte</tooltip>
 				<description>Verlustbeiwerte</description>
 			</documentation>
+			<documentation xml:lang="en">
+				<label>Loss coefficients</label>
+				<tooltip>Loss coefficients</tooltip>
+				<description>Loss coefficients</description>
+			</documentation>			
 		</annotation>
 	</element>
 	<element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Verlustbeiwerte</label>
-				<tooltip>Verlustbeiwerte</tooltip>
-				<description>Verlustbeiwerte</description>
+				<label>Verlustbeiwert</label>
+				<tooltip>Verlustbeiwert</tooltip>
+				<description>Verlustbeiwert</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Loss coefficient</label>
+				<tooltip>Loss coefficient</tooltip>
+				<description>Loss coefficient</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -96,6 +114,11 @@
 								<tooltip>Art</tooltip>
 								<description>Art des Einzelverlusts</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Type</label>
+								<tooltip>Type</tooltip>
+								<description>Type of local loss</description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
@@ -106,6 +129,11 @@
 											<tooltip>Einlauf</tooltip>
 											<description>Einlauf</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Inlet</label>
+											<tooltip>Inlet</tooltip>
+											<description>Inlet</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="KRUEMMER">
@@ -114,6 +142,11 @@
 											<label>Krümmer</label>
 											<tooltip>Krümmer</tooltip>
 											<description>Krümmer</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>elbow</label>
+											<tooltip>elbow</tooltip>
+											<description>elbow</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -124,6 +157,11 @@
 											<tooltip>Zusatz-Verlust</tooltip>
 											<description>Zusatz-Verlust</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Additional loss</label>
+											<tooltip>Additional loss</tooltip>
+											<description>Additional loss</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="RECHEN">
@@ -133,6 +171,11 @@
 											<tooltip>Rechen</tooltip>
 											<description>Rechen</description>
 										</documentation>
+										<documentation xml:lang="en">
+											<label>Rake</label>
+											<tooltip>Rake</tooltip>
+											<description>Rake</description>
+										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="AUSLAUF">
@@ -141,6 +184,11 @@
 											<label>Auslauf</label>
 											<tooltip>Auslauf</tooltip>
 											<description>Auslauf</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Outlet</label>
+											<tooltip>Outlet</tooltip>
+											<description>Outlet</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -153,6 +201,11 @@
 								<label>Wert</label>
 								<tooltip>Wert</tooltip>
 								<description>Wert des Einzelverlusts</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Value</label>
+								<tooltip>Value</tooltip>
+								<description>Value of local loss</description>
 							</documentation>
 						</annotation>
 					</element>
