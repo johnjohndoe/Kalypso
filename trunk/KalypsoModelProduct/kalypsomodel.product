@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="Kalypso Simulation Platform" id="org.kalypso.model.product.product" application="org.eclipse.ui.ide.workbench" useFeatures="false">
+<product name="Kalypso Simulation Platform" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" useFeatures="false">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
       <text>
-         %blurb
+         %aboutText
       </text>
    </aboutInfo>
 
@@ -79,6 +79,8 @@
       <plugin id="org.junit"/>
       <plugin id="org.kalypso.NACalcJob"/>
       <plugin id="org.kalypso.auth"/>
+      <plugin id="org.kalypso.chart"/>
+      <plugin id="org.kalypso.chart.ui"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
@@ -91,6 +93,7 @@
       <plugin id="org.kalypso.gml.processes"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
+      <plugin id="org.kalypso.layerprovider"/>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.product"/>
       <plugin id="org.kalypso.model.wspm.core"/>
