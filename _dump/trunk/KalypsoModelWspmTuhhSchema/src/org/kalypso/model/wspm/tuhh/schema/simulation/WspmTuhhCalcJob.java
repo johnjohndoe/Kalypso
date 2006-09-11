@@ -135,7 +135,7 @@ public class WspmTuhhCalcJob implements ISimulation
       // load gml
       pwSimuLog.println( "Loading GML: " + modellGmlURL );
       monitor.setMessage( "Loading GML: " + modellGmlURL );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL, null );
 
       // get calculation via path
       pwSimuLog.println( "Loading Calculation: " + calcXPath );
@@ -299,7 +299,7 @@ public class WspmTuhhCalcJob implements ISimulation
               pwSimuLog.println( " - Längsschnitt (als GML) erzeugt." );
 
               // Read Length-Section GML
-              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL() );
+              final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
               final Feature rootFeature = obsWks.getRootFeature();
 
               final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );

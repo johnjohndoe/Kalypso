@@ -3,7 +3,7 @@
 	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
     <!-- Component Dictionary -->
-	<catalog:system systemId="urn:ogc:gml:???:???:???:???:???" uri="dict_components.gml.xml" />
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:components" uri="dict_components.gml" />
 	
 </catalog:catalog>
 

@@ -105,9 +105,9 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang - stationär (TU-HH)</name>
-				<label>${property:http://www.opengis.net/gml#name}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description}</description>
+				<label>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Reach - steady (TU-HH)</name>

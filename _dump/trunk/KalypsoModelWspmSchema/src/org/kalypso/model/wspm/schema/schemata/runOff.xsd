@@ -52,6 +52,20 @@
                 Abflussereignis leitet von CommonObservation ab und beinhaltet also die Tupel. Sie
                 werden anhand von resultDefinition angegeben. TODO: es sollte eine feste
                 resultDefinition für Abflüsse vorgegeben sein..</documentation>
+            <appinfo xmlns:kapp="org.kalypso.appinfo">
+                <kapp:functionProperty
+                    kapp:functionId="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
+                    kapp:property="om:resultDefinition">
+                    <kapp:parameter>
+                        <kapp:name>component1</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation</kapp:value>
+                    </kapp:parameter>
+                    <kapp:parameter>
+                        <kapp:name>component2</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff</kapp:value>
+                    </kapp:parameter>
+                </kapp:functionProperty>
+            </appinfo>
         </annotation>
         <complexContent>
             <extension base="om:ObservationType"/>
@@ -97,6 +111,20 @@
                 ab und beinhaltet also die Tupel. Sie werden anhand von resultDefinition angegeben.
                 TODO: es sollte eine feste resultDefinition für Wasserspiegelfixierungen vorgegeben
                 sein..</documentation>
+            <appinfo xmlns:kapp="org.kalypso.appinfo">
+                <kapp:functionProperty
+                    kapp:functionId="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
+                    kapp:property="om:resultDefinition">
+                    <kapp:parameter>
+                        <kapp:name>component1</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation</kapp:value>
+                    </kapp:parameter>
+                    <kapp:parameter>
+                        <kapp:name>component2</kapp:name>
+                        <kapp:value>urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel</kapp:value>
+                    </kapp:parameter>
+                </kapp:functionProperty>
+            </appinfo>
         </annotation>
         <complexContent>
             <extension base="om:ObservationType"/>

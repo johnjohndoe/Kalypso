@@ -19,6 +19,10 @@
             class="org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction"
             id="org.kalypso.model.wspm.functionProperty.profileGeometry"
             name="Profile-Location-Cacher"/>
+      <function
+            class="org.kalypso.model.wspm.schema.function.FixedResultDefinitionFeaturePropertyFunction"
+            id="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
+            name="Fixed-ResultDefinition"/>
    </extension>
 
 </plugin>

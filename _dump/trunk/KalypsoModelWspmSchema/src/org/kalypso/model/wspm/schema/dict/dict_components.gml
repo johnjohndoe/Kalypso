@@ -10,9 +10,73 @@
      xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" gml:id="components">
 
-     <gml:description>Ein Dictionary f�r die Modellierung von Zeitreihendaten</gml:description>
+     <gml:description>Ein Dictionary für die Modellierung von Zeitreihendaten</gml:description>
      <gml:name>Zeitreihenkomponente</gml:name>
 
+     <!-- Length Section components -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSectionStation">
+               <gml:name>Station</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-stat">
+                         <gml:description>Gewässerstationierung</gml:description>
+                         <gml:name>Stationierung</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSectionRunOff">
+               <gml:name>Abfluss</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_runoff">
+                         <gml:description>Abfluss</gml:description>
+                         <gml:name>Abfluss</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="m³/s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSectionWaterlevel">
+               <gml:name>Abfluss</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_waterlevel">
+                         <gml:description>Wasserstand</gml:description>
+                         <gml:name>Wasserstand</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="2"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="NN+m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+
+     <!--
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="pegelhoehe">
                <gml:name/>
@@ -72,10 +136,11 @@
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
-     </gml:dictionaryEntry>
+     </gml:dictionaryEntry>-->
 
+     <!-- Einfacher skalarer Typ ohne Einheit -->
+     <!--
      <gml:dictionaryEntry>
-          <!-- Einfacher skalarer Typ ohne Einheit -->
           <swe:ItemDefinition gml:id="skalar">
                <gml:name/>
                <swe:property xlink:href="dict_phenomenon.xml#undefined"/>
@@ -90,15 +155,17 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
+-->
 
+     <!-- Einfacher ganzzahliger Typ ohne Einheit -->
+     <!--
      <gml:dictionaryEntry>
-          <!-- Einfacher ganzzahliger Typ ohne Einheit -->
           <swe:ItemDefinition gml:id="ganzzahl">
                <gml:name/>
                <swe:property/>
                <swe:representation>
                     <swe:SimpleType>
-                         <st:restriction  base="decimal">
+                         <st:restriction base="decimal">
                               <st:minInclusive value="0"/>
                               <st:fractionDigits value="0"/>
                          </st:restriction>
@@ -107,7 +174,7 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-
+-->
 
      <!-- Definition der Wechmann Parameter 
      
@@ -116,6 +183,7 @@
      
      -->
 
+     <!-- 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="wechmann_w1">
                <gml:name/>
@@ -167,5 +235,6 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
+ -->
 
 </gml:Dictionary>

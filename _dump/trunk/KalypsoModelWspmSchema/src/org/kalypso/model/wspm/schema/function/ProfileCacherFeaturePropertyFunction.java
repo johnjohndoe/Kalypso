@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.schema.function;
 
 import java.util.LinkedList;
-import java.util.Properties;
+import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -66,7 +66,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Properties)
    */
   @Override
-  public void init( final Properties properties )
+  public void init( final Map<String, String> properties )
   {
   }
 
@@ -77,7 +77,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // TODO: interpolate geometry onto profile points.
-    
+
     return null;
   }
 
@@ -90,11 +90,11 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     try
     {
       final WspmReachProfileSegment segment = new WspmReachProfileSegment( feature );
-      
+
       final WspmProfile profileMember = segment.getProfileMember();
       if( profileMember == null )
         return currentValue;
-      
+
       final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
 
       segment.setStation( profil.getStation() );
@@ -111,7 +111,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
       if( ppRW == null || ppHW == null || ppH == null )
         return null;
-        
+
       final LinkedList<IProfilPoint> points = profil.getPoints();
       final GM_Position[] positions = new GM_Position[points.size()];
       int count = 0;
