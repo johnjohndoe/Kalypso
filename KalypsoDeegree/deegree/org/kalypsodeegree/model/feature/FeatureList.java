@@ -22,7 +22,7 @@ public interface FeatureList extends List, JMSpatialIndex
 
   /**
    * This method returns the propertyType of the parent which denotes this list.
-   * 
+   *
    * @return property of parent feature that has this list or null if it is not known or list is allready some kind of
    *         rootelement
    */

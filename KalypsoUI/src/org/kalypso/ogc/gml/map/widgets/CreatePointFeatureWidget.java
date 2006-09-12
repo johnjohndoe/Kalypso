@@ -46,6 +46,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 
 /**
+ * TODO: not used. Obsolete, remove?
+ * 
  * @author vDoemming
  */
 public class CreatePointFeatureWidget extends AbstractWidget

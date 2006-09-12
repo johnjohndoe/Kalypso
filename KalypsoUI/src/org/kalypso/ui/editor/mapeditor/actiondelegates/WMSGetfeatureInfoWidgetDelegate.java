@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -58,7 +59,7 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( final IAction action )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );
 

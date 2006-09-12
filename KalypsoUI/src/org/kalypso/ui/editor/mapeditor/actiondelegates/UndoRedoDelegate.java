@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -90,11 +91,11 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
       }
     }
 
-    refreshAction( null );
+    refreshAction( action, getSelection() );
   }
 
   @Override
-  protected void refreshAction( final IAction action )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     boolean bEnabled = false;
 

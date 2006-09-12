@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.tools;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -530,7 +531,7 @@ public class GeometryUtilities
     return getEnvelopeClass().equals( o.getClass() );
   }
 
-  public static Class<? extends Object > getEnvelopeClass( )
+  public static Class< ? extends Object> getEnvelopeClass( )
   {
     return GM_Envelope.class;
   }
@@ -681,4 +682,28 @@ public class GeometryUtilities
     }
     return area;
   }
+
+  /**
+   * Finds the first geometry property of the given feature type.
+   * 
+   * @param aPreferedGeometryClass
+   *          If non null, the first property of this type is returned.
+   */
+  public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class aPreferedGeometryClass )
+  {
+    final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+
+    IValuePropertyType geometryProperty = null;
+    for( int i = 0; i < allGeomteryProperties.length; i++ )
+    {
+      final IValuePropertyType property = allGeomteryProperties[i];
+      if( aPreferedGeometryClass == null || property.getValueClass() == aPreferedGeometryClass )
+      {
+        geometryProperty = property;
+        break;
+      }
+    }
+    return geometryProperty;
+  }
+
 }

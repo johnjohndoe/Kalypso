@@ -33,7 +33,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActionDelegate
 {
-
   IFeatureSelection m_spatialOpSelection = null;
 
   IStructuredSelection m_ftSelection = null;
@@ -141,7 +140,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( IAction action, final ISelection selection )
   {
     // do nothing
   }

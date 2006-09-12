@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
@@ -83,11 +84,11 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
       new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
-    refreshAction( null );
+    refreshAction( action, getSelection() );
   }
 
   @Override
-  protected void refreshAction( final IAction action )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     boolean bEnabled = false;
 

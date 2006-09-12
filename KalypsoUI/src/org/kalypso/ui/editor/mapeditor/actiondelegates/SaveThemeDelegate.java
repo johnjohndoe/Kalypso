@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -122,11 +123,11 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
       }
     }
 
-    refreshAction( null );
+    refreshAction( action, getSelection() );
   }
 
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( IAction action, final ISelection selection )
   {
     boolean bEnabled = false;
 

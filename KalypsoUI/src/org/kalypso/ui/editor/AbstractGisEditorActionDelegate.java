@@ -61,6 +61,8 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
 
   private IAction m_action;
 
+  private ISelection m_selection;
+
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
@@ -103,7 +105,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
     }
 
     // update action state
-    refreshAction( action );
+    refreshAction( action, m_selection );
   }
 
   /**
@@ -112,12 +114,18 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    refreshAction( action );
+    m_selection = selection;
+    refreshAction( action, selection );
   }
 
   protected WidgetActionPart getPart( )
   {
     return m_part;
+  }
+  
+  protected ISelection getSelection( )
+  {
+    return m_selection;
   }
 
   /**
@@ -125,7 +133,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshAction( m_action );
+    refreshAction( m_action, m_selection );
   }
 
   /**
@@ -135,6 +143,6 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    * 
    * @param action
    */
-  protected abstract void refreshAction( final IAction action );
+  protected abstract void refreshAction( final IAction action, final ISelection selection );
 
 }
