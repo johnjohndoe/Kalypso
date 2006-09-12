@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -88,7 +89,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
           treeViewer.saveData( monitor );
-          refreshAction( action );
+          refreshAction( action, getSelection() );
         }
       };
 
@@ -111,7 +112,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
   }
 
   @Override
-  protected void refreshAction( IAction action )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     boolean bEnabled = false;
 

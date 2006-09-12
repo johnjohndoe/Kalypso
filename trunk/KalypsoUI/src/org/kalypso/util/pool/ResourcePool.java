@@ -292,4 +292,9 @@ public class ResourcePool
         info2.dispose();
     }
   }
+
+  public KeyInfo getInfoForKey( final IPoolableObjectType poolKey )
+  {
+    return m_keyInfos.get( poolKey );
+  }
 }

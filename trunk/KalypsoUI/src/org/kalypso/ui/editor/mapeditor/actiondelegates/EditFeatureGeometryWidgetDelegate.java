@@ -33,69 +33,50 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * abstract delegate to create features drawing geometries on map
  * 
  * @author doemming
  */
-public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class EditFeatureGeometryWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  private final Class m_geometryClass;
-
   /**
    * @param geometryClass
    *          the geometryclass to create or <code>null</code> for "any geometry"
    */
-  public AbstractCreateGeometryWidgetDelegate( final Class geometryClass )
+  public EditFeatureGeometryWidgetDelegate( )
   {
-    super( WidgetHelper.getWidget( getWidgetIdForGeometryClass( geometryClass ) ) );
-    m_geometryClass = geometryClass;
+    super( WidgetHelper.getWidget( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) );
   }
 
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
-    action.setEnabled( fitsToAction() );
+    action.setEnabled( fitsToAction( selection ) );
   }
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( IAction action, final ISelection selection )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     super.refreshAction( action, selection );
 
     if( action != null )
-      action.setEnabled( fitsToAction() );
+      action.setEnabled( fitsToAction( selection ) );
   }
 
-  /**
-   * @return widgetID
-   */
-  private static String getWidgetIdForGeometryClass( final Class geometryClass )
-  {
-    if( geometryClass == GeometryUtilities.getPointClass() )
-      return MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT;
-    if( geometryClass == GeometryUtilities.getLineStringClass() )
-      return MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING;
-    if( geometryClass == GeometryUtilities.getPolygonClass() )
-      return MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON;
-    // if( geometryClass == null || geometryClass == GM_Object.class )
-    // default:
-    return MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY;
-  }
-
-  public boolean fitsToAction( )
+  public boolean fitsToAction( final ISelection selection )
   {
     final WidgetActionPart part = getPart();
     if( part != null )
@@ -112,20 +93,17 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
       if( activeTheme == null )
         return false;
 
-      if( activeTheme instanceof IKalypsoFeatureTheme )
+      if( activeTheme instanceof IKalypsoFeatureTheme && selection instanceof IFeatureSelection )
       {
-        final IFeatureType featureType = ((IKalypsoFeatureTheme) activeTheme).getFeatureType();
-        if( featureType == null )
-          return false;
-        final IPropertyType[] geomProps = featureType.getAllGeomteryProperties();
-        for( int i = 0; i < geomProps.length; i++ )
+        final Feature firstFeature = FeatureSelectionHelper.getFirstFeature( (IFeatureSelection) selection );
+        if( firstFeature != null )
         {
-          if( geomProps[i] instanceof IValuePropertyType )
-          {
-            final IValuePropertyType vpt = (IValuePropertyType) geomProps[i];
-            if( m_geometryClass == null || m_geometryClass == GM_Object.class || vpt.getValueClass() == m_geometryClass )
-              return true;
-          }
+          final IFeatureType featureType = firstFeature.getFeatureType();
+          if( featureType == null )
+            return false;
+
+          final IPropertyType[] geomProps = featureType.getAllGeomteryProperties();
+          return geomProps.length > 0;
         }
       }
     }

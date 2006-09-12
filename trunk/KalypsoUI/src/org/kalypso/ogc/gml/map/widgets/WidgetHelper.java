@@ -81,8 +81,13 @@ public class WidgetHelper
     // if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
     // return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
     // the geometry feature creators:
+
+    if( widgetID.startsWith( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) )
+      return (new EditFeatureGeometryWidget( "Replace Geometry", "Replace The First Geometry Of The Selected Feature" ));
+
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
       return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ));
+
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
       return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ));
     if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )

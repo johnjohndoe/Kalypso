@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -113,7 +114,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
     final MapPanel mapPanel = part.getMapPanel();
     if( mapPanel == null )
       return;
-    
+
     mapPanel.getWidgetManager().setActualWidget( getWidget() );
   }
 
@@ -123,7 +124,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( final IAction action )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     // does nothing
   }

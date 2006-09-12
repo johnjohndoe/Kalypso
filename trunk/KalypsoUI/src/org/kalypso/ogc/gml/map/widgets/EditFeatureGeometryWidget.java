@@ -29,36 +29,32 @@
  */
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * Lets the user edit a new geometry on the map and creates a new feature with this geometry.
+ * Lets the user replace an existing geometry of a given feature with a new edited one.
  * 
  * @author Holger Albert
  */
-public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
+public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 {
-  private final Class m_apreferedGeometryClass;
+  // private final Class m_apreferedGeometryClass;
 
-  public CreateGeometeryWidget2( final String name, final String toolTip, final Class geometryClass )
+  public EditFeatureGeometryWidget( final String name, final String toolTip /* , final Class geometryClass */)
   {
     super( name, toolTip );
 
-    m_apreferedGeometryClass = geometryClass;
+    // m_apreferedGeometryClass = geometryClass;
 
     update( getMapPanel() );
   }
@@ -66,67 +62,63 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
   @Override
   protected Object createFeatureToEdit( final IKalypsoFeatureTheme theme )
   {
+    final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+    final Feature feature = FeatureSelectionHelper.getFirstFeature( selectionManager );
+
     final CommandableWorkspace workspace = theme.getWorkspace();
-    final IFeatureType featureType = theme.getFeatureType();
 
-    final FeatureList featureList = theme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
-    final IRelationType linkrelationType = featureList.getParentFeatureTypeProperty();
+    final IValuePropertyType geometryProperty;
+    if( feature == null )
+      geometryProperty = null;
+    else
+      geometryProperty = GeometryUtilities.findGeometryProperty( feature.getFeatureType(), null );
 
-    final IValuePropertyType geometryProperty = GeometryUtilities.findGeometryProperty( featureType, m_apreferedGeometryClass );
-
-    if( geometryProperty == null )
-      return null;
-
-    return new FeatureToEdit( parentFeature, linkrelationType, featureType, workspace, geometryProperty );
+    return new FeatureToEdit( workspace, feature, geometryProperty );
   }
 
   @Override
   protected void editFeature( final GM_Object validGeometryValue, final Object toEdit ) throws Exception
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) toEdit;
-    
-    final Map<IPropertyType, Object> valueMap = new HashMap<IPropertyType, Object>();
-    valueMap.put( featureToEdit.getGeometryProperty(), validGeometryValue );
 
-    // TODO ask for substitutions
-    CommandableWorkspace workspace = featureToEdit.getWorkspace();
+    final CommandableWorkspace workspace = featureToEdit.getWorkspace();
+    final Feature feature = featureToEdit.getFeature();
+    final IValuePropertyType geometryProperty = featureToEdit.getGeometryProperty();
 
-    final ICommand command = new AddFeatureCommand( workspace, featureToEdit.getFeatureType(), featureToEdit.getParentFeature(), featureToEdit.getLinkProperty(), 0, valueMap, null, 0 );
+    final FeatureChange change = new FeatureChange( feature, geometryProperty, validGeometryValue );
+    final ICommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
     workspace.postCommand( command );
   }
-  
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#getGeometryClass()
+   */
   @Override
   protected Class getGeometryClass( )
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
-    return featureToEdit == null ? null : featureToEdit.getGeometryProperty().getValueClass();
+
+    return featureToEdit.getGeometryProperty().getValueClass();
   }
-  
-  private static final class FeatureToEdit
+
+  private final static class FeatureToEdit
   {
-    private final Feature m_parentFeature;
+    private final IValuePropertyType m_geometryProperty;
 
-    private final IRelationType m_linkProperty;
-
-    private final IFeatureType m_featureType;
+    private final Feature m_feature;
 
     private final CommandableWorkspace m_workspace;
 
-    private final IValuePropertyType m_geometryProperty;
-
-    public FeatureToEdit( final Feature parentFeature, final IRelationType linkProperty, final IFeatureType featureType, final CommandableWorkspace workspace, final IValuePropertyType geometryProperty )
+    public FeatureToEdit( final CommandableWorkspace workspace, final Feature feature, final IValuePropertyType geometryProperty )
     {
-      m_parentFeature = parentFeature;
-      m_linkProperty = linkProperty;
-      m_featureType = featureType;
       m_workspace = workspace;
+      m_feature = feature;
       m_geometryProperty = geometryProperty;
     }
 
-    public IFeatureType getFeatureType( )
+    public Feature getFeature( )
     {
-      return m_featureType;
+      return m_feature;
     }
 
     public IValuePropertyType getGeometryProperty( )
@@ -134,20 +126,9 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
       return m_geometryProperty;
     }
 
-    public IRelationType getLinkProperty( )
-    {
-      return m_linkProperty;
-    }
-
-    public Feature getParentFeature( )
-    {
-      return m_parentFeature;
-    }
-
     public CommandableWorkspace getWorkspace( )
     {
       return m_workspace;
     }
   }
-
 }
