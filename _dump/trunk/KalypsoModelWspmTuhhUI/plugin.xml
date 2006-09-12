@@ -14,9 +14,9 @@
                class="org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction"
                icon="icons/obj16/startCalulation.gif"
                id="org.kalypso.model.wspm.calcTuhhAction"
-               label="Berechnung starten"
+               label="%org.kalypso.model.wspm.calcTuhhAction"
                style="push"
-               tooltip="Startet die selektierten Berechnungen"/>
+               tooltip="%org.kalypso.model.wspm.calcTuhhAction.tooltip"/>
       </objectContribution>
    </extension>
 
@@ -26,7 +26,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportWizard"
             icon="icons/obj16/wspwin.gif"
             id="org.kalypso.model.wspm.importwizard.wspwin"
-            name="WspWin Daten...">
+            name="%org.kalypso.model.wspm.importwizard.wspwin">
          <description>
             Importiert Daten aus einem bestehenden WspWin Projekt
          </description>
@@ -38,7 +38,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard"
             icon="icons/obj16/wspwin.gif"
             id="org.kalypso.model.wspm.exportwizard.wspwin"
-            name="WspWin-Format">
+            name="%org.kalypso.model.wspm.exportwizard.wspwin">
          <description>
             Exportiert WSP-Modell (TU-HH) als WspWin-Projekt
          </description>
@@ -101,7 +101,7 @@
             hasPages="true"
             icon="icons/obj16/kalypso16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
-            name="TUHH 1D-Spiegellinienberechnung Projekt"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
             project="true">
          
          <description>
@@ -117,7 +117,7 @@
             hasPages="true"
             icon="icons/obj16/wspwin16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
-            name="TUHH 1D-Spiegellinienberechnung Projekt aus WspWin Projekt"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
             project="true">
          <description>
             Importiert ein bestehendes WspWin Projekt als neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
