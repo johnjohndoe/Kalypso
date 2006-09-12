@@ -91,6 +91,7 @@
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.featureview"/>
       <plugin id="org.kalypso.gml.processes"/>
+      <plugin id="org.kalypso.gml.ui"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
       <plugin id="org.kalypso.layerprovider"/>
