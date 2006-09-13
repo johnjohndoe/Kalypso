@@ -48,7 +48,7 @@
               <PointPlacement auto="true">
                 <Displacement>
 					<DisplacementX>10.0</DisplacementX>
-					<DisplacementY>10.0</DisplacementY>
+					<DisplacementY>15.0</DisplacementY>
                 </Displacement>
               </PointPlacement>
             </LabelPlacement>
