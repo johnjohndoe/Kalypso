@@ -68,6 +68,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
     final CommandableWorkspace workspace = theme.getWorkspace();
 
     final IValuePropertyType geometryProperty;
+
     if( feature == null )
       geometryProperty = null;
     else
@@ -98,7 +99,12 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
 
-    return featureToEdit.getGeometryProperty().getValueClass();
+    IValuePropertyType geometryProperty = featureToEdit.getGeometryProperty();
+
+    if( geometryProperty == null )
+      return null;
+
+    return geometryProperty.getValueClass();
   }
 
   private final static class FeatureToEdit
