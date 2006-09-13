@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="spree_view_prognose" vendor="sachsen">
-  <title>Vorhersagemodell Spree</title>
+<section id="schwElster_view_prognose" vendor="sachsen">
+  <title>Vorhersagemodell Schwarze Elster</title>
 
-  <section id="spree_2">
+  <indexterm>
+    <primary>Vorhersagemodell Schwarze Elster</primary>
+  </indexterm>
+
+  <section id="sec_Assi_schwElster_01_Steuerparams">
     <title>Eingabe der Steuerparameter</title>
 
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
-    linkend="spree_steuerparameter" />) werden verschiedene Informationen
+    linkend="schwElster_steuerparameter" />) werden verschiedene Informationen
     angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
     generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
     die Einträge denen der ursprünglichen Rechenvariante.</para>
 
-    <figure id="spree_steuerparameter">
+    <figure id="schwElster_steuerparameter">
       <title>Eingabe der Steuerparameter</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_3.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_01_Steuerparams.png"
+                       scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -32,8 +37,8 @@
 
     <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
     einer neuen Rechenvariante automatisch auf den letzten gültigen
-    Startzeitpunkt für die Modellrechnung der Spree gesetzt (1h, 4h, ...,
-    22h). Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der
+    Startzeitpunkt für die Modellrechnung der Schwarze Elster gesetzt (1h, 4h,
+    ..., 22h). Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der
     Zeitreihenablage geholt. Der Eintrag kann vom Benutzer angepasst werden.
     Der Endzeitpunkt der Vorhersage wird durch das Modell bestimmt und liegt
     48 Stunden nach dem <guilabel>Start der Vorhersage</guilabel>.</para>
@@ -68,7 +73,7 @@
     Eingangsdaten.</para>
   </section>
 
-  <section>
+  <section id="sec_Assi_schwElster_02_Eingangsdaten">
     <title>Kontrolle der Eingangsdaten</title>
 
     <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
@@ -77,15 +82,15 @@
     abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
     linkend="tabellen_kennzeichnung" />). Der Vorhersage-Assistent ist so
     aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
-    (<xref linkend="spree_eingangsdaten" />):</para>
+    (<xref linkend="schwElster_eingangsdaten" />):</para>
 
-    <figure id="spree_eingangsdaten">
+    <figure id="schwElster_eingangsdaten">
       <title>Kontrolle der Eingangsdaten (Niederschläge)</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_kontrolle_niederschlag.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_02_Kontrolle_Niederschlag.png"
                        scale="40" />
           </imageobject>
         </mediaobject>
@@ -95,17 +100,17 @@
     <orderedlist>
       <listitem>
         <para>Gemessene Niederschläge an Ombrometerstationen im Einzugsgebiet
-        der Spree</para>
+        der Schwarzen Elster (Kamenz-Lückersdorf, KA Bischofswerda, TS
+        Wallroda, Strauch, Kubschütz)</para>
       </listitem>
 
       <listitem>
         <para>Niederschlagszeitreihen für die N-A-Modelle innerhalb des
-        Einzugsgebietes (Schirgiswalde, Bautzen, Gröditz 1, Jänkendorf,
-        Särichen)</para>
+        Einzugsgebietes (Trado 1, Schönau, Zescha)</para>
       </listitem>
 
       <listitem>
-        <para>Talsperrenabgaben für TS Bautzen und TS Quitzdorf</para>
+        <para>Talsperrenabgaben für TS Knappenrode</para>
       </listitem>
 
       <listitem>
@@ -114,13 +119,7 @@
       </listitem>
 
       <listitem>
-        <para>Abflusswerte für die Abzweige / Überleitungen (Abzweig Kleine
-        Spree, Zuleiter Restloch Bärwalde, Zuleitung Restloch Lohsa II,
-        Überleitung Restlochkette)</para>
-      </listitem>
-
-      <listitem>
-        <para>Zuflüsse am Pegel Burgneudorf</para>
+        <para>Abflusswerte für den Zuleiter Knappenrode</para>
       </listitem>
     </orderedlist>
 
@@ -133,14 +132,14 @@
     <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
   </section>
 
-  <section>
+  <section id="sec_Assi_schwElster_03_Berechnung_Gebietsniederschlag">
     <title>Berechnung des Gebietsniederschlags</title>
 
     <para>Ein Spezialfall ist die Anzeige der Niederschlagszeitreihen für die
     N-A-Modelle innerhalb des Einzugsgebietes (Seite <quote>Kontrolle
     Niederschlag - Eingabepegel (NA Modelle)</quote> ). Diese Ganglinien
     wurden beim Erstellen der Rechenvariante automatisch anhand eines
-    Gebietsniederschlagmodells aus den Niederschlagsmessungen sowie den
+    Gebietsniederschlagmodells aus den Niederschlagmessungen sowie den
     DWD-Rastervorhersagen zusammengesetzt (DWD-Lokalmodell).</para>
 
     <para>Falls die gemesssenen Niederschlagswerte nachträglich vom Benutzer
@@ -148,16 +147,16 @@
     diese erneut in die Gebietsniederschläge übernommen werden. Zu diesem
     Zweck dient der Knopf <guilabel>Neuberechnung
     Gebietsniederschlag</guilabel> auf dieser Seite des Assistenten (siehe
-    <xref linkend="spree_eingangsdaten_namodell" />).</para>
+    <xref linkend="schwElster_eingangsdaten_namodell" />).</para>
 
-    <figure id="spree_eingangsdaten_namodell">
+    <figure id="schwElster_eingangsdaten_namodell">
       <title>Kontrolle und Neuberechnung Niederschlag - Eingabepegel
       (NA-Modelle)</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_kontrolle_niederschlag_namodelle.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_03_Kontrolle_Niederschlag_NaModelle.png"
                        scale="40" />
           </imageobject>
         </mediaobject>
@@ -165,15 +164,15 @@
     </figure>
   </section>
 
-  <section id="spree_berechnung_vorhersage">
+  <section id="sec_Assi_schwElster_04_Vorhersage_Berechnung">
     <title>Berechnung einer Vorhersage</title>
 
     <para>Die Vorhersageberechnungen erfolgen nach Prüfung der
     Eingangszeitreihen. Die Reihenfolge der Abarbeitung der Berechnungen für
-    die einzelnen Pegel im Einzugsgebiet der Spree ist in folgender
+    die einzelnen Pegel im Einzugsgebiet der Schwarzen Elster ist in folgender
     Reihenfolge im Programm implementiert: Zunächst erfolgen Berechnungen für
-    Pegel mit vorgeschaltetem N-A-Modell, anschließend für die
-    Talsperren-Abgabepegel und daraufhin für die Pegel mit vorgeschaltetem
+    Pegel mit vorgeschaltetem N-A-Modell, anschließend für den
+    Talsperren-Abgabepegel und daraufhin für den Pegel mit vorgeschaltetem
     Flusslaufmodell (d.h. von Ober- Richtung Unterlauf).</para>
 
     <para>Dabei ist vom Benutzer auf die Reihenfolge der Pegel zu achten. An
@@ -183,23 +182,24 @@
 
     <para>Die Wizard-Masken sind jeweils so gestaltet, dass auf der linken
     Hälfte eine Übersicht der Pegel im Lageplan erscheint (<xref
-    linkend="spree_berechnung" />). In der rechten Hälfte wird oben eine
-    Tabelle angezeigt, über die die entsprechenden Parameter zur Kalibrierung
-    der Nachführung des HW-Ereignisses eingegeben werden können. Im unteren
-    Teil ist eine Diagrammansicht gegeben, in der die Zeitreihen der
-    Berechnung angezeigt werden. Beim Start des Wizards ist die
+    linkend="schwElster_berechnung_NaModelle" />). In der rechten Hälfte wird
+    oben eine Tabelle angezeigt, über die die entsprechenden Parameter zur
+    Kalibrierung der Nachführung des HW-Ereignisses eingegeben werden können.
+    Im unteren Teil ist eine Diagrammansicht gegeben, in der die Zeitreihen
+    der Berechnung angezeigt werden. Beim Start des Wizards ist die
     Diagramm-Anzeige zunächst noch ohne Inhalt. Zeitreihen werden durch einen
     Klick auf den entsprechenden Eintrag in der Tabelle grafisch dargestellt.
     Die Achsen des Diagramms werden dabei automatisch an die jeweilige
     Zeitreihe angepasst.</para>
 
-    <figure id="spree_berechnung">
+    <figure id="schwElster_berechnung_NaModelle">
       <title>Berechnung N-A-Modelle</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_9a.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_04_Berechnung_NaModelle.png"
+                       scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -211,7 +211,7 @@
     <orderedlist>
       <listitem>
         <para>Berechnung der Pegeleinzugsgebiete mit N-A-Modell (<xref
-        linkend="spree_berechnung" />)</para>
+        linkend="schwElster_berechnung_NaModelle" />)</para>
 
         <para>In der Tabelle einzugeben ist die Anfangsbodenfeuchte (in den
         vom Programm vorgegebenen festen Grenzen). Wird für die Bodenfeuchte
@@ -221,14 +221,15 @@
       </listitem>
 
       <listitem>
-        <para>Berechnung der Talsperreninhalte</para>
+        <para>Berechnung des Talsperreninhalts der Talsperre
+        Knappenrode</para>
 
         <para>Vorzugeben ist der Stauinhalt der Talsperre zu Beginn der
         Vorhersage</para>
       </listitem>
 
       <listitem>
-        <para>Berechnung der Pegel mit Flusslaufmodell</para>
+        <para>Berechnung des Pegels Neuwiese mit Flusslaufmodell</para>
 
         <para>In der Tabelle anzugeben sind die Parameter zur Korrektur der
         Abflussganglinie (multiplikative und additive Niveau-Korrektur und
@@ -246,23 +247,25 @@
     Talsperre.</para>
   </section>
 
-  <section id="spree_ergebnisbearbeitung">
+  <section id="sec_Assi_schwElster_05_Berichtsablage">
     <title>Ergebnisbearbeitung und Veröffentlichung</title>
 
     <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
-    <xref linkend="spree_berechnung_vorhersage" />) können die ermittelten
-    Ergebnisse an das Berichtswesen übergeben werden. Zudem ist der Export der
-    berechneten Prognose-Zeitreihen nach PSI-Compact möglich. Die dazugehörige
-    Eingabemaske (<xref linkend="spree_ergebnisse" />) zeigt einen Lageplan
-    mit allen im Modell vorhandenen Vorhersage-Pegeln.</para>
+    <xref linkend="sec_Assi_schwElster_04_Vorhersage_Berechnung" />) können
+    die ermittelten Ergebnisse an das Berichtswesen übergeben werden. Zudem
+    ist der Export der berechneten Prognose-Zeitreihen nach PSI-Compact
+    möglich. Die dazugehörige Eingabemaske (<xref
+    linkend="schwElster_berichtsablage" />) zeigt einen Lageplan mit allen im
+    Modell vorhandenen Vorhersage-Pegeln.</para>
 
-    <figure id="spree_ergebnisse">
+    <figure id="schwElster_berichtsablage">
       <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/spree_12.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_05_Berichtsablage.png"
+                       scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
