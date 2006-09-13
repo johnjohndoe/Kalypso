@@ -3,7 +3,7 @@
 [
 	<!ENTITY hid "org.kalypso.manual.">
 ]>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" >
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" helpId="&hid;SA_Assi_allg_00_Start">
 	
 <!-- 
 ToDo: Help-Ids setzen!!! -->
@@ -16,7 +16,9 @@ ToDo: Help-Ids setzen!!! -->
         
 		<arg name="pageID" value="Ombrometer"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
-       <arg name="mainSash" value="50"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
+ 		
+        <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         
         <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
@@ -33,7 +35,9 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Einzugsgebiete"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Einzugsgebiete.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
+
+ 		<arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -53,7 +57,9 @@ ToDo: Help-Ids setzen!!! -->
 
  		<arg name="pageID" value="Talsperre"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Talsperre.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
+
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -74,8 +80,11 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Pegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Pegel.html"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
+
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
+
         <arg name="zmlTableShow" value="all"/>
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
@@ -95,7 +104,9 @@ ToDo: Help-Ids setzen!!! -->
 
  		<arg name="pageID" value="Zuleiter"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Zuleiter.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
+
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
 
         <arg name="zmlTableShow" value="all"/>
@@ -123,7 +134,9 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Ber_NA_Modelle"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_NA_Modelle.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_04_Vorhersage_Berechnung"/>
+
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
         
         <arg name="ignoreType1" value="Q"/>
@@ -156,7 +169,9 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Ber_Talsperre"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_Talsperre.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_04_Vorhersage_Berechnung"/>
+
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
 
         <arg name="ignoreType1" value="V;W"/>
@@ -199,7 +214,9 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Ber_Flusslauf_Modell"/>
  		<arg name="htmlFilePath" value=".model/wizardhtml/Ber_Flusslauf_Modell.html"/>
-       <arg name="mainSash" value="40"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_04_Vorhersage_Berechnung"/>
+
+        <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
        	
         <arg name="buttonText" value="Berechnung durchführen"/>
@@ -234,6 +251,8 @@ ToDo: Help-Ids setzen!!! -->
 
 		<arg name="pageID" value="Berichtsablage"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage.html"/>
+ 		<arg name="helpId" value="&hid;sec_Assi_schwElster_05_Berichtsablage"/>
+
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="25"/>
 

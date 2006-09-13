@@ -1,7 +1,9 @@
-- .templates/calcCase/berichtDiagW.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geändert, Texte geändert und Einheit Niederschlag angepasst)
-- .templates/calcCase/berichtDiagQ.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geändert, Texte geändert und Einheit Niederschlag angepasst)
-
-Folgende Vorlagen werden nicht mehr benutzt und könnten somit entfernt werden (bei Spree aber noch mal prüfen, diese Vorlagen nur bei Schwarze Elster geprüft):
+- .templates/calcCase/berichtDiagW.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geï¿½ndert, Texte geï¿½ndert und Einheit Niederschlag angepasst)
+- .templates/calcCase/berichtDiagQ.odt ersetzen durch entsprechende Datei aus SchwarzeElster (Farben geï¿½ndert, Texte geï¿½ndert und Einheit Niederschlag angepasst)
+- in .templates/calcCase/berichtTabelle.ott auch "Spur oben", "Spur unten" durch "obere" bzw. "untere umhï¿½llende" ersetzen (wie bei Schwarze Elster)
+  (ggf. fÃ¼r alle Modelle auch Spaltenreihenfolge erzwingen)
+  
+Folgende Vorlagen werden nicht mehr benutzt und kï¿½nnten somit entfernt werden (bei Spree aber noch mal prï¿½fen, diese Vorlagen nur bei Schwarze Elster geprï¿½ft):
 -.templates/calcCase/diag1.odt
 -.templates/calcCase/results.odt
 -.templates/calcCase/flutungen.odt
@@ -11,15 +13,15 @@ Folgende Vorlagen werden nicht mehr benutzt und könnten somit entfernt werden (b
 -.templates/calcCase/zufluss.odt
 -.templates/calcCase/berichtDiagObereSpree.odt
 
-Tippfehler in calcWizard.xml: "Abfluß" bei der Konfiguration der Berichte
+Tippfehler in calcWizard.xml: "Abfluï¿½" bei der Konfiguration der Berichte
 
 create-target (build.xml) wie bei Schwarze Elster (Kopieren von Vorlagen aus Unterverzeichnissen funktionierte nicht)
-Außerdem auch Vorlagen für Ergebnistabellen erstellen (.templates/Ergebnisse/Zeitreihen)
+Auï¿½erdem auch Vorlagen fï¿½r Ergebnistabellen erstellen (.templates/Ergebnisse/Zeitreihen)
 
 
 
-potentielle Dinge, die im Rahmen der Pflege getrieben werden könnten (gilt ggf. auch für die Weiße Elster):
+potentielle Dinge, die im Rahmen der Pflege getrieben werden kï¿½nnten (gilt ggf. auch fï¿½r die Weiï¿½e Elster):
 -------------------------------------------------------------------------------------------------------------------------------
 - neue Berichtstypen (insb. Scheitelwerte)
 - HTML-Navigation
-- zusätzliche Vorlagen?
+- zusï¿½tzliche Vorlagen?
