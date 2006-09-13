@@ -107,6 +107,7 @@ public class EditFeatureGeometryWidgetDelegate extends AbstractGisMapEditorActio
         }
       }
     }
+
     return false;
   }
 }

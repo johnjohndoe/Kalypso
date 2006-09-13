@@ -182,7 +182,7 @@ public class ViewEditorLauncherHelper
           e.printStackTrace();
 
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( shell, "Ansichtsauswahl", "Fehler beim Öfnen der Dateiansicht", status );
+          ErrorDialog.openError( shell, "Ansichtsauswahl", "Fehler beim Öffnen der Dateiansicht", status );
         }
       }
     }

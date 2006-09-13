@@ -232,7 +232,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( m_formToolkit != null )
       {
         m_formToolkit.adapt( composite, true, true );
-        m_formToolkit.paintBordersFor( composite );
+        // m_formToolkit.paintBordersFor( composite );
       }
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
@@ -331,7 +331,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       addFeatureControl( tfc );
 
       return control;
-   }
+    }
     else if( controlType instanceof Combo )
     {
       final Combo comboType = (Combo) controlType;
@@ -355,7 +355,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           }
           catch( final ParseException e )
           {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse") + any ); //$NON-NLS-1$
+            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse" ) + any ); //$NON-NLS-1$
             KalypsoGisPlugin.getDefault().getLog().log( status );
           }
         }
@@ -414,7 +414,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.create") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ) ); //$NON-NLS-1$
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -580,7 +580,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
    * So old entries are interpreted against the namespace of the featuretemplate.
    */
-  @SuppressWarnings("deprecation") //$NON-NLS-1$
+  @SuppressWarnings("deprecation")//$NON-NLS-1$
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )
