@@ -466,9 +466,10 @@
 
               <entry>Plugin/Library</entry>
 
-              <entry>Integration des Spreemodells in Form eines Plugins für
-              die lokale Benutzung, und in Form einer Library für die
-              serverseitige Benutzung.</entry>
+              <entry>Integration der Vorhersagemodelle für die Spree und die
+              Schwarze Elster in Form eines Plugins für die lokale Benutzung,
+              und in Form einer Library für die serverseitige
+              Benutzung.</entry>
             </row>
 
             <row vendor="sachsen">
@@ -476,7 +477,7 @@
 
               <entry>Plugin/Library</entry>
 
-              <entry>Integration des NA Modell der TUHH in Form eines Plugins
+              <entry>Integration des NA-Modells der TUHH in Form eines Plugins
               für die lokale Benutzung, und in Form einer Library für die
               serverseitige Benutzung.</entry>
             </row>
@@ -487,7 +488,7 @@
               <entry>Plugin/Library</entry>
 
               <entry>Plugin zur Kapselung des Optimierungsalgorythmus für das
-              Weiße-Elster Modell..</entry>
+              Weiße-Elster Modell.</entry>
             </row>
 
             <row vendor="sachsen">

@@ -21,6 +21,10 @@
             typeID="spree"
             catalogClass="org.kalypso.lhwzsachsen.spree.SpreeUrlCatalog"
             jobClass="org.kalypso.lhwzsachsen.spree.SpreeCalcJob"/>
+      <calcJob
+            typeID="schwarzeelster"
+            catalogClass="org.kalypso.lhwzsachsen.spree.SpreeUrlCatalog"
+            jobClass="org.kalypso.lhwzsachsen.spree.SchwarzeElsterCalcJob"/>
    </extension>
 
 </plugin>

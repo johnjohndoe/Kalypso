@@ -27,7 +27,7 @@
       <secondary>Modellstruktur</secondary>
     </indexterm>
 
-    <para>Alle Daten eines Modells werden innerhalb eines sogenannten
+    <para>Alle Daten eines Modells werden innerhalb eines so genannten
     Projektes im Arbeitsbereich (<guilabel>Navigator</guilabel>) der Anwendung
     abgelegt. Die Ablage erfolgt dabei in einer, im Wesentlichen beliebigen,
     Verzeichnisstruktur.</para>

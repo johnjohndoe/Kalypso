@@ -25,7 +25,7 @@
   </figure>
 
   <para>Serverseitig wird das Modell (bzw. der Rechenkern) über eine
-  feststehende Java-Schnittstelle implementiert.Hier erfolgt die für den
+  feststehende Java-Schnittstelle implementiert. Hier erfolgt die für den
   jeweiligen Rechenkern spezifische Programmierung wie <abbrev>z. B.</abbrev>:
   Anstoßen des nativen Programms (.exe), Lesen und Schreiben der speziellen
   Formate.</para>

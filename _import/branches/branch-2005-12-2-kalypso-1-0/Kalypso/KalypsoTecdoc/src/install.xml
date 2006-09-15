@@ -35,7 +35,7 @@
       der Eclipse Plattform realisiert, so dass die Software prinzipiell auf
       allen Systemen unter einer Java Runtime Umgebung (ab Version. 1.4) und
       der Eclipse Plattform einsetzbar ist. Um allerdings die volle
-      Funktionalität nutzen zu können (Anstossen des Grafikprogramms zum
+      Funktionalität nutzen zu können (Anstoßen des Grafikprogramms zum
       Editieren von Ergebnisdaten), ist der Einsatz der Software unter Windows
       NT/2000/XP zwingend.</para>
     </section>
@@ -78,7 +78,7 @@
       <para>Da KALYPSO aus der Basis Eclipse-Plattform, zusätzlichen Features
       und Plugins für KALYPSO selbst und der Internationalisierung besteht,
       empfiehlt es sich, das Installationsverzeichnis zu unterteilen. Dies
-      wird durch den sogenannten Links- und Extensionmechanismus von Eclipse
+      wird durch den so genannten Links- und Extensionmechanismus von Eclipse
       unterstützt.</para>
 
       <para>Vorgehensweise: Verzeichnis 'links' im Verzeichnis
@@ -116,7 +116,7 @@
 
       <para>Auf jeden Client-Rechner muss nur noch das Datenverzeichnis (sog.
       Workspace) und die KALYPSO-Verknüpfung kopiert werden. Die Verknüpfung
-      soll auf die .exe-Datei in der zentralen Installation verweisen,
+      soll auf die EXE-Datei in der zentralen Installation verweisen,
       allerdings über den Pfad der Freigabe. Die Freigabe selbst muss
       angepasst werden, sodass nur Lese-Berechtigungen für
       <quote>Jede(r)</quote> erteilt werden.</para>

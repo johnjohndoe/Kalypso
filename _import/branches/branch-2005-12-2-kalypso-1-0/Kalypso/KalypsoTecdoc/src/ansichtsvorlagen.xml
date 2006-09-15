@@ -8,7 +8,7 @@
 
   <para>KALYPSO Enterprise ermöglicht eine Reihe verschiedener Ansichten auf
   die Daten eines Modells. Die Einstellungen einer Ansicht (welche Daten,
-  Darstellung, usw.) werden in Dateien bestimmter Formate, sogenannten
+  Darstellung, usw.) werden in Dateien bestimmter Formate, so genannten
   Ansichtsvorlagen, gespeichert.</para>
 
   <para>Alle Ansichtvorlagen sind Dateien im XML-Format, die jeweils durch ein
@@ -189,7 +189,7 @@
     <para>Die Referenzierung der eigentlichen Daten erfolgt über das
     <emphasis>href</emphasis>-Attribut jedes <emphasis>layer</emphasis>
     -Elements. Das <emphasis>linktype</emphasis>-Attribut des Themas legt
-    fest, in welchem Format die Datendatei geladen wird. Zur Zeit können die
+    fest, in welchem Format die Datendatei geladen wird. Zurzeit können die
     Formate GML (gml) und ESRI Shape (shape) geladen werden.</para>
 
     <para>Eine Besonderheit des Formates <emphasis>shape</emphasis> ist, dass
@@ -284,7 +284,7 @@
     diesem Fall öffnet sich eine automatisch generierte GIS-Formularansicht
     auf dem Element.</para>
 
-    <para>Die GIS-Strukturansicht befindet sich zur Zeit noch in Bearbeitung
+    <para>Die GIS-Strukturansicht befindet sich zurzeit noch in Bearbeitung
     und ist somit für den täglichen Gebrauch eventuell noch nicht anwendbar.
     Sie kann aber gerade beim Modellaufbau eine starke Hilfe bei der
     Dateneingabe darstellen.</para>
@@ -319,10 +319,10 @@
     <para>Wie in den GIS-Vorlagen referenziert ein Thema
     (<emphasis>observation</emphasis>-Element) eine Datendatei über das
     <emphasis>href</emphasis>-Attribut. Es können die gleichen URL-Protokolle
-    wie dort verwendet werden. Als <emphasis>linktype</emphasis> ist zur Zeit
+    wie dort verwendet werden. Als <emphasis>linktype</emphasis> ist zurzeit
     ausschließlich <emphasis>zml</emphasis> zugelassen.</para>
 
-    <para>Neben der Themenliste können auch sogenannte RenderingRules
+    <para>Neben der Themenliste können auch so genannte RenderingRules
     (Darstellungsregeln) eingetragen sein. Diese Darstellungsregeln definieren
     die Darstellung von Zusatzinformation wie <abbrev>z. B.</abbrev>
     <quote>Wert muss geprüft werden</quote> oder <quote>Wert vom Benutzer
