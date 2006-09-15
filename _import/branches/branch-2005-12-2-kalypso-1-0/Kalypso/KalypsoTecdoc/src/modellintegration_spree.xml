@@ -125,7 +125,8 @@
     Vorhersage-Assistenten.</para>
 
     <table>
-      <title>Parameter der NA-Modelle (Einzugsgebiete)</title>
+      <title>Parameter der NA-Modelle (Einzugsgebiete) für Spree und Schwarze
+      Elster</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="7*" />
@@ -266,7 +267,8 @@
     </table>
 
     <table>
-      <title>Parameter der Flusslaufmodelle</title>
+      <title>Parameter der Flusslaufmodelle für Spree und Schwarze
+      Elster</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="5*" />
@@ -390,7 +392,7 @@
     </table>
 
     <table>
-      <title>Parameter der Talsperren</title>
+      <title>Parameter der Talsperren für Spree und Schwarze Elster</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="4*" />
@@ -481,7 +483,7 @@
     </table>
 
     <table>
-      <title>Parameter der Vorgabepegel</title>
+      <title>Parameter der Vorgabepegel für Spree und Schwarze Elster</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="2*" />
@@ -529,7 +531,7 @@
     </table>
 
     <table>
-      <title>Parameter der Ombrometer</title>
+      <title>Parameter der Ombrometer für Spree und Schwarze Elster</title>
 
       <tgroup cols="3">
         <colspec align="left" colwidth="1*" />
@@ -614,11 +616,11 @@
       Schwarze-Elster-Modells</title>
 
       <tgroup cols="3">
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="3*" />
 
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="5*" />
 
-        <colspec align="left" colwidth="2*" />
+        <colspec align="left" colwidth="5*" />
 
         <thead>
           <row>
@@ -685,7 +687,7 @@
             <entry>Log-Datei zur Erstellung der Rechenvariante, insbesondere
             Meldungen zur Gültigkeit der Zeitreihenwerte</entry>
 
-            <entry></entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -729,7 +731,7 @@
 
             <entry>Ergebnisse einer Berechnung</entry>
 
-            <entry>KALYPSO-Berechnungsdienst</entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -738,7 +740,7 @@
             <entry>Eventuell durch die Berechnung geänderte Modelldaten
             (optimierte Anfangsbodenfeuchten)</entry>
 
-            <entry></entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -746,7 +748,7 @@
 
             <entry>Log-Datei der Berechnung</entry>
 
-            <entry></entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -755,7 +757,7 @@
             <entry>Modelldaten im Format des Rechenkerns (*.dbf), zu
             Prüfzwecken hier abgelegt</entry>
 
-            <entry></entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
@@ -764,7 +766,7 @@
             <entry>Eigentliche Berechnungsergebnisse in Form von
             Zeitreihen</entry>
 
-            <entry></entry>
+            <entry>KALYPSO-Rechendienst</entry>
           </row>
 
           <row>
