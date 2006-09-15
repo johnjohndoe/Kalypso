@@ -192,12 +192,13 @@
 
         <para>Abhängig von der Datenart können die einzelnen Modellparameter
         in der Oberfläche dargestellt werden. Die Visualisierung der
-        geo-basierten Modelldaten (<abbrev>z. B.</abbrev> Einzugsgebiete, Gewässernetz,
-        Pegelstandorte) kann auf Grundlage von Shape-Dateien in Karten
-        erfolgen. Die Modelldaten selbst (<abbrev>z. B.</abbrev> Einzugsgebietsfläche, Name
-        eines Pegels) werden in Form von Tabellen dargestellt. Zur grafischen
-        Darstellung von Zeitreihen ist eine Diagramm-Ansicht in der Oberfläche
-        integriert (siehe <xref linkend="grundfunktionen" /> ).</para>
+        geo-basierten Modelldaten (<abbrev>z. B.</abbrev> Einzugsgebiete,
+        Gewässernetz, Pegelstandorte) kann auf Grundlage von Shape-Dateien in
+        Karten erfolgen. Die Modelldaten selbst (<abbrev>z. B.</abbrev>
+        Einzugsgebietsfläche, Name eines Pegels) werden in Form von Tabellen
+        dargestellt. Zur grafischen Darstellung von Zeitreihen ist eine
+        Diagramm-Ansicht in der Oberfläche integriert (siehe <xref
+        linkend="grundfunktionen" /> ).</para>
       </listitem>
 
       <listitem>
@@ -473,7 +474,10 @@
       Namen wie im lokalen Verzeichnis abgelegt. Die Speicherung der
       Rechenvariante erfolgt innerhalb des Modellverzeichnisses auf dem
       Server. Existiert bereits eine gleichnamige Rechenvariante, ist eine
-      Archivierung nicht möglich.</para>
+      Archivierung nicht möglich. Um die in Frage stehende Rechenvariante
+      trotzdem zu archivieren, kann eine Kopie unter einem anderen Namen
+      erstellt (siehe <xref linkend="rechenvariante_kopieren" />) und dann
+      archiviert werden.</para>
     </section>
   </section>
 
