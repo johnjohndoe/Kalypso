@@ -85,14 +85,6 @@ public class GMLSerializerTest extends TestCase
     multiLoadAndSaveGMLWorkspace( resource );
   }
 
-  // not working at the moment as the schemacatalog is not available in test
-  // TODO reactivate test soon
-  public void testWspmTuhhModel( ) throws Exception
-  {
-    final URL resource = getClass().getResource( "resources/wspmTuhhModel.gml" );
-    multiLoadAndSaveGMLWorkspace( resource );
-  }
-
   /**
    * Class under test for GMLWorkspace createGMLWorkspace(URL)
    */
