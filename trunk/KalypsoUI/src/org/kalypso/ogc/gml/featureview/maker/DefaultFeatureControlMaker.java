@@ -100,9 +100,9 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     final boolean result = super.addControls( list, parentLayout, pt, value );
 
     // HACK: se above
-    if( QNAME_GML_NAME.equals(qname))
+    if( QNAME_GML_NAME.equals( qname ) )
       controlList.addAll( m_descControls );
-    
+
     return result;
   }
 
@@ -135,7 +135,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
       griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
       griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setVerticalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      // REMARK: this value is random: where do we get a good value (liek 2 times the normal height of a text field?).
+      // REMARK: this value is random: where do we get a good value (like 2 times the normal height of a text field?).
       griddata.setHeightHint( new Integer( 30 ) );
       griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
       griddata.setHorizontalSpan( 1 );
@@ -176,10 +176,10 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   {
     final QName qname = ftp.getQName();
     if( QNAME_GML_DESCRIPTION.equals( qname ) )
-      return new DefaultAnnotation( "de", Messages.getString("org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.desc") ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DefaultAnnotation( "de", Messages.getString( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.desc" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( QNAME_GML_NAME.equals( qname ) )
-      return new DefaultAnnotation( "de", Messages.getString("org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.name") ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DefaultAnnotation( "de", Messages.getString( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.name" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return super.getAnnotation( ftp );
   }

@@ -29,14 +29,26 @@
  */
 package org.kalypso.ogc.gml.map.widgets;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.PluginActionContributionItem;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.editor.mapeditor.GisMapEditorContributor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -105,6 +117,69 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
       return null;
 
     return geometryProperty.getValueClass();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#perform()
+   */
+  @Override
+  public void perform( )
+  {
+    /* Calling the parent function. */
+    super.perform();
+
+    /*
+     * If the action is finished, the Tool should be deselected, and the standard tool or last active one should be
+     * selected.
+     */
+
+    /* The PAN-Widget should be activated. */
+
+    /* TODO: This is not the optimal way, to get the toolbar of the active editor. There must be a better way. */
+    IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+    IEditorSite editorSite = workbenchWindows[0].getActivePage().getActiveEditor().getEditorSite();
+    IActionBars actionBars = editorSite.getActionBars();
+
+    /* The items of the toolbar. */
+    IContributionItem[] items = actionBars.getToolBarManager().getItems();
+
+    /* Loop them to find the needed buttons. */
+    for( IContributionItem item : items )
+    {
+      String id = item.getId();
+
+      if( id != null )
+      {
+        if( item instanceof PluginActionContributionItem )
+        {
+          PluginActionContributionItem i = (PluginActionContributionItem) item;
+          IAction action = i.getAction();
+          if( action.isChecked() )
+          {
+            action.setChecked( false );
+            action.setEnabled( true );
+          }
+          else
+          {
+            /* If it is not checked and it is the PanAction, set the icon. */
+            if( id.equals( "org.kalypso.ui.editor.mapeditor.action.PanAction" ) )
+            {
+              /* Enable the icon. */
+              action.setChecked( true );
+
+              /* Create the event to enable the action. */
+              Event event = new Event();
+              event.button = 0;
+
+              /* Set the widget to the WidgetManager, by perfoming the buttons action. */
+              action.runWithEvent( event );
+            }
+          }
+        }
+      }
+    }
+
+    // TODO
   }
 
   private final static class FeatureToEdit

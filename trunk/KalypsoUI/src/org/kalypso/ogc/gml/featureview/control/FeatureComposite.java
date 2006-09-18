@@ -125,6 +125,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final IFeatureviewFactory m_featureviewFactory;
 
+  /**
+   * Constructs the FeatureComposite.
+   * 
+   * @param feature
+   *          If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
+   * @param selectionManager
+   *          A selection manager, which provides functionality for adding and removing a feature from an selection and
+   *          it handels the registration of listerners and so on. It has to implement IFeatureSelectionManager. You can
+   *          get a default one for the features here <strong>KalypsoCorePlugin.getDefault().getSelectionManager()</strong>.
+   * @param featureviewFactory
+   *          A factory which delivers feature-view-templates (e.g. FeatureviewHelper).
+   */
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory featureviewFactory )
   {
     super( feature, null );
