@@ -81,6 +81,7 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
@@ -176,7 +177,7 @@ public class WehrPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_point.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfilPoint point = getProfil().findNearestPoint( value );
+            final IProfilPoint point = ProfilUtil.findNearestPoint(getProfil(), value );
             if( point != m_devider.getPoint() )
             {
 

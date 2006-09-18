@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -146,7 +147,7 @@ public class PrfSource implements IProfilSource
     final double[] ys = db.getY();
     for( int i = 0; i < xs.length; i++ )
     {
-      final IProfilPoint point = p.findPoint( i, xs[i], 0 );
+      final IProfilPoint point = ProfilUtil.findPoint(p, i, xs[i], 0 );
       if( point != null )
         point.setValueFor( property, ys[i] );
     }
@@ -361,7 +362,7 @@ public class PrfSource implements IProfilSource
 
     for( int i = 0; i < db.getCoordCount(); i++ )
     {
-      final IProfilPoint point = p.findPoint( i, db.getX()[i], 0 );
+      final IProfilPoint point = ProfilUtil.findPoint(p, i, db.getX()[i], 0 );
       if( point != null )
         point.setValueFor( POINT_PROPERTY.RAUHEIT, db.getY()[i] );
     }
@@ -384,12 +385,12 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = p.findPoint( db.getX()[0], 0 );
+      p1 = ProfilUtil.findPoint(p, db.getX()[0], 0 );
       pos1 = (int) db.getY()[0];
     }
     if( pCount > 1 )
     {
-      p2 = p.findPoint( db.getX()[1], 0 );
+      p2 = ProfilUtil.findPoint(p,db.getX()[1], 0 );
       pos2 = (int) db.getY()[1];
     }
     if( pCount > 2 )
@@ -437,11 +438,11 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = p.findPoint( db.getX()[0], 0 );
+      p1 = ProfilUtil.findPoint(p, db.getX()[0], 0 );
     }
     if( pCount > 1 )
     {
-      p2 = p.findPoint( db.getX()[1], 0 );
+      p2 = ProfilUtil.findPoint(p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
       m_logger.log( Level.INFO, "mehr als 2 Datensätze an Station(" + p.getStation() + ")  für Durchströmte Bereiche können nicht ausgewertet werden" );
@@ -472,7 +473,7 @@ public class PrfSource implements IProfilSource
     final double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
-      final IProfilPoint point = p.findPoint( pos[i], 0 );
+      final IProfilPoint point = ProfilUtil.findPoint(p, pos[i], 0 );
       if( point != null )
       {
         if( (values != null) && (values.length > i + 1) )
@@ -577,11 +578,11 @@ public class PrfSource implements IProfilSource
 
     if( pCount > 0 )
     {
-      p1 = p.findPoint( db.getX()[0], 0 );
+      p1 =ProfilUtil.findPoint(p, db.getX()[0], 0 );
     }
     if( pCount > 1 )
     {
-      p2 = p.findPoint( db.getX()[1], 0 );
+      p2 = ProfilUtil.findPoint(p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
       m_logger.log( Level.INFO, "mehr als 2 Datensätze für Bordvollpunkte können an Station(" + p.getStation() + ") nicht ausgewertet werden" );

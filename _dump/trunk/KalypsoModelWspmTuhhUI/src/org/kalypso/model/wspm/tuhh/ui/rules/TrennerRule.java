@@ -84,6 +84,8 @@ public class TrennerRule extends AbstractValidatorRule
 
   private void validatePosition( IProfilDevider[] db, IProfilDevider[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
+    if(db==null || db.length < 2 || toValidate==null || toValidate.length < 2)
+      return;
     try
     {
       final double left = db[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );

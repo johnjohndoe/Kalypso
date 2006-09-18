@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -278,12 +279,12 @@ public class BreakLinesHelper implements IWspmConstants
     final double lastX = lastPoint.getValueFor( POINT_PROPERTY.BREITE );
     final double lastY = lastPoint.getValueFor( POINT_PROPERTY.HOEHE );
 
-    final double[] breiteValues = profil.getValuesFor( POINT_PROPERTY.BREITE );
+    final double[] breiteValues = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BREITE );
 
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, profil.getValuesFor( POINT_PROPERTY.HOEHE ), 0.0001 );
-    final PolyLine rwLine = new PolyLine( breiteValues, profil.getValuesFor( POINT_PROPERTY.RECHTSWERT ), 0.0001 );
-    final PolyLine hwLine = new PolyLine( breiteValues, profil.getValuesFor( POINT_PROPERTY.HOCHWERT ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.HOEHE ), 0.0001 );
+    final PolyLine rwLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.RECHTSWERT ), 0.0001 );
+    final PolyLine hwLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.HOCHWERT ), 0.0001 );
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 

@@ -73,6 +73,7 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
@@ -489,7 +490,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         }
 
-        final IProfilPoint pointCloseTo = getProfil().findNearestPoint( value );
+        final IProfilPoint pointCloseTo = ProfilUtil.findNearestPoint(getProfil(), value );
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
 
         if( devs == null || devs.length <= m_pos )

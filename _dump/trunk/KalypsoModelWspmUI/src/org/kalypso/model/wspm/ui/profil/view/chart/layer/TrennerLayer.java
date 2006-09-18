@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -329,7 +328,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     // : 0));
     try
     {
-      final IProfilPoint destinationPoint = getProfil().findNearestPoint( screen2logical( editing ).getX() );
+      final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint(getProfil(), screen2logical( editing ).getX() );
       final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( POINT_PROPERTY.BREITE ), destinationPoint.getValueFor( POINT_PROPERTY.HOEHE ) ) );
       gc.drawRectangle( destP.x - 5, bottom, 10, top - bottom );
       // gc.drawText(Double.toString(destinationPoint.getValueFor(POINT_PROPERTY.BREITE)),20,20);
@@ -348,7 +347,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     final IProfilDevider activeDevider = (IProfilDevider) data;
 
-    final IProfilPoint destinationPoint = getProfil().findNearestPoint( screen2logical( point ).getX() );
+    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(),screen2logical( point ).getX() );
 
     final IProfilPoint oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )

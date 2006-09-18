@@ -170,7 +170,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       points = getProfil().getPoints();
       try
       {
-        values = getProfil().getValuesFor( POINT_PROPERTY.RAUHEIT );
+        values = ProfilUtil.getValuesFor(getProfil(), POINT_PROPERTY.RAUHEIT );
       }
       catch( ProfilDataException e )
       {

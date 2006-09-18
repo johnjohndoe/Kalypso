@@ -104,31 +104,31 @@ public interface IProfil
    */
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
 
-  /**
-   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste als nächsten
-   */
-  public IProfilPoint findNearestPoint( final double breite );
+//  /**
+//   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste als nächsten
+//   */
+//  public IProfilPoint findNearestPoint( final double breite );
 
-  /**
-   * sucht den nächsten Punkt dessen x-position näher als delta an breite ist, ansonsten Null
-   */
-
-  /**
-   * @param breite
-   * @param delta
-   * @return
-   */
-  public IProfilPoint findPoint( final double breite, final double delta );
+//  /**
+//   * sucht den nächsten Punkt dessen x-position näher als delta an breite ist, ansonsten Null
+//   */
+//
+//  /**
+//   * @param breite
+//   * @param delta
+//   * @return
+//   */
+//  public IProfilPoint findPoint( final double breite, final double delta );
 
  // public IProfilPoint findPoint( final double breite, final double value, final POINT_PROPERTY property );
 
-  /**
-   * @param index
-   * @param breite
-   * @param delta
-   * @return
-   */
-  public IProfilPoint findPoint( final int index, final double breite, final double delta );
+//  /**
+//   * @param index
+//   * @param breite
+//   * @param delta
+//   * @return
+//   */
+//  public IProfilPoint findPoint( final int index, final double breite, final double delta );
 
   /**
    * @return das aktuelle bauwerk oder Typ Building_typ NONE
@@ -164,38 +164,7 @@ public interface IProfil
    */
   public Object getProperty( Object key );
 
-  /**
-   * @param pointProperty
-   * @return double[] with values of pointproperty sorted by breite
-   * @throws ProfilDataException
-   */
-  public double[] getValuesFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
-  /**
-   * Erzeugt einen neuen Punkt und fügt ihn in das Profil ein. Er wird genau in die Mitte des angegebenen Segments
-   * gesetzt, seine Werte interpoliert oder fortgesetzt.
-   */
-  public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
-
-  /**
-   * Fügt einen neuen Punkt ein. Wie {@link #insertPoint(IProfilPoint)}, nur Breite und Höhe sind bereits vorgegeben
-   */
-  public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite, final double hoehe ) throws ProfilDataException;
-
-  /**
-   * Fügt einen bestehenden Punkt ein. return true wenn die Liste geändert wurde, sonst false.
-   * 
-   * @param thePointBefore
-   * @param point
-   * @return
-   * @throws ProfilDataException
-   */
-  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException;
-
-  /**
-   * @return Den Punkt vor dem Verschieben
-   * @throws ProfilDataException
-   */
   public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );
 
   /**

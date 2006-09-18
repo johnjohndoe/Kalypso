@@ -62,6 +62,7 @@ public class ProfilPoint implements IProfilPoint
   }
 
   /**
+   * @return a copy of this point or null
    * @see org.kalypso.model.wspm.core.profilinterface.IProfilPoint#clonePoint()
    */
   public IProfilPoint clonePoint( )

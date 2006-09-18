@@ -90,7 +90,22 @@ public class ProfilUtil
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
 
   }
-
+  /**
+   * @throws ProfilDataException
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getValuesFor(org.kalypso.model.wspm.core.profildata.tabledata.ColumnKey)
+   */
+  public static double[] getValuesFor(final IProfil profil, final POINT_PROPERTY pointProperty ) throws ProfilDataException
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints() ;
+    final double[] values = new double[points.size()];
+    int i = 0;
+    for( IProfilPoint point : points )
+    {
+      values[i] = point.getValueFor( pointProperty );
+      i++;
+    }
+    return values;
+  }
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilDevider leftDevider, final IProfilDevider rightDevider )
   {
 
@@ -159,7 +174,7 @@ public class ProfilUtil
    * findet einen Punkt in einem Profil 1.hole Punkt[index] und vergleiche Punkt.breite mit breite -> 2.suche Punkt bei
    * breite mit einer Toleranz von delta 3.kein Punkt gefunden -> (return null)
    */
-  public final IProfilPoint findPoint( final IProfil profil, final int index, final double breite, final double delta )
+  public static final IProfilPoint findPoint( final IProfil profil, final int index, final double breite, final double delta )
   {
     final IProfilPoint point = profil.getPoints().get( index );
     try
@@ -170,7 +185,7 @@ public class ProfilUtil
           return point;
       }
 
-      return profil.findPoint( breite, delta );
+      return findPoint( profil, breite, delta );
 
     }
     catch( ProfilDataException e )
@@ -178,6 +193,41 @@ public class ProfilUtil
       // sollte nie passieren da Breite als Eigenschaft immer existiert
     }
     return null;
+  }
+
+  public static IProfilPoint findNearestPoint( final IProfil profil, final double breite )
+  {
+
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    IProfilPoint pkt = points.getFirst();
+    for( final IProfilPoint point : points )
+    {
+      try
+      {
+        if( Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( point.getValueFor( POINT_PROPERTY.BREITE ) - breite ) )
+          pkt = point;
+      }
+      catch( ProfilDataException e )
+      {
+        // sollte nie passieren da Breite immer vorhanden ist
+      }
+    }
+    return pkt;
+  }
+
+  public static IProfilPoint findPoint( final IProfil profil, final double breite, final double delta )
+  {
+    final IProfilPoint pkt = findNearestPoint( profil, breite, delta, POINT_PROPERTY.BREITE );
+    try
+    {
+      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
+      return (Math.abs( xpos - breite ) <= delta) ? pkt : null;
+    }
+    catch( ProfilDataException e1 )
+    {
+      // sollte nie passieren da Breite immer vorhanden ist
+      return null;
+    }
   }
 
   public static IProfilPoint getPointBefore( final IProfil profil, IProfilPoint point ) throws ProfilDataException
@@ -269,9 +319,9 @@ public class ProfilUtil
   /**
    * @return null if profil has no points or property does not exists or nomatch
    */
-  public static IProfilPoint findPoint(final IProfil profil, final double breite, final double value, final POINT_PROPERTY property )
+  public static IProfilPoint findPoint( final IProfil profil, final double breite, final double value, final POINT_PROPERTY property )
   {
-    final IProfilPoint pkt = findNearestPoint(profil, breite, value, property );
+    final IProfilPoint pkt = findNearestPoint( profil, breite, value, property );
     final Double delta = (Double) property.getParameter( PARAMETER.PRECISION );
     try
     {
