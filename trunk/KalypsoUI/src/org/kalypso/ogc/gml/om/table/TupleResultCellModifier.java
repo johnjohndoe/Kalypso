@@ -44,10 +44,12 @@ import java.text.ParseException;
 
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
-import org.kalypso.ogc.gml.om.ComponentDefinition;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 public class TupleResultCellModifier implements ICellModifier
@@ -89,20 +91,27 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final IComponent component = m_provider.getComponent( property );
 
-    final ComponentDefinition definition = ComponentDefinition.create( component );
-    final XsdBaseTypeHandler<Object> typeHandler = definition.getTypeHandler();
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
     try
     {
-      final Object valueToSet = typeHandler.parseType( value.toString() );
+      if( handler instanceof XsdBaseTypeHandler )
+      {
+        final Object valueToSet = handler.parseType( value.toString() );
 
-      /* Set value and inform listeners */
-      record.setValue( component, valueToSet );
+        /* Set value and inform listeners */
+        record.setValue( component, valueToSet );
+      }
+      else
+      {
+        System.out.println( "No type handler for component:" + component );
+      }
     }
     catch( final ParseException e1 )
     {
       // ignore
     }
-    
+
     return component;
   }
 }

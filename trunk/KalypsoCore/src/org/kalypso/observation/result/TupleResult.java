@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -64,7 +64,7 @@ public class TupleResult implements List<IRecord>
 {
   private final List<IRecord> m_records = new ArrayList<IRecord>();
 
-  private final Set<IComponent> m_components = new HashSet<IComponent>();
+  private final Set<IComponent> m_components = new LinkedHashSet<IComponent>();
 
   private final Set<ITupleResultChangedListener> m_listeners = new HashSet<ITupleResultChangedListener>();
 
@@ -342,20 +342,17 @@ public class TupleResult implements List<IRecord>
 
   public IComponent[] getComponents( )
   {
-    final TreeSet<IComponent> set = new TreeSet<IComponent>( ComponentPositionComparator.getInstance() );
-    set.addAll( m_components );
-
-    if( m_components.size() != set.size() )
-      throw new IllegalStateException( "Achtung da ist noch was schief: Komponente werden ignoriert weil sie die gleiche Position haben" );
-
-    return set.toArray( new IComponent[m_components.size()] );
+    return m_components.toArray( new IComponent[m_components.size()] );
   }
 
-  public final void addComponent( final IComponent comp )
+  /**
+   * Adds a component to this tuple result. Does nothing if an equal component was already added.
+   */
+  public final boolean addComponent( final IComponent comp )
   {
+    final boolean added = m_components.add( comp );
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
-
-    m_components.add( comp );
+    return added;
   }
 
   public boolean removeComponent( final IComponent comp )

@@ -50,11 +50,10 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.DateComponent;
+import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.ValueComponent;
 
 /**
  * @author schlienger
@@ -63,8 +62,8 @@ public class ObservationTest extends TestCase
 {
   public static IObservation<TupleResult> createTestObservation( )
   {
-    DateComponent dc = new DateComponent( 1, "Date", "", XmlTypes.XS_DATE );
-    ValueComponent vc = new ValueComponent( 2, "Value", "", XmlTypes.XS_DOUBLE, "m" );
+    final Component dc = new Component( "DATE", "Date", "", null, null, XmlTypes.XS_DATE, null );
+    final Component vc = new Component( "VALUE", "Value", "", null, null, XmlTypes.XS_DOUBLE, "m" );
     IComponent[] comps = { dc, vc };
     TupleResult tupleResult = new TupleResult( comps );
 

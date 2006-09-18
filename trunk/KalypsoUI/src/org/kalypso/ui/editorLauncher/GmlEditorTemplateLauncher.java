@@ -70,11 +70,6 @@ import org.kalypso.template.types.ObjectFactory;
  */
 public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
 {
-  public GmlEditorTemplateLauncher( )
-  {
-    super();
-  }
-
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */

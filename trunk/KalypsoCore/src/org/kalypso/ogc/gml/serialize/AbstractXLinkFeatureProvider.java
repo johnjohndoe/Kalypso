@@ -44,7 +44,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
@@ -71,8 +70,6 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
   private final String m_uri;
   
   private final String m_featureId;
-
-  private GMLWorkspace m_workspace;
 
   /**
    * @param context

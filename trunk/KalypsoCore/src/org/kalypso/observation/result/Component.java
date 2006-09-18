@@ -50,29 +50,30 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Component implements IComponent
 {
-  private final int m_pos;
-
   private final String m_name;
 
   private final String m_description;
+
+  private final String m_unit;
 
   private final QName m_valueTypeName;
 
   private final Object m_defaultValue;
 
-  public Component( final int pos, final String name, final String description, final QName valueTypeName )
-  {
-    this( pos, name, description, valueTypeName, null );
-  }
+  private final String m_frame;
 
-  public Component( final int pos, final String name, final String description, final QName valueTypeName, final Object defaultValue )
+  private final String m_id;
+
+  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue )
   {
+    m_id = id;
+    m_unit = unit;
+    m_frame = frame;
     if( name == null )
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
     if( valueTypeName == null )
       throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
 
-    m_pos = pos;
     m_name = name;
     m_description = description;
     m_valueTypeName = valueTypeName;
@@ -90,7 +91,7 @@ public class Component implements IComponent
 
     if( this == obj )
       return true;
-    
+
     // subclass are sure that the component they receive is of the same class
     if( !getClass().getName().equals( obj.getClass().getName() ) )
       return false;
@@ -119,9 +120,9 @@ public class Component implements IComponent
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
-    
+
     fillHashCodeBuilder( builder );
-    
+
     return builder.toHashCode();
   }
 
@@ -134,13 +135,13 @@ public class Component implements IComponent
   }
 
   /**
-   * @see org.kalypso.observation.result.IComponent#getPosition()
+   * @see org.kalypso.observation.result.IComponent#getId()
    */
-  public int getPosition( )
+  public String getId( )
   {
-    return m_pos;
+    return m_id;
   }
-
+  
   /**
    * @see org.kalypso.om.tuple.IComponent#getName()
    */
@@ -148,7 +149,7 @@ public class Component implements IComponent
   {
     return m_name;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -180,5 +181,18 @@ public class Component implements IComponent
   public String getDescription( )
   {
     return m_description;
+  }
+
+  public String getUnit( )
+  {
+    return m_unit;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#getFrame()
+   */
+  public String getFrame( )
+  {
+    return m_frame;
   }
 }

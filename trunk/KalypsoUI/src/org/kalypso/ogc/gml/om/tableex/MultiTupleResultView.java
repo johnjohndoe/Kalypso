@@ -110,7 +110,7 @@ public class MultiTupleResultView extends AbstractObservationView
 
     if( m_model.getKeyComponent() == null && components.length >= 2 )
     {
-      m_model.addColumn( new TupleResultColumn( components[1].getPosition(), obs.getResult(), components[0], components[1] ) );
+      m_model.addColumn( new TupleResultColumn( m_model.getColumnCount(), obs.getResult(), components[0], components[1] ) );
       return true;
     }
     else if( m_model.getKeyComponent() != null )
@@ -120,7 +120,7 @@ public class MultiTupleResultView extends AbstractObservationView
 
       if( kc != null && vc != null )
       {
-        m_model.addColumn( new TupleResultColumn( vc.getPosition(), obs.getResult(), kc, vc ) );
+        m_model.addColumn( new TupleResultColumn( m_model.getColumnCount(), obs.getResult(), kc, vc ) );
         return true;
       }
     }

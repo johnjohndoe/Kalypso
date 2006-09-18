@@ -343,9 +343,9 @@ public class TypeHandlerUtilities
          * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
          */
         @Override
-        public String convertToXMLString( BigDecimal value )
+        public String convertToXMLString( final BigDecimal value )
         {
-          return value.toString();
+          return value == null ? "" : value.toString();
         }
       } );
       // <element name="integer" type="integer" />
