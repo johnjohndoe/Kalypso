@@ -51,7 +51,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -65,7 +64,6 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderMap;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
@@ -77,10 +75,10 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.ValueComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -93,6 +91,10 @@ public class ProfileFeatureFactory implements IWspmConstants
   public final static QName QN_PROF_PROFILE = new QName( NS_WSPMPROF, "Profile" );
 
   public static final String URN_PHENOMENON_BUILDING = "urn:ogc:phenomenon:wspm:building:";
+
+  public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_";
+
+  public static final QName QNAME_STATION = new QName( NS_WSPMPROF, "station" );
 
   private ProfileFeatureFactory( )
   {
@@ -121,6 +123,15 @@ public class ProfileFeatureFactory implements IWspmConstants
       final double station = profile.getStation();
       targetFeature.setProperty( new QName( NS_WSPMPROF, "station" ), new Double( station ) );
 
+      /* Ensure that record-definition is there */
+      final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
+      if( recordDefinition == null )
+      {
+        final GMLWorkspace workspace = targetFeature.getWorkspace();
+        final Feature rd = workspace.createFeature( targetFeature, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
+        targetFeature.setProperty( ObservationFeatureFactory.OM_RESULTDEFINITION, rd );
+      }
+
       //
       // read tuple data into tuple-observation
       //
@@ -130,10 +141,10 @@ public class ProfileFeatureFactory implements IWspmConstants
       final ProfilDeviderMap deviderMap = new ProfilDeviderMap( profile );
 
       final Map<DEVIDER_TYP, IComponent> deviderComponents = new HashMap<DEVIDER_TYP, IComponent>();
-      deviderComponents.put( DEVIDER_TYP.DURCHSTROEMTE, new ValueComponent( 0, "Durchströmte Bereiche", "Markierung Durchströmte Bereiche", XmlTypes.XS_BOOLEAN, Boolean.FALSE, "-" ) );
-      deviderComponents.put( DEVIDER_TYP.BORDVOLL, new ValueComponent( 1, "Bordvollpunkte", "Markierung Bordvollpunkte", XmlTypes.XS_BOOLEAN, Boolean.FALSE, "-" ) );
-      deviderComponents.put( DEVIDER_TYP.TRENNFLAECHE, new ValueComponent( 2, "Trennflächen", "Markierung Trennflächen", XmlTypes.XS_STRING, "none", "-" ) );
-      deviderComponents.put( DEVIDER_TYP.WEHR, new ValueComponent( 3, "Trennlinie Wehr", "Markierung Trennlinie Wehr", XmlTypes.XS_DOUBLE, Double.NaN, "-" ) );
+      deviderComponents.put( DEVIDER_TYP.DURCHSTROEMTE, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.DURCHSTROEMTE.name() ) );
+      deviderComponents.put( DEVIDER_TYP.BORDVOLL, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.BORDVOLL ) );
+      deviderComponents.put( DEVIDER_TYP.TRENNFLAECHE, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.TRENNFLAECHE ) );
+      deviderComponents.put( DEVIDER_TYP.WEHR, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.WEHR ) );
 
       // add all devider types which have deviders
       // if we don't do it here, we get later null entries in the result
@@ -144,8 +155,6 @@ public class ProfileFeatureFactory implements IWspmConstants
           result.addComponent( deviderComponents.get( dTyp ) );
       }
 
-      int compCount = 4;
-
       for( final IProfilPoint point : profile.getPoints() )
       {
         final IRecord record = result.createRecord();
@@ -155,7 +164,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         {
           if( !compMap.containsKey( pp ) )
           {
-            final ValueComponent component = componentForPointProperty( compCount++, profile, pp );
+            final IComponent component = ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + pp.name() );
             compMap.put( pp, component );
             result.addComponent( component );
           }
@@ -215,8 +224,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IProfilBuilding building = profile.getBuilding();
       if( building != null )
       {
-        final IObservation<TupleResult> buildingObs = observationFromBuilding( building );
         final Feature buildingFeature = FeatureHelper.addFeature( targetFeature, memberQName, new QName( NS.OM, "Observation" ) );
+        final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
       }
     }
@@ -228,7 +237,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
   }
 
-  private static IObservation<TupleResult> observationFromBuilding( IProfilBuilding building ) throws ProfilDataException
+  private static IObservation<TupleResult> observationFromBuilding( final IProfilBuilding building, final Feature obsFeature ) throws ProfilDataException
   {
     final Collection<BUILDING_PROPERTY> buildingProperties = building.getBuildingProperties();
 
@@ -236,10 +245,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     final IRecord record = result.createRecord();
     result.add( record );
 
-    int compCount = 0;
     for( final BUILDING_PROPERTY bp : buildingProperties )
     {
-      final ValueComponent component = new ValueComponent( compCount++, bp.name(), "", new QName( NS.XSD_SCHEMA, "double" ), 0.0, "" );
+      final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, DICT_COMP_PROFILE_PREFIX + bp.name() );
       result.addComponent( component );
       record.setValue( component, building.getValueFor( bp ) );
     }
@@ -253,17 +261,6 @@ public class ProfileFeatureFactory implements IWspmConstants
     observation.setPhenomenon( phenomenon );
 
     return observation;
-  }
-
-  private static ValueComponent componentForPointProperty( final int pos, final IProfil profile, final POINT_PROPERTY pp )
-  {
-    final String unit;
-    if( pp == POINT_PROPERTY.RAUHEIT )
-      unit = ((RAUHEIT_TYP) profile.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP )).name();
-    else
-      unit = "?";
-
-    return new ValueComponent( pos, pp.name(), "", new QName( NS.XSD_SCHEMA, "double" ), 0.0, unit );
   }
 
   public static IProfil toProfile( final Feature profileFeature ) throws ProfilDataException
@@ -302,11 +299,8 @@ public class ProfileFeatureFactory implements IWspmConstants
     profil.setProperty( IProfil.PROFIL_PROPERTY.WASSERSPIEGEL, "Gewaesser" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.MEHRFELDBRUECKE, "0" );
 
-    //
-    // Station
-    //
-    final Double property = (Double) profileFeature.getProperty( new QName( NS_WSPMPROF, "station" ) );
-    profil.setStation( property == null ? Double.NaN : property.doubleValue() );
+    final Double station = getProfileStation( profileFeature );
+    profil.setStation( station == null ? Double.NaN : station.doubleValue() );
 
     //
     // Building
@@ -325,13 +319,20 @@ public class ProfileFeatureFactory implements IWspmConstants
     final Map<IComponent, IProfilPoint.POINT_PROPERTY> compMap = new HashMap<IComponent, IProfilPoint.POINT_PROPERTY>();
     for( final IComponent component : components )
     {
-      final String name = component.getName();
+      final String id = component.getId();
+      
+      final String name;
+      if( id.startsWith( DICT_COMP_PROFILE_PREFIX ) )
+        name = id.substring( DICT_COMP_PROFILE_PREFIX.length() );
+      else
+        name = id;
+      
       try
       {
         final POINT_PROPERTY pp = IProfilPoint.POINT_PROPERTY.valueOf( name );
         if( pp == POINT_PROPERTY.RAUHEIT )
         {
-          final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( ((ValueComponent) component).getUnit() );
+          final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( component.getUnit() );
           profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, rauheit_typ );
         }
 
@@ -402,6 +403,11 @@ public class ProfileFeatureFactory implements IWspmConstants
     return profil;
   }
 
+  public static Double getProfileStation( final Feature profileFeature )
+  {
+    return (Double) profileFeature.getProperty( QNAME_STATION );
+  }
+
   private static IProfilBuilding buildingFromFeature( final Feature buildingFeature ) throws ProfilDataException
   {
     final IObservation<TupleResult> buildingObs = ObservationFeatureFactory.toObservation( buildingFeature );
@@ -409,19 +415,22 @@ public class ProfileFeatureFactory implements IWspmConstants
     final String phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
     if( phenomenon == null )
       return null;
-    
+
     final BUILDING_TYP bType = BUILDING_TYP.valueOf( phenomenon.substring( URN_PHENOMENON_BUILDING.length() ) );
-    
+
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( bType );
 
     final TupleResult result = buildingObs.getResult();
     if( result == null )
       return null;
-    
+
     final IRecord record = result.get( 0 );
     for( final IComponent component : result.getComponents() )
     {
-      final BUILDING_PROPERTY bProperty = BUILDING_PROPERTY.valueOf( component.getName() );
+      final String id = component.getId();
+      // TODO: find end of id; that is: remove start DICT_...
+      
+      final BUILDING_PROPERTY bProperty = BUILDING_PROPERTY.valueOf( id );
       final Object value = record.getValue( component );
       building.setValue( bProperty, value );
     }

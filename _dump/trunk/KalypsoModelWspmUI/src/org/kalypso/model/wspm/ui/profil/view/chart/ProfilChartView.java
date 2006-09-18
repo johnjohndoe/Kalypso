@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.result.IResultSet;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
@@ -164,7 +163,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       for( final IStationResult result : results )
       {
         // only if we have got a wsp for this profile
-        if( result.getValue( IResultSet.TYPE.WSP ) != null )
+        if( result.getComponentValue( "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" ) != null )
           addLayer( new WspLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_WSP ), result ), visibility, true );
       }
     }

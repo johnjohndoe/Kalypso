@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
@@ -50,10 +52,12 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class WspmWaterBody implements IWspmConstants
 {
+  public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" );
+
   private final Feature m_water;
 
   public WspmWaterBody( final Feature water )
@@ -125,11 +129,17 @@ public class WspmWaterBody implements IWspmConstants
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "waterlevelFixationMember" ), new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
+    return FeatureHelper.addFeature( m_water, QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
+  }
+
+  public List getWspFixations( )
+  {
+    return (List) m_water.getProperty(QNAME_WSP_FIX_MEMBER);
   }
 
   public boolean isDirectionUpstreams( )
   {
     return (Boolean) m_water.getProperty( new QName( NS_WSPM, "isDirectionUpstream" ) );
   }
+
 }

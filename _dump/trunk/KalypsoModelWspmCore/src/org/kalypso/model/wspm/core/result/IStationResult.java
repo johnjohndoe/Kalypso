@@ -1,12 +1,12 @@
 package org.kalypso.model.wspm.core.result;
 
-import org.kalypso.model.wspm.core.result.IResultSet.TYPE;
-
 public interface IStationResult
 {
+  public String[] getComponentIds();
+
   public String getName();
   
-  public TYPE[] getTypes();
+  public String getComponentName( final String componentId );
 
-  public Double getValue( final IResultSet.TYPE type );
+  public Number getComponentValue( final String componentId );
 }

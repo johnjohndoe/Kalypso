@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
@@ -54,6 +57,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -61,6 +65,7 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
@@ -68,10 +73,12 @@ import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -84,9 +91,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   private final ISelectionProvider m_provider;
 
-  private IProfilEventManager m_pem = null;
-
   private final IFile m_file;
+
+  private IProfilEventManager m_pem = null;
 
   private Feature m_feature;
 
@@ -136,12 +143,15 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     IProfil profile = null;
     WspmProfile profileMember = null;
+    IStationResult[] results = null;
     try
     {
       if( feature != null )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) )
+        {
           profileMember = new WspmProfile( feature );
+        }
         else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" ) ) )
         {
           final WspmReachProfileSegment segment = new WspmReachProfileSegment( feature );
@@ -149,7 +159,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         }
 
         if( profileMember != null )
+        {
           profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+
+          results = findResults( profileMember );
+        }
       }
     }
     catch( final ProfilDataException e )
@@ -159,7 +173,34 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     }
 
     final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
-    setProfile( profile, profileFeature );
+    setProfile( profile, results, profileFeature );
+  }
+
+  /* find all results connected to this water */
+  private IStationResult[] findResults( final WspmProfile profileMember )
+  {
+    final WspmWaterBody water = profileMember.getWater();
+    final GMLWorkspace workspace = water.getFeature().getWorkspace();
+
+    final List<IStationResult> results = new ArrayList<IStationResult>();
+
+    /* Waterlevel fixations */
+    final List wspFixations = water.getWspFixations();
+    for( final Object wspFix : wspFixations )
+    {
+      final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
+      
+      final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
+      results.add( result );
+    }
+
+    /* Calculated results. */
+    // TRICKY: this depends currently on the concrete model
+    // so we need to know the model-type (such as tuhh) and
+    // delegate the search for results to model-specific code.
+    // TODO Auto-generated method stub
+    
+    return results.toArray( new IStationResult[results.size()] );
   }
 
   private void unhookListeners( )
@@ -226,7 +267,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       try
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
-        setProfile( profil, m_feature );
+        /* Results probably haven't changed. */
+        final IStationResult[] results = m_pem == null ? null : m_pem.getResults();
+        setProfile( profil, results, m_feature );
       }
       catch( ProfilDataException e )
       {
@@ -236,14 +279,15 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     }
   }
 
-  private void setProfile( final IProfil profil, final Feature feature )
+  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature )
   {
     final IProfilEventManager oldPem = m_pem;
 
     unhookListeners();
 
     if( profil != null )
-      m_pem = new ProfilEventManager( profil );
+      m_pem = new ProfilEventManager( profil, results );
+
     m_feature = feature;
 
     if( m_pem != null )

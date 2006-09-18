@@ -414,7 +414,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           if( monitor.isCanceled() )
             return Status.CANCEL_STATUS;
 
-          setProfil( new ProfilEventManager( profil ), file );
+          setProfil( new ProfilEventManager( profil, getResults() ), file );
 
           return Status.OK_STATUS;
         }
@@ -600,13 +600,14 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     m_profilPart.saveLegend( chartlegend );
   }
 
-  /**
-   * @param results
-   *          The results to set.
-   */
   public void setResults( final IStationResult[] results )
   {
     m_results = results;
+  }
+  
+  public IStationResult[] getResults( )
+  {
+    return m_results;
   }
 
   public void gotoMarker( final IMarker marker )

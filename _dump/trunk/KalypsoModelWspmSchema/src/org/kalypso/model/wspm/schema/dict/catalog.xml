@@ -4,6 +4,8 @@
 	
     <!-- Component Dictionary -->
 	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:components" uri="dict_components.gml" />
+
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:profile" uri="dict_profile.gml" />
 	
 </catalog:catalog>
 

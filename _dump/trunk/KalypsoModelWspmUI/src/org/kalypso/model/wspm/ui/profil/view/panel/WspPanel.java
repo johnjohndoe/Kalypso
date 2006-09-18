@@ -51,10 +51,8 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.core.result.IResultSet.TYPE;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-
 
 /**
  * @author belger
@@ -75,7 +73,8 @@ public class WspPanel extends AbstractProfilView
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final int style )
@@ -83,17 +82,17 @@ public class WspPanel extends AbstractProfilView
     m_panel = new Composite( parent, style );
     m_panel.setLayout( new GridLayout( 2, false ) );
 
-    final TYPE[] types = m_result.getTypes();
-    for( final TYPE type : types )
+    final String[] types = m_result.getComponentIds();
+    for( final String type : types )
     {
       final Label typeLabel = new Label( m_panel, SWT.NONE );
       typeLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.FILL_HORIZONTAL ) );
-      typeLabel.setText( type.toString() + " [" + type.getUnit() + "] :" );
+      typeLabel.setText( type.toString() /* + " [" + type.getUnit() + "] :" */);
 
       final Text typeText = new Text( m_panel, SWT.TRAIL | SWT.SINGLE );
       typeText.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL ) );
       typeText.setEditable( false );
-      typeText.setText( String.format( VALUE_FORMAT, m_result.getValue( type ) ) );
+      typeText.setText( String.format( VALUE_FORMAT, m_result.getComponentValue( type ) ) );
     }
 
     return m_panel;

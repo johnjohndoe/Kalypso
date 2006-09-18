@@ -40,44 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Belger
+ * Utility methods for Wspm-GML-Wrapper-classes.
+ * 
+ * @author Gernot Belger
  */
-public class WspmProfile
+public class WspmGmlHelper
 {
-  private final Feature m_feature;
-
-  public WspmProfile( final Feature feature )
+  private WspmGmlHelper( )
   {
-    if( !QNameUtilities.equals( feature.getFeatureType().getQName(), IWspmConstants.NS_WSPMPROF, "Profile" ) )
-      throw new IllegalStateException( "Feature is of wrong type: " + feature );
-
-    m_feature = feature;
+    // helper class, do not instantiate
   }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
-  }
-
-  public WspmWaterBody getWater( )
-  {
-    final Feature parent = m_feature.getParent();
-    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
-      return new WspmWaterBody( parent );
-
-    return null;
-  }
-
-  public double getStation( )
-  {
-    final Double profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
-
-    return profileStation == null ? Double.NaN : profileStation;
-  }
+  
 
 }

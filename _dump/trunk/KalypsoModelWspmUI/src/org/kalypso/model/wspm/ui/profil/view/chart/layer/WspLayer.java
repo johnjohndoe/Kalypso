@@ -56,9 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.result.IResultSet;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.core.result.IResultSet.TYPE;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
@@ -70,8 +68,7 @@ import de.belger.swtchart.axis.AxisRange;
 /**
  * Zeigt eine Konstante WSP Linie im Profil
  * 
- * @author gernot
- * 
+ * @author Gernot Belger
  */
 public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLayer, IStationResult
 {
@@ -83,14 +80,15 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
   private double m_height;
 
-  public WspLayer(final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final IStationResult result )
+  public WspLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final IStationResult result )
   {
-    super(pvp, domainRange, valueRange );
+    super( pvp, domainRange, valueRange );
 
     m_profil = pvp.getProfil();
     m_color = color;
     m_result = result;
-    m_height = result.getValue( IResultSet.TYPE.WSP );
+    final Number componentValue = result.getComponentValue( "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" );
+    m_height = componentValue == null ? Double.NaN : componentValue.doubleValue();
   }
 
   /**
@@ -203,8 +201,6 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
     return m_result.getName();
   }
 
- 
-
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
@@ -239,23 +235,41 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
     return m_result;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.result.IStationResult#getName()
+   */
   public String getName( )
   {
     return m_result.getName();
   }
 
-  public TYPE[] getTypes( )
+  /**
+   * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentIds()
+   */
+  public String[] getComponentIds( )
   {
-    return m_result.getTypes();
-  }
-
-  public Double getValue( final TYPE type )
-  {
-    return m_result.getValue( type );
+    return m_result.getComponentIds();
   }
 
   /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentName(java.lang.String)
+   */
+  public String getComponentName( final String componentId )
+  {
+    return m_result.getComponentName( componentId );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.result.IStationResult#getComponentValue(java.lang.String)
+   */
+  public Number getComponentValue( final String componentId )
+  {
+    return m_result.getComponentValue( componentId );
+  }
+
+  /**
+   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
   protected void editProfil( Point point, Object data )
@@ -263,7 +277,8 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )

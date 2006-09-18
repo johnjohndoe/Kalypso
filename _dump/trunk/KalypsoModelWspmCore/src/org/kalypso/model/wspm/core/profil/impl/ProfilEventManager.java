@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.result.IStationResult;
 
 /**
  * @author kimwerner
@@ -61,9 +62,12 @@ public class ProfilEventManager implements IProfilEventManager
 
   private final IProfil m_profil;
 
-  public ProfilEventManager( final IProfil profil )
+  private final IStationResult[] m_results;
+
+  public ProfilEventManager( final IProfil profil, final IStationResult[] results )
   {
     m_profil = profil;
+    m_results = results;
   }
 
   /**
@@ -111,5 +115,13 @@ public class ProfilEventManager implements IProfilEventManager
   public void removeProfilListener( final IProfilListener pl )
   {
     m_listeners.remove( pl );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilEventManager#getResults()
+   */
+  public IStationResult[] getResults( )
+  {
+    return m_results;
   }
 }

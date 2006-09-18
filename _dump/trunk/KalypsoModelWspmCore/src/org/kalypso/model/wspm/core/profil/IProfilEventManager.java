@@ -41,10 +41,13 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.result.IStationResult;
 
 public interface IProfilEventManager
 {
   public IProfil getProfil( );
+  
+  public IStationResult[] getResults();
 
   public void addProfilListener( final IProfilListener pl );
 
