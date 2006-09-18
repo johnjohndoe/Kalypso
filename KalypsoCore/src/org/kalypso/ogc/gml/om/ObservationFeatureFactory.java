@@ -41,32 +41,35 @@
 package org.kalypso.ogc.gml.om;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.swe.RepresentationType;
+import org.kalypso.ogc.swe.RepresentationType.KIND;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author schlienger
@@ -118,12 +121,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final Object phenProp = f.getProperty( OM_OBSERVED_PROP );
     final String phenomenon = phenProp instanceof String ? (String) phenProp : null;
 
-    final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
-
-    final String result = (String) f.getProperty( OM_RESULT );
-    final String withoutCDATA = result == null ? "" : result.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
-
-    final TupleResult tupleResult = buildTupleResult( recordDefinition, withoutCDATA );
+    final TupleResult tupleResult = buildTupleResult( f );
 
     final IObservation<TupleResult> observation = new Observation<TupleResult>( name, desc, tupleResult, meta );
     observation.setPhenomenon( phenomenon );
@@ -137,13 +135,15 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static TupleResult buildTupleResult( final Feature recordDefinition, final String result )
+  protected static TupleResult buildTupleResult( final Feature f )
   {
-    final ComponentDefinition[] definitions = buildComponentDefinitions( recordDefinition );
-    final IComponent[] components = new IComponent[definitions.length];
+    final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
 
-    for( int i = 0; i < definitions.length; i++ )
-      components[i] = definitions[i].toComponent();
+    final String resultRaw = (String) f.getProperty( OM_RESULT );
+    final String result = resultRaw == null ? "" : resultRaw.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
+
+    final IComponent[] components = buildComponents( recordDefinition );
+    final XsdBaseTypeHandler[] typeHandlers = typeHandlersForComponents( components );
 
     final TupleResult tupleResult = new TupleResult( components );
 
@@ -159,22 +159,51 @@ public class ObservationFeatureFactory implements IAdapterFactory
       }
 
       final String token = tk.nextToken();
+      final IComponent component = components[nb];
+      final XsdBaseTypeHandler handler = typeHandlers[nb];
       try
       {
-        final Object value = definitions[nb].getTypeHandler().convertToJavaValue( token );
-        record.setValue( components[nb], value );
+        final Object value = handler.convertToJavaValue( token );
+        record.setValue( component, value );
       }
       catch( final NumberFormatException e )
       {
         // TODO: set null here: Problem: the other components can't handle null now, they should
-        record.setValue( components[nb], null );
+        record.setValue( component, null );
       }
 
       nb++;
-      nb = nb % definitions.length;
+      nb = nb % components.length;
     }
 
     return tupleResult;
+  }
+
+  private static XsdBaseTypeHandler[] typeHandlersForComponents( final IComponent[] components )
+  {
+    final XsdBaseTypeHandler[] typeHandlers = new XsdBaseTypeHandler[components.length];
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    for( int i = 0; i < components.length; i++ )
+    {
+      final IComponent component = components[i];
+      final QName valueTypeName = component.getValueTypeName();
+      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
+      if( handler instanceof XsdBaseTypeHandler )
+        typeHandlers[i] = (XsdBaseTypeHandler) handler;
+    }
+    return typeHandlers;
+  }
+
+  public static IComponent[] componentsFromFeature( final Feature f )
+  {
+    final IFeatureType featureType = f.getFeatureType();
+
+    if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
+      throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
+
+    final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
+
+    return buildComponents( recordDefinition );
   }
 
   /**
@@ -182,54 +211,22 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static ComponentDefinition[] buildComponentDefinitions( final Feature recordDefinition )
+  protected static IComponent[] buildComponents( final Feature recordDefinition )
   {
     if( recordDefinition == null )
-      return new ComponentDefinition[0];
+      return new IComponent[0];
 
-    final List<ComponentDefinition> components = new ArrayList<ComponentDefinition>();
+    final List<IComponent> components = new ArrayList<IComponent>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( SWE_COMPONENT );
     for( int i = 0; i < comps.size(); i++ )
     {
       final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
 
-      final Feature phenomenon = FeatureHelper.resolveLink( itemDef, SWE_PROPERTY );
-      if( phenomenon == null )
-      {
-        Logger.getLogger( ObservationFeatureFactory.class.getName() ).warning( "Phenomenon could not be found for ItemDefinition: " + itemDef );
-        continue;
-      }
-
-      final String name = (String) FeatureHelper.getFirstProperty( phenomenon, GML_NAME );
-      final String desc = (String) FeatureHelper.getFirstProperty( phenomenon, GML_DESCRIPTION );
-
-      final RepresentationType rep = (RepresentationType) itemDef.getProperty( SWE_REPRESENTATION );
-
-      components.add( new ComponentDefinition( i, name, desc, rep ) );
+      components.add( new FeatureComponent( itemDef ) );
     }
 
-    return components.toArray( new ComponentDefinition[components.size()] );
-  }
-
-  /**
-   * Helper: builds the list of component definitions from the components of the tuple result.
-   * <p>
-   * This method is declared protected, but if the need emanes, it could be made public.
-   */
-  public static Map<IComponent, ComponentDefinition> buildComponentDefinitions( final TupleResult result )
-  {
-    final IComponent[] components = result.getComponents();
-
-    // REMARK: we use the linked hash map to püreserve the order of the components
-    // its not really importent here, but maybe we shouldn't shuffle it too much
-    final Map<IComponent, ComponentDefinition> map = new LinkedHashMap<IComponent, ComponentDefinition>( components.length );
-
-    // for each component, set a component property, create a feature: ItemDefinition
-    for( int i = 0; i < components.length; i++ )
-      map.put( components[i], ComponentDefinition.create( components[i] ) );
-
-    return map;
+    return components.toArray( new IComponent[components.size()] );
   }
 
   /**
@@ -243,7 +240,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
       throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
 
-    FeatureHelper.addProperty( targetObsFeature, GML_NAME, source.getName() );
+    targetObsFeature.setProperty( GML_NAME, Collections.singletonList( source.getName() ) );
     targetObsFeature.setProperty( GML_DESCRIPTION, source.getDescription() );
 
     final List<MetadataObject> mdList = source.getMetadataList();
@@ -253,15 +250,12 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final TupleResult result = source.getResult();
 
-    final Map<IComponent, ComponentDefinition> map = buildComponentDefinitions( result );
+    final IComponent[] components = result.getComponents();
 
-    // REMARK + BUGFIX: the order of the records and the order of the serialized string must
-    // be the same!
-    // Policy: always use the order of the map
-    final Feature rd = buildRecordDefinition( targetObsFeature, map );
+    final Feature rd = buildRecordDefinition( targetObsFeature, components );
     targetObsFeature.setProperty( OM_RESULTDEFINITION, rd );
 
-    final String strResult = serializeResultAsString( result, map );
+    final String strResult = serializeResultAsString( result );
     targetObsFeature.setProperty( OM_RESULT, strResult );
   }
 
@@ -273,7 +267,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
-  public static Feature buildRecordDefinition( final Feature targetObsFeature, final Map<IComponent, ComponentDefinition> map )
+  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IComponent[] components )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
@@ -281,18 +275,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_RECORDDEFINITIONTYPE ) );
 
     // for each component, set a component property, create a feature: ItemDefinition
-    for( final Map.Entry<IComponent, ComponentDefinition> entry : map.entrySet() )
+    for( final IComponent comp : components )
     {
-      final ComponentDefinition compDef = entry.getValue();
-
-      final Feature featureItemDef = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_ITEMDEFINITION ) );
-
-      final Feature featurePhenomenon = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
-      FeatureHelper.addProperty( featurePhenomenon, GML_NAME, compDef.getName() );
-      featurePhenomenon.setProperty( GML_DESCRIPTION, compDef.getDescription() );
-
-      featureItemDef.setProperty( SWE_PROPERTY, featurePhenomenon );
-      featureItemDef.setProperty( SWE_REPRESENTATION, compDef.getRepresentationType() );
+      final Feature featureItemDef = itemDefinitionFromComponent( targetObsFeature, schema, comp );
 
       FeatureHelper.addProperty( featureRD, SWE_COMPONENT, featureItemDef );
     }
@@ -300,24 +285,90 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return featureRD;
   }
 
-  public static String serializeResultAsString( final TupleResult result, final Map<IComponent, ComponentDefinition> map )
+  private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IGMLSchema schema, final IComponent comp )
+  {
+    if( comp instanceof FeatureComponent )
+    {
+      final FeatureComponent fc = (FeatureComponent) comp;
+      final Feature itemDef = fc.getItemDefinition();
+
+      // TODO: clone feature and set new parent
+
+      return itemDef;
+    }
+
+    final Feature itemDefinition = recordDefinition.getWorkspace().createFeature( recordDefinition, schema.getFeatureType( SWE_ITEMDEFINITION ) );
+
+    /* Phenomenon */
+    final Feature featurePhenomenon = recordDefinition.getWorkspace().createFeature( recordDefinition, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
+    FeatureHelper.addProperty( featurePhenomenon, GML_NAME, comp.getName() );
+    featurePhenomenon.setProperty( GML_DESCRIPTION, comp.getDescription() );
+    itemDefinition.setProperty( SWE_PROPERTY, featurePhenomenon );
+
+    /* Representation type */
+    final RepresentationType rt = createRepresentationType( comp );
+    itemDefinition.setProperty( SWE_REPRESENTATION, rt );
+
+    return itemDefinition;
+  }
+
+  /**
+   * Creates an instance of ComponentDefinition that best fits the given component
+   */
+  public static RepresentationType createRepresentationType( final IComponent component )
+  {
+    if( component == null )
+      throw new IllegalArgumentException( "component is null" );
+
+    final QName valueTypeName = component.getValueTypeName();
+
+    final String classification = "";
+
+    final String unit = component.getUnit();
+
+    final String frame = component.getFrame();
+
+    return new RepresentationType( toKind( valueTypeName ), valueTypeName, unit, frame, classification );
+  }
+
+  /**
+   * Finds the best KIND that suits the given QName
+   */
+  private static KIND toKind( final QName valueTypeName )
+  {
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
+      return KIND.Boolean;
+
+    if( XmlTypes.isNumber( valueTypeName ) )
+      return KIND.Number;
+
+    if( XmlTypes.isDate( valueTypeName ) )
+      return KIND.SimpleType;
+
+    return KIND.Word;
+  }
+
+  public static String serializeResultAsString( final TupleResult result )
   {
     final StringBuffer buffer = new StringBuffer();
 
-    final Set<Entry<IComponent, ComponentDefinition>> entries = map.entrySet();
-    final Entry<IComponent, ComponentDefinition> firstEntry = entries.iterator().next();
+    final IComponent[] components = result.getComponents();
+
+    final XsdBaseTypeHandler[] handlers = typeHandlersForComponents( components );
 
     for( final IRecord record : result )
     {
-      for( final Entry<IComponent, ComponentDefinition> entry : entries )
+      for( int i = 0; i < components.length; i++ )
       {
-        if( entry != firstEntry )
+        final XsdBaseTypeHandler handler = handlers[i];
+        final IComponent comp = components[i];
+
+        if( comp != components[0] )
           buffer.append( " " );
 
-        final IComponent comp = entry.getKey();
-
         final Object value = record.getValue( comp );
-        final String strValue = map.get( comp ).getTypeHandler().convertToXMLString( value );
+
+        final String strValue = handler.convertToXMLString( value );
 
         buffer.append( strValue );
       }
@@ -329,8 +380,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
   }
 
   /**
-   * TODO do not directly return an observation, but rather an observation provider TODO do not create an observation
-   * twice for the same feature, pooling?
+   * TODO do not directly return an observation, but rather an observation provider
+   * <p>
+   * TODO do not create an observation twice for the same feature, pooling?
+   * </p>
    * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
@@ -349,5 +402,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Class[] classes = { IObservation.class };
     return classes;
+  }
+
+  public static IComponent createDictionaryComponent( final Feature obsFeature, final String dictUrn )
+  {
+    final Feature recordDefinition = FeatureHelper.resolveLink( obsFeature, OM_RESULTDEFINITION );
+
+    final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( SWE_ITEMDEFINITION );
+
+    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, featureType, dictUrn, null, null, null, null, null );
+    return new FeatureComponent( itemDef );
   }
 }

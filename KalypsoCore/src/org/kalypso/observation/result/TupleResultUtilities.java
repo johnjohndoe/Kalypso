@@ -55,12 +55,29 @@ public class TupleResultUtilities
    * 
    * @return null, if no component with the given name was found.
    */
-  public static IComponent getComponent( final TupleResult result, final String name )
+  public static IComponent findComponentByName( final TupleResult result, final String name )
   {
     final IComponent[] components = result.getComponents();
     for( final IComponent comp : components )
     {
       if( comp.getName().equals( name ) )
+        return comp;
+    }
+
+    return null;
+  }
+
+  /**
+   * Find component by id.
+   * 
+   * @return The first component with the given id, null, none was found.
+   */
+  public static IComponent findComponentById( final TupleResult result, final String id )
+  {
+    final IComponent[] components = result.getComponents();
+    for( final IComponent comp : components )
+    {
+      if( comp.getId().equals( id ) )
         return comp;
     }
 

@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -60,7 +59,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.om.ComponentDefinition;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
@@ -283,20 +281,20 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   // }
   // }
   // }
+  
+  
   private void fireChanges( final boolean definitionChanged )
   {
-    final Map<IComponent, ComponentDefinition> map = ObservationFeatureFactory.buildComponentDefinitions( m_tupleResult );
-
     final Feature obsFeature = getFeature();
 
-    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, map );
+    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, m_tupleResult.getComponents() );
 
     final IFeatureType obsFT = obsFeature.getFeatureType();
 
     final IPropertyType resultDefPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final IPropertyType resultPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULT );
 
-    final String strResult = ObservationFeatureFactory.serializeResultAsString( m_tupleResult, map );
+    final String strResult = ObservationFeatureFactory.serializeResultAsString( m_tupleResult );
 
     // PROBLEM: we have 2 changes, so we get entries to the undo queue here
     // TODO: refaktor so that we may send multiple changes at one go

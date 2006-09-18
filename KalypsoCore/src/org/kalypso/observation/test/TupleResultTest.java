@@ -47,7 +47,6 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.ValueComponent;
 
 /**
  * @author schlienger
@@ -60,7 +59,7 @@ public class TupleResultTest extends TestCase
     assertEquals( 0, result.getComponents().length );
     assertEquals( 0, result.size() );
 
-    final IComponent comp = new ValueComponent( 1, "Abfluss", "", XmlTypes.XS_DOUBLE, "m³/s" );
+    final IComponent comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null );
     result.addComponent( comp );
     assertEquals( 1, result.getComponents().length );
 
@@ -71,7 +70,7 @@ public class TupleResultTest extends TestCase
 
     try
     {
-      result.setValue( r1, new Component( 2, "Non-Existent", "", XmlTypes.XS_INTEGER ), 0 );
+      result.setValue( r1, new Component( "NONE", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null ), 0 );
 
       fail( "there should be an exception if we set a value of a nonexistent component" );
     }
@@ -81,7 +80,7 @@ public class TupleResultTest extends TestCase
 
     try
     {
-      r1.setValue( new Component( 2, "Non-Existent", "", XmlTypes.XS_INTEGER ), 0 );
+      r1.setValue( new Component( "ID", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null ), 0 );
 
       fail( "there should be an exception if we set a value of a nonexistent component" );
     }
@@ -109,7 +108,7 @@ public class TupleResultTest extends TestCase
 
   public void testComponent( )
   {
-    ValueComponent comp = new ValueComponent( 2, "Abfluss", null, XmlTypes.XS_DOUBLE, "m³/s" );
+    final Component comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null );
     assertEquals( "Abfluss", comp.getName() );
     assertNull( comp.getDescription() );
     assertEquals( "m³/s", comp.getUnit() );

@@ -47,19 +47,30 @@ import javax.xml.namespace.QName;
  */
 public interface IComponent
 {
-  public int getPosition();
-  
-  public String getName( );
-  
-  public String getDescription();
+  /**
+   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
+   * should be the urn of the coressponding dictionary entry.
+   */
+  public String getId( );
 
-  public QName getValueTypeName();
+  /**
+   * User-firednly name of this component.
+   */
+  public String getName( );
+
+  public String getDescription( );
+
+  public String getUnit( );
+
+  public String getFrame( );
+
+  public QName getValueTypeName( );
 
   public Object getDefaultValue( );
-  
+
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
   public boolean equals( final Object object );
 
   /** override hashCode according to equals */
-  public int hashCode();
+  public int hashCode( );
 }
