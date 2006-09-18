@@ -20,8 +20,8 @@
 
    <requires>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.forms"/>
@@ -41,207 +41,202 @@
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.ant.ui"/>
       <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.eclipse.ui.intro"/>
    </requires>
-
-   <plugin
-         id="com.bce.eind.prf"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
 
    <plugin
          id="com.bce.profil.resources"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="de.belger.swtchart.core"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.core"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.schema"
          download-size="0"
          install-size="0"
-         version="0.0.1"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.core"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.schema"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.ui"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.model.wspm.ui"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.wspwin.core"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.chart"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.commons"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.eclipseplatform"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.eclipsercp"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.java"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.ogc31"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.core"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.featureview"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.gmlschema"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.profil.manual"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.ui"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.ui.addlayer"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.gml.processes"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.ogc2x"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.jwsdp"
          download-size="0"
          install-size="0"
-         version="1.4.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.auth"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.services.core.client"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.simulation.core"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.simulation.ui"
          download-size="0"
          install-size="0"
-         version="0.0.1"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.repository"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.gml.ui"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.osgi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

@@ -241,7 +241,10 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     }
 
     if( m_control != null && !m_control.isDisposed() )
-      m_control.getDisplay().syncExec( m_updateControlRunnable );
+    {
+      // BUGFIX: use Async exec, because we got a deadlock here
+      m_control.getDisplay().asyncExec( m_updateControlRunnable );
+    }
   }
 
   /**
