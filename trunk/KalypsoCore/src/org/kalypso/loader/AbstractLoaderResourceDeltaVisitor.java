@@ -55,9 +55,9 @@ import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
  * <pre>
- *   Changes:
- *   2004-11-09 - schlienger - uses now the path of the resource as key in the map
- *   						     Path should be taken using the pathFor( IResource ) method
+ *      Changes:
+ *      2004-11-09 - schlienger - uses now the path of the resource as key in the map
+ *      						     Path should be taken using the pathFor( IResource ) method
  * </pre>
  * 
  * @author belger
@@ -71,7 +71,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   private final Map<Object, IResource> m_objectMap = new HashMap<Object, IResource>();
 
   /** Resources in this list will be ignored at the next resource change event. */
-  private final Collection<String> m_ignoreOneTimeList = new HashSet<String>();
+  private final Collection<String> m_ignoreresourceList = new HashSet<String>();
 
   private final AbstractLoader m_loader;
 
@@ -123,11 +123,8 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   {
     final IResource resource = delta.getResource();
 
-    if( m_ignoreOneTimeList.contains( pathFor( resource ) ) )
-    {
-      m_ignoreOneTimeList.remove( pathFor(resource ) );
+    if( m_ignoreresourceList.contains( pathFor( resource ) ) )
       return true;
-    }
 
     final Object oldValue = m_resourceMap.get( pathFor( resource ) );
     if( oldValue != null )
@@ -161,10 +158,16 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   }
 
   /**
-   * Der nächste change event dieser Resource wird ignoriert
+   * Resources in this list will be ignored, i.e. no event are generated for these resources
+   * 
+   * @param doIgnore
+   *          If true, resources will be ignored in the future. If false, the resource is removed frmo the blacklist.
    */
-  public void ignoreResourceOneTime( final IResource resource )
+  public void ignoreResource( final IResource resource, final boolean doIgnore )
   {
-    m_ignoreOneTimeList.add( pathFor( resource ) );
+    if( doIgnore )
+      m_ignoreresourceList.add( pathFor( resource ) );
+    else
+      m_ignoreresourceList.remove( pathFor( resource ) );
   }
 }

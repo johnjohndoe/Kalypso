@@ -547,7 +547,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Object prop = parent.getProperty( propName );
 
     if( prop instanceof List )
-      ((List) prop).add( pos, newFeature );
+    {
+      final List list = (List) prop;
+      if( pos == -1 )
+        list.add( newFeature );
+      else
+        list.add( pos, newFeature );
+    }
     else if( prop == null ) // element not set
       parent.setProperty( propName, newFeature );
     else

@@ -171,6 +171,11 @@ public class AddFeatureCommand implements ICommand
 
     if( m_selectionManager != null )
       m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
-
   }
+  
+  public Feature getNewFeature( )
+  {
+    return m_newFeature;
+  }
+  
 }

@@ -128,6 +128,11 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public Feature getParentFeature( final Feature toFindParentFrom );
 
+  /**
+   * @param pos
+   *          Position at which the new element is inserted into the list. If -1, the new element is added to the end of
+   *          the list.
+   */
   public void addFeatureAsComposition( Feature parent, final IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
 
   public void addFeatureAsAggregation( Feature parent, final IRelationType linkProperty, int pos, String featureID ) throws Exception;
@@ -196,6 +201,6 @@ public interface GMLWorkspace extends ModellEventProvider
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart );
 
-  /** Return the factory which creates feature providers used to load linked features. */ 
+  /** Return the factory which creates feature providers used to load linked features. */
   public IFeatureProviderFactory getFeatureProviderFactory( );
 }
