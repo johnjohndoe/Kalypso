@@ -72,7 +72,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class DWDRasterGeoLayer
 {
-
   private final DWDRaster m_xRaster;
 
   private final DWDRaster m_yRaster;
