@@ -300,6 +300,15 @@
 				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
 				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
 			</action>
+			<action state="false" style="radio"
+				id="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
+				toolbarPath="karte/tools"
+				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
+				icon="icons/map/select_feature.gif"
+				label="Edit Geometry"
+				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+				tooltip="Die Geometrie des selektierten Features editieren">
+			</action>
 			<action
 				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
 				icon="icons/map/zoomin.gif" style="radio"

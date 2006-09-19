@@ -133,7 +133,7 @@ public class ResourcePool
       }
 
       info.addListener( l );
-      
+
       return info;
     }
   }
@@ -155,13 +155,13 @@ public class ResourcePool
           m_logger.info( "Releasing key (no more listeners): " + key );
 
           iter.remove();
-          
+
           infosToDispose.add( info );
         }
       }
-      
+
       final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
-      
+
       for( final KeyInfo info : infosToDispose )
       {
         final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );

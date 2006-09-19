@@ -14,7 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -337,7 +337,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
           public void run( )
           {
             if( !treeControl.isDisposed() )
-              treeViewer.update( features, null );
+            {
+              for( final Feature feature : features )
+                treeViewer.refresh( feature, true );
+            }
           }
         } );
       }
@@ -597,7 +600,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         }
       };
 
-      Platform.run( safeRunnable );
+      SafeRunner.run( safeRunnable );
     }
   }
 

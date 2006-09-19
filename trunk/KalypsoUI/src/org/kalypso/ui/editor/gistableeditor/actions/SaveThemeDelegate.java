@@ -54,6 +54,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
@@ -87,12 +88,14 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
+      final LayerTableViewer layerTable = editor.getLayerTable();
+
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
         @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
-          editor.getLayerTable().saveData( monitor );
+          layerTable.saveData( monitor );
         }
       };
 

@@ -47,7 +47,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.command.ICommandManager;
@@ -56,6 +58,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -174,8 +177,11 @@ public class GmlLoader extends AbstractLoader
 
       // ists im Workspace?
       file = ResourceUtilities.findFileFromURL( gmlURL );
+
       if( file != null )
       {
+        file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
+
         final SetContentHelper thread = new SetContentHelper()
         {
           @Override
@@ -185,11 +191,7 @@ public class GmlLoader extends AbstractLoader
           }
         };
 
-        // damit der change event nicht kommt
-        savingResource( file, true );
-
         thread.setFileContents( file, false, true, new NullProgressMonitor() );
-
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {
@@ -212,8 +214,20 @@ public class GmlLoader extends AbstractLoader
     }
     finally
     {
+      /* delete all markers on the corresponding resource */
       if( file != null )
-        savingResource( file, false );
+      {
+        try
+        {
+          final IMarker[] markers = file.findMarkers( source, false, IResource.DEPTH_ZERO );
+          for( final IMarker marker : markers )
+            marker.delete();
+        }
+        catch( final CoreException e )
+        {
+          KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+        }
+      }
     }
   }
 

@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
 
+import org.eclipse.swt.SWT;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -49,6 +50,7 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.util.swt.SWTUtilities;
 
 /**
  * This is one control maker tries to create the control via the {@link org.kalypso.ogc.gml.gui.IGuiTypeHandler}.
@@ -73,7 +75,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
       return null;
 
     final IValuePropertyType vpt = (IValuePropertyType) pt;
-    
+
     /* We try to delegate to the gui type handlers. If this is not possible, we are not responsible. */
     if( !GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( vpt.getValueQName() ) )
       return null;
@@ -99,6 +101,18 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
 
       // TODO is this ok for all controls?
       griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+
+      // if( tweakBorderFlag )
+      // {
+      // final String style = type.getStyle();
+      // final int swtStyle = SWTUtilities.createStyleFromString( style );
+      // final int swtStyleWithoutBorder = swtStyle & (0xfffffff ^ SWT.BORDER);
+      //
+      // // TODO: SWTUtilities.createStringFromStyle( );
+      // final String styleWithoutBorder = "SWT.NONE";// SWTUtilities.createStringFromStyle( swtStyleWithoutBorder );
+      //
+      // type.setStyle( styleWithoutBorder );
+      // }
     }
 
     return controlElement;

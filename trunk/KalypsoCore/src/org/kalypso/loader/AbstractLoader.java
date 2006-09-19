@@ -42,6 +42,8 @@ package org.kalypso.loader;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -52,7 +54,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -67,6 +68,9 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   private final List<ILoaderListener> m_listener = new ArrayList<ILoaderListener>();
 
   private final List<Object> m_objectList = new ArrayList<Object>();
+
+  /** Resources in this list will be ignored at the next resource change event. */
+  private final Collection<String> m_ignoreresourceList = new HashSet<String>();
 
   public AbstractLoader( )
   {
@@ -125,14 +129,15 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload ) throws Exception
   {
-    beforeObjectInvalid();
+    if( m_ignoreresourceList.contains( m_visitor.pathForObject( oldObject ) ) )
+      return;
 
     // protect against concurrent modification exception and broken listeners
     final ILoaderListener[] ls = m_listener.toArray( new ILoaderListener[m_listener.size()] );
     for( int i = 0; i < ls.length; i++ )
     {
       final ILoaderListener listener = ls[i];
-      Platform.run( new SafeRunnable()
+      SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception
         {
@@ -140,11 +145,6 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
         }
       } );
     }
-  }
-
-  protected void beforeObjectInvalid( )
-  {
-    // overwrite it
   }
 
   /**
@@ -194,8 +194,14 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     throw new LoaderException( "Operation not supported" );
   }
 
-  protected void savingResource( final IResource resource, final boolean isSaving )
+  /**
+   * @see org.kalypso.loader.ILoader#lockEvents(java.lang.Object, boolean)
+   */
+  public void lockEvents( final Object data, boolean doLock )
   {
-    m_visitor.ignoreResource( resource, isSaving );
+    if( doLock )
+      m_ignoreresourceList.add( m_visitor.pathForObject( data ) );
+    else
+      m_ignoreresourceList.remove( m_visitor.pathForObject( data ) );
   }
 }

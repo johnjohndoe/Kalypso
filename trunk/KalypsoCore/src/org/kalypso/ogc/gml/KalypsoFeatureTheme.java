@@ -205,7 +205,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   @Override
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     if( modellEvent instanceof IGMLWorkspaceModellEvent )
     {

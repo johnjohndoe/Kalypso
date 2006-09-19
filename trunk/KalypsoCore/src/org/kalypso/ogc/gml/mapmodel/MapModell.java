@@ -83,7 +83,7 @@ public class MapModell implements IMapModell
     m_project = project;
   }
 
-  public void dispose()
+  public void dispose( )
   {
     final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     m_themes.clear();
@@ -97,7 +97,7 @@ public class MapModell implements IMapModell
     fireModellEvent( null );
   }
 
-  public IKalypsoTheme getActiveTheme()
+  public IKalypsoTheme getActiveTheme( )
   {
     return m_activeTheme;
   }
@@ -126,18 +126,17 @@ public class MapModell implements IMapModell
     fireModellEvent( null );
   }
 
-  public IKalypsoTheme[] getAllThemes()
+  public IKalypsoTheme[] getAllThemes( )
   {
     return m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
   }
 
-  public CS_CoordinateSystem getCoordinatesSystem()
+  public CS_CoordinateSystem getCoordinatesSystem( )
   {
     return m_coordinatesSystem;
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
     // directly access themes in order to avoid synchronization problems
     final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
@@ -155,7 +154,7 @@ public class MapModell implements IMapModell
     return m_themes.elementAt( pos );
   }
 
-  public int getThemeSize()
+  public int getThemeSize( )
   {
     return m_themes.size();
   }
@@ -214,7 +213,7 @@ public class MapModell implements IMapModell
     fireModellEvent( null );
   }
 
-  public GM_Envelope getFullExtentBoundingBox()
+  public GM_Envelope getFullExtentBoundingBox( )
   {
     final IKalypsoTheme[] themes = getAllThemes();
     GM_Envelope result = null;
@@ -270,7 +269,7 @@ public class MapModell implements IMapModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_project;
   }
@@ -278,14 +277,14 @@ public class MapModell implements IMapModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
    */
-  public IKalypsoFeatureTheme getScrabLayer()
+  public IKalypsoFeatureTheme getScrabLayer( )
   {
     IKalypsoTheme[] allThemes = getAllThemes();
     for( int i = 0; i < allThemes.length; i++ )
     {
       IKalypsoTheme theme = allThemes[i];
       if( theme instanceof ScrabLayerFeatureTheme )
-        return (IKalypsoFeatureTheme)theme;
+        return (IKalypsoFeatureTheme) theme;
     }
     return null;
   }

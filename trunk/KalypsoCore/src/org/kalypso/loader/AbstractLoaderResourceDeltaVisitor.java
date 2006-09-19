@@ -40,11 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
+import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -55,9 +54,9 @@ import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
  * <pre>
- *      Changes:
- *      2004-11-09 - schlienger - uses now the path of the resource as key in the map
- *      						     Path should be taken using the pathFor( IResource ) method
+ *         Changes:
+ *         2004-11-09 - schlienger - uses now the path of the resource as key in the map
+ *         						     Path should be taken using the pathFor( IResource ) method
  * </pre>
  * 
  * @author belger
@@ -69,9 +68,6 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 
   /** object -> resource */
   private final Map<Object, IResource> m_objectMap = new HashMap<Object, IResource>();
-
-  /** Resources in this list will be ignored at the next resource change event. */
-  private final Collection<String> m_ignoreresourceList = new HashSet<String>();
 
   private final AbstractLoader m_loader;
 
@@ -123,33 +119,49 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   {
     final IResource resource = delta.getResource();
 
-    if( m_ignoreresourceList.contains( pathFor( resource ) ) )
-      return true;
-
     final Object oldValue = m_resourceMap.get( pathFor( resource ) );
     if( oldValue != null )
     {
-      switch( delta.getKind() )
+      if( (delta.getFlags() & IResourceDelta.MARKERS) != 0 )
       {
-        case IResourceDelta.REMOVED:
-          // todo: sollte eigentlich auch behandelt werden
-          // aber so, dass noch die chance auf ein add besteht
-          break;
-
-        case IResourceDelta.ADDED:
-        case IResourceDelta.CHANGED:
+        final IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
+        for( final IMarkerDelta delta2 : markerDeltas )
         {
-          try
+          if( delta2.getType().equals( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE ) && (delta2.getKind() & IResourceDelta.ADDED) != 0 )
+            m_loader.lockEvents( oldValue, true );
+        }
+      }
+
+      try
+      {
+        switch( delta.getKind() )
+        {
+          case IResourceDelta.REMOVED:
+            // todo: sollte eigentlich auch behandelt werden
+            // aber so, dass noch die chance auf ein add besteht
+            break;
+
+          case IResourceDelta.ADDED:
+          case IResourceDelta.CHANGED:
           {
             m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
           }
-          catch( final Exception e )
+        }
+      }
+      catch( final Exception e )
+      {
+        throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0, "Fehler beim Wiederherstellen einer Resource", e ) );
+      }
+      finally
+      {
+        if( (delta.getFlags() & IResourceDelta.MARKERS) != 0 )
+        {
+          final IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
+          for( final IMarkerDelta delta2 : markerDeltas )
           {
-            throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0, "Fehler beim Wiederherstellen einer Resource", e ) );
+            if( delta2.getType().equals( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE ) && (delta2.getKind() & IResourceDelta.REMOVED) != 0 )
+              m_loader.lockEvents( oldValue, false );
           }
-
-          // handle changed resource
-          return true;
         }
       }
     }
@@ -158,16 +170,14 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   }
 
   /**
-   * Resources in this list will be ignored, i.e. no event are generated for these resources
-   * 
-   * @param doIgnore
-   *          If true, resources will be ignored in the future. If false, the resource is removed frmo the blacklist.
+   * TRICKY: this method normalizes the path in order to make comparisaon robust.
+   * <p>
+   * This is maybe obsolete, because the bad pathes (e.g. those beginning with '//' where made by
+   * {@link org.kalypso.contribs.eclipse.core.resources.ResourceUtilities#createURL(IResource)}, which is fixed now.
    */
-  public void ignoreResource( final IResource resource, final boolean doIgnore )
+  public String pathForObject( final Object data )
   {
-    if( doIgnore )
-      m_ignoreresourceList.add( pathFor( resource ) );
-    else
-      m_ignoreresourceList.remove( pathFor( resource ) );
+    final IResource resource = m_objectMap.get( data );
+    return resource == null ? null : pathFor( resource );
   }
 }
