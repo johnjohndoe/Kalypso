@@ -65,7 +65,7 @@ public class EditFeatureGeometryWidgetDelegate extends AbstractGisMapEditorActio
      * If the selection is changed it is checked, if it fits to the action. That means, it changes the enabled state of
      * the button.
      */
-    action.setEnabled( fitsToAction( selection ) );
+    refreshAction( action,selection );
   }
 
   /**

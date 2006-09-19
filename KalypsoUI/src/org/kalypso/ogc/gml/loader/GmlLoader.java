@@ -114,7 +114,7 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-//      final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
+      // final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
       final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
 
@@ -165,6 +165,7 @@ public class GmlLoader extends AbstractLoader
   @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
+    IFile file = null;
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace) data;
@@ -172,7 +173,7 @@ public class GmlLoader extends AbstractLoader
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
       // ists im Workspace?
-      final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
+      file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
       {
         final SetContentHelper thread = new SetContentHelper()
@@ -185,9 +186,10 @@ public class GmlLoader extends AbstractLoader
         };
 
         // damit der change event nicht kommt
-        savingResource( file );
+        savingResource( file, true );
 
         thread.setFileContents( file, false, true, new NullProgressMonitor() );
+
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {
@@ -207,6 +209,11 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      if( file != null )
+        savingResource( file, false );
     }
   }
 
