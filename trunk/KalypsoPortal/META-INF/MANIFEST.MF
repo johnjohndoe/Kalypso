@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.commons,
  org.kalypso.ui,
  org.kalypso.ui.addlayer,
- org.kalypso.workflow
+ org.kalypso.workflow,
+ org.eclipse.help
 Eclipse-AutoStart: true
 Bundle-Vendor: Universtity of Technology Hamburg-Harburg
 Export-Package: org.kalypso.portal,

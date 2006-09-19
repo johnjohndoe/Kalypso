@@ -10,7 +10,8 @@ Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.deegree,
  org.kalypso.ui,
  org.eclipse.ui,
- org.kalypso.services.observation.client
+ org.kalypso.services.observation.client,
+ org.kalypso.services.observation
 Export-Package: org.kalypso.ant,
  org.kalypso.transformation,
  org.kalypso.transformation.dwd

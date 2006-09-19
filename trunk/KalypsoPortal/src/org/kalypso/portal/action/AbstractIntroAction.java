@@ -62,7 +62,7 @@ public abstract class AbstractIntroAction implements IIntroAction
 
   public void run( IIntroSite site, Properties params )
   {
-    final BrowserIntroPartImplementation impl = (BrowserIntroPartImplementation) IntroPlugin.getDefault().getIntroModelRoot().getPresentation().getIntroParttImplementation();
+    final BrowserIntroPartImplementation impl = (BrowserIntroPartImplementation) IntroPlugin.getDefault().getIntroModelRoot().getPresentation().getIntroPartImplementation();
     m_browser = impl.getBrowser();
     final String urlAsString = m_browser.getUrl();
     final WorkflowContext wfContext = KalypsoWorkFlowPlugin.getDefault().getDefaultWorkflowContext();

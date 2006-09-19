@@ -21,9 +21,6 @@
          <property
                name="aboutText"
                value="%aboutText"/>
-         <property
-               name="windowImages"
-               value="etc/kalypso16.gif,etc/kalypso32.gif"/>
       </product>
    </extension>
    <extension
