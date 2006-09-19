@@ -46,4 +46,6 @@ package org.kalypso.core;
 public interface IKalypsoCoreConstants
 {
   public final static String PLUGIN_ID = "org.kalypso.core";
+  
+  public static final String RESOURCE_LOCK_MARKER_TYPE = IKalypsoCoreConstants.PLUGIN_ID + ".resourcePoolLockMarker";
 }

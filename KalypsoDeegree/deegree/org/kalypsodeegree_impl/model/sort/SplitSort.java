@@ -23,19 +23,25 @@ public class SplitSort implements FeatureList
 
   private SplitSortContainer m_rootContainer = null;
 
-  private List m_objects = new ArrayList();
+  private final List<Object> m_objects = new ArrayList<Object>();
 
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
 
-  public SplitSort( Feature parentFeature, IRelationType parentFTP )
+  /**
+   * A flag indicating if the spacial index is upd-to-date (if false). If not, the next call to 'query' will first recalculate the
+   * index.
+   */
+  private boolean m_invalid = true;
+
+  public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
   }
 
-  public SplitSort( final Feature parentFeature, IRelationType parentFTP, final GM_Envelope env )
+  public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env )
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
@@ -83,16 +89,19 @@ public class SplitSort implements FeatureList
     }
   }
 
-  public List query( GM_Envelope queryEnv, List result )
+  public List query( final GM_Envelope queryEnv, List result )
   {
+    resort();
+
     if( result == null )
       result = new ArrayList();
+    
     if( m_rootContainer != null )
       result = m_rootContainer.query( queryEnv, result );
     return result;
   }
 
-  public List query( GM_Position pos, List result )
+  public List query( final GM_Position pos, List result )
   {
     if( result == null )
       result = new ArrayList();
@@ -179,34 +188,37 @@ public class SplitSort implements FeatureList
     spacialAdd( envelope, feature );
   }
 
-  public void resort( )
+  private void resort( )
   {
+    if( m_invalid == false )
+      return;
+    
     m_rootContainer = null;
 
     GM_Envelope bbox = null;
 
-    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    for( final Object f : m_objects )
     {
-      final Object f = iter.next();
-
       final GM_Envelope envelope = getEnvelope( f );
       if( bbox == null )
         bbox = envelope;
       else
         bbox = bbox.getMerged( envelope );
     }
+
     if( bbox != null )
     {
       m_rootContainer = new SplitSortContainer( null, bbox );
-      for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+      for( final Object next : m_objects )
       {
-        final Object next = iter.next();
         GM_Envelope envelope = getEnvelope( next );
         spacialAdd( envelope, next );
       }
     }
     else
       m_rootContainer = null;
+    
+    m_invalid = false;
   }
 
   /**
@@ -396,10 +408,10 @@ public class SplitSort implements FeatureList
    * @deprecated use toArray() cause in a splitsort can be also featureIds (String), if feature is linked from the list
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
+  @Deprecated
   public Feature[] toFeatures( )
   {
-
-    return (Feature[]) m_objects.toArray( new Feature[m_objects.size()] );
+    return m_objects.toArray( new Feature[m_objects.size()] );
   }
 
   /**
@@ -429,5 +441,22 @@ public class SplitSort implements FeatureList
   public IRelationType getParentFeatureTypeProperty( )
   {
     return m_parentFeatureTypeProperty;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
+   */
+  public void invalidate( )
+  {
+    m_invalid = true;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
+   */
+  public void invalidate( final Object o )
+  {
+    if( contains( o ) )
+      invalidate();
   }
 }

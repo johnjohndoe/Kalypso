@@ -7,7 +7,9 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -222,7 +224,31 @@ public class Feature_Impl extends AbstractFeature implements Feature
     m_properties[pos] = fsh.setValue( this, pt, value );
 
     if( GeometryUtilities.isGeometry( pt ) )
+    {
       invalidEnvelope();
+
+      /* Invalidate geo-index of all feature-list which cnotains this feature. */
+      // TODO: At the moment, only the owning list is invalidated. This who link to this feature are broken.
+      // TODO: This code is probably not very performant. How to improve this?
+      final Feature parent = getParent();
+      final IFeatureType featureType = parent.getFeatureType();
+      final IPropertyType[] properties = featureType.getProperties();
+      for( final IPropertyType type : properties )
+      {
+        if( type instanceof IRelationType )
+        {
+          if( type.isList() )
+          {
+            final FeatureList list = (FeatureList) parent.getProperty( type );
+            if( list.contains( this ) )
+            {
+              list.invalidate( this );
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 
   /**

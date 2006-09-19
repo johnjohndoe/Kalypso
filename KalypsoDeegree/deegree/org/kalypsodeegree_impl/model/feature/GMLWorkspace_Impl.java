@@ -24,7 +24,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 
 /**
  * In order to use this workspace with support of xlinks, a
@@ -72,14 +71,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     try
     {
       accept( new RegisterVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
-    try
-    {
-      accept( new ResortVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
     }
     catch( final Throwable e )
     {

@@ -64,7 +64,7 @@ public class CascadingFeatureList implements FeatureList
 {
   private final FeatureList[] m_lists;
 
-  public CascadingFeatureList( FeatureList[] lists )
+  public CascadingFeatureList( final FeatureList[] lists )
   {
     m_lists = lists;
   }
@@ -384,14 +384,6 @@ public class CascadingFeatureList implements FeatureList
   }
 
   /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#resort()
-   */
-  public void resort( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
@@ -451,5 +443,23 @@ public class CascadingFeatureList implements FeatureList
   public IRelationType getParentFeatureTypeProperty( )
   {
     return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
+   */
+  public void invalidate( )
+  {
+    for( final FeatureList list : m_lists )
+      list.invalidate();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
+   */
+  public void invalidate( final Object o )
+  {
+    for( final FeatureList list : m_lists )
+      list.invalidate( o );
   }
 }

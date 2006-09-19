@@ -78,6 +78,7 @@ import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.ResourcePool;
 import org.xml.sax.InputSource;
 
 /**
@@ -90,14 +91,15 @@ public final class TableViewUtils
   public final static String OTT_FILE_EXTENSION = "ott";
 
   private final static ObjectFactory OTT_OF = new ObjectFactory();
+
   private final static JAXBContext OTT_JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   /**
    * Not to be instanciated
    */
-  private TableViewUtils()
+  private TableViewUtils( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -142,7 +144,7 @@ public final class TableViewUtils
    */
   public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final Obstableview baseTemplate = (Obstableview)OTT_JC.createUnmarshaller().unmarshal( ins );
+    final Obstableview baseTemplate = (Obstableview) OTT_JC.createUnmarshaller().unmarshal( ins );
 
     return baseTemplate;
   }
@@ -154,7 +156,7 @@ public final class TableViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller(OTT_JC);
+      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC );
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -171,7 +173,7 @@ public final class TableViewUtils
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC);
+      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC );
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, writer );
     }
@@ -191,7 +193,7 @@ public final class TableViewUtils
     final Obstableview xmlTemplate = OTT_OF.createObstableview();
 
     xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
-    
+
     xmlTemplate.setAlphaSort( template.isAlphaSort() );
 
     // rendering rules
@@ -202,11 +204,11 @@ public final class TableViewUtils
     // only set timezone if not default one
     if( !template.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
       xmlTemplate.setTimezone( template.getTimezone().getID() );
-    
+
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
     {
-      final RenderingRule rule = (RenderingRule)itRules.next();
+      final RenderingRule rule = (RenderingRule) itRules.next();
 
       final TypeRenderingRule xmlRule = OTT_OF.createTypeRenderingRule();
       xmlRule.setMask( rule.getMask() );
@@ -230,8 +232,8 @@ public final class TableViewUtils
 
     for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
-      final Map.Entry entry = (Entry)itThemes.next();
-      final IObservation obs = (IObservation)entry.getKey();
+      final Map.Entry entry = (Entry) itThemes.next();
+      final IObservation obs = (IObservation) entry.getKey();
       if( obs == null )
         continue;
 
@@ -244,10 +246,10 @@ public final class TableViewUtils
       // columns
       final List<TypeColumn> xmlColumns = xmlObs.getColumn();
 
-      final List columns = (List)entry.getValue();
+      final List columns = (List) entry.getValue();
       for( Iterator itCol = columns.iterator(); itCol.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn)itCol.next();
+        final TableViewColumn col = (TableViewColumn) itCol.next();
 
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
@@ -265,8 +267,7 @@ public final class TableViewUtils
     return xmlTemplate;
   }
 
-  public static IStatus applyXMLTemplate( final TableView view, final Obstableview xml, final URL context,
-      final boolean synchron, final String ignoreHref )
+  public static IStatus applyXMLTemplate( final TableView view, final Obstableview xml, final URL context, final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
 
@@ -286,7 +287,7 @@ public final class TableViewUtils
       final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
       view.setTimezone( timeZone );
     }
-    
+
     final Rules trules = xml.getRules();
     if( trules != null )
     {
@@ -294,13 +295,13 @@ public final class TableViewUtils
       view.getRules().removeAllRules();
 
       for( final Iterator it = trules.getRenderingrule().iterator(); it.hasNext(); )
-        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule)it.next() ) );
+        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it.next() ) );
     }
 
     final List<IStatus> stati = new ArrayList<IStatus>();
 
     final List<TypeObservation> list = xml.getObservation();
-    final TypeObservation[] tobs = list.toArray(new TypeObservation[list.size()]);
+    final TypeObservation[] tobs = list.toArray( new TypeObservation[list.size()] );
     for( int i = 0; i < tobs.length; i++ )
     {
       // check, if href is ok
@@ -312,7 +313,7 @@ public final class TableViewUtils
         Logger.getLogger( TableViewUtils.class.getName() ).warning( "Href ignored: " + href );
         continue;
       }
-      
+
       final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
       stati.add( loader.getResult() );
     }
@@ -326,11 +327,11 @@ public final class TableViewUtils
    */
   public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List tableViewColumns )
   {
-    final Map<IObservation, ArrayList<TableViewColumn>>  map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
+    final Map<IObservation, ArrayList<TableViewColumn>> map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
 
     for( final Iterator it = tableViewColumns.iterator(); it.hasNext(); )
     {
-      final TableViewColumn col = (TableViewColumn)it.next();
+      final TableViewColumn col = (TableViewColumn) it.next();
       final IObservation obs = col.getObservation();
 
       if( !map.containsKey( obs ) )
@@ -355,15 +356,15 @@ public final class TableViewUtils
 
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Entry)it.next();
-      final IObservation obs = (IObservation)entry.getKey();
-      final List cols = (List)entry.getValue();
+      final Map.Entry entry = (Entry) it.next();
+      final IObservation obs = (IObservation) entry.getKey();
+      final List cols = (List) entry.getValue();
 
       boolean obsSaved = false;
 
       for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn)itCols.next();
+        final TableViewColumn col = (TableViewColumn) itCols.next();
 
         if( col.isDirty() && !obsSaved )
         {

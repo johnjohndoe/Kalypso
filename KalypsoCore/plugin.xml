@@ -92,5 +92,11 @@
             class="org.kalypso.ogc.gml.dict.KalypsoCoreDictionaryCatalogContribution"
             name="KalypsoDictionaryCatalogContribution"/>
    </extension>
+ <extension
+       id="resourcePoolLockMarker"
+       name="Resource Pool Lock Marker"
+       point="org.eclipse.core.resources.markers">
+    <persistent value="false"/>
+ </extension>
 
 </plugin>
