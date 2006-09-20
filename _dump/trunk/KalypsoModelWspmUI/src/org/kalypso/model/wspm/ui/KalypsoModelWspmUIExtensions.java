@@ -61,12 +61,12 @@ public class KalypsoModelWspmUIExtensions
   public static IPointsTarget[] createProfilPointTargets( )
   {
     
-    return  createExtensions( "org.kalypso.model.wspm.ui.profil.profilPointsTarget",new IPointsTarget[0]);
+    return  createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget",new IPointsTarget[0]);
   }
 
   public static IPointsSource[] createProfilPointSources( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.profil.profilPointsSource", new IPointsSource[0] );
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] );
   }
 
   @SuppressWarnings("unchecked")
