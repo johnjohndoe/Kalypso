@@ -207,7 +207,7 @@ public class TrennerPanel extends AbstractProfilView
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.TRENNFLAECHE, m_fz_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setDeviderMoved();
-        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
+        getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -239,7 +239,7 @@ public class TrennerPanel extends AbstractProfilView
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.DURCHSTROEMTE, m_db_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setDeviderMoved();
-        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
+        getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -271,7 +271,7 @@ public class TrennerPanel extends AbstractProfilView
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.BORDVOLL, m_bv_show.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setDeviderMoved();
-        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
+        getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 

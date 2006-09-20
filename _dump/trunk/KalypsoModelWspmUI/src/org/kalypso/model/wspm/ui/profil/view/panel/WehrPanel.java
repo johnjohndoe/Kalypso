@@ -399,7 +399,7 @@ public class WehrPanel extends AbstractProfilView
         IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setDeviderMoved();
-        m_pem.fireProfilChanged( hint, new IProfilChange[] { change } );
+        getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
         // getViewData().setDeviderVisibility( DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
       }
     } );

@@ -74,7 +74,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardDataTransferPage;
 import org.eclipse.ui.internal.ide.DialogUtil;
 import org.eclipse.ui.internal.ide.dialogs.ResourceTreeAndListGroup;
@@ -84,10 +83,9 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 /**
  * @author thuel2
  */
+@SuppressWarnings("restriction")
 public class WspWinExportPage extends WizardDataTransferPage implements Listener
 {
-  private final IWorkbench m_workbench;
-
   private final IStructuredSelection m_selection;
 
   private List selectedTypes = new ArrayList();
@@ -133,10 +131,10 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param selection
    *          IStructuredSelection
    */
-  protected WspWinExportPage( final String pageName, final IWorkbench workbench, final IStructuredSelection selection )
+  protected WspWinExportPage( final String pageName, final IStructuredSelection selection )
   {
     super( pageName );
-    m_workbench = workbench;
+
     m_selection = selection;
 
     setTitle( SELECT_DESTINATION_TITLE );
@@ -146,9 +144,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Creates an instance of this class
    */
-  public WspWinExportPage( final IWorkbench workbench, final IStructuredSelection selection )
+  public WspWinExportPage( final IStructuredSelection selection )
   {
-    this( "WspWinExportPage", workbench, selection );
+    this( "WspWinExportPage", selection );
 
   }
 
@@ -476,6 +474,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * 
    * @return a collection of resources currently selected for export (element type: <code>IResource</code>)
    */
+  @SuppressWarnings("unchecked")
   protected List getSelectedResources( )
   {
     Iterator resourcesToExportIterator = this.getSelectedResourcesIterator();
@@ -516,7 +515,6 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   protected List getWhiteCheckedResources( )
   {
-
     return this.resourceGroup.getAllWhiteCheckedItems();
   }
 

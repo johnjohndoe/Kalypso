@@ -28,7 +28,7 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="4"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#km"/>
+                         <gml:unitOfMeasure gml:uom="dict_uom.xml#km"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -49,7 +49,7 @@
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m³/s"/>
+                         <gml:unitOfMeasure gml:uom="m³/s"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
@@ -69,172 +69,10 @@
                          <st:restriction base="decimal">
                               <st:fractionDigits value="2"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="NN+m"/>
+                         <gml:unitOfMeasure gml:uom="NN+m"/>
                     </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-
-
-     <!--
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="pegelhoehe">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#wasserstand"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="2"/>
-                         </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mNN"/>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="niederschlagsmenge">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#niederschlag"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="0"/>
-                         </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#mm"/>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="abflussmenge">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#abfluss"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="4"/>
-                         </st:restriction>
-                         <gml:unitOfMeasure uom="#m3s"/>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="datum">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#datum"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="dateTime"> </st:restriction>
-                         <swe:frame xlink:href="#zz_europaberlin"/>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>-->
-
-     <!-- Einfacher skalarer Typ ohne Einheit -->
-     <!--
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="skalar">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#undefined"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0.0"/>
-                              <st:fractionDigits value="4"/>
-                         </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
--->
-
-     <!-- Einfacher ganzzahliger Typ ohne Einheit -->
-     <!--
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="ganzzahl">
-               <gml:name/>
-               <swe:property/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal">
-                              <st:minInclusive value="0"/>
-                              <st:fractionDigits value="0"/>
-                         </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
--->
-
-     <!-- Definition der Wechmann Parameter 
-     
-     TODO: was bedeutet noScale?
-     TODO: bessere Spezifikation der Wechmann Parameter
-     
-     -->
-
-     <!-- 
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="wechmann_w1">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#wechmann_w1"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction  base="decimal"> </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="wechmann_lnk1">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#wechmann_lnk1"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal"> </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="wechmann_k2">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#wechmann_k2"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal"> </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="wechmann_wgr">
-               <gml:name/>
-               <swe:property xlink:href="dict_phenomenon.xml#wechmann_wgr"/>
-               <swe:representation>
-                    <swe:SimpleType>
-                         <st:restriction base="decimal"> </st:restriction>
-                         <swe:noScale>true</swe:noScale>
-                    </swe:SimpleType>
-               </swe:representation>
-          </swe:ItemDefinition>
-     </gml:dictionaryEntry>
- -->
 
 </gml:Dictionary>

@@ -91,13 +91,8 @@ public interface IProfilPoint
 
     RAUHEIT("Rauheit", true, true, false, 0.0001),
 
-    RECHTSWERT("Rechtswert", true, true, true, 0.0001),
+    RECHTSWERT("Rechtswert", true, true, true, 0.0001);
 
-    FLIESSZONE("Trennflächen", false, false, false, 0.0001),
-
-    DURCHSTROEMTE("Durchströmte Bereiche", false, false, false, 0.0001),
-
-    BORDVOLL("Bordvollpunkte", true, false, false, 0.0001);
     @SuppressWarnings("boxing")
     private POINT_PROPERTY( final String label, final boolean optional, final boolean visible, final boolean interpolation, final double precision )
     {

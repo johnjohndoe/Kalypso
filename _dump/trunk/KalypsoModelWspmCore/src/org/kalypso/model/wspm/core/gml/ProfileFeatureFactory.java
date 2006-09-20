@@ -94,6 +94,10 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_";
 
+  private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_DEVIDER_";
+
+  private static final String DICT_COMP_PROFILE_BUILDING_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_BUILDING_";
+
   public static final QName QNAME_STATION = new QName( NS_WSPMPROF, "station" );
 
   private ProfileFeatureFactory( )
@@ -140,16 +144,14 @@ public class ProfileFeatureFactory implements IWspmConstants
       final Map<POINT_PROPERTY, IComponent> compMap = new HashMap<POINT_PROPERTY, IComponent>( pointProperties.size() );
       final ProfilDeviderMap deviderMap = new ProfilDeviderMap( profile );
 
-      final Map<DEVIDER_TYP, IComponent> deviderComponents = new HashMap<DEVIDER_TYP, IComponent>();
-      deviderComponents.put( DEVIDER_TYP.DURCHSTROEMTE, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.DURCHSTROEMTE.name() ) );
-      deviderComponents.put( DEVIDER_TYP.BORDVOLL, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.BORDVOLL ) );
-      deviderComponents.put( DEVIDER_TYP.TRENNFLAECHE, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.TRENNFLAECHE ) );
-      deviderComponents.put( DEVIDER_TYP.WEHR, ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_PREFIX + DEVIDER_TYP.WEHR ) );
-
       // add all devider types which have deviders
       // if we don't do it here, we get later null entries in the result
+      final Map<DEVIDER_TYP, IComponent> deviderComponents = new HashMap<DEVIDER_TYP, IComponent>();
       for( final DEVIDER_TYP dTyp : DEVIDER_TYP.values() )
       {
+        final IComponent deviderComponent = ObservationFeatureFactory.createDictionaryComponent( targetFeature, DICT_COMP_PROFILE_DEVIDER_PREFIX + dTyp.name() );
+        deviderComponents.put( dTyp, deviderComponent );
+
         final IProfilDevider[] devider = profile.getDevider( dTyp );
         if( devider != null && devider.length > 0 )
           result.addComponent( deviderComponents.get( dTyp ) );
@@ -247,7 +249,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     for( final BUILDING_PROPERTY bp : buildingProperties )
     {
-      final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, DICT_COMP_PROFILE_PREFIX + bp.name() );
+      final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, DICT_COMP_PROFILE_BUILDING_PREFIX + bp.name() );
       result.addComponent( component );
       record.setValue( component, building.getValueFor( bp ) );
     }
@@ -277,7 +279,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     //
     // Metadaten
     //
-    // TODO: we now create the needed metastrings and such für the prf serializer
+    // TODO: we now create the needed metastrings and such for the prf serializer
     // this should not be necessary
     final ArrayList<Object> metastrings = new ArrayList<Object>( 14 );
     metastrings.add( profileFeature.getWorkspace().getContext().toString() );
@@ -320,14 +322,26 @@ public class ProfileFeatureFactory implements IWspmConstants
     for( final IComponent component : components )
     {
       final String id = component.getId();
-      
+
       final String name;
-      if( id.startsWith( DICT_COMP_PROFILE_PREFIX ) )
+      final boolean devider;
+      if( id.startsWith( DICT_COMP_PROFILE_DEVIDER_PREFIX ) )
+      {
+        name = id.substring( DICT_COMP_PROFILE_DEVIDER_PREFIX.length() );
+        devider = true;
+      }
+      else if( id.startsWith( DICT_COMP_PROFILE_PREFIX ) )
+      {
         name = id.substring( DICT_COMP_PROFILE_PREFIX.length() );
+        devider = false;
+      }
       else
+      {
         name = id;
-      
-      try
+        devider = false;
+      }
+
+      if( devider == false )
       {
         final POINT_PROPERTY pp = IProfilPoint.POINT_PROPERTY.valueOf( name );
         if( pp == POINT_PROPERTY.RAUHEIT )
@@ -339,10 +353,6 @@ public class ProfileFeatureFactory implements IWspmConstants
         profil.addPointProperty( pp );
         compMap.put( component, pp );
       }
-      catch( final IllegalArgumentException e )
-      {
-        // ignore, name is not know, maybe we have a marker
-      }
     }
 
     for( final IRecord record : result )
@@ -351,7 +361,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
       for( final IComponent component : components )
       {
-        final String compName = component.getName();
+        final String compId = component.getId();
         final Object value = record.getValue( component );
 
         final POINT_PROPERTY pp = compMap.get( component );
@@ -361,7 +371,7 @@ public class ProfileFeatureFactory implements IWspmConstants
           continue;
         }
         // Devider
-        else if( "Durchströmte Bereiche".equals( compName ) )
+        else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.DURCHSTROEMTE.name()).equals( compId ) )
         {
           final Boolean hasDevider = (Boolean) value;
           if( hasDevider.booleanValue() )
@@ -370,7 +380,7 @@ public class ProfileFeatureFactory implements IWspmConstants
             profil.addDevider( devider );
           }
         }
-        else if( "Bordvollpunkte".equals( compName ) )
+        else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.BORDVOLL.name()).equals( compId ) )
         {
           final Boolean hasDevider = (Boolean) value;
           if( hasDevider.booleanValue() )
@@ -379,22 +389,22 @@ public class ProfileFeatureFactory implements IWspmConstants
             profil.addDevider( devider );
           }
         }
-        else if( "Trennflächen".equals( compName ) )
+        else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.TRENNFLAECHE.name()).equals( compId ) )
         {
           final String kind = (String) value;
-          if( !"none".equals( kind ) )
+          if( !"null".equals( kind ) && !"none".equals( kind ) )
           {
             final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
             final Boolean high = Boolean.valueOf( "high".equals( kind ) );
             devider.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, high );
             profil.addDevider( devider );
           }
-          else if( "Trennlinie Wehr".equals( compName ) )
-          {
-            final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
-            devider.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, value );
-            profil.addDevider( devider );
-          }
+        }
+        else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.WEHR.name()).equals( compId ) )
+        {
+          final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
+          devider.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, value );
+          profil.addDevider( devider );
         }
 
       }
@@ -428,9 +438,13 @@ public class ProfileFeatureFactory implements IWspmConstants
     for( final IComponent component : result.getComponents() )
     {
       final String id = component.getId();
-      // TODO: find end of id; that is: remove start DICT_...
-      
-      final BUILDING_PROPERTY bProperty = BUILDING_PROPERTY.valueOf( id );
+      final String name;
+      if( id.startsWith( DICT_COMP_PROFILE_BUILDING_PREFIX ) )
+        name = id.substring( DICT_COMP_PROFILE_BUILDING_PREFIX.length() );
+      else
+        name = id;
+
+      final BUILDING_PROPERTY bProperty = BUILDING_PROPERTY.valueOf( name );
       final Object value = record.getValue( component );
       building.setValue( bProperty, value );
     }

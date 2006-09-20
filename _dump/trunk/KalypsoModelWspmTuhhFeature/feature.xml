@@ -73,7 +73,8 @@
          id="org.kalypso.model.wspm.tuhh.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.tuhh.schema"
@@ -170,7 +171,8 @@
          id="org.kalypso.ui.addlayer"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.gml.processes"
@@ -237,6 +239,7 @@
          id="org.eclipse.osgi"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

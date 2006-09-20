@@ -66,7 +66,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -711,7 +710,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     final IProfilchartEditorListener[] listeners = m_listener.toArray( new IProfilchartEditorListener[m_listener.size()] );
     for( final IProfilchartEditorListener l : listeners )
     {
-      Platform.run( new SafeRunnable()
+      SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception
         {

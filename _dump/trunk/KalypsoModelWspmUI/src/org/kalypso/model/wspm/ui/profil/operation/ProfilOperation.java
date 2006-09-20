@@ -55,11 +55,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-
 
 public final class ProfilOperation extends AbstractOperation
 {
@@ -131,9 +129,9 @@ public final class ProfilOperation extends AbstractOperation
     {
       for( final IProfilChange change : changes )
       {
-        final Double v = change.getValue();
-        final POINT_PROPERTY pp = change.getPointProperty() ;
-        //TODO:KIM System.out.println("->"+( pp==null?"null":pp.name())+"   :" + (v==null?"null":v.toString() ) );
+        // final Double v = change.getValue();
+        // final POINT_PROPERTY pp = change.getPointProperty() ;
+        // TODO:KIM System.out.println("->"+( pp==null?"null":pp.name())+" :" + (v==null?"null":v.toString() ) );
         try
         {
           final IProfilChange undoChange = change.doChange( hint );

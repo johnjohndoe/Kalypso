@@ -68,8 +68,6 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
 {
   private IStructuredSelection m_selection;
 
-  private IWorkbench m_workbench;
-
   private WspWinExportPage m_wspWinExportPage;
 
   /**
@@ -93,7 +91,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   @Override
   public void addPages( )
   {
-    m_wspWinExportPage = new WspWinExportPage( m_workbench, m_selection );
+    m_wspWinExportPage = new WspWinExportPage( m_selection );
     addPage( m_wspWinExportPage );
   }
 
@@ -102,8 +100,6 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
-
-    m_workbench = workbench;
     m_selection = currentSelection;
     setWindowTitle( "WSP-Modell (TU-HH)" );
     setNeedsProgressMonitor( true );

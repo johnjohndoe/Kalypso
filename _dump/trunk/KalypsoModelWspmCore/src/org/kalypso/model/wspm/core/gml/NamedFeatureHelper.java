@@ -72,11 +72,11 @@ public class NamedFeatureHelper
       return (String) value;
     else if( value instanceof List )
     {
-      final List<String> nameList = (List<String>) value;
+      final List nameList =  (List) value;
       if( nameList == null || nameList.isEmpty() )
         return "";
 
-      final String name = nameList.get( 0 );
+      final String name = (String) nameList.get( 0 );
       return name == null ? "" : (String) name;
     }
 

@@ -184,7 +184,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     };
     private final String m_label;
 
-    private AddableLayer( final String label )
+    protected AddableLayer( final String label )
     {
       m_label = label;
     }

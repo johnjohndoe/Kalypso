@@ -92,7 +92,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
     private IFile m_file;
 
-    private DoFinishOperation( IProject project )
+    protected DoFinishOperation( IProject project )
     {
       super();
       m_project = project;

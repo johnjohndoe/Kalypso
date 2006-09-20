@@ -71,6 +71,7 @@ public class LaengsschnittHelper
     // Helper class, dont instantiate
   }
 
+  @SuppressWarnings("unchecked")
   public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws JAXBException, IOException
   {
     // Check if optional bundle is installed

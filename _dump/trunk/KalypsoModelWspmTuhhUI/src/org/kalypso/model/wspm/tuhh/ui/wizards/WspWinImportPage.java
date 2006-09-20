@@ -83,6 +83,7 @@ import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
 /**
  * @author thuel2
  */
+@SuppressWarnings("restriction")
 public class WspWinImportPage extends WizardResourceImportPage implements Listener
 {
   // widgets
@@ -811,6 +812,5 @@ public class WspWinImportPage extends WizardResourceImportPage implements Listen
 
     return root.getFolder( path );
   }
-  
-  
+
 }

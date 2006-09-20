@@ -32,4 +32,4 @@ Require-Bundle: org.junit,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.deegree,
  org.kalypso.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

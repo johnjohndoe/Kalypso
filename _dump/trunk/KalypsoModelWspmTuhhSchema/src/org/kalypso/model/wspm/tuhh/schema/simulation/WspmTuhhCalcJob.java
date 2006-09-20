@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;

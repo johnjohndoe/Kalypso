@@ -6,12 +6,14 @@
      http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
      http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
      http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
-     xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:xst="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" gml:id="components">
 
      <gml:description>Dictionary for profile-observation components.</gml:description>
      <gml:name>Profile Component Dictionary</gml:name>
+
+	<!-- Standard Component Types -->
 
      <gml:dictionaryEntry>
 	        <swe:ItemDefinition gml:id="WSPM_BREITE">
@@ -21,11 +23,11 @@
 		           <gml:name>Breite</gml:name>
 		          </swe:Phenomenon>
 		         </swe:property>
-		         <representation xmlns="http://www.opengis.net/swe">
-		          <Number>
-		           <unitOfMeasure gml:uom="m"/>
-		          </Number>
-		         </representation>
+		         <swe:representation>
+		          <swe:Number>
+		           <gml:unitOfMeasure gml:uom="m"/>
+		          </swe:Number>
+		         </swe:representation>
 	        </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -37,44 +39,28 @@
            <gml:name>Höhe</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="mNN"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="mNN"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
 
      <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="WSPM_RAUHEIT_KS">
+        <swe:ItemDefinition gml:id="WSPM_RAUHEIT">
          <swe:property>
-          <swe:Phenomenon gml:id="Phenomenon_RauheitKs">
+          <swe:Phenomenon gml:id="Phenomenon_Rauheit">
            <gml:description></gml:description>
            <gml:name>Rauheit ks</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom=""/>
-          </Number>
-         </representation>
-        </swe:ItemDefinition>
-     </gml:dictionaryEntry>
-
-     <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="WSPM_RAUHEIT_KST">
-         <swe:property>
-          <swe:Phenomenon gml:id="Phenomenon_RauheitKst">
-           <gml:description></gml:description>
-           <gml:name>Rauheit kst</gml:name>
-          </swe:Phenomenon>
-         </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="TODO"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="ks"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -86,11 +72,27 @@
            <gml:name>Hochwert</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="m"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_RECHTSWERT">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_Rechtswert">
+           <gml:description></gml:description>
+           <gml:name>Rechtswert</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -102,11 +104,11 @@
            <gml:name>AX</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="m"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -118,11 +120,11 @@
            <gml:name>AY</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="m"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -134,11 +136,11 @@
            <gml:name>DP</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="m"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -150,11 +152,11 @@
            <gml:name>Brückenunterkante</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="mNN"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="mNN"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -166,11 +168,11 @@
            <gml:name>Brückenoberkante</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="mNN"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="mNN"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
@@ -182,87 +184,249 @@
            <gml:name>Wehr</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="mNN"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="mNN"/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
 	<!-- Devider Types -->
 
      <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="DURCHSTROEMTE">
+        <swe:ItemDefinition gml:id="WSPM_DEVIDER_DURCHSTROEMTE">
          <swe:property>
           <swe:Phenomenon gml:id="Phenomenon_DurchstroemteBereiche">
            <gml:description>Markierung Durchströmte Bereiche</gml:description>
            <gml:name>Durchströmte Bereiche</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Boolean>
-          	<restriction>
-          		<enumeration>true</enumeration>
-          		<enumeration>false</enumeration>
-          	</restriction>
-          </Boolean>
-         </representation>
+         <swe:representation>
+          <swe:Boolean>
+          	<swe:restriction>
+          		<xst:enumeration>true</xst:enumeration>
+          		<xst:enumeration>false</xst:enumeration>
+          	</swe:restriction>
+          </swe:Boolean>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
      <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="BORDVOLL">
+        <swe:ItemDefinition gml:id="WSPM_DEVIDER_BORDVOLL">
          <swe:property>
           <swe:Phenomenon gml:id="Phenomenon_Bordvoll">
            <gml:description>Markierung Bordvollpunkte</gml:description>
            <gml:name>Bordvollpunkte</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Boolean>
-          	<restriction>
-          		<enumeration>true</enumeration>
-          		<enumeration>false</enumeration>
-          	</restriction>
-          </Boolean>
-         </representation>
+         <swe:representation>
+          <swe:Boolean>
+          	<swe:restriction>
+          		<xst:enumeration>true</xst:enumeration>
+          		<xst:enumeration>false</xst:enumeration>
+          	</swe:restriction>
+          </swe:Boolean>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
      <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="TRENNFLAECHE">
+        <swe:ItemDefinition gml:id="WSPM_DEVIDER_TRENNFLAECHE">
          <swe:property>
           <swe:Phenomenon gml:id="Phenomenon_Trennflaechen">
            <gml:description>Markierung Trennflächen</gml:description>
            <gml:name>Trennflächen</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Word>
-          	<restriction>
-          		<enumeration>none</enumeration>
-          		<enumeration>low</enumeration>
-          		<enumeration>high</enumeration>
-          	</restriction>
-          </Word>
-         </representation>
+         <swe:representation>
+          <swe:Word>
+          	<swe:restriction>
+          		<xst:enumeration>none</xst:enumeration>
+          		<xst:enumeration>low</xst:enumeration>
+          		<xst:enumeration>high</xst:enumeration>
+          	</swe:restriction>
+          </swe:Word>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
      <gml:dictionaryEntry>
-        <swe:ItemDefinition gml:id="WEHR">
+        <swe:ItemDefinition gml:id="WSPM_DEVIDER_WEHR">
          <swe:property>
           <swe:Phenomenon gml:id="Phenomenon_TrennlinieWehr">
            <gml:description>Markierung Trennlinie Wehr</gml:description>
            <gml:name>Trennlinie Wehr</gml:name>
           </swe:Phenomenon>
          </swe:property>
-         <representation xmlns="http://www.opengis.net/swe">
-          <Number>
-           <unitOfMeasure gml:uom="m"/>
-          </Number>
-         </representation>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+	<!-- Building Components -->
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_BREITE">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_Breite">
+           <gml:description></gml:description>
+           <gml:name>größte Breite/Durchmesser</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_HOEHE">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_Hoehe">
+           <gml:description></gml:description>
+           <gml:name>Gesamthöhe [m]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_SOHLGEFAELLE">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_Sohlgefaelle">
+           <gml:description></gml:description>
+           <gml:name>Sohlgefälle [1/1000]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="1/1000"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_BEZUGSPUNKT_X">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_X">
+           <gml:description></gml:description>
+           <gml:name>Bezugspunkt Breite [m]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="m"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_BEZUGSPUNKT_Y">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_Y">
+           <gml:description></gml:description>
+           <gml:name>Bezugspunkt Höhe [NN+m]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="mNN"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_STEIGUNG">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_STEIGUNG">
+           <gml:description></gml:description>
+           <gml:name>Verhältnis der Dreieckseiten [1/100]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="1/100"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_RAUHEIT">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_RAUHEIT">
+           <gml:description>Rauheitsbeiwert im Durchlass</gml:description>
+           <gml:name>Rauheit</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="?"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_FORMBEIWERT">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_FORMBEIWERT">
+           <gml:description></gml:description>
+           <gml:name>Formbeiwert</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="?"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_UNTERWASSER">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_UNTERWASSER">
+           <gml:description>Höhe der Gewässersohle im Unterwasser</gml:description>
+           <gml:name>Unterwasser [NN+m]</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom="?"/>
+          </swe:Number>
+         </swe:representation>
+        </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WSPM_BUILDING_WEHRART">
+         <swe:property>
+          <swe:Phenomenon gml:id="Phenomenon_WEHRART">
+           <gml:description>Form der Wehrkrone</gml:description>
+           <gml:name>Wehrart</gml:name>
+          </swe:Phenomenon>
+         </swe:property>
+         <swe:representation>
+          <swe:Number>
+           <gml:unitOfMeasure gml:uom=""/>
+          </swe:Number>
+         </swe:representation>
         </swe:ItemDefinition>
      </gml:dictionaryEntry>
 

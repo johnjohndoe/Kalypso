@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 public class ValidatorPreferencePage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage
 {
-  private final static class ValidatorLabelProvider extends LabelProvider implements ITableLabelProvider 
+  protected final static class ValidatorLabelProvider extends LabelProvider implements ITableLabelProvider 
   {
     public Image getColumnImage( Object element, int columnIndex )
     {

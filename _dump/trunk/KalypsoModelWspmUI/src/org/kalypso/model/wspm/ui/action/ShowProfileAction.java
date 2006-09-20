@@ -52,7 +52,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.model.wspm.ui.product.ProfileditorPerspective;
-import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
 
 /**
  * @author Gernot Belger

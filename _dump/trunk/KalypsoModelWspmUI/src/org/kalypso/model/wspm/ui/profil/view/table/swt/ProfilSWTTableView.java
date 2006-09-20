@@ -140,7 +140,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 
   public static final String ACTION_FILLVALUES = "protfiltable.action.fillvalues";
 
-  private final static class ColumnStruct
+  protected final static class ColumnStruct
   {
     private final Collection<CellEditor> m_editors = new LinkedList<CellEditor>();
 
