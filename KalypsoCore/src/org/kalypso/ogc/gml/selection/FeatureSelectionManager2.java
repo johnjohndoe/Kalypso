@@ -42,6 +42,7 @@
 package org.kalypso.ogc.gml.selection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,7 +56,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class FeatureSelectionManager2 implements IFeatureSelectionManager
 {
@@ -63,6 +64,27 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   private final Map<Feature, EasyFeatureWrapper> m_map = new HashMap<Feature, EasyFeatureWrapper>();
 
   private List<IFeatureSelectionListener> m_listener = new ArrayList<IFeatureSelectionListener>( 5 );
+
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#setSelection(org.kalypso.ogc.gml.selection.EasyFeatureWrapper[])
+   */
+  public void setSelection( final EasyFeatureWrapper[] selectedFeatures )
+  {
+    final HashSet<EasyFeatureWrapper> newState = new HashSet<EasyFeatureWrapper>();
+    Collections.addAll( newState, selectedFeatures );
+    if( newState.equals( m_map.keySet() ) )
+      return;
+
+    m_map.clear();
+
+    for( int i = 0; i < selectedFeatures.length; i++ )
+    {
+      final EasyFeatureWrapper wrapper = selectedFeatures[i];
+      m_map.put( wrapper.getFeature(), wrapper );
+    }
+
+    fireSelectionChanged();
+  }
 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#changeSelection(org.kalypsodeegree.model.feature.Feature[],

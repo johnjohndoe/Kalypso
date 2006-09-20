@@ -53,6 +53,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
     m_title = title;
     m_show = show;
     m_actuate = actuate;
+    
+    if( m_parentFeature == null )
+      throw new IllegalArgumentException( "XLinked Feature must have parent feature: " + m_parentFeature );
   }
 
   /** Returns the linked feature. */
@@ -63,7 +66,12 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
       return null;
 
     final IFeatureProvider provider = getProvider( workspace );
-    return provider == null ? null : provider.getFeature();
+    final Feature feature = provider == null ? null : provider.getFeature();
+    
+    if( feature == null )
+      throw new IllegalStateException( "No feature found at: " + m_href );
+    
+    return feature;
   }
 
   private IFeatureProvider getProvider( final GMLWorkspace workspace )

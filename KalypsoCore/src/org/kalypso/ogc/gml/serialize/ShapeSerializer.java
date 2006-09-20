@@ -62,17 +62,13 @@ import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -88,7 +84,7 @@ public class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( "namespace", "name" );
 
-  private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
+//  private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
 
   private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
 

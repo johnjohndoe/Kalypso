@@ -692,7 +692,7 @@ public class FeatureHelper
   }
 
   /**
-   * Retrieves a property as a feature. Linked features are not suported.
+   * Retrieves a property as a feature.
    * <p>
    * If the property is not yet set, the feature is generated and set.
    * </p>
@@ -705,9 +705,12 @@ public class FeatureHelper
    */
   public static Feature getSubFeature( final Feature parent, final QName propertyName )
   {
-    final Feature subFeature = (Feature) parent.getProperty( propertyName );
-    if( subFeature != null )
-      return subFeature;
+    final Object value = parent.getProperty( propertyName );
+    if( value instanceof Feature )
+      return (Feature) value;
+    
+    if( value instanceof String )
+      return parent.getWorkspace().getFeature( (String) value );
 
     final IFeatureType parentType = parent.getFeatureType();
     final IPropertyType property = parentType.getProperty( propertyName );

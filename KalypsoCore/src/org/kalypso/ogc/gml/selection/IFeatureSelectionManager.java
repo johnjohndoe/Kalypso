@@ -38,6 +38,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureSelectionManager extends IFeatureSelection
 {
+  /** Completely resets the current selection. */
+  public void setSelection( final EasyFeatureWrapper[] selectedFeatures );
+  
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd );
   
   public void clear();
