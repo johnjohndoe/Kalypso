@@ -47,6 +47,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 /**
  * @author albert
  */
+@SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
 {
   public KalypsoModelWorkbenchAdvisor( )

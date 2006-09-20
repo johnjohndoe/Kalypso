@@ -206,7 +206,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       final CommandableWorkspace workspace = (CommandableWorkspace) input;
 
-      // remove all feature of my workspace from the selection manager
+      // remove all features of my workspace from the selection manager
+      // TODO: why not just take the current selection?
+      // or have a setSelection method on the manager?
       final CollectorVisitor visitor = new CollectorVisitor();
       workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Feature[] toRemove = visitor.getResults( true );

@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.swt,
  org.kalypso.contribs.eclipsercp,
  org.eclipse.ui.ide
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

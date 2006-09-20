@@ -201,8 +201,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
       throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
 
-    final Feature recordDefinition = FeatureHelper.resolveLink( f, OM_RESULTDEFINITION );
-
+    final Feature recordDefinition = getOrCreateRecordDefinition( f );
     return buildComponents( recordDefinition );
   }
 
@@ -261,8 +260,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   * <p>
-   * This method is declared protected, but if the need emanes, it could be made public.
    * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
@@ -406,12 +403,25 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   public static IComponent createDictionaryComponent( final Feature obsFeature, final String dictUrn )
   {
-    final Feature recordDefinition = FeatureHelper.resolveLink( obsFeature, OM_RESULTDEFINITION );
+    final Feature recordDefinition = getOrCreateRecordDefinition( obsFeature );
 
     final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
     final IFeatureType featureType = schema.getFeatureType( SWE_ITEMDEFINITION );
 
     final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, featureType, dictUrn, null, null, null, null, null );
     return new FeatureComponent( itemDef );
+  }
+
+  private static Feature getOrCreateRecordDefinition( final Feature obsFeature )
+  {
+    final Feature recordDefinition = FeatureHelper.resolveLink( obsFeature, OM_RESULTDEFINITION );
+    /* Make sure there is always a record definition */
+    if( recordDefinition == null )
+    {
+      final Feature rd = buildRecordDefinition( obsFeature, new IComponent[] {} );
+      obsFeature.setProperty( OM_RESULTDEFINITION, rd );
+      return rd;
+    }
+    return recordDefinition;
   }
 }

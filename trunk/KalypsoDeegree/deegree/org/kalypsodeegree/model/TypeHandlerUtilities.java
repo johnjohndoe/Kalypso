@@ -251,7 +251,7 @@ public class TypeHandlerUtilities
         @Override
         public String convertToXMLString( Boolean value )
         {
-          return Boolean.toString( value );
+          return value == null ? null : Boolean.toString( value );
         }
       } );
 

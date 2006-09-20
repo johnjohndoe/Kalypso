@@ -52,6 +52,7 @@ import org.eclipse.ui.intro.config.CustomizableIntroPart;
 /**
  * @author albert
  */
+@SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdvisor
 {
   public KalypsoModelWorkbenchWindowAdvisor( final KalypsoModelWorkbenchAdvisor workbenchAdvisor, final IWorkbenchWindowConfigurer configurer )
