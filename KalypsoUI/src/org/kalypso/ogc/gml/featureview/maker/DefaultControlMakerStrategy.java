@@ -45,9 +45,11 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.LayoutType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This is one strategy to create a control. It uses several of the concrete makers in a defined order to create the
@@ -59,13 +61,13 @@ public class DefaultControlMakerStrategy implements IControlMaker
 {
   private List<IControlMaker> m_makers = new ArrayList<IControlMaker>();
 
-  public DefaultControlMakerStrategy( final boolean addValidator, final boolean showTables )
+  public DefaultControlMakerStrategy( final boolean addValidator, final boolean showTables, final boolean showButton )
   {
     // m_makers.add( new DefaultControlMaker( addValidator ) );
     m_makers.add( new DefaultFeatureControlMaker( addValidator ) );
     m_makers.add( new GuiHandlerControlMaker( addValidator ) );
 
-    m_makers.add( new LinkedFeatureControlMaker( addValidator ) );
+    m_makers.add( new LinkedFeatureControlMaker( addValidator, showButton ) );
     m_makers.add( new TableControlMaker( showTables ) );
     m_makers.add( new InlineFeatureControlMaker() );
 
@@ -76,11 +78,11 @@ public class DefaultControlMakerStrategy implements IControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean addControls( List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType ftp, final Object value ) throws AbortCreationException
+  public boolean addControls( List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
   {
     for( final IControlMaker controlMaker : m_makers )
     {
-      final boolean stop = controlMaker.addControls( controlList, parentLayout, ftp, value );
+      final boolean stop = controlMaker.addControls( controlList, parentLayout, ft, ftp, feature );
       if( stop )
         return true;
     }

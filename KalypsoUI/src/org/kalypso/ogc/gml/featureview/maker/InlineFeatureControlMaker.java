@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
@@ -67,10 +68,12 @@ public class InlineFeatureControlMaker implements IControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType ftp, final Object value )
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature )
   {
     if( !(ftp instanceof IRelationType) )
       return false;
+
+    final Object value = feature == null ? null : feature.getProperty( ftp );
 
     if( !(value instanceof Feature) )
       return false;
@@ -97,7 +100,7 @@ public class InlineFeatureControlMaker implements IControlMaker
     groupdata.setGrabExcessVerticalSpace( true );
     groupdata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     groupdata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    groupdata.setHorizontalSpan( ((GridLayout)parentLayout).getNumColumns() );
+    groupdata.setHorizontalSpan( ((GridLayout) parentLayout).getNumColumns() );
 
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
     final String text = annotation == null ? ftp.getQName().getLocalPart() : annotation.getLabel();
@@ -115,7 +118,7 @@ public class InlineFeatureControlMaker implements IControlMaker
     group.getControl().add( FeatureviewHelper.FACTORY.createSubcomposite( compo ) );
 
     controlList.add( FeatureviewHelper.FACTORY.createGroup( group ) );
-    
+
     return true;
   }
 

@@ -267,7 +267,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final LabelType labelType = (LabelType) controlType;
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
       label.setText( labelType.getText() );
-      applyAnnotation( label, labelType.getProperty(), feature );
+
+      final QName property = labelType.getProperty();
+      if( property != null )
+        applyAnnotation( label, property, feature );
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
@@ -422,7 +425,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final Control control = fc.createControl( parent, SWT.NONE );
       control.setLayoutData( new GridData() );
-      return (Composite) control;
+      return control;
     }
 
     final Label label = new Label( parent, SWT.NONE );

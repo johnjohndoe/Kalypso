@@ -131,10 +131,6 @@
 			icon="icons/kalypso_odt.gif"
 			id="org.kalypso.ogc.gml.om.chart.ObservationChartView"
 			name="%org.kalypso.ogc.gml.om.chart.ObservationChartView" />
-		<view allowMultiple="true" category="org.kalypso.ui.kalypso"
-			class="org.kalypso.ui.views.map.MapView" fastViewWidthRatio="70"
-			icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.map.MapView"
-			name="%org.kalypso.ui.views.map.MapView" />
 	</extension>
 	<extension id="editorActions" name="editorActions"
 		point="org.eclipse.ui.editorActions">

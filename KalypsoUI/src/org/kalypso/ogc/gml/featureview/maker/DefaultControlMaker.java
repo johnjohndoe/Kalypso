@@ -44,9 +44,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Control maker for the default feature properties. This one supresses everything which is a property-list or
@@ -67,7 +69,7 @@ public class DefaultControlMaker extends AbstractValueControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException
+  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException
   {
     /* 'boundedBy' and value lists shall be ignored, so abort. */
     if( QNAME_GML_BOUNDEDBY.equals( pt.getQName() ) || pt.isList() )

@@ -44,9 +44,11 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.LayoutType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Implementors of this class create feature-view controls for one property.
@@ -62,5 +64,5 @@ public interface IControlMaker
    *          The layout of the parent composite. The control makers need this to know how to fill the controls in.
    * @return true, if controls where added and no further control makers should be asked to add controls for this type.
    */
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType ftp, final Object value ) throws AbortCreationException;
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException;
 }

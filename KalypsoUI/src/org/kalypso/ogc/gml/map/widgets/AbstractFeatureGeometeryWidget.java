@@ -113,7 +113,7 @@ public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeome
   {
     return m_projection;
   }
-  
+
   protected Object getFeatureToEdit( )
   {
     return m_featureToEdit;

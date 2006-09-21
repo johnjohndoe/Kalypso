@@ -49,12 +49,14 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.adapter.DefaultAnnotation;
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.Text;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Control maker for the default feature properties. Replaces the old DefaultControlMaker.
@@ -85,7 +87,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType pt, final Object value ) throws AbortCreationException
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType pt, final Feature feature ) throws AbortCreationException
   {
     final QName qname = pt.getQName();
 
@@ -97,7 +99,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     else
       list = controlList;
 
-    final boolean result = super.addControls( list, parentLayout, pt, value );
+    final boolean result = super.addControls( list, parentLayout, ft, pt, feature );
 
     // HACK: se above
     if( QNAME_GML_NAME.equals( qname ) )
@@ -110,7 +112,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException
+  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException
   {
     final QName qname = pt.getQName();
 
