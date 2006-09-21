@@ -42,10 +42,12 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Displays a simple button to edit the property.
@@ -63,7 +65,7 @@ public class ButtonControlMaker extends AbstractValueControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType fpt, final GridDataType griddata )
+  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
   {
     final Button button = FeatureviewHelper.FACTORY.createButton();
     button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$

@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
 
-import org.eclipse.swt.SWT;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -50,7 +50,7 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
-import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This is one control maker tries to create the control via the {@link org.kalypso.ogc.gml.gui.IGuiTypeHandler}.
@@ -69,7 +69,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
    *      javax.xml.bind.JAXBElement)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final IPropertyType pt, final GridDataType griddata )
+  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
   {
     if( !(pt instanceof IValuePropertyType) )
       return null;
@@ -100,7 +100,9 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
       griddata.setHorizontalSpan( 1 );
 
       // TODO is this ok for all controls?
-      griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+      //griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+      griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+      griddata.setGrabExcessHorizontalSpace( true );
 
       // if( tweakBorderFlag )
       // {

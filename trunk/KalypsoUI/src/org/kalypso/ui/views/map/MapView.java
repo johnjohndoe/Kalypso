@@ -61,6 +61,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.forms.widgets.IFocusSelectable;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -96,7 +97,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class MapView extends ViewPart implements ICommandTarget
 {
-  public static final String ID = MapView.class.getName();
+  // public static final String ID = MapView.class.getName();
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -268,7 +269,7 @@ public class MapView extends ViewPart implements ICommandTarget
             toolBarManager.update( true );
 
             actionBars.updateActionBars();
-            
+
             return Status.OK_STATUS;
           }
         };

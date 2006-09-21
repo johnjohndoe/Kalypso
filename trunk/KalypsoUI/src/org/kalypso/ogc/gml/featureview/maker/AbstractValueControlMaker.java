@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.template.featureview.ControlType;
@@ -55,6 +56,7 @@ import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.ValidatorLabelType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * An abstract control maker with some kind of standard behaviourr: a label followed by a type specific control followed
@@ -75,11 +77,11 @@ public abstract class AbstractValueControlMaker implements IControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType ftp, final Object value ) throws AbortCreationException
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
   {
     /* Create the 'real' control */
     final GridDataType griddata = FeatureviewHelper.FACTORY.createGridDataType();
-    final JAXBElement< ? extends ControlType> controlElement = createControlType( ftp, griddata );
+    final JAXBElement< ? extends ControlType> controlElement = createControlType( feature, ft, ftp, griddata );
     if( controlElement == null )
       return false;
     final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
@@ -193,5 +195,17 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     return AnnotationUtilities.getAnnotation( ftp );
   }
 
-  protected abstract JAXBElement< ? extends ControlType> createControlType( final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException;
+  /**
+   * This function creates the ControlType for a property of a feature.
+   * 
+   * @param feature
+   *          The feature itself.
+   * @param ft
+   *          The feature type.
+   * @param pt
+   *          the property type of the property.
+   * @param gridData
+   *          the grid data object, which should be used.
+   */
+  protected abstract JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException;
 }

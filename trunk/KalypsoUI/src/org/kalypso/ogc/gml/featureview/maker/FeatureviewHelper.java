@@ -70,6 +70,8 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
   private boolean m_shouldAddValidator = false;
 
+  private boolean m_shouldShowButton = true;
+
   /** Generate new templates with or without tables. Cache is cleared. */
   public void setShowTables( final boolean showTable )
   {
@@ -89,6 +91,16 @@ public class FeatureviewHelper implements IFeatureviewFactory
   public boolean isShouldAddValidator( )
   {
     return m_shouldAddValidator;
+  }
+
+  public void setShouldShowButton( boolean shouldShowButton )
+  {
+    m_shouldShowButton = shouldShowButton;
+  }
+
+  public boolean isShouldShowButton( )
+  {
+    return m_shouldShowButton;
   }
 
   /**
@@ -117,14 +129,13 @@ public class FeatureviewHelper implements IFeatureviewFactory
     // PARANOIA: createControlMaker may have been overwritten and so may return null.
     if( controlMaker == null )
       return featureview;
-    
+
     final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
     for( final IPropertyType ftp : featureType.getProperties() )
     {
       try
       {
-        final Object value = feature == null ? null : feature.getProperty( ftp );
-        controlMaker.addControls( controlList, gridLayout, ftp, value );
+        controlMaker.addControls( controlList, gridLayout, featureType, ftp, feature );
       }
       catch( AbortCreationException e )
       {
@@ -142,6 +153,6 @@ public class FeatureviewHelper implements IFeatureviewFactory
    */
   protected IControlMaker createControlMaker( )
   {
-    return new DefaultControlMakerStrategy( m_shouldAddValidator, m_showTables );
+    return new DefaultControlMakerStrategy( m_shouldAddValidator, m_showTables, m_shouldShowButton );
   }
 }

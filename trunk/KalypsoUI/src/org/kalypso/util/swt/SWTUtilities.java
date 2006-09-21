@@ -95,6 +95,7 @@ public class SWTUtilities
     putSWT( "SWT.DROP_DOWN", SWT.DROP_DOWN );
     putSWT( "SWT.READ_ONLY", SWT.READ_ONLY );
     putSWT( "SWT.FULL_SELECTION", SWT.FULL_SELECTION );
+    putSWT( "SWT.WRAP", SWT.WRAP );
     // TODO really a lot to complete SWT keys
   }
 

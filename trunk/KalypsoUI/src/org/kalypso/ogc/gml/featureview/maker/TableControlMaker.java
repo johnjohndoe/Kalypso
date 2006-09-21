@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.template.featureview.ControlType;
@@ -52,6 +53,7 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.Table;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Control maker for lists of feature-properties. Displays them as table of features.
@@ -71,7 +73,7 @@ public class TableControlMaker implements IControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IPropertyType ftp, final Object value ) throws AbortCreationException
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
   {
     if( !(ftp instanceof IRelationType) )
       return false;
