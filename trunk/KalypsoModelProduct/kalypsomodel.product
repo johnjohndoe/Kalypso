@@ -20,8 +20,8 @@
 
    <splash
       location="org.kalypso.model.product"
-      startupProgressRect="0,0,0,0"
-      startupMessageRect="0,0,0,0"
+      startupProgressRect="0,200,400,20"
+      startupMessageRect="0,190,400,20"
       startupForegroundColor="000000" />
    <launcher name="kalypso">
       <solaris/>

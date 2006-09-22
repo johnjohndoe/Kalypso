@@ -21,6 +21,18 @@
          <property
                name="aboutText"
                value="%aboutText"/>
+         <property
+               name="windowImages"
+               value="etc/kalypso16.gif"/>
+         <property
+               name="startupMessageRect"
+               value="0,0,0,0"/>
+         <property
+               name="startupForegroundColor"
+               value="000000"/>
+         <property
+               name="startupProgressRect"
+               value="0,0,0,0"/>
       </product>
    </extension>
    <extension

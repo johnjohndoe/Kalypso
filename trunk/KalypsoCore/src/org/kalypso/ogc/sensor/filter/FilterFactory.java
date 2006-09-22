@@ -48,6 +48,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
@@ -75,9 +76,9 @@ public class FilterFactory
   private static FilterFactory m_instance = null;
 
   /** jaxb context for filter stuff */
-  private static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet( //
+  public static final JAXBContext JC_FILTER = JaxbUtilities.createQuiet( //
 
-      ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class
+      ObjectFactory.class, org.kalypso.wechmann.ObjectFactory.class, org.kalypso.zml.filters.valuecomp.ObjectFactory.class, org.kalypso.zml.ObjectFactory.class, org.w3._1999.xlinkext.ObjectFactory.class
 
   );
 
@@ -142,7 +143,8 @@ public class FilterFactory
     final IObservation obsFilter;
     try
     {
-      final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) JC_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
+      final Unmarshaller unmarshaller = JC_FILTER.createUnmarshaller();
+      final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
       // final IntervallFilterType ift = (IntervallFilterType) value.getValue();
       final AbstractFilterType af = value.getValue();
       sr.close();
