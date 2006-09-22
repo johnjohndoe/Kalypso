@@ -72,7 +72,7 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
     catalog.put( NS.GML3 + "#3", getClass().getResource( "gml/3.1.1/base/gml.xsd" ) );
     prefixes.put( NS.GML3, "gml" );
-
+    
     // WFS
     catalog.put( NS.WFS, getClass().getResource( "wfs1.1.0/wfs1.1.0.xsd" ) );
     prefixes.put( NS.WFS, "wfs" );
