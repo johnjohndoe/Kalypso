@@ -139,7 +139,6 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
       griddata.setVerticalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       // REMARK: this value is random: where do we get a good value (like 2 times the normal height of a text field?).
       griddata.setHeightHint( new Integer( 30 ) );
-      griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
       griddata.setHorizontalSpan( 1 );
 
       return FeatureviewHelper.FACTORY.createText( editor );
@@ -153,9 +152,9 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
       editor.setEditable( true );
       editor.setProperty( qname );
 
-      griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
+      griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
+      griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setHorizontalSpan( 1 );
-      griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
 
       return FeatureviewHelper.FACTORY.createText( editor );
     }

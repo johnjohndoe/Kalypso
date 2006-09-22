@@ -68,10 +68,16 @@ public interface NS
 
   public static final String GML3 = GML2;
 
+  public static final String SMIL20 = "http://www.w3.org/2001/SMIL20/";
+
+  public static final String SMIL20LANG = "http://www.w3.org/2001/SMIL20/Language";
+
   public static final String WFS = "http://www.opengis.net/wfs";
 
   public static final String SWE = "http://www.opengis.net/swe";
 
+  public static final String ST = "http://www.seegrid.csiro.au/xml/st";
+  
   public static final String OM = "http://www.opengis.net/om";
 
   public static final String XST = "http://www.seegrid.csiro.au/xml/st";
@@ -98,5 +104,6 @@ public interface NS
 
   public static final String OGC = "http://www.opengis.net/ogc";
 
-  public static final String COMMON = "org.kalypso.gml.common";;
+  public static final String COMMON = "org.kalypso.gml.common";
+
 }

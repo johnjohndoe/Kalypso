@@ -301,7 +301,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
     return defaultValue;
   }
 
-  /** Loads the main application schema and also all 8via xmlns) references schemas. */
+  /** Loads the main application schema and also all (via xmlns) references schemas. */
   private void initGmlSchema( final String uri, final Attributes atts ) throws SAXException
   {
     if( m_gmlSchema == null )
@@ -324,10 +324,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         final String qname = atts.getQName( i );
         if( qname != null && qname.startsWith( "xmlns:" ) )
         {
+          final String xmlnsUri = atts.getValue( i );
           // HM: are there any other possible namespaces wo do NOT want to load?
-          if( !qname.endsWith( ":xsi" ) )
+          if( !xmlnsUri.equals( NS.XSD ) )
           {
-            final String xmlnsUri = atts.getValue( i );
             try
             {
               m_gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );

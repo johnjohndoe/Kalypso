@@ -231,6 +231,9 @@ public class Feature_Impl extends AbstractFeature implements Feature
       // TODO: At the moment, only the owning list is invalidated. This who link to this feature are broken.
       // TODO: This code is probably not very performant. How to improve this?
       final Feature parent = getParent();
+      if( parent == null )
+        return;
+      
       final IFeatureType featureType = parent.getFeatureType();
       final IPropertyType[] properties = featureType.getProperties();
       for( final IPropertyType type : properties )
