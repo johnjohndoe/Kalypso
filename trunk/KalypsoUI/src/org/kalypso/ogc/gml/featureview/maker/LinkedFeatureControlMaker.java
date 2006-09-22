@@ -110,7 +110,11 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
 
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setGrabExcessHorizontalSpace( true );
-    griddata.setHorizontalSpan( 2 );
+
+    if( m_showButton )
+      griddata.setHorizontalSpan( 2 );
+    else
+      griddata.setHorizontalSpan( 1 );
 
     // Text
     final Combo combo = FeatureviewHelper.FACTORY.createCombo();
@@ -118,8 +122,8 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
     combo.setProperty( qname );
 
     final GridDataType comboData = FeatureviewHelper.FACTORY.createGridDataType();
-    comboData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-    comboData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+    comboData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    comboData.setGrabExcessHorizontalSpace( true );
     combo.setLayoutData( FeatureviewHelper.FACTORY.createGridData( comboData ) );
 
     control.add( FeatureviewHelper.FACTORY.createCombo( combo ) );
@@ -140,5 +144,4 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
 
     return FeatureviewHelper.FACTORY.createComposite( composite );
   }
-
 }
