@@ -247,59 +247,42 @@
 								<enumeration value="DARCY_WEISBACH_OHNE_FORMEINFLUSS">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Darcy-Weisbach (Rohrströmungen, äquivalente
-												Sandrauheiten, ks)</label>
-											<tooltip>Darcy-Weisbach (Rohrströmungen, äquivalente
-												Sandrauheiten, ks)</tooltip>
-											<description>Fließgesetz nach Darcy-Weisbach
-												(Rohrströmungen, äquivalente Sandrauheiten,
-											ks)</description>
+											<label><![CDATA[ Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks)</label>
-											<tooltip>Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks)</tooltip>
-											<description>Darcy-Weisbach fluid model(pipe flows, equivalent sand roughnesses, ks)</description>
+											<label><![CDATA[ Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks) ]]></tooltip>
+											<description><![CDATA[ Darcy-Weisbach fluid model(pipe flows, equivalent sand roughnesses, ks) ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="DARCY_WEISBACH_MIT_FORMEINFLUSS">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Darcy-Weisbach (offene Gerinne mit Formeinfluss,
-												äquivalente Sandrauheiten, ks)</label>
-											<tooltip>Darcy-Weisbach (offene Gerinne mit
-												Formeinfluss, äquivalente Sandrauheiten, ks)</tooltip>
-											<description>Fließgesetz nach Darcy-Weisbach (offene
-												Gerinne mit Formeinfluss, äquivalente Sandrauheiten,
-												ks)</description>
+											<label><![CDATA[ Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Darcy-Weisbach (open channels with profile impact,
-												equivalent sand roughnesses, ks)</label>
-											<tooltip>Darcy-Weisbach (open channels with profile impact,
-												equivalent sand roughnesses, ks)</tooltip>
-											<description>Darcy-Weisbach fluid model (open channels with profile impact,
-												equivalent sand roughnesses, ks)</description>
+											<label><![CDATA[ Darcy-Weisbach (open channels with profile impact, equivalent sand roughnesses, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (open channels with profile impact,	equivalent sand roughnesses, ks) ]]></tooltip>
+											<description><![CDATA[ Darcy-Weisbach fluid model (open channels with profile impact,	equivalent sand roughnesses, ks) ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="MANNING_STRICKLER">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Gauckler-Manning-Strickler (Rauheitsbeiwerte,
-												kst)</label>
-											<tooltip>Gauckler-Manning-Strickler (Rauheitsbeiwerte,
-												kst)</tooltip>
-											<description>Fließgesetz nach Gauckler-Manning-Strickler
-												(Rauheitsbeiwerte, kst)</description>
+											<label><![CDATA[ Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></label>
+											<tooltip><![CDATA[ Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Gauckler-Manning-Strickler (roughness coefficients,
-												kst)</label>
-											<tooltip>Gauckler-Manning-Strickler (roughness coefficients,
-												kst)</tooltip>
-											<description>Gauckler-Manning-Strickler fluid model
-												(roughness coefficients, kst)</description>
+											<label><![CDATA[ Gauckler-Manning-Strickler (roughness coefficients, kst) ]]></label>
+											<tooltip><![CDATA[ Gauckler-Manning-Strickler (roughness coefficients, kst) ]]></tooltip>
+											<description><![CDATA[ Gauckler-Manning-Strickler fluid model (roughness coefficients, kst) ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -352,18 +335,14 @@
 								<enumeration value="BF_NON_UNIFORM">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>Bordvollberechnung - stationär-ungleichförmige
-												Abflussverhältnisse</label>
-											<tooltip>Bordvollberechnung - stationär-ungleichförmige
-												Abflussverhältnisse</tooltip>
-											<description>Bordvollberechnung -
-												stationär-ungleichförmige
-											Abflussverhältnisse</description>
+											<label><![CDATA[ Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse ]]></label>
+											<tooltip><![CDATA[ Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse ]]></tooltip>
+											<description><![CDATA[ Bordvollberechnung - stationär-ungleichförmige	Abflussverhältnisse ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Bank-full - steady-non-uniform discharge</label>
-											<tooltip>Bank-full - steady-non-uniform discharge</tooltip>
-											<description>Bank-full - steady-non-uniform discharge</description>
+											<label><![CDATA[ Bank-full - steady-non-uniform discharge ]]></label>
+											<tooltip><![CDATA[ Bank-full - steady-non-uniform discharge ]]></tooltip>
+											<description><![CDATA[ Bank-full - steady-non-uniform discharge ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -502,8 +481,7 @@
 										<documentation xml:lang="en">
 											<label>Critical water depth</label>
 											<tooltip>Critical water depth</tooltip>
-											<description>Lower boundary condition (1. profile):
-											critical water depth</description>
+											<description><![CDATA[ Lower boundary condition (1. profile):	critical water depth ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -512,14 +490,12 @@
 										<documentation xml:lang="de">
 											<label>Anfangswasserspiegel</label>
 											<tooltip>Anfangswasserspiegel</tooltip>
-											<description>Untere Randbedingung (1.Profil):
-												Anfangswasserspiegel</description>
+											<description><![CDATA[ Untere Randbedingung (1.Profil): Anfangswasserspiegel ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
 											<label>Initial water level</label>
 											<tooltip>Initial water level</tooltip>
-											<description>Lower boundary condition (1. profile):
-											initial water level</description>
+											<description><![CDATA[ Lower boundary condition (1. profile):	initial water level ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -528,14 +504,12 @@
 										<documentation xml:lang="de">
 											<label>stationär-gleichförmiges Gefälle</label>
 											<tooltip>stationär-gleichförmiges Gefälle</tooltip>
-											<description>Untere Randbedingung (1.Profil):
-												stationär-gleichförmiges Gefälle</description>
+											<description><![CDATA[ Untere Randbedingung (1.Profil): stationär-gleichförmiges Gefälle ]]></description>
 										</documentation>
 										<documentation xml:lang="en">
 											<label>Steady-uniform slope</label>
 											<tooltip>Steady-uniform slope</tooltip>
-											<description>Lower boundary condition (1. profile):
-											steady-uniform slope</description>
+											<description><![CDATA[ Lower boundary condition (1. profile):	steady-uniform slope ]]></description>
 										</documentation>
 									</annotation>
 								</enumeration>

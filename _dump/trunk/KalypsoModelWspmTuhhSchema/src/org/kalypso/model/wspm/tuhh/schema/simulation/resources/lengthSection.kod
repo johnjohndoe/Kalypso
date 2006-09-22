@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="CP1252"?>
 <Configuration xmlns="http://www.ksp.org/chart/viewerConfiguration"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:style="http://www.ksp.org/chart/layerStyle"
@@ -7,31 +7,31 @@
     http://www.ksp.org/chart/layerStyle file:/C:/Eclipse/Kalypso/KalypsoChart/etc/binding/style/layerStyle.xsd
     ">
     <Chart name="ls">
-        <Title>Spiegellinien-LÃ¤ngsschnitt</Title>
-        <Abstract>Die ist das Ergebnis einer 1D-Spiegellinienberechnung in Form eines LÃ¤ngsschnitts</Abstract>
+        <Title>Spiegellinien-Längsschnitt</Title>
+        <Abstract>Die ist das Ergebnis einer 1D-Spiegellinienberechnung in Form eines Längsschnitts</Abstract>
         <LayerProvider name="org.kalypso.layerprovider.observation.WasserstandLayerProvider">
-            <Parameter name="href" value="Daten/LÃ¤ngsschnitt.gml"/>
+            <Parameter name="href" value="Daten/Längsschnitt.gml"/>
             <Parameter name="gmlxpath" value=""/>
             <ChartElement>
                 <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="Stationierung"/>
-                    <Value axisLink="NN_Axis" equation="HÃ¶he WSP"/>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
                 </AxisMapping>
                 <StyleLink name="LINE" ref="wspStyle"/>
             </ChartElement>
 
             <ChartElement>
                 <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="Stationierung"/>
-                    <Value axisLink="M3SAxis" equation="Abfluss"/>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="M3SAxis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
                 </AxisMapping>
                 <StyleLink name="LINE" ref="runoffStyle"/>
             </ChartElement>
 
             <ChartElement>
                 <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="Stationierung"/>
-                    <Value axisLink="NN_Axis" equation="SohlhÃ¶he"/>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
                 </AxisMapping>
                 <StyleLink name="LINE" ref="soilStyle"/>
             </ChartElement>
@@ -52,7 +52,7 @@
             <MaxVal>10.0</MaxVal>
         </DoubleAxis>
         <DoubleAxis id="M3SAxis">
-            <Name>mÂ³/s</Name>
+            <Name>m³/s</Name>
             <Direction>POSITIVE</Direction>
             <Position>RIGHT</Position>
             <MinVal>-5.0</MinVal>

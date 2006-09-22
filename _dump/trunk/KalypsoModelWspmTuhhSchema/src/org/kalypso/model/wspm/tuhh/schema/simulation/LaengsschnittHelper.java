@@ -53,6 +53,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.swtchart.configuration.ConfigurationLoader;
@@ -102,7 +103,7 @@ public class LaengsschnittHelper
       }
     }
 
-    final Marshaller marshaller = ConfigurationLoader.JC.createMarshaller();
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( ConfigurationLoader.JC, true );
 
     OutputStream os = null;
 

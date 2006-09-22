@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -134,26 +135,17 @@ public class BreakLinesHelper implements IWspmConstants
 
   private static Map<Double, Double> createWspMap( final TupleResult result, final String strStationierung, final String strWsp )
   {
-    IComponent stationComp = null;
-    IComponent wspComp = null;
-    final IComponent[] components = result.getComponents();
-    for( final IComponent comp : components )
-    {
-      // TODO: get component via phenomenon
-      if( comp.getName().equals( strWsp ) )
-        wspComp = comp;
-      if( comp.getName().equals( strStationierung ) )
-        stationComp = comp;
-    }
+    final IComponent statComponent = TupleResultUtilities.findComponentById( result, strStationierung );
+    final IComponent wspComp = TupleResultUtilities.findComponentById( result, strWsp );
 
-    if( stationComp == null )
+    if( statComponent == null )
       throw new IllegalArgumentException( "Längsschnitt hat keine Spalte mit Namen " + strStationierung );
     if( wspComp == null )
       throw new IllegalArgumentException( "Längsschnitt hat keine Spalte mit Namen " + strWsp );
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
-      wspMap.put( ((BigDecimal) record.getValue( stationComp )).doubleValue(), ((BigDecimal) record.getValue( wspComp )).doubleValue() );
+      wspMap.put( ((BigDecimal) record.getValue( statComponent )).doubleValue(), ((BigDecimal) record.getValue( wspComp )).doubleValue() );
     return wspMap;
   }
 

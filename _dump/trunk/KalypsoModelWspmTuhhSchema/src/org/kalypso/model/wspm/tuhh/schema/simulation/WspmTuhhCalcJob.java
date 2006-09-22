@@ -303,8 +303,8 @@ public class WspmTuhhCalcJob implements ISimulation
 
               final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
               final TupleResult result = lengthSectionObs.getResult();
-              final String strStationierung = "Stationierung";
-              final String strWsp = "Höhe WSP";
+              final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
+              final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
               final WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
 
               //
@@ -377,7 +377,8 @@ public class WspmTuhhCalcJob implements ISimulation
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Modellgrenzen konnten nicht erzeugt werden: " + e.getLocalizedMessage() );
+                pwSimuLog.println( "Modellgrenzen konnten nicht erzeugt werden: " );
+                e.printStackTrace( pwSimuLog );
               }
 
               //
