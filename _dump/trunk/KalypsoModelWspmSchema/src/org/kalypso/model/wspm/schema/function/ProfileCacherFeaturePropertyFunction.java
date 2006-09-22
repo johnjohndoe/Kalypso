@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Gernot Belger
@@ -102,11 +103,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
       final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
       final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
-      // final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT
-      // :
-      // POINT_PROPERTY.BREITE;
-      // final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT :
-      // null;
       final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
 
       if( ppRW == null || ppHW == null || ppH == null )
@@ -123,6 +119,9 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
         positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
       }
+      
+      
+      
       return GeometryFactory.createGM_Curve( positions, null );
     }
     catch( final ProfilDataException e )
