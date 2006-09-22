@@ -176,6 +176,9 @@ public class GisTemplateHelper
   public static GM_Envelope getBoundingBox( final Gismapview gisview )
   {
     final ExtentType extent = gisview.getExtent();
+    if( extent == null )
+      return null;
+    
     final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
