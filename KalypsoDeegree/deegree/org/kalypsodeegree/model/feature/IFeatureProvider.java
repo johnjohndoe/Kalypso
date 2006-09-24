@@ -52,4 +52,6 @@ public interface IFeatureProvider
   public Feature getFeature( final String featureId );
 
   public void dispose( );
+
+  public GMLWorkspace getWorkspace( );
 }

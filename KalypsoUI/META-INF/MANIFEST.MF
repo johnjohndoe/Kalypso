@@ -187,4 +187,4 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.kalypso.services.core.client,
  org.eclipse.ui.forms
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

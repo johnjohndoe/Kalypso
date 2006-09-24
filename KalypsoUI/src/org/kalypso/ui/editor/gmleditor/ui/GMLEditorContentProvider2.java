@@ -48,6 +48,7 @@ import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
@@ -135,7 +136,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         final Feature feature = features[i];
         if( feature != null )
         {
-          if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) )
+          if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
             result.add( new LinkedFeatureElement2( feature ) );
           else
             result.add( feature );

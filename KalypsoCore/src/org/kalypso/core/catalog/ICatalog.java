@@ -62,17 +62,17 @@ import javax.xml.bind.JAXBException;
  */
 public interface ICatalog
 {
-  // /**
-  // * resolves catalog for baseURN<br>
-  // * TODO this method is intended for categorized catalogs in kalypso and it must be checked if we can remove it from
-  // * the interface (althought catalogs are kept categorized intern)
-  // */
-  // @SuppressWarnings("unchecked")
-  // public ICatalog getCatalogFor( final String baseURN ) throws Exception;
-
   /**
    * returns a uri (absolute) or the systemID if no match was found int the catalog<br>
    * callers usually resolve the result against their local context
+   * 
+   * @param resolveContext
+   *          If true, the found uri is resolved against the local context
+   */
+  public String resolve( final String systemID, final String publicID, final boolean resolveContext );
+
+  /**
+   * Same as {@link #resolve(String, String, true)}.
    */
   public String resolve( final String systemID, final String publicID );
 

@@ -48,5 +48,9 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
  */
 public interface IFeatureProviderFactory
 {
-  public IFeatureProvider createFeatureProvider( final Feature context, final String href, final String role, final String arcrole, final String title, final String show, final String actuate );
+  /**
+   * @param urn
+   *          Urn to the workspace ths feature provider gets features from.
+   */
+  public IFeatureProvider createFeatureProvider( final Feature context, final String urn, final String role, final String arcrole, final String title, final String show, final String actuate );
 }

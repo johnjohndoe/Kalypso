@@ -340,18 +340,19 @@ public class DynamicCatalog implements ICatalog
     return UrlResolverSingleton.resolveUrl( m_context, href );
   }
 
-  /**
-   * 
-   */
-  @SuppressWarnings("unchecked")
   public String resolve( final String systemID, final String publicID )
   {
-    return resolveLocal( systemID, publicID, false );
+    return resolve( systemID, publicID, true );
   }
 
-  private String resolveLocal( final String systemID, final String publicID, boolean local )
+  public String resolve( final String systemID, final String publicID, final boolean resolveContext )
   {
-    final List<String> result = internResolve( systemID, publicID, null, false, false, local );
+    return resolveLocal( systemID, publicID, false, resolveContext );
+  }
+
+  private String resolveLocal( final String systemID, final String publicID, final boolean local, final boolean resolveContext )
+  {
+    final List<String> result = internResolve( systemID, publicID, null, false, false, local, resolveContext );
     if( result.size() > 0 )
       return result.get( 0 );
     return systemID;
@@ -360,18 +361,17 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#getEnryURNS(java.lang.String)
    */
-  public List<String> getEnryURNS( String urnPattern )
+  public List<String> getEnryURNS( final String urnPattern )
   {
-    final List<String> result = internResolve( urnPattern, urnPattern, null, true, true, false );
-    return result;
+    return internResolve( urnPattern, urnPattern, null, true, true, false, true );
   }
 
   /**
    * @return true results of resolve
    */
-  private List<String> internResolveDelegate( final String hrefCatalog, final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern )
+  private List<String> internResolveDelegate( final String hrefCatalog, final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern, final boolean resolveContext )
   {
-    final String uriToCatalog = resolveLocal( hrefCatalog, hrefCatalog, true );
+    final String uriToCatalog = resolveLocal( hrefCatalog, hrefCatalog, true, true );
     final URI catalogURI;
     try
     {
@@ -381,7 +381,7 @@ public class DynamicCatalog implements ICatalog
       if( catalog instanceof DynamicCatalog )
       {
         final DynamicCatalog dynCatalog = (DynamicCatalog) catalog;
-        collector = dynCatalog.internResolve( systemID, publicID, collector, doCollectURN, supportPattern, false );
+        collector = dynCatalog.internResolve( systemID, publicID, collector, doCollectURN, supportPattern, false, resolveContext );
       }
       else
       {
@@ -415,8 +415,12 @@ public class DynamicCatalog implements ICatalog
     return collector;
   }
 
+  /**
+   * @param resolveContext
+   *          If true, the found entry is resolved against the catalogs location, if false it is directly returned.
+   */
   @SuppressWarnings("unchecked")
-  private List<String> internResolve( final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern, boolean local )
+  private List<String> internResolve( final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean local, final boolean resolveContext )
   {
     if( collector == null )
       collector = new ArrayList<String>();
@@ -441,11 +445,16 @@ public class DynamicCatalog implements ICatalog
               {
                 try
                 {
-                  final String uri = resolve( system.getUri() ).toExternalForm();
                   if( doCollectURN )
                     collector.add( sysID );
+                  else if( !resolveContext )
+                  {
+                    collector.add( system.getUri() );
+                    return collector;
+                  }
                   else
                   {
+                    final String uri = resolve( system.getUri() ).toExternalForm();
                     collector.add( uri );
                     return collector;
                   }
@@ -462,8 +471,9 @@ public class DynamicCatalog implements ICatalog
             {
               final NextCatalog nextCatalog = (NextCatalog) item;
               final String catalogHref = nextCatalog.getCatalog();
-              //TODO: @Andreas: is it ok to stop here if we find something? What, if we have some public/system entries after the nextCatalog entry?
-              collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );
+              // TODO: @Andreas: is it ok to stop here if we find something? What, if we have some public/system entries
+              // after the nextCatalog entry?
+              collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern, resolveContext );
               if( !doCollectURN && collector.size() > 0 )
                 return collector;
             }
@@ -480,11 +490,16 @@ public class DynamicCatalog implements ICatalog
               {
                 try
                 {
-                  final String uri = resolve( public_.getUri() ).toExternalForm();
                   if( doCollectURN )
                     collector.add( pubID );
+                  else if( !resolveContext )
+                  {
+                    collector.add( public_.getUri() );
+                    return collector;
+                  }
                   else
                   {
+                    final String uri = resolve( public_.getUri() ).toExternalForm();
                     collector.add( uri );
                     return collector;
                   }
@@ -506,7 +521,7 @@ public class DynamicCatalog implements ICatalog
                   (publicID != null && publicID.startsWith( uriStartString )) )
               {
                 final String catalogHref = delegateURI.getCatalog();
-                collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern );
+                collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern, resolveContext );
                 if( !doCollectURN && collector.size() > 0 )
                   return collector;
               }
@@ -520,7 +535,7 @@ public class DynamicCatalog implements ICatalog
     return collector;
   }
 
-  private boolean matches( String requestedID, String entryID, boolean supportPattern )
+  private boolean matches( final String requestedID, final String entryID, boolean supportPattern )
   {
     if( !supportPattern )
       return requestedID.equals( entryID );
@@ -529,6 +544,22 @@ public class DynamicCatalog implements ICatalog
       final String prefixToTest = requestedID.substring( 0, requestedID.length() - 1 );
       return entryID.startsWith( prefixToTest );
     }
+    else
+    {
+      final String[] requestedStrings = requestedID.split( ":" );
+      final String[] entryStrings = entryID.split( ":" );
+      if( requestedStrings.length == entryStrings.length )
+      {
+        for( int i = 0; i < entryStrings.length; i++ )
+        {
+          final String requestedString = requestedStrings[i];
+          if( !requestedString.equals( "*" ) && !requestedString.equals( entryStrings[i] ) )
+            return false;
+        }
+        return true;
+      }
+    }
+
     return requestedID.equals( entryID );
   }
 
