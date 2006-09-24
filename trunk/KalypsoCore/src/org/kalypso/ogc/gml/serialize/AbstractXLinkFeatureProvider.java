@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
@@ -51,8 +48,6 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
  */
 public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
 {
-  private final String m_href;
-
   private final String m_role;
 
   private final String m_actuate;
@@ -65,73 +60,23 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
 
   private final Feature m_context;
 
-  private final IFeatureType m_targetFeatureType;
-
   private final String m_uri;
-  
-  private final String m_featureId;
 
   /**
    * @param context
    *          The context is used to find the feature.
    */
-  public AbstractXLinkFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public AbstractXLinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_context = context;
-    m_targetFeatureType = targetFeatureType;
+    m_uri = uri;
     m_role = role;
     m_arcrole = arcrole;
     m_title = title;
     m_show = show;
     m_actuate = actuate;
-    m_href = href;
-
-    if( !m_href.contains( "#" ) )
-    {
-      m_uri = null;
-      m_featureId = null;
-    }
-    else if( m_href.startsWith( "#" ) )
-    {
-      m_uri = null;
-      m_featureId = m_href.substring( 1 ); 
-    }
-    else
-    {
-      final String[] hrefParts = m_href.split( "#" );
-      if( hrefParts.length == 2 )
-      {
-        final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-        m_uri = baseCatalog.resolve( hrefParts[0], hrefParts[0] );
-        m_featureId = hrefParts[1];
-      }
-      else
-      {
-        m_uri = null;
-        m_featureId = null;
-      }
-    }
   }
 
-  
-  
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeatureType()
-   */
-  public IFeatureType getFeatureType( )
-  {
-    final Feature feature = getFeature();
-    return feature == null ? m_targetFeatureType : feature.getFeatureType();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getId()
-   */
-  public String getId( )
-  {
-    return m_featureId;
-  }
-  
   public String getActuate( )
   {
     return m_actuate;
@@ -140,11 +85,6 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
   public String getArcrole( )
   {
     return m_arcrole;
-  }
-
-  public String getHref( )
-  {
-    return m_href;
   }
 
   public String getRole( )
@@ -165,11 +105,6 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
   protected Feature getContext( )
   {
     return m_context;
-  }
-
-  protected String getFeatureId( )
-  {
-    return m_featureId;
   }
 
   protected String getUri( )

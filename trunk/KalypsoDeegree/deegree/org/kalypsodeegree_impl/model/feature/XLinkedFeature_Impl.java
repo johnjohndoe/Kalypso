@@ -27,9 +27,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 {
   private final Feature m_parentFeature;
 
-  private final IFeatureType m_featureType;
+  private final String m_uri;
 
-  private final String m_href;
+  private final String m_featureId;
 
   private final String m_role;
 
@@ -43,17 +43,45 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 
   private IFeatureProvider m_provider;
 
+  private final IFeatureType m_basicFeatureType;
+
+  private IFeatureType m_featureType;
+
   public XLinkedFeature_Impl( final Feature parentFeature, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_parentFeature = parentFeature;
-    m_featureType = featureType;
-    m_href = href;
+    m_basicFeatureType = featureType;
     m_role = role;
     m_arcrole = arcrole;
     m_title = title;
     m_show = show;
     m_actuate = actuate;
-    
+
+    if( !href.contains( "#" ) )
+    {
+      m_uri = null;
+      m_featureId = null;
+    }
+    else if( href.startsWith( "#" ) )
+    {
+      m_uri = null;
+      m_featureId = href.substring( 1 );
+    }
+    else
+    {
+      final String[] hrefParts = href.split( "#" );
+      if( hrefParts.length == 2 )
+      {
+        m_uri = hrefParts[0];
+        m_featureId = hrefParts[1];
+      }
+      else
+      {
+        m_uri = null;
+        m_featureId = null;
+      }
+    }
+
     if( m_parentFeature == null )
       throw new IllegalArgumentException( "XLinked Feature must have parent feature: " + m_parentFeature );
   }
@@ -62,15 +90,19 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   private final Feature getFeature( )
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
-    if( workspace == null )
+    if( workspace == null || m_featureId == null )
       return null;
 
     final IFeatureProvider provider = getProvider( workspace );
-    final Feature feature = provider == null ? null : provider.getFeature();
-    
+    final Feature feature = provider == null ? null : provider.getFeature( m_featureId );
+
     if( feature == null )
-      throw new IllegalStateException( "No feature found at: " + m_href );
-    
+      throw new IllegalStateException( "No feature found at: " + m_uri + "#" + m_featureId );
+
+    /* The first time we access the real feature, get our real feature type. */
+    if( m_featureType == null )
+      m_featureType = feature.getFeatureType();
+
     return feature;
   }
 
@@ -80,7 +112,7 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
       return m_provider;
 
     final IFeatureProviderFactory featureProviderFactory = workspace.getFeatureProviderFactory();
-    m_provider = featureProviderFactory.createFeatureProvider( m_parentFeature, m_featureType, m_href, m_role, m_arcrole, m_title, m_show, m_actuate );
+    m_provider = featureProviderFactory.createFeatureProvider( m_parentFeature, m_uri, m_role, m_arcrole, m_title, m_show, m_actuate );
     return m_provider;
   }
 
@@ -89,8 +121,13 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public String getId( )
   {
-    final IFeatureProvider provider = getProvider( getWorkspace() );
-    return provider.getId();
+    // return null in order to let the workspace generate internal ids
+    return null;
+
+    // do not access the provider/feature, because else we already acess the remote workspace while loading
+    // the old one, this leading to dead-locks
+    // final IFeatureProvider provider = getProvider( getWorkspace() );
+    // return provider.getId();
   }
 
   /**
@@ -98,10 +135,12 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
    */
   public IFeatureType getFeatureType( )
   {
-    if( m_provider == null )
-    return m_featureType;
-    
-    return m_provider.getFeatureType();
+    /* As long as the feature was not accessed, we only know the target feature type of our defining property. */
+
+    if( m_featureType != null )
+      return m_featureType;
+
+    return m_basicFeatureType;
   }
 
   /**
@@ -246,9 +285,12 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     getFeature().setProperty( propQName, value );
   }
-  
+
   public String getHref( )
   {
-    return m_href;
+    if( m_uri == null )
+      return "#" + m_featureId;
+
+    return m_uri + "#" + m_featureId;
   }
 }

@@ -92,7 +92,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     }
     if( parentElement instanceof GMLWorkspace )
     {
-      final IFeatureType[] featureTypes = ((GMLWorkspace) parentElement).getFeatureTypes();
+      final IFeatureType[] featureTypes = ((GMLWorkspace) parentElement).getGMLSchema().getAllFeatureTypes();
 
       for( int i = 0; i < featureTypes.length; i++ )
       {

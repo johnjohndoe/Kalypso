@@ -350,14 +350,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  private final class RegisterVisitor implements FeatureVisitor
+  protected final class RegisterVisitor implements FeatureVisitor
   {
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
      */
     public boolean visit( final Feature f )
     {
-      final String id = f.getId();
+      String id = f.getId();
       // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
       // if( m_indexMap.containsKey( id ) )
       // System.out.println( "Workspace already contains a feature with id: " +
@@ -366,7 +366,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       // System.out.println( "found" );
 
       if( id == null || id.length() == 0 )
-        System.out.println( "Feature has no id: " + f );
+      {
+        id = createFeatureId( f.getFeatureType() );
+//        System.out.println( "Feature has no id: " + f );
+      }
 
       // TODO: better generate new ids and remember wich ones are generated (because
       // we dont want to write the gernerated ones)
@@ -379,7 +382,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  private final class UnRegisterVisitor implements FeatureVisitor
+  protected final class UnRegisterVisitor implements FeatureVisitor
   {
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
