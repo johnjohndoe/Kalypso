@@ -90,4 +90,4 @@ Require-Bundle: org.kalypso.core,
  org.kalypso.jwsdp,
  org.eclipse.ui,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
