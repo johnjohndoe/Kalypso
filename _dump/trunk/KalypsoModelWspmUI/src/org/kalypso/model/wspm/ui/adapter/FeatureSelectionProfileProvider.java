@@ -259,7 +259,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   public void onModellChange( final ModellEvent modellEvent )
   {
     // do no react to my own event, beware of recursion
-    if( modellEvent.getEventSource() == m_mep )
+    if( modellEvent.getEventSource() == m_mep || m_feature == null )
       return;
 
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
@@ -271,7 +271,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStationResult[] results = m_pem == null ? null : m_pem.getResults();
         setProfile( profil, results, m_feature );
       }
-      catch( ProfilDataException e )
+      catch( final ProfilDataException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
