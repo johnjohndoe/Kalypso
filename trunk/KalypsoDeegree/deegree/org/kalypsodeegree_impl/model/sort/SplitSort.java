@@ -30,8 +30,8 @@ public class SplitSort implements FeatureList
   private final IRelationType m_parentFeatureTypeProperty;
 
   /**
-   * A flag indicating if the spacial index is upd-to-date (if false). If not, the next call to 'query' will first recalculate the
-   * index.
+   * A flag indicating if the spacial index is upd-to-date (if false). If not, the next call to 'query' will first
+   * recalculate the index.
    */
   private boolean m_invalid = true;
 
@@ -50,8 +50,13 @@ public class SplitSort implements FeatureList
 
   public boolean add( final Object object )
   {
-    final GM_Envelope env = getEnvelope( object );
-    spacialAdd( env, object );
+    /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
+    if( !m_invalid )
+    {
+      final GM_Envelope env = getEnvelope( object );
+      spacialAdd( env, object );
+    }
+
     return m_objects.add( object );
   }
 
@@ -95,7 +100,7 @@ public class SplitSort implements FeatureList
 
     if( result == null )
       result = new ArrayList();
-    
+
     if( m_rootContainer != null )
       result = m_rootContainer.query( queryEnv, result );
     return result;
@@ -169,30 +174,17 @@ public class SplitSort implements FeatureList
 
   public GM_Envelope getBoundingBox( )
   {
-    // TODO es muss die boundingbox aus den Objecten innerhalb des
-    // rootcontainers gebildet werden
     if( m_rootContainer != null )
       return m_rootContainer.getEnvelope();
+    
     return null;
-  }
-
-  public void resort( final Feature feature )
-  {
-    if( !contains( feature ) )
-      return;
-    if( m_rootContainer != null )
-      m_rootContainer.remove( feature );
-    final GM_Envelope envelope = getEnvelope( feature );
-    if( envelope == null )
-      System.out.println( "no envelope !" );
-    spacialAdd( envelope, feature );
   }
 
   private void resort( )
   {
     if( m_invalid == false )
       return;
-    
+
     m_rootContainer = null;
 
     GM_Envelope bbox = null;
@@ -217,7 +209,7 @@ public class SplitSort implements FeatureList
     }
     else
       m_rootContainer = null;
-    
+
     m_invalid = false;
   }
 
@@ -234,7 +226,6 @@ public class SplitSort implements FeatureList
    */
   public void clear( )
   {
-    // TODO: dispose it?
     m_rootContainer = null;
 
     m_objects.clear();
@@ -279,8 +270,12 @@ public class SplitSort implements FeatureList
    */
   public void add( int index, Object object )
   {
-    final GM_Envelope env = getEnvelope( object );
-    spacialAdd( env, object );
+    if( !m_invalid )
+    {
+      final GM_Envelope env = getEnvelope( object );
+      spacialAdd( env, object );
+    }
+
     m_objects.add( index, object );
   }
 
@@ -456,7 +451,13 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    if( contains( o ) )
-      invalidate();
+    if( !contains( o ) )
+      return;
+    if( m_rootContainer != null )
+      m_rootContainer.remove( o );
+    final GM_Envelope envelope = getEnvelope( o );
+
+    spacialAdd( envelope, o );
   }
+
 }

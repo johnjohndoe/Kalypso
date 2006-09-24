@@ -36,7 +36,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -665,30 +664,6 @@ public class FeatureHelper
     }
 
     return null;
-  }
-
-  public static void resortFeature( Feature feature )
-  {
-    Feature parent = feature.getParent();
-    if( parent == null )
-      return; // nothing to do
-    final IPropertyType[] properties = parent.getFeatureType().getProperties();
-    for( IPropertyType propType : properties )
-    {
-      if( propType instanceof IRelationType )
-      {
-        final IRelationType relationType = (IRelationType) propType;
-        if( relationType.isList() )
-        {
-          final Object property = parent.getProperty( relationType );
-          if( property instanceof SplitSort )
-          {
-            final SplitSort sort = (SplitSort) property;
-            sort.resort( feature );
-          }
-        }
-      }
-    }
   }
 
   /**
