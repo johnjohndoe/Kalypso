@@ -50,11 +50,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ModifyFeatureGeometryCommand implements ICommand
 {
@@ -97,9 +95,10 @@ public class ModifyFeatureGeometryCommand implements ICommand
     doIt( false );
   }
 
-  private void doIt( boolean undo )
+  private void doIt( final boolean undo )
   {
     final List<Feature> feList = new ArrayList<Feature>();
+
     for( final Handle handle : m_handles )
     {
       final GM_Position position = handle.getPosition();
@@ -107,33 +106,17 @@ public class ModifyFeatureGeometryCommand implements ICommand
         position.translate( m_undoTranslation );
       else
         position.translate( m_translation );
-    }
 
-    for( final Handle handle : m_handles )
-    {
+      /* Reset the geometry value in order to invalidate the feature's envelope */
       final Feature feature = handle.getFeature();
       final IValuePropertyType propertyType = handle.getPropertyType();
-      // next lines force the feature to recognice that geometry has changed, otherwise the boundingbox
-      // will not be recalculated
       final GM_Object value = (GM_Object) feature.getProperty( propertyType );
-      final GM_Object newValue;
-      try
-      {
-        newValue = GeometryFactory.rebuildGeometry( value );
-        feature.setProperty( propertyType, newValue );
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      feature.setProperty( propertyType, value );
+
       if( !feList.contains( feature ) )
         feList.add( feature );
-      // final ResortVisitor visitor = new ResortVisitor();
-      // m_workspace.accept( visitor, m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     }
-    for( Feature feature : feList )
-      FeatureHelper.resortFeature( feature );
+
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList ) );
   }
 

@@ -95,6 +95,7 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
+import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -121,7 +122,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private ResourceBundle m_resourceBundle = null;
 
-  private CS_CoordinateSystem myCoordinateSystem = null;
+  private CS_CoordinateSystem m_coordinateSystem = null;
 
   /** Manages the list of repositories. */
   private IRepositoryContainer m_tsRepositoryContainer = null;
@@ -557,7 +558,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public CS_CoordinateSystem getCoordinatesSystem( )
   {
-    if( myCoordinateSystem == null )
+    if( m_coordinateSystem == null )
     {
       String crsName = getPluginPreferences().getString( IKalypsoPreferences.GLOBAL_CRS );
 
@@ -568,9 +569,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + DEFAULT_CRS + "\"" );
         crsName = DEFAULT_CRS;
       }
-      myCoordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
+      m_coordinateSystem = Adapters.getDefault().export( csFac.getCSByName( crsName ) );
     }
-    return myCoordinateSystem;
+    return m_coordinateSystem;
   }
 
   public IRepositoryContainer getRepositoryContainer( )

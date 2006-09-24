@@ -89,11 +89,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 final public class GeoTransformer
 {
-  private CS_CoordinateSystem targetOGCCS = null;
+  private CS_CoordinateSystem m_targetOGCCS = null;
 
-  private ConvenienceCSFactory csFactory = null;
+  private ConvenienceCSFactory m_csFactory = null;
 
-  private CoordinateSystem targetCS = null;
+  private CoordinateSystem m_targetCS = null;
 
   /**
    * Creates a new GeoTransformer object.
@@ -103,9 +103,9 @@ final public class GeoTransformer
    */
   public GeoTransformer( String targetCS ) throws Exception
   {
-    csFactory = ConvenienceCSFactory.getInstance();
-    this.targetCS = csFactory.getCSByName( targetCS );
-    setTargetCS( this.targetCS );
+    m_csFactory = ConvenienceCSFactory.getInstance();
+    this.m_targetCS = m_csFactory.getCSByName( targetCS );
+    setTargetCS( this.m_targetCS );
   }
 
   /**
@@ -117,7 +117,7 @@ final public class GeoTransformer
   public GeoTransformer( CoordinateSystem targetCS ) throws Exception
   {
     setTargetCS( targetCS );
-    csFactory = ConvenienceCSFactory.getInstance();
+    m_csFactory = ConvenienceCSFactory.getInstance();
   }
 
   /**
@@ -129,7 +129,7 @@ final public class GeoTransformer
   public GeoTransformer( CS_CoordinateSystem targetCS ) throws Exception
   {
     setTargetCS( targetCS );
-    csFactory = ConvenienceCSFactory.getInstance();
+    m_csFactory = ConvenienceCSFactory.getInstance();
   }
 
   /**
@@ -137,8 +137,8 @@ final public class GeoTransformer
    */
   public void setTargetCS( CS_CoordinateSystem targetCS ) throws Exception
   {
-    targetOGCCS = targetCS;
-    this.targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( targetCS );
+    m_targetOGCCS = targetCS;
+    m_targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( targetCS );
   }
 
   /**
@@ -146,8 +146,8 @@ final public class GeoTransformer
    */
   public void setTargetCS( CoordinateSystem targetCS ) throws Exception
   {
-    this.targetCS = targetCS;
-    targetOGCCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS );
+    this.m_targetCS = targetCS;
+    m_targetOGCCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS );
   }
 
   /**
@@ -155,7 +155,7 @@ final public class GeoTransformer
    */
   public CS_CoordinateSystem getTargetCS( )
   {
-    return targetOGCCS;
+    return m_targetOGCCS;
   }
 
   /**
@@ -167,9 +167,9 @@ final public class GeoTransformer
 
     ConvenienceTransformFactory ctf = null;
     ctf = ConvenienceTransformFactory.getInstance();
-    if( cs == null || cs.equals( targetCS ) )
+    if( cs == null || cs.equals( m_targetCS ) )
       return geo;
-    MathTransform trans = ctf.getTransform( cs, targetCS );
+    MathTransform trans = ctf.getTransform( cs, m_targetCS );
 
     if( geo instanceof GM_Point )
     {
@@ -241,7 +241,7 @@ final public class GeoTransformer
     {
       e.printStackTrace();
     }
-    geo = GeometryFactory.createGM_Point( dout[0], dout[1], targetOGCCS );
+    geo = GeometryFactory.createGM_Point( dout[0], dout[1], m_targetOGCCS );
 
     Debug.debugMethodEnd();
     return geo;
@@ -261,7 +261,7 @@ final public class GeoTransformer
       GM_CurveSegment cus = geo.getCurveSegmentAt( i );
       GM_Position[] pos = cus.getPositions();
       pos = transformPositions( pos, trans );
-      newcus[i] = GeometryFactory.createGM_CurveSegment( pos, targetOGCCS );
+      newcus[i] = GeometryFactory.createGM_CurveSegment( pos, m_targetOGCCS );
     }
 
     geo = GeometryFactory.createGM_Curve( newcus );
@@ -299,7 +299,7 @@ final public class GeoTransformer
         }
       }
 
-      patches[i] = GeometryFactory.createGM_SurfacePatch( ex, inn, p.getInterpolation(), targetOGCCS );
+      patches[i] = GeometryFactory.createGM_SurfacePatch( ex, inn, p.getInterpolation(), m_targetOGCCS );
     }
 
     // at the moment only polygons made of one patch are supported
@@ -322,7 +322,7 @@ final public class GeoTransformer
     {
       CoordinatePoint point = new CoordinatePoint( geo.getPointAt( i ).getAsArray() );
       point = trans.transform( point, point );
-      points[i] = GeometryFactory.createGM_Point( point.ord[0], point.ord[1], targetOGCCS );
+      points[i] = GeometryFactory.createGM_Point( point.ord[0], point.ord[1], m_targetOGCCS );
     }
 
     geo = GeometryFactory.createGM_MultiPoint( points );
@@ -418,7 +418,7 @@ final public class GeoTransformer
   {
     Debug.debugMethodBegin( this, "transformPositions" );
 
-    CoordinateSystem cs = csFactory.getCSByName( sourceCRS );
+    CoordinateSystem cs = m_csFactory.getCSByName( sourceCRS );
 
     envelope = transformEnvelope( envelope, cs );
 
