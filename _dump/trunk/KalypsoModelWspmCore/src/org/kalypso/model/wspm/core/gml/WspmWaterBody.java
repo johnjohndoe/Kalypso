@@ -97,11 +97,6 @@ public class WspmWaterBody implements IWspmConstants
   {
     final Feature profile = FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "profileMember" ), new QName( NS_WSPMPROF, "Profile" ) );
 
-    // TODO: create a linked feature instead
-
-    // final String href = "Profile/" + hrefHint;
-    // TODO: check if this reference is already in use
-
     return new WspmProfile( profile );
   }
 

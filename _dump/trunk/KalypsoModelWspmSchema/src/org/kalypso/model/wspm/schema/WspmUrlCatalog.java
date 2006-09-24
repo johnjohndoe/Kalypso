@@ -66,6 +66,9 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
     catalog.put( NS_WSPMPROF, myClass.getResource( "schemata/profile.xsd" ) );
     prefixes.put( NS_WSPMPROF, "prof" );
 
+    catalog.put( NS_WSPMPROF_ASSIGNMENT, myClass.getResource( "schemata/profilePointAssignment.xsd" ) );
+    prefixes.put( NS_WSPMPROF_ASSIGNMENT, "profass" );
+
     catalog.put( NS_WSPMRUNOFF, myClass.getResource( "schemata/runOff.xsd" ) );
     prefixes.put( NS_WSPMRUNOFF, "runoff" );
 
@@ -77,5 +80,6 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
 
     catalog.put( NS_WSPM_BOUNDARY, myClass.getResource( "schemata/floodBoundary.xsd" ) );
     prefixes.put( NS_WSPM_BOUNDARY, "boundary" );
-}
+
+  }
 }

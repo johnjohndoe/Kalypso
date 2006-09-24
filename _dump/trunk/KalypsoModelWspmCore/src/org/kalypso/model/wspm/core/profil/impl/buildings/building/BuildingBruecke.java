@@ -62,10 +62,10 @@ public class BuildingBruecke extends AbstractProfilBuilding
         { POINT_PROPERTY.UNTERKANTEBRUECKE, POINT_PROPERTY.OBERKANTEBRUECKE } );
   }
 
-  @Override
   /**
    * erzeugt die verknüpften Objekte des Bauwerks im Profil und setzt sie auf einen default Wert
    */
+  @Override
   public void addProfilProperties( PlainProfil profil ) throws ProfilDataException
   {
     super.addProfilProperties( profil );
