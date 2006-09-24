@@ -70,7 +70,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -117,7 +116,7 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      // final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
+//      final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
       final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
 
@@ -127,7 +126,6 @@ public class GmlLoader extends AbstractLoader
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       if( gmlFile != null )

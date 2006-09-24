@@ -194,11 +194,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatureTypeFromPath( featurePath );
   }
 
-  public IFeatureType[] getFeatureTypes( )
-  {
-    return m_workspace.getFeatureTypes();
-  }
-
   public Feature getRootFeature( )
   {
     return m_workspace.getRootFeature();

@@ -26,13 +26,13 @@
                value="etc/kalypso16.gif"/>
          <property
                name="startupMessageRect"
-               value="0,0,0,0"/>
+               value="0,190,400,20"/>
          <property
                name="startupForegroundColor"
                value="000000"/>
          <property
                name="startupProgressRect"
-               value="0,0,0,0"/>
+               value="0,200,400,20"/>
       </product>
    </extension>
    <extension

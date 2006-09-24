@@ -42,11 +42,11 @@ package org.kalypso.ogc.gml.loader;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
@@ -67,9 +67,9 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    * @param context
    *          The context is used to find the feature.
    */
-  public PooledXLinkFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public PooledXLinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
-    super( context, targetFeatureType, href, role, arcrole, title, show, actuate );
+    super( context, uri, role, arcrole, title, show, actuate );
   }
 
   /**
@@ -81,14 +81,13 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
     pool.removePoolListener( this );
   }
 
-  
-
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeature()
    */
-  public Feature getFeature( )
+  public Feature getFeature( final String featureId )
   {
-    final String featureId = getFeatureId();
+    if( featureId == null )
+      return null;
 
     /* Quickly return if already initialized */
     if( m_workspace != null )
@@ -100,7 +99,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
       /* Immediately handle local features */
       final String uri = getUri();
-      
+
       if( uri == null && featureId != null )
       {
         m_workspace = contextWorkspace;
@@ -112,6 +111,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
       m_key = new PoolableObjectType( "gml", uri, contextWorkspace.getContext() );
 
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
       final KeyInfo info = pool.addPoolListener( this, m_key );
       try
       {
@@ -136,7 +136,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    if( key == m_key )
+    if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
     {
       if( status.isOK() )
         m_workspace = (GMLWorkspace) newValue;
@@ -150,7 +150,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    if( key == m_key )
+    if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
       m_workspace = null;
   }
 

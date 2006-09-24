@@ -40,22 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
- * A provider factory which directly loads the workspace.
+ * Abstract feature provider factory which parses the href and caches the providers.
  * 
  * @author Gernot Belger
  */
-public class GmlSerializerFeatureProviderFactory extends AbstractFeatureProviderFactory
+public abstract class AbstractFeatureProviderFactory implements IFeatureProviderFactory
 {
+  private Map<String, IFeatureProvider> m_providers = new HashMap<String, IFeatureProvider>();
+
   /**
-   * @see org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory#createProvider(org.kalypsodeegree.model.feature.Feature, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.feature.IFeatureType, java.lang.String, java.lang.String, java.lang.String,
+   *      java.lang.String, java.lang.String, java.lang.String)
    */
-  @Override
-  protected IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public IFeatureProvider createFeatureProvider( final Feature context, final String urn, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
-    return new GmlSerializerXlinkFeatureProvider( context, uri, role, arcrole, title, show, actuate, this );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    if( m_providers.containsKey( uri ) )
+      return m_providers.get( uri );
+
+    final IFeatureProvider provider = createProvider( context, uri, role, arcrole, title, show, actuate );
+    m_providers.put( uri, provider );
+    return provider;
   }
+
+  protected abstract IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate );
 }

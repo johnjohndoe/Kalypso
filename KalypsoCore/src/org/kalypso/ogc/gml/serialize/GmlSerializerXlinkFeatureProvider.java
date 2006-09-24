@@ -45,10 +45,10 @@ import java.net.URL;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author belger
@@ -56,18 +56,20 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
 public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvider implements IFeatureProvider
 {
   private GMLWorkspace m_workspace;
+  private final IFeatureProviderFactory m_factory;
 
-  public GmlSerializerXlinkFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory )
   {
-    super( context, targetFeatureType, href, role, arcrole, title, show, actuate );
+    super( context, uri, role, arcrole, title, show, actuate );
+    
+    m_factory = factory;
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeature()
    */
-  public Feature getFeature( )
+  public Feature getFeature( final String featureId )
   {
-    final String featureId = getFeatureId();
     if( featureId == null )
       return null;
 
@@ -79,8 +81,6 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
     {
       try
       {
-        // TODO: maybe cache workspaces?
-        
         // TODO: maybe add listener to workspace in order to be informed of deletion of my feature?
         final Feature contextFeature = getContext();
         final GMLWorkspace contextWorkspace = contextFeature.getWorkspace();
@@ -90,7 +90,7 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
         
         final URL context = contextWorkspace.getContext();
         final URL url = new URL( context, uri );
-        m_workspace = GmlSerializer.createGMLWorkspace( url, null );
+        m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
         return m_workspace.getFeature( featureId );
       }
       catch( final Exception e )

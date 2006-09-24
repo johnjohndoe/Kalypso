@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
@@ -49,5 +48,5 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
  */
 public interface IFeatureProviderFactory
 {
-  public IFeatureProvider createFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate );
+  public IFeatureProvider createFeatureProvider( final Feature context, final String href, final String role, final String arcrole, final String title, final String show, final String actuate );
 }

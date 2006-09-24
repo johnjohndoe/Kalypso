@@ -28,13 +28,6 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public IGMLSchema getGMLSchema( );
 
-  /**
-   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getAllFeatureTypes()} instead.
-   * @return all FeatureTypes that can be used somewhere in the schema
-   */
-  @Deprecated
-  public IFeatureType[] getFeatureTypes( );
-
   public Feature[] getFeatures( final IFeatureType ft );
 
   /**

@@ -40,24 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
  */
-public class PooledXLinkFeatureProviderFactory implements IFeatureProviderFactory
+public class PooledXLinkFeatureProviderFactory extends AbstractFeatureProviderFactory
 {
   /**
-   * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.feature.IFeatureType, java.lang.String, java.lang.String, java.lang.String,
-   *      java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory#createProvider(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
    */
-  public IFeatureProvider createFeatureProvider( final Feature context, final IFeatureType targetFeatureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
+  @Override
+  protected IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
-    return new PooledXLinkFeatureProvider( context, targetFeatureType, href, role, arcrole, title, show, actuate );
+    return new PooledXLinkFeatureProvider( context, uri, role, arcrole, title, show, actuate );
   }
 
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * Provides a {@link org.kalypsodeegree.model.feature.Feature} and its
@@ -50,12 +49,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public interface IFeatureProvider
 {
-  public IFeatureType getFeatureType( );
-
-  public Feature getFeature( );
-
-  /** Returns the id, this is possible because the id must be the anchor-part of the reference. */
-  public String getId( );
+  public Feature getFeature( final String featureId );
 
   public void dispose( );
 }
