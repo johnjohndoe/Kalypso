@@ -2,8 +2,12 @@ package org.kalypsodeegree_impl.model.feature;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
@@ -270,12 +274,8 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   @Override
   public String toString( )
   {
-    final StringBuffer buffer = new StringBuffer( "Delegated-Feature " );
-    if( getFeatureType() != null )
-      buffer.append( getFeatureType().getQName().getLocalPart() );
-    // if( m_id != null )
-    // buffer.append( "#" + m_id );
-    return buffer.toString();
+    final Feature feature = getFeature();
+    return feature == null ? "null" : FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
   }
 
   /**
@@ -292,5 +292,28 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
       return "#" + m_featureId;
 
     return m_uri + "#" + m_featureId;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof XLinkedFeature_Impl) )
+      return false;
+
+    final XLinkedFeature_Impl other = (XLinkedFeature_Impl) obj;
+
+    return new EqualsBuilder().append( m_uri, other.m_uri ).append( m_featureId, other.m_featureId ).isEquals();
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return new HashCodeBuilder().append( m_uri ).append( m_featureId ).toHashCode();
   }
 }

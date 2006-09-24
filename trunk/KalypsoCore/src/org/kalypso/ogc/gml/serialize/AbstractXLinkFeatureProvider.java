@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.serialize;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
@@ -77,6 +78,18 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
     m_actuate = actuate;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeature()
+   */
+  public Feature getFeature( final String featureId )
+  {
+    if( featureId == null )
+      return null;
+
+    final GMLWorkspace workspace = getWorkspace();
+    return workspace == null ? null : workspace.getFeature( featureId );
+  }
+  
   public String getActuate( )
   {
     return m_actuate;

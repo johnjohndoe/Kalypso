@@ -61,12 +61,16 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
+import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor;
 
@@ -95,6 +99,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
   private final Map<Object, String> m_fixedEntries = new HashMap<Object, String>();
 
   private final Map<Object, String> m_entries = new HashMap<Object, String>();
+
+  private boolean m_ignoreNextUpdate = false;
 
   public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries )
   {
@@ -130,18 +136,16 @@ public class ComboFeatureControl extends AbstractFeatureControl
           m_entries.put( null, "" ); //$NON-NLS-1$
 
         /* Find all substituting features. */
-        final IFeatureType targetFeatureType = rt.getTargetFeatureType();
         final Feature feature = getFeature();
-        final GMLWorkspace workspace = feature.getWorkspace();
-        final CollectorVisitor collectorVisitor = new CollectorVisitor();
-        final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
-        workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-        final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
+        final GMLWorkspace workspace = feature.getWorkspace();
+
+        final Feature[] features = collectReferencableFeatures( workspace, feature, rt );
         
-        final Feature[] features = collectorVisitor.getResults( true );
+        final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
+
         for( final Feature foundFeature : features )
-          m_entries.put( foundFeature.getId(), labelProvider.getText( foundFeature ) );
+          m_entries.put( foundFeature, labelProvider.getText( foundFeature ) );
       }
     }
   }
@@ -201,7 +205,10 @@ public class ComboFeatureControl extends AbstractFeatureControl
     final Object newValue = selection.isEmpty() ? null : selection.getFirstElement();
 
     if( !newValue.equals( oldValue ) )
+    {
+      m_ignoreNextUpdate = true;
       fireFeatureChange( new FeatureChange( feature, pt, newValue ) );
+    }
   }
 
   /**
@@ -209,6 +216,12 @@ public class ComboFeatureControl extends AbstractFeatureControl
    */
   public void updateControl( )
   {
+    if( m_ignoreNextUpdate )
+    {
+      m_ignoreNextUpdate = false;
+      return;
+    }
+    
     final Object currentFeatureValue = getCurrentFeatureValue();
 
     updateEntries( getFeatureTypeProperty() );
@@ -254,5 +267,46 @@ public class ComboFeatureControl extends AbstractFeatureControl
   public void removeModifyListener( ModifyListener l )
   {
     m_listeners.remove( l );
+  }
+
+  private Feature[] collectReferencableFeatures( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt )
+  {
+    final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+
+    final List<Feature> foundFeatures = new ArrayList<Feature>();
+
+    final IDocumentReference[] refs = rt.getDocumentReferences(  );
+    for( final IDocumentReference ref : refs )
+    {
+      final GMLWorkspace workspace;
+      final String uri = ref.getReference();
+      if( ref == IDocumentReference.SELF_REFERENCE )
+        workspace = localWorkspace;
+      else
+      {
+        final IFeatureProviderFactory featureProviderFactory = localWorkspace.getFeatureProviderFactory();
+        final IFeatureProvider provider = featureProviderFactory.createFeatureProvider( parentFeature, uri, "", "", "", "", "" );
+        workspace = provider.getWorkspace();
+      }
+      
+      final CollectorVisitor collectorVisitor = new CollectorVisitor();
+      final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
+      workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+      final Feature[] features = collectorVisitor.getResults( true );
+      for( final Feature feature : features )
+      {
+        if( workspace == localWorkspace )
+          foundFeatures.add( feature );
+        else
+        {
+          final String href = uri + "#" + feature.getId();
+          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, targetFeatureType, href, "", "", "", "", "" );
+          foundFeatures.add( linkedFeature );
+        }
+      }
+    }
+
+    return foundFeatures.toArray( new Feature[foundFeatures.size()] );
   }
 }

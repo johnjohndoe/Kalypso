@@ -82,17 +82,10 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeature()
+   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getWorkspace()
    */
-  public Feature getFeature( final String featureId )
+  public synchronized GMLWorkspace getWorkspace( )
   {
-    if( featureId == null )
-      return null;
-
-    /* Quickly return if already initialized */
-    if( m_workspace != null )
-      return m_workspace.getFeature( featureId );
-
     if( m_key == null )
     {
       final GMLWorkspace contextWorkspace = getContext().getWorkspace();
@@ -100,13 +93,11 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
       /* Immediately handle local features */
       final String uri = getUri();
 
-      if( uri == null && featureId != null )
+      if( uri == null  )
       {
         m_workspace = contextWorkspace;
-        return m_workspace.getFeature( featureId );
+        return m_workspace;
       }
-      else if( uri == null || featureId == null )
-        return null;
 
       m_key = new PoolableObjectType( "gml", uri, contextWorkspace.getContext() );
 
@@ -124,10 +115,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
       }
     }
 
-    if( m_workspace != null )
-      return m_workspace.getFeature( featureId );
-
-    return null;
+    return m_workspace;
   }
 
   /**

@@ -56,28 +56,23 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvider implements IFeatureProvider
 {
   private GMLWorkspace m_workspace;
+
   private final IFeatureProviderFactory m_factory;
 
   public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory )
   {
     super( context, uri, role, arcrole, title, show, actuate );
-    
+
     m_factory = factory;
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getFeature()
+   * @see org.kalypsodeegree.model.feature.IFeatureProvider#getWorkspace()
    */
-  public Feature getFeature( final String featureId )
+  public GMLWorkspace getWorkspace( )
   {
-    if( featureId == null )
-      return null;
-
-    if( m_workspace != null )
-      return m_workspace.getFeature( featureId );
-
     final String uri = getUri();
-    if( uri != null )
+    if( m_workspace == null && uri != null )
     {
       try
       {
@@ -87,11 +82,10 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
         /* We are probably still loading the workspace, just return null here. */
         if( contextWorkspace == null )
           return null;
-        
+
         final URL context = contextWorkspace.getContext();
         final URL url = new URL( context, uri );
         m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
-        return m_workspace.getFeature( featureId );
       }
       catch( final Exception e )
       {
@@ -100,7 +94,7 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
       }
     }
 
-    return null;
+    return m_workspace;
   }
 
   /**
