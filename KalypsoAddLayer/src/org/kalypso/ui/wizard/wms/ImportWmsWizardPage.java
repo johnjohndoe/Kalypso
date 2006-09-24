@@ -94,7 +94,7 @@ public class ImportWmsWizardPage extends WizardPage
 
     private WMSCapabilities m_capas = null;
 
-    private CapabilitiesGetter( URL service )
+    protected CapabilitiesGetter( URL service )
     {
       super();
       m_service = service;

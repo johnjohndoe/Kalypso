@@ -52,9 +52,6 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
 
 public class AddThemeAction implements PluginMapOutlineAction
 {
-
-  private ISelection m_selection = null;
-
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
@@ -66,7 +63,7 @@ public class AddThemeAction implements PluginMapOutlineAction
       final Shell shell = viewer.getControl().getShell();
       final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
       final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-      wizard.init( activeWorkbenchWindow.getWorkbench(), m_selection );
+      wizard.init( activeWorkbenchWindow.getWorkbench() );
       wizard.setForcePreviousAndNextButtons( true );
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       dialog.open();
@@ -79,7 +76,6 @@ public class AddThemeAction implements PluginMapOutlineAction
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    m_selection = selection;
     if( action instanceof PluginMapOutlineActionDelegate )
     {
       final GisMapOutlineViewer viewer = ((PluginMapOutlineActionDelegate) action).getOutlineviewer();

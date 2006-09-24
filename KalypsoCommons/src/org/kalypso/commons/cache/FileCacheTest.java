@@ -50,7 +50,7 @@ public class FileCacheTest extends TestCase
     assertTrue( cache.getObject( "B" ) == null );
   }
 
-  private static class StringComparator implements Comparator<String>
+  protected static class StringComparator implements Comparator<String>
   {
     public int compare( String s1, String s2 )
     {
@@ -58,7 +58,7 @@ public class FileCacheTest extends TestCase
     }
   }
 
-  private static class StringKeyFactory implements IKeyFactory<String>
+  protected static class StringKeyFactory implements IKeyFactory<String>
   {
     public String createKey( final String string )
     {
@@ -71,7 +71,7 @@ public class FileCacheTest extends TestCase
     }
   }
 
-  private static class StringSerializer implements ISerializer<String>
+  protected static class StringSerializer implements ISerializer<String>
   {
     public String read( final InputStream ins ) throws IOException
     {

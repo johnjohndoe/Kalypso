@@ -37,6 +37,7 @@ import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
  *      references MementoWithUrlResolver.
  * @author kuepfer
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractBrowserView extends ViewPart implements IBrowserViewerContainer
 {
   private IMemento m_memento;
