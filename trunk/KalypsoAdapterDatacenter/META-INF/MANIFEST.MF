@@ -19,4 +19,4 @@ Export-Package: ca.edbc.jdbc,
 Require-Bundle: org.kalypso.core,
  org.eclipse.ui,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.view.action;
 
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
@@ -54,6 +53,7 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
  * This class extends the ImportWizard. This enables to call the import wizard from any action. Entry point to kalypso
  * import wizards.
  */
+@SuppressWarnings("restriction")
 public class KalypsoAddLayerWizard extends Wizard
 {
   private GisMapOutlineViewer m_outlineviewer;
@@ -105,7 +105,7 @@ public class KalypsoAddLayerWizard extends Wizard
     return true;
   }
 
-  public void init( IWorkbench workbench, ISelection selection )
+  public void init( final IWorkbench workbench )
   {
     m_workbench = workbench;
   }

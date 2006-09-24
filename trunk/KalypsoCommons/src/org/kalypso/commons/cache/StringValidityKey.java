@@ -35,7 +35,7 @@ public class StringValidityKey
     return new StringComparator();
   }
 
-  private static class StringComparator implements Comparator<StringValidityKey>
+  protected static class StringComparator implements Comparator<StringValidityKey>
   {
     public int compare( final StringValidityKey k1, final StringValidityKey k2 )
     {

@@ -31,4 +31,4 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.contribs.eclipseplatform,
  org.junit,
  org.eclipse.ui.forms
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

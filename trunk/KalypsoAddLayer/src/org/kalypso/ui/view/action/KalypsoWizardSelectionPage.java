@@ -55,6 +55,7 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 /**
  * @author kuepfer
  */
+@SuppressWarnings("restriction")
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 {
   protected GisMapOutlineViewer m_outline;

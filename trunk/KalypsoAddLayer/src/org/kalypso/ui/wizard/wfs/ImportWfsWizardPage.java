@@ -68,8 +68,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -788,7 +786,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     private IWFSCapabilities m_capas = null;
 
-    private CapabilitiesGetter( URL service )
+    protected CapabilitiesGetter( URL service )
     {
       super();
       m_service = service;
