@@ -52,6 +52,8 @@ import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
  */
 public class ChartView extends AbstractProfilViewPart2
 {
+  public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView";
+
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
 
   /**

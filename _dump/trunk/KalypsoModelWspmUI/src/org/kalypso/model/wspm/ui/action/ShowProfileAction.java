@@ -52,6 +52,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.model.wspm.ui.product.ProfileditorPerspective;
+import org.kalypso.model.wspm.ui.view.chart.ChartView;
 
 /**
  * @author Gernot Belger
@@ -83,7 +84,7 @@ public class ShowProfileAction extends ActionDelegate
         activePage.setPerspective( finalPersp );
 
       /* Make sure that the diagram view is visible. */
-      activePage.showView( "org.kalypso.model.wspm.ui.view.chart.ChartView" );
+      activePage.showView( ChartView.ID );
     }
     catch( final PartInitException e )
     {

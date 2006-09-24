@@ -49,12 +49,13 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -64,6 +65,22 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunction
 {
+  private GeoTransformer m_transformer;
+
+  public ProfileCacherFeaturePropertyFunction( )
+  {
+    // TODO: get crs from global settings
+    final CS_CoordinateSystem targetCRS = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+    try
+    {
+      m_transformer = new GeoTransformer( targetCRS );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Properties)
    */
@@ -112,7 +129,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       final LinkedList<IProfilPoint> points = profil.getPoints();
       final GM_Position[] positions = new GM_Position[points.size()];
       int count = 0;
-      
+
       String crsName = null;
       for( final IProfilPoint point : points )
       {
@@ -123,26 +140,21 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( crsName == null )
           crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-        
+
         positions[count++] = GeometryFactory.createGM_Position( rw, hw, h );
       }
-      
-      final CS_CoordinateSystem crs = crsName == null ?  null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
-      
-      return GeometryFactory.createGM_Curve( positions, crs );
+
+      final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+
+      final GM_Curve curve = GeometryFactory.createGM_Curve( positions, crs );
+
+      return m_transformer.transform( curve );
     }
-    catch( final ProfilDataException e )
+    catch( Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final GM_Exception e )
-    {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
-    // TODO Auto-generated method stub
     return null;
   }
 

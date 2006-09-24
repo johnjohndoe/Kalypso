@@ -561,7 +561,7 @@
 					<element name="profileLocation" type="gml:LineStringPropertyType">
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the
-								referenced profile-observation and can be a line or a point</appinfo>
+								referenced profile-observation.</appinfo>
 							<documentation xml:lang="de">
 								<label>Profillinie</label>
 								<tooltip>Profillinie</tooltip>
@@ -578,7 +578,7 @@
 						<annotation>
 							<appinfo>This property is backed by profileMember, more explicit by the
 								referenced profile-observation. This is more difficult than the line
-								property bceause, it depends on the profile, how many points we
+								property because, it depends on the profile, how many points we
 								have.</appinfo>
 							<documentation xml:lang="de">
 								<label>???marker</label>
