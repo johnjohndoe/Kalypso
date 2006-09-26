@@ -13,13 +13,14 @@
 	<!--
 		function messageboxWithNextPageDateiLaden() 
 		{
-			kalypso://importBPlanGML?
+			kalypso://openEditor?input=project:/.maps/BPlan_Editieren.gmt&activate=true;
+			kalypso://importBPlanGML?targetPath=project:.data/xplanung.gml&xpathParentFeature=BPlan&relationType=http://www.xplanung.de/bplangml#ebene&selectableQNames=http://www.xplanung.de/bplangml#BPlanEbene,http://www.opengis.net/gml#Polygon&replace=true&newFeatureType=http://www.xplanung.de/bplangml#BPlanEbene&newPropType=http://www.xplanung.de/bplangml#fachobjekt;
 			kalypso://openURL?&url=KONZEPTPHASE_NULLVARIANTE_START.html;
+			
 		}
 		
 		function digitalisieren()
 		{
-			kalypso://closeEditor?input=project:/.maps/Plangebiet_definieren.gmt&doSave=false;
 			kalypso://openURL?url=KONZEPTPHASE_BPLAN_ZEICHNEN.html;
 			kalyoso://setBBoxInGMT?urlGMTfrom=project:/.maps/Plangebiet_definieren.gmt&urlGMTto=project:/.maps/BPlan_Editieren.gmt;
 			kalypso://openEditor?input=project:/.maps/BPlan_Editieren.gmt&activate=true;
@@ -29,6 +30,7 @@
 	 -->
  </script>
  
+<!--			kalypso://importBPlanGML?targetPath=project:.data/plangebiet.gml&xpathParentFeature=BPlan&relationType=http://www.xplanung.de/bplangml#fachobjekt&newFeatureType=http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd#Plangebiet&newPropType=http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd#gebiet -->
   
   
   

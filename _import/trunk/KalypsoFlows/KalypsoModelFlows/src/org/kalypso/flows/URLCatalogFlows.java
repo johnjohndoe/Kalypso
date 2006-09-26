@@ -51,12 +51,12 @@ public class URLCatalogFlows extends AbstractUrlCatalog
     // these are defines in UrlCatalogNA now.
     // catalog.put( "http://www.xplanung.de/bplangml", getClass()
     // .getResource( "resources/v0.1/BPlan-Minimal_measures.xsd" ) );
-    catalog.put( "http://www.xplanung.de/bplangml", getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ) );
-    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", getClass().getResource( "resources/v0.1/plangebiet.xsd" ) );
-    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", getClass().getResource( "resources/v0.3/rhbMeasure.xsd" ) );
-    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/mrs", getClass().getResource( "resources/v0.3/mrsMeasure.xsd" ) );
-    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/sealing", getClass().getResource( "resources/v0.3/sealingMeasure.xsd" ) );
-    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/control", getClass().getResource( "resources/v0.3/measuresControl.xsd" ) );
+    catalog.put( "http://www.xplanung.de/bplangml", URLCatalogFlows.class.getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/plangebiet.xsd", URLCatalogFlows.class.getResource( "resources/v0.1/plangebiet.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", URLCatalogFlows.class.getResource( "resources/v0.3/rhbMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/mrs", URLCatalogFlows.class.getResource( "resources/v0.3/mrsMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/sealing", URLCatalogFlows.class.getResource( "resources/v0.3/sealingMeasure.xsd" ) );
+    catalog.put( "http://schema.kalypso.wb.tu-harburg.de/measure/control", URLCatalogFlows.class.getResource( "resources/v0.3/measuresControl.xsd" ) );
 
   }
 

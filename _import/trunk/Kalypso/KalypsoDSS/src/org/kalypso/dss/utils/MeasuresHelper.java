@@ -107,7 +107,7 @@ public class MeasuresHelper
 
   public static void insertStorageChannelMeasure( final URL rhbURL, final GMLWorkspace modelWorkspace, final Logger logger ) throws SimulationException, IOException, Exception
   {
-    final GMLWorkspace measureRhbWorkspace = GmlSerializer.createGMLWorkspace( rhbURL, null );
+    final GMLWorkspace measureRhbWorkspace = GmlSerializer.createGMLWorkspace( rhbURL );
     // *Get available Measuers*/
     final IGMLSchema rhbMeasureSchema = measureRhbWorkspace.getGMLSchema();
     final IFeatureType sealingFT = rhbMeasureSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_RHB, MeasuresConstants.RHB_MEASURE_FT ) );
@@ -348,8 +348,8 @@ public class MeasuresHelper
   public static void insertPlanningMeasure( final URL measuresPlanningURL, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace initValuesWorkspace, final CalcDataProviderDecorater rrmInputProvider, final Logger logger ) throws Exception
   {
     final URL paramURL = (URL) rrmInputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
-    final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL, null );
-    final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL, null );
+    final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( paramURL );
+    final GMLWorkspace planningWorkspace = GmlSerializer.createGMLWorkspace( measuresPlanningURL );
     final IGMLSchema planningSchema = planningWorkspace.getGMLSchema();
     final QName qNameGeom = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEOM_PROP );
     final QName qNameGRZ = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRZ_PROP );
@@ -460,9 +460,7 @@ public class MeasuresHelper
     while( iter.hasNext() )
     {
       final Feature hydroFE = (Feature) iter.next();
-      if( hydroFE.getId().endsWith( "2782" ) && landUseProp.equals( MeasuresConstants.XPLANUNG_RWG_LANDUSE_NAME ) )
-        System.out.println();
-      if( hydroFE == null )
+      if( hydroFE == null )// the list can contain elementData = null
         continue;
       final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( qNameHydroGeom );
       final CS_CoordinateSystem storedCrs = hydroGEOM.getCoordinateSystem();
@@ -488,7 +486,7 @@ public class MeasuresHelper
             + ".Es wird trotzdem weitergerechnet diese Operation wurde ingnorier!" );
         continue;
       }
-      final Feature newHydroFE;
+      Feature newHydroFE;
       if( difference != null && !difference.isEmpty() )
       {
         final Feature hydroRootFeature = hydrotopWorkspace.getRootFeature();
@@ -499,7 +497,6 @@ public class MeasuresHelper
         hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
         // copy all propterties from the intersected hydrotop to the newly created hydrotop
         FeatureHelper.copyNoRelationPropterty( hydroFE, newHydroFE );
-
         final GM_Object geomWithOldParam = JTSAdapter.wrap( difference );
         // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
         geomWithOldParam.setCoordinateSystem( storedCrs );
@@ -507,7 +504,7 @@ public class MeasuresHelper
         hydroFE.setProperty( qNameHydroGeom, GeometryUtilities.ensureIsMultiPolygon( geomWithOldParam ) );
       }
       else
-        newHydroFE = hydroFE;
+        continue;
       // override copied props that are not valid anymore
       final GM_Object geomWithNewMeasure = JTSAdapter.wrap( intersection );
       // since JTS has no coordiante system we have to set the old one after a JTSAdapter call
@@ -560,11 +557,13 @@ public class MeasuresHelper
     final IFeatureType hydIniFT = initalValuesSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_MEMBER_PROP ) );
     final IPropertyType featureIdPT = hydIniFT.getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ) );
     final Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
+    final String hydFEId = hydroFE.getId();
+    boolean foundMatch = false;
     for( int i = 0; i < hydIniFEs.length; i++ )
     {
       final Feature hydIniFE = hydIniFEs[i];
-      final String value = (String) hydIniFE.getProperty( featureIdPT );
-      if( hydroFE.getId().equals( value ) )
+      final String hydIniFEId = (String) hydIniFE.getProperty( featureIdPT );
+      if( hydFEId.equals( hydIniFEId ) )
       {
         final Feature catchementIniFE = hydIniFE.getParent();
         final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, hydIniFT );
@@ -574,10 +573,12 @@ public class MeasuresHelper
         final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
         initValuesWorkspace.addFeatureAsComposition( catchementIniFE, linkCatchmentHydIni, 0, newHydIniFE );
         // there is only one match for hydIni.featureID to hydroFE.getId() -> leave the loop now
+        foundMatch = true;
         break;
       }
-
     }
+    if( !foundMatch )
+      throw new Exception("No Initial values set for hydrotopID=" + newHydroFE.getId() );
   }
 
   /**
@@ -594,7 +595,7 @@ public class MeasuresHelper
    */
   public static void insertSealingChangeMeasure( final URL sealingURL, final GMLWorkspace hydrotopWorkspace, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
   {
-    GMLWorkspace sealingWS = GmlSerializer.createGMLWorkspace( sealingURL, null );
+    GMLWorkspace sealingWS = GmlSerializer.createGMLWorkspace( sealingURL );
 
     final URL parameterURL = (URL) result.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     // Versiegelungsgrad Measure
@@ -606,7 +607,7 @@ public class MeasuresHelper
       logger.info( "measure " + MeasuresConstants.SEALING_MEASURE_FT + " is empty, continue normal simulation without this measure" );
       return;
     }
-    final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( parameterURL, null );
+    final GMLWorkspace paraWorkspace = GmlSerializer.createGMLWorkspace( parameterURL );
     final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getFeatureFromPath( NaModelConstants.HYDRO_MEMBER );
 
     // for geometry operations hydroworkspace and measureworkspace must use the same coordinatessystem,
@@ -710,7 +711,7 @@ public class MeasuresHelper
   {
     try
     {
-      final GMLWorkspace mrsMeasureWorkspace = GmlSerializer.createGMLWorkspace( measuresMrsURL, null );
+      final GMLWorkspace mrsMeasureWorkspace = GmlSerializer.createGMLWorkspace( measuresMrsURL );
       final IGMLSchema mrsMeasureSchema = mrsMeasureWorkspace.getGMLSchema();
       final IFeatureType mrsMeasureFT = mrsMeasureSchema.getFeatureType( new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_FT ) );
       final Feature[] mrsMeasureFEs = mrsMeasureWorkspace.getFeatures( mrsMeasureFT );
@@ -737,7 +738,7 @@ public class MeasuresHelper
       final IFeatureType mrsFt = naModelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_FT ) );
 
       /** Start inserting bussines */
-      final GMLWorkspace designAreaWorkspace = GmlSerializer.createGMLWorkspace( designAreaURL, null );
+      final GMLWorkspace designAreaWorkspace = GmlSerializer.createGMLWorkspace( designAreaURL );
       final FeatureList catchementList = (FeatureList) naModelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
       if( catchementList.size() > 0 )
       {

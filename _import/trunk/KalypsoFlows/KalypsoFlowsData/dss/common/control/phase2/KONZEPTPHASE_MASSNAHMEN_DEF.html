@@ -3,6 +3,8 @@
 <head>
 
 
+
+  
   <script type="text/kalypso"> 
 	<!--
 		function neueEntsiegelung() 
@@ -12,29 +14,13 @@
 			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate;
 		}
 
-		function editierenEntsiegelung() 
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Entsiegelungs-Massnahme;
-			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate;
-		}
-
 		function parameterEntsiegelung()
 		{
 			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
 			kalypso://activateTheme?theme=Entsiegelungs-Massnahme;
 			kalypso://openView?partId=org.kalypso.featureview.views.FeatureView&activePartId=org.eclipse.ui.views.ResourceNavigator;
-			kalypso://showMessage?message=Bitte selektieren sie ein Entsiegelungs-Element und editieren sie den Versieglungsgrad der Fläche;
 			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
 		}		
-		
-		function entsieglungLoeschen()
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Entsiegelungs-Massnahme;
-			kalypso://showMessage?message=Bitte selektieren sie ein Entsiegelungs-Element und löschen sie dieses mittles rechter Maustaste;
-			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
-		}
 
 		function neuesRhb()
 		{
@@ -43,26 +29,11 @@
 			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate;
 		}		
 
-		function editierenRhb()
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Rueckhaltebecken-Massnahme;
-			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate;
-		}
 		function parameterRhb()
 		{
 			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
 			kalypso://activateTheme?theme=Rueckhaltebecken-Massnahme;
 			kalypso://openView?partId=org.kalypso.featureview.views.FeatureView&activePartId=org.eclipse.ui.views.ResourceNavigator;
-			kalypso://showMessage?message=Bitte selektieren sie ein Rueckhaltebecken-Element und editieren sie die Tiefe des Beckens;
-			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
-		}
-					
-		function rhbLoeschen()
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Rueckhaltebecken-Massnahme;
-			kalypso://showMessage?message=Bitte selektieren sie ein Rueckhaltebecken-Element und löschen sie dieses mittles rechter Maustaste;
 			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
 		}
 
@@ -72,29 +43,15 @@
 			kalypso://activateTheme?theme=Mulden-Rigolen-Massnahme;
 			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate;
 		}		
-		function editierenMRS()
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Mulden-Rigolen-Massnahme;
-			kalypso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate;
-		}
-		
+				
 		function parameterMRS()
 		{
 			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
 			kalypso://activateTheme?theme=Mulden-Rigolen-Massnahme;
 			kalypso://openView?partId=org.kalypso.featureview.views.FeatureView&activePartId=org.eclipse.ui.views.ResourceNavigator;
-			kalypso://showMessage?message=Bitte selektieren sie ein Mulden-Rigolen-Element und editieren sie die Breite der Mulde;
 			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
 		}		
 
-		function mrsLoeschen()
-		{
-			kalypso://selectEditor?input=Massnahmen_definieren.gmt;
-			kalypso://activateTheme?theme=Mulden-Rigolen-Massnahme;
-			kalypso://showMessage?message=Bitte selektieren sie ein Mulden-Rigolen-Element und löschen sie dieses mittles rechter Maustaste;
-			kalpyso://runAction?pluginId=org.kalypso.ui&class=org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate;
-		}
 		
 		function save()
 		{
@@ -106,73 +63,99 @@
 		}
 	 -->
  </script>
+  
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
 
+
+  
   <title>Konzeptphase: Ma&szlig;nahmen definieren</title>
 </head>
 
 
+<body style="margin-top: 0px; height: 413px; width: 234px; direction: ltr;">
 
-
-
-
-
-
-
-<body style="direction: ltr; margin-top: 0px; height: 413px; width: 234px;">
 <table style="text-align: left; width: 233px; height: 92px;" border="0" cellpadding="2" cellspacing="2">
+
   <tbody>
+
     <tr>
+
       <td><span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">M&ouml;gliche Ma&szlig;nahmen zur </span><span style="font-weight: bold;">Verringerung des 
 Hochwasserrisikos</span><br style="font-family: Helvetica,Arial,sans-serif;" />
+
       <span style="font-weight: bold;">im aktuellen Plangebiet</span></span></td>
+
     </tr>
+
+  
   </tbody>
 </table>
+
 <table style="text-align: left; width: 232px; height: 289px;" border="0" cellpadding="2" cellspacing="2">
+
   <tbody>
+
     <tr style="margin-top: 89px; height: 79px;">
+
       <td style="height: 81px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;" href="kalypso://saveActiveTheme?"><img style="border: 0px solid ; float: left; width: 64px; height: 90px;" src="RHB_icon.gif" alt="Speichern der änderungen" /></a></span></td>
+
       <td style="height: 81px; font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"></span>
-      <small><a href="kalypso://runScript?type=text/kalypso&function=neuesRhb">Element erstellen..</a></small><small><br />
-      <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=rhbLoeschen">Element l&ouml;schen.. </a></small><br />
-      <small><a href="kalypso://runScript?type=text/kalypso&function=parameterRhb">Werte setzen/&auml;ndern..</a><br />
-      </small><small><a href="kalypso://runScript?type=text/kalypso&function=editierenRhb">Geometrie editieren..</a></small><a &nbsp="" href="kalypso://runScript?type=text/kalypso&function=rhbLoeschen"> </a></td>
+      <small><a href="kalypso://runScript?type=text/kalypso&function=neuesRhb">R&uuml;ckhaltebecken einf&uuml;gen...</a></small><small><br />
+
+      <small><big><a style="font-family: Helvetica,Arial,sans-serif;" href="kalypso://runScript?type=text/kalypso&function=parameterRhb">Attribute setzen...</a></big><br />
+
+      </small></small></td>
+
     </tr>
+
     <tr style="margin-top: 62px; height: 72px;">
+
       <td style="height: 89px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;" href="kalypso://saveActiveTheme?"><img alt="Speichern der änderungen" src="MRS_icon.gif" style="border: 0px solid ; float: left; width: 64px; height: 81px;" /></a></span></td>
-      <td style="height: 89px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span><small style="font-family: Helvetica,Arial,sans-serif;"><a href="kalypso://runScript?type=text/kalypso&function=neuesMRS">Element erstellen..</a></small><small><br />
-      <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=mrsLoeschen">Element l&ouml;schen.. </a></small><br style="font-family: Helvetica,Arial,sans-serif;" />
-      <small style="font-family: Helvetica,Arial,sans-serif;">
-      <a href="kalypso://runScript?type=text/kalypso&function=editierenMRS">Geometrie editieren..</a><br />
-      <a href="kalypso://runScript?type=text/kalypso&function=parameterMRS">Werte
-setzen/&auml;ndern</a></small>
-      <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=mrsLoeschen"> </a></td>
+
+      <td style="height: 89px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span><small style="font-family: Helvetica,Arial,sans-serif;"><a href="kalypso://runScript?type=text/kalypso&function=neuesMRS">Mulden-Rigolen erstellen..</a></small><small><br />
+
+      
+      <a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=parameterMRS">Attribute setzen...</a>
+     </small></td>
+
     </tr>
+
     <tr>
+
       <td style="height: 88px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"><a style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;" href="kalypso://saveActiveTheme?"><img alt="Speichern der änderungen" src="Entsiegelung.gif" style="border: 0px solid ; float: left; width: 64px; height: 88px;" /></a></span></td>
+
       <td style="height: 88px;"><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">
       </span>
-      <small><span style="font-family: Helvetica,Arial,sans-serif;"><a href="kalypso://runScript?type=text/kalypso&function=neueEntsiegelung">Element erstellen..</a><br />
-      </span></small><small><a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=entsieglungLoeschen">Element l&ouml;schen.. </a></small><br />
-      <small><span style="font-family: Helvetica,Arial,sans-serif;">
-      <a href="kalypso://runScript?type=text/kalypso&function=editierenEntsiegelung">Geometrie editieren..</a><br />
-      </span></small><small><a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=parameterEntsiegelung">Werte
-setzen/&auml;ndern..</a>
-      </small><br />
+      <small><span style="font-family: Helvetica,Arial,sans-serif;"><a href="kalypso://runScript?type=text/kalypso&function=neueEntsiegelung">Entsiegelung einf&uuml;gen...</a><br />
 
-      </td>
+      <small><span style="font-family: Helvetica,Arial,sans-serif;">
+      </span></small><a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=parameterEntsiegelung">Attribute setzen...</a>
+      <br />
+
+
+      </span></small></td>
+
     </tr>
+
+  
   </tbody>
 </table>
+
 <table style="text-align: left; width: 233px; height: 32px;" border="0" cellpadding="2" cellspacing="2">
+
   <tbody>
+
     <tr>
-      <td><span style="font-family: Helvetica,Arial,sans-serif;"><small><a href="kalypso://runScript?type=text/kalypso&function=save">abschliessen und speichern..</a></small>
+
+      <td><span style="font-family: Helvetica,Arial,sans-serif;"><small><a style="font-family: Arial;" href="kalypso://runScript?type=text/kalypso&function=save">alle speichern..</a></small>
       </span></td>
+
     </tr>
+
+  
   </tbody>
 </table>
+
 <span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"></span></span>&nbsp;&nbsp;
 &nbsp;
 &nbsp;

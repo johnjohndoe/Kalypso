@@ -18,5 +18,26 @@
             class="org.kalypso.flows.measures.MeasuresFeatureTypeStyleCatalogContribution"
             name="Measure sytles catalog"/>
    </extension>
+   <extension
+         id="org.kalypso.model.flows"
+         name="URLActionCommands"
+         point="org.kalypso.workflow.urlCommandActionContribution">
+      <urlaction
+            class="org.kalypso.flows.URLActionAnalizeConflicts"
+            command="analizeConflicts"
+            name="Analize conflicts"/>
+      <urlaction
+            class="org.kalypso.flows.URLActionGenerateHTMLConflictAnalysis"
+            command="generateFilterHTML"
+            name="Generates HTML for filter"/>
+      <urlaction
+            class="org.kalypso.flows.URLActionFLOWSAddFilterToGMT"
+            command="openFLOWSFilterDialog"
+            name="Simple FLOWS filter dialog"/>
+	  <urlaction
+            class="org.kalypso.flows.URLActionImportBPlanGML"
+            command="importBPlanGML"
+            name="Import XPlanung GML"/>            
+   </extension>
 
 </plugin>
