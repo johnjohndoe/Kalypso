@@ -40,52 +40,69 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.contribs.eclipse.core.resources.FindFirstFileVisitor;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
+import org.kalypso.workflow.ui.browser.IURLActionConstants;
 
 /**
  * @author kuepfer
  */
-public class URLActionSelectEditor extends AbstractURLAction
+public class URLActionEnableOrDisableThemes extends AbstractURLAction
 {
 
-  // private final static String COMMAND_NAME = "selectEditor";
-
-  /**
-   * file name that is the input of the editor to be selected
-   */
-  private final static String PARAM_INPUT = "input";
+  private static final String PARAM_DISABLE = "doDisable";
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
   {
-    final String fileName = commandURL.getParameter( PARAM_INPUT );
-    final IProject project = getWorkFlowContext().getContextProject();
-    final IWorkbenchPage activePage = getActivePage();
-    try
+    final String themesAsString = commandURL.getParameter( IURLActionConstants.PARAM_THEME_LIST );
+    final String[] themes;
+    if( themesAsString != null )
+      themes = themesAsString.split( IURLActionConstants.PARAM_DEFAULT_SEPARATOR );
+    else
+      themes = new String[0];
+    final boolean doDisable = Boolean.parseBoolean( commandURL.getParameter( PARAM_DISABLE ) );
+    final IEditorPart activeEditor = getActiveEditor();
+    IKalypsoTheme[] kThemes = null;
+    IMapModell mapModell = null;
+    if( activeEditor instanceof GisMapEditor )
     {
-      final FindFirstFileVisitor visitor = new FindFirstFileVisitor( fileName, true );
-      project.accept( visitor );
-      final IFile inputFile = visitor.getFile();
-      final IEditorPart part = activePage.findEditor( new FileEditorInput( inputFile ) );
-      if( part == null )
-        return generateMessageDialog("The editor-input:" + fileName + " does not match loaded Editors" ,IStatus.CANCEL);
-      activePage.activate( part );
+      final MapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
+      mapModell = mapPanel.getMapModell();
+      kThemes = mapModell.getAllThemes();
     }
-    catch( Exception e )
+    else
+      return generateMessageDialog( "No active Map available.", IStatus.CANCEL );
+    if( themes.length < 1 )
+      return disableAll( kThemes, mapModell, !doDisable );
+    else
+      return disableThemes( kThemes, mapModell, themes, !doDisable );
+  }
+
+  private boolean disableThemes( IKalypsoTheme[] kThemes, IMapModell mapModell, String[] themes, boolean doDisable )
+  {
+    for( IKalypsoTheme kTheme : kThemes )
     {
-      e.printStackTrace();
-      return false;
+      if( ArrayUtils.contains( themes, kTheme.getName() ) )
+        mapModell.enableTheme( kTheme, doDisable );
     }
     return true;
   }
+
+  private boolean disableAll( IKalypsoTheme[] themes, IMapModell modell, boolean doDisable )
+  {
+    for( IKalypsoTheme theme : themes )
+      modell.enableTheme( theme, doDisable );
+    return true;
+  }
+
 }

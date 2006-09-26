@@ -57,15 +57,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionSaveAllThemes extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "saveAllThemes";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 
   /**
    * Assumes the active Editor is the GisMapEditor, use URLCommandActivateEditor befor running this command

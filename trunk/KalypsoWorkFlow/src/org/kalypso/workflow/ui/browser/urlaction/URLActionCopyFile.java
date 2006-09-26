@@ -58,8 +58,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionCopyFile extends AbstractURLAction
 {
-  private final static String COMMAND_NAME = "copyFile";
-
   private static final String PARAM_SOURCE_URL = "source";
 
   private static final String PARAM_TARGET_URL = "target";
@@ -69,14 +67,6 @@ public class URLActionCopyFile extends AbstractURLAction
   private static final String PARAM_NEWFILE_NAME = "newfilename";
 
   private static final String PARAM_OVERWRITE = "overwrite";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return COMMAND_NAME;
-  }
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)

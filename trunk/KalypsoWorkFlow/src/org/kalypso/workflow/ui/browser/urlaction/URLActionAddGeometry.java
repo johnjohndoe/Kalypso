@@ -65,6 +65,7 @@ import org.kalypso.ui.dialog.GmlShapeFileImportDialog;
 import org.kalypso.workflow.WorkflowContext;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
+import org.kalypso.workflow.ui.browser.IURLActionConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -77,30 +78,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class URLActionAddGeometry extends AbstractURLAction
 {
 
-  // private final static String COMMAND_NAME = "addGeometry";
-
-  /**
-   * optional
-   */
-  private final static String PARAM_TARGETPATH = "targetPath";
-
-  // position, where to place new feature as xpath
-  // optional, else root feature is parent
-  private final static String PARAM_XPATH_PARENT_FEATURE = "xpathParentFeature";
-
-  // required
-  private final static String PARAM_NEW_RELATION_QN = "relationType";
-
-  // featuretype of feature to create <br>
-  // syntax is <namespace>#<localname> <br>
-  // example: createFT=http://kalypso.org#KalypsoFeature
-  // optional, else target of relation if featuretype
-  private final static String PARAM_NEW_FT_QN = "newFeatureType";
-
-  // propername of feature to create
-  // required
-  private final static String PARAM_NEW_PROPERTY_QN = "newPropType";
-
   // property type that can be selected in source gml <br>
   // example: opengis.net#PolygonPropertyType
   // TODO
@@ -111,11 +88,11 @@ public class URLActionAddGeometry extends AbstractURLAction
    */
   public boolean run( ICommandURL commandURL )
   {
-    final String relativeTarget = commandURL.getParameter( PARAM_TARGETPATH );
-    final String placementXPath = commandURL.getParameter( PARAM_XPATH_PARENT_FEATURE );
-    final String createFTQName = commandURL.getParameter( PARAM_NEW_FT_QN );
-    final String relationQNameString = commandURL.getParameter( PARAM_NEW_RELATION_QN );
-    final String createFPQNameString = commandURL.getParameter( PARAM_NEW_PROPERTY_QN );
+    final String relativeTarget = commandURL.getParameter( IURLActionConstants.PARAM_TARGETPATH );
+    final String placementXPath = commandURL.getParameter( IURLActionConstants.PARAM_XPATH_PARENT_FEATURE );
+    final String createFTQName = commandURL.getParameter( IURLActionConstants.PARAM_NEW_FT_QN );
+    final String relationQNameString = commandURL.getParameter( IURLActionConstants.PARAM_NEW_RELATION_QN );
+    final String createFPQNameString = commandURL.getParameter( IURLActionConstants.PARAM_NEW_PROPERTY_QN );
 
     // final String contextString = commandURL.getParameter( ICommandURLActionKeys.KEY_CONTEXT );
     // final String fPath = commandURL.getParameter( ICommandURLActionKeys.KEY_FEATURE_PATH );
@@ -143,7 +120,7 @@ public class URLActionAddGeometry extends AbstractURLAction
     {
       // load target workspace
       final URL targetURL = wfContext.resolveURL( relativeTarget );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( targetURL, new UrlResolver(), null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( targetURL, new UrlResolver() );
 
       // find parent from feature to create
       final Feature targetParentFE;
@@ -202,14 +179,6 @@ public class URLActionAddGeometry extends AbstractURLAction
       e.printStackTrace();
       return false;
     }
-  }
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
   }
 
 }

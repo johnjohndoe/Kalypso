@@ -63,15 +63,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionAddThemeGMT extends AbstractURLAction
 {
-//  private final static String COMMAND_NAME = "openAddThemeDialog";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
@@ -90,7 +81,7 @@ public class URLActionAddThemeGMT extends AbstractURLAction
         final Shell shell = viewer.getControl().getShell();
         final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
         final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-        wizard.init( activeWorkbenchWindow.getWorkbench() );
+        wizard.init( activeWorkbenchWindow.getWorkbench(), null );
         wizard.setForcePreviousAndNextButtons( true );
         final WizardDialog dialog = new WizardDialog( shell, wizard );
         dialog.open();

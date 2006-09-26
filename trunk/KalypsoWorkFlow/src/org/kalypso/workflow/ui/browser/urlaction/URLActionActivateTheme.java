@@ -54,8 +54,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionActivateTheme extends AbstractURLAction
 {
 
-  // private final static String COMMAND_NAME = "activateTheme";
-
   /**
    * optional
    */
@@ -72,14 +70,6 @@ public class URLActionActivateTheme extends AbstractURLAction
   }
 
   /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
-
-  /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )
@@ -93,16 +83,18 @@ public class URLActionActivateTheme extends AbstractURLAction
       if( mapPanel != null )
       {
         final IMapModell mapModell = mapPanel.getMapModell();
-
-        IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-        for( int i = 0; i < allThemes.length; i++ )
+        if( mapModell != null )
         {
-          IKalypsoTheme layer = allThemes[i];
-          String name = layer.getName();
-          if( name.equals( theme ) )
+          final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+          for( int i = 0; i < allThemes.length; i++ )
           {
-            mapModell.activateTheme( layer );
-            return true;
+            final IKalypsoTheme layer = allThemes[i];
+            final String name = layer.getName();
+            if( name.equals( theme ) )
+            {
+              mapModell.activateTheme( layer );
+              return true;
+            }
           }
         }
       }

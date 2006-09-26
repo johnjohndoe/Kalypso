@@ -37,8 +37,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -178,6 +181,8 @@ public class GmlShapeFileImportDialog extends Dialog
 
   private Group m_styleGroup;
 
+  private QName[] m_selectableQNames;
+
   public GmlShapeFileImportDialog( final Shell parentShell, boolean withStyleSelection, boolean chooseFromLocalFileSystem, boolean loadData, boolean selectFeature, final String[] extensions, final IContainer root, final Class< ? extends Object>[] selectableClasses )
   {
     super( parentShell );
@@ -200,6 +205,12 @@ public class GmlShapeFileImportDialog extends Dialog
   {
     this( parentShell, withStyleSelection, chooseFromLocalFileSystem, true, selectFeature, new String[] { SHAPE_FILE_EXT, GML_FILE_EXT }, root, selectableClasses );
 
+  }
+
+  public GmlShapeFileImportDialog( final Shell parentShell, final boolean withStyleSeleciton, final boolean chooseFromLocalFileSystem, final boolean selectFeature, final String[] extensions, final IContainer root, final QName[] selectableQNames )
+  {
+    this( parentShell, withStyleSeleciton, chooseFromLocalFileSystem, true, selectFeature, extensions, root, new Class[0] );
+    m_selectableQNames = selectableQNames;
   }
 
   public void setFilter( final ViewerFilter filter )
@@ -534,7 +545,7 @@ public class GmlShapeFileImportDialog extends Dialog
         else if( isGml() )
         {
           m_crsGroup.setVisible( false );
-          m_workspace = GmlSerializer.createGMLWorkspace( file.toURL(), new UrlResolver(), null );
+          m_workspace = GmlSerializer.createGMLWorkspace( file.toURL(), new UrlResolver() );
         }
       }
     }
@@ -581,7 +592,7 @@ public class GmlShapeFileImportDialog extends Dialog
     return m_workspace;
   }
 
-protected void handleBrowseButton2Selected( )
+  protected void handleBrowseButton2Selected( )
   {
     Object[] result = null;
     if( !m_fromLocalFileSys )
@@ -608,13 +619,13 @@ protected void handleBrowseButton2Selected( )
         final Reader reader = new InputStreamReader( (styleURL).openStream() );
         IUrlResolver2 resolver = new IUrlResolver2()
         {
-        
-          public URL resolveURL(final String href ) throws MalformedURLException
+
+          public URL resolveURL( final String href ) throws MalformedURLException
           {
-            return UrlResolverSingleton.resolveUrl(styleURL, href);
+            return UrlResolverSingleton.resolveUrl( styleURL, href );
           }
         };
-        StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD(resolver, reader );
+        StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, reader );
         reader.close();
         Layer[] layers = styledLayerDescriptor.getLayers();
         final Vector<String> styleNameVector = new Vector<String>();
@@ -648,7 +659,9 @@ protected void handleBrowseButton2Selected( )
         xmlEx.printStackTrace();
       }
     }
-  }  protected void handleCheckDefaultStyleButtonSelected( )
+  }
+
+  protected void handleCheckDefaultStyleButtonSelected( )
   {
     if( m_checkDefaultStyleButton.getSelection() )
     {
@@ -771,10 +784,10 @@ protected void handleBrowseButton2Selected( )
   void validateSelection( IStructuredSelection selection )
   {
     final Button button = getButton( IDialogConstants.OK_ID );
-    Object firstElement = null;
+    button.setEnabled( false );
+    final Object firstElement = selection.getFirstElement();
     if( m_selectableClasses != null && m_selectableClasses.length > 0 )
     {
-      firstElement = selection.getFirstElement();
       if( firstElement != null )
       {
         Class< ? extends Object> class1 = firstElement.getClass();
@@ -801,11 +814,47 @@ protected void handleBrowseButton2Selected( )
         }
       }
     }
-    button.setEnabled( false );
+    else if( m_selectableQNames != null && m_selectableQNames.length > 0 )
+    {
+      final Iterator it = selection.iterator();
+      while( it.hasNext() )
+      {
+        Object o = it.next();
+        if( o instanceof Feature )
+        {
+          boolean test = false;
+          for( QName qName : m_selectableQNames )
+          {
+            final Feature feature = ((Feature) o);
+            final IFeatureType ft = feature.getFeatureType();
+            test = ft.getQName().equals( qName );
+            if( test )
+            {
+              m_selectedObject = feature;
+              // System.out.println();
+              break;
+            }
+            else
+              try
+              {
+                m_selectedObject = feature.getProperty( qName );
+              }
+              catch( IllegalArgumentException e )
+              {
+                m_selectedObject = null;
+                test = m_selectedObject != null;
+              }
+          }
+          button.setEnabled( test );
+        }
+      }
+    }
+
   }
 
   public CS_CoordinateSystem getCRS( )
   {
+
     return ConvenienceCSFactory.getInstance().getOGCCSByName( m_checkCRS.getText() );
   }
 

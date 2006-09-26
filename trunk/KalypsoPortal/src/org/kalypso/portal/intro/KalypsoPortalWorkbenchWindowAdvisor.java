@@ -1,15 +1,11 @@
 package org.kalypso.portal.intro;
 
-import org.eclipse.jface.action.ICoolBarManager;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
-import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
-import org.eclipse.ui.internal.ide.IDEWorkbenchWindowAdvisor;
 import org.eclipse.ui.intro.IIntroManager;
 
 public class KalypsoPortalWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor

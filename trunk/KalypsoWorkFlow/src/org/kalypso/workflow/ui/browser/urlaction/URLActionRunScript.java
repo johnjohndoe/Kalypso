@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.CommandURLUtilities;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -60,22 +60,21 @@ import org.kalypso.workflow.ui.browser.urlaction.script.ScriptFactory;
  * html content
  * 
  * <pre>
- *                                                                     &lt;script type=&quot;text/kalypso&quot;&gt;
- *                                                                         &lt;!--
- *                                                                         function test() {
- *                                                                          kalypso://showMessage?message=test;
- *                                                                          kalypso://showMessage?message=test;
- *                                                                          kalypso://showMessage?message=test;
- *                                                                          }
- *                                                                          //--&gt;
- *                                                                      &lt;/script&gt;
+ *                                                                       &lt;script type=&quot;text/kalypso&quot;&gt;
+ *                                                                           &lt;!--
+ *                                                                           function test() {
+ *                                                                            kalypso://showMessage?message=test;
+ *                                                                            kalypso://showMessage?message=test;
+ *                                                                            kalypso://showMessage?message=test;
+ *                                                                            }
+ *                                                                            //--&gt;
+ *                                                                        &lt;/script&gt;
  * </pre> }
  * 
  * @author doemming
  */
 public class URLActionRunScript extends AbstractURLAction
 {
-//  private final static String COMMAND_NAME = "runScript";
 
   private final static String PARAM_FUNCTION = "function";
 
@@ -110,17 +109,8 @@ public class URLActionRunScript extends AbstractURLAction
     catch( Exception e )
     {
       e.printStackTrace();
-      MessageDialog.openError( getShell(), "Error Message Planer Client", "Error occured while processing a script." + e.getMessage() + ".\nContact your Administator." );
-      return false;
+      return generateMessageDialog( e.getMessage(), IStatus.ERROR );
     }
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
   }
 
 }

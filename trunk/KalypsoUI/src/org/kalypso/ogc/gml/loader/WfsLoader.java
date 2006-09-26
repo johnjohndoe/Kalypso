@@ -49,6 +49,8 @@ public class WfsLoader extends AbstractLoader
 
   public static final int MAXFEATURE_UNBOUNDED = -1;
 
+  public static final char KV_PAIR_SEPARATOR = '#';
+
   /**
    * Loads a WFS DataSource from the given URL
    * 
@@ -66,7 +68,7 @@ public class WfsLoader extends AbstractLoader
     try
     {
       monitor.beginTask( "WFS laden", 1000 );
-      final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
+      final Properties sourceProps = PropertiesHelper.parseFromString( source, KV_PAIR_SEPARATOR );
       final String baseURLAsString = sourceProps.getProperty( KEY_URL );
       final String featureType = sourceProps.getProperty( KEY_FEATURETYPE );
       final String featureTypeNS = sourceProps.getProperty( KEY_FEATURETYPENAMESPACE );

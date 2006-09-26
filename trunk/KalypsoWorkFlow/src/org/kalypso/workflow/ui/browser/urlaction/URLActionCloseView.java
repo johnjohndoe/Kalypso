@@ -53,7 +53,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionCloseView extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "closeView";
 
   /**
    * required: the id where the view was registred in the extension point org.eclipse.ui.view
@@ -82,13 +81,5 @@ public class URLActionCloseView extends AbstractURLAction
       activePage.hideView( viewRef );
     }
     return true;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
   }
 }

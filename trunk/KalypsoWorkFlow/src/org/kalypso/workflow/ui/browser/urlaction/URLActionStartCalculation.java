@@ -64,15 +64,7 @@ public class URLActionStartCalculation extends AbstractURLAction
 
   private final static String PARAM_CALC_CASE_FOLDER_URL_ID = "calcCaseFolder";
 
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
-
-  /**
+   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
   public boolean run( ICommandURL commandURL )

@@ -62,7 +62,6 @@ import org.osgi.framework.Bundle;
  */
 public class URLActionRunAction extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "runAction";
 
   private final static String PARAM_PLUGIN_ID = "pluginId";
 
@@ -93,18 +92,6 @@ public class URLActionRunAction extends AbstractURLAction
       return false;
     }
 
-    // if( actionInstance instanceof IURLAction )
-    // {
-    // final IURLAction action = (IURLAction) actionInstance;
-    // // wozu die listener ?
-    // // if( m_listener != null )
-    // // action.addListener( m_listener );
-    // // action.run( parameter );
-    // // if( m_listener != null )
-    // // action.removeListener( m_listener );
-    // return action.run( commandURL );
-    // }
-
     if( actionInstance instanceof IAction )
     {
       final IAction action = (IAction) actionInstance;
@@ -132,17 +119,6 @@ public class URLActionRunAction extends AbstractURLAction
       final IEditorPart activeEditor = getActivePage().getActiveEditor();
       actionDelegate.setActiveEditor( action, activeEditor );
       actionDelegate.selectionChanged( action, selection );
-      // getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
-      // final IEditorSite editorSite = getActivePage().getActiveEditor().getEditorSite();
-      // final IActionBars actionBars = editorSite.getActionBars();
-      // IContributionItem item = actionBars.getToolBarManager().find(
-      // "org.kalypso.ui.editor.mapeditor.action.CreatePolygon" );
-      // int style = globalActionHandler.getStyle();
-      // globalActionHandler.setEnabled( true );
-      // globalActionHandler.setChecked( true );
-      // globalActionHandler.run();
-
-      // return true;
     }
 
     if( actionInstance instanceof IActionDelegate )
@@ -166,11 +142,4 @@ public class URLActionRunAction extends AbstractURLAction
     return false;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }

@@ -106,11 +106,4 @@ public class URLActionOpenEditor extends AbstractURLAction
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }
