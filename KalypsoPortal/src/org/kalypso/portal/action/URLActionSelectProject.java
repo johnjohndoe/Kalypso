@@ -63,7 +63,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionSelectProject extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "selectProject";
 
   // e.g. "org.kalypso.portal.loadProject.wizard";
   private final static String PARAM_CATEGORY_ID = "categoryId";
@@ -109,13 +108,5 @@ public class URLActionSelectProject extends AbstractURLAction
       }
     }
     return false;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
   }
 }

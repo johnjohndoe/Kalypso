@@ -64,8 +64,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionCloseEditor extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "closeEditor";
-
   /**
    * optional
    */
@@ -133,11 +131,4 @@ public class URLActionCloseEditor extends AbstractURLAction
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }

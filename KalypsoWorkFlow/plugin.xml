@@ -115,10 +115,6 @@
             command="setBBoxInGMT"
             name="Set BBox in Map View"/>
       <urlaction
-            class="org.kalypso.workflow.ui.browser.urlaction.URLActionImportBPlanGML"
-            command="importBPlanGML"
-            name="Import XPlanung GML"/>
-      <urlaction
             class="org.kalypso.workflow.ui.browser.urlaction.URLActionCopyFile"
             command="copyFile"
             name="Copy File"/>
@@ -134,6 +130,10 @@
             class="org.kalypso.workflow.ui.browser.urlaction.URLActionCloseAllViews"
             command="closeAllViews"
             name="Close All Views"/>
+      <urlaction
+            class="org.kalypso.workflow.ui.browser.urlaction.URLActionEnableOrDisableThemes"
+            command="doDisableTheme"
+            name="Enable or disable Themes"/>
    </extension>
 
 </plugin>

@@ -62,8 +62,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionExtract extends AbstractURLAction
 {
-  // private final static String COMMAND_NAME = "extract";
-
   private final static String PARAM_SOURCE = "sourceURL";
 
   private final static String PARAM_TARGET = "target";
@@ -113,11 +111,4 @@ public class URLActionExtract extends AbstractURLAction
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }

@@ -38,34 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.workflow.ui.browser.urlaction;
-
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.kalypso.workflow.ui.browser.AbstractURLAction;
-import org.kalypso.workflow.ui.browser.ICommandURL;
+package org.kalypso.workflow.ui.browser;
 
 /**
  * @author kuepfer
  */
-public class URLActionImportBPlanGML extends AbstractURLAction
+public interface IURLActionConstants
 {
+  public final static String PARAM_THEME_LIST = "themes";
+
+  public final static String PARAM_SECONDARY_PART_ID = "secondaryPartId";
+
+  public final static String PARAM_LIST_SEPARATOR = "separator";
+
+  public final static String PARAM_DEFAULT_SEPARATOR = ",";
 
   /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
+   * the file or path to serialize the new file
    */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
+
+  public final static String PARAM_TARGETPATH = "targetPath";
 
   /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
+   * position, where to place new feature as xpath optional, else root feature is parent
    */
-  public boolean run( ICommandURL commandURL )
-  {
-    // TODO implement the replacment of of the emtpy bplan gml in the map with the loaded data.
-    MessageDialog.openInformation( getShell(), "FLOWS Planer Client Info", "Das Kommando [" + m_commandName + "] ist noch nicht implementiert" );
-    return false;
-  }
+  public final static String PARAM_XPATH_PARENT_FEATURE = "xpathParentFeature";
 
+  /** the qualified name of the relation type */
+  public final String PARAM_NEW_RELATION_QN = "relationType";
+
+  /**
+   * featuretype of feature to create <br>
+   * syntax is <namespace>#<localname> <br>
+   * example: createFT=http://kalypso.org#KalypsoFeature optional, else target of relation if featuretype
+   */
+  public final static String PARAM_NEW_FT_QN = "newFeatureType";
+
+  /**
+   * propername of feature to be newly create <br>
+   * syntax is <namespace>#<localname> <br>
+   * http://kalypso.org#KalypsoFeature
+   */
+  public final static String PARAM_NEW_PROPERTY_QN = "newPropType";
+
+  public final static String PARAM_REPLACE = "replace";
 }

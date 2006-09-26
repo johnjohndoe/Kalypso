@@ -58,8 +58,6 @@ public class URLActionOpenURL extends AbstractURLAction
 {
   private static final String DEFAULT_BROWSER_VIEW = "org.kalypso.workflow.ui.WorkflowBrowserView";
 
-  // private final static String COMMAND_NAME = "openURL";
-
   private final static String PARAM_URL = "url";
 
   private final static String PARAM_BROWSER_ID = "browserId";
@@ -95,11 +93,4 @@ public class URLActionOpenURL extends AbstractURLAction
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }

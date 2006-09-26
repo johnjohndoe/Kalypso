@@ -53,17 +53,7 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
 public class URLActionCloseAllEditors extends AbstractURLAction
 {
 
-  // private final static String COMMAND_NAME = "closeAllEditors";
-
   private final static String PARAM_DOSAVE = "doSave";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)

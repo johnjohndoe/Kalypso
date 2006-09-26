@@ -85,6 +85,6 @@ public class CommandURLUtilities
       if( !success )
         return false; // abort
     }
-    return false;
+    return commands.size() > 1; // if a script1 runs in script2, script2 must return true or script1 will be aborted
   }
 }

@@ -42,6 +42,8 @@ package org.kalypso.workflow.ui.browser;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
@@ -59,7 +61,7 @@ public abstract class AbstractURLAction implements IURLAction
 
   private WorkflowContext m_workFlowContext = null;
 
-  protected String m_commandName;
+  private String m_commandName;
 
   /**
    * init will called befor run
@@ -115,6 +117,34 @@ public abstract class AbstractURLAction implements IURLAction
       m_commandName = commandName;
     else
       throw new CommandURLActionException( "Command name of this action was already set, can not be assigned again!" );
+  }
+
+  /**
+   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
+   */
+  public String getActionName( )
+  {
+    return m_commandName;
+  }
+
+  protected boolean generateMessageDialog( String message, int severity )
+  {
+    if( severity == IStatus.ERROR )
+    {
+      MessageDialog.openError( getShell(), "URLAction Error-Dialog", message );
+      return false;
+    }
+    else if( severity == IStatus.CANCEL )
+    {
+      MessageDialog.openWarning( getShell(), "URLAction Warning-Dialog", message );
+      return true;
+    }
+    else if( severity == IStatus.INFO )
+    {
+      MessageDialog.openInformation( getShell(), "URLAction Info-Dialog", message );
+      return true;
+    }
+    return false;
   }
 
   public class CommandURLActionException extends Exception

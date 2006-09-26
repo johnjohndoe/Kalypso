@@ -54,7 +54,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionOpenView extends AbstractURLAction
 {
-//  private final static String COMMAND_NAME = "openView";
 
   private final static String PARAM_PART_ID = "partId";
 
@@ -97,13 +96,5 @@ public class URLActionOpenView extends AbstractURLAction
       return false;
     }
     return true;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
   }
 }

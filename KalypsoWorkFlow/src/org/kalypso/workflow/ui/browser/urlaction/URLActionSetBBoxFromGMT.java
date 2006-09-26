@@ -67,7 +67,7 @@ import org.xml.sax.InputSource;
 public class URLActionSetBBoxFromGMT extends AbstractURLAction
 {
 
-//  private final static String COMMAND_NAME = "setBBoxInGMT";
+  // private final static String COMMAND_NAME = "setBBoxInGMT";
 
   /**
    * The url of the Gismapview to get the bbox from
@@ -83,14 +83,6 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
    */
 
   private static final String PARAM_URL_GMT_TO = "urlGMTto";
-
-  /**
-   * @see org.kalypso.workflow.ui.browser.IURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)

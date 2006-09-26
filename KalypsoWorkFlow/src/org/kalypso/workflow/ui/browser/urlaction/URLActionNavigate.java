@@ -53,8 +53,6 @@ import org.kalypso.workflow.ui.browser.ICommandURL;
  */
 public class URLActionNavigate extends AbstractURLAction
 {
-//  private final static String COMMAND_NAME = "navigate";
-
   private final static String PARAM_DIRECTION = "direction";
 
   private static final String PARAM_BACKWARD = "backward";
@@ -84,18 +82,11 @@ public class URLActionNavigate extends AbstractURLAction
       }
       else if( direction.equalsIgnoreCase( PARAM_HOME ) )
       {
-        ((CommandURLBrowserView)part).navigateHome();
+        ((CommandURLBrowserView) part).navigateHome();
         return false;
       }
     }
     return false;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.browser.commandable.ICommandURLAction#getActionName()
-   */
-  public String getActionName( )
-  {
-    return m_commandName;
-  }
 }

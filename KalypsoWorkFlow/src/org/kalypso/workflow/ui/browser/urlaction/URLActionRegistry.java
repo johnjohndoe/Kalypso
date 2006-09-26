@@ -82,55 +82,6 @@ public class URLActionRegistry
     }
   }
 
-  //
-  // final Object clazz = element.createExecutableExtension( "class" );
-  // m_defaultInstance.register( (IURLAction) clazz );
-  // ((AbstractURLAction) clazz).setCommandName( commandName );
-  // }
-  //
-  // }
-  // // m_defaultInstance.register( new URLActionNavigate() );
-  // // m_defaultInstance.register( new URLActionOpenEditor() );
-  // // m_defaultInstance.register( new URLActionCloseEditor() );
-  // // m_defaultInstance.register( new URLActionSelectEditor() );
-  // // m_defaultInstance.register( new URLActionOpenView() );
-  // // m_defaultInstance.register( new URLActionCloseView() );
-  // // m_defaultInstance.register( new URLActionChangePerspective() );
-  // // m_defaultInstance.register( new URLActionRunAction() );
-  // // m_defaultInstance.register( new URLActionRunScript() );
-  // // m_defaultInstance.register( new URLActionShowMessage() );
-  // // m_defaultInstance.register( new URLActionSelectProject() );
-  // // m_defaultInstance.register( new URLActionExtract() );
-  // // m_defaultInstance.register( new URLActionAddGeometry() );
-  // // m_defaultInstance.register( new URLActionOpenURL() );
-  // // m_defaultInstance.register( new URLActionSaveAllThemes() );
-  // // m_defaultInstance.register( new URLActionActivateTheme() );
-  // // m_defaultInstance.register( new URLActionSaveActiveTheme() );
-  // // m_defaultInstance.register( new URLActionSaveActiveGMT() );
-  // // m_defaultInstance.register( new URLActionAddThemeGMT() );
-  // // m_defaultInstance.register( new URLActionOpenWorkflowBrowser() );
-  // // m_defaultInstance.register( new URLActionStartCalculation() );
-  // // m_defaultInstance.register( new URLActionSetBBoxFromGMT() );
-  // // m_defaultInstance.register( new URLActionImportBPlanGML() );
-  // // m_defaultInstance.register( new URLActionCopyFile() );
-  // // m_defaultInstance.register( new URLActionShowInMap() );
-  // // m_defaultInstance.register( new URLActionCloseAllEditors() );
-  // // m_defaultInstance.register( new URLActionCloseAllViews() );
-  // }
-  // catch( URLActionRegistryException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // catch( CoreException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // catch( CommandURLActionException e )
-  // {
-  // e.printStackTrace();
-  // }
-  // }
-
   public static URLActionRegistry getDefault( )
   {
     return m_registryInstance;
