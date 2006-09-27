@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
 	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
@@ -109,9 +109,9 @@
 				<description>Gewässer</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Water body</label>
-				<tooltip>Water body</tooltip>
-				<description>Water body</description>
+				<label>River</label>
+				<tooltip>River</tooltip>
+				<description>River</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -124,9 +124,9 @@
 				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Water body</name>
+				<name>River</name>
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
-				<tooltip>Water body</tooltip>
+				<tooltip>River</tooltip>
 				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
 			</documentation>
 		</annotation>
@@ -141,9 +141,9 @@
 				<description>Gewässerstrang</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Reach</label>
-				<tooltip>Reach</tooltip>
-				<description>Reach</description>
+				<label>River string</label>
+				<tooltip>River string</tooltip>
+				<description>River string</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -156,7 +156,7 @@
 				<description>${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Reach</name>
+				<name>River string</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>${property:http://www.opengis.net/gml#name}</description>
@@ -174,9 +174,9 @@
 				<description>Gewässerstrangsegmente</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Reach segments</label>
-				<tooltip>Reach segments</tooltip>
-				<description>Reach segments</description>
+				<label>River string segments</label>
+				<tooltip>River string segments</tooltip>
+				<description>River string segments</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -192,10 +192,10 @@
 				<description>Zufluss-Strangsegment</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Influent reach segment</name>
-				<label>Influent reach segment</label>
-				<tooltip>Influent reach segment</tooltip>
-				<description>Influent reach segment</description>
+				<name>Influent string segment</name>
+				<label>Influent string segment</label>
+				<tooltip>Influent string segment</tooltip>
+				<description>Influent string segment</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -210,7 +210,7 @@
 				gesetzt-}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Profile reach segment</name>
+				<name>Profile string segment</name>
 				<label>Station km ${property:org.kalypso.model.wspm#station;-not set-}</label>
 				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-not set-}</tooltip>
 				<description>Station km ${property:org.kalypso.model.wspm#station;-not set-}</description>
@@ -437,9 +437,9 @@
 								<description>Übergeordnetes Gewässer</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water body</label>
-								<tooltip>Superior water body</tooltip>
-								<description>Superior water body</description>
+								<label>River</label>
+								<tooltip>Superior river</tooltip>
+								<description>Superior river</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -453,9 +453,9 @@
 								<description>(generierte) Gewässerachse</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water axis</label>
-								<tooltip>(Generated) water axis</tooltip>
-								<description>(Generated) water axis</description>
+								<label>River axis</label>
+								<tooltip>(Generated) River axis</tooltip>
+								<description>(Generated) River axis</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -495,8 +495,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Station km</label>
-								<tooltip>Station in reach, where the profile selected below will be placed.</tooltip>
-								<description>Station in reach, where the profile selected below will be placed.</description>
+								<tooltip>Station in string, where the profile selected below will be placed.</tooltip>
+								<description>Station in string, where the profile selected below will be placed.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -553,8 +553,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Profile</label>
-								<tooltip>Reach segment profile</tooltip>
-								<description>Reach segment profile</description>
+								<tooltip>String segment profile</tooltip>
+								<description>String segment profile</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -617,9 +617,9 @@
 								<description>Gewässerkennziffer (optional)</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water body reference number</label>
-								<tooltip>Water body reference number (optional)</tooltip>
-								<description>Water body reference number (optional)</description>
+								<label>River reference number</label>
+								<tooltip>River reference number (optional)</tooltip>
+								<description>River reference number (optional)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -631,9 +631,9 @@
 								<description>Gewässerachse</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water body center line</label>
-								<tooltip>Water body center line</tooltip>
-								<description>Water body center line</description>
+								<label>River center line</label>
+								<tooltip>River center line</tooltip>
+								<description>River center line</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -681,9 +681,9 @@ Selection means that stationing will be against flow direction. ]]></description
 								<description>Gewässerstränge</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Reaches</label>
-								<tooltip>Reaches</tooltip>
-								<description>Reaches</description>
+								<label>River strings</label>
+								<tooltip>River strings</tooltip>
+								<description>River strings</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -696,9 +696,9 @@ Selection means that stationing will be against flow direction. ]]></description
 								<description>Abflussereignisse</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Run-off events</label>
-								<tooltip>Run-off events</tooltip>
-								<description>Run-off events</description>
+								<label>Discharge events</label>
+								<tooltip>Discharge events</tooltip>
+								<description>Discharge events</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -712,9 +712,9 @@ Selection means that stationing will be against flow direction. ]]></description
 								<description>Wasserspiegelfixierungen</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water line fixings</label>
-								<tooltip>Water line fixings</tooltip>
-								<description>Water line fixings</description>
+								<label>Water surface fixings</label>
+								<tooltip>Water surface fixings</tooltip>
+								<description>Water surface fixings</description>
 							</documentation>
 						</annotation>
 					</element>

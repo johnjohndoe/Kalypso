@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm"
 	xmlns:prof="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
 	<annotation>
@@ -50,7 +50,7 @@
 					<element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden.</documentation>
-							<documentation xml:lang="en">List of additional observations: e.g. passages, arch, circular and trapezoidal profiles can be modelled.</documentation>
+							<documentation xml:lang="en">List of additional observations: e.g. outlets, arch, circular and trapezoidal profiles can be modelled.</documentation>
 						</annotation>
 					</element>
 					<element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
@@ -68,9 +68,9 @@
 				<description>Verlustbeiwerte</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Loss coefficients</label>
-				<tooltip>Loss coefficients</tooltip>
-				<description>Loss coefficients</description>
+				<label>Attrition coefficients</label>
+				<tooltip>Attrition coefficients</tooltip>
+				<description>Attrition coefficients</description>
 			</documentation>			
 		</annotation>
 	</element>
@@ -82,9 +82,9 @@
 				<description>Verlustbeiwert</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Loss coefficient</label>
-				<tooltip>Loss coefficient</tooltip>
-				<description>Loss coefficient</description>
+				<label>Attrition coefficient</label>
+				<tooltip>Attrition coefficient</tooltip>
+				<description>Attrition coefficient</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -117,7 +117,7 @@
 							<documentation xml:lang="en">
 								<label>Type</label>
 								<tooltip>Type</tooltip>
-								<description>Type of local loss</description>
+								<description>Type of local attrition</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -158,9 +158,9 @@
 											<description>Zusatz-Verlust</description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Additional loss</label>
-											<tooltip>Additional loss</tooltip>
-											<description>Additional loss</description>
+											<label>Additional attrition</label>
+											<tooltip>Additional attrition</tooltip>
+											<description>Additional attrition</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -205,7 +205,7 @@
 							<documentation xml:lang="en">
 								<label>Value</label>
 								<tooltip>Value</tooltip>
-								<description>Value of local loss</description>
+								<description>Value of local attrition</description>
 							</documentation>
 						</annotation>
 					</element>

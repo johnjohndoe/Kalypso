@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
 	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
 	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
@@ -72,10 +72,10 @@
 				<description>Abflussintervall</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Run-off interval - steady (TU-HH)</name>
-				<label>Run-off interval</label>
-				<tooltip>Run-off interval</tooltip>
-				<description>Run-off interval</description>
+				<name>discharge interval - steady (TU-HH)</name>
+				<label>discharge interval</label>
+				<tooltip>discharge interval</tooltip>
+				<description>discharge interval</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -91,10 +91,10 @@
 				<description>Numerische Parameter</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Numeric parameters - steady (TU-HH)</name>
-				<label>Numeric parameters</label>
-				<tooltip>Numeric parameters</tooltip>
-				<description>Numeric parameters</description>
+				<name>Numerical parameters - steady (TU-HH)</name>
+				<label>Numerical parameters</label>
+				<tooltip>Numerical parameters</tooltip>
+				<description>Numerical parameters</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -110,7 +110,7 @@
 				<description>${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Reach - steady (TU-HH)</name>
+				<name>River string - steady (TU-HH)</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
 				<description>${property:http://www.opengis.net/gml#description}</description>
@@ -129,9 +129,9 @@
 				<description>Zufluss-Strangsegmente</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Influent reach segments</label>
-				<tooltip>Influent reach segments</tooltip>
-				<description>Influent reach segments</description>
+				<label>Influent string segments</label>
+				<tooltip>Influent string segments</tooltip>
+				<description>Influent string segments</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -176,7 +176,7 @@
 				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Profile reach segment - steady (TU-HH)</name>
+				<name>Profile string segment - steady (TU-HH)</name>
 				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
 				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
 				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
@@ -238,8 +238,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Fluid model</label>
-								<tooltip>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</tooltip>
-								<description>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</description>
+								<tooltip>Selection of flow resistance model (Darcy-Weißbach or Manning-Strickler)</tooltip>
+								<description>Selection of flow resistance model (Darcy-Weißbach or Manning-Strickler)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -298,8 +298,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Type of calculation</label>
-								<tooltip>Choose type of calculation (water level or bank-full)</tooltip>
-								<description>Choose type of calculation (water level or bank-full)</description>
+								<tooltip>Choose type of calculation (water surface or bank-full)</tooltip>
+								<description>Choose type of calculation (water surface or bank-full)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -312,9 +312,9 @@
 											<description>Wasserspiegellagenberechnung</description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Water level calculation</label>
-											<tooltip>Water level calculation</tooltip>
-											<description>Water level calculation</description>
+											<label>Water surface calculation</label>
+											<tooltip>Water surface calculation</tooltip>
+											<description>Water surface calculation</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -358,9 +358,9 @@
 								<description>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Reach</label>
-								<tooltip>Selection of reach included in calculation.</tooltip>
-								<description>Selection of reach included in calculation.</description>
+								<label>River string</label>
+								<tooltip>Selection of river string included in calculation.</tooltip>
+								<description>Selection of river string included in calculation.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -420,9 +420,9 @@
 								<description>Auswahl des Abflussereignisses</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Run-off event</label>
-								<tooltip>Selection of run-off event</tooltip>
-								<description>Selection of run-off event</description>
+								<label>Discharge event</label>
+								<tooltip>Selection of discharge event</tooltip>
+								<description>Selection of discharge event</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -434,9 +434,9 @@
 								<description>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Run-off interval</label>
-								<tooltip>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</tooltip>
-								<description>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</description>
+								<label>Discharge interval</label>
+								<tooltip>Definition of discharge interval (only for bank-full and Kalinin-Miljukov calculations)</tooltip>
+								<description>Definition of discharge interval (only for bank-full and Kalinin-Miljukov calculations)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -569,8 +569,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Minimum discharge [m³/s]</label>
-								<tooltip>Minimum value of run-off interval</tooltip>
-								<description>Minimum value of run-off interval</description>
+								<tooltip>Minimum value of discharge interval</tooltip>
+								<description>Minimum value of discharge interval</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -583,8 +583,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Step length [m³/s]</label>
-								<tooltip>Step length of run-off interval</tooltip>
-								<description>Step length of run-off interval</description>
+								<tooltip>Step length of discharge interval</tooltip>
+								<description>Step length of discharge interval</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -597,8 +597,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Maximum discharge [m³/s]</label>
-								<tooltip>Maximum value of run-off interval</tooltip>
-								<description>Maximum value of run-off interval</description>
+								<tooltip>Maximum value of discharge interval</tooltip>
+								<description>Maximum value of discharge interval</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -673,9 +673,9 @@
 								<description>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Delay loss</label>
-								<tooltip>Type of delay loss (standard=DVWK)</tooltip>
-								<description>Type of delay loss (standard=DVWK)</description>
+								<label>Delay attrition</label>
+								<tooltip>Type of delay attrition (standard=DVWK)</tooltip>
+								<description>Type of delay attrition (standard=DVWK)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -691,7 +691,7 @@
 										<documentation xml:lang="en">
 											<label>according to DVWK (beta = 0.67)</label>
 											<tooltip>according to DVWK (beta = 0.67)</tooltip>
-											<description>Delay loss according to DVWK (beta =
+											<description>Delay attrition according to DVWK (beta =
 											0.67)</description>
 										</documentation>
 									</annotation>
@@ -707,7 +707,7 @@
 										<documentation xml:lang="en">
 											<label>according to Björnsen (beta = 0.5)</label>
 											<tooltip>according to Björnsen (beta = 0.5)</tooltip>
-											<description>Delay loss according to Björnsen (beta =
+											<description>Delay attrition according to Björnsen (beta =
 												0.5)</description>
 										</documentation>
 									</annotation>
@@ -723,7 +723,7 @@
 										<documentation xml:lang="en">
 											<label>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
 											<tooltip>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
-											<description>Delay loss according to DFG (beta = 2 /
+											<description>Delay attrition according to DFG (beta = 2 /
 												(1+Ai + 1/Ai) )</description>
 										</documentation>
 									</annotation>
@@ -739,9 +739,9 @@
 								<description>Berechnung des Reibungsverlustes (Standard=Trapezformel)</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Calculation of friction loss</label>
-								<tooltip>Calculation of friction loss (standard=trapezoidal)</tooltip>
-								<description>Calculation of friction loss (standard=trapezoidal)</description>
+								<label>Calculation of friction attrition</label>
+								<tooltip>Calculation of friction attrition (standard=trapezoidal)</tooltip>
+								<description>Calculation of friction attrition (standard=trapezoidal)</description>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -755,9 +755,9 @@
 												Trapezformel</description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>Trapezoidal</label>
+											<label>Trapezoidal rule</label>
 											<tooltip>Trapezoidal rule</tooltip>
-											<description>Calculation of friction losses according to
+											<description>Calculation of friction attrition according to
 												trapezoidal rule</description>
 										</documentation>
 									</annotation>
@@ -773,7 +773,7 @@
 										<documentation xml:lang="en">
 											<label>Geometric averaging</label>
 											<tooltip>Geometric averaging</tooltip>
-											<description>Calculation of friction losses according to
+											<description>Calculation of friction attrition according to
 												geometric averaging</description>
 										</documentation>
 									</annotation>
@@ -792,7 +792,7 @@
 							<documentation xml:lang="en">
 								<label>Additional options</label>
 								<tooltip>Additional options</tooltip>
-								<description>Additional options (calculation of special structures)</description>
+								<description>Additional options (calculation of building structures)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -825,9 +825,9 @@
 								<description>Übergeordnetes Gewässer</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water body</label>
-								<tooltip>Superior water body</tooltip>
-								<description>Superior water body</description>
+								<label>River</label>
+								<tooltip>Superior river</tooltip>
+								<description>Superior river</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -841,9 +841,9 @@
 								<description>(generierte) Gewässerachse</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Water axis</label>
-								<tooltip>(Generated) water axis</tooltip>
-								<description>(Generated) water axis</description>
+								<label>River axis</label>
+								<tooltip>(Generated) river axis</tooltip>
+								<description>(Generated) river axis</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -945,8 +945,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Initial station</label>
-								<tooltip>Initial station (lower reaches), value depending on profile stationing!</tooltip>
-								<description>Initial station (lower reaches), value depending on profile stationing!
+								<tooltip>Initial station (lower reach), value depending on profile stationing!</tooltip>
+								<description>Initial station (lower reach), value depending on profile stationing!
 								</description>
 							</documentation>
 						</annotation>
@@ -960,8 +960,8 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Final station</label>
-								<tooltip>Final station (upper reaches), value depending on profile stationing!</tooltip>
-								<description>Final station (upper reaches), value depending on profile stationing!</description>
+								<tooltip>Final station (upper reach), value depending on profile stationing!</tooltip>
+								<description>Final station (upper reach), value depending on profile stationing!</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -983,21 +983,21 @@
 					<element name="doCalcBridges" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Brücken mit berechnen</label>
+								<label>Brücken mitberechnen</label>
 								<tooltip>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Include bridges</label>
-								<tooltip>Bridges and passages are included in calculation.</tooltip>
-								<description>Bridges and passages are included in calculation.</description>
+								<tooltip>Bridges and outlets are included in calculation.</tooltip>
+								<description>Bridges and outlets are included in calculation.</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="doCalcBarrages" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wehre mit berechnen</label>
+								<label>Wehre mitberechnen</label>
 								<tooltip>falls aktiv, werden Wehre bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Wehre bei der Berechnung berücksichtigt. </description>
 							</documentation>
