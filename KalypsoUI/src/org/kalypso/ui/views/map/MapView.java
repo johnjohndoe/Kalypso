@@ -255,14 +255,15 @@ public class MapView extends ViewPart implements ICommandTarget
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
         m_mapPanel.setBoundingBox( env );
 
-        // Apply action filters to action bars and refresh them
-        final IActionBars actionBars = getViewSite().getActionBars();
-        GisTemplateHelper.applyActionFilters( actionBars, gisview );
         final UIJob job = new UIJob( "" )
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor uiMonitor )
           {
+            // Apply action filters to action bars and refresh them
+            final IActionBars actionBars = getViewSite().getActionBars();
+            GisTemplateHelper.applyActionFilters( actionBars, gisview );
+
             // must frce on toolBarManager, just update action bars is not enough
             final IToolBarManager toolBarManager = actionBars.getToolBarManager();
             toolBarManager.update( true );

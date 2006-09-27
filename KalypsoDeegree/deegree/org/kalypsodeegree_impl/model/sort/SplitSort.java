@@ -19,6 +19,26 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSort implements FeatureList
 {
+  private static final IEnvelopeProvider DEFAULT_ENV_PROVIDER = new IEnvelopeProvider()
+  {
+    public GM_Envelope getEnvelope( final Object object )
+    {
+      if( object instanceof DisplayElement )
+      {
+        final DisplayElement de = (DisplayElement) object;
+        return getEnvelope( de.getFeature() );
+      }
+      else if( object instanceof Feature )
+      {
+        final Feature fe = (Feature) object;
+        GM_Envelope env = fe.getEnvelope();
+        return env;
+      }
+
+      return null;
+    }
+  };
+
   public static boolean showIndexEnv = false;
 
   private SplitSortContainer m_rootContainer = null;
@@ -35,17 +55,31 @@ public class SplitSort implements FeatureList
    */
   private boolean m_invalid = true;
 
+  private final IEnvelopeProvider m_envelopeProvider;
+
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
-    m_parentFeature = parentFeature;
-    m_parentFeatureTypeProperty = parentFTP;
+    this( parentFeature, parentFTP, (IEnvelopeProvider) null );
+  }
+
+  public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
+  {
+    this( parentFeature, parentFTP, null, envelopeProvider );
   }
 
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env )
   {
+    this( parentFeature, parentFTP, env, null );
+  }
+
+  public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env, final IEnvelopeProvider envelopeProvider )
+  {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    m_rootContainer = new SplitSortContainer( null, env );
+
+    m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
+    if( env != null )
+      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
   }
 
   public boolean add( final Object object )
@@ -66,7 +100,7 @@ public class SplitSort implements FeatureList
       return;
 
     if( m_rootContainer == null )
-      m_rootContainer = new SplitSortContainer( null, env );
+      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
 
     if( m_rootContainer.getEnvelope().contains( env ) )
       m_rootContainer.add( env, object );
@@ -86,7 +120,7 @@ public class SplitSort implements FeatureList
       GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY
           : maxYroot );
 
-      SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv );
+      SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv, m_envelopeProvider );
       m_rootContainer.setParent( newRootContainer );
       newRootContainer.createSubContainers( m_rootContainer );
       m_rootContainer = newRootContainer;
@@ -142,21 +176,9 @@ public class SplitSort implements FeatureList
     return m_objects.remove( object );
   }
 
-  protected static GM_Envelope getEnvelope( Object object )
+  protected GM_Envelope getEnvelope( final Object object )
   {
-    if( object instanceof DisplayElement )
-    {
-      final DisplayElement de = (DisplayElement) object;
-      return getEnvelope( de.getFeature() );
-    }
-    else if( object instanceof Feature )
-    {
-      final Feature fe = (Feature) object;
-      GM_Envelope env = fe.getEnvelope();
-      return env;
-    }
-
-    return null;
+    return m_envelopeProvider.getEnvelope( object );
   }
 
   public void paint( Graphics g, GeoTransform geoTransform )
@@ -176,7 +198,7 @@ public class SplitSort implements FeatureList
   {
     if( m_rootContainer != null )
       return m_rootContainer.getEnvelope();
-    
+
     return null;
   }
 
@@ -200,7 +222,7 @@ public class SplitSort implements FeatureList
 
     if( bbox != null )
     {
-      m_rootContainer = new SplitSortContainer( null, bbox );
+      m_rootContainer = new SplitSortContainer( null, bbox, m_envelopeProvider );
       for( final Object next : m_objects )
       {
         GM_Envelope envelope = getEnvelope( next );
@@ -451,13 +473,14 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    if( !contains( o ) )
-      return;
-    if( m_rootContainer != null )
-      m_rootContainer.remove( o );
-    final GM_Envelope envelope = getEnvelope( o );
-
-    spacialAdd( envelope, o );
+    invalidate();
+    // if( !contains( o ) )
+    // return;
+    // if( m_rootContainer != null )
+    // m_rootContainer.remove( o );
+    // final GM_Envelope envelope = getEnvelope( o );
+    //
+    // spacialAdd( envelope, o );
   }
 
 }

@@ -178,7 +178,7 @@ public class GisTemplateHelper
     final ExtentType extent = gisview.getExtent();
     if( extent == null )
       return null;
-    
+
     final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
@@ -260,15 +260,19 @@ public class GisTemplateHelper
     return null;
   }
 
-  /** Applies the settings in the map template to the given action bars. */
+  /**
+   * Applies the settings in the map template to the given action bars.
+   * <p>
+   * Must be called in the SWT-Thread.
+   */
   public static void applyActionFilters( final IActionBars actionBars, final Gismapview gisview )
   {
     final IMenuManager menuManager = actionBars.getMenuManager();
     applyActionFilters( menuManager, gisview );
-    
+
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     applyActionFilters( toolBarManager, gisview );
-    
+
     final IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
     applyActionFilters( statusLineManager, gisview );
   }
@@ -276,8 +280,8 @@ public class GisTemplateHelper
   private static void applyActionFilters( final IContributionManager manager, Gismapview gisview )
   {
     // TODO: read constraints from gisview
-//    final IContributionItem item = manager.find( "org.kalypso.ui.editor.mapeditor.actions.PanMapActionDelegate" );
-//    if( item != null )
-//      item.setVisible( false );
+    // final IContributionItem item = manager.find( "org.kalypso.ui.editor.mapeditor.actions.PanMapActionDelegate" );
+    // if( item != null )
+    // item.setVisible( false );
   }
 }

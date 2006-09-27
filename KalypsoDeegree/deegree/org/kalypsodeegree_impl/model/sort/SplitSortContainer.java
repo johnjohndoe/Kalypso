@@ -26,6 +26,17 @@ public class SplitSortContainer
 
   private static final int LEFT_TOP = 3;
 
+  private SplitSortContainer myParent = null;
+
+  private final IEnvelopeProvider m_envProvider;
+
+  public SplitSortContainer( final SplitSortContainer parent, final GM_Envelope env, final IEnvelopeProvider envProvider )
+  {
+    myEnvelope = env;
+    myParent = parent;
+    m_envProvider = envProvider;
+  }
+  
   public GM_Envelope getEnvelope( )
   {
     return myEnvelope;
@@ -50,25 +61,8 @@ public class SplitSortContainer
     return size;
   }
 
-  private SplitSortContainer myParent = null;
-
-  public SplitSortContainer( final SplitSortContainer parent, final GM_Envelope env )
-  {
-    myEnvelope = env;
-    myParent = parent;
-    // try
-    // {
-    // // add(org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory.buildDisplayElement(env));
-    // }
-    // catch( Exception e )
-    // {
-    // e.printStackTrace();
-    // }
-  }
-
   private void add( Object object )
   {
-    // System.out.println("splitsortcontaier.add...");
     myObjects.add( object );
   }
 
@@ -78,7 +72,7 @@ public class SplitSortContainer
     myObjects = new ArrayList<Object>( oldObjects.size() );
     for( int i = 0; i < oldObjects.size(); i++ )
     {
-      final GM_Envelope env = SplitSort.getEnvelope( oldObjects.get( i ) );
+      final GM_Envelope env = m_envProvider.getEnvelope( oldObjects.get( i ) );
       if( env != null )
         add( env, oldObjects.get( i ) );
       else
@@ -247,10 +241,10 @@ public class SplitSortContainer
     final double minX = myEnvelope.getMin().getX();
     final double minY = myEnvelope.getMin().getY();
 
-    mySubContainer[0] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, minY, midX, midY ) );
-    mySubContainer[1] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, minY, maxX, midY ) );
-    mySubContainer[2] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, midY, maxX, maxY ) );
-    mySubContainer[3] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, midY, midX, maxY ) );
+    mySubContainer[0] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, minY, midX, midY ), m_envProvider );
+    mySubContainer[1] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, minY, maxX, midY ),m_envProvider );
+    mySubContainer[2] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, midY, maxX, maxY ), m_envProvider );
+    mySubContainer[3] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, midY, midX, maxY ), m_envProvider );
   }
 
   private boolean hasSubContainers( )
@@ -270,7 +264,7 @@ public class SplitSortContainer
     for( int i = 0; i < myObjects.size(); i++ )
     {
       Object object = myObjects.get( i );
-      GM_Envelope envObject = SplitSort.getEnvelope( object );
+      GM_Envelope envObject = m_envProvider.getEnvelope( object );
       if( envObject == null || env.intersects( envObject ) )
         result.add( object );
     }
