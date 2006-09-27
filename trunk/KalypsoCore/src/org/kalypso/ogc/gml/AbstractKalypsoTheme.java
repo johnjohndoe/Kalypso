@@ -127,7 +127,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 
   public String getType( )
   {
-    return "[" + m_type + "] ";
+    return m_type;
   }
 
   public void setType( String type )
