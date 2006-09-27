@@ -603,6 +603,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireSelectionChanged();
   }
 
+  /**
+   * @deprecated
+   */
   public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode, final boolean useOnlyFirstChoosen )
   {
     final GeoTransform transform = getProjection();
@@ -627,7 +630,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
-        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
+        final Feature fe = (Feature) selector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
 
         final List<Feature> listFe = new ArrayList<Feature>();
         if( fe != null )
@@ -654,12 +657,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List<Feature> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), withinStatus );
+          final List<Object> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
             // delete all but first if we shall only the first selected
-            final Feature object = features.get( 0 );
+            final Feature object = (Feature) features.get( 0 );
             features.clear();
             features.add( object );
           }
@@ -670,6 +673,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
   }
 
+  /**
+   * @deprecated Does not belong into the MapPanel. Use {@link IFeatureSelectionChanger} instead.
+   */
   private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
     // nothing was choosen by the user, clear selection

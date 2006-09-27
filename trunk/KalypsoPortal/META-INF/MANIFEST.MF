@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ui.addlayer,
  org.kalypso.workflow,
  org.eclipse.help
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Bundle-Vendor: Universtity of Technology Hamburg-Harburg
 Export-Package: org.kalypso.portal,
  org.kalypso.portal.action,

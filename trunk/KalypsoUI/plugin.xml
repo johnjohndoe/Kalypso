@@ -837,33 +837,6 @@
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>
-	<extension point="org.eclipse.ui.viewActions">
-		<viewContribution id="org.kalypso.ui.viewContributions.mapView"
-			targetID="org.kalypso.ui.views.map.MapView">
-			<menu id="navigate" label="Navigation" />
-			<action
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
-				icon="icons/map/pan.gif"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
-				menubarPath="navigate" style="radio" toolbarPath="navigate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip" />
-			<action
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-				icon="icons/map/zoomin.gif"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
-				menubarPath="navigate" style="radio" toolbarPath="navigate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip" />
-			<action
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
-				icon="icons/map/zoomout.gif"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
-				menubarPath="navigate" style="push" toolbarPath="navigate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip" />
-		</viewContribution>
-	</extension>
 	<extension point="org.kalypso.contribs.java.urlCatalog">
 		<catalog
 			class="org.kalypso.ui.catalogs.ServerPropertiesUrlCatalog"

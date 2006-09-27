@@ -34,7 +34,9 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
@@ -50,10 +52,28 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 {
   private final Class m_apreferedGeometryClass;
 
-  public EditFeatureGeometryWidget( final String name, final String toolTip, final Class geometryClass )
+  /**
+   * The feature which should be edited.
+   */
+  private final Feature m_feature;
+
+  /**
+   * If the feature variable is used, the workspace is although needed.
+   */
+  private final CommandableWorkspace m_workspace;
+
+  /**
+   * @param workspace
+   *          set to null, if not used (if feature is not set, this param has no effect!).
+   * @param feature
+   *          set to null, if not used (if used, the workspace has to be set!).
+   */
+  public EditFeatureGeometryWidget( final String name, final String toolTip, final CommandableWorkspace workspace, final Feature feature, final Class geometryClass )
   {
     super( name, toolTip );
 
+    m_workspace = workspace;
+    m_feature = feature;
     m_apreferedGeometryClass = geometryClass;
 
     update( getMapPanel() );
@@ -62,19 +82,33 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   @Override
   protected Object createFeatureToEdit( final IKalypsoFeatureTheme theme )
   {
-    final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-    final Feature feature = FeatureSelectionHelper.getFirstFeature( selectionManager );
+    if( theme != null )
+    {
+      /* If a theme is present, the update method from the parent was called and everthing is handled as before. */
+      final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( selectionManager );
 
-    final CommandableWorkspace workspace = theme.getWorkspace();
+      final CommandableWorkspace workspace = theme.getWorkspace();
 
-    final IValuePropertyType geometryProperty;
+      final IValuePropertyType geometryProperty;
 
-    if( feature == null )
-      geometryProperty = null;
+      if( feature == null )
+        geometryProperty = null;
+      else
+        geometryProperty = GeometryUtilities.findGeometryProperty( feature.getFeatureType(), m_apreferedGeometryClass );
+
+      return new FeatureToEdit( workspace, feature, geometryProperty );
+    }
     else
-      geometryProperty = GeometryUtilities.findGeometryProperty( feature.getFeatureType(), m_apreferedGeometryClass );
-
-    return new FeatureToEdit( workspace, feature, geometryProperty );
+    {
+      /*
+       * Only do this, if no theme is present. Then, the update method from the parent is not called and everything is
+       * handled in the new way.
+       */
+      final IValuePropertyType geometryProperty = GeometryUtilities.findGeometryProperty( m_feature.getFeatureType(), m_apreferedGeometryClass );
+      // TODO
+      return new FeatureToEdit( m_workspace, m_feature, geometryProperty );
+    }
   }
 
   @Override
@@ -107,68 +141,34 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
     return geometryProperty.getValueClass();
   }
 
-//  /**
-//   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#perform()
-//   */
-//  @Override
-//  public void perform( )
-//  {
-//    /* Calling the parent function. */
-//    super.perform();
-//
-//    /*
-//     * If the action is finished, the Tool should be deselected, and the standard tool or last active one should be
-//     * selected.
-//     */
-//
-//    /* The PAN-Widget should be activated. */
-//
-//    /* TODO: This is not the optimal way, to get the toolbar of the active editor. There must be a better way. */
-//    IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
-//    IEditorSite editorSite = workbenchWindows[0].getActivePage().getActiveEditor().getEditorSite();
-//    IActionBars actionBars = editorSite.getActionBars();
-//
-//    /* The items of the toolbar. */
-//    IContributionItem[] items = actionBars.getToolBarManager().getItems();
-//
-//    /* Loop them to find the needed buttons. */
-//    for( IContributionItem item : items )
-//    {
-//      String id = item.getId();
-//
-//      if( id != null )
-//      {
-//        if( item instanceof PluginActionContributionItem )
-//        {
-//          PluginActionContributionItem i = (PluginActionContributionItem) item;
-//          IAction action = i.getAction();
-//          if( action.isChecked() )
-//          {
-//            action.setChecked( false );
-//            action.setEnabled( true );
-//          }
-//          else
-//          {
-//            /* If it is not checked and it is the PanAction, set the icon. */
-//            if( id.equals( "org.kalypso.ui.editor.mapeditor.action.PanAction" ) )
-//            {
-//              /* Enable the icon. */
-//              action.setChecked( true );
-//
-//              /* Create the event to enable the action. */
-//              Event event = new Event();
-//              event.button = 0;
-//
-//              /* Set the widget to the WidgetManager, by perfoming the buttons action. */
-//              action.runWithEvent( event );
-//            }
-//          }
-//        }
-//      }
-//    }
-//
-//    // TODO
-//  }
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractFeatureGeometeryWidget#update(org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  protected void update( MapPanel mapPanel )
+  {
+    if( m_feature == null )
+    {
+      super.update( mapPanel );
+      return;
+    }
+
+    m_featureToEdit = null;
+
+    /* Nothing to do. */
+    if( mapPanel == null )
+      return;
+
+    final IMapModell mapModell = mapPanel.getMapModell();
+
+    if( mapModell == null )
+      return;
+
+    m_coordinatesSystem = mapModell.getCoordinatesSystem();
+    m_projection = mapPanel.getProjection();
+
+    m_featureToEdit = createFeatureToEdit( null );
+  }
 
   private final static class FeatureToEdit
   {

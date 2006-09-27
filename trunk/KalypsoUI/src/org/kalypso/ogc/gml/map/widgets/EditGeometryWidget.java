@@ -126,7 +126,7 @@ public class EditGeometryWidget extends AbstractWidget
     final JMSelector selector = new JMSelector();
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
-    final List<Feature> features = selector.select( envelope, featureListVisible, false );
+    final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = createHandles( features, null, envelope );
   }
 
@@ -344,12 +344,12 @@ public class EditGeometryWidget extends AbstractWidget
         handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, mask );
   }
 
-  private List<Handle> createHandles( final List<Feature> features, List<Handle> collector, GM_Envelope envelope )
+  private List<Handle> createHandles( final List<Object> features, List<Handle> collector, GM_Envelope envelope )
   {
     if( collector == null )
       collector = new ArrayList<Handle>();
-    for( final Feature feature : features )
-      createHandles( feature, collector, envelope );
+    for( final Object feature : features )
+      createHandles( (Feature)feature, collector, envelope );
     return collector;
   }
 

@@ -39,11 +39,11 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeometeryWidget
 {
-  private CS_CoordinateSystem m_coordinatesSystem = null;
+  protected CS_CoordinateSystem m_coordinatesSystem = null;
 
-  private GeoTransform m_projection = null;
+  protected GeoTransform m_projection = null;
 
-  private Object m_featureToEdit = null;
+  protected Object m_featureToEdit = null;
 
   public AbstractFeatureGeometeryWidget( final String name, final String toolTip )
   {
@@ -62,7 +62,7 @@ public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeome
   }
 
   @Override
-  protected final void update( final MapPanel mapPanel )
+  protected void update( final MapPanel mapPanel )
   {
     m_featureToEdit = null;
 

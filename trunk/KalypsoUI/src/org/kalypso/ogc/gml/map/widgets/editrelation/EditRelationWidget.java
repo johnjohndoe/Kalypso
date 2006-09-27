@@ -156,7 +156,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
     final double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
 
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false );
+    final Feature feature = (Feature) selector.selectNearest( point, r, m_allowedFeatureList, false );
     m_srcFE = feature;
     m_fitProblems.setLength( 0 );
     updateProblemsText();
@@ -232,7 +232,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false );
+    final Feature feature = (Feature) selector.selectNearest( point, r, m_allowedFeatureList, false );
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
