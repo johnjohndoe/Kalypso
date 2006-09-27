@@ -182,7 +182,7 @@ public class WspWinImportSourcePage extends WizardPage
 
         final File f = new File( getText() );
         dialog.setFilterPath( f.getPath() );
-        dialog.setMessage( "Wählen Sie ein WspWin PRojekt Verzeichnis aus. Das Verzeichnis muss die Unterverzeichnisse 'prof' und 'dath' enthalten." );
+        dialog.setMessage( "Wählen Sie ein WspWin Projekt Verzeichnis aus. Das Verzeichnis muss die Unterverzeichnisse 'prof' und 'dath' enthalten." );
 
         final String loadPath = dialog.open();
 
