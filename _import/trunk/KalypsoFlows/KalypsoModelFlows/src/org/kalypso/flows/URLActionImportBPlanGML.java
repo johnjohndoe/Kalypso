@@ -116,7 +116,7 @@ public class URLActionImportBPlanGML extends AbstractURLAction
     {
       // load target workspace
       final URL targetURL = wfContext.resolveURL( relativeTarget );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( targetURL, new UrlResolver() );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( targetURL, new UrlResolver(), null );
       // find parent from feature to create
       final Feature targetParentFE;
       if( placementXPath != null && placementXPath.length() > 0 )
