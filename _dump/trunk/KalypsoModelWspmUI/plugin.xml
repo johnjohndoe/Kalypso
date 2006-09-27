@@ -197,6 +197,11 @@
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
          <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
       </factory>
+      <factory
+            adaptableType="org.kalypso.ui.views.map.MapView"
+            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
+      </factory>
    </extension>
       <extension
          point="org.eclipse.ui.popupMenus">
