@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="org.kalypso.model.wspm"
+		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd"/>
+	<import namespace="org.kalypso.model.wspmcommon"
+		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspmCommons.xsd"/>
+	<import namespace="org.kalypso.model.wspmrunoff"
+		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/runOff.xsd"/>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om"
+		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType"
+		substitutionGroup="wspm:AbstractCalculation">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Berechnungsvariante - stationär (TU-HH)</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;0;-keine Beschreibung vorhanden-}]]></description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Calculation case - steady (TU-HH)</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;0;-no description-}]]></description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Untere Randbedingung (1. Profil) - stationär (TU-HH)</name>
+				<label>Untere Randbedingung (1. Profil)</label>
+				<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
+				<description>Untere Randbedingung (am 1. Profil)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Lower boundary condition (1. profile) - steady (TU-HH)</name>
+				<label>Lower boundary condition (at 1. profile)</label>
+				<tooltip>Lower boundary condition (at 1. profile)</tooltip>
+				<description>Lower boundary condition (at 1. profile)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Abflussintervall - stationär (TU-HH)</name>
+				<label>Abflussintervall</label>
+				<tooltip>Abflussintervall</tooltip>
+				<description>Abflussintervall</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Run-off interval - steady (TU-HH)</name>
+				<label>Run-off interval</label>
+				<tooltip>Run-off interval</tooltip>
+				<description>Run-off interval</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!--
+	-->
+	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType"
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Numerische Parameter - stationär (TU-HH)</name>
+				<label>Numerische Parameter</label>
+				<tooltip>Numerische Parameter</tooltip>
+				<description>Numerische Parameter</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Numeric parameters - steady (TU-HH)</name>
+				<label>Numeric parameters</label>
+				<tooltip>Numeric parameters</tooltip>
+				<description>Numeric parameters</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
+		substitutionGroup="wspm:Reach">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Gewässerstrang - stationär (TU-HH)</name>
+				<label>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Reach - steady (TU-HH)</name>
+				<label>${property:http://www.opengis.net/gml#name}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description}</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="influentReachSegmentWspmTuhhSteadyStateMember"
+		type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
+		substitutionGroup="wspm:reachSegmentMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zufluss-Strangsegmente</label>
+				<tooltip>Zufluss-Strangsegmente</tooltip>
+				<description>Zufluss-Strangsegmente</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Influent reach segments</label>
+				<tooltip>Influent reach segments</tooltip>
+				<description>Influent reach segments</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- TODO Überflüssig?, kann eventuell weg. -->
+	<element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType"
+		substitutionGroup="wspm:AbstractReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Zufluss-Strangsegment - stationär (TU-HH)</name>
+				<label>huhu???influentReachSegmentWspmTuhhSteadyState</label>
+				<tooltip>???tooltip</tooltip>
+				<description>???description</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="profileReachSegmentWspmTuhhSteadyStateMember"
+		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType"
+		substitutionGroup="wspm:reachSegmentMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Profil-Strangsegmente</label>
+				<tooltip>Profil-Strangsegmente</tooltip>
+				<description>Profil-Strangsegmente</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Profile reach segments</label>
+				<tooltip>Profile reach segments</tooltip>
+				<description>Profile reach segments</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="ProfileReachSegmentWspmTuhhSteadyState"
+		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
+		substitutionGroup="wspm:ProfileReachSegment">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Profil-Strangsegment - stationär (TU-HH)</name>
+				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Profile reach segment - steady (TU-HH)</name>
+				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType"
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Berechnungsabschnitt - stationär (TU-HH)</name>
+				<label>Berechnungsabschnitt</label>
+				<tooltip>Berechnungsabschnitt</tooltip>
+				<description>Berechnungsabschnitt</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Calculation segment - steady (TU-HH)</name>
+				<label>Calculation segment</label>
+				<tooltip>Calculation segment</tooltip>
+				<description>Calculation segment</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	-->
+	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Zusatzoptionen - stationär (TU-HH)</name>
+				<label>Zusatzoptionen</label>
+				<tooltip>Zusatzoptionen</tooltip>
+				<description>Zusatzoptionen (Berechnung von Sonderbauwerken)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Additional options - steady (TU-HH)</name>
+				<label>Additional options</label>
+				<tooltip>Additional options</tooltip>
+				<description>Additional options (calculation of special structures)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<complexType name="CalculationWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:AbstractCalculationType">
+				<sequence>
+					<element name="fliessgesetz" default="DARCY_WEISBACH_MIT_FORMEINFLUSS">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Fließgesetz</label>
+								<tooltip>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</tooltip>
+								<description>Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Fluid model</label>
+								<tooltip>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</tooltip>
+								<description>Selection of used fluid model (Darcy-Weißbach or Manning-Strickler)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="DARCY_WEISBACH_OHNE_FORMEINFLUSS">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[ Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Darcy-Weisbach (Rohrströmungen, äquivalente Sandrauheiten, ks) ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[ Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (pipe flows, equivalent sand roughnesses, ks) ]]></tooltip>
+											<description><![CDATA[ Darcy-Weisbach fluid model(pipe flows, equivalent sand roughnesses, ks) ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="DARCY_WEISBACH_MIT_FORMEINFLUSS">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[ Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Darcy-Weisbach (offene Gerinne mit Formeinfluss, äquivalente Sandrauheiten, ks) ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[ Darcy-Weisbach (open channels with profile impact, equivalent sand roughnesses, ks) ]]></label>
+											<tooltip><![CDATA[ Darcy-Weisbach (open channels with profile impact,	equivalent sand roughnesses, ks) ]]></tooltip>
+											<description><![CDATA[ Darcy-Weisbach fluid model (open channels with profile impact,	equivalent sand roughnesses, ks) ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="MANNING_STRICKLER">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[ Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></label>
+											<tooltip><![CDATA[ Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></tooltip>
+											<description><![CDATA[ Fließgesetz nach Gauckler-Manning-Strickler (Rauheitsbeiwerte, kst) ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[ Gauckler-Manning-Strickler (roughness coefficients, kst) ]]></label>
+											<tooltip><![CDATA[ Gauckler-Manning-Strickler (roughness coefficients, kst) ]]></tooltip>
+											<description><![CDATA[ Gauckler-Manning-Strickler fluid model (roughness coefficients, kst) ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="mode" default="WATERLEVEL">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnungsart</label>
+								<tooltip>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</tooltip>
+								<description>Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Type of calculation</label>
+								<tooltip>Choose type of calculation (water level or bank-full)</tooltip>
+								<description>Choose type of calculation (water level or bank-full)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="WATERLEVEL">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Wasserspiegellagenberechnung</label>
+											<tooltip>Wasserspiegellagenberechnung</tooltip>
+											<description>Wasserspiegellagenberechnung</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Water level calculation</label>
+											<tooltip>Water level calculation</tooltip>
+											<description>Water level calculation</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="BF_UNIFORM">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse]]></label>
+											<tooltip><![CDATA[ Bordvollberechnung - stationär-gleichförmige Abflussverhältnisse ]]></tooltip>
+											<description><![CDATA[ Bordvollberechnung -	stationär-gleichförmige Abflussverhältnisse ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[Bank-full - steady-uniform discharge]]></label>
+											<tooltip><![CDATA[ Bank-full - steady-uniform discharge ]]></tooltip>
+											<description><![CDATA[ Bank-full - steady-uniform discharge ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="BF_NON_UNIFORM">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[ Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse ]]></label>
+											<tooltip><![CDATA[ Bordvollberechnung - stationär-ungleichförmige Abflussverhältnisse ]]></tooltip>
+											<description><![CDATA[ Bordvollberechnung - stationär-ungleichförmige	Abflussverhältnisse ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[ Bank-full - steady-non-uniform discharge ]]></label>
+											<tooltip><![CDATA[ Bank-full - steady-non-uniform discharge ]]></tooltip>
+											<description><![CDATA[ Bank-full - steady-non-uniform discharge ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="reachWspmTuhhSteadyStateMember"
+						type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässerstrang</label>
+								<tooltip>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</tooltip>
+								<description>Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reach</label>
+								<tooltip>Selection of reach included in calculation.</tooltip>
+								<description>Selection of reach included in calculation.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="subReachDefinitionMember"
+						type="tuhh:subReachDefinitionPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnungsabschnitt</label>
+								<tooltip>Berechnungsabschnitt</tooltip>
+								<description>Berechnungsabschnitt</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Calculation segment</label>
+								<tooltip>Calculation segment</tooltip>
+								<description>Calculation segment</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO: not used at this moment -->
+					<!--element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/-->
+					<!--element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/-->
+					<element name="waterlevelParameterMember"
+						type="tuhh:WaterlevelParameterPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Numerische Parameter</label>
+								<tooltip>Numerische Parameter</tooltip>
+								<description>Numerische Parameter</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Numerical parameter</label>
+								<tooltip>Numerical parameter</tooltip>
+								<description>Numerical parameter</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Randbedingung (1. Profil)</label>
+								<tooltip>Untere Randbedingung (am 1. Profil)</tooltip>
+								<description>Untere Randbedingung (am 1. Profil)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower boundary condition (1. profile)</label>
+								<tooltip>Lower boundary condition (1. profile)</tooltip>
+								<description>Lower boundary condition (1. profile)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- TODO force it to be one of the water body's runOffEvents? -->
+					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussereignis</label>
+								<tooltip>Auswahl des Abflussereignisses</tooltip>
+								<description>Auswahl des Abflussereignisses</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Run-off event</label>
+								<tooltip>Selection of run-off event</tooltip>
+								<description>Selection of run-off event</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussintervall</label>
+								<tooltip>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</tooltip>
+								<description>Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Run-off interval</label>
+								<tooltip>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</tooltip>
+								<description>Definition of run-off interval (only for bank-full and Kalinin-Miljukov calculations)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="StartConditionPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:StartCondition"/>
+		</sequence>
+	</complexType>
+	<complexType name="StartConditionType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="kind" default="CRITICAL_WATER_DEPTH">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art</label>
+								<tooltip>Auswahl der Randbedingung am ersten Profil (Unterlauf)</tooltip>
+								<description>Auswahl der Randbedingung am ersten Profil (Unterlauf)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Type</label>
+								<tooltip>Selection of boundary condition for first profile (lower reaches)</tooltip>
+								<description>Selection of boundary condition for first profile (lower reaches)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="CRITICAL_WATER_DEPTH">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Grenztiefe</label>
+											<tooltip>Grenztiefe</tooltip>
+											<description>Untere Randbedingung (1.Profil):
+											Grenztiefe</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Critical water depth</label>
+											<tooltip>Critical water depth</tooltip>
+											<description><![CDATA[ Lower boundary condition (1. profile):	critical water depth ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="WATERLEVEL">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>Anfangswasserspiegel</label>
+											<tooltip>Anfangswasserspiegel</tooltip>
+											<description><![CDATA[ Untere Randbedingung (1.Profil): Anfangswasserspiegel ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Initial water level</label>
+											<tooltip>Initial water level</tooltip>
+											<description><![CDATA[ Lower boundary condition (1. profile):	initial water level ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="UNIFORM_BOTTOM_SLOPE">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>stationär-gleichförmiges Gefälle</label>
+											<tooltip>stationär-gleichförmiges Gefälle</tooltip>
+											<description><![CDATA[ Untere Randbedingung (1.Profil): stationär-gleichförmiges Gefälle ]]></description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Steady-uniform slope</label>
+											<tooltip>Steady-uniform slope</tooltip>
+											<description><![CDATA[ Lower boundary condition (1. profile):	steady-uniform slope ]]></description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="waterlevel" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangswasserspiegel</label>
+								<tooltip>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung</tooltip>
+								<description>Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Ranbedingung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial water level</label>
+								<tooltip>Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition</tooltip>
+								<description>Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bottomSlope" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>stationär-gleichförmiges Gefälle</label>
+								<tooltip>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</tooltip>
+								<description>Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Steady-uniform slope</label>
+								<tooltip>Slope of river bed (absolute!) at first profile (lower reaches), depending on type of boundary condition</tooltip>
+								<description>Slope of river bed (absolute!) at first profile (lower reaches), depending on type of boundary condition</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="RunOffIntervalPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:RunOffInterval"/>
+		</sequence>
+	</complexType>
+	<complexType name="RunOffIntervalType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<!-- TODO: Element Abflussintervall machen -->
+					<element name="minimalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Minimaler Abfluss [m³/s]</label>
+								<tooltip>kleinster Wert des Abflussintervalls</tooltip>
+								<description>kleinster Wert des Abflussintervalls</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Minimum discharge [m³/s]</label>
+								<tooltip>Minimum value of run-off interval</tooltip>
+								<description>Minimum value of run-off interval</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runOffStep" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Schrittbreite [m³/s]</label>
+								<tooltip>Schrittbreite des Abflussintervalls</tooltip>
+								<description>Schrittbreite des Abflussintervalls</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Step length [m³/s]</label>
+								<tooltip>Step length of run-off interval</tooltip>
+								<description>Step length of run-off interval</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maximalRunOff" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Maximaler Abfluss [m³/s]</label>
+								<tooltip>größter Wert des Abflussintervalls </tooltip>
+								<description>größter Wert des Abflussintervalls</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Maximum discharge [m³/s]</label>
+								<tooltip>Maximum value of run-off interval</tooltip>
+								<description>Maximum value of run-off interval</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="WaterlevelParameterPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:WaterlevelParameter"/>
+		</sequence>
+	</complexType>
+	<complexType name="WaterlevelParameterType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="wspIteration" default="SIMPLE">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Iterationsgenauigkeit</label>
+								<tooltip>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</tooltip>
+								<description>Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Iteration precision</label>
+								<tooltip>Iteration method for WSP calculation (standard=simple iteration)</tooltip>
+								<description>Iteration method for WSP calculation (standard=simple iteration)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="SIMPLE">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>einfache Iteration</label>
+											<tooltip>einfache Iteration</tooltip>
+											<description>Iterationsgenauigkeit: einfache
+											Iteration</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Simple iteration</label>
+											<tooltip>Simple iteration</tooltip>
+											<description>Iteration precision: simple iteration</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="EXACT">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>genaue Berechnung durch Einschlussintervall</label>
+											<tooltip>genaue Berechnung durch Einschlussintervall</tooltip>
+											<description>Iterationsgenauigkeit: genaue Berechnung
+												durch Einschlussintervall</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Exact calculation using inclusion interval</label>
+											<tooltip>Exact calculation using inclusion interval</tooltip>
+											<description>Iteration precision: exact calculation using inclusion interval</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="verzoegerungsverlust" default="BJOERNSEN">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verzögerungsverlust</label>
+								<tooltip>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</tooltip>
+								<description>Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Delay loss</label>
+								<tooltip>Type of delay loss (standard=DVWK)</tooltip>
+								<description>Type of delay loss (standard=DVWK)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="DVWK">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach DVWK (beta = 0.67)</label>
+											<tooltip>nach DVWK (beta = 0.67)</tooltip>
+											<description>Verzögerungsverlust nach DVWK (beta =
+											0.67)</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>according to DVWK (beta = 0.67)</label>
+											<tooltip>according to DVWK (beta = 0.67)</tooltip>
+											<description>Delay loss according to DVWK (beta =
+											0.67)</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="BJOERNSEN">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach Björnsen (beta = 0.5)</label>
+											<tooltip>nach Björnsen (beta = 0.5)</tooltip>
+											<description>Verzögerungsverlust nach Björnsen (beta =
+												0.5)</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>according to Björnsen (beta = 0.5)</label>
+											<tooltip>according to Björnsen (beta = 0.5)</tooltip>
+											<description>Delay loss according to Björnsen (beta =
+												0.5)</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="DFG">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>nach DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
+											<description>Verzögerungsverlust nach DFG (beta = 2 /
+												(1+Ai + 1/Ai) )</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</label>
+											<tooltip>according to DFG (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
+											<description>Delay loss according to DFG (beta = 2 /
+												(1+Ai + 1/Ai) )</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="reibungsverlust" default="TRAPEZ_FORMULA">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Berechnung von Reibungsverlusten</label>
+								<tooltip>Berechnung des Reibungsverlustes (Standard=Trapezformel)</tooltip>
+								<description>Berechnung des Reibungsverlustes (Standard=Trapezformel)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Calculation of friction loss</label>
+								<tooltip>Calculation of friction loss (standard=trapezoidal)</tooltip>
+								<description>Calculation of friction loss (standard=trapezoidal)</description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="TRAPEZ_FORMULA">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>nach Trapezformel</label>
+											<tooltip>nach Trapezformel</tooltip>
+											<description>Berechnung von Reibungsverlusten nach
+												Trapezformel</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Trapezoidal</label>
+											<tooltip>Trapezoidal rule</tooltip>
+											<description>Calculation of friction losses according to
+												trapezoidal rule</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="GEOMETRIC_FORMULA">
+									<annotation>
+										<documentation xml:lang="de">
+											<label>durch geometrische Mittelung</label>
+											<tooltip>durch geometrische Mittelung</tooltip>
+											<description>Berechnung von Reibungsverlusten durch
+												geometrische Mittelung</description>
+										</documentation>
+										<documentation xml:lang="en">
+											<label>Geometric averaging</label>
+											<tooltip>Geometric averaging</tooltip>
+											<description>Calculation of friction losses according to
+												geometric averaging</description>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zusatzoptionen</label>
+								<tooltip>Zusatzoptionen</tooltip>
+								<description>Zusatzoptionen (Berechnung von
+								Sonderbauwerken)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Additional options</label>
+								<tooltip>Additional options</tooltip>
+								<description>Additional options (calculation of special structures)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="ReachWspmTuhhSteadyStatePropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="tuhh:ReachWspmTuhhSteadyState"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+
+	<!-- TODO: copy of wspm:ReachType, nothing is changed -->
+	<complexType name="ReachWspmTuhhSteadyStateType">
+		<complexContent>
+			<restriction base="wspm:ReachType">
+				<sequence>
+					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="gml:description"/>
+					<element ref="gml:name"/>
+					<element ref="wspm:waterBodyLinkMember">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässer</label>
+								<tooltip>Übergeordnetes Gewässer</tooltip>
+								<description>Übergeordnetes Gewässer</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water body</label>
+								<tooltip>Superior water body</tooltip>
+								<description>Superior water body</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="waterAxis" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember)
+								itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>Gewässerachse</label>
+								<tooltip>(generierte) Gewässerachse</tooltip>
+								<description>(generierte) Gewässerachse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Water axis</label>
+								<tooltip>(Generated) water axis</tooltip>
+								<description>(Generated) water axis</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
+					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">
+						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
+						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
+					</choice>
+					-->
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="InfluentReachSegmentWspmTuhhSteadyStatePropertyType">
+		<complexContent>
+			<restriction base="wspm:ReachSegmentPropertyType">
+				<sequence>
+					<element ref="tuhh:InfluentReachSegmentWspmTuhhSteadyState"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="InfluentReachSegmentWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:InfluentReachSegmentType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
+		<complexContent>
+			<restriction base="wspm:ReachSegmentPropertyType">
+				<sequence>
+					<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ProfileReachSegmentWspmTuhhSteadyStateType">
+		<complexContent>
+			<extension base="wspm:ProfileReachSegmentType">
+				<sequence>
+					<!-- Distances are commented out, because they are not yet (?)
+					used by the tuhh steady-state flow model -->
+					<!--
+					<element name="distanceL" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceL</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? linkes Vorland</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceM" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceM</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? Hauptöffnung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="distanceR" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???distanceR</label>
+								<tooltip>???tooltip</tooltip>
+								<description>Abstand UW??? rechtes Vorland</description>
+							</documentation>
+						</annotation>
+					</element>
+					-->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="subReachDefinitionPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:SubReachDefinition"/>
+		</sequence>
+	</complexType>
+	<complexType name="subReachDefinitionType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startStation" type="wspmcommon:stationDouble">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsstation</label>
+								<tooltip>Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!</tooltip>
+								<description>Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!
+								</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Initial station</label>
+								<tooltip>Initial station (lower reaches), value depending on profile stationing!</tooltip>
+								<description>Initial station (lower reaches), value depending on profile stationing!
+								</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="endStation" type="wspmcommon:stationDouble">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Endstation</label>
+								<tooltip>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</tooltip>
+								<description>Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Final station</label>
+								<tooltip>Final station (upper reaches), value depending on profile stationing!</tooltip>
+								<description>Final station (upper reaches), value depending on profile stationing!</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<complexType name="specialOptionsPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:SpecialOptions"/>
+		</sequence>
+	</complexType>
+	<complexType name="specialOptionsType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="doCalcBridges" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Brücken mit berechnen</label>
+								<tooltip>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</tooltip>
+								<description>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Include bridges</label>
+								<tooltip>Bridges and passages are included in calculation.</tooltip>
+								<description>Bridges and passages are included in calculation.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="doCalcBarrages" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wehre mit berechnen</label>
+								<tooltip>falls aktiv, werden Wehre bei der Berechnung berücksichtigt.</tooltip>
+								<description>falls aktiv, werden Wehre bei der Berechnung berücksichtigt. </description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Include weirs</label>
+								<tooltip>Weirs are included in calculation.</tooltip>
+								<description>Weirs are included in calculation.</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+</schema>
