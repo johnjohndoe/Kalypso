@@ -5,4 +5,5 @@ kalypso_2.02: neueste exe mit behobenem fehler bodenspeicherberechnung
 kalypso_2.0.1a: aufbauend auf Version kalypso_WeisseElster; mit Bugfix in der Interzeptionsspeicherberechnung
 kalypso_2.0.3beta: restart und Bugfix Interzeptionsspeicherberechnung (!!!noch Testversion!!!)
 kalypso_2.0.5beta: test version mr (christoph)
-kalypso_2.0.6: Test korrigierte Anfangswerte und Fehlermanagement mit logger.
+kalypso_2.0.6_small: Ohne Erweiterung für Tarpenbek-Kollau Modell und ohne Bugfix Speicherzeitreiehen
+kalypso_2.0.6: Test korrigierte Anfangswerte und Fehlermanagement mit logger. Erweiterung der Parameterbegrenzung für Tarpenbek/Kollau Modell (34 RHBs, Stränge Knoten, TGAnzahl erweitert), Bugfix Ausgabe Speicherzeitreiehen
