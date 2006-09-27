@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +91,9 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
   public IObservation createObservationFromSource( File source ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
+    // TODO: allgemein setzten im Import dialog!
+    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+    m_ex2DateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis );
