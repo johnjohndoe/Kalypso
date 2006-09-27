@@ -81,7 +81,7 @@ public class URLActionAddThemeGMT extends AbstractURLAction
         final Shell shell = viewer.getControl().getShell();
         final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer );
         final IWorkbenchWindow activeWorkbenchWindow = KalypsoAddLayerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-        wizard.init( activeWorkbenchWindow.getWorkbench(), null );
+        wizard.init( activeWorkbenchWindow.getWorkbench() );
         wizard.setForcePreviousAndNextButtons( true );
         final WizardDialog dialog = new WizardDialog( shell, wizard );
         dialog.open();

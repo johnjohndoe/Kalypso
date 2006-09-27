@@ -366,9 +366,11 @@ public class KalypsoPlanerClientActionBuilder extends ActionBarAdvisor
     menuBar.add( createWindowMenu() );
     // menuBar.add(createHelpMenu());
     MenuManager helpMenuManager = new MenuManager( "&Help", IWorkbenchActionConstants.M_HELP );
-    helpMenuManager.add( m_introAction );
+    if( m_introAction != null )
+      helpMenuManager.add( m_introAction );
     helpMenuManager.add( new Separator( "group.about" ) ); //$NON-NLS-1$
-    helpMenuManager.add( m_aboutAction );
+    if( m_aboutAction != null )
+      helpMenuManager.add( m_aboutAction );
     menuBar.add( helpMenuManager );
 
   }

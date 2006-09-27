@@ -45,7 +45,7 @@ public class KalypsoPortalWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     final IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
     final IIntroManager intromanager = workbench.getIntroManager();
     // starts the welcome page
-    intromanager.showIntro( workbench.getActiveWorkbenchWindow(), false );
+    intromanager.showIntro( getWindowConfigurer().getWindow(), false );
     // makes shure the welcome page is always maximized
     workbench.getActiveWorkbenchWindow().getShell().setMaximized( true );
 

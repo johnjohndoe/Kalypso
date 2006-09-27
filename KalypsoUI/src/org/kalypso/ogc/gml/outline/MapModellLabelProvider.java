@@ -81,8 +81,13 @@ public class MapModellLabelProvider implements ILabelProvider
     if( element instanceof IKalypsoTheme )
     {
       final IKalypsoTheme kalypsoTheme = (IKalypsoTheme) element;
-
-      final StringBuffer sb = new StringBuffer( kalypsoTheme.getType() + kalypsoTheme.getName() );
+      final StringBuffer sb = new StringBuffer();
+      final String type = kalypsoTheme.getType();
+      final String themeName = kalypsoTheme.getName();
+      if( type != null && type.length() > 0 )
+        sb.append( "[" + type + "] " + themeName );
+      else
+        sb.append( themeName );
 
       // falls aktiviert
       if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )
