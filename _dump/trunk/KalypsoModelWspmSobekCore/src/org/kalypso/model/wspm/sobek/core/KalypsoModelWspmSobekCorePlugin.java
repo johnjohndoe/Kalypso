@@ -1,3 +1,5 @@
+package org.kalypso.model.wspm.sobek.core;
+
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 

@@ -48,7 +48,6 @@ import org.kalypso.model.wspm.sobek.core.IWspmSobekConstants;
 
 /**
  * @author thuel2
- *
  */
 public class WspmSobekUrlCatalog extends AbstractUrlCatalog implements IWspmSobekConstants
 {

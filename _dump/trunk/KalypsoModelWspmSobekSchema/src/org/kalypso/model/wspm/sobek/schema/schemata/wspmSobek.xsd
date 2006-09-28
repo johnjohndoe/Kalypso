@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+<schema targetNamespace="org.kalypso.model.wspm.sobek" xmlns:sobek="org.kalypso.model.wspm.sobek"
 	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
 	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema"
@@ -26,7 +26,7 @@
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
-	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType"
+	<element name="CalculationWspmTuhhSteadyState" type="sobek:CalculationWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
@@ -45,7 +45,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
+	<element name="StartCondition" type="sobek:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Untere Randbedingung (1. Profil) - stationär (TU-HH)</name>
@@ -63,7 +63,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
+	<element name="RunOffInterval" type="sobek:RunOffIntervalType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Abflussintervall - stationär (TU-HH)</name>
@@ -81,7 +81,7 @@
 	</element>
 	<!--
 	-->
-	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType"
+	<element name="WaterlevelParameter" type="sobek:WaterlevelParameterType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -100,7 +100,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
+	<element name="ReachWspmTuhhSteadyState" type="sobek:ReachWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:Reach">
 		<annotation>
 			<documentation xml:lang="de">
@@ -120,7 +120,7 @@
 	<!-- 
 	-->
 	<element name="influentReachSegmentWspmTuhhSteadyStateMember"
-		type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
+		type="sobek:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
 		substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
 			<documentation xml:lang="de">
@@ -150,7 +150,7 @@
 	<!-- 
 	-->
 	<element name="profileReachSegmentWspmTuhhSteadyStateMember"
-		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType"
+		type="sobek:ProfileReachSegmentWspmTuhhSteadyStatePropertyType"
 		substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
 			<documentation xml:lang="de">
@@ -166,7 +166,7 @@
 		</annotation>
 	</element>
 	<element name="ProfileReachSegmentWspmTuhhSteadyState"
-		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
+		type="sobek:ProfileReachSegmentWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:ProfileReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
@@ -185,7 +185,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType"
+	<element name="SubReachDefinition" type="sobek:subReachDefinitionType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -204,7 +204,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
+	<element name="SpecialOptions" type="sobek:specialOptionsType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Zusatzoptionen - stationär (TU-HH)</name>
@@ -350,7 +350,7 @@
 						</simpleType>
 					</element>
 					<element name="reachWspmTuhhSteadyStateMember"
-						type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
+						type="sobek:ReachWspmTuhhSteadyStatePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
@@ -365,7 +365,7 @@
 						</annotation>
 					</element>
 					<element name="subReachDefinitionMember"
-						type="tuhh:subReachDefinitionPropertyType">
+						type="sobek:subReachDefinitionPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnungsabschnitt</label>
@@ -383,7 +383,7 @@
 					<!--element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/-->
 					<!--element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/-->
 					<element name="waterlevelParameterMember"
-						type="tuhh:WaterlevelParameterPropertyType">
+						type="sobek:WaterlevelParameterPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Numerische Parameter</label>
@@ -397,7 +397,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
+					<element name="startConditionMember" type="sobek:StartConditionPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Untere Randbedingung (1. Profil)</label>
@@ -426,7 +426,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
+					<element name="runOffIntervalMember" type="sobek:RunOffIntervalPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussintervall</label>
@@ -448,7 +448,7 @@
 	-->
 	<complexType name="StartConditionPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:StartCondition"/>
+			<element ref="sobek:StartCondition"/>
 		</sequence>
 	</complexType>
 	<complexType name="StartConditionType">
@@ -552,7 +552,7 @@
 	-->
 	<complexType name="RunOffIntervalPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:RunOffInterval"/>
+			<element ref="sobek:RunOffInterval"/>
 		</sequence>
 	</complexType>
 	<complexType name="RunOffIntervalType">
@@ -610,7 +610,7 @@
 	-->
 	<complexType name="WaterlevelParameterPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:WaterlevelParameter"/>
+			<element ref="sobek:WaterlevelParameter"/>
 		</sequence>
 	</complexType>
 	<complexType name="WaterlevelParameterType">
@@ -781,7 +781,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType">
+					<element name="specialOptionsMember" type="sobek:specialOptionsPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zusatzoptionen</label>
@@ -804,7 +804,7 @@
 	-->
 	<complexType name="ReachWspmTuhhSteadyStatePropertyType">
 		<sequence minOccurs="0" maxOccurs="0">
-			<element ref="tuhh:ReachWspmTuhhSteadyState"/>
+			<element ref="sobek:ReachWspmTuhhSteadyState"/>
 		</sequence>
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
@@ -850,8 +850,8 @@
 					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
 					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
 					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">
-						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
-						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
+						<element ref="sobek:influentReachSegmentWspmTuhhSteadyStateMember"/>
+						<element ref="sobek:profileReachSegmentWspmTuhhSteadyStateMember"/>
 					</choice>
 					-->
 				</sequence>
@@ -864,7 +864,7 @@
 		<complexContent>
 			<restriction base="wspm:ReachSegmentPropertyType">
 				<sequence>
-					<element ref="tuhh:InfluentReachSegmentWspmTuhhSteadyState"/>
+					<element ref="sobek:InfluentReachSegmentWspmTuhhSteadyState"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -880,7 +880,7 @@
 		<complexContent>
 			<restriction base="wspm:ReachSegmentPropertyType">
 				<sequence>
-					<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState"/>
+					<element ref="sobek:ProfileReachSegmentWspmTuhhSteadyState"/>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -928,7 +928,7 @@
 	-->
 	<complexType name="subReachDefinitionPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:SubReachDefinition"/>
+			<element ref="sobek:SubReachDefinition"/>
 		</sequence>
 	</complexType>
 	<complexType name="subReachDefinitionType">
@@ -973,7 +973,7 @@
 	-->
 	<complexType name="specialOptionsPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:SpecialOptions"/>
+			<element ref="sobek:SpecialOptions"/>
 		</sequence>
 	</complexType>
 	<complexType name="specialOptionsType">
