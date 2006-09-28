@@ -60,6 +60,8 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.jwsdp.JaxbUtilities;
 
@@ -118,7 +120,7 @@ public class CatalogManager
     }
     catch( Exception e )
     {
-      e.printStackTrace();
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return null;
     }
   }
