@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -77,7 +78,7 @@ public class ProcessJob extends Job
    */
   public ProcessJob( final Modeldata modelData, final IProject project )
   {
-    super( "Berechne: " + modelData.getTypeID() );
+    super( Messages.getString("process.implProcessJob.Computing")+": " + modelData.getTypeID() ); //$NON-NLS-1$ //$NON-NLS-2$
     m_modelData = modelData;
     m_project = project;
     setUser( true );
@@ -110,7 +111,7 @@ public class ProcessJob extends Job
    */
   private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird gestartet", 100 );
+    monitor.beginTask( Messages.getString("process.implProcessJob.CalculationStarted"), 100 ); //$NON-NLS-1$
 
     final ISimulationService simulationService = KalypsoSimulationCorePlugin.findCalculationServiceForType( m_modelData.getTypeID() );
 
@@ -122,7 +123,7 @@ public class ProcessJob extends Job
     if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
       return runStatus;
 
-    return new Status( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Berechnung abgeschlossen.", null );
+    return new Status( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("process.implProcessJob.CalculationFinished"), null ); //$NON-NLS-1$
   }
 
 }

@@ -50,6 +50,7 @@ import java.math.BigDecimal;
 import java.util.Vector;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -95,8 +96,8 @@ public abstract class GridUtils
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
-      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner " + originX + "\nyllcorner " + originY
-          + "\ncellsize " + offsetX + "\nnodata_value " + nodata );
+      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner " + originX + "\nyllcorner " + originY //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          + "\ncellsize " + offsetX + "\nnodata_value " + nodata ); //$NON-NLS-1$ //$NON-NLS-2$
       bw.newLine();
 
       for( int i = 0; i < rangeSetData.size(); i++ )
@@ -108,11 +109,11 @@ public abstract class GridUtils
           {
             double value = ( (Double)rowData.get( j ) ).doubleValue();
             double roundValue = Number.round( value, 6, BigDecimal.ROUND_HALF_EVEN );
-            bw.write( roundValue + " " );
+            bw.write( roundValue + " " ); //$NON-NLS-1$
           }
           else
           {
-            bw.write( nodata + " " );
+            bw.write( nodata + " " ); //$NON-NLS-1$
           }
           /*
            * System.out.println(i + "," + j + ": " + rowData.get(j) + " ");
@@ -124,7 +125,7 @@ public abstract class GridUtils
     }// try
     catch( IOException e )
     {
-      bw.write( "Error while writing ascii-arc file: " + e.getMessage() );
+      bw.write( Messages.getString("tools.GridUtils.ErrorWhileWritingAsciiArcFile")+": " + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
       throw e;
     }// catch
     finally
@@ -153,7 +154,7 @@ public abstract class GridUtils
     for( int i = 0; i < 6; i++ )
     {
       line = br.readLine();
-      int index = line.indexOf( " " );
+      int index = line.indexOf( " " ); //$NON-NLS-1$
       String subString = line.substring( index );
       data[i] = subString.trim();
     }
@@ -175,7 +176,7 @@ public abstract class GridUtils
     //double nodataDoublevalue = Double.parseDouble(data[5]);
     while( ( line = br.readLine() ) != null )
     {
-      String[] dataAsString = line.split( " " );
+      String[] dataAsString = line.split( " " ); //$NON-NLS-1$
       for( int i = 0; i < dataAsString.length; i++ )
       {
         singleValue = new Double(dataAsString[i]);

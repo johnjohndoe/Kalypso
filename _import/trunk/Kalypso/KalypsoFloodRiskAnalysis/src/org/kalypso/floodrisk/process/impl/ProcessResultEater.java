@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
@@ -91,7 +92,7 @@ public class ProcessResultEater implements IProcessResultEater
   {
     final SimulationDataPath clientBean = m_clientOutputMap.get( id );
     if( clientBean == null )
-      throw new SimulationException( "Unerwartete Ausgabe mit ID: " + id, null );
+      throw new SimulationException( Messages.getString("process.impl.ProcessResultEater.UnexpectedOutputFor")+" ID: " + id, null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_results.add( clientBean );
   }

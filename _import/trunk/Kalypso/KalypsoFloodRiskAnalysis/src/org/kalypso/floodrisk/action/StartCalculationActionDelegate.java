@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.floodrisk.KalypsoFloodRiskAnalysisExtensions;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.wizard.ChooseProcessDialog;
 import org.kalypso.floodrisk.wizard.ProcessInputWizard;
@@ -104,7 +105,7 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     }
     else
     {
-      MessageDialog.openError( m_window.getShell(), "Error", "Bitte Projekt auswählen!" );
+      MessageDialog.openError( m_window.getShell(), Messages.getString("action.StartCalculationActionDelegate.Error"), Messages.getString("action.StartCalculationActionDelegate.PleaseOpenProject") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

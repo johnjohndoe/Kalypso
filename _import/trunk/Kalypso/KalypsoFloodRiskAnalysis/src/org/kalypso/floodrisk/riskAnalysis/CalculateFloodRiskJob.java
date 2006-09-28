@@ -62,6 +62,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.data.RiskContextModel;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -93,16 +94,16 @@ public class CalculateFloodRiskJob implements ISimulation
 {
   // IDs
   // input
-  public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData";
+  public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData"; //$NON-NLS-1$
 
-  public static final String LanduseRasterDataID = "LanduseRasterData";
+  public static final String LanduseRasterDataID = "LanduseRasterData"; //$NON-NLS-1$
 
-  public static final String RiskContextModelID = "RiskContextModel";
+  public static final String RiskContextModelID = "RiskContextModel"; //$NON-NLS-1$
 
   // output
-  public static final String FloodRiskRasterDataID = "FloodRiskRasterData";
+  public static final String FloodRiskRasterDataID = "FloodRiskRasterData"; //$NON-NLS-1$
 
-  public static final String FloodRiskRasterStyleID = "FloodRiskRasterStyle";
+  public static final String FloodRiskRasterStyleID = "FloodRiskRasterStyle"; //$NON-NLS-1$
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
@@ -117,7 +118,7 @@ public class CalculateFloodRiskJob implements ISimulation
     {
       // Generate input
       // annualDamageRaster
-      monitor.setMessage( "Lese Eingabedateien" );
+      monitor.setMessage( Messages.getString("riskAnalysis.CalculateFloodRiskJob.LoadingInputData") ); //$NON-NLS-1$
       URL annualDamageRasterGML = (URL) inputProvider.getInputForID( AnnualDamageRasterDataID );
       RectifiedGridCoverage annualDamageRaster = rasterDataModel.getRectifiedGridCoverage( annualDamageRasterGML );
 
@@ -132,14 +133,14 @@ public class CalculateFloodRiskJob implements ISimulation
       monitor.setProgress( 40 );
 
       // start riskAnalysis
-      monitor.setMessage( "Berechne" );
+      monitor.setMessage( Messages.getString("riskAnalysis.CalculateFloodRiskJob.Calcucalting") ); //$NON-NLS-1$
       RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster, landuseRaster, riskContextModel.getRiskClassLists() );
 
       monitor.setProgress( 20 );
 
       // Generate output
       // floodrisk raster
-      monitor.setMessage( "Schreibe Ausgabedateien" );
+      monitor.setMessage( Messages.getString("riskAnalysis.CalculateFloodRiskJob.SavingResults") ); //$NON-NLS-1$
       SimulationDataPath floodRiskOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( FloodRiskRasterDataID );
       File floodRiskResultFile = new File( floodRiskOutputBean.getPath() );
       if( !floodRiskResultFile.exists() )
@@ -152,7 +153,7 @@ public class CalculateFloodRiskJob implements ISimulation
       resultEater.addResult( floodRiskOutputBean.getId(), null );
 
       // floodrisk style
-      String styleName = "FloodRisk";
+      String styleName = "FloodRisk"; //$NON-NLS-1$
       Symbolizer rasterSymbolizer = StyleFactory.createRasterSymbolizer();
       TreeMap<Double, ColorMapEntry> defaultColorMap = ((RasterSymbolizer) rasterSymbolizer).getColorMap();
       // add riskClass colorMapEntries to defaultColorMap
@@ -189,11 +190,11 @@ public class CalculateFloodRiskJob implements ISimulation
     }
     catch( MalformedURLException e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e ); //$NON-NLS-1$
     }
     catch( Exception e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e ); //$NON-NLS-1$
     }
   }
 
@@ -203,8 +204,8 @@ public class CalculateFloodRiskJob implements ISimulation
     final Source source = new DOMSource( doc );
     Result result = new StreamResult( targetFile );
     Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+    t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
     t.transform( source, result );
   }
 
@@ -213,7 +214,7 @@ public class CalculateFloodRiskJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/riskCalcjob_spec.xml" );
+    return getClass().getResource( "resources/riskCalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
 }

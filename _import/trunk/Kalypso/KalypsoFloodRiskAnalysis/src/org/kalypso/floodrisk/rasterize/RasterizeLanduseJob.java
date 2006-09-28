@@ -47,6 +47,7 @@ import java.util.List;
 
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
@@ -71,14 +72,14 @@ public class RasterizeLanduseJob implements ISimulation
 
   // IDs
   // input
-  public static final String LanduseVectorDataID = "LanduseVectorData";
+  public static final String LanduseVectorDataID = "LanduseVectorData"; //$NON-NLS-1$
 
-  public static final String ContextModelID = "ContextModel";
+  public static final String ContextModelID = "ContextModel"; //$NON-NLS-1$
 
-  public static final String BaseRasterID = "BaseRaster";
+  public static final String BaseRasterID = "BaseRaster"; //$NON-NLS-1$
 
   // output
-  public static final String LanduseRasterDataID = "LanduseRasterData";
+  public static final String LanduseRasterDataID = "LanduseRasterData"; //$NON-NLS-1$
 
   public RasterizeLanduseJob( )
   {
@@ -95,13 +96,13 @@ public class RasterizeLanduseJob implements ISimulation
   {
     try
     {
-      monitor.setMessage( "Lese Eingabedateien" );
+      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.LoadingInputData") ); //$NON-NLS-1$
 
       // landuseVectorData: featureList
       URL landuseVectorDataGML = (URL) inputProvider.getInputForID( LanduseVectorDataID );
       GMLWorkspace landuseVectorData;
-      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML, null );
-      FeaturePath featureMember = new FeaturePath( "FeatureMember" );
+      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML );
+      FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
       List featureList = (List) featureMember.getFeature( landuseVectorData );
 
       // contextModel: landuseTypeList
@@ -115,14 +116,14 @@ public class RasterizeLanduseJob implements ISimulation
       RasterDataModel rasterDataModel = new RasterDataModel();
       RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
-      monitor.setMessage( "Berechne" );
+      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.Calculating") ); //$NON-NLS-1$
       RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, landuseTypeList, baseRaster, monitor );
 
       SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( LanduseRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
-      monitor.setMessage( "Schreibe Ausgabedateien" );
+      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.SavingResults") ); //$NON-NLS-1$
       rasterDataModel.toFile( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }
@@ -161,7 +162,7 @@ public class RasterizeLanduseJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/rasterLanduseCalcjob_spec.xml" );
+    return getClass().getResource( "resources/rasterLanduseCalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
 }

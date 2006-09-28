@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.mathTool.ParseFunction;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
@@ -76,7 +77,7 @@ public class DamageAnalysis
   public static TreeMap calculateDamagePercentages( TreeMap waterlevelGrids, RectifiedGridCoverage landuseGrid,
       Hashtable damageFunctions ) throws Exception
   {
-    System.out.println( "Calculate DamagePercentageGrids..." );
+    System.out.println( Messages.getString("damageAnalysis.DamageAnalysis.CalculateDamagePercentageGrids") ); //$NON-NLS-1$
     TreeMap<Double, RectifiedGridCoverage> damagePercentageGrids = new TreeMap<Double, RectifiedGridCoverage>();
     Iterator it = waterlevelGrids.keySet().iterator();
     while( it.hasNext() )
@@ -84,7 +85,7 @@ public class DamageAnalysis
       Double key = (Double)it.next();
       RectifiedGridCoverage waterlevelGrid = (RectifiedGridCoverage)waterlevelGrids.get( key );
       double annuality = 1 / key.doubleValue();
-      System.out.println( "HQ " + ( new Double( annuality ) ).intValue() );
+      System.out.println( "HQ " + ( new Double( annuality ) ).intValue() ); //$NON-NLS-1$
       RectifiedGridCoverage damagePercentageGrid = calculateDamagePercentage( waterlevelGrid, landuseGrid,
           damageFunctions );
       damagePercentageGrids.put( key, damagePercentageGrid );
@@ -171,7 +172,7 @@ public class DamageAnalysis
   public static TreeMap calculateDamages( TreeMap damagePercentageGrids, RectifiedGridCoverage landuseGrid,
       RectifiedGridCoverage administrationUnitGrid, Hashtable assets ) throws Exception
   {
-    System.out.println( "Calculate DamageGrids..." );
+    System.out.println( Messages.getString("damageAnalysis.DamageAnalysis.CalculateDamageGrids") ); //$NON-NLS-1$
     TreeMap<Double, RectifiedGridCoverage> damageGrids = new TreeMap<Double, RectifiedGridCoverage>();
     Iterator it = damagePercentageGrids.keySet().iterator();
     while( it.hasNext() )
@@ -180,7 +181,7 @@ public class DamageAnalysis
       RectifiedGridCoverage damagePercentageGrid = (RectifiedGridCoverage)damagePercentageGrids.get( key );
       RectifiedGridCoverage damageGrid = null;
       double annuality = 1 / key.doubleValue();
-      System.out.println( "HQ " + ( new Double( annuality ) ).intValue() );
+      System.out.println( "HQ " + ( new Double( annuality ) ).intValue() ); //$NON-NLS-1$
       if( administrationUnitGrid != null )
       {
         damageGrid = calculateDamage( damagePercentageGrid, landuseGrid, administrationUnitGrid, assets );
@@ -238,7 +239,7 @@ public class DamageAnalysis
             double damagePercentage = ( (Double)damagePercentage_rowData.get( j ) ).doubleValue();
             Integer landuseKey = new Integer( ( (Double)landuse_rowData.get( j ) ).intValue() );
             Integer administrationUnitKey = new Integer( ( (Double)administrationUnit_rowData.get( j ) ).intValue() );
-            String assetKey1 = new String( landuseKey.toString() + "," + administrationUnitKey.toString() );
+            String assetKey1 = new String( landuseKey.toString() + "," + administrationUnitKey.toString() ); //$NON-NLS-1$
             String assetKey2 = new String( landuseKey.toString() );
             if( assets.get( assetKey1 ) != null )
             {
@@ -346,7 +347,7 @@ public class DamageAnalysis
    */
   public static Vector calculateTempGridsAnnualDamage( TreeMap damageGrids ) throws Exception
   {
-    System.out.println( "Calculate TempGrids..." );
+    System.out.println( Messages.getString("damageAnalysis.DamageAnalysis.CalculateTempGrids") ); //$NON-NLS-1$
     Vector<RectifiedGridCoverage> tempGrids = new Vector<RectifiedGridCoverage>();
     Object[] keys = damageGrids.keySet().toArray();
     for( int i = 0; i < keys.length; i++ )
@@ -356,7 +357,7 @@ public class DamageAnalysis
       {
         Double nextKey = (Double)keys[i + 1];
         double deltaP = nextKey.doubleValue() - key.doubleValue();
-        System.out.println( "deltaP=" + deltaP );
+        System.out.println( "deltaP=" + deltaP ); //$NON-NLS-1$
         RectifiedGridCoverage grid = (RectifiedGridCoverage)damageGrids.get( key );
         RectifiedGridCoverage nextGrid = (RectifiedGridCoverage)damageGrids.get( nextKey );
         // control Geometries
@@ -409,7 +410,7 @@ public class DamageAnalysis
         RangeSet temp_RangeSet = new RangeSet( tempGrid_rangeSetData, null );
         RectifiedGridCoverage tempGrid = new RectifiedGridCoverage( temp_gridDomain, temp_RangeSet );
         tempGrids.addElement( tempGrid );
-        System.out.println( "Key: " + key + ", NextKey: " + nextKey );
+        System.out.println( "Key: " + key + ", NextKey: " + nextKey ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }//for i
     return tempGrids;
@@ -424,7 +425,7 @@ public class DamageAnalysis
    */
   public static RectifiedGridCoverage calculateAnnualDamage( Vector tempGrids ) throws Exception
   {
-    System.out.println( "Calculate AnnualDamageGrid..." );
+    System.out.println( Messages.getString("damageAnalysis.DamageAnalysis.CalculateAnnualDamageGrid") ); //$NON-NLS-1$
     RectifiedGridCoverage firstGrid = (RectifiedGridCoverage)tempGrids.firstElement();
     RectifiedGridDomain annualDamage_gridDomain = new RectifiedGridDomain( firstGrid.getGridDomain().getOrigin( null ),
         firstGrid.getGridDomain().getOffset(), firstGrid.getGridDomain().getGridRange() );

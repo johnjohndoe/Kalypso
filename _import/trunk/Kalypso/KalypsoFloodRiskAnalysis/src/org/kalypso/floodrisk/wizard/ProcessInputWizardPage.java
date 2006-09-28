@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.ProcessExtension;
 
 /**
@@ -116,7 +117,7 @@ public class ProcessInputWizardPage extends WizardPage
     m_topLevel.setLayoutData( data );
 
     Label label = new Label( m_topLevel, SWT.NONE );
-    label.setText( "ModelData: " );
+    label.setText( Messages.getString("wizard.ProcessInputWizardPage.ModelData")+": " ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_textModelData = new Text( m_topLevel, SWT.BORDER );
     m_textModelData.setEditable( false );
@@ -126,7 +127,7 @@ public class ProcessInputWizardPage extends WizardPage
     m_textModelData.setLayoutData( data1 );
 
     Button button = new Button( m_topLevel, SWT.PUSH );
-    button.setText( "Auswahl ..." );
+    button.setText( Messages.getString("wizard.ProcessInputWizardPage.Browse")+"..." ); //$NON-NLS-1$ //$NON-NLS-2$
     GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
@@ -145,7 +146,7 @@ public class ProcessInputWizardPage extends WizardPage
 
   KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select modelData", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString("wizard.ProcessInputWizardPage.SelectModelData"), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   /**
@@ -173,7 +174,7 @@ public class ProcessInputWizardPage extends WizardPage
     }
     else
     {
-      setErrorMessage( "Bitte Modelldaten auswählen!" );
+      setErrorMessage( Messages.getString("wizard.ProcessInputWizardPage.PleaseSelectModelData")+"!" ); //$NON-NLS-1$ //$NON-NLS-2$
       pageComplete = false;
     }
     setPageComplete( pageComplete );
@@ -183,7 +184,7 @@ public class ProcessInputWizardPage extends WizardPage
   {
     try
     {
-      KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "xml" } );
+      KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "xml" } ); //$NON-NLS-1$
       dialog.open();
       Object[] result = dialog.getResult();
       if( result != null )

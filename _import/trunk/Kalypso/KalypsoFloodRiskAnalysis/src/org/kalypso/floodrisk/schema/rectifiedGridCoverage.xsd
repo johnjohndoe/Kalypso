@@ -1,50 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" elementFormDefault="qualified" version="2.06" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage">
-	<!-- include constructs from the GML observation schema -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="base/gml.xsd"/>
-	<!-- === global declarations ============================================ -->
+<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/rectifiedGridCoverage" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_rgc="http://www.tuhh.de/floodrisk/rectifiedGridCoverage">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="base/gml.xsd"/>
+	<!-- =========================================================== -->
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	<!-- =========================================================== -->
 	<!-- RectifiedGridCoverageMember=========================================================== -->
-	<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType" substitutionGroup="gml:_Coverage"/>
-	<!-- ==============================================================-->
-	<complexType name="RectifiedGridCoverageMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:AbstractCoverageType">
-				<sequence>
-					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="gml:description" minOccurs="0"/>
-					<element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="gml:boundedBy" minOccurs="0"/>
-					<element ref="gml:location" minOccurs="0"/>
-					<element ref="gml:rectifiedGridDomain"/>
-					<element ref="rgc:rangeSet"/>
-					<element ref="gml:coverageFunction" minOccurs="0"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<!-- =========================================================== -->
-	<element name="rangeSet" type="rgc:FileRangeSetType" substitutionGroup="gml:rangeSet"/>
-	<!-- =========================================================== -->
-	<complexType name="FileRangeSetType">
-		<complexContent>
-			<restriction base="gml:RangeSetType">
-				<sequence>
-					<element ref="rgc:File"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<!-- =========================================================== -->
-	<element name="File">
-		<complexType name="FileType">
-			<sequence>
-				<element ref="gml:rangeParameters"/>
-				<element name="fileName" type="anyURI"/>
-				<element name="fileDate" type="date"/>
-				<element name="fileStructure" type="gml:FileValueModelType"/>
-				<element name="mimeType" type="anyURI" minOccurs="0"/>
-				<element name="compression" type="anyURI" minOccurs="0"/>
-			</sequence>
-		</complexType>
-	</element>
-</schema>
+	<xs:element name="RectifiedGridCoverageMember" type="risk_rgc:RectifiedGridCoverageMemberAssociationType"/>
+	<xs:complexType name="RectifiedGridCoverageMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_rgc:RectifiedGridCoverage"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="RectifiedGridCoverage" type="risk_rgc:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="RectifiedGridCoverageType">
+	  <xs:complexContent>
+		<xs:restriction base="gml:AbstractDiscreteCoverageType">
+		  <xs:sequence>
+			<xs:group ref="gml:StandardObjectProperties"/>
+			<xs:element ref="gml:boundedBy" minOccurs="0"/>
+			<xs:element ref="gml:rectifiedGridDomain"/>
+			<xs:element ref="gml:rangeSet"/>
+			<xs:element ref="gml:coverageFunction" minOccurs="0"/>
+		  </xs:sequence>
+		</xs:restriction>
+	  </xs:complexContent>
+	</xs:complexType>
+</xs:schema>

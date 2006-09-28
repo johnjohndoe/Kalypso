@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.tools;
 
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -74,8 +75,8 @@ public class GridGeometryHelper
     CS_CoordinateSystem cs2 = gridDomain2.getOrigin( null ).getCoordinateSystem();
     if( !cs1.getName().equals( cs2.getName() ) )
     {
-      String errorMessage = "Diffrent Coordinate System. (CS 1: " + cs1.getName() + ", CS 2: " + cs2.getName() + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentCoordinateSystems")+". (CS 1: " + cs1.getName() + ", CS 2: " + cs2.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
 
@@ -85,17 +86,17 @@ public class GridGeometryHelper
     // check x-Coordinate
     if( origin1.getX() != origin2.getX() )
     {
-      String errorMessage = "Diffrent x-coordinate of origin. (x-coordinate 1: " + origin1.getX()
-          + ", x-coordinate 2: " + origin2.getX() + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentXcoordinateOfOrigin")+". ("+Messages.getString("tools.GridGeometryHelper.Xcoordinate")+" 1: " + origin1.getX() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          + ", "+Messages.getString("tools.GridGeometryHelper.Xcoordinate")+" 2"+": " + origin2.getX() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
     // check y-Coordinate
     if( origin1.getY() != origin2.getY() )
     {
-      String errorMessage = "Diffrent y-coordinate of origin. (y-coordinate 1: " + origin1.getY()
-          + ", y-coordinate 2: " + origin2.getY() + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentYcoordinateOfOrigin")+". ("+Messages.getString("tools.GridGeometryHelper.Ycoordinate")+" 1: " + origin1.getY() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          + ", "+Messages.getString("tools.GridGeometryHelper.Ycoordinate")+" 2: " + origin2.getY() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
 
@@ -107,17 +108,17 @@ public class GridGeometryHelper
     // check number of columns
     if( numCols1 != numCols2 )
     {
-      String errorMessage = "Diffrent number of columns. (Number of columns 1: " + numCols1 + ", Number of columns 2: "
-          + numCols2 + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentNumberOfColumns")+". ("+Messages.getString("tools.GridGeometryHelper.NumberOfColumns")+" 1: " + numCols1 + ", "+Messages.getString("tools.GridGeometryHelper.NumberOfColumns")+" 2: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+          + numCols2 + ")"; //$NON-NLS-1$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
     //check number of rows
     if( numRows1 != numRows2 )
     {
-      String errorMessage = "Diffrent number of rows. (Number of rows 1: " + numRows1 + ", Number of rows 2: "
-          + numRows2 + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentNumberOfRows")+". ("+Messages.getString("tools.GridGeometryHelper.NumberOfRows")+" 1: " + numRows1 + ", "+Messages.getString("tools.GridGeometryHelper.NumberOfRows")+" 2: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+          + numRows2 + ")"; //$NON-NLS-1$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
     // check offset
@@ -128,15 +129,15 @@ public class GridGeometryHelper
     // check offsetX
     if( offsetX1 != offsetX2 )
     {
-      String errorMessage = "Diffrent offsetX. (OffsetX 1: " + offsetX1 + ", OffsetX 2: " + offsetX2 + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentOffsetX")+". ("+Messages.getString("tools.GridGeometryHelper.OffsetX")+" 1: " + offsetX1 + ", "+Messages.getString("tools.GridGeometryHelper.OffsetX")+" 2: " + offsetX2 + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
     // check offsetY
     if( offsetY1 != offsetY2 )
     {
-      String errorMessage = "Diffrent offsetY. (OffsetY 1: " + offsetY1 + ", OffsetY 2: " + offsetY2 + ")";
-      System.out.println( "Error: " + errorMessage );
+      String errorMessage = Messages.getString("tools.GridGeometryHelper.DifferentOffsetY")+". ("+Messages.getString("tools.GridGeometryHelper.OffsetY")+" 1: " + offsetY1 + ", "+Messages.getString("tools.GridGeometryHelper.OffsetY")+" 2: " + offsetY2 + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+      System.out.println( Messages.getString("tools.GridGeometryHelper.Error")+": " + errorMessage ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new Exception( errorMessage );
     }
   }

@@ -44,6 +44,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypso.floodrisk.tools.Interval;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
@@ -75,7 +76,7 @@ public class FloodRiskAnalysis
   public static RectifiedGridCoverage defineRisk( RectifiedGridCoverage annualDamageGrid,
       RectifiedGridCoverage landuseGrid, Hashtable riskClassTable ) throws Exception
   {
-    System.out.println( "Calculate FloodRiskGrid..." );
+    System.out.println( Messages.getString("riskAnalysis.FloodRiskAnalysis.CalculatingFloodRiskGrid")+"..." ); //$NON-NLS-1$ //$NON-NLS-2$
     RectifiedGridCoverage floodRiskGrid = null;
     GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin(

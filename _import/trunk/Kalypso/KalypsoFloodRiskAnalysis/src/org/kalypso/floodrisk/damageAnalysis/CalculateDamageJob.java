@@ -65,6 +65,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -108,19 +109,19 @@ public class CalculateDamageJob implements ISimulation
 {
   //IDs
   //input
-  public static final String LanduseRasterDataID = "LanduseRasterData";
+  public static final String LanduseRasterDataID = "LanduseRasterData"; //$NON-NLS-1$
 
   //optional
-  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
+  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData"; //$NON-NLS-1$
 
-  public static final String WaterlevelDataID = "WaterlevelData";
+  public static final String WaterlevelDataID = "WaterlevelData"; //$NON-NLS-1$
 
-  public static final String ContextModelID = "ContextModel";
+  public static final String ContextModelID = "ContextModel"; //$NON-NLS-1$
 
   //output
-  public static final String DamageDirectoryID = "DamageDirectory";
+  public static final String DamageDirectoryID = "DamageDirectory"; //$NON-NLS-1$
 
-  public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData";
+  public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData"; //$NON-NLS-1$
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
@@ -137,7 +138,7 @@ public class CalculateDamageJob implements ISimulation
     {
       //Generate input
       //landuseRaster
-      monitor.setMessage( "Lese Eingabedateien" );
+      monitor.setMessage( Messages.getString("damageAnalysis.CalculateDamageJob.LoadingInputData") ); //$NON-NLS-1$
       URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
@@ -159,7 +160,7 @@ public class CalculateDamageJob implements ISimulation
 
       //start damageAnalysis
       // calculate damagePercentage
-      monitor.setMessage( "Berechne" );
+      monitor.setMessage( Messages.getString("damageAnalysis.CalculateDamageJob.Calculating") ); //$NON-NLS-1$
       TreeMap damagePercentageGrids = DamageAnalysis.calculateDamagePercentages( waterlevelGrids, landuseRaster,
           contextModel.getDamageFunctionList() );
 
@@ -175,7 +176,7 @@ public class CalculateDamageJob implements ISimulation
 
       //Generate Output
       // damage directory
-      monitor.setMessage( "Schreibe Ausgabedateien" );
+      monitor.setMessage( Messages.getString("damageAnalysis.CalculateDamageJob.SavingOutputData") ); //$NON-NLS-1$
       SimulationDataPath damageDirOutputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap()
           .get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
@@ -192,7 +193,7 @@ public class CalculateDamageJob implements ISimulation
         annualDamageResultFile.createNewFile();
       rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
       //style
-      File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile.toString() ) + ".sld" );
+      File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile.toString() ) + ".sld" ); //$NON-NLS-1$
       Color lightRed = new Color( 255, 100, 100 );
       int numOfCategories = 4;
       String styleName = FileUtilities.nameWithoutExtension( annualDamageResultFile.getName() );
@@ -210,11 +211,11 @@ public class CalculateDamageJob implements ISimulation
     }
     catch( MalformedURLException e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e ); //$NON-NLS-1$
     }
     catch( Exception e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e ); //$NON-NLS-1$
     }
   }
 
@@ -230,12 +231,12 @@ public class CalculateDamageJob implements ISimulation
    */
   private TreeMap readWaterlevelData( URL waterlevelDataGML ) throws MalformedURLException, Exception
   {
-    String waterlevelFeatureListPropertyName = "WaterlevelMember";
-    String annualityPropertyName = "Annuality";
-    String waterlevelDataURLPropertyName = "WaterlevelRasterData";
+    String waterlevelFeatureListPropertyName = "WaterlevelMember"; //$NON-NLS-1$
+    String annualityPropertyName = "Annuality"; //$NON-NLS-1$
+    String waterlevelDataURLPropertyName = "WaterlevelRasterData"; //$NON-NLS-1$
 
     TreeMap<Double, RectifiedGridCoverage> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage>();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML, null );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
     List waterlevelDataList = (List)waterlevelDataFeature.getProperty( waterlevelFeatureListPropertyName );
@@ -272,11 +273,11 @@ public class CalculateDamageJob implements ISimulation
     {
       Double key = (Double)keys[i];
       double annuality = 1 / key.doubleValue();
-      File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" );
+      File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids.get( key );
       rasterDataModel.toFile( damageFile, damageGrid );
       //style
-      File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" );
+      File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" ); //$NON-NLS-1$
       Color lightRed = new Color( 255, 100, 100 );
       int numOfCategories = 4;
       String styleName = FileUtilities.nameWithoutExtension( damageFile.getName() );
@@ -287,8 +288,8 @@ public class CalculateDamageJob implements ISimulation
         Double nextKey = (Double)keys[i + 1];
         double deltaP = nextKey.doubleValue() - key.doubleValue();
         RectifiedGridCoverage tempGrid = (RectifiedGridCoverage)tempGrids.get( i );
-        File tempGridFile = new File( damageResultDir, "tempGrid_deltaP"
-            + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" );
+        File tempGridFile = new File( damageResultDir, "tempGrid_deltaP" //$NON-NLS-1$
+            + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" ); //$NON-NLS-1$
         rasterDataModel.toFile( tempGridFile, tempGrid );
       }
     }
@@ -311,7 +312,7 @@ public class CalculateDamageJob implements ISimulation
       int numOfCategories ) throws Exception
   {
     TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
-    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
+    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, Messages.getString("damageAnalysis.CalculateDamageJob.NoData") ); //$NON-NLS-1$
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     double min = grid.getRangeSet().getMinValue();
     double max = grid.getRangeSet().getMaxValue();
@@ -319,11 +320,11 @@ public class CalculateDamageJob implements ISimulation
     for( int i = 0; i < numOfCategories; i++ )
     {
       double quantity = Number.round( ( min + ( i * intervalStep ) ), 4, BigDecimal.ROUND_HALF_EVEN );
-      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity, "" );
+      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity, "" ); //$NON-NLS-1$
       color = color.darker();
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
-    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" );
+    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" ); //$NON-NLS-1$
     colorMap.put( new Double( Number.round( max, 4, BigDecimal.ROUND_HALF_EVEN ) ), colorMapEntry_max );
     RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
     Symbolizer[] symbolizers = new Symbolizer[]
@@ -331,7 +332,7 @@ public class CalculateDamageJob implements ISimulation
     FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     double minScaleDenominator = 0;
     double maxScaleDenominator = 1.8;
-    Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator,
+    Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         maxScaleDenominator );
     featureTypeStyle.addRule( rule );
     FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[]
@@ -339,14 +340,14 @@ public class CalculateDamageJob implements ISimulation
     Style[] styles = new Style[]
     { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" );
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
     Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     Result result = new StreamResult( resultFile );
     Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+    t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
     t.transform( source, result );
   }
 
@@ -356,7 +357,7 @@ public class CalculateDamageJob implements ISimulation
    */
   public URL getSpezifikation()
   {
-    return getClass().getResource( "resources/damageCalcjob_spec.xml" );
+    return getClass().getResource( "resources/damageCalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
 }

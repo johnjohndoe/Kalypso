@@ -52,15 +52,19 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulation
+            catalogClass="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"
             simulationClass="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
             typeID="RasterizeLanduseJob"/>
       <simulation
+            catalogClass="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"
             simulationClass="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
             typeID="CalculateDamageJob"/>
       <simulation
+            catalogClass="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"
             simulationClass="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
             typeID="CalculateFloodRiskJob"/>
       <simulation
+            catalogClass="org.kalypso.floodrisk.schema.UrlCatalogFloodRisk"
             simulationClass="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
             typeID="CalculateStatisticJob"/>
    </extension>

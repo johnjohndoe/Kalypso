@@ -72,6 +72,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -116,25 +117,25 @@ public class ExportThemeAction implements PluginMapOutlineAction
       if( activeTheme instanceof GisTemplateFeatureTheme )
       {
         IFeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
-        if( featureType.getName().equals( "RectifiedGridCoverage" ) )
+        if( featureType.getName().equals( "RectifiedGridCoverage" ) ) //$NON-NLS-1$
         {
           //System.out.println( "CreateImage" );
           String targetFileName = chooseFile( viewer.getControl().getShell(), m_targetFile, new String[]
           {
-              "*.jpg",
-              ".JPG",
-              ".JPEG",
-              ".jpeg" } );
+              "*.jpg", //$NON-NLS-1$
+              ".JPG", //$NON-NLS-1$
+              ".JPEG", //$NON-NLS-1$
+              ".jpeg" } ); //$NON-NLS-1$
           if( targetFileName != null )
           {
-            if( targetFileName.indexOf( "." ) == -1 )
-              m_targetFile = new File( targetFileName + ".jpg" );
+            if( targetFileName.indexOf( "." ) == -1 ) //$NON-NLS-1$
+              m_targetFile = new File( targetFileName + ".jpg" ); //$NON-NLS-1$
             else
               m_targetFile = new File( targetFileName );
           }
           if( m_targetFile != null )
           {
-            Job createImageJob = new Job( "Create Image" )
+            Job createImageJob = new Job( Messages.getString("action.ExportThemeAction.CreateImage") ) //$NON-NLS-1$
             {
               @Override
               protected IStatus run( IProgressMonitor monitor )
@@ -148,12 +149,12 @@ public class ExportThemeAction implements PluginMapOutlineAction
         }
         else
         {
-          MessageDialog.openConfirm( viewer.getControl().getShell(), "Information", "Export-Function not implemented" );
+          MessageDialog.openConfirm( viewer.getControl().getShell(), Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       else
       {
-        MessageDialog.openConfirm( viewer.getControl().getShell(), "Information", "Export-Function not implemented" );
+        MessageDialog.openConfirm( viewer.getControl().getShell(), Messages.getString("action.ExportThemeAction.Information"), Messages.getString("action.ExportThemeAction.ExportFunctionNotImplemented") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -168,24 +169,24 @@ public class ExportThemeAction implements PluginMapOutlineAction
    */
   IStatus createImage( GisTemplateFeatureTheme activeTheme, IProgressMonitor monitor )
   {
-    monitor.beginTask( "Create Image", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("action.ExportThemeAction.CreateImage"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     FeatureList featureList = activeTheme.getFeatureList();
     UserStyle[] style = activeTheme.getStyles();
     int pos = 0;
     RasterSymbolizer rasterSym = (RasterSymbolizer)style[pos].getFeatureTypeStyles()[pos].getRules()[pos]
         .getSymbolizers()[pos];
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)( (Feature)featureList.get( pos ) )
-        .getProperty( "rectifiedGridDomain" );
-    RangeSet rangeSet = (RangeSet)( (Feature)featureList.get( pos ) ).getProperty( "rangeSet" );
-    monitor.beginTask( "Create Image", IProgressMonitor.UNKNOWN );
+        .getProperty( "rectifiedGridDomain" ); //$NON-NLS-1$
+    RangeSet rangeSet = (RangeSet)( (Feature)featureList.get( pos ) ).getProperty( "rangeSet" ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("action.ExportThemeAction.CreateImage"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     Raster raster = getSurrogateRaster( rgDomain, rangeSet, rasterSym, monitor );
     PlanarImage image = getSurrogateImage( raster );
     //File tempFile = new File( "D://temp//test.jpg" );
-    monitor.setTaskName( "Save Image" );
+    monitor.setTaskName( Messages.getString("action.ExportThemeAction.SaveImage") ); //$NON-NLS-1$
     saveAsJpg( m_targetFile, image );
     File worldFile = new File( m_targetFile.getParentFile(), FileUtilities
         .nameWithoutExtension( m_targetFile.getName() )
-        + ".jgw" );
+        + ".jgw" ); //$NON-NLS-1$
     createWorldFile( worldFile, rgDomain );
     monitor.done();
     return Status.OK_STATUS;
@@ -206,26 +207,26 @@ public class ExportThemeAction implements PluginMapOutlineAction
       BufferedWriter bw = new BufferedWriter( new FileWriter( worldFile ) );
       //dx
       double dx = rgDomain.getOffsetX( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      bw.write( "" + dx );
+      bw.write( "" + dx ); //$NON-NLS-1$
       bw.newLine();
       //phi x
-      bw.write( "0.0" );
+      bw.write( "0.0" ); //$NON-NLS-1$
       bw.newLine();
       //phi y
-      bw.write( "0.0" );
+      bw.write( "0.0" ); //$NON-NLS-1$
       bw.newLine();
       //dy
       double dY = rgDomain.getOffsetY( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      bw.write( "-" + dY );
+      bw.write( "-" + dY ); //$NON-NLS-1$
       bw.newLine();
       //origin x (upper left corner)
       double originX = rgDomain.getOrigin( null ).getX();
-      bw.write( "" + originX );
+      bw.write( "" + originX ); //$NON-NLS-1$
       bw.newLine();
       //origin y (upper left corner)
       GM_Envelope envelope = rgDomain.getGM_Envelope( rgDomain.getOrigin( null ).getCoordinateSystem() );
       double originY = envelope.getMax().getY();
-      bw.write( "" + originY );
+      bw.write( "" + originY ); //$NON-NLS-1$
       bw.close();
     }
     catch( IOException e )
@@ -252,7 +253,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
   {
     try
     {
-      JAI.create( "filestore", surrogateImage, outFile.getAbsolutePath(), "jpeg" );
+      JAI.create( "filestore", surrogateImage, outFile.getAbsolutePath(), "jpeg" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
     catch( Exception e )
@@ -274,9 +275,9 @@ public class ExportThemeAction implements PluginMapOutlineAction
     String fileName = dialog.getFileName();
     String filterPath = dialog.getFilterPath();
     String filePath = null;
-    if( fileName != null && fileName != "" && filterPath != null )
+    if( fileName != null && fileName != "" && filterPath != null ) //$NON-NLS-1$
     {
-      filePath = filterPath + "/" + fileName;
+      filePath = filterPath + "/" + fileName; //$NON-NLS-1$
     }
     return filePath;
   }
@@ -294,7 +295,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
     ParameterBlock pbConvert = new ParameterBlock();
     pbConvert.addSource( surrogateImage );
     pbConvert.add( DataBuffer.TYPE_BYTE );
-    surrogateImage = JAI.create( "format", pbConvert );
+    surrogateImage = JAI.create( "format", pbConvert ); //$NON-NLS-1$
     return surrogateImage;
   }
 
@@ -399,7 +400,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
         dataBuffer.setElem( 2, j + ( i * nCols ), blueValue );
         //dataBuffer.setElem( 3, j + ( i * nCols ), alphaValue );
       }
-      monitor.setTaskName( i + " rows of " + rangeSetData.size() + " calculated." );
+      monitor.setTaskName( i + " "+Messages.getString("action.ExportThemeAction.RowsOf")+" " + rangeSetData.size() + " "+Messages.getString("action.ExportThemeAction.Calculated")+"." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       //monitor.worked( i );
     }
     Point origin = new Point( 0, 0 );

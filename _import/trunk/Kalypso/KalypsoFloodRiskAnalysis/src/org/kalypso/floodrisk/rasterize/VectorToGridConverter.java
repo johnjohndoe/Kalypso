@@ -44,6 +44,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -77,7 +78,7 @@ public class VectorToGridConverter
    */
   public static RectifiedGridCoverage toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage baseGrid, ISimulationMonitor monitor ) throws Exception
   {
-    String propertyName = "RasterProperty";
+    String propertyName = "RasterProperty"; //$NON-NLS-1$
     RectifiedGridDomain newGridDomain = new RectifiedGridDomain( baseGrid.getGridDomain().getOrigin( null ), baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
     GM_Point origin = baseGrid.getGridDomain().getOrigin( null );
     double originX = origin.getX();
@@ -123,7 +124,7 @@ public class VectorToGridConverter
         }
       }
       newRangeSetData.addElement( newRowData );
-      monitor.setMessage( i + 1 + " rows of " + rangeSetData.size() + " calculated" );
+      monitor.setMessage( i + 1 + " "+Messages.getString("rasterize.VectorToGridConverter.RowsOf")+" " + rangeSetData.size() + " "+Messages.getString("rasterize.VectorToGridConverter.Calculated") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       monitor.setProgress( 100 * i / rangeSetData.size() );
       // System.out.println(i + 1 + " rows of " + rangeSetData.size() + "
       // calculated"+ " Progress: "+100 * i / rangeSetData.size());

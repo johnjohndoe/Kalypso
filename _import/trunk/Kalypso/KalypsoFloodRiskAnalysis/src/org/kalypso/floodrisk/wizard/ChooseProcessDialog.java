@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.ProcessExtension;
 
 /**
@@ -90,7 +91,7 @@ public class ChooseProcessDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Prozesse auswählen..." );
+    getShell().setText( Messages.getString("wizard.ChooseProcessDialog.SelectProcess")+"..." ); //$NON-NLS-1$
 
     Composite m_topLevel = new Composite( parent, SWT.NONE );
 

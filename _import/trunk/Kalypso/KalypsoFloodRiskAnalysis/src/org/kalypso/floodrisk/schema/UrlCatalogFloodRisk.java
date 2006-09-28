@@ -60,15 +60,15 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 
   public static final String NS_RISKCONTEXTMODEL = "http://www.tuhh.de/floodrisk/riskContextModel";
 
-  public static final String NS_RASTERDATAMODEL = "http://elbe.wb.tu-harburg.de/rasterData";
+  public static final String NS_RASTERDATAMODEL = "http://www.tuhh.de/floodrisk/rasterData";
 
-  public static final String NS_VECTORDATAMODEL = "http://elbe.wb.tu-harburg.de/vectorData";
+  public static final String NS_VECTORDATAMODEL = "http://www.tuhh.de/floodrisk/vectorData";
 
-  public static final String NS_RECTIFIEDGRIDCOVERAGE = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
+  public static final String NS_RECTIFIEDGRIDCOVERAGE = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
 
-  public static final String NS_WATERLEVELDATA = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData";
+  public static final String NS_WATERLEVELDATA = "http://www.tuhh.de/floodrisk/floodrisk/waterlevelData";
 
-  public static final String NS_STATISTICDATA = "http://elbe.wb.tu-harburg.de/floodrisk/statisticData";
+  public static final String NS_STATISTICDATA = "http://www.tuhh.de/floodrisk/floodrisk/statisticData";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)

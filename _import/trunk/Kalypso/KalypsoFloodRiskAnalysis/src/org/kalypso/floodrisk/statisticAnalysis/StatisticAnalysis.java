@@ -49,6 +49,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypso.floodrisk.tools.Number;
@@ -266,19 +267,19 @@ public class StatisticAnalysis
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
-    String rootFeatureName = "StatisticData";
-    String collectionFeatureName = "Collection";
-    String collectionPropertyName = "CollectionMember";
-    String landuseFeatureName = "Landuse";
-    String landusePropertyName = "LanduseMember";
-    String sumPropertyName = "Sum";
-    String overallSumProperty = "OverallSum";
+    String rootFeatureName = "StatisticData"; //$NON-NLS-1$
+    String collectionFeatureName = "Collection"; //$NON-NLS-1$
+    String collectionPropertyName = "CollectionMember"; //$NON-NLS-1$
+    String landuseFeatureName = "Landuse"; //$NON-NLS-1$
+    String landusePropertyName = "LanduseMember"; //$NON-NLS-1$
+    String sumPropertyName = "Sum"; //$NON-NLS-1$
+    String overallSumProperty = "OverallSum"; //$NON-NLS-1$
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true );
+    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
     // create Collection
     final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-    final Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT, true );
+    final Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT, true ); //$NON-NLS-1$
     FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
     // create landuseFeatures
     double sumAll = 0;
@@ -301,12 +302,12 @@ public class StatisticAnalysis
           break;
         }
       }
-      Object[] properties = { "", "", null, landuse, min, max, sum };
-      Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties );
+      Object[] properties = { "", "", null, landuse, min, max, sum }; //$NON-NLS-1$ //$NON-NLS-2$
+      Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
       FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
 
       int mode = BigDecimal.ROUND_HALF_EVEN;
-      System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
+      System.out.println( landuse + ": "+Messages.getString("statisticAnalysis.StatisticAnalysis.Sum")+"=" + Number.round( sum.doubleValue(), 2, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MinValue")+"=" + Number.round( min.doubleValue(), 4, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MaxValue")+"=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
           + Number.round( max.doubleValue(), 4, mode ) );
       sumAll = sumAll + sum.doubleValue();
     }
@@ -314,11 +315,11 @@ public class StatisticAnalysis
     FeatureHelper.addProperty( collection, collFT.getProperty( sumPropertyName ), new Double( sumAll ) );
     FeatureHelper.addProperty( rootFeature, rootFT.getProperty( overallSumProperty ), new Double( sumAll ) );
 
-    System.out.println( "Total damage= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
+    System.out.println( Messages.getString("statisticAnalysis.StatisticAnalysis.TotalDamage")+"= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // create workspace
     IFeatureType[] types = schema.getAllFeatureTypes();
-    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "", null );
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" ); //$NON-NLS-1$
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );
@@ -556,17 +557,17 @@ public class StatisticAnalysis
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA, (String) null );
 
     // create feature and workspace gml
-    String rootFeatureName = "StatisticData";
-    String collectionFeatureName = "Collection";
-    String collectionPropertyName = "CollectionMember";
-    String namePropertyName = "Name";
-    String landuseFeatureName = "Landuse";
-    String landusePropertyName = "LanduseMember";
-    String sumPropertyName = "Sum";
-    String overallSumProperty = "OverallSum";
+    String rootFeatureName = "StatisticData"; //$NON-NLS-1$
+    String collectionFeatureName = "Collection"; //$NON-NLS-1$
+    String collectionPropertyName = "CollectionMember"; //$NON-NLS-1$
+    String namePropertyName = "Name"; //$NON-NLS-1$
+    String landuseFeatureName = "Landuse"; //$NON-NLS-1$
+    String landusePropertyName = "LanduseMember"; //$NON-NLS-1$
+    String sumPropertyName = "Sum"; //$NON-NLS-1$
+    String overallSumProperty = "OverallSum"; //$NON-NLS-1$
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true );
+    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -592,11 +593,11 @@ public class StatisticAnalysis
       }
       // create Collection
       final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-      Feature collection = FeatureFactory.createFeature( rootFeature, "Collection" + numOfCol, collFT, true );
+      Feature collection = FeatureFactory.createFeature( rootFeature, "Collection" + numOfCol, collFT, true ); 
       FeatureHelper.addProperty( collection, collFT.getProperty( namePropertyName ), adminUnit );
       FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
 
-      System.out.println( adminUnit + ": " );
+      System.out.println( adminUnit + ": " ); //$NON-NLS-1$
       // create landuse-features
       while( it1.hasNext() )
       {
@@ -617,26 +618,26 @@ public class StatisticAnalysis
             break;
           }
         }
-        Object[] properties = { "", "", null, landuse, min, max, sum };
-        Feature landuseFeature = FeatureFactory.createFeature( collection, "Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties );
+        Object[] properties = { "", "", null, landuse, min, max, sum }; //$NON-NLS-1$ //$NON-NLS-2$
+        Feature landuseFeature = FeatureFactory.createFeature( collection, "Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
         numOfFeat = numOfFeat + 1;
         FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
         int mode = BigDecimal.ROUND_HALF_EVEN;
-        System.out.println( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue=" + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
+        System.out.println( landuse + ": "+Messages.getString("statisticAnalysis.StatisticAnalysis.Sum")+"=" + Number.round( sum.doubleValue(), 2, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MinValue")+"=" + Number.round( min.doubleValue(), 4, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MaxValue")+"=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
             + Number.round( max.doubleValue(), 4, mode ) );
       }
       int mode = BigDecimal.ROUND_HALF_EVEN;
-      System.out.println( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) );
+      System.out.println( Messages.getString("statisticAnalysis.StatisticAnalysis.SummedDamage")+"=" + Number.round( sum_adminUnit, 2, mode ) ); //$NON-NLS-1$ //$NON-NLS-2$
       FeatureHelper.addProperty( collection, collFT.getProperty( sumPropertyName ), new Double( sum_adminUnit ) );
       sumAll = sumAll + sum_adminUnit;
       numOfCol = numOfCol + 1;
     }
-    System.out.println( "Total Damage=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
+    System.out.println( Messages.getString("statisticAnalysis.StatisticAnalysis.TotalDamage")+"=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     FeatureHelper.addProperty( rootFeature, rootFT.getProperty( overallSumProperty ), new Double( sumAll ) );
 
     // create workspace
     final IFeatureType[] types = schema.getAllFeatureTypes();
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "", null );
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" ); //$NON-NLS-1$
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );

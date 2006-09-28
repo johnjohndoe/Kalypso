@@ -93,7 +93,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   private Text m_textFileSource;
 
-  private String DEFAUL_FILE_LABEL = "";
+  private String _DEFAULT_FILE_LABEL = ""; //$NON-NLS-1$
 
   File m_file;
 
@@ -113,8 +113,8 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   public SelectLanduseWizardPage()
   {
-    super( "page_type:landuse", "Landnutzungsdaten einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    setDescription( "Landuse WizardPage" );
+    super( "page_type:landuse", WizardMessages.getString("SelectLanduseWizardPage.SelectLanduseData"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
+    setDescription( WizardMessages.getString("SelectLanduseWizardPage.LanduseWizardPage") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -142,7 +142,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
   public void createControlFile( Composite parent )
   {
     Group group = new Group( parent, SWT.NONE );
-    group.setText( "Landnutzung" );
+    group.setText( WizardMessages.getString("SelectLanduseWizardPage.Landuse") ); //$NON-NLS-1$
 
     GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
@@ -155,10 +155,10 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     //  line 1: ShapeFile selection
     Label label = new Label( group, SWT.NONE );
-    label.setText( "Shape-Datei: " );
+    label.setText( WizardMessages.getString("SelectLanduseWizardPage.ShapeData")+": " ); //$NON-NLS-1$
 
     m_textFileSource = new Text( group, SWT.BORDER );
-    m_textFileSource.setText( DEFAUL_FILE_LABEL );
+    m_textFileSource.setText( _DEFAULT_FILE_LABEL );
     m_textFileSource.addFocusListener( this );
     m_textFileSource.setEditable( false );
 
@@ -168,7 +168,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     m_textFileSource.setLayoutData( data1 );
 
     Button button = new Button( group, SWT.PUSH );
-    button.setText( "Auswahl ..." );
+    button.setText( WizardMessages.getString("SelectLanduseWizardPage.Browse")+"..." ); //$NON-NLS-1$
     GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
@@ -179,7 +179,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       public void widgetSelected( SelectionEvent e )
       {
         String filePath = chooseFile( m_file, new String[]
-        { "*.shp" } );
+        { "*.shp" } ); //$NON-NLS-1$
         if( filePath != null )
         {
           m_file = new File( filePath );
@@ -196,7 +196,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     //line2: coordinate system
     Label csLabel = new Label( group, SWT.NONE );
-    csLabel.setText( "Coordinate system: " );
+    csLabel.setText( WizardMessages.getString("SelectLanduseWizardPage.CoordinateSystem")+": " ); //$NON-NLS-1$
 
     final Combo csCombo = new Combo( group, SWT.NONE );
     csCombo.setItems( coordinateSystems );
@@ -243,7 +243,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     //line 3: landusePropertyName
     landusePropLabel = new Label( group, SWT.NONE );
-    landusePropLabel.setText( "Attribut Landnutzung: " );
+    landusePropLabel.setText( WizardMessages.getString("SelectLanduseWizardPage.AttributeLanduse")+": " ); //$NON-NLS-1$
     landusePropLabel.setEnabled( false );
 
     landusePropCombo = new Combo( group, SWT.READ_ONLY );
@@ -272,7 +272,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     } );
 
     Label landuseColLabel = new Label( group, SWT.NONE );
-    landuseColLabel.setText( "LanduseCollection automatisch generieren" );
+    landuseColLabel.setText( WizardMessages.getString("SelectLanduseWizardPage.GenerateLanduseCollection") ); //$NON-NLS-1$
   }
 
   /**
@@ -326,9 +326,9 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     String fileName = dialog.getFileName();
     String filterPath = dialog.getFilterPath();
     String filePath = null;
-    if( fileName != null && fileName != "" && filterPath != null )
+    if( fileName != null && fileName != "" && filterPath != null ) //$NON-NLS-1$
     {
-      filePath = filterPath + "/" + fileName;
+      filePath = filterPath + "/" + fileName; //$NON-NLS-1$
     }
     return filePath;
   }
@@ -347,14 +347,14 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       m_textFileSource.setText( m_file.getAbsolutePath() );
       if( !m_file.exists() )
       {
-        error.append( "Datei existiert nicht\n\n" );
+        error.append( WizardMessages.getString("SelectLanduseWizardPage.DataNotExists")+"\n\n" ); //$NON-NLS-1$
         setPageComplete( false );
       }
     }
     else
     {
-      m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( "Datei nicht ausgewählt\n\n" );
+      m_textFileSource.setText( _DEFAULT_FILE_LABEL );
+      error.append( WizardMessages.getString("SelectLanduseWizardPage.DataNotSelected")+"\n\n" ); //$NON-NLS-1$
       setPageComplete( false );
     }
 
@@ -363,7 +363,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
-        error.append( "Koordinatensystem existiert nicht\n\n" );
+        error.append( WizardMessages.getString("SelectLanduseWizardPage.CoordinateSystemNotExists")+"\n\n" ); //$NON-NLS-1$
         setPageComplete( false );
       }
     }
@@ -374,7 +374,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     }
     else
     {
-      error.append( "Attribut Landnutzung wählen.\n\n" );
+      error.append( WizardMessages.getString("SelectLanduseWizardPage.SelectLanduseAttribute")+":\n\n" ); //$NON-NLS-1$
       setPageComplete( false );
     }
 
@@ -382,7 +382,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       setMessage( error.toString() );
     else
     {
-      setMessage( "Eingabe OK" );
+      setMessage( WizardMessages.getString("SelectLanduseWizardPage.SelectionOK") ); //$NON-NLS-1$
       setPageComplete( true );
     }
   }

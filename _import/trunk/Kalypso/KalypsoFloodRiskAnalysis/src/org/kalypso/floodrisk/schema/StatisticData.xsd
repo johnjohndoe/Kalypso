@@ -1,65 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk/statisticData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk/statisticData">
+<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/statisticData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_sd="http://www.tuhh.de/floodrisk/statisticData">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="base/gml.xsd"/>
+	<!-- =========================================================== -->
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
 	<!-- =========================================================== -->
 	<!-- StatisticData=========================================================== -->
-	<element name="StatisticData" type="hws:StatisticDataType"/>
-	<complexType name="StatisticDataType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="CollectionMember" type="hws:CollectionMemberAssociationType"/>
-					<element name="OverallSum" type="double" minOccurs="0"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:element name="StatisticData" type="risk_sd:StatisticDataType"/>
+	<xs:complexType name="StatisticDataType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="CollectionMember" type="risk_sd:CollectionMemberAssociationType"/>
+					<xs:element name="OverallSum" type="xs:double" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- CollectionMember=========================================================== -->
-	<complexType name="CollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:Collection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="Collection" type="hws:CollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="CollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="Name" type="string" minOccurs="0"/>
-					<element name="Sum" type="double"/>
-					<element name="LanduseMember" type="hws:LanduseMemberAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="CollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_sd:Collection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Collection" type="risk_sd:CollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="CollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="Name" type="xs:string" minOccurs="0"/>
+					<xs:element name="Sum" type="xs:double"/>
+					<xs:element name="LanduseMember" type="risk_sd:LanduseMemberAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- LanduseMember=========================================================== -->
-	<complexType name="LanduseMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:Landuse"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="Landuse" type="hws:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="LanduseFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Name" type="string"/>
-					<element name="minValue" type="double"/>
-					<element name="maxValue" type="double"/>
-					<element name="sum" type="double"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-</schema>
+	<xs:complexType name="LanduseMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_sd:Landuse"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Landuse" type="risk_sd:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="LanduseFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="Name" type="xs:string"/>
+					<xs:element name="minValue" type="xs:double"/>
+					<xs:element name="maxValue" type="xs:double"/>
+					<xs:element name="sum" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

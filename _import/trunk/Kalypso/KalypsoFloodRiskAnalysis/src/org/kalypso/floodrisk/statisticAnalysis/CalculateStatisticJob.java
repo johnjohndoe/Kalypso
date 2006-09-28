@@ -47,6 +47,7 @@ import java.util.Hashtable;
 
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -68,20 +69,20 @@ public class CalculateStatisticJob implements ISimulation
 
   // IDs
   // input
-  public static final String DamageRasterID = "DamageRaster";
+  public static final String DamageRasterID = "DamageRaster"; //$NON-NLS-1$
 
-  public static final String LanduseRasterDataID = "LanduseRasterData";
-
-  // optional
-  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
-
-  public static final String ContextModelID = "ContextModel";
+  public static final String LanduseRasterDataID = "LanduseRasterData"; //$NON-NLS-1$
 
   // optional
-  public static final String TemplateRasterID = "TemplateRaster";
+  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData"; //$NON-NLS-1$
+
+  public static final String ContextModelID = "ContextModel"; //$NON-NLS-1$
+
+  // optional
+  public static final String TemplateRasterID = "TemplateRaster"; //$NON-NLS-1$
 
   // output
-  public static final String StatisticDataID = "StatisticData";
+  public static final String StatisticDataID = "StatisticData"; //$NON-NLS-1$
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
@@ -96,7 +97,7 @@ public class CalculateStatisticJob implements ISimulation
     {
       // Generate input
       // damageRaster
-      monitor.setMessage( "Lese Eingabedateien" );
+      monitor.setMessage( Messages.getString("statisticAnalysis.CalculateStatisticJob.LoadingInputData") ); //$NON-NLS-1$
       URL damageRasterGML = (URL) inputProvider.getInputForID( DamageRasterID );
       RectifiedGridCoverage damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
 
@@ -120,7 +121,7 @@ public class CalculateStatisticJob implements ISimulation
 
       // Calculation
       // statisticAnalysis
-      monitor.setMessage( "Berechne" );
+      monitor.setMessage( Messages.getString("statisticAnalysis.CalculateStatisticJob.Calculating") ); //$NON-NLS-1$
       Hashtable statistics = null;
       if( inputProvider.getInputForID( TemplateRasterID ) != null )
       {
@@ -144,7 +145,7 @@ public class CalculateStatisticJob implements ISimulation
 
       // Generate output
       // statisticData
-      monitor.setMessage( "Schreibe Ausgabedateien" );
+      monitor.setMessage( Messages.getString("statisticAnalysis.CalculateStatisticJob.SavingResults") ); //$NON-NLS-1$
       SimulationDataPath statisticDataOutputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( StatisticDataID );
       File statisticDataFile = new File( statisticDataOutputBean.getPath() );
       if( !statisticDataFile.exists() )
@@ -161,11 +162,11 @@ public class CalculateStatisticJob implements ISimulation
     }
     catch( MalformedURLException e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception: Malformed URL", e ); //$NON-NLS-1$
     }
     catch( Exception e )
     {
-      throw new SimulationException( "CalculateDamageJob Service Exception", e );
+      throw new SimulationException( "CalculateDamageJob Service Exception", e ); //$NON-NLS-1$
     }
   }
 
@@ -174,7 +175,7 @@ public class CalculateStatisticJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/statisticCalcjob_spec.xml" );
+    return getClass().getResource( "resources/statisticCalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
 }

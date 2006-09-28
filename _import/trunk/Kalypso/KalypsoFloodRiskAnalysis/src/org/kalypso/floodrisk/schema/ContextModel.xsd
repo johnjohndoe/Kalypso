@@ -1,314 +1,319 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.tuhh.de/floodrisk/contextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.1.1" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://www.tuhh.de/floodrisk/contextModel">
+<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/contextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_cm="http://www.tuhh.de/floodrisk/contextModel">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="base/feature.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="base/gml.xsd"/>
 	<!-- =========================================================== -->
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
 	<!-- ContextModel=========================================================== -->
-	<element name="ContextModel" type="hws:ContextModelType"/>
-	<complexType name="ContextModelType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="LanduseCollectionMember" type="hws:LanduseCollectionMemberAssociationType"/>
-					<element name="AdministrationUnitCollectionMember" type="hws:AdministrationUnitCollectionMemberAssociationType" minOccurs="0"/>
-					<element name="DamageFunctionCollectionMember" type="hws:DamageFunctionCollectionMemberAssociationType"/>
-					<element name="AssetValueCollectionMember" type="hws:AssetValueCollectionMemberAssociationType"/>
-					<element name="DamageFunctionMappingCollectionMember" type="hws:DamageFunctionMappingCollectionMemberAssociationType"/>
-					<element name="AssetValueMappingCollectionMember" type="hws:AssetValueMappingCollectionMemberAssociationType"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:element name="ContextModel" type="risk_cm:ContextModelType"/>
+	<xs:complexType name="ContextModelType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="LanduseCollectionMember" type="risk_cm:LanduseCollectionMemberAssociationType"/>
+					<xs:element name="AdministrationUnitCollectionMember" type="risk_cm:AdministrationUnitCollectionMemberAssociationType" minOccurs="0"/>
+					<xs:element name="DamageFunctionCollectionMember" type="risk_cm:DamageFunctionCollectionMemberAssociationType"/>
+					<xs:element name="AssetValueCollectionMember" type="risk_cm:AssetValueCollectionMemberAssociationType"/>
+					<xs:element name="DamageFunctionMappingCollectionMember" type="risk_cm:DamageFunctionMappingCollectionMemberAssociationType"/>
+					<xs:element name="AssetValueMappingCollectionMember" type="risk_cm:AssetValueMappingCollectionMemberAssociationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- LanduseCollectionMember=========================================================== -->
-	<complexType name="LanduseCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:LanduseCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="LanduseCollection" type="hws:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="LanduseCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="LanduseMember" type="hws:LanduseMemberAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="LanduseCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:LanduseCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="LanduseCollection" type="risk_cm:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="LanduseCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="LanduseMember" type="risk_cm:LanduseMemberAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- LanduseMember=========================================================== -->
-	<complexType name="LanduseMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:Landuse"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="Landuse" type="hws:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="LanduseFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Name" type="string"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="LanduseMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:Landuse"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Landuse" type="risk_cm:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="LanduseFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="Name" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- AdministrationUnitCollectionMember=========================================================== -->
-	<complexType name="AdministrationUnitCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AdministrationUnitCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AdministrationUnitCollection" type="hws:AdministrationUnitCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AdministrationUnitCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="AdministrationUnitMember" type="hws:AdministrationUnitMemberAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AdministrationUnitCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AdministrationUnitCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AdministrationUnitCollection" type="risk_cm:AdministrationUnitCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AdministrationUnitCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="AdministrationUnitMember" type="risk_cm:AdministrationUnitMemberAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- AdministrationUnitMember=========================================================== -->
-	<complexType name="AdministrationUnitMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AdministrationUnit"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AdministrationUnit" type="hws:AdministrationUnitFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AdministrationUnitFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Name" type="string"/>
+	<xs:complexType name="AdministrationUnitMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AdministrationUnit"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AdministrationUnit" type="risk_cm:AdministrationUnitFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AdministrationUnitFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="Name" type="xs:string"/>
 					<!--<element name="Unit" type="string"/>-->
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- DamageFunctionCollectionMember=========================================================== -->
-	<complexType name="DamageFunctionCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:DamageFunctionCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="DamageFunctionCollection" type="hws:DamageFunctionCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="DamageFunctionCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="DamageFunctionMember" type="hws:DamageFunctionAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="DamageFunctionCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:DamageFunctionCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DamageFunctionCollection" type="risk_cm:DamageFunctionCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="DamageFunctionCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="DamageFunctionMember" type="risk_cm:DamageFunctionAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- DamageFunctionMember=========================================================== -->
-	<complexType name="DamageFunctionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:DamageFunction"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="DamageFunction" type="hws:DamageFunctionFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="DamageFunctionFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Function" type="string"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="DamageFunctionAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:DamageFunction"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DamageFunction" type="risk_cm:DamageFunctionFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="DamageFunctionFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="Function" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- AssetValueCollectionMember=========================================================== -->
-	<complexType name="AssetValueCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AssetValueCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AssetValueCollection" type="hws:AssetValueCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AssetValueCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="AssetValueMember" type="hws:AssetValueAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AssetValueCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AssetValueCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AssetValueCollection" type="risk_cm:AssetValueCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AssetValueCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="AssetValueMember" type="risk_cm:AssetValueAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- AssetValueMember=========================================================== -->
-	<complexType name="AssetValueAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AssetValue"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AssetValue" type="hws:AssetValueFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AssetValueFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="Value" type="double"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AssetValueAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AssetValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AssetValue" type="risk_cm:AssetValueFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AssetValueFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="Value" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- DamageFunctionMappingCollectionMember=========================================================== -->
-	<complexType name="DamageFunctionMappingCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:DamageFunctionMappingCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="DamageFunctionMappingCollection" type="hws:DamageFunctionMappingCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="DamageFunctionMappingCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="DamageFunctionMappingMember" type="hws:DamageFunctionMappingMemberAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="DamageFunctionMappingCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:DamageFunctionMappingCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DamageFunctionMappingCollection" type="risk_cm:DamageFunctionMappingCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="DamageFunctionMappingCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="DamageFunctionMappingMember" type="risk_cm:DamageFunctionMappingMemberAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- DamageFunctionMappingMember=========================================================== -->
-	<complexType name="DamageFunctionMappingMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:DamageFunctionMapping"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="DamageFunctionMapping" type="hws:DamageFunctionMappingFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="DamageFunctionMappingFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="DamageFunctionLink" type="hws:DamageFunctionLinkType"/>
-					<element name="LanduseLink" type="hws:LanduseLinkType" maxOccurs="unbounded"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="DamageFunctionMappingMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:DamageFunctionMapping"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DamageFunctionMapping" type="risk_cm:DamageFunctionMappingFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="DamageFunctionMappingFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="DamageFunctionLink" type="risk_cm:DamageFunctionLinkType"/>
+					<xs:element name="LanduseLink" type="risk_cm:LanduseLinkType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- AssetValueMappingCollectionMember=========================================================== -->
-	<complexType name="AssetValueMappingCollectionMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AssetValueMappingCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AssetValueMappingCollection" type="hws:AssetValueMappingCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AssetValueMappingCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="AssetValueMappingMember" type="hws:AssetValueMappingMemberAssociationType" maxOccurs="unbounded"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AssetValueMappingCollectionMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AssetValueMappingCollection"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AssetValueMappingCollection" type="risk_cm:AssetValueMappingCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AssetValueMappingCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="AssetValueMappingMember" type="risk_cm:AssetValueMappingMemberAssociationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- AssetValueMappingMember=========================================================== -->
-	<complexType name="AssetValueMappingMemberAssociationType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="hws:AssetValueMapping"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="AssetValueMapping" type="hws:AssetValueMappingFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="AssetValueMappingFeatureType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="AssetValueLink" type="hws:AssetValueLinkType"/>
-					<element name="LanduseLink" type="hws:LanduseLinkType" maxOccurs="unbounded"/>
-					<element name="AdministrationUnitLink" type="hws:AdministrationUnitLinkType" minOccurs="0"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AssetValueMappingMemberAssociationType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					<xs:element ref="risk_cm:AssetValueMapping"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AssetValueMapping" type="risk_cm:AssetValueMappingFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:complexType name="AssetValueMappingFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="AssetValueLink" type="risk_cm:AssetValueLinkType"/>
+					<xs:element name="LanduseLink" type="risk_cm:LanduseLinkType" maxOccurs="unbounded"/>
+					<xs:element name="AdministrationUnitLink" type="risk_cm:AdministrationUnitLinkType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- =========================================================== -->
-	<complexType name="DamageFunctionLinkType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence minOccurs="0">
-					<element ref="hws:DamageFunction"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="DamageFunctionLinkType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="risk_cm:DamageFunction"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
-	<complexType name="AssetValueLinkType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence minOccurs="0">
-					<element ref="hws:AssetValue"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AssetValueLinkType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="risk_cm:AssetValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
-	<complexType name="LanduseLinkType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence minOccurs="0">
-					<element ref="hws:Landuse"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="LanduseLinkType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="risk_cm:Landuse"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =========================================================== -->
-	<complexType name="AdministrationUnitLinkType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence minOccurs="0">
-					<element ref="hws:AdministrationUnit"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-</schema>
+	<xs:complexType name="AdministrationUnitLinkType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="risk_cm:AdministrationUnit"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

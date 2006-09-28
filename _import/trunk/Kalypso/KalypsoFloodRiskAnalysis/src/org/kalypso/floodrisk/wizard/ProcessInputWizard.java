@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -86,7 +87,7 @@ public class ProcessInputWizard extends Wizard
     super();
     m_project = project;
     m_processes = processes;
-    setWindowTitle( "Process Input Wizard" );
+    setWindowTitle( Messages.getString("wizard.ProcessInputWizard.ProcessInputWizard") ); //$NON-NLS-1$
   }
 
   /**
@@ -130,8 +131,8 @@ public class ProcessInputWizard extends Wizard
           // check if typeID in modelData equals typeID of process
           if( !processExtension.getId().equals( modelData.getTypeID() ) )
           {
-            throw new CoreException( StatusUtilities.createErrorStatus( "TypeId of modelData (" + modelData.getTypeID() + ") does not fit to typeID of process (" + processExtension.getId()
-                + ")! Check modelData!" ) );
+            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("wizard.ProcessInputWizard.TypeIdOfModelData")+" (" + modelData.getTypeID() + ") "+Messages.getString("wizard.ProcessInputWizard.doesNotFitToTypeIDOfProcess")+" (" + processExtension.getId() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                + ")! "+Messages.getString("wizard.ProcessInputWizard.CheckModelData")+"!" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           // create job
           final ProcessJob processJob = new ProcessJob( modelData, m_project );
@@ -167,7 +168,7 @@ public class ProcessInputWizard extends Wizard
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("wizard.ProcessInputWizard.ErrorLoadingModelSpecification") ) ); //$NON-NLS-1$
     }
   }
 }
