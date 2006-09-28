@@ -17,8 +17,8 @@ C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
       IF(KK .EQ. 0) THEN
-        NLA=1
         NTA=NP
+        NLA=1
       ELSE
         NLA=KK
         NTA=KK
