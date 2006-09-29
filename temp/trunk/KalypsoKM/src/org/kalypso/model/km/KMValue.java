@@ -24,6 +24,9 @@ public class KMValue extends AbstractKMValue
 
 	private final double m_qf;
 
+    /*
+     * Calculates the Kalinin-Miljukov parameters for one profile (one set per discharge) 
+     */
 	public KMValue(double length, Row row1, Row row2)
 	{
 		final double qm = (row1.getQ() + row2.getQ()) / 2d;
@@ -35,8 +38,8 @@ public class KMValue extends AbstractKMValue
 		final double dq = Math.abs(row2.getQ() - row1.getQ());
 		final double dqForeland = Math.abs(row2.getQforeland()
 				- row1.getQforeland());
-
-		final double slope = (row1.getSlope() + row2.getSlope()) / 2d;
+// a problem occures, if the slope is negative (first solution: take the absulute values - bacause negative values are very small)
+		final double slope = (Math.abs( row1.getSlope() ) + Math.abs( row2.getSlope() )) / 2d;
 		final double li = qm * dh / (slope * dq);
 		final double ki = (li * dA / dq) / 3600d;
 		final double n = length / li;

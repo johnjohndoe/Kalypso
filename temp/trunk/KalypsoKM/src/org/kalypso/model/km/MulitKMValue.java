@@ -23,6 +23,9 @@ public class MulitKMValue extends AbstractKMValue
 
 	private AbstractKMValue m_innerKM;
 
+    /*
+     * Aggregation of Kalinin-Miljukov parameters for one river strand.
+     */
 	public MulitKMValue(AbstractKMValue[] values)
 	{
 		m_innerKM = values[0];

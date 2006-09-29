@@ -75,7 +75,7 @@ public class ProfileDataSet
 			{
 				Logger.getAnonymousLogger().log(
 						Level.WARNING,
-						"skip profile, could not read: "
+						"Skip profile, could not read: "
 								+ file.getAbsolutePath());
 				e.printStackTrace();
 			}
@@ -109,7 +109,7 @@ public class ProfileDataSet
 		{
 			final ProfileData[] profiles = (ProfileData[]) m_profileSort
 					.toArray(new ProfileData[m_profileSort.size()]);
-			// collect KMValues for one index over all profiles
+			// collect KMValues for one index (row) over all profiles
 			final List<AbstractKMValue> kmForIndexOverProfiles = new ArrayList<AbstractKMValue>();
 			for (int counterProfile = 0; counterProfile < profiles.length; counterProfile++)
 			{
@@ -156,7 +156,7 @@ public class ProfileDataSet
 		}
 		 
 //		double dq1 = (qbankfull - qFirst) / (numberOfDischarges / 2);
-		int max1=numberOfDischarges/2;
+		int max1=numberOfDischarges/2;    //Bei 5 insgesamt sind dies immer 2 
 		for(int i=0;i<max1;i++)
 		{
 			double q=qFirst+i*(qbankfull - qFirst)/max1; 
