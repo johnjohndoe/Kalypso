@@ -80,11 +80,10 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
 {
   public static final DateFormat DF_Date = DateFormat.getDateInstance( DateFormat.MEDIUM );
 
-  
   public static final DateFormat DF_DateTime = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
 
   public static final DateFormat DF_Time = DateFormat.getTimeInstance( DateFormat.MEDIUM );
-  
+
   static
   {
     DF_Date.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
@@ -146,7 +145,8 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     text.setProperty( qname );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.BEGINNING" );
+    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setGrabExcessHorizontalSpace( true );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 

@@ -53,7 +53,6 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -115,13 +114,13 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.NONE" );
+    text.setStyle( "SWT.BORDER" );
     text.setEditable( true );
     text.setProperty( qname );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.BEGINNING" );
-    textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setGrabExcessHorizontalSpace( true );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
