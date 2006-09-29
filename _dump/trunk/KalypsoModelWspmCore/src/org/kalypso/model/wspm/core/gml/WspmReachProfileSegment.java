@@ -56,11 +56,13 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class WspmReachProfileSegment implements IWspmConstants
 {
+  public static final QName QNAME_PROFILEREACHSEGMENT = new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" );
+
   private final Feature m_reachSegment;
 
   public WspmReachProfileSegment( final Feature reachSegment )
   {
-    if( !GMLSchemaUtilities.substitutes( reachSegment.getFeatureType(), new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" ) ) )
+    if( !GMLSchemaUtilities.substitutes( reachSegment.getFeatureType(), QNAME_PROFILEREACHSEGMENT ) )
       throw new IllegalStateException( "Feature is no ProfileReachSegment" );
 
     m_reachSegment = reachSegment;

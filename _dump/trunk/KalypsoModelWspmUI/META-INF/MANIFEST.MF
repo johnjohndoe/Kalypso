@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.ui,
  org.kalypso.model.wspm.core,
  de.belger.swtchart.core,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.kalypso.featureview
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,

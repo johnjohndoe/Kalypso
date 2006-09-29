@@ -219,6 +219,31 @@
                label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
+            objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+         <menu
+               id="wspmProfileActions"
+               label="Profile"/>
+         <filter
+               name="featureAssociationQname"
+               value="org.kalypso.model.wspm#AbstractReachSegment;org.kalypso.model.wspmprofile#Profile"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
+               id="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
+               label="Rauheiten zuweisen"
+               menubarPath="wspmProfileActions"
+               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+               icon="icons/elcl16/createProfileMap.gif"
+               id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+               label="Profile in neuer Karte anzeigen"
+               menubarPath="wspmProfileActions"
+               style="push"
+               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+      </objectContribution>
    </extension>
      <extension
            point="org.eclipse.ui.popupMenus">
@@ -249,8 +274,8 @@
         </viewerContribution>
         <objectContribution
               adaptable="true"
-              id="com.bce.profil.objectControbution.profilLayer"
-              objectClass="com.bce.profil.ui.view.chart.layer.IProfilChartLayer">
+              id="org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer.objectcontribution"
+              objectClass="org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer">
            <action
                  class="org.kalypso.model.wspm.ui.action.ProfilLayerActionDelegate"
                  enablesFor="1"

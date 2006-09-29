@@ -97,7 +97,7 @@
 				<label>Water bodies</label>
 				<tooltip>Water bodies</tooltip>
 				<description>Water bodies</description>
-			</documentation>			
+			</documentation>
 		</annotation>
 	</element>
 	<!-- same as waterBodyMember, but supports only linked waterBodies -->
@@ -165,24 +165,9 @@
 	</element>
 	<!-- 
 	-->
-	<element name="reachSegmentMember" type="wspm:ReachSegmentPropertyType"
-		substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Gewässerstrangsegmente</label>
-				<tooltip>Gewässerstrangsegmente</tooltip>
-				<description>Gewässerstrangsegmente</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>River string segments</label>
-				<tooltip>River string segments</tooltip>
-				<description>River string segments</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="AbstractReachSegment" type="wspm:AbstractReachSegmentType" abstract="true"
 		substitutionGroup="gml:_Feature"/>
-	<element name="InfluentReachSegment" type="wspm:InfluentReachSegmentType"
+	<!--element name="InfluentReachSegment" type="wspm:InfluentReachSegmentType"
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
@@ -198,7 +183,7 @@
 				<description>Influent string segment</description>
 			</documentation>
 		</annotation>
-	</element>
+	</element-->
 	<element name="ProfileReachSegment" type="wspm:ProfileReachSegmentType"
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
@@ -213,7 +198,8 @@
 				<name>Profile string segment</name>
 				<label>Station km ${property:org.kalypso.model.wspm#station;-not set-}</label>
 				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-not set-}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm#station;-not set-}</description>
+				<description>Station km ${property:org.kalypso.model.wspm#station;-not
+				set-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -355,7 +341,8 @@
 				<name>Vegetation definition</name>
 				<label>${property:http://www.opengis.net/gml#name}</label>
 				<tooltip>Vegetation definition ${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>Vegetation definition ${property:http://www.opengis.net/gml#name}</description>
+				<description>Vegetation definition
+				${property:http://www.opengis.net/gml#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -459,7 +446,21 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="reachSegmentMember" type="wspm:ReachSegmentPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässerstrangsegmente</label>
+				<tooltip>Gewässerstrangsegmente</tooltip>
+				<description>Gewässerstrangsegmente</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>River string segments</label>
+				<tooltip>River string segments</tooltip>
+				<description>River string segments</description>
+			</documentation>
+		</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -467,14 +468,11 @@
 	<!-- 
 	-->
 	<complexType name="ReachSegmentPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="wspm:AbstractReachSegment"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="wspm:AbstractReachSegment"/>
+		</sequence>
 	</complexType>
+
 	<complexType name="AbstractReachSegmentType" abstract="true">
 		<complexContent>
 			<annotation>
@@ -504,7 +502,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="InfluentReachSegmentType">
+	<!--complexType name="InfluentReachSegmentType">
 		<complexContent>
 			<annotation>
 				<appinfo>We have two properties (line, markers) here, which are backuped by another
@@ -530,7 +528,7 @@
 				</sequence>
 			</extension>
 		</complexContent>
-	</complexType>
+	</complexType-->
 	<complexType name="ProfileReachSegmentType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">

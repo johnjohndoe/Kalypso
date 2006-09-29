@@ -119,7 +119,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="influentReachSegmentWspmTuhhSteadyStateMember"
+	<!--element name="influentReachSegmentWspmTuhhSteadyStateMember"
 		type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
 		substitutionGroup="wspm:reachSegmentMember">
 		<annotation>
@@ -134,9 +134,9 @@
 				<description>Influent string segments</description>
 			</documentation>
 		</annotation>
-	</element>
+	</element-->
 	<!-- TODO Überflüssig?, kann eventuell weg. -->
-	<element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType"
+	<!--element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType"
 		substitutionGroup="wspm:AbstractReachSegment">
 		<annotation>
 			<documentation xml:lang="de">
@@ -146,25 +146,9 @@
 				<description>???description</description>
 			</documentation>
 		</annotation>
-	</element>
+	</element-->
 	<!-- 
 	-->
-	<element name="profileReachSegmentWspmTuhhSteadyStateMember"
-		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType"
-		substitutionGroup="wspm:reachSegmentMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Profil-Strangsegmente</label>
-				<tooltip>Profil-Strangsegmente</tooltip>
-				<description>Profil-Strangsegmente</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>Profile reach segments</label>
-				<tooltip>Profile reach segments</tooltip>
-				<description>Profile reach segments</description>
-			</documentation>
-		</annotation>
-	</element>
 	<element name="ProfileReachSegmentWspmTuhhSteadyState"
 		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:ProfileReachSegment">
@@ -812,55 +796,19 @@
 	<!-- TODO: copy of wspm:ReachType, nothing is changed -->
 	<complexType name="ReachWspmTuhhSteadyStateType">
 		<complexContent>
-			<restriction base="wspm:ReachType">
-				<sequence>
-					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="gml:description"/>
-					<element ref="gml:name"/>
-					<element ref="wspm:waterBodyLinkMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Gewässer</label>
-								<tooltip>Übergeordnetes Gewässer</tooltip>
-								<description>Übergeordnetes Gewässer</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>River</label>
-								<tooltip>Superior river</tooltip>
-								<description>Superior river</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="waterAxis" type="gml:LineStringPropertyType">
-						<annotation>
-							<appinfo>This property is backuped by the observation (profileMember)
-								itself.</appinfo>
-							<documentation xml:lang="de">
-								<label>Gewässerachse</label>
-								<tooltip>(generierte) Gewässerachse</tooltip>
-								<description>(generierte) Gewässerachse</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>River axis</label>
-								<tooltip>(Generated) river axis</tooltip>
-								<description>(Generated) river axis</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="wspm:reachSegmentMember" minOccurs="0" maxOccurs="unbounded"/>
-					<!--  The tuhh reach is restricted to certain, tuhh specific, elements -->
+			<extension base="wspm:ReachType">
+					<!--  The tuhh reach should be restricted to certain, tuhh specific, elements -->
 					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">
 						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
 						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
 					</choice>
 					-->
-				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="InfluentReachSegmentWspmTuhhSteadyStatePropertyType">
+	<!--complexType name="InfluentReachSegmentWspmTuhhSteadyStatePropertyType">
 		<complexContent>
 			<restriction base="wspm:ReachSegmentPropertyType">
 				<sequence>
@@ -875,7 +823,7 @@
 				<sequence/>
 			</extension>
 		</complexContent>
-	</complexType>
+	</complexType-->
 	<complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
 		<complexContent>
 			<restriction base="wspm:ReachSegmentPropertyType">
@@ -983,7 +931,7 @@
 					<element name="doCalcBridges" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Brücken mitberechnen</label>
+								<label>Brücken mit berechnen</label>
 								<tooltip>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.</description>
 							</documentation>
@@ -997,7 +945,7 @@
 					<element name="doCalcBarrages" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wehre mitberechnen</label>
+								<label>Wehre mit berechnen</label>
 								<tooltip>falls aktiv, werden Wehre bei der Berechnung berücksichtigt.</tooltip>
 								<description>falls aktiv, werden Wehre bei der Berechnung berücksichtigt. </description>
 							</documentation>

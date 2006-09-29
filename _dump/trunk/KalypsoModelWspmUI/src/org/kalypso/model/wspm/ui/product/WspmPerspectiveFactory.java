@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.product;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.featureview.views.FeatureView;
 
 /**
  * @author Gernot
@@ -80,6 +81,8 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
 //    layout.addShowViewShortcut( IPageLayout.ID_PROBLEM_VIEW );
 //    layout.addShowViewShortcut( IPageLayout.ID_TASK_LIST );
 
+    layout.addShowViewShortcut( FeatureView.ID );
+    
 //    layout.addActionSet( IPageLayout.ID_NAVIGATE_ACTION_SET );
   }
 

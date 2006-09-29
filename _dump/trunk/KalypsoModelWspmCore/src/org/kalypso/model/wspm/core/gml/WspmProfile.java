@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
@@ -49,6 +51,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class WspmProfile
 {
+  public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
+
   private final Feature m_feature;
 
   public WspmProfile( final Feature feature )

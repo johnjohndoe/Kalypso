@@ -26,6 +26,14 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
+					<element name="sourceProperty" type="QName">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Quell-Attribut</label>
+								<tooltip>Name des Attributs der Quell-Datei</tooltip>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="assignmentMember" type="profass:AssignmentPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -131,7 +139,7 @@
 	<complexType name="PointPropertyPropertyType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>urn:ogc:gml:dict:kalypso:model:wspm:profile</kapp:documentReference>
+				<kapp:documentReference>urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents</kapp:documentReference>
 			</appinfo>
 		</annotation>
 		<sequence minOccurs="0" maxOccurs="0">

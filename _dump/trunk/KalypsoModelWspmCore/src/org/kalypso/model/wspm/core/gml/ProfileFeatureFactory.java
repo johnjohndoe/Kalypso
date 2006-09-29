@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class ProfileFeatureFactory implements IWspmConstants
 {
@@ -92,11 +92,11 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public static final String URN_PHENOMENON_BUILDING = "urn:ogc:phenomenon:wspm:building:";
 
-  public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_";
+  public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
-  private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_DEVIDER_";
+  private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
 
-  private static final String DICT_COMP_PROFILE_BUILDING_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profile#WSPM_BUILDING_";
+  private static final String DICT_COMP_PROFILE_BUILDING_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#";
 
   public static final QName QNAME_STATION = new QName( NS_WSPMPROF, "station" );
 
