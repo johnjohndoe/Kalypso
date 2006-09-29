@@ -186,7 +186,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
             }
 
             // und die ganze view refreshen!
-            viewer.refresh();
+            if( !viewer.getControl().isDisposed() )
+              viewer.refresh();
           }
           catch( final RuntimeException e )
           {

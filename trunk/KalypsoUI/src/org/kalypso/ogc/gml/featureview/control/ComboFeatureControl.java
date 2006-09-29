@@ -141,11 +141,16 @@ public class ComboFeatureControl extends AbstractFeatureControl
         final GMLWorkspace workspace = feature.getWorkspace();
 
         final Feature[] features = collectReferencableFeatures( workspace, feature, rt );
-        
+
         final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
 
         for( final Feature foundFeature : features )
-          m_entries.put( foundFeature, labelProvider.getText( foundFeature ) );
+        {
+          if( foundFeature instanceof XLinkedFeature_Impl )
+            m_entries.put( foundFeature, labelProvider.getText( foundFeature ) );
+          else
+            m_entries.put( foundFeature.getId(), labelProvider.getText( foundFeature ) );
+        }
       }
     }
   }
@@ -221,7 +226,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       m_ignoreNextUpdate = false;
       return;
     }
-    
+
     final Object currentFeatureValue = getCurrentFeatureValue();
 
     updateEntries( getFeatureTypeProperty() );
@@ -275,7 +280,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     final List<Feature> foundFeatures = new ArrayList<Feature>();
 
-    final IDocumentReference[] refs = rt.getDocumentReferences(  );
+    final IDocumentReference[] refs = rt.getDocumentReferences();
     for( final IDocumentReference ref : refs )
     {
       final GMLWorkspace workspace;
@@ -288,7 +293,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
         final IFeatureProvider provider = featureProviderFactory.createFeatureProvider( parentFeature, uri, "", "", "", "", "" );
         workspace = provider.getWorkspace();
       }
-      
+
       final CollectorVisitor collectorVisitor = new CollectorVisitor();
       final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
       workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );

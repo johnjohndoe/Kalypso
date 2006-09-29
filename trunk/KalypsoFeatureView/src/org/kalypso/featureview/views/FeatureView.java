@@ -136,6 +136,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FeatureView extends ViewPart implements ModellEventListener
 {
+  public static final String ID = "org.kalypso.featureview.views.FeatureView";
+
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
 
   /**
@@ -147,6 +149,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
    * Settings constant for show tables (value <code>FeatureView.STORE_SHOW_TABLES</code>).
    */
   private static final String STORE_SHOW_TABLES = "FeatureView.STORE_SHOW_TABLES"; //$NON-NLS-1$
+
 
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {

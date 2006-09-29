@@ -813,6 +813,11 @@
 			class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
+  <factory
+        adaptableType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
+        class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
+     <adapter type="org.eclipse.ui.IActionFilter"/>
+  </factory>
 	</extension>
 	<extension point="org.kalypso.contribs.eclipsercp.actionFilters">
 		<actionFilter
@@ -823,6 +828,10 @@
         class="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter"
         id="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter"
         targetType="org.kalypsodeegree.model.feature.Feature"/>
+  <actionFilter
+        class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
+        id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
+        targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />
