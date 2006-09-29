@@ -122,12 +122,13 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.NONE" );
+    text.setStyle( "SWT.BORDER" );
     text.setEditable( true );
     text.setProperty( qname );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.BEGINNING" );
+    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setGrabExcessHorizontalSpace( true );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 
@@ -248,7 +249,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
       if( cs != null )
       {
-        crs = crs = m_csAdapter.export( cs );
+        crs = m_csAdapter.export( cs );
 
         /* Der erste Eintrag war ein CS. */
         dbl_values = new double[str_values.length - 1];
@@ -281,7 +282,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
       if( cs != null )
       {
-        crs = crs = m_csAdapter.export( cs );
+        crs = m_csAdapter.export( cs );
         pos = GeometryFactory.createGM_Position( new double[] { 0.0 } );
       }
       else
