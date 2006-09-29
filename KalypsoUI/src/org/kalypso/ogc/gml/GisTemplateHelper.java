@@ -44,6 +44,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.Writer;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
@@ -61,6 +65,8 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.IActionBars;
 import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -71,11 +77,14 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
@@ -87,6 +96,10 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
+  public static final org.kalypso.template.types.ObjectFactory OF_TYPES = new org.kalypso.template.types.ObjectFactory();
+
+  public static final ObjectFactory OF_MAPVIEW = new ObjectFactory();
+
   public static final JAXBContext JC_GISMAP = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public static final JAXBContext JC_GISTABLE = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
@@ -171,6 +184,14 @@ public class GisTemplateHelper
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
     marshaller.marshal( modellTemplate, outStream );
+  }
+
+  public static void saveGisMapView( final Gismapview modellTemplate, final Writer writer, final String encoding ) throws JAXBException
+  {
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISMAP );
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+    marshaller.marshal( modellTemplate, writer );
   }
 
   public static GM_Envelope getBoundingBox( final Gismapview gisview )
@@ -277,11 +298,66 @@ public class GisTemplateHelper
     applyActionFilters( statusLineManager, gisview );
   }
 
-  private static void applyActionFilters( final IContributionManager manager, Gismapview gisview )
+  private static void applyActionFilters( final IContributionManager manager, final Gismapview gisview )
   {
     // TODO: read constraints from gisview
     // final IContributionItem item = manager.find( "org.kalypso.ui.editor.mapeditor.actions.PanMapActionDelegate" );
     // if( item != null )
     // item.setVisible( false );
   }
+
+  /**
+   * @param strictType
+   *          If true, use the real FeatureType of the first feature of the given collection to strictly type the layer.
+   */
+  public static Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
+  {
+    final Gismapview gismapview = OF_MAPVIEW.createGismapview();
+    final Layers layers = OF_MAPVIEW.createGismapviewLayers();
+    gismapview.setLayers( layers );
+
+    final List<StyledLayerType> layer = layers.getLayer();
+
+    for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
+    {
+      final Feature feature = entry.getKey();
+      final URL context = feature.getWorkspace().getContext();
+
+      final IRelationType rt = entry.getValue();
+
+      final String parentName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
+      final String parentLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+      final String layerName = parentName + " - " + parentLabel;
+      
+      final FeaturePath featurePathToParent = new FeaturePath( feature );
+
+      final Object property = feature.getProperty( rt );
+      String typeName = "";
+      if( strictType && property instanceof List )
+      {
+        final List list = (List) property;
+        if( !list.isEmpty() )
+        {
+          final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), (list).get( 0 ) );
+          typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]";
+        }
+      }
+
+      final String memberName = rt.getQName().getLocalPart() + typeName;
+
+      final FeaturePath featurePath = new FeaturePath( featurePathToParent, memberName );
+
+      final StyledLayerType layerType = OF_TYPES.createStyledLayerType();
+      layerType.setHref( context.toExternalForm() );
+      layerType.setFeaturePath( featurePath.toString() );
+      layerType.setLinktype( "gml" );
+      layerType.setName( layerName );
+      layerType.setVisible( true );
+
+      layer.add( layerType );
+    }
+
+    return gismapview;
+  }
+
 }

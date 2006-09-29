@@ -396,10 +396,10 @@ public class FileUtilities
    * Example:
    * 
    * <pre>
-   *   
-   *    test.foo -- test
-   *    robert.tt -- robert
    *    
+   *     test.foo -- test
+   *     robert.tt -- robert
+   *     
    * </pre>
    * 
    * @param fileName
@@ -522,5 +522,19 @@ public class FileUtilities
       return "";
 
     return path.substring( lastIndexOf + 1 );
+  }
+
+  /**
+   * Sets a certain suffix to the given file name. If the file name already has a suffix (that is a non-empty string
+   * after the last '.') it will be replaced.
+   * @param suffix The suffix without the point '.'
+   */
+  public static String setSuffix( final String fileName, final String suffix )
+  {
+    final int index = fileName.indexOf( '.' );
+    if( index == -1 )
+      return fileName + '.' + suffix;
+    
+    return fileName.substring( 0, index ) + suffix;
   }
 }

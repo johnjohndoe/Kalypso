@@ -234,22 +234,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
       if( parent == null )
         return;
       
-      final IFeatureType featureType = parent.getFeatureType();
-      final IPropertyType[] properties = featureType.getProperties();
-      for( final IPropertyType type : properties )
+      final IRelationType rt = FeatureHelper.findParentRelation( this );
+      if( rt.isList() )
       {
-        if( type instanceof IRelationType )
-        {
-          if( type.isList() )
-          {
-            final FeatureList list = (FeatureList) parent.getProperty( type );
-            if( list.contains( this ) )
-            {
-              list.invalidate( this );
-              break;
-            }
-          }
-        }
+        final FeatureList list = (FeatureList) parent.getProperty( rt );
+        list.invalidate( this );
       }
     }
   }

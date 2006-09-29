@@ -69,10 +69,10 @@ public class FeatureHelper
 
       final String propName = strings[0];
       final String nullValue = strings.length > 1 ? strings[1] : null;
-      
+
       final QName qname = QNameUtilities.createQName( propName );
       final Object property = feature.getProperty( qname );
-      
+
       if( property == null )
         return "" + nullValue;
 
@@ -100,14 +100,14 @@ public class FeatureHelper
       final String nullValue = strings.length > 2 ? strings[2] : null;
 
       final List list = (List) feature.getProperty( qname );
-      
-      if( listindex >= list.size())
+
+      if( listindex >= list.size() )
         return "" + nullValue;
 
       final Object propertyValue = list.get( listindex );
       if( propertyValue == null )
         return "" + nullValue;
-      
+
       return "" + propertyValue;
     }
 
@@ -683,7 +683,7 @@ public class FeatureHelper
     final Object value = parent.getProperty( propertyName );
     if( value instanceof Feature )
       return (Feature) value;
-    
+
     if( value instanceof String )
       return parent.getWorkspace().getFeature( (String) value );
 
@@ -810,5 +810,47 @@ public class FeatureHelper
     }
 
     return featureMap;
+  }
+
+  /**
+   * This methods finds the {@link IRelationType} of its parent, which contains the given feature.
+   * <p>
+   * Example: Feature A has a property 'child' which is a relation and contains feature b. So
+   * {@link #findParentRelation(b)} returns the relation type 'child'.
+   * 
+   * @return <code>null</code> if the feature has no parent or no property of its parent contains this feature.
+   * @throws NullPointerException
+   *           If the given <code>feature</code> is null
+   */
+  public static IRelationType findParentRelation( final Feature feature )
+  {
+    final Feature parent = feature.getParent();
+    if( parent == null )
+      return null;
+
+    final IFeatureType featureType = parent.getFeatureType();
+    final IPropertyType[] properties = featureType.getProperties();
+    for( final IPropertyType type : properties )
+    {
+      if( type instanceof IRelationType )
+      {
+        final IRelationType rt = (IRelationType) type;
+        if( type.isList() )
+        {
+          final FeatureList list = (FeatureList) parent.getProperty( rt );
+          if( list.contains( feature ) )
+            return rt;
+        }
+        else
+        {
+          final Object property = parent.getProperty( rt );
+          // REMARK: we directly test if it is the feature; linking to the feature is not enough
+          if( property == feature )
+            return rt;
+        }
+      }
+    }
+
+    return null;
   }
 }

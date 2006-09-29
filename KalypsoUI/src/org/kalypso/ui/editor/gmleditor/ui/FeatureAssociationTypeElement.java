@@ -31,13 +31,14 @@ package org.kalypso.ui.editor.gmleditor.ui;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuepfer
  */
-public class FeatureAssociationTypeElement
+public class FeatureAssociationTypeElement extends PlatformObject
 {
   private final IRelationType m_featureAssociattionTypeProp;
 

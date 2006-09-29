@@ -309,7 +309,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           if( value == null )
             continue;
 
-          if( value instanceof Feature )
+          if( value instanceof XLinkedFeature_Impl )
+          {
+            if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
+            {
+              final Feature f = getFeature( (String) value );
+              accept( fv, f, depth );
+            }
+          }
+          else if( value instanceof Feature )
           {
             final Feature f = (Feature) value;
             accept( fv, f, depth );
@@ -368,7 +376,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( id == null || id.length() == 0 )
       {
         id = createFeatureId( f.getFeatureType() );
-//        System.out.println( "Feature has no id: " + f );
+        // System.out.println( "Feature has no id: " + f );
       }
 
       // TODO: better generate new ids and remember wich ones are generated (because
