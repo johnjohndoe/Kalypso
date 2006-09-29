@@ -194,16 +194,13 @@ public class ObservationPlot extends XYPlot
 
       // HACK: damit immer zu mindest [0,1] als range gesetzt wird
       // z.Zt. nur für Niederschlag.
-      if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis.getType() ) )
+      if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis == null ? null : axis.getType() ) )
       {
         final NumberAxis na = (NumberAxis)vAxis;
         na.setAutoRangeMinimumSize( 1 );
 
         if( na instanceof NumberAxis2 )
         {
-          System.out.println( diagAxis.getDataType() );
-          System.out.println( axis.getType() );
-
           final NumberAxis2 na2 = (NumberAxis2)na;
           na2.setMin( new Double( 0 ) );
           na2.setMax( new Double( 1 ) );
