@@ -1,30 +1,30 @@
 package org.kalypso.model.wspm.ui.action;
 
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -33,6 +33,7 @@ import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -59,7 +60,7 @@ public class CreateProfileMapAction extends ActionDelegate
         {
           final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
           final Feature parentFeature = fate.getParentFeature();
-          
+
           selectedProfiles.put( parentFeature, fate.getAssociationTypeProperty() );
         }
       }
@@ -73,53 +74,39 @@ public class CreateProfileMapAction extends ActionDelegate
       return;
     }
 
-    /* Create an empty map with the selected layers */
-    final InputDialog dialog = new InputDialog( shell, "Karte erzeugen", "Bitte geben Sie den Kartennamen ein:", "Grundkarte", null );
-    if( !(dialog.open() == Window.OK) )
-      return;
-
-    final WorkspaceJob job = new WorkspaceJob( "Karte wird erzeugt" )
+    final UIJob uijob = new UIJob( "Open GML Editor" )
     {
       @Override
-      public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
-
-        final String mapName = dialog.getValue();
-        final Feature firstFeature = selectedProfiles.keySet().iterator().next();
-        final URL context = firstFeature.getWorkspace().getContext();
         try
         {
-          final String mapFileName = FileUtilities.setSuffix( mapName, "gmt" );
-          
-          final URL mapUrl = new URL( context, mapFileName );
-          final IFile file = ResourceUtilities.findFileFromURL( mapUrl );
+          final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
+          final StringWriter stringWriter = new StringWriter();
+          GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" );
+          stringWriter.close();
 
-          final SetContentHelper helper = new SetContentHelper()
-          {
-            @Override
-            protected void write( final OutputStreamWriter writer ) throws Throwable
-            {
-              GisTemplateHelper.saveGisMapView( gismapview, writer, writer.getEncoding() );
-            }
-          };
+          final IWorkbench workbench = PlatformUI.getWorkbench();
 
-          helper.setFileContents( file, false, true, monitor );
+          final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+          final IWorkbenchPage page = window.getActivePage();
+
+          final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+          final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
+          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", stringWriter.toString(), null ) );
+
+          page.openEditor( input, editorDescription.getId(), true );
         }
-        catch( final MalformedURLException e )
+        catch( final Exception e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          throw new CoreException( status );
+          return StatusUtilities.statusFromThrowable( e );
         }
 
         return Status.OK_STATUS;
       }
     };
-
-    job.setUser( true );
-    job.schedule();
-
-    // TODO: open map
+    uijob.setUser( true );
+    uijob.schedule();
   }
 
   private void addFeature( final Map<Feature, IRelationType> selectedProfiles, final Feature feature )
