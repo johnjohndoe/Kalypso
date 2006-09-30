@@ -159,7 +159,7 @@ public class URLActionFLOWSAddFilterToGMT extends AbstractURLActionAnalizeTheme
 
   private void addFilterToGMT( final HashMap<IKalypsoFeatureTheme, Filter> filters, final URL gmtURL, final IKalypsoFeatureTheme[] themes ) throws Exception
   {
-    final Unmarshaller unmarshaller = GisTemplateHelper.JC_GISMAP.createUnmarshaller();
+    final Unmarshaller unmarshaller = GisTemplateHelper.JC_GISMAPVIEW.createUnmarshaller();
     final InputSource isToGMT = new InputSource( new InputStreamReader( gmtURL.openStream() ) );
     final Gismapview mapview = (Gismapview) unmarshaller.unmarshal( isToGMT );
     final Layers mapViewLayers = mapview.getLayers();
@@ -181,7 +181,7 @@ public class URLActionFLOWSAddFilterToGMT extends AbstractURLActionAnalizeTheme
     ByteArrayInputStream bis = null;
     try
     {
-      final Marshaller marshaller = GisTemplateHelper.JC_GISMAP.createMarshaller();
+      final Marshaller marshaller = GisTemplateHelper.JC_GISMAPVIEW.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( mapview, bos );
       bis = new ByteArrayInputStream( bos.toByteArray() );
