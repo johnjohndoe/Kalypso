@@ -55,7 +55,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -747,9 +746,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         {
           l.selectionChanged( e );
         }
+
+        /**
+         * Overwritten because opening the message dialog here results in a NPE
+         * 
+         * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
+         */
+        @Override
+        public void handleException( final Throwable e )
+        {
+          e.printStackTrace();
+        }
       };
 
-      Platform.run( safeRunnable );
+      SafeRunnable.run( safeRunnable );
     }
   }
 

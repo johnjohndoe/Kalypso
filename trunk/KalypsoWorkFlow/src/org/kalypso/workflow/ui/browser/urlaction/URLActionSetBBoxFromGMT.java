@@ -50,6 +50,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.ExtentType;
@@ -97,7 +98,7 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       final URL urlTo = getWorkFlowContext().resolveURL( gmtURLto );
       final IFile gmtFromFile = ResourceUtilities.findFileFromURL( urlFrom );
       final IFile gmtToFile = ResourceUtilities.findFileFromURL( urlTo );
-      final Unmarshaller unmarshaller = GisTemplateHelper.JC_GISMAP.createUnmarshaller();
+      final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
       // open existing gmt to load bbox from
       final InputSource isfromGMT = new InputSource( new InputStreamReader( gmtFromFile.getContents(), gmtFromFile.getCharset() ) );
       final Gismapview mapviewfrom = (Gismapview) unmarshaller.unmarshal( isfromGMT );
@@ -106,7 +107,7 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       final Gismapview mapviewto = (Gismapview) unmarshaller.unmarshal( isToGMT );
       final Gismapview transformedGisMapView = transformExtent( mapviewfrom, mapviewto );
       // write change to file
-      final Marshaller marshaller = GisTemplateHelper.JC_GISMAP.createMarshaller();
+      final Marshaller marshaller = TemplateUtilitites.JC_GISMAPVIEW.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       marshaller.marshal( transformedGisMapView, bos );

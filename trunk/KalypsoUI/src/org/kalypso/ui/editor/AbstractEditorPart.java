@@ -96,7 +96,12 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     }
   };
 
-  protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+
+  /**
+   * This flag prevents reload on save.
+   */
+  private boolean m_isSaving = false;
 
   public AbstractEditorPart( )
   {
@@ -134,6 +139,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     {
       try
       {
+        m_isSaving = true;
         doSaveInternal( monitor, input );
         m_commandTarget.resetDirty();
         fireDirty();
@@ -143,6 +149,10 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
         e.printStackTrace();
 
         ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
+      }
+      finally
+      {
+        m_isSaving = false;
       }
     }
   }
@@ -336,14 +346,15 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
         // if its only a marker change, do not reload
-        if( delta.getFlags() != IResourceDelta.MARKERS  )
-        
-        // TODO: ask user?
-        // if( !m_isSaving
-        // && MessageDialog.openQuestion( getSite().getShell(),
-        // "FeatureEditor",
-        // "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
-        load();
+        if( delta.getFlags() != IResourceDelta.MARKERS )
+
+          // TODO: ask user?
+          // if( !m_isSaving
+          // && MessageDialog.openQuestion( getSite().getShell(),
+          // "FeatureEditor",
+          // "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
+          if( !m_isSaving )
+            load();
       }
     }
   }

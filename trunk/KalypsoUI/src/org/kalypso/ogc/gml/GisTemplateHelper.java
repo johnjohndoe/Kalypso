@@ -65,6 +65,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.IActionBars;
 import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -96,14 +97,6 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
-  public static final org.kalypso.template.types.ObjectFactory OF_TYPES = new org.kalypso.template.types.ObjectFactory();
-
-  public static final ObjectFactory OF_MAPVIEW = new ObjectFactory();
-
-  public static final JAXBContext JC_GISMAP = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  public static final JAXBContext JC_GISTABLE = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
-
   private GisTemplateHelper( )
   {
     // never instantiate this class
@@ -142,7 +135,7 @@ public class GisTemplateHelper
 
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = JC_GISMAP.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
     return (Gismapview) unmarshaller.unmarshal( is );
   }
 
@@ -174,23 +167,19 @@ public class GisTemplateHelper
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = JC_GISTABLE.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISTABLEVIEW.createUnmarshaller();
     return (Gistableview) unmarshaller.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream, final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISMAP );
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+    final Marshaller marshaller = TemplateUtilitites.createGismapviewMarshaller( encoding );
     marshaller.marshal( modellTemplate, outStream );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final Writer writer, final String encoding ) throws JAXBException
   {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( JC_GISMAP );
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+    final Marshaller marshaller = TemplateUtilitites.createGismapviewMarshaller( encoding );
     marshaller.marshal( modellTemplate, writer );
   }
 
@@ -312,12 +301,13 @@ public class GisTemplateHelper
    */
   public static Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
   {
-    final Gismapview gismapview = OF_MAPVIEW.createGismapview();
-    final Layers layers = OF_MAPVIEW.createGismapviewLayers();
+    final Gismapview gismapview = TemplateUtilitites.OF_GISMAPVIEW.createGismapview();
+    final Layers layers = TemplateUtilitites.OF_GISMAPVIEW.createGismapviewLayers();
     gismapview.setLayers( layers );
 
     final List<StyledLayerType> layer = layers.getLayer();
 
+    int count = 0;
     for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
     {
       final Feature feature = entry.getKey();
@@ -328,7 +318,7 @@ public class GisTemplateHelper
       final String parentName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
       final String parentLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
       final String layerName = parentName + " - " + parentLabel;
-      
+
       final FeaturePath featurePathToParent = new FeaturePath( feature );
 
       final Object property = feature.getProperty( rt );
@@ -347,15 +337,19 @@ public class GisTemplateHelper
 
       final FeaturePath featurePath = new FeaturePath( featurePathToParent, memberName );
 
-      final StyledLayerType layerType = OF_TYPES.createStyledLayerType();
+      final StyledLayerType layerType = TemplateUtilitites.OF_TYPES.createStyledLayerType();
       layerType.setHref( context.toExternalForm() );
       layerType.setFeaturePath( featurePath.toString() );
       layerType.setLinktype( "gml" );
       layerType.setName( layerName );
       layerType.setVisible( true );
+      layerType.setId( "ID_" + count++ );
 
       layer.add( layerType );
     }
+
+    if( layer.size() > 0 )
+      layers.setActive( layer.get( 0 ) );
 
     return gismapview;
   }

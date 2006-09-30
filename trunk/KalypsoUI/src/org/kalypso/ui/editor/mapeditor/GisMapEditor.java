@@ -102,6 +102,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, IExportableObjectFactory
 {
+  public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor";
+
   private GisMapOutlinePage m_outlinePage = null;
 
   private final MapPanel m_mapPanel;
