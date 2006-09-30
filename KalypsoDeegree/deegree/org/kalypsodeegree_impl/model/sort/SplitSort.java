@@ -196,6 +196,9 @@ public class SplitSort implements FeatureList
 
   public GM_Envelope getBoundingBox( )
   {
+    if( m_invalid )
+      resort();
+    
     if( m_rootContainer != null )
       return m_rootContainer.getEnvelope();
 
