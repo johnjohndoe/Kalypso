@@ -20,9 +20,13 @@
      <extension
            point="org.kalypso.deegree.functionProperty">
         <function
-              class="org.kalypsodeegree_impl.model.feature.ConstantFeaturePropertyFunction"
+              class="org.kalypsodeegree_impl.model.feature.function.ConstantFeaturePropertyFunction"
               id="org.kalypso.gmlschema.functionProperty.const"
               name="Constant"/>
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.CopyFeaturePropertyFunction"
+              id="org.kalypso.gml.functionProperty.copyProperty"
+              name="Copy Feature Property Function"/>
      </extension>
 
 </plugin>

@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.feature.function;
 
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
  * The constant property function which always returns the same value.

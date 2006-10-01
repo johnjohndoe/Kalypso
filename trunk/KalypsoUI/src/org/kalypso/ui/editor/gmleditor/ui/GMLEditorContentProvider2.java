@@ -40,7 +40,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -252,7 +251,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     if( parent instanceof Feature )
     {
       final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
-      final QName childName = QNameUtilities.fromString( segment.toString() );
+      final QName childName = QName.valueOf( segment.toString() );
       final Object[] children = getChildren( parent );
       for( int i = 0; i < children.length; i++ )
       {
