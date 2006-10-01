@@ -42,7 +42,7 @@
 		</editor>
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor"
 			contributorClass="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditorActionBarContributor"
-			default="true" extensions="xsd" icon="icons/sample.gif"
+			default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif"
 			id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor"
 			name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
 		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
@@ -69,7 +69,7 @@
 		</editor>
 		<editor
 			launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
-			icon="icons/sample.gif" default="true"
+			icon="icons/full/obj16/gml_file.gif" default="true"
 			name="%org.kalypso.ui.editorLauncher.GisTemplateLauncher"
 			id="org.kalypso.ui.editor.GisEditor" extensions="gml,shp">
 		</editor>
@@ -835,11 +835,14 @@
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />
-		<wizard canFinishEarly="false"
-			category="org.kalypso.ui.newwizards.kalypso"
-			class="org.kalypso.ui.wizard.NewGMLFileWizard" hasPages="true"
-			id="org.kalypso.ui.wizard.NewGMLFileWizard"
-			name="%org.kalypso.ui.wizard.NewGMLFileWizard.name">
+		<wizard
+        canFinishEarly="false"
+        category="org.kalypso.ui.newwizards.kalypso"
+        class="org.kalypso.ui.wizard.NewGMLFileWizard"
+        hasPages="true"
+        icon="icons/full/obj16/gml_file.gif"
+        id="org.kalypso.ui.wizard.NewGMLFileWizard"
+        name="%org.kalypso.ui.wizard.NewGMLFileWizard.name">
 			<description>
 				%org.kalypso.ui.wizard.NewGMLFileWizard.description
 			</description>

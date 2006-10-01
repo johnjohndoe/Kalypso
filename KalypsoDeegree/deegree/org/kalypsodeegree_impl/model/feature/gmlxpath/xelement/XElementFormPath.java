@@ -72,16 +72,17 @@ public class XElementFormPath extends AbstractXElement
   {
     final IFeatureType featureType = contextFeature.getFeatureType();
     
+    final QName qname = QName.valueOf( m_propName );
+
     if( featureTypeLevel )
     {
       // check featureType
-      if( "*".equals( m_propName ) || m_propName.equals( featureType.getQName().getLocalPart() ) )
+      if( "*".equals( m_propName ) || m_propName.equals( featureType.getQName().getLocalPart() ) || qname.equals( featureType.getQName() ) )
         return contextFeature;
       else
         return null;
     }
 
-    final QName qname = QNameUtilities.fromString( m_propName );
     final IPropertyType pt;
     if( qname == null )
       pt = featureType.getProperty( m_propName );
@@ -95,7 +96,8 @@ public class XElementFormPath extends AbstractXElement
     if( pt instanceof IRelationType )
     {
       if( value instanceof String )
-        return null; // xPath would not follow linked associations; why not??
+        return contextFeature.getWorkspace().getFeature( (String) value ); 
+
       return value;
     }
     return value;
