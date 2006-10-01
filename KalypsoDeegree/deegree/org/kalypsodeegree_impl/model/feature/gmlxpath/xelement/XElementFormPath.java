@@ -84,7 +84,7 @@ public class XElementFormPath extends AbstractXElement
     }
 
     final IPropertyType pt;
-    if( qname == null )
+    if( qname.getNamespaceURI().length() == 0 )
       pt = featureType.getProperty( m_propName );
     else
       pt = featureType.getProperty( qname );
