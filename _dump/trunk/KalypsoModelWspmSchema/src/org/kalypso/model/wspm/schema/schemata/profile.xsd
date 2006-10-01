@@ -36,7 +36,13 @@
 		<annotation>
 			<documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent benutzt um
 				Querprofil zu bearbeiten. Wir packen deswegen diese Information als Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und beinhaltet also die Tupeln. Sie
-				werden anhand von resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member definiert.</documentation>
+				werden anhand von resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member definiert.
+			</documentation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry"
+					kapp:property="prof:profileLocation"/>
+			</appinfo>
 		</annotation>
 		<complexContent>
 			<extension base="om:ObservationType">
@@ -45,6 +51,21 @@
 						<annotation>
 							<documentation xml:lang="de">Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
 							<documentation xml:lang="en">The profile stationing, important for editing cross sections.</documentation>
+						</annotation>
+					</element>
+					<element name="profileLocation" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backed by the profile-observation.</appinfo>
+							<documentation xml:lang="de">
+								<label>Profillinie</label>
+								<tooltip>Profillinie</tooltip>
+								<description>Profillinie</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile location</label>
+								<tooltip>Profile location</tooltip>
+								<description>Profile location</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">

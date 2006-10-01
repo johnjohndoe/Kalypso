@@ -18,6 +18,42 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.calcTuhhAction.tooltip"/>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               icon="icons/obj16/openProfile.gif"
+               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
+      </objectContribution>
+            <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
+            objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+         <filter
+               name="featureAssociationQname"
+               value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
+               id="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
+               label="Rauheiten zuweisen"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+               icon="icons/elcl16/createProfileMap.gif"
+               id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+               label="Profile in neuer Karte anzeigen"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               style="push"
+               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+      </objectContribution>
    </extension>
 
    <extension
@@ -136,5 +172,11 @@
       <configExtension
             configId="org.kalypso.model.product.configId"
             content="content/ext.xml"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profileFeatureProvider">
+      <profileFeatureProvider
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"
+            id="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"/>
    </extension>
 </plugin>

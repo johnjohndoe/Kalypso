@@ -40,48 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public abstract class WspmReach implements IWspmConstants
+public class ProfileFeatureProvider
 {
-  private final Feature m_reach;
-
-  public WspmReach( final Feature reach )
+  private ProfileFeatureProvider( )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
-
-    m_reach = reach;
+    // helper class, everything should be acessed static
   }
 
-  public String getName( )
+  /**
+   * Finds a {@link WspmProfile} from a given feature using the org.kalypso.model.wspm.core.profileFeatureProvider
+   * extension-point.
+   */
+  public static WspmProfile findProfile( final Feature feature )
   {
-    return NamedFeatureHelper.getName( m_reach );
-  }
+    final IProfileFeatureProvider[] profileFeatureProvider = KalypsoModelWspmCoreExtensions.getProfileFeatureProvider();
+    for( final IProfileFeatureProvider provider : profileFeatureProvider )
+    {
+      final WspmProfile profile = provider.getProfile( feature );
+      if( profile != null )
+        return profile;
+    }
 
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
+    return null;
   }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_reach;
-  }
-
 }

@@ -40,7 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.wizard;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
@@ -52,7 +59,7 @@ public class IntersectRoughnessWizard extends Wizard
 {
   private final Feature[] m_features;
 
-  private ArrayChooserPage m_chooserPage;
+  private ArrayChooserPage m_profileChooserPage;
 
   private GMLEditorLabelProvider2 m_chooserPageLabelProvider = new GMLEditorLabelProvider2();
 
@@ -68,14 +75,15 @@ public class IntersectRoughnessWizard extends Wizard
   public void addPages( )
   {
     /*
-     * - page to choose polygon-data - page to choose assignment-gml - page to choose further parameters (welche fliesszone, ...)
+     * - page to choose polygon-data - page to choose assignment-gml - page to choose further parameters (welche
+     * fliesszone, ...)
      */
 
-    m_chooserPage = new ArrayChooserPage( m_features, new Object[] {}, m_features, "profileFeaturesChooserPage", "Profile auswählen", null );
-    m_chooserPage.setLabelProvider( m_chooserPageLabelProvider );
-    m_chooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Rauheiten zugeweisen werden sollen." );
+    m_profileChooserPage = new ArrayChooserPage( m_features, new Object[] {}, m_features, "profileFeaturesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage.setLabelProvider( m_chooserPageLabelProvider );
+    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Rauheiten zugeweisen werden sollen." );
 
-    addPage( m_chooserPage );
+    addPage( m_profileChooserPage );
 
     super.addPages();
   }
@@ -90,16 +98,40 @@ public class IntersectRoughnessWizard extends Wizard
 
     super.dispose();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
   public boolean performFinish( )
   {
-    final Object[] choosen = m_chooserPage.getChoosen();
+    final Object[] choosen = m_profileChooserPage.getChoosen();
+    if( choosen.length == 0 )
+      return true;
 
-    // intersect as wanted
+    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
+        try
+        {
+          final RoughnessIntersector intersector = new RoughnessIntersector( choosen );
+          intersector.intersect( monitor );
+        }
+        catch( final Exception e )
+        {
+          throw new InvocationTargetException( e );
+        }
+        finally
+        {
+          monitor.done();
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    RunnableContextHelper.execute( getContainer(), false, true, runnable );
 
     return true;
   }

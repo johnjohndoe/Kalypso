@@ -69,15 +69,15 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.ReachSegmentStationComparator;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -361,9 +361,9 @@ public class WspWinExporter
 
   private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException, ProfilDataException
   {
-    final WspmReachProfileSegment[] segments = reach.getReachProfileSegments();
+    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 
-    Arrays.sort( segments, new ReachSegmentStationComparator( isDirectionUpstreams ) );
+    Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     PrintWriter zustWriter = null;
     PrintWriter psiWriter = null;
@@ -377,7 +377,7 @@ public class WspWinExporter
       psiWriter = new PrintWriter( new BufferedWriter( new FileWriter( psiFile ) ) );
 
       int fileCount = 0;
-      for( final WspmReachProfileSegment segment : segments )
+      for( final TuhhReachProfileSegment segment : segments )
       {
         final BigDecimal station = segment.getStation();
         final WspmProfile profileMember = segment.getProfileMember();

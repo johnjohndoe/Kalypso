@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget;
 
-
 public class KalypsoModelWspmUIExtensions
 {
   /** Only the Plugin may instantiate me */
@@ -60,8 +59,7 @@ public class KalypsoModelWspmUIExtensions
 
   public static IPointsTarget[] createProfilPointTargets( )
   {
-    
-    return  createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget",new IPointsTarget[0]);
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget", new IPointsTarget[0] );
   }
 
   public static IPointsSource[] createProfilPointSources( )
@@ -91,4 +89,5 @@ public class KalypsoModelWspmUIExtensions
 
     return targets.toArray( a );
   }
+  
 }

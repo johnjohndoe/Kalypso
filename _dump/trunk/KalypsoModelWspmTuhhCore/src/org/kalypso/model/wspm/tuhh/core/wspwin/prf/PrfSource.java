@@ -72,6 +72,8 @@ import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
+import com.vividsolutions.jts.algorithm.InteriorPointPoint;
+
 /**
  * @author kimwerner
  */

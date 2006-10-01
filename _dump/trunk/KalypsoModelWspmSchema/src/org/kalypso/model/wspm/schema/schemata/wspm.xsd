@@ -100,21 +100,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- same as waterBodyMember, but supports only linked waterBodies -->
-	<element name="waterBodyLinkMember" type="wspm:WaterBodyLinkPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Gewässer</label>
-				<tooltip>Gewässer</tooltip>
-				<description>Gewässer</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>River</label>
-				<tooltip>River</tooltip>
-				<description>River</description>
-			</documentation>
-		</annotation>
-	</element>
+
 	<element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -133,7 +119,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="reachMember" type="wspm:ReachPropertyType" substitutionGroup="gml:featureMember">
+	<element name="reachMember" type="wspm:ReachPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Gewässerstrang</label>
@@ -147,7 +133,8 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="Reach" type="wspm:ReachType" substitutionGroup="gml:_Feature">
+	
+	<element name="AbstractReach" type="wspm:AbstractReachType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang</name>
@@ -163,48 +150,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
-	-->
-	<element name="AbstractReachSegment" type="wspm:AbstractReachSegmentType" abstract="true"
-		substitutionGroup="gml:_Feature"/>
-	<!--element name="InfluentReachSegment" type="wspm:InfluentReachSegmentType"
-		substitutionGroup="wspm:AbstractReachSegment">
-		<annotation>
-			<documentation xml:lang="de">
-				<name>Zufluss-Strangsegment</name>
-				<label>Zufluss-Strangsegment</label>
-				<tooltip>Zufluss-Strangsegment</tooltip>
-				<description>Zufluss-Strangsegment</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<name>Influent string segment</name>
-				<label>Influent string segment</label>
-				<tooltip>Influent string segment</tooltip>
-				<description>Influent string segment</description>
-			</documentation>
-		</annotation>
-	</element-->
-	<element name="ProfileReachSegment" type="wspm:ProfileReachSegmentType"
-		substitutionGroup="wspm:AbstractReachSegment">
-		<annotation>
-			<documentation xml:lang="de">
-				<name>Profil-Strangsegment</name>
-				<label>Station km ${property:org.kalypso.model.wspm#station;-nicht gesetzt-}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-nicht gesetzt-}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm#station;-nicht
-				gesetzt-}</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<name>Profile string segment</name>
-				<label>Station km ${property:org.kalypso.model.wspm#station;-not set-}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm#station;-not set-}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm#station;-not
-				set-}</description>
-			</documentation>
-		</annotation>
-	</element>
-	<!-- 
-	-->
+
 	<element name="roughnessDefinitionCollectionMember"
 		type="wspm:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
 		<annotation>
@@ -404,193 +350,17 @@
 	<!-- 
 	-->
 	<complexType name="ReachPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="wspm:Reach"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="ReachType" abstract="false">
-		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
-				<sequence>
-					<element ref="wspm:waterBodyLinkMember">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Gewässer</label>
-								<tooltip>Übergeordnetes Gewässer</tooltip>
-								<description>Übergeordnetes Gewässer</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>River</label>
-								<tooltip>Superior river</tooltip>
-								<description>Superior river</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="waterAxis" type="gml:LineStringPropertyType">
-						<annotation>
-							<appinfo>This property is backuped by the observation (profileMember)
-								itself.</appinfo>
-							<documentation xml:lang="de">
-								<label>Gewässerachse</label>
-								<tooltip>(generierte) Gewässerachse</tooltip>
-								<description>(generierte) Gewässerachse</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>River axis</label>
-								<tooltip>(Generated) River axis</tooltip>
-								<description>(Generated) River axis</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="reachSegmentMember" type="wspm:ReachSegmentPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Gewässerstrangsegmente</label>
-				<tooltip>Gewässerstrangsegmente</tooltip>
-				<description>Gewässerstrangsegmente</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>River string segments</label>
-				<tooltip>River string segments</tooltip>
-				<description>River string segments</description>
-			</documentation>
-		</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<complexType name="ReachSegmentPropertyType">
-		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="wspm:AbstractReachSegment"/>
+		<sequence>
+			<element ref="wspm:AbstractReach"/>
 		</sequence>
 	</complexType>
+	
+	<complexType name="AbstractReachType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
 
-	<complexType name="AbstractReachSegmentType" abstract="true">
-		<complexContent>
-			<annotation>
-				<appinfo>We have two properties (line, markers) here, which are backuped by another
-					property (profileMember). The time of last synchronization is stored in
-					'cacheDate'</appinfo>
-			</annotation>
-			<extension base="wspmcommon:EmptyFeatureBaseType">
-				<sequence>
-					<element name="station" type="wspmcommon:stationDouble">
-						<annotation>
-							<appinfo>This property is backuped by the observation (profileMember)
-								itself.</appinfo>
-							<documentation xml:lang="de">
-								<label>Station km</label>
-								<tooltip>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</tooltip>
-								<description>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Station km</label>
-								<tooltip>Station in string, where the profile selected below will be placed.</tooltip>
-								<description>Station in string, where the profile selected below will be placed.</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!--complexType name="InfluentReachSegmentType">
-		<complexContent>
-			<annotation>
-				<appinfo>We have two properties (line, markers) here, which are backuped by another
-					property (profileMember). The time of last synchronization is stored in
-					'cacheDate'</appinfo>
-			</annotation>
-			<extension base="wspm:AbstractReachSegmentType">
-				<sequence>
-					<element name="location" type="gml:PointType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Position des Zulaufs</label>
-								<tooltip>Position des Zulaufs</tooltip>
-								<description>Position des Zulaufs</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Inflow location</label>
-								<tooltip>Inflow location</tooltip>
-								<description>Inflow location</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType-->
-	<complexType name="ProfileReachSegmentType">
-		<annotation>
-			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry"
-					kapp:property="wspm:profileLocation"/>
-			</appinfo>
-			<documentation>The profileLocation is in reality retrieved from the underlying
-			profile.</documentation>
-		</annotation>
-		<complexContent>
-			<extension base="wspm:AbstractReachSegmentType">
-				<sequence>
-					<element name="profileMember" type="wspm:ProfileLinkPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Profil</label>
-								<tooltip>Für Strangsegment verwendetes Profil</tooltip>
-								<description>Für Strangsegment verwendetes Profil</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Profile</label>
-								<tooltip>String segment profile</tooltip>
-								<description>String segment profile</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="profileLocation" type="gml:LineStringPropertyType">
-						<annotation>
-							<appinfo>This property is backed by profileMember, more explicit by the
-								referenced profile-observation.</appinfo>
-							<documentation xml:lang="de">
-								<label>Profillinie</label>
-								<tooltip>Profillinie</tooltip>
-								<description>Profillinie</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Profile location</label>
-								<tooltip>Profile location</tooltip>
-								<description>Profile location</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<appinfo>This property is backed by profileMember, more explicit by the
-								referenced profile-observation. This is more difficult than the line
-								property because, it depends on the profile, how many points we
-								have.</appinfo>
-							<documentation xml:lang="de">
-								<label>???marker</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
 	<complexType name="WaterBodyPropertyType">
 		<sequence minOccurs="0">
 			<element ref="wspm:WaterBody"/>

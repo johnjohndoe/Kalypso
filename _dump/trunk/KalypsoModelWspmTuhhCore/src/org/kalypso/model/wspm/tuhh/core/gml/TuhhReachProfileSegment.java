@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
 
@@ -46,6 +46,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -54,13 +56,13 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 /**
  * @author Belger
  */
-public class WspmReachProfileSegment implements IWspmConstants
+public class TuhhReachProfileSegment implements IWspmTuhhConstants
 {
-  public static final QName QNAME_PROFILEREACHSEGMENT = new QName( IWspmConstants.NS_WSPM, "ProfileReachSegment" );
+  public static final QName QNAME_PROFILEREACHSEGMENT = new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" );
 
   private final Feature m_reachSegment;
 
-  public WspmReachProfileSegment( final Feature reachSegment )
+  public TuhhReachProfileSegment( final Feature reachSegment )
   {
     if( !GMLSchemaUtilities.substitutes( reachSegment.getFeatureType(), QNAME_PROFILEREACHSEGMENT ) )
       throw new IllegalStateException( "Feature is no ProfileReachSegment" );
@@ -70,7 +72,7 @@ public class WspmReachProfileSegment implements IWspmConstants
 
   public void setProfileMember( final WspmProfile profileReference )
   {
-    m_reachSegment.setProperty( new QName( NS_WSPM, "profileMember" ), profileReference.getFeature().getId() );
+    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getFeature().getId() );
   }
 
   // Commented out, because not used by the tuhh-model
@@ -91,12 +93,12 @@ public class WspmReachProfileSegment implements IWspmConstants
 
   public BigDecimal getStation( )
   {
-    return (BigDecimal) m_reachSegment.getProperty( new QName( NS_WSPM, "station" ) );
+    return (BigDecimal) m_reachSegment.getProperty( new QName( NS_WSPM_TUHH, "station" ) );
   }
 
   public WspmProfile getProfileMember( )
   {
-    final String href = (String) m_reachSegment.getProperty( new QName( NS_WSPM, "profileMember" ) );
+    final String href = (String) m_reachSegment.getProperty( new QName( NS_WSPM_TUHH, "profileMember" ) );
     final GMLWorkspace workspace = m_reachSegment.getWorkspace();
     final Feature feature = workspace == null ? null : workspace.getFeature( href );
     return feature == null ?  null : new WspmProfile( feature );
@@ -104,17 +106,17 @@ public class WspmReachProfileSegment implements IWspmConstants
 
   public void setStation( final double station )
   {
-    m_reachSegment.setProperty( new QName( NS_WSPM, "station" ), new BigDecimal( station, STATION_MATH_CONTEXT ) );
+    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "station" ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
   }
 
   public void setGeometry( final GM_Curve curve )
   {
-    m_reachSegment.setProperty( new QName( NS_WSPM, "profileLocation" ), curve );
+    m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "profileLocation" ), curve );
   }
 
   public GM_Curve getGeometry( )
   {
-    final Object geomProp = m_reachSegment.getProperty( new QName( NS_WSPM, "profileLocation" ) );
+    final Object geomProp = m_reachSegment.getProperty( new QName( NS_WSPM_TUHH, "profileLocation" ) );
     if( geomProp instanceof GM_Curve )
     {
       return (GM_Curve) geomProp;

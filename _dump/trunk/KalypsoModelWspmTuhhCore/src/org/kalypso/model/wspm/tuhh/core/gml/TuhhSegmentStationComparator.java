@@ -38,50 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.model.wspm.tuhh.core.gml;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import java.math.BigDecimal;
+import java.util.Comparator;
 
 /**
- * @author Gernot Belger
+ * @author thuel2
  */
-public abstract class WspmReach implements IWspmConstants
+public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfileSegment>
 {
-  private final Feature m_reach;
+  private final boolean m_isDirectionUpstreams;
 
-  public WspmReach( final Feature reach )
+  public TuhhSegmentStationComparator( final boolean isDirectionUpstreams )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
-
-    m_reach = reach;
+    m_isDirectionUpstreams = isDirectionUpstreams;
   }
 
-  public String getName( )
+  /**
+   * @see java.util.Comparator#compare(T, T)
+   */
+  public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
   {
-    return NamedFeatureHelper.getName( m_reach );
-  }
+    final BigDecimal s1 = o1.getStation();
+    final BigDecimal s2 = o2.getStation();
 
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_reach;
+    if( s1 == null || s2 == null )
+      return 0;
+    
+    if( m_isDirectionUpstreams )
+      return s1.compareTo( s2 );
+    else
+      return s2.compareTo( s1 );
   }
 
 }

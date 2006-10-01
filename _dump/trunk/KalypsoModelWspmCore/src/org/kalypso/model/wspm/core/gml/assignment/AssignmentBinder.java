@@ -38,50 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.model.wspm.core.gml.assignment;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * Binding for Assignment-Gml
+ * 
  * @author Gernot Belger
  */
-public abstract class WspmReach implements IWspmConstants
+public class AssignmentBinder
 {
-  private final Feature m_reach;
+  private final GMLWorkspace m_assignmentWorkspace;
 
-  public WspmReach( final Feature reach )
+  public AssignmentBinder( final GMLWorkspace assignmentWorkspace )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
-
-    m_reach = reach;
+    m_assignmentWorkspace = assignmentWorkspace;
   }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( m_reach );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_reach;
-  }
-
+  
+  
 }

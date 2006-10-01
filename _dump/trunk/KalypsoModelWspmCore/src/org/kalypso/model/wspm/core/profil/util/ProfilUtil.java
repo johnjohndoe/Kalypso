@@ -217,7 +217,7 @@ public class ProfilUtil
 
   public static IProfilPoint findPoint( final IProfil profil, final double breite, final double delta )
   {
-    final IProfilPoint pkt = findNearestPoint( profil, breite, delta, POINT_PROPERTY.BREITE );
+    final IProfilPoint pkt = findNearestPoint( profil, breite );
     try
     {
       final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );

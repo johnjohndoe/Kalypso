@@ -147,7 +147,6 @@ public class WspmProject implements IWspmConstants
     wspmWaterBody.setName( name );
     wspmWaterBody.setDescription( "" );
     wspmWaterBody.setRefNr( "" );
-    wspmWaterBody.setCenterLine( null );
     wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     return wspmWaterBody;

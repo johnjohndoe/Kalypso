@@ -211,12 +211,12 @@
             objectClass="org.kalypsodeegree.model.feature.Feature">
          <filter
                name="featureType"
-               value="org.kalypso.model.wspm#ProfileReachSegment;org.kalypso.model.wspmprofile#Profile"/>
+               value="org.kalypso.model.wspmprofile#Profile"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               label="Profil anzeigen"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
       </objectContribution>
       <objectContribution
@@ -228,19 +228,19 @@
                label="Profile"/>
          <filter
                name="featureAssociationQname"
-               value="org.kalypso.model.wspm#AbstractReachSegment;org.kalypso.model.wspmprofile#Profile"/>
+               value="org.kalypso.model.wspmprofile#Profile"/>
          <action
                class="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
                id="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
                label="Rauheiten zuweisen"
-               menubarPath="wspmProfileActions"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
          <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                label="Profile in neuer Karte anzeigen"
-               menubarPath="wspmProfileActions"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
       </objectContribution>
@@ -317,5 +317,11 @@
               icon="icons/eview16/wsp16.gif"
               id="org.kalypso.model.wspm.ui.product.ProfileditorPerspective"
               name="%org.kalypso.model.wspm.ui.product.ProfileditorPerspective"/>
+     </extension>
+     <extension
+           point="org.kalypso.model.wspm.core.profileFeatureProvider">
+        <profileFeatureProvider
+              class="org.kalypso.model.wspm.core.gml.DefaultProfileFeatureProvider"
+              id="org.kalypso.model.wspm.core.gml.DefaultProfileFeatureProvider"/>
      </extension>
 </plugin>

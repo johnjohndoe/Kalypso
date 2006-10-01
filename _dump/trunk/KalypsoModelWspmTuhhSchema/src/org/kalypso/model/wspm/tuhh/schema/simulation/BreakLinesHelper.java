@@ -61,12 +61,12 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -97,7 +97,7 @@ public class BreakLinesHelper implements IWspmConstants
     // don't instantiate
   }
 
-  public static void createBreaklines( final WspmReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, Double epsThinning, final File breaklineFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
+  public static void createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, Double epsThinning, final File breaklineFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
@@ -108,7 +108,7 @@ public class BreakLinesHelper implements IWspmConstants
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
 
-      for( final WspmReachProfileSegment reach : reachProfileSegments )
+      for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
         if( geometry == null ) // ignore profiles without geometry
@@ -179,7 +179,7 @@ public class BreakLinesHelper implements IWspmConstants
     return curve;
   }
 
-  public static void createModelBoundary( final WspmReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final File file, final boolean useWsp ) throws GMLSchemaException, GM_Exception, InvocationTargetException, IOException, GmlSerializeException, ProfilDataException
+  public static void createModelBoundary( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final File file, final boolean useWsp ) throws GMLSchemaException, GM_Exception, InvocationTargetException, IOException, GmlSerializeException, ProfilDataException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
@@ -194,7 +194,7 @@ public class BreakLinesHelper implements IWspmConstants
       // we assume that all points have the same crs
 
       CS_CoordinateSystem crs = null;
-      for( final WspmReachProfileSegment reach : reachProfileSegments )
+      for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
         if( geometry == null ) // ignore profiles without geometry

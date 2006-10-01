@@ -12,10 +12,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,14 +65,12 @@ public class IntersectRoughnessAction extends ActionDelegate
 
   private void addFeature( final List<Feature> selectedProfiles, final Feature feature )
   {
-    final IFeatureType featureType = feature.getFeatureType();
-    if( GMLSchemaUtilities.substitutes( featureType, WspmProfile.QNAME_PROFILE ) )
-      selectedProfiles.add( feature );
-    else if( GMLSchemaUtilities.substitutes( featureType, WspmReachProfileSegment.QNAME_PROFILEREACHSEGMENT ) )
-    {
-      final Feature profileFeature = new WspmReachProfileSegment( feature ).getProfileMember().getFeature();
-      selectedProfiles.add( profileFeature );
-    }
+    final WspmProfile profile = ProfileFeatureProvider.findProfile( feature );
+    if( profile == null )
+      return;
+    
+    final Feature profileFeature = profile.getFeature();
+    selectedProfiles.add( profileFeature );
   }
 
   /**

@@ -25,11 +25,9 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -111,20 +109,14 @@ public class CreateProfileMapAction extends ActionDelegate
 
   private void addFeature( final Map<Feature, IRelationType> selectedProfiles, final Feature feature )
   {
-    final IFeatureType featureType = feature.getFeatureType();
-    if( GMLSchemaUtilities.substitutes( featureType, WspmProfile.QNAME_PROFILE ) )
-    {
-      final IRelationType rt = FeatureHelper.findParentRelation( feature );
-      if( rt != null )
-        selectedProfiles.put( feature.getParent(), rt );
-    }
-    else if( GMLSchemaUtilities.substitutes( featureType, WspmReachProfileSegment.QNAME_PROFILEREACHSEGMENT ) )
-    {
-      final Feature profileFeature = new WspmReachProfileSegment( feature ).getProfileMember().getFeature();
-      final IRelationType rt = FeatureHelper.findParentRelation( profileFeature );
-      if( rt != null )
-        selectedProfiles.put( feature.getParent(), rt );
-    }
+    final WspmProfile profile = ProfileFeatureProvider.findProfile( feature );
+    if( profile == null )
+      return;
+    
+    final Feature profileFeature = profile.getFeature();
+    final IRelationType rt = FeatureHelper.findParentRelation( profileFeature );
+    if( rt != null )
+      selectedProfiles.put( profileFeature.getParent(), rt );
   }
 
   /**

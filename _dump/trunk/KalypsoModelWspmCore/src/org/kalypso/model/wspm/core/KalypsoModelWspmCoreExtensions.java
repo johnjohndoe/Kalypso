@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -18,6 +19,8 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 /** Helper class to read extension points of this plugin. */
 public class KalypsoModelWspmCoreExtensions
 {
+  private static IProfileFeatureProvider[] PROFILE_FEATURE_PROVIDER = null;
+
   public static IProfilReparator[] createReaparatorRules( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -92,5 +95,33 @@ public class KalypsoModelWspmCoreExtensions
     }
 
     return map;
+  }
+  
+  public synchronized static IProfileFeatureProvider[] getProfileFeatureProvider(  )
+  {
+    if( PROFILE_FEATURE_PROVIDER != null )
+      return PROFILE_FEATURE_PROVIDER;
+    
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileFeatureProvider" );
+
+    final Collection<IProfileFeatureProvider> provider = new ArrayList<IProfileFeatureProvider>( elements.length );
+    for( int i = 0; i < elements.length; i++ )
+    {
+      final IConfigurationElement element = elements[i];
+      try
+      {
+        provider.add( (IProfileFeatureProvider) element.createExecutableExtension( "class" ) );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    
+    PROFILE_FEATURE_PROVIDER = provider.toArray( new IProfileFeatureProvider[provider.size()] );
+    
+    return PROFILE_FEATURE_PROVIDER;
   }
 }

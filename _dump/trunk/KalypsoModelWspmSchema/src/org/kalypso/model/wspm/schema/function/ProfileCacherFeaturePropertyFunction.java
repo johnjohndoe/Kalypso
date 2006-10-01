@@ -45,8 +45,6 @@ import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -108,15 +106,16 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     try
     {
-      final WspmReachProfileSegment segment = new WspmReachProfileSegment( feature );
+//      final WspmReachProfileSegment segment = new WspmReachProfileSegment( feature );
+//
+//      final WspmProfile profileMember = segment.getProfileMember();
+//      if( profileMember == null )
+//        return currentValue;
+//      final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+  
+//      segment.setStation( profil.getStation() );
 
-      final WspmProfile profileMember = segment.getProfileMember();
-      if( profileMember == null )
-        return currentValue;
-
-      final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-
-      segment.setStation( profil.getStation() );
+      final IProfil profil = ProfileFeatureFactory.toProfile( feature );
 
       final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
       final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;

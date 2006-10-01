@@ -40,48 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot Belger
+ * @author Gernot
+ *
  */
-public abstract class WspmReach implements IWspmConstants
+public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
 {
-  private final Feature m_reach;
-
-  public WspmReach( final Feature reach )
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
+   */
+  public WspmProfile getProfile( final Feature feature )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
-
-    m_reach = reach;
-  }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( m_reach );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_reach;
+    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) )
+      return new WspmProfile( feature );
+    
+    return null;
   }
 
 }

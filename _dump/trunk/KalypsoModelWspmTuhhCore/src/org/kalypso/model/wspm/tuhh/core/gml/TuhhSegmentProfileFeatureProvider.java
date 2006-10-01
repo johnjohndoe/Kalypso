@@ -38,50 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.model.wspm.tuhh.core.gml;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
+ *
  */
-public abstract class WspmReach implements IWspmConstants
+public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
-  private final Feature m_reach;
-
-  public WspmReach( final Feature reach )
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
+   */
+  public WspmProfile getProfile( final Feature feature )
   {
-    // dont check, we are abstract; maybe check if qname substitutes?
-    // if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-    // throw new IllegalStateException( "Feature is of wrong type: " + reach );
+    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
+    {
+      final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( feature );
+      return segment.getProfileMember();
+    }
 
-    m_reach = reach;
-  }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( m_reach );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_reach, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_reach );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_reach, desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_reach;
+    return null;
   }
 
 }

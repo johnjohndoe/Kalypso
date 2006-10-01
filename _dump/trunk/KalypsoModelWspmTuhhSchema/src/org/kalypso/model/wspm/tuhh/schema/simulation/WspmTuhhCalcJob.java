@@ -56,9 +56,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.model.wspm.core.gml.WspmReachProfileSegment;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.observation.IObservation;
@@ -305,7 +305,7 @@ public class WspmTuhhCalcJob implements ISimulation
               final TupleResult result = lengthSectionObs.getResult();
               final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
               final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
-              final WspmReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
+              final TuhhReachProfileSegment[] reachProfileSegments = calculation.getReach().getReachProfileSegments();
 
               //
               // Diagramm

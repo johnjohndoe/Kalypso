@@ -101,19 +101,19 @@
 	<!-- 
 	-->
 	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
-		substitutionGroup="wspm:Reach">
+		substitutionGroup="wspm:AbstractReach">
 		<annotation>
 			<documentation xml:lang="de">
-				<name>Gewässerstrang - stationär (TU-HH)</name>
-				<label>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name;-Name nicht gesetzt-}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-}</description>
+				<name><![CDATA[ Gewässerstrang - stationär (TU-HH) ]]></name>
+				<label><![CDATA[ ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-} ]]></label>
+				<tooltip><![CDATA[ ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-} ]]></tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-} ]]></description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>River string - steady (TU-HH)</name>
-				<label>${property:http://www.opengis.net/gml#name}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description}</description>
+				<name><![CDATA[ River string - steady (TU-HH) ]]></name>
+				<label><![CDATA[ ${listProperty:http://www.opengis.net/gml#name;0;-no name-} ]]></label>
+				<tooltip><![CDATA[ ${listProperty:http://www.opengis.net/gml#name;0;-no name-} ]]></tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-} ]]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -151,19 +151,19 @@
 	-->
 	<element name="ProfileReachSegmentWspmTuhhSteadyState"
 		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
-		substitutionGroup="wspm:ProfileReachSegment">
+		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil-Strangsegment - stationär (TU-HH)</name>
-				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
+				<label>Station km ${property:org.kalypso.model.wspm.tuhh#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm.tuhh#station}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Profile string segment - steady (TU-HH)</name>
-				<label>Station km ${property:org.kalypso.model.wspm#station}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm#station}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm#station}</description>
+				<label>Station km ${property:org.kalypso.model.wspm.tuhh#station}</label>
+				<tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station}</tooltip>
+				<description>Station km ${property:org.kalypso.model.wspm.tuhh#station}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -793,80 +793,197 @@
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
 
-	<!-- TODO: copy of wspm:ReachType, nothing is changed -->
 	<complexType name="ReachWspmTuhhSteadyStateType">
+		<!-- TODO: gewässer is function property: just link to parent -->
 		<complexContent>
-			<extension base="wspm:ReachType">
-					<!--  The tuhh reach should be restricted to certain, tuhh specific, elements -->
-					<!-- TODO: drüber nachdenken und richtig machen (Import!!!)					<choice minOccurs="0" maxOccurs="unbounded">
-						<element ref="tuhh:influentReachSegmentWspmTuhhSteadyStateMember"/>
-						<element ref="tuhh:profileReachSegmentWspmTuhhSteadyStateMember"/>
-					</choice>
-					-->
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
-	<!--complexType name="InfluentReachSegmentWspmTuhhSteadyStatePropertyType">
-		<complexContent>
-			<restriction base="wspm:ReachSegmentPropertyType">
+			<extension base="wspm:AbstractReachType">
 				<sequence>
-					<element ref="tuhh:InfluentReachSegmentWspmTuhhSteadyState"/>
+					<element name="waterBodyLinkMember" type="wspm:WaterBodyLinkPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässer</label>
+								<tooltip>Übergeordnetes Gewässer</tooltip>
+								<description>Übergeordnetes Gewässer</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>River</label>
+								<tooltip>Superior river</tooltip>
+								<description>Superior river</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="waterAxis" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember)
+								itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>Gewässerachse</label>
+								<tooltip>(generierte) Gewässerachse</tooltip>
+								<description>(generierte) Gewässerachse</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>River axis</label>
+								<tooltip>(Generated) River axis</tooltip>
+								<description>(Generated) River axis</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="reachSegmentMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewässerstrangsegmente</label>
+								<tooltip>Gewässerstrangsegmente</tooltip>
+								<description>Gewässerstrangsegmente</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>River string segments</label>
+								<tooltip>River string segments</tooltip>
+								<description>River string segments</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="InfluentReachSegmentWspmTuhhSteadyStateType">
-		<complexContent>
-			<extension base="wspm:InfluentReachSegmentType">
-				<sequence/>
 			</extension>
 		</complexContent>
-	</complexType-->
+	</complexType>
+
 	<complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
-		<complexContent>
-			<restriction base="wspm:ReachSegmentPropertyType">
-				<sequence>
-					<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState"/>
+		</sequence>
 	</complexType>
+	
 	<complexType name="ProfileReachSegmentWspmTuhhSteadyStateType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.gml.functionProperty.copyProperty"
+					kapp:property="tuhh:station">
+					<kapp:parameter>
+						<!-- TODO -->
+						<kapp:name>xpath</kapp:name>
+						<kapp:value>{org.kalypso.model.wspm.tuhh}profileMember/{org.kalypso.model.wspmprofile}Profile/{org.kalypso.model.wspmprofile}station</kapp:value>
+					</kapp:parameter>					
+					<kapp:parameter>
+						<kapp:name>copySet</kapp:name>
+						<kapp:value>false</kapp:value>
+					</kapp:parameter>					
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.gml.functionProperty.copyProperty"
+					kapp:property="tuhh:profileLocation">
+					<kapp:parameter>
+						<!-- TODO -->
+						<kapp:name>xpath</kapp:name>
+						<kapp:value>{org.kalypso.model.wspm.tuhh}profileMember/{org.kalypso.model.wspmprofile}Profile/{org.kalypso.model.wspmprofile}profileLocation</kapp:value>
+					</kapp:parameter>					
+					<kapp:parameter>
+						<kapp:name>copySet</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>					
+				</kapp:functionProperty>
+			</appinfo>
+			<documentation>The profileLocation is in reality retrieved from the underlying
+				profile.</documentation>
+		</annotation>
+		
 		<complexContent>
-			<extension base="wspm:ProfileReachSegmentType">
+			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
+					<element name="station" type="wspmcommon:stationDouble">
+						<annotation>
+							<appinfo>This property is backuped by the observation (profileMember)
+								itself.</appinfo>
+							<documentation xml:lang="de">
+								<label>Station km</label>
+								<tooltip>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</tooltip>
+								<description>Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Station km</label>
+								<tooltip>Station in string, where the profile selected below will be placed.</tooltip>
+								<description>Station in string, where the profile selected below will be placed.</description>
+							</documentation>
+						</annotation>
+					</element>
+					
+					<element name="profileMember" type="wspm:ProfileLinkPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Profil</label>
+								<tooltip>Für Strangsegment verwendetes Profil</tooltip>
+								<description>Für Strangsegment verwendetes Profil</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile</label>
+								<tooltip>String segment profile</tooltip>
+								<description>String segment profile</description>
+							</documentation>
+						</annotation>
+					</element>
+					
+					<element name="profileLocation" type="gml:LineStringPropertyType">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the
+								referenced profile-observation.</appinfo>
+							<documentation xml:lang="de">
+								<label>Profillinie</label>
+								<tooltip>Profillinie</tooltip>
+								<description>Profillinie</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile location</label>
+								<tooltip>Profile location</tooltip>
+								<description>Profile location</description>
+							</documentation>
+						</annotation>
+					</element>
+
+<!--					
+					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>This property is backed by profileMember, more explicit by the
+								referenced profile-observation. This is more difficult than the line
+								property because, it depends on the profile, how many points we
+								have.</appinfo>
+							<documentation xml:lang="de">
+								<label>???marker</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+-->				
 					<!-- Distances are commented out, because they are not yet (?)
-					used by the tuhh steady-state flow model -->
+						used by the tuhh steady-state flow model -->
 					<!--
-					<element name="distanceL" type="double">
+						<element name="distanceL" type="double">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>???distanceL</label>
-								<tooltip>???tooltip</tooltip>
-								<description>Abstand UW??? linkes Vorland</description>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>???distanceL</label>
+						<tooltip>???tooltip</tooltip>
+						<description>Abstand UW??? linkes Vorland</description>
+						</documentation>
 						</annotation>
-					</element>
-					<element name="distanceM" type="double">
+						</element>
+						<element name="distanceM" type="double">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>???distanceM</label>
-								<tooltip>???tooltip</tooltip>
-								<description>Abstand UW??? Hauptöffnung</description>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>???distanceM</label>
+						<tooltip>???tooltip</tooltip>
+						<description>Abstand UW??? Hauptöffnung</description>
+						</documentation>
 						</annotation>
-					</element>
-					<element name="distanceR" type="double">
+						</element>
+						<element name="distanceR" type="double">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>???distanceR</label>
-								<tooltip>???tooltip</tooltip>
-								<description>Abstand UW??? rechtes Vorland</description>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>???distanceR</label>
+						<tooltip>???tooltip</tooltip>
+						<description>Abstand UW??? rechtes Vorland</description>
+						</documentation>
 						</annotation>
-					</element>
+						</element>
 					-->
 				</sequence>
 			</extension>

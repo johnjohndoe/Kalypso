@@ -40,36 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
-public class ReachSegmentStationComparator implements Comparator<WspmReachProfileSegment>
+public interface IProfileFeatureProvider
 {
-  private final boolean m_isDirectionUpstreams;
-
-  public ReachSegmentStationComparator( final boolean isDirectionUpstreams )
-  {
-    m_isDirectionUpstreams = isDirectionUpstreams;
-  }
-
-  /**
-   * @see java.util.Comparator#compare(T, T)
-   */
-  public int compare( final WspmReachProfileSegment o1, final WspmReachProfileSegment o2 )
-  {
-    final BigDecimal s1 = o1.getStation();
-    final BigDecimal s2 = o2.getStation();
-
-    if( s1 == null || s2 == null )
-      return 0;
-    
-    if( m_isDirectionUpstreams )
-      return s1.compareTo( s2 );
-    else
-      return s2.compareTo( s1 );
-  }
-
+  public WspmProfile getProfile( final Feature feature );
 }
