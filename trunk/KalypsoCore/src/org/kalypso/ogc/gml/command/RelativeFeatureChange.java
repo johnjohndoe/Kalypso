@@ -137,13 +137,13 @@ public class RelativeFeatureChange extends FeatureChange
    * {@link java.math.BigDecimal}. The result will be of the same type as the first operand.
    */
   @SuppressWarnings("unchecked")
-  private <T extends Number> T calculate( final T firstOperand, final double secondOperand, final String bigTypesMethodName )
+  private <T extends Number> Number calculate( final T firstOperand, final double secondOperand, final String bigTypesMethodName )
   {
-    final T result;
-    final Class< ? extends T> valueClass = firstOperand.getClass();
+    final Number result;
+    final Class< ? extends Number> valueClass = firstOperand.getClass();
     if( firstOperand instanceof BigDecimal || firstOperand instanceof BigInteger )
     {
-      final BigDecimal typedSecondOperand = castDoubleAsType( BigDecimal.class, secondOperand );
+      final Number typedSecondOperand = castDoubleAsType( BigDecimal.class, secondOperand );
       final BigDecimal typedFirstOperand = new BigDecimal( firstOperand.toString() );
       final BigDecimal bigDecimalResult;
       try
@@ -157,12 +157,12 @@ public class RelativeFeatureChange extends FeatureChange
       }
       if( firstOperand instanceof BigInteger )
       {
-        result = (T) bigDecimalResult.toBigInteger();
+        result = bigDecimalResult.toBigInteger();
       }
       else
       // firstOperand instanceof BigDecimal
       {
-        result = (T) bigDecimalResult;
+        result = bigDecimalResult;
       }
     }
     else
@@ -182,12 +182,12 @@ public class RelativeFeatureChange extends FeatureChange
    * cast as a long are tried. If both strings are not of an appropriate format, a {@link NumberFormatException} will be
    * thrown. If any other error occurs, an {@link IllegalArgumentException} will be thrown.
    */
-  private <T extends Number> T castDoubleAsType( final Class<T> type, final double doubleValue ) throws NumberFormatException
+  private <T extends Number> Number castDoubleAsType( final Class<? extends Number> type, final double doubleValue ) throws NumberFormatException
   {
-    T result;
+    Number result;
     try
     {
-      final Constructor<T> stringConstructor = type.getConstructor( String.class );
+      final Constructor<? extends Number> stringConstructor = type.getConstructor( String.class );
       try
       {
         result = stringConstructor.newInstance( "" + doubleValue );
