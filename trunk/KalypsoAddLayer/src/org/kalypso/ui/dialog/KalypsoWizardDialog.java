@@ -1,10 +1,3 @@
-package org.kalypso.ui.dialog;
-
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,19 +38,23 @@ import org.eclipse.swt.widgets.Shell;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.dialog;
 
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
+
+/**
+ * @author kuepfer
+ */
 public class KalypsoWizardDialog extends WizardDialog
 {
-
-  /*
-   * @author kuepfer
-   */
   public KalypsoWizardDialog( Shell parentShell, IWizard newWizard )
   {
-
     super( parentShell, newWizard );
+
     final Point size = parentShell.getSize();
     setMinimumPageSize( (int) (size.x * 0.5), (int) (size.y * 0.4) );
   }
-
 }
