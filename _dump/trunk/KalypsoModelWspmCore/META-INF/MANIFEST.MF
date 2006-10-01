@@ -9,6 +9,7 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml,
+ org.kalypso.model.wspm.core.gml.assignment,
  org.kalypso.model.wspm.core.profil,
  org.kalypso.model.wspm.core.profil.changes,
  org.kalypso.model.wspm.core.profil.impl,

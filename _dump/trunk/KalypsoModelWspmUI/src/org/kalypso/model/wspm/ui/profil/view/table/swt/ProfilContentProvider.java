@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ProfilContentProvider implements IStructuredContentProvider, IResourceChangeListener
 {
@@ -173,6 +173,10 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
           m_markerIndex.put( point, markerList );
         }
       }
+    }
+    catch( final IndexOutOfBoundsException ioobe )
+    {
+      ioobe.printStackTrace();
     }
     catch( final CoreException e )
     {

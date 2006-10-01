@@ -67,7 +67,6 @@ public interface IWspmConstants
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary";
 
-
   // TODO: get number of fractions digits from gml-schema
   public static final MathContext STATION_MATH_CONTEXT = new MathContext( 4 );
 

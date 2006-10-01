@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.ui.wizard;
 
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -51,17 +53,27 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Gernot Belger
@@ -77,46 +89,91 @@ public class RoughnessIntersector
 
   public void intersect( final IProgressMonitor monitor ) throws Exception
   {
+    monitor.beginTask( "Rauheiten zuweisen - ", 2 + m_profileFeatures.length );
+
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
     /* Load assignment */
+    monitor.subTask( "Zuordnungen werden geladen" );
     final IFile assignmentFile = workspace.getRoot().getFile( new Path( "1D/Zuordnungen/assignment.gml" ) );
     final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
-    
+
     final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
-    // wrap it into binding class
+    final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
+    monitor.worked( 1 );
 
     /* get polygones */
+    monitor.subTask( "Polygonthema wird geladen" );
     final IFile polygonFile = workspace.getRoot().getFile( new Path( "1D/maﬂnahmen.gml" ) );
     final URL polygonUrl = ResourceUtilities.createURL( polygonFile );
-    
+
     final GMLWorkspace polygoneWorkspace = GmlSerializer.createGMLWorkspace( polygonUrl, null );
 
     final GMLXPath xpathToPolygoneFeatures = new GMLXPath( "Methods/methodMember" );
     final FeatureList polygoneFeatures = (FeatureList) GMLXPathUtilities.query( xpathToPolygoneFeatures, polygoneWorkspace );
 
     final IFeatureType featureType = polygoneWorkspace.getGMLSchema().getFeatureType( new QName( "org.kalypso.informdss.variants.methods", "StructureData" ) );
-    final IPropertyType property = featureType.getProperty( new QName( "org.kalypso.informdss.variants.methods", "polygon" ) );
-    
+    final IPropertyType polygoneGeoPT = featureType.getProperty( new QName( "org.kalypso.informdss.variants.methods", "polygon" ) );
+    final IPropertyType polygoneValuePT = featureType.getProperty( new QName( "org.kalypso.informdss.variants.methods", "name" ) );
+
+    monitor.worked( 1 );
+
     /* apply polygone data to profile data */
     for( final Object object : m_profileFeatures )
     {
       final Feature profileFeature = (Feature) object;
-      
       final IProfil profil = ProfileFeatureFactory.toProfile( profileFeature );
-      
+
+      final String label = FeatureHelper.getAnnotationValue( profileFeature, IAnnotation.ANNO_LABEL );
+      monitor.subTask( label );
+
       final LinkedList<IProfilPoint> points = profil.getPoints();
       for( final IProfilPoint point : points )
       {
-        // get location
-        
-        // find polygon for location
-        
-        // find assignment for polygon
-        
-        // apply assignment to point properties
-        
+        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( point );
+        final Geometry jtsPoint = JTSAdapter.export( geoPoint );
+
+        /* find polygon for location */
+        final List<Object> foundPolygones = polygoneFeatures.query( geoPoint.getPosition(), null );
+        for( final Object polyObject : foundPolygones )
+        {
+          final Feature polygoneFeature = (Feature) polyObject;
+          final GM_Surface surface = (GM_Surface) polygoneFeature.getProperty( polygoneGeoPT );
+
+          final Geometry jtsSurface = JTSAdapter.export( surface );
+          if( jtsSurface.contains( jtsPoint ) )
+          {
+            final Object polygoneValue = polygoneFeature.getProperty( polygoneValuePT );
+            if( polygoneValue != null )
+            {
+              // find assignment for polygon
+              final Map<String, Double> assignments = assignment.getAssignmentsFor( polygoneValue.toString() );
+              // apply assignment to point properties
+              for( final Map.Entry<String, Double> entry : assignments.entrySet() )
+              {
+                final String componentId = entry.getKey();
+                final Double newValue = entry.getValue();
+
+                if( newValue != null )
+                {
+                  final POINT_PROPERTY pp = ProfileFeatureFactory.pointPropertyFromComponentId( componentId );
+                  if( pp != null )
+                  {
+                    profil.addPointProperty( pp );
+                    
+                    point.setValueFor( pp, newValue );
+                  }
+                }
+              }
+            }
+            break;
+          }
+        }
       }
+      
+      ProfileFeatureFactory.toFeature( profil, profileFeature );
+      
+      monitor.worked( 1 );
     }
   }
 

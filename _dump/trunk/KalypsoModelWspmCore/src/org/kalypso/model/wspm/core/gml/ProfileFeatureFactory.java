@@ -323,27 +323,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     {
       final String id = component.getId();
 
-      final String name;
-      final boolean devider;
-      if( id.startsWith( DICT_COMP_PROFILE_DEVIDER_PREFIX ) )
+      final POINT_PROPERTY pp = pointPropertyFromComponentId( id );
+      if( pp != null )
       {
-        name = id.substring( DICT_COMP_PROFILE_DEVIDER_PREFIX.length() );
-        devider = true;
-      }
-      else if( id.startsWith( DICT_COMP_PROFILE_PREFIX ) )
-      {
-        name = id.substring( DICT_COMP_PROFILE_PREFIX.length() );
-        devider = false;
-      }
-      else
-      {
-        name = id;
-        devider = false;
-      }
-
-      if( devider == false )
-      {
-        final POINT_PROPERTY pp = IProfilPoint.POINT_PROPERTY.valueOf( name );
         if( pp == POINT_PROPERTY.RAUHEIT )
         {
           final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( component.getUnit() );
@@ -411,6 +393,32 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
 
     return profil;
+  }
+  
+  public static POINT_PROPERTY pointPropertyFromComponentId( final String id )
+  {
+    final String name;
+    final boolean devider;
+    if( id.startsWith( DICT_COMP_PROFILE_DEVIDER_PREFIX ) )
+    {
+      name = id.substring( DICT_COMP_PROFILE_DEVIDER_PREFIX.length() );
+      devider = true;
+    }
+    else if( id.startsWith( DICT_COMP_PROFILE_PREFIX ) )
+    {
+      name = id.substring( DICT_COMP_PROFILE_PREFIX.length() );
+      devider = false;
+    }
+    else
+    {
+      name = id;
+      devider = false;
+    }
+
+    if( devider == false )
+      return IProfilPoint.POINT_PROPERTY.valueOf( name );
+
+    return null;
   }
 
   public static Double getProfileStation( final Feature profileFeature )

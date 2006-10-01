@@ -8,10 +8,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
@@ -57,9 +57,11 @@ public class IntersectRoughnessAction extends ActionDelegate
       return;
     }
 
-    final IWizard intersectwizard = new IntersectRoughnessWizard( selectedProfiles.toArray( new Feature[selectedProfiles.size()] ) );
+    final IWizard intersectWizard = new IntersectRoughnessWizard( selectedProfiles.toArray( new Feature[selectedProfiles.size()] ) );
+
     /* show intersection wizard */
-    final WizardDialog dialog = new WizardDialog( shell, intersectwizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, intersectWizard );
+    dialog.setRememberSize( true );
     dialog.open();
   }
 
@@ -68,7 +70,7 @@ public class IntersectRoughnessAction extends ActionDelegate
     final WspmProfile profile = ProfileFeatureProvider.findProfile( feature );
     if( profile == null )
       return;
-    
+
     final Feature profileFeature = profile.getFeature();
     selectedProfiles.add( profileFeature );
   }

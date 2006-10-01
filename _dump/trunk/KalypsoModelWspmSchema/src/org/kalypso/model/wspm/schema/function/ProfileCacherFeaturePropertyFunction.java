@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.function;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -51,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -63,15 +65,15 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  private GeoTransformer m_transformer;
+  private static GeoTransformer GEO_TRANSFORMER;
 
-  public ProfileCacherFeaturePropertyFunction( )
+  static
   {
     // TODO: get crs from global settings
     final CS_CoordinateSystem targetCRS = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     try
     {
-      m_transformer = new GeoTransformer( targetCRS );
+      GEO_TRANSFORMER = new GeoTransformer( targetCRS );
     }
     catch( final Exception e )
     {
@@ -106,15 +108,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     try
     {
-//      final WspmReachProfileSegment segment = new WspmReachProfileSegment( feature );
-//
-//      final WspmProfile profileMember = segment.getProfileMember();
-//      if( profileMember == null )
-//        return currentValue;
-//      final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
-  
-//      segment.setStation( profil.getStation() );
-
       final IProfil profil = ProfileFeatureFactory.toProfile( feature );
 
       final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
@@ -147,7 +140,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
       final GM_Curve curve = GeometryFactory.createGM_Curve( positions, crs );
 
-      return m_transformer.transform( curve );
+      return GEO_TRANSFORMER.transform( curve );
     }
     catch( Exception e )
     {
@@ -155,6 +148,38 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public static GM_Point convertPoint( final IProfilPoint profilPoint ) throws Exception
+  {
+    final Collection<POINT_PROPERTY> pointProperties = profilPoint.getProperties();
+    final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
+    final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
+    final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
+
+    if( ppRW == null || ppHW == null || ppH == null )
+      return null;
+
+    String crsName = null;
+
+    final double rw = profilPoint.getValueFor( ppRW );
+    final double hw = ppHW == null ? 0.0 : profilPoint.getValueFor( ppHW );
+    final double h = profilPoint.getValueFor( ppH );
+
+    /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
+    if( crsName == null )
+      crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+
+    final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
+
+    final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+
+    final GM_Point point = GeometryFactory.createGM_Point( position, crs );
+    return (GM_Point) GEO_TRANSFORMER.transform( point );
   }
 
 }

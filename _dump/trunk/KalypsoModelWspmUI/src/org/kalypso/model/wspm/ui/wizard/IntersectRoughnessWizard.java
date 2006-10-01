@@ -45,10 +45,13 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -66,7 +69,13 @@ public class IntersectRoughnessWizard extends Wizard
   public IntersectRoughnessWizard( final Feature[] features )
   {
     m_features = features;
+    
+    setWindowTitle( "Rauheiten zuweisen" );
+    setNeedsProgressMonitor( true );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
+  
+  
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -131,9 +140,10 @@ public class IntersectRoughnessWizard extends Wizard
       }
     };
 
-    RunnableContextHelper.execute( getContainer(), false, true, runnable );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Zuweisen der Rauheiten", status );
 
-    return true;
+    return status.isOK();
   }
 
 }
