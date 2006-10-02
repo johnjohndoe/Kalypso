@@ -51,9 +51,12 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author Gernot Belger
@@ -62,21 +65,24 @@ public class IntersectRoughnessWizard extends Wizard
 {
   private final Feature[] m_features;
 
+  private final IMapModell m_modell;
+
+  private final GMLEditorLabelProvider2 m_chooserPageLabelProvider = new GMLEditorLabelProvider2();
+
   private ArrayChooserPage m_profileChooserPage;
 
-  private GMLEditorLabelProvider2 m_chooserPageLabelProvider = new GMLEditorLabelProvider2();
+  private IntersectRoughnessPage m_roughnessIntersectPage;
 
-  public IntersectRoughnessWizard( final Feature[] features )
+  public IntersectRoughnessWizard( final Feature[] features, final IMapModell modell )
   {
     m_features = features;
+    m_modell = modell;
     
     setWindowTitle( "Rauheiten zuweisen" );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
   
-  
-
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
@@ -92,7 +98,10 @@ public class IntersectRoughnessWizard extends Wizard
     m_profileChooserPage.setLabelProvider( m_chooserPageLabelProvider );
     m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Rauheiten zugeweisen werden sollen." );
 
+    m_roughnessIntersectPage = new IntersectRoughnessPage( m_modell );
+    
     addPage( m_profileChooserPage );
+    addPage( m_roughnessIntersectPage );
 
     super.addPages();
   }
@@ -118,13 +127,17 @@ public class IntersectRoughnessWizard extends Wizard
     if( choosen.length == 0 )
       return true;
 
+    final FeatureList polygoneFeatures = m_roughnessIntersectPage.getPolygoneFeatures();
+    final IPropertyType polygoneGeomType = m_roughnessIntersectPage.getPolygoneGeomProperty();
+    final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
+    
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
-          final RoughnessIntersector intersector = new RoughnessIntersector( choosen );
+          final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType );
           intersector.intersect( monitor );
         }
         catch( final Exception e )

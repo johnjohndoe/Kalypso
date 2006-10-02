@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.adapter;
 
 import java.util.HashMap;
 
-import org.kalypso.model.wspm.core.gml.NamedFeatureHelper;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -51,6 +50,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author Gernot Belger

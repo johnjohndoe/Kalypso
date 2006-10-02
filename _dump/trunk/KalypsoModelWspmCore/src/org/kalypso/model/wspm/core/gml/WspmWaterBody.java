@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author Gernot Belger

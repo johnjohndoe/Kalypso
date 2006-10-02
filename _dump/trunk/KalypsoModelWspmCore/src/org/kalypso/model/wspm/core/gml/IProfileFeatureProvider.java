@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

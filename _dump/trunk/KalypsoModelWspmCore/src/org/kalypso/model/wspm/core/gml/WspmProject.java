@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * This is an abstraction layer over an wspmproje gml instance.

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       // Station
       //
       final double station = profile.getStation();
-      targetFeature.setProperty( new QName( NS_WSPMPROF, "station" ), new Double( station ) );
+      targetFeature.setProperty( QNAME_STATION, new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
 
       /* Ensure that record-definition is there */
       final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
@@ -301,7 +302,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     profil.setProperty( IProfil.PROFIL_PROPERTY.WASSERSPIEGEL, "Gewaesser" );
     profil.setProperty( IProfil.PROFIL_PROPERTY.MEHRFELDBRUECKE, "0" );
 
-    final Double station = getProfileStation( profileFeature );
+    final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
 
     //
@@ -421,9 +422,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     return null;
   }
 
-  public static Double getProfileStation( final Feature profileFeature )
+  public static BigDecimal getProfileStation( final Feature profileFeature )
   {
-    return (Double) profileFeature.getProperty( QNAME_STATION );
+    return (BigDecimal) profileFeature.getProperty( QNAME_STATION );
   }
 
   private static IProfilBuilding buildingFromFeature( final Feature buildingFeature ) throws ProfilDataException

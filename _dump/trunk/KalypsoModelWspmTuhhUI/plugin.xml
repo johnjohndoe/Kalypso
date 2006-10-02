@@ -29,8 +29,8 @@
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
+               label="Profil anzeigen"
+               tooltip="Öffnet die Profileeditor Perspektive"/>
       </objectContribution>
             <objectContribution
             adaptable="false"
@@ -52,8 +52,39 @@
                label="Profile in neuer Karte anzeigen"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+               tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
       </objectContribution>
+            <objectContribution
+                  adaptable="false"
+                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.showProfileinMap"
+                  objectClass="org.kalypsodeegree.model.feature.Feature">
+               <filter
+                     name="featureType"
+                     value="org.kalypso.model.wspm.tuhh#ReachWspmTuhhSteadyState"/>
+               <action
+                     class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+                     icon="icons/elcl16/createProfileMap.gif"
+                     id="KalypsoModelWspmTuhhUI.action1"
+                     label="Profile in neuer Karte anzeigen"
+                     menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+                     style="push"
+                     tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
+            </objectContribution>
+            <objectContribution
+                  adaptable="false"
+                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.showProfileinMap"
+                  objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+               <filter
+                     name="featureThemeQname"
+                     value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
+               <action
+                     class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
+                     id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
+                     label="Rauheiten zuweisen"
+                     menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+                     style="push"
+                     tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+            </objectContribution>
    </extension>
 
    <extension

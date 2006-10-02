@@ -15,10 +15,12 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-public class IntersectRoughnessAction extends ActionDelegate
+public class IntersectRoughnessMapThemeAction extends ActionDelegate
 {
   private ISelection m_selection;
 
@@ -31,33 +33,34 @@ public class IntersectRoughnessAction extends ActionDelegate
   {
     /* retrieve selected profiles, abort if none */
     final List<Feature> selectedProfiles = new ArrayList<Feature>();
+    IKalypsoFeatureTheme theme = null;
     if( m_selection instanceof IStructuredSelection )
     {
       for( final Object selectedObject : ((IStructuredSelection) m_selection).toList() )
       {
-        if( selectedObject instanceof Feature )
-          addFeature( selectedProfiles, (Feature) selectedObject );
-        else if( selectedObject instanceof FeatureAssociationTypeElement )
+        if( selectedObject instanceof IKalypsoFeatureTheme )
         {
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
-          final Feature parentFeature = fate.getParentFeature();
-          final List features = (List) parentFeature.getProperty( fate.getAssociationTypeProperty() );
-
-          for( final Object f : features )
-            addFeature( selectedProfiles, (Feature) f );
+          theme = (IKalypsoFeatureTheme) selectedObject;
+          final FeatureList featureList = theme.getFeatureList();
+          for( final Object object : featureList )
+          {
+            final Feature feature = FeatureHelper.getFeature( theme.getWorkspace(), object );
+            addFeature( selectedProfiles, feature );
+          }
         }
       }
     }
 
     final Shell shell = event.display.getActiveShell();
 
-    if( selectedProfiles.size() == 0 )
+    if( selectedProfiles.size() == 0 || theme == null )
     {
       MessageDialog.openWarning( shell, "Rauheiten zuweisen", "Es wurden keine Profile in der Selektion gefunden." );
       return;
     }
 
-    final IWizard intersectWizard = new IntersectRoughnessWizard( selectedProfiles.toArray( new Feature[selectedProfiles.size()] ) );
+    
+    final IWizard intersectWizard = new IntersectRoughnessWizard( selectedProfiles.toArray( new Feature[selectedProfiles.size()] ), theme.getMapModell() );
 
     /* show intersection wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, intersectWizard );

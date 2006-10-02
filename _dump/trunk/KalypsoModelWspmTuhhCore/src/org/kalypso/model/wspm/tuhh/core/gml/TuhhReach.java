@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -63,12 +62,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants
 {
+  public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" );
+
   public TuhhReach( final Feature reach )
   {
-    super( reach );
-
-    if( !QNameUtilities.equals( reach.getFeatureType().getQName(), NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) )
-      throw new IllegalStateException( "Feature is of wrong type: " + reach );
+    super( reach, QNAME_TUHH_REACH );
   }
 
   /**
@@ -83,9 +81,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     // set default values
     tuhhProfilesegment.setProfileMember( profileReference );
     tuhhProfilesegment.setStation( station );
-//    tuhhProfilesegment.setDistanceL( distanceL );
-//    tuhhProfilesegment.setDistanceM( distanceM );
-//    tuhhProfilesegment.setDistanceR( distanceR );
+    // tuhhProfilesegment.setDistanceL( distanceL );
+    // tuhhProfilesegment.setDistanceM( distanceM );
+    // tuhhProfilesegment.setDistanceR( distanceR );
 
     return tuhhProfilesegment;
   }
@@ -103,7 +101,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
     return profilesegments.toArray( new TuhhReachProfileSegment[profilesegments.size()] );
   }
-  
+
   public void setWaterBody( final WspmWaterBody body )
   {
     final IPropertyType waterProp = getFeature().getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ) );

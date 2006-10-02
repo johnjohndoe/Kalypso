@@ -45,8 +45,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -54,7 +52,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
@@ -69,8 +66,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -81,15 +76,22 @@ import com.vividsolutions.jts.geom.Geometry;
 public class RoughnessIntersector
 {
   private final Object[] m_profileFeatures;
+  private final FeatureList m_polygoneFeatures;
+  private final IPropertyType m_polygoneGeomType;
+  private final IPropertyType m_polygoneValueType;
 
-  public RoughnessIntersector( final Object[] profileFeatures )
+  public RoughnessIntersector( final Object[] profileFeatures, final FeatureList polygoneFeatures, final IPropertyType polygoneGeomType, final IPropertyType polygoneValueType )
   {
     m_profileFeatures = profileFeatures;
+    m_polygoneFeatures = polygoneFeatures;
+    m_polygoneGeomType = polygoneGeomType;
+    m_polygoneValueType = polygoneValueType;
   }
 
+  @SuppressWarnings("unchecked")
   public void intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Rauheiten zuweisen - ", 2 + m_profileFeatures.length );
+    monitor.beginTask( "Rauheiten zuweisen - ", 1 + m_profileFeatures.length );
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
@@ -100,22 +102,6 @@ public class RoughnessIntersector
 
     final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
     final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
-    monitor.worked( 1 );
-
-    /* get polygones */
-    monitor.subTask( "Polygonthema wird geladen" );
-    final IFile polygonFile = workspace.getRoot().getFile( new Path( "1D/maﬂnahmen.gml" ) );
-    final URL polygonUrl = ResourceUtilities.createURL( polygonFile );
-
-    final GMLWorkspace polygoneWorkspace = GmlSerializer.createGMLWorkspace( polygonUrl, null );
-
-    final GMLXPath xpathToPolygoneFeatures = new GMLXPath( "Methods/methodMember" );
-    final FeatureList polygoneFeatures = (FeatureList) GMLXPathUtilities.query( xpathToPolygoneFeatures, polygoneWorkspace );
-
-    final IFeatureType featureType = polygoneWorkspace.getGMLSchema().getFeatureType( new QName( "org.kalypso.informdss.variants.methods", "StructureData" ) );
-    final IPropertyType polygoneGeoPT = featureType.getProperty( new QName( "org.kalypso.informdss.variants.methods", "polygon" ) );
-    final IPropertyType polygoneValuePT = featureType.getProperty( new QName( "org.kalypso.informdss.variants.methods", "name" ) );
-
     monitor.worked( 1 );
 
     /* apply polygone data to profile data */
@@ -134,16 +120,16 @@ public class RoughnessIntersector
         final Geometry jtsPoint = JTSAdapter.export( geoPoint );
 
         /* find polygon for location */
-        final List<Object> foundPolygones = polygoneFeatures.query( geoPoint.getPosition(), null );
+        final List<Object> foundPolygones = m_polygoneFeatures.query( geoPoint.getPosition(), null );
         for( final Object polyObject : foundPolygones )
         {
           final Feature polygoneFeature = (Feature) polyObject;
-          final GM_Surface surface = (GM_Surface) polygoneFeature.getProperty( polygoneGeoPT );
+          final GM_Surface surface = (GM_Surface) polygoneFeature.getProperty( m_polygoneGeomType );
 
           final Geometry jtsSurface = JTSAdapter.export( surface );
           if( jtsSurface.contains( jtsPoint ) )
           {
-            final Object polygoneValue = polygoneFeature.getProperty( polygoneValuePT );
+            final Object polygoneValue = polygoneFeature.getProperty( m_polygoneValueType );
             if( polygoneValue != null )
             {
               // find assignment for polygon

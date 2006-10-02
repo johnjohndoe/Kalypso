@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:prof="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
+	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
@@ -47,7 +48,7 @@
 		<complexContent>
 			<extension base="om:ObservationType">
 				<sequence>
-					<element name="station" type="swe:RelativeMeasureType" minOccurs="1" maxOccurs="1">
+					<element name="station" type="wspmcommon:stationDouble" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
 							<documentation xml:lang="en">The profile stationing, important for editing cross sections.</documentation>

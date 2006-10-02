@@ -230,12 +230,6 @@
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
          <action
-               class="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
-               id="org.kalypso.model.wspm.ui.action.IntersectRoughnessAction"
-               label="Rauheiten zuweisen"
-               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
-         <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"

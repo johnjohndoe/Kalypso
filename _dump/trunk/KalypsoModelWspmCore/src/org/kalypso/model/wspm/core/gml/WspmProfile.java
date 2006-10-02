@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
@@ -79,9 +81,9 @@ public class WspmProfile
 
   public double getStation( )
   {
-    final Double profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
+    final BigDecimal profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
 
-    return profileStation == null ? Double.NaN : profileStation;
+    return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
 }
