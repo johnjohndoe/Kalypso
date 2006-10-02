@@ -86,7 +86,7 @@ public class GisTemplateMapModell implements IMapModell
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
     // layer 2 is scrablayer
-    final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager );
+    final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
     //    m_modell.addModellListener( m_scrabLayer );
     addTheme( scrabLayer );
 
@@ -136,7 +136,7 @@ public class GisTemplateMapModell implements IMapModell
       String layerName = layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs );
+      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs, this );
     }
     if( layerType.getLinktype().equals( "tif" ) || layerType.getLinktype().equals( "jpg" ) //$NON-NLS-1$ //$NON-NLS-2$
         || layerType.getLinktype().equals( "png" ) || layerType.getLinktype().equals( "gif" ) ) //$NON-NLS-1$ //$NON-NLS-2$
@@ -144,9 +144,9 @@ public class GisTemplateMapModell implements IMapModell
       String source = layerType.getHref();
       String layerName = layerType.getName();
       return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem() );
+          .getCoordinatesSystem(), this );
     }
-    return new GisTemplateFeatureTheme( layerType, context, m_selectionManager );
+    return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
   }
 
   // Helper

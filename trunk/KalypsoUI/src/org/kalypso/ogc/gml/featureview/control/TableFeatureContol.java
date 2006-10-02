@@ -148,7 +148,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       else
         c_workspace = new CommandableWorkspace( workspace );
 
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager );
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, null );
       m_kft.addModellListener( this );
       m_viewer.setInput( m_kft );
 

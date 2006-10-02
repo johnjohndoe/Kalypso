@@ -235,7 +235,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
         return;
       
       final IRelationType rt = FeatureHelper.findParentRelation( this );
-      if( rt.isList() )
+      if( rt != null && rt.isList() )
       {
         final FeatureList list = (FeatureList) parent.getProperty( rt );
         list.invalidate( this );

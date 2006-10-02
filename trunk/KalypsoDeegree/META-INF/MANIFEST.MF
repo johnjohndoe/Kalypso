@@ -22,7 +22,7 @@ Require-Bundle: org.kalypso.commons,
  org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: Acme,
  Acme.JPM.Encoders,
@@ -278,6 +278,7 @@ Export-Package: Acme,
  org.kalypsodeegree_impl.model.ct,
  org.kalypsodeegree_impl.model.cv,
  org.kalypsodeegree_impl.model.feature,
+ org.kalypsodeegree_impl.model.feature.binding,
  org.kalypsodeegree_impl.model.feature.gmlxpath,
  org.kalypsodeegree_impl.model.feature.gmlxpath.xelement,
  org.kalypsodeegree_impl.model.feature.visitors,

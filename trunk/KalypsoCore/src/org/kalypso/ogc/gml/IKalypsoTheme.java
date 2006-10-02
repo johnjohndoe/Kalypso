@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -51,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  *  
  */
-public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
+public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IAdaptable
 {
   public void dispose();
 
@@ -67,4 +69,6 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
   public void setName( final String name );
 
   public GM_Envelope getBoundingBox();
+  
+  public IMapModell getMapModell();
 }

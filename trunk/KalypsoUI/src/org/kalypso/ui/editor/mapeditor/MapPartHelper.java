@@ -41,27 +41,49 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Frame;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.editor.actions.FeatureActionUtilities;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * Helper class for {@link org.eclipse.ui.IWorkbenchPart}s, which show a map.
  * 
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class MapPartHelper
 {
   private MapPartHelper( )
@@ -83,16 +105,17 @@ public class MapPartHelper
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
-        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( new Separator() );
+        handleMenuAboutToShow( site.getPart(), manager, mapPanel );
       }
     } );
+
     final Menu mapMenu = menuManager.createContextMenu( composite );
     composite.setMenu( mapMenu );
     // register it
     site.registerContextMenu( menuManager, mapPanel );
+
     site.setSelectionProvider( mapPanel );
 
     mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
@@ -100,4 +123,174 @@ public class MapPartHelper
     return composite;
   }
 
+  /**
+   * Add some special actions to the menuManager, dependend on the current selection.
+   */
+  public static void handleMenuAboutToShow( final IWorkbenchPart part, final IMenuManager manager, final MapPanel mapPanel )
+  {
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+
+    /* Menu depending on active theme */
+    final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+    {
+      manager.add( new GroupMarker( "themeActions" ) );
+
+      /* Add a 'new'  menu corresponding to the theme's feature type. */
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+      final ThemeFeatureSelection themeFeatureSelection = new ThemeFeatureSelection( theme );
+      final IMenuManager newManager = FeatureActionUtilities.createFeatureNewMenu( themeFeatureSelection, selectionManager );
+      manager.add( newManager );
+
+      /* Also add specific theme actions. */
+      final StructuredSelection themeSelection = new StructuredSelection( theme );
+      final ISelectionProvider selectionProvider = new ISelectionProvider()
+      {
+        public void addSelectionChangedListener( ISelectionChangedListener listener )
+        {
+        }
+
+        public ISelection getSelection( )
+        {
+          return themeSelection;
+        }
+
+        public void removeSelectionChangedListener( ISelectionChangedListener listener )
+        {
+        }
+
+        public void setSelection( ISelection selection )
+        {
+        }
+      };
+      final IMenuManager themeManager = new MenuManager( "&Thema", "themeActions" );
+      ObjectActionContributorManager.getManager().contributeObjectActions( part, themeManager, selectionProvider );
+      manager.add( themeManager );
+    }
+
+    // add additions seperator: if not, eclipse whines
+    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+  }
+  
+  private static class ThemeFeatureSelection implements IFeatureSelection
+  {
+    private final IKalypsoFeatureTheme m_theme;
+
+    private FeatureAssociationTypeElement m_fate;
+
+    private List<FeatureAssociationTypeElement> m_selection;
+
+    public ThemeFeatureSelection( final IKalypsoFeatureTheme theme )
+    {
+      m_theme = theme;
+
+      final FeatureList featureList = m_theme.getFeatureList();
+      m_fate = new FeatureAssociationTypeElement( featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() );
+      m_selection = Collections.singletonList( m_fate );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
+     */
+    public EasyFeatureWrapper[] getAllFeatures( )
+    {
+      return new EasyFeatureWrapper[] {};
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
+     */
+    public Feature getFocusedFeature( )
+    {
+      return null;
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
+     */
+    public IPropertyType getFocusedProperty( )
+    {
+      return null;
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeature(org.kalypsodeegree.model.feature.Feature)
+     */
+    public Feature getParentFeature( final Feature feature )
+    {
+      return m_fate.getParentFeature();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
+     */
+    public IRelationType getParentFeatureProperty( final Feature feature )
+    {
+      return m_fate.getAssociationTypeProperty();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
+     */
+    public IFeatureSelectionManager getSelectionManager( )
+    {
+      return m_theme.getSelectionManager();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getWorkspace(org.kalypsodeegree.model.feature.Feature)
+     */
+    public CommandableWorkspace getWorkspace( Feature feature )
+    {
+      return m_theme.getWorkspace();
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredSelection#getFirstElement()
+     */
+    public Object getFirstElement( )
+    {
+      return m_fate;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredSelection#iterator()
+     */
+    public Iterator iterator( )
+    {
+      return m_selection.iterator();
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredSelection#size()
+     */
+    public int size( )
+    {
+      return 1;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredSelection#toArray()
+     */
+    public Object[] toArray( )
+    {
+      return new Object[] { m_fate };
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
+     */
+    public List toList( )
+    {
+      return m_selection;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ISelection#isEmpty()
+     */
+    public boolean isEmpty( )
+    {
+      return false;
+    }
+  }
 }

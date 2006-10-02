@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.PlatformObject;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -55,7 +57,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author Belger
  */
-public abstract class AbstractKalypsoTheme implements IKalypsoTheme
+public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
   private String m_name;
 
@@ -63,15 +65,19 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 
   private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
-  public AbstractKalypsoTheme( final String name )
+  private final IMapModell m_mapModel;
+
+  public AbstractKalypsoTheme( final String name, final IMapModell mapModel )
   {
     m_name = name;
+    m_mapModel = mapModel;
   }
 
-  public AbstractKalypsoTheme( final String name, final String type )
+  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
   {
     m_name = name;
     m_type = type;
+    m_mapModel = mapModel;
   }
   
   /**
@@ -133,5 +139,13 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   public void setType( String type )
   {
     m_type = type;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
+   */
+  public IMapModell getMapModell( )
+  {
+    return m_mapModel;
   }
 }

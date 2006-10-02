@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -66,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author doemming
  */
-public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
+public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme, ModellEventListener
 {
   private ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
 
@@ -291,5 +292,13 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   public String getType( )
   {
     return "";
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
+   */
+  public IMapModell getMapModell( )
+  {
+    return m_mapModell;
   }
 }

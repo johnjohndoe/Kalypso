@@ -166,7 +166,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       // just show this feature in the view, don't change the selection this doesn't work
       // don't change the command manager, changing the feature only work inside the same workspace
-      activateFeature( feature, false );
+      activateFeature( feature, false, null );
     }
   };
 
@@ -268,7 +268,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   @Override
   public void dispose( )
   {
-    activateFeature( null, false ); // to unhook listeners
+    activateFeature( null, false, null ); // to unhook listeners
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
@@ -287,7 +287,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_settings.put( STORE_SHOW_TABLES, showTables );
 
-    activateFeature( currentFeature, true );
+    activateFeature( currentFeature, true, null );
   }
 
   public boolean isShowTables( )
@@ -305,36 +305,36 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
       final Feature feature = featureFromSelection( featureSel );
       m_commandManager = featureSel.getWorkspace( feature );
-      activateFeature( feature, false );
+      activateFeature( feature, false, selection );
     }
     else
     {
       m_commandManager = null;
-      activateFeature( null, false );
+      activateFeature( null, false, null );
     }
 
-    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
-
-    runAsync( new Runnable()
-    {
-      public void run( )
-      {
-        featureSelectionActionGroup.getContext().setSelection( selection );
-        featureSelectionActionGroup.updateActionBars();
-      }
-    } );
+//    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
+//
+//    runAsync( new Runnable()
+//    {
+//      public void run( )
+//      {
+//        featureSelectionActionGroup.getContext().setSelection( selection );
+//        featureSelectionActionGroup.updateActionBars();
+//      }
+//    } );
   }
 
-  private void runAsync( final Runnable runnable )
-  {
-    final Group mainGroup = m_mainGroup;
-    final Control control = m_featureComposite.getControl();
-    if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
-    {
-      if( !control.isDisposed() )
-        control.getDisplay().asyncExec( runnable );
-    }
-  }
+//  private void runAsync( final Runnable runnable )
+//  {
+//    final Group mainGroup = m_mainGroup;
+//    final Control control = m_featureComposite.getControl();
+//    if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
+//    {
+//      if( !control.isDisposed() )
+//        control.getDisplay().asyncExec( runnable );
+//    }
+//  }
 
   protected void handlePartClosed( final IWorkbenchPart part )
   {
@@ -375,7 +375,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_featureComposite.addChangeListener( m_fcl );
 
-    activateFeature( null, false );
+    activateFeature( null, false, null );
 
     // add showTables-Action to menu-bar
     // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
@@ -415,10 +415,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
    * @param force
    *          if true, alwys reset this view, else, only if feature has really changed.
    */
-  protected void activateFeature( final Feature feature, final boolean force )
+  protected void activateFeature( final Feature feature, final boolean force, final ISelection selection )
   {
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
+    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
 
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
@@ -488,6 +489,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
           if( FeatureView.this == getViewSite().getPage().getActivePart() )
             mainGroup.setFocus();
         }
+        
+        featureSelectionActionGroup.getContext().setSelection( selection );
+        featureSelectionActionGroup.updateActionBars();
 
         return Status.OK_STATUS;
       }

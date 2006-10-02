@@ -63,6 +63,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.ObjectFactory;
@@ -125,9 +126,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager )
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), mapModel ); //$NON-NLS-1$
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final String source = layerType.getHref();
@@ -289,7 +290,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         if( newValue != null )
         {
           final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
-          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager );
+          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
           m_theme.addModellListener( this );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
           fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );

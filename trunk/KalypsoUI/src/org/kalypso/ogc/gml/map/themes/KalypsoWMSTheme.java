@@ -90,6 +90,7 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.WMSCapabilitiesHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -163,9 +164,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
 
   private final String m_service;
 
-  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS, final IMapModell mapModel )
   {
-    super( themeName, linktype.toUpperCase() );
+    super( themeName, linktype.toUpperCase(), mapModel );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
     m_layers = sourceProps.getProperty( KEY_LAYERS, null );
     m_styles = sourceProps.getProperty( KEY_STYLES, null );

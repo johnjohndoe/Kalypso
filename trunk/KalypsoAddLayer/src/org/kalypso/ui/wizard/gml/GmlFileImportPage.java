@@ -47,7 +47,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -68,6 +72,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -98,8 +103,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   private Text m_sourceFileText;
 
   private Button m_browseButton;
-
-  private URL m_activeMapContext;
 
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
@@ -223,11 +226,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_selectedProject = project;
   }
 
-  public void setMapContextURL( URL context )
-  {
-    m_activeMapContext = context;
-  }
-
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
@@ -235,18 +233,23 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   {
     if( e.widget == m_browseButton )
     {
-      final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, "Auswählen einer GML Datei", new String[] { "gml" }, m_selectedProject, new ResourceSelectionValidator() );
+      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+      
+      final IContainer container = m_selectedProject == null ? root : m_selectedProject;
+      
+      final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, "Auswählen einer GML Datei", new String[] { "gml" }, container, new ResourceSelectionValidator() );
       dialog.open();
       // get first element, only one element possible
-      IPath selection = (IPath) dialog.getResult()[0];
-      // IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( selection );
+      final IPath selection = (IPath) dialog.getResult()[0];
+      final IFile resource = root.getFile( selection );
+      
       // create project path (Kalypso project-protocol)
-      m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
+//      m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
       m_sourceFileText.setText( selection.toString() );
 
       try
       {
-        final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
+        final URL gmlURL = ResourceUtilities.createURL( resource );
         m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, null ) );
       }
       catch( Exception e1 )

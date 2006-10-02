@@ -58,11 +58,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This action group is used to show actions depending on a selected feature.
@@ -71,6 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class FeatureSelectionActionGroup extends ActionGroup
 {
   private final ISelectionProvider m_provider = new ISelectionProvider()
@@ -152,10 +150,8 @@ public class FeatureSelectionActionGroup extends ActionGroup
 
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
-    final Feature feature = FeatureSelectionHelper.getFirstFeature( selectionManager );
-    final CommandableWorkspace workspace = fs.getWorkspace( feature );
 
-    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( fs, workspace, selectionManager );
+    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( fs, selectionManager );
     manager.add( newMenuManager );
 
     // add additions seperator: if not, eclipse whines
