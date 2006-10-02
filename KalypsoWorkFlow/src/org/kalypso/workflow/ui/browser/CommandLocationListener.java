@@ -63,7 +63,6 @@ import org.kalypso.workflow.WorkflowContext;
  */
 public class CommandLocationListener implements LocationListener, Listener
 {
-
   private final CommandURLBrowserView m_browserView;
 
   private final WorkflowContext m_workFlowContext;

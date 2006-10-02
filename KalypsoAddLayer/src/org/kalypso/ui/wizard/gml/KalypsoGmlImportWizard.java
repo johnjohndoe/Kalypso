@@ -64,8 +64,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     m_page = new GmlFileImportPage( "GML:importPage", "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
-    if( m_outlineviewer != null )
-      m_page.setMapContextURL( ((GisTemplateMapModell) m_outlineviewer.getMapModell()).getContext() );
+
     addPage( m_page );
   }
 
@@ -85,61 +84,6 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         final ICommand command = commands[i];
         m_outlineviewer.postCommand( command, null );
       }
-      // final IMapModell mapModell = m_outlineviewer.getMapModell();
-      // String featureName = null;
-      // final Feature[] features = m_page.getFeatures();
-      // for( int i = 0; i < features.length; i++ )
-      // {
-      // final Feature feature = features[i];
-      // final FeaturePath featureId = m_page.getWorkspace().getFeaturepathForFeature( feature );
-      // String featurePath = null;
-      // if( FeatureHelper.isCollection( feature ) )
-      // {
-      // IPropertyType ftp = feature.getFeatureType().getProperties()[0];
-      // FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
-      // IFeatureType[] associationFeatureTypes = fatp.getAssociationFeatureTypes();
-      // String typeName = fatp.getName();
-      // if( associationFeatureTypes.length == 1 )
-      // {
-      // featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName;
-      // featureName = associationFeatureTypes[0].getName();
-      // AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-      // featurePath, m_page.getSource() );
-      // m_outlineviewer.postCommand( command, null );
-      // }
-      // else
-      // {
-      // FeatureTypeSelectionDialog dialog = new FeatureTypeSelectionDialog( getShell(), associationFeatureTypes );
-      // int open = dialog.open();
-      // if( open == Window.OK )
-      // {
-      // IFeatureType[] selectedFeatureTypes = dialog.getSelectedFeatureTypes();
-      //
-      // for( int j = 0; j < selectedFeatureTypes.length; j++ )
-      // {
-      // IFeatureType ftype = selectedFeatureTypes[j];
-      // featureName = ftype.getName();
-      // featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName
-      // + FeaturePath.TYPENAME_TAG_OPEN + featureName + FeaturePath.TYPENAME_TAG_CLOSE;
-      // AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-      // featurePath, m_page.getSource() );
-      // m_outlineviewer.postCommand( command, null );
-      // }
-      // }
-      // else
-      // return false;
-      // }
-      // }
-      // else
-      // {
-      // featureName = feature.getFeatureType().getName();
-      // AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId
-      // .toString(), m_page.getSource() );
-      // m_outlineviewer.postCommand( command, null );
-      //
-      // }
-      // }
-      //
     }
     catch( Exception e )
     {
@@ -163,7 +107,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    // nothing to initalize
+    setWindowTitle( "GML Datei" );
   }
 
 }

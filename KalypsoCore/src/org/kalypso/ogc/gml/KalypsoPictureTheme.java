@@ -41,6 +41,7 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -85,9 +86,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs )
+  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel )
   {
-    super( themeName, linktype.toUpperCase() );
+    super( themeName, linktype.toUpperCase(), mapModel );
     m_themeName = themeName;
     m_linkType = linktype;
     m_source = source;

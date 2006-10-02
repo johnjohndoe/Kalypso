@@ -334,7 +334,7 @@ public class TypeHandlerUtilities
          * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
          */
         @Override
-        public BigDecimal convertToJavaValue( String xmlString )
+        public BigDecimal convertToJavaValue( final String xmlString )
         {
           return new BigDecimal( xmlString );
         }
@@ -345,6 +345,7 @@ public class TypeHandlerUtilities
         @Override
         public String convertToXMLString( final BigDecimal value )
         {
+          // TODO: format according to fraction digits
           return value == null ? "" : value.toString();
         }
       } );

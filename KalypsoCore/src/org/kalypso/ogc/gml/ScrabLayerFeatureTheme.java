@@ -34,10 +34,12 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -57,9 +59,8 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author kuepfer
  */
-public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
+public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFeatureTheme
 {
-
   public static final String STYLE_NAME = "ScrabLayerStyle";
 
   public static final String POLYGON_GEOM_PROP_NAME = "geomPolygon";
@@ -74,9 +75,12 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public ScrabLayerFeatureTheme( IFeatureSelectionManager selectionManager )
+  private final IMapModell m_mapModel;
+
+  public ScrabLayerFeatureTheme( final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     m_selectionManager = selectionManager;
+    m_mapModel = mapModel;
     final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
@@ -95,7 +99,7 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     }
 
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager );
+    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager, m_mapModel );
     // add styles for visualisation
     ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), POINT_GEOM_PROP_NAME ) );
@@ -294,5 +298,13 @@ public class ScrabLayerFeatureTheme implements IKalypsoFeatureTheme
     if( m_scrabLayerTheme != null )
       return m_selectionManager;
     return null;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
+   */
+  public IMapModell getMapModell( )
+  {
+    return m_mapModel;
   }
 }

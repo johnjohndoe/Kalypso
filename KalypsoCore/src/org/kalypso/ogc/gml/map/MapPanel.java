@@ -837,4 +837,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       m_pointofInterests.remove( ofinterest );
     }
   }
+  
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
+  }
 }

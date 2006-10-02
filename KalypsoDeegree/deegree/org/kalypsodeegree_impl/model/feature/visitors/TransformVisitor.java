@@ -69,8 +69,7 @@ public class TransformVisitor implements FeatureVisitor
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-
+//      e.printStackTrace();
       m_exceptions.put( f, e );
     }
 

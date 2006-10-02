@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -85,9 +86,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final String m_featurePath;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( name );
+    super( name, mapModel );
 
     m_workspace = workspace;
     m_featurePath = featurePath;

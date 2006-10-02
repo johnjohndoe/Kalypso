@@ -412,7 +412,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager );
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, null );
       setInput( theme );
 
       final Sort sort = layer.getSort();

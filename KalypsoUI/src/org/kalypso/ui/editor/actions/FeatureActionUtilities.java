@@ -81,7 +81,7 @@ public class FeatureActionUtilities
   {
     private final int m_occurs;
 
-    private ListFullAction( final int occurs )
+    protected ListFullAction( final int occurs )
     {
       super( "Maximale Grösse erreicht" );
 
@@ -111,7 +111,7 @@ public class FeatureActionUtilities
    */
   private static final class NewFeatureFromExternalSchemaAction extends Action
   {
-    private NewFeatureFromExternalSchemaAction( )
+    protected NewFeatureFromExternalSchemaAction( )
     {
       super( "Feature aus zusätzlichem Schema..." );
     }
@@ -137,7 +137,7 @@ public class FeatureActionUtilities
    * <p>
    * Works only, if the first element of the selection is of type {@link FeatureAssociationTypeElement}.
    */
-  public static IMenuManager createFeatureNewMenu( final IStructuredSelection selection, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public static IMenuManager createFeatureNewMenu( final IStructuredSelection selection, final IFeatureSelectionManager selectionManager )
   {
     final IMenuManager newMenuManager = new MenuManager( "&Neu" );
 
@@ -161,6 +161,7 @@ public class FeatureActionUtilities
     {
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
+      featureSelection.getWorkspace( feature );
       // to avoid NullPointerException: the first feature is null ( e.g. a linked feature is selected )
       if( feature == null )
         return newMenuManager;
@@ -171,7 +172,11 @@ public class FeatureActionUtilities
     else
       return newMenuManager;
 
-    if( fatp == null || parentFeature == null )
+    CommandableWorkspace workspace = null;
+    if( selection instanceof IFeatureSelection )
+      workspace = ((IFeatureSelection) selection).getWorkspace( parentFeature );
+    
+    if( fatp == null || parentFeature == null || workspace == null )
       return newMenuManager;
 
     final int maxOccurs = fatp.getMaxOccurs();
