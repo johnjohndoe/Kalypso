@@ -245,6 +245,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       
       // create project path (Kalypso project-protocol)
 //      m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
+      m_source = selection.toString();
       m_sourceFileText.setText( selection.toString() );
 
       try
