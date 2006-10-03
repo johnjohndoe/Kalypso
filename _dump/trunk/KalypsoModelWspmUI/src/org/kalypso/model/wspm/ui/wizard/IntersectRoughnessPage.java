@@ -43,6 +43,12 @@ package org.kalypso.model.wspm.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -51,18 +57,26 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -72,6 +86,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class IntersectRoughnessPage extends WizardPage
 {
+  private static final String SETTINGS_ASSIGNMENT_PATH = "settings.assignment.path";
+
   private final IMapModell m_modell;
 
   private IKalypsoFeatureTheme m_polygoneTheme = null;
@@ -79,6 +95,8 @@ public class IntersectRoughnessPage extends WizardPage
   private IPropertyType m_polygoneGeomProperty = null;
 
   private IPropertyType m_polygoneValueProperty = null;
+
+  private IPath m_assignmentPath;
 
   public IntersectRoughnessPage( final IMapModell modell )
   {
@@ -97,7 +115,76 @@ public class IntersectRoughnessPage extends WizardPage
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
 
-    final Group polygoneGroup = new Group( composite, SWT.NONE );
+    createPolygoneGroup( composite );
+    createAssignmentGroup( composite );
+
+    setControl( composite );
+  }
+
+  private void createAssignmentGroup( final Composite parent )
+  {
+    final IDialogSettings dialogSettings = getDialogSettings();
+    final String lastPathName = dialogSettings == null ? null : dialogSettings.get( SETTINGS_ASSIGNMENT_PATH );
+
+    final Group assignmentGroup = new Group( parent, SWT.NONE );
+    assignmentGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    assignmentGroup.setLayout( new GridLayout( 3, false ) );
+    assignmentGroup.setText( "Zuordnung" );
+
+    /* theme chooser */
+    new Label( assignmentGroup, SWT.NONE ).setText( "&Zuordnung" );
+    final Text text = new Text( assignmentGroup, SWT.BORDER );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    text.setEditable( false );
+
+    final Button button = new Button( assignmentGroup, SWT.NONE );
+    button.setText( "&Datei..." );
+    button.setToolTipText( "Datei aus dem Arbeitsbereich wählen" );
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        assignmentButtonPressed( text );
+      }
+    } );
+
+    if( lastPathName != null )
+      setAssignmentPath( text, Path.fromPortableString( lastPathName ) );
+  }
+
+  protected void assignmentButtonPressed( final Text text )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+    final IResource initialSelection = m_assignmentPath == null ? null : root.findMember( m_assignmentPath );
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, "Zuordnungsdatei", new String[] { "gml" }, root, new ResourceSelectionValidator() );
+    if( dialog.open() != Window.OK )
+      return;
+
+    final Object[] result = dialog.getResult();
+    final IPath path = result.length == 0 ? null : (IPath) result[0];
+    setAssignmentPath( text, path );
+  }
+
+  private void setAssignmentPath( final Text text, final IPath path )
+  {
+    m_assignmentPath = path;
+    text.setText( m_assignmentPath == null ? "" : m_assignmentPath.toOSString() );
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      dialogSettings.put( SETTINGS_ASSIGNMENT_PATH, path.toPortableString() );
+
+    updatePageComplete();
+  }
+
+  private void createPolygoneGroup( final Composite parent )
+  {
+    final Group polygoneGroup = new Group( parent, SWT.NONE );
     polygoneGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     polygoneGroup.setLayout( new GridLayout( 2, false ) );
     polygoneGroup.setText( "Polygone" );
@@ -121,7 +208,7 @@ public class IntersectRoughnessPage extends WizardPage
     final ComboViewer geoComboViewer = new ComboViewer( polygoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
     geoComboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     geoComboViewer.setContentProvider( new ArrayContentProvider() );
-    geoComboViewer.setLabelProvider( new LabelProvider() );
+    geoComboViewer.setLabelProvider( new FeatureTypeLabelProvider() );
     geoComboViewer.setSorter( new ViewerSorter() );
 
     /* Value-Property chooser */
@@ -129,7 +216,7 @@ public class IntersectRoughnessPage extends WizardPage
     final ComboViewer valueComboViewer = new ComboViewer( polygoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
     valueComboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     valueComboViewer.setContentProvider( new ArrayContentProvider() );
-    valueComboViewer.setLabelProvider( new LabelProvider() );
+    valueComboViewer.setLabelProvider( new FeatureTypeLabelProvider() );
     valueComboViewer.setSorter( new ViewerSorter() );
 
     /* event handlers */
@@ -159,8 +246,6 @@ public class IntersectRoughnessPage extends WizardPage
 
     if( !polygoneThemes.isEmpty() )
       themeComboViewer.setSelection( new StructuredSelection( polygoneThemes.get( 0 ) ) );
-
-    setControl( composite );
   }
 
   protected void handleGeoChanged( final IStructuredSelection selection )
@@ -283,15 +368,23 @@ public class IntersectRoughnessPage extends WizardPage
     return m_polygoneValueProperty;
   }
 
+  public IPath getAssignmentPath( )
+  {
+    return m_assignmentPath;
+  }
+
   private void updatePageComplete( )
   {
-    final boolean pageComplete = m_polygoneTheme != null && m_polygoneGeomProperty != null && m_polygoneValueProperty != null;
+    final boolean pageComplete = m_polygoneTheme != null && m_polygoneGeomProperty != null && m_polygoneValueProperty != null && m_assignmentPath != null;
+
     setPageComplete( pageComplete );
 
     if( m_polygoneTheme == null )
       setErrorMessage( "Es sind keine Polygon-Themen in der Karte vorhanden. Zuweisung nicht möglich." );
     else if( m_polygoneValueProperty == null )
       setErrorMessage( "Das gewählte Thema hat keine Wert-Eigenschaften. Zuweisung nicht möglich." );
+    else if( m_assignmentPath == null )
+      setErrorMessage( "Ess muss ein Pfad auf eine Zuordnungsdatei angegeben werden." );
     else
     {
       setErrorMessage( null );

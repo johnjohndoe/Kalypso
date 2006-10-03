@@ -41,22 +41,32 @@
 package org.kalypso.model.wspm.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
@@ -130,15 +140,28 @@ public class IntersectRoughnessWizard extends Wizard
     final FeatureList polygoneFeatures = m_roughnessIntersectPage.getPolygoneFeatures();
     final IPropertyType polygoneGeomType = m_roughnessIntersectPage.getPolygoneGeomProperty();
     final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
+    final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
     
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
+        monitor.beginTask( "Rauheiten zuweisen", 1 + choosen.length );
+        
         try
         {
-          final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType );
-          intersector.intersect( monitor );
+          /* Load assignment */
+          monitor.subTask( "Zuordnungen werden geladen" );
+          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
+          final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
+
+          final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
+          final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
+          monitor.worked( 1 );
+          
+          final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType, assignment );
+          intersector.intersect( new SubProgressMonitor(monitor, choosen.length) );
         }
         catch( final Exception e )
         {

@@ -51,7 +51,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.model.wspm.ui.product.ProfileditorPerspective;
+import org.kalypso.model.wspm.ui.product.ProfileManagerPerspective;
 import org.kalypso.model.wspm.ui.view.chart.ChartView;
 
 /**
@@ -79,7 +79,7 @@ public class ShowProfileAction extends ActionDelegate
     {
       /* Set the perspective. */
       final IPerspectiveRegistry reg = workbench.getPerspectiveRegistry();
-      final IPerspectiveDescriptor finalPersp = reg.findPerspectiveWithId( ProfileditorPerspective.ID );
+      final IPerspectiveDescriptor finalPersp = reg.findPerspectiveWithId( ProfileManagerPerspective.ID );
       if( finalPersp != null )
         activePage.setPerspective( finalPersp );
 

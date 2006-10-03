@@ -308,9 +308,16 @@
               name="%org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"/>
         <perspective
               class="org.kalypso.model.wspm.ui.product.ProfileditorPerspective"
+              fixed="false"
               icon="icons/eview16/wsp16.gif"
               id="org.kalypso.model.wspm.ui.product.ProfileditorPerspective"
               name="%org.kalypso.model.wspm.ui.product.ProfileditorPerspective"/>
+        <perspective
+              class="org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"
+              fixed="false"
+              icon="icons/eview16/wsp16.gif"
+              id="org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"
+              name="Profil Manager"/>
      </extension>
      <extension
            point="org.kalypso.model.wspm.core.profileFeatureProvider">

@@ -40,17 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.wizard;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -59,10 +53,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -79,30 +71,21 @@ public class RoughnessIntersector
   private final FeatureList m_polygoneFeatures;
   private final IPropertyType m_polygoneGeomType;
   private final IPropertyType m_polygoneValueType;
+  private final AssignmentBinder m_assignment;
 
-  public RoughnessIntersector( final Object[] profileFeatures, final FeatureList polygoneFeatures, final IPropertyType polygoneGeomType, final IPropertyType polygoneValueType )
+  public RoughnessIntersector( final Object[] profileFeatures, final FeatureList polygoneFeatures, final IPropertyType polygoneGeomType, final IPropertyType polygoneValueType, final AssignmentBinder assignment )
   {
     m_profileFeatures = profileFeatures;
     m_polygoneFeatures = polygoneFeatures;
     m_polygoneGeomType = polygoneGeomType;
     m_polygoneValueType = polygoneValueType;
+    m_assignment = assignment;
   }
 
   @SuppressWarnings("unchecked")
   public void intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Rauheiten zuweisen - ", 1 + m_profileFeatures.length );
-
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-    /* Load assignment */
-    monitor.subTask( "Zuordnungen werden geladen" );
-    final IFile assignmentFile = workspace.getRoot().getFile( new Path( "1D/Zuordnungen/assignment.gml" ) );
-    final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
-
-    final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
-    final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
-    monitor.worked( 1 );
+    monitor.beginTask( "Rauheiten zuweisen - ", m_profileFeatures.length );
 
     /* apply polygone data to profile data */
     for( final Object object : m_profileFeatures )
@@ -133,7 +116,7 @@ public class RoughnessIntersector
             if( polygoneValue != null )
             {
               // find assignment for polygon
-              final Map<String, Double> assignments = assignment.getAssignmentsFor( polygoneValue.toString() );
+              final Map<String, Double> assignments = m_assignment.getAssignmentsFor( polygoneValue.toString() );
               // apply assignment to point properties
               for( final Map.Entry<String, Double> entry : assignments.entrySet() )
               {
