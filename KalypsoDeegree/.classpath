@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="srcbind"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts.jar" sourcepath="lib/jts/jts1.3_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>

@@ -56,7 +56,6 @@ public class FeaturePropertyLabelProvider extends LabelProvider
   @Override
   public String getText( Object element )
   {
-
     if( element == null )
       return null;
     if( GeometryUtilities.isPolygonGeometry( element ) )

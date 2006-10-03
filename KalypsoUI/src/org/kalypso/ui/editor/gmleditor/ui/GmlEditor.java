@@ -44,6 +44,8 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  */
 public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
+  public static final String ID = "org.kalypso.ui.editor.GmlEditor";
+  
   private GmlTreeView m_viewer = null;
   
   @Override

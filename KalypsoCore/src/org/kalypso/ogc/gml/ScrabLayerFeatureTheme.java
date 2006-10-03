@@ -307,4 +307,13 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   {
     return m_mapModel;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return getName();
+  }
 }
