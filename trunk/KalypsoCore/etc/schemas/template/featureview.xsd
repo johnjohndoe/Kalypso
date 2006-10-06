@@ -86,6 +86,15 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<xs:element name="geometrylabel" type="ns1:GeometryLabelType" substitutionGroup="ns1:control"/>
+	<xs:complexType name="GeometryLabelType">
+		<xs:complexContent>
+			<xs:extension base="ns1:PropertyControlType">
+				<xs:attribute name="text" type="xs:string" use="optional" default="" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:element name="text" substitutionGroup="ns1:control">
 		<xs:complexType>
 			<xs:complexContent>
