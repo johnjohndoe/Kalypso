@@ -87,6 +87,7 @@ import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.GeometryLabelType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
@@ -285,6 +286,22 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, true );
 
       final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
+
+      addFeatureControl( vfc );
+
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+        m_formToolkit.adapt( control, true, true );
+
+      return control;
+    }
+    else if( controlType instanceof GeometryLabelType )
+    {
+      final GeometryLabelType geometryLabelType = (GeometryLabelType) controlType;
+
+      final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
+
+      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( geometryLabelType.getStyle() ) );
 
       addFeatureControl( vfc );
 
