@@ -153,8 +153,8 @@ public class PlainProfil implements IProfilConstants, IProfil
           deviderList.add( devider );
         }
       }
-
     }
+    
     Collections.sort( deviderList, new DeviderComparator() );
     return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList.size()] );
   }

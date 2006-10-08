@@ -45,16 +45,29 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
+import org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -64,6 +77,8 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 {
   public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" );
 
+  private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" );
+
   public TuhhReach( final Feature reach )
   {
     super( reach, QNAME_TUHH_REACH );
@@ -72,7 +87,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   /**
    * Creates and adds a new profile segment to this reach.
    */
-  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, final double distanceL, final double distanceM, final double distanceR ) throws GMLSchemaException
+  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, @SuppressWarnings("unused")
+  final double distanceL, @SuppressWarnings("unused")
+  final double distanceM, @SuppressWarnings("unused")
+  final double distanceR ) throws GMLSchemaException
   {
     final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM_TUHH, "reachSegmentMember" ), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
 
@@ -123,6 +141,61 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   protected FeatureList getReachSegmentList( )
   {
     return (FeatureList) getFeature().getProperty( new QName( NS_WSPM_TUHH, "reachSegmentMember" ) );
+  }
+
+  public FeatureList createMarkerList( )
+  {
+    final Feature feature = getFeature();
+    final IFeatureType featureType = feature.getFeatureType();
+    final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MARKER_MEMBER );
+
+    final FeatureList list = FeatureFactory.createFeatureList( feature, markerRT );
+
+    final TuhhReachProfileSegment[] reachProfileSegments = getReachProfileSegments();
+    for( final TuhhReachProfileSegment segment : reachProfileSegments )
+    {
+      final WspmProfile profileMember = segment.getProfileMember();
+      if( profileMember == null )
+        continue;
+
+      final IProfil profil = profileMember.getProfil();
+      final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
+      for( final IProfilDevider devider : deviders )
+      {
+        try
+        {
+          final DEVIDER_TYP typ = devider.getTyp();
+          final IProfilPoint point = devider.getPoint();
+          // REMARK: create the point before the marker because we may have an exception
+          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( point );
+
+          final TuhhMarker marker = createMarker();
+          marker.setName( typ.toString() );
+          marker.setType( typ.name() );
+          marker.setLocation( location );
+
+          list.add( marker.getFeature() );
+        }
+        catch( final Exception e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          KalypsoModelWspmTuhhCorePlugin.getDefault().getLog().log( status );
+        }
+      }
+    }
+
+    return list;
+  }
+
+  private TuhhMarker createMarker( )
+  {
+    final Feature feature = getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final IFeatureType markerFT = workspace.getGMLSchema().getFeatureType( TuhhMarker.QNAME_MARKER );
+    final Feature markerFeature = workspace.createFeature( feature, markerFT );
+
+    return new TuhhMarker( markerFeature );
   }
 
 }

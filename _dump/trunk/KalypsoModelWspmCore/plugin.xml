@@ -6,4 +6,5 @@
    <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
    <extension-point id="profilserializer" name="profilserializer" schema="schema/profilserializer.exsd"/>
    <extension-point id="profileFeatureProvider" name="profileFeatureProvider" schema="schema/profileFeatureProvider.exsd"/>
+   <extension-point id="profilePointFilter" name="profilePointFilter" schema="schema/profilePointFilter.exsd"/>
 </plugin>

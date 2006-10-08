@@ -155,7 +155,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_view != null )
     {
       final Control control = m_view.getControl();
-      if( control != null && !m_control.isDisposed() )
+      if( control != null && !control.isDisposed() )
         control.setFocus();
     }
   }
@@ -185,7 +185,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     }
     else
     {
-      final IFile file = (IFile) m_profilProviderListener.getPart().getAdapter( IFile.class );
+      final IFile file = m_provider == null ? null : m_provider.getFile();
 
       m_view = new ProfilSWTTableView( pem, pvd, file );
 

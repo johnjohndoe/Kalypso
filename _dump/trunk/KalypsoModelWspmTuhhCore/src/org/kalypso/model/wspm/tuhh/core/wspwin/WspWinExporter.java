@@ -73,11 +73,11 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -87,7 +87,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 
 /**
  * @author thuel2
@@ -305,8 +304,12 @@ public class WspWinExporter
       pw.println( "# UNIFORM_BOTTOM_SLOPE" );
       pw.println( "# WATERLEVEL" );
       pw.println( "ART_RANDBEDINGUNG=" + calculation.getStartKind().name() );
-      pw.println( "ANFANGSWASSERSPIEGEL=" + Double.toString( calculation.getStartWaterlevel() ) );
-      pw.println( "GEFAELLE=" + Double.toString( calculation.getStartSlope() ) );
+      final Double startWaterlevel = calculation.getStartWaterlevel();
+      if( startWaterlevel != null )
+        pw.println( "ANFANGSWASSERSPIEGEL=" + Double.toString( startWaterlevel ) );
+      final Double startSlope = calculation.getStartSlope();
+      if( startSlope != null )
+        pw.println( "GEFAELLE=" + Double.toString( startSlope ) );
 
       pw.println();
       pw.println( "# mögliche Werte" );
@@ -339,9 +342,15 @@ public class WspWinExporter
       pw.println( "EINZELVERLUSTE=" + "TODO" );
 
       pw.println();
-      pw.println( "MIN_Q=" + Double.toString( calculation.getMinQ() ) );
-      pw.println( "MAX_Q=" + Double.toString( calculation.getMaxQ() ) );
-      pw.println( "DELTA_Q=" + Double.toString( calculation.getQStep() ) );
+      final Double minQ = calculation.getMinQ();
+      if( minQ != null )
+        pw.println( "MIN_Q=" + Double.toString( minQ ) );
+      final Double maxQ = calculation.getMaxQ();
+      if( maxQ != null )
+        pw.println( "MAX_Q=" + Double.toString( maxQ ) );
+      final Double qstep = calculation.getQStep();
+      if( qstep != null )
+        pw.println( "DELTA_Q=" + Double.toString( qstep ) );
 
       pw.println();
       // Einheit des Durchflusses wird standardmäßig festgelegt
@@ -395,12 +404,12 @@ public class WspWinExporter
         profil.setStation( station.doubleValue() );
 
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
-        prfWriter = new PrintWriter(outPrfFile);
-        final IProfilSink ps =  new PrfSink();
-        ps.write(profil,prfWriter);
-        
-//        ProfilesSerializer.store( profil,outPrfFile );
-//        ProfilesSerializer.store( profil,zustFile.getParent() + File.separatorChar + prfName );
+        prfWriter = new PrintWriter( outPrfFile );
+        final IProfilSink ps = new PrfSink();
+        ps.write( profil, prfWriter );
+
+        // ProfilesSerializer.store( profil,outPrfFile );
+        // ProfilesSerializer.store( profil,zustFile.getParent() + File.separatorChar + prfName );
       }
 
       zustWriter.close();

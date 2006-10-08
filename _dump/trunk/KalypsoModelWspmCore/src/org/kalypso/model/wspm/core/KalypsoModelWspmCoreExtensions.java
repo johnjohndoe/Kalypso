@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -20,6 +21,8 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 public class KalypsoModelWspmCoreExtensions
 {
   private static IProfileFeatureProvider[] PROFILE_FEATURE_PROVIDER = null;
+
+  private static IProfilePointFilter[] PROFILE_POINT_FILTER = null;
 
   public static IProfilReparator[] createReaparatorRules( )
   {
@@ -123,5 +126,32 @@ public class KalypsoModelWspmCoreExtensions
     PROFILE_FEATURE_PROVIDER = provider.toArray( new IProfileFeatureProvider[provider.size()] );
     
     return PROFILE_FEATURE_PROVIDER;
+  }
+
+  public static IProfilePointFilter[] getProfilePointFilters( )
+  {
+    if( PROFILE_POINT_FILTER != null )
+      return PROFILE_POINT_FILTER;
+    
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilePointFilter" );
+
+    final Collection<IProfilePointFilter> filter = new ArrayList<IProfilePointFilter>( elements.length );
+    for( int i = 0; i < elements.length; i++ )
+    {
+      final IConfigurationElement element = elements[i];
+      try
+      {
+        filter.add( (IProfilePointFilter) element.createExecutableExtension( "class" ) );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+    
+    PROFILE_POINT_FILTER = filter.toArray( new IProfilePointFilter[filter.size()] );
+    
+    return PROFILE_POINT_FILTER;
   }
 }

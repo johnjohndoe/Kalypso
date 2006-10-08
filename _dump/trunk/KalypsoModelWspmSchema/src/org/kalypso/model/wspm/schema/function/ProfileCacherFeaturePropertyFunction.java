@@ -95,7 +95,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    // TODO: interpolate geometry onto profile points.
+    // TODO: interpolate geometry onto profile points?
 
     return null;
   }

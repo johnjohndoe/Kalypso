@@ -14,5 +14,16 @@
          simulationClass="org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob"
          typeID="WspmTuhhV1.0"/>
    </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+            id="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+            name="Water Body Parent"/>
+      <function
+            class="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
+            id="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
+            name="Tuhh Reach Marker List"/>
+   </extension>
    
 </plugin>

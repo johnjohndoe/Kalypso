@@ -44,9 +44,15 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Belger
@@ -54,6 +60,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class WspmProfile
 {
   public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
+
+  public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
 
   private final Feature m_feature;
 
@@ -84,6 +92,26 @@ public class WspmProfile
     final BigDecimal profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
 
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
+  }
+
+  public IProfil getProfil( )
+  {
+    try
+    {
+      return ProfileFeatureFactory.toProfile( getFeature() );
+    }
+    catch( final ProfilDataException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+
+      return null;
+    }
+  }
+
+  public GM_Curve getLine( )
+  {
+    return (GM_Curve) getFeature().getProperty( QNAME_LINE );
   }
 
 }

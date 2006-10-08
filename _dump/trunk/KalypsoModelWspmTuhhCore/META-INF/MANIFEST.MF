@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.kalypso.wspwin.core;visibility:=reexport,
  org.kalypso.ui,
- org.junit
+ org.junit,
+ org.kalypso.model.wspm.schema
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,

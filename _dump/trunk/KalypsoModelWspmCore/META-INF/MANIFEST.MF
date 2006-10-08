@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmCore
 Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: wspprofilcore.jar
 Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
@@ -12,6 +11,7 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml.assignment,
  org.kalypso.model.wspm.core.profil,
  org.kalypso.model.wspm.core.profil.changes,
+ org.kalypso.model.wspm.core.profil.filter,
  org.kalypso.model.wspm.core.profil.impl,
  org.kalypso.model.wspm.core.profil.impl.buildings,
  org.kalypso.model.wspm.core.profil.impl.buildings.building,

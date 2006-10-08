@@ -91,7 +91,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class BreakLinesHelper implements IWspmConstants
 {
-
   public BreakLinesHelper( )
   {
     // don't instantiate

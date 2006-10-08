@@ -236,7 +236,29 @@
                label="Profile in neuer Karte anzeigen"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
+               tooltip="Erzeugt eine neue Karte welche die selektierten Profile anzeigt."/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"
+            objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+         <filter
+               name="featureThemeQname"
+               value="org.kalypso.model.wspmprofile#Profile"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
+               id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
+               label="Rauheiten zuweisen"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               style="push"
                tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
+               id="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
+               label="Fließzonen erzeugen"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               style="push"
+               tooltip="Erzeugt Fließzonen-Begrenzer anhand von Linien-Themen"/>
       </objectContribution>
    </extension>
      <extension

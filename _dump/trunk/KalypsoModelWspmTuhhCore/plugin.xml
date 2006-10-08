@@ -14,5 +14,13 @@
             id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
             name="PrfSink"/>
    </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilePointFilter">
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.VorlandProfilePointFilter"
+            description="nur Profilpunkte ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
+            id="org.kalypso.model.wspm.tuhh.core.profile.VorlandProfilePointFilter"
+            name="nur Vorländer"/>
+   </extension>
 
 </plugin>

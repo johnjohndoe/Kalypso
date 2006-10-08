@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.gml;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,12 +51,15 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
@@ -76,10 +80,12 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -113,12 +119,26 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  public static void toFeature( final IProfil profile, final Feature targetFeature ) throws GMLSchemaException
+  public static void toFeature( final IProfil profile, final Feature targetFeature ) 
+  {
+    final FeatureChange[] changes = toFeatureAsChanges( profile, targetFeature );
+    for( final FeatureChange change : changes )
+      change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+  }
+
+  /**
+   * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
+   * changes.
+   */
+  public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
-
+    
     if( !GMLSchemaUtilities.substitutes( featureType, QN_PROF_PROFILE ) )
       throw new IllegalArgumentException( "Feature ist not a profile: " + targetFeature );
+
+    
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     try
     {
@@ -126,7 +146,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       // Station
       //
       final double station = profile.getStation();
-      targetFeature.setProperty( QNAME_STATION, new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) ) );
 
       /* Ensure that record-definition is there */
       final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
@@ -134,7 +154,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       {
         final GMLWorkspace workspace = targetFeature.getWorkspace();
         final Feature rd = workspace.createFeature( targetFeature, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
-        targetFeature.setProperty( ObservationFeatureFactory.OM_RESULTDEFINITION, rd );
+
+        changes.add( new FeatureChange( targetFeature, featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION ), rd ) );
       }
 
       //
@@ -215,29 +236,36 @@ public class ProfileFeatureFactory implements IWspmConstants
       // write the table into the main feature
       final List<MetadataObject> metadata = new ArrayList<MetadataObject>();
       final Observation<TupleResult> tableObs = new Observation<TupleResult>( "Profil", "", result, metadata );
-      ObservationFeatureFactory.toFeature( tableObs, targetFeature );
-
+      final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( tableObs, targetFeature );
+      Collections.addAll( changes, obsChanges );
+      
       //
       // Building
       //
       final QName memberQName = new QName( NS_WSPMPROF, "member" );
-      final FeatureList memberFeatures = (FeatureList) targetFeature.getProperty( memberQName );
-      memberFeatures.clear(); // delete existing features
+      final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
 
       final IProfilBuilding building = profile.getBuilding();
       if( building != null )
       {
-        final Feature buildingFeature = FeatureHelper.addFeature( targetFeature, memberQName, new QName( NS.OM, "Observation" ) );
+        final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[]{} );
+        final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
+        final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingType );
+        buildingList.add( buildingFeature );
         final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
+        
+        changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
       }
     }
     catch( final ProfilDataException e )
     {
       e.printStackTrace();
-
-      // TODO: handle exceptions
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
     }
+    
+    return changes.toArray( new FeatureChange[changes.size()] );
   }
 
   private static IObservation<TupleResult> observationFromBuilding( final IProfilBuilding building, final Feature obsFeature ) throws ProfilDataException
@@ -395,7 +423,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     return profil;
   }
-  
+
   public static POINT_PROPERTY pointPropertyFromComponentId( final String id )
   {
     final String name;

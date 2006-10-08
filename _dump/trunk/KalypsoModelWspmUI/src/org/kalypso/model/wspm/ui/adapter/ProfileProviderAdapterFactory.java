@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.adapter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
@@ -99,8 +98,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
           if( m_providers.containsKey( part ) )
             return m_providers.get( part );
 
-          final IFile file = (IFile) part.getAdapter( IFile.class );
-          final FeatureSelectionProfileProvider featureSelectionProfileProvider = new FeatureSelectionProfileProvider( file, part.getSite().getSelectionProvider() );
+          final FeatureSelectionProfileProvider featureSelectionProfileProvider = new FeatureSelectionProfileProvider( part.getSite().getSelectionProvider() );
 
           m_providers.put( part, featureSelectionProfileProvider );
           part.getSite().getPage().addPartListener( m_partAdapter );

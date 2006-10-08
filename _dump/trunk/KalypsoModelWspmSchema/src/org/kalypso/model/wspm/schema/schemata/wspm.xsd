@@ -44,48 +44,6 @@
 		substitutionGroup="gml:_Feature"/>
 	<!-- 
 	-->
-	<!-- Result (vorübergehend?) auskommentiert. Hätte wahrscheinlich sowieso nur Verweis auf Verzeichnisse enthalten
-	<element name="resultMember" type="wspm:ResultPropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Referenz auf Ergebnis</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>-->
-	<!--<element name="Result" type="wspm:ResultType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Ergebnis</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>-->
-	<!-- 
-	-->
-	<!--	<element name="documentMember" type="wspm:DocumentPropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???resultDocumentMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="Document" type="wspm:DocumentType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???resultDocument</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
--->
-	<!-- 
-	-->
 	<element name="waterBodyMember" type="wspm:WaterBodyPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
@@ -425,7 +383,6 @@ Selection means that stationing will be against flow direction. ]]></description
 							</documentation>
 						</annotation>
 					</element>
-					<!-- TODO hier kommt noch das neue Profil rein -->
 					<element name="profileMember" minOccurs="0" maxOccurs="unbounded"
 						type="wspm:ProfileInlinePropertyType">
 						<annotation>

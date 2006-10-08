@@ -66,12 +66,14 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
 
   }
 
+  @SuppressWarnings("unused")
   public void addProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
     for( final POINT_PROPERTY property : getPointProperties() )
       profil.addPointProperty( property );
   }
 
+  @SuppressWarnings("unused")
   public void removeProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
     for( final POINT_PROPERTY property : getPointProperties() )

@@ -40,16 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.adapter;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
@@ -66,14 +68,15 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -81,21 +84,23 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 implements IProfilProvider2, ISelectionChangedListener, IProfilListener, ModellEventListener
 {
-  private final ModellEventProvider m_mep = new ModellEventProviderAdapter();
-
   private final ProfilViewData m_viewData = new ProfilViewData();
 
   private final ISelectionProvider m_provider;
 
-  private final IFile m_file;
+  private IFile m_file;
 
   private IProfilEventManager m_pem = null;
 
   private Feature m_feature;
 
-  public FeatureSelectionProfileProvider( final IFile file, final ISelectionProvider provider )
+  private CommandableWorkspace m_workspace;
+  
+  /** Flag to prevent update when source of modell change is this */
+  private boolean m_lockNextModelChange = false;
+
+  public FeatureSelectionProfileProvider( final ISelectionProvider provider )
   {
-    m_file = file;
     m_provider = provider;
 
     m_provider.addSelectionChangedListener( this );
@@ -136,7 +141,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final Feature feature = FeatureSelectionHelper.getSelectedFeature( fs );
-
+    final CommandableWorkspace workspace = fs.getWorkspace( feature );
+    final URL workspaceContext = workspace.getContext();
+    m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
+    
     IProfil profile = null;
     WspmProfile profileMember = null;
     IStationResult[] results = null;
@@ -160,7 +168,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     }
 
     final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
-    setProfile( profile, results, profileFeature );
+    setProfile( profile, results, profileFeature, workspace );
   }
 
   /* find all results connected to this water */
@@ -176,7 +184,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     for( final Object wspFix : wspFixations )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
-      
+
       final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
       results.add( result );
     }
@@ -185,8 +193,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     // TRICKY: this depends currently on the concrete model
     // so we need to know the model-type (such as tuhh) and
     // delegate the search for results to model-specific code.
-    // TODO Auto-generated method stub
-    
     return results.toArray( new IStationResult[results.size()] );
   }
 
@@ -226,14 +232,20 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     {
       try
       {
-        ProfileFeatureFactory.toFeature( profil, m_feature );
-        // use m_mep as ModellEventProvider to remember where the event came from
-        m_feature.getWorkspace().fireModellEvent( new ModellEvent( m_mep, ModellEvent.FEATURE_CHANGE ) );
+        if( hint.isBuildingChanged() || hint.isBuildingDataChanged() || hint.isDeviderDataChanged() || hint.isDeviderMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
+            || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
+        {
+          final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profil, m_feature );
+
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_feature.getWorkspace(), featureChanges );
+          m_lockNextModelChange = true;
+          m_workspace.postCommand( command );
+        }
       }
-      catch( final GMLSchemaException e )
+      catch( final Exception e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
     }
   }
@@ -245,8 +257,14 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    if( m_lockNextModelChange )
+    {
+      m_lockNextModelChange = false;
+      return;
+    }
+    
     // do no react to my own event, beware of recursion
-    if( modellEvent.getEventSource() == m_mep || m_feature == null )
+    if( m_feature == null )
       return;
 
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
@@ -256,17 +274,18 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
         /* Results probably haven't changed. */
         final IStationResult[] results = m_pem == null ? null : m_pem.getResults();
-        setProfile( profil, results, m_feature );
+        setProfile( profil, results, m_feature, m_workspace );
       }
       catch( final ProfilDataException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
     }
   }
 
-  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature )
+  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
   {
     final IProfilEventManager oldPem = m_pem;
 
@@ -276,6 +295,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       m_pem = new ProfilEventManager( profil, results );
 
     m_feature = feature;
+    m_workspace = workspace;
 
     if( m_pem != null )
       m_pem.addProfilListener( this );

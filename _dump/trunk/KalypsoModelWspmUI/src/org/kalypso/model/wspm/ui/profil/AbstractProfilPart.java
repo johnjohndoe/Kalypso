@@ -167,14 +167,14 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     {
       final Label label = new Label( m_control, SWT.CENTER );
       label.setText( "Kein Profil selektiert." );
-      final GridData gridData = new GridData(  );
+      final GridData gridData = new GridData();
       gridData.grabExcessHorizontalSpace = true;
       gridData.horizontalAlignment = SWT.FILL;
       gridData.horizontalIndent = 10;
       gridData.grabExcessVerticalSpace = true;
       gridData.verticalAlignment = SWT.CENTER;
       gridData.verticalIndent = 10;
-      
+
       label.setLayoutData( gridData );
     }
     else
@@ -214,16 +214,17 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public synchronized void setProfil( final IProfilEventManager pem, final IFile file, final String editorID )
   {
+    if( m_profilValidator != null )
+    {
+      if( m_pem != null )
+        m_pem.removeProfilListener( m_profilValidator );
+      m_profilValidator.dispose();
+      m_profilValidator = null;
+    }
+
+    // die undo queue für dieses profil löschen
     if( m_pem != null )
     {
-      if( m_profilValidator != null )
-      {
-        m_pem.removeProfilListener( m_profilValidator );
-        m_profilValidator.dispose();
-        m_profilValidator = null;
-      }
-
-      // die undo queue für dieses profil löschen
       final IOperationHistory operationHistory = getUndoHistory();
       operationHistory.dispose( getUndoContext(), true, true, true );
     }

@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmTuhhSchema Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.schema; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: org.kalypso.model.wspm.tuhh/
 Bundle-Activator: org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

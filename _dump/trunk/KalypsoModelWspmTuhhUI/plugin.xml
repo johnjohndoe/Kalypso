@@ -48,7 +48,7 @@
                style="push"
                tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
       </objectContribution>
-            <objectContribution
+            <!--objectContribution
                   adaptable="false"
                   id="org.kalypso.model.wspm.tuhh.ui.object.contribution.showProfileinMap"
                   objectClass="org.kalypsodeegree.model.feature.Feature">
@@ -63,36 +63,31 @@
                      menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                      style="push"
                      tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
-            </objectContribution>
+            </objectContribution-->
             <objectContribution
                   adaptable="false"
-                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.showProfileinMap"
+                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"
                   objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
                <filter
                      name="featureThemeQname"
                      value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
                <action
                      class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-                     id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
+                     id="org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
                      label="Rauheiten zuweisen"
                      menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                      style="push"
                      tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+		         <action
+		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
+		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
+		               label="Fließzonen erzeugen"
+		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+		               style="push"
+		               tooltip="Erzeugt Fließzonen-Begrenzer anhand von Linien-Themen"/>
             </objectContribution>
    </extension>
 
-   <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportWizard"
-            icon="icons/obj16/wspwin.gif"
-            id="org.kalypso.model.wspm.importwizard.wspwin"
-            name="%org.kalypso.model.wspm.importwizard.wspwin">
-         <description>
-            Importiert Daten aus einem bestehenden WspWin Projekt
-         </description>
-      </wizard>
-   </extension>
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard

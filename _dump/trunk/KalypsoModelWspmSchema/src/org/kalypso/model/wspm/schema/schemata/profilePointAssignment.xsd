@@ -18,6 +18,7 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Zuordnungstabelle</label>
+				<label>Zuordnungstabelle</label>
 			</documentation>
 		</annotation>
 	</element>
@@ -52,7 +53,6 @@
 		</sequence>
 	</complexType>
 
-	
 	<element name="Assignment" type="profass:AssignmentType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">

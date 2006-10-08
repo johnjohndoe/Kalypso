@@ -794,7 +794,18 @@
 	</complexType>
 
 	<complexType name="ReachWspmTuhhSteadyStateType">
-		<!-- TODO: gewässer is function property: just link to parent -->
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+					kapp:property="tuhh:waterBodyLinkMember">
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
+					kapp:property="tuhh:markerMember">
+				</kapp:functionProperty>
+			</appinfo>
+		</annotation>
 		<complexContent>
 			<extension base="wspm:AbstractReachType">
 				<sequence>
@@ -840,6 +851,11 @@
 								<tooltip>River string segments</tooltip>
 								<description>River string segments</description>
 							</documentation>
+						</annotation>
+					</element>
+					<element name="markerMember" type="tuhh:ProfileMarkerPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>This list of markers is generated from the profile-segments.</documentation>
 						</annotation>
 					</element>
 				</sequence>
@@ -939,21 +955,6 @@
 						</annotation>
 					</element>
 
-<!--					
-					<element name="marker" type="gml:PointType" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<appinfo>This property is backed by profileMember, more explicit by the
-								referenced profile-observation. This is more difficult than the line
-								property because, it depends on the profile, how many points we
-								have.</appinfo>
-							<documentation xml:lang="de">
-								<label>???marker</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
--->				
 					<!-- Distances are commented out, because they are not yet (?)
 						used by the tuhh steady-state flow model -->
 					<!--
@@ -1045,7 +1046,7 @@
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="doCalcBridges" type="boolean">
+					<element name="doCalcBridges" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Brücken mit berechnen</label>
@@ -1059,7 +1060,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="doCalcBarrages" type="boolean">
+					<element name="doCalcBarrages" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wehre mit berechnen</label>
@@ -1079,4 +1080,40 @@
 	</complexType>
 	<!-- 
 	-->
+	<complexType name="ProfileMarkerPropertyType">
+		<sequence>
+			<element ref="tuhh:ProfileMarker"/>
+		</sequence>
+	</complexType>
+
+	<element name="ProfileMarker" type="tuhh:ProfileMarkerType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Marker</label>
+				<tooltip>Markierungen im Profil</tooltip>
+				<description>Markierung im Profil wie z.B. Trennflächen</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<complexType name="ProfileMarkerType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
+					kapp:property="tuhh:location">
+				</kapp:functionProperty>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!-- Reference to component dict? -->
+					<element name="type" type="string"/>
+					<element name="location" type="gml:PointPropertyType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
 </schema>
