@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.timeseries.diff;
 
-import java.io.IOException;
-
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffObject;
 
@@ -71,7 +69,7 @@ public class BilFileDiffObject implements IDiffObject
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getContent(java.lang.String)
    */
-  public Object getContent( String path ) throws IOException
+  public Object getContent( String path ) 
   {
     // TODO Auto-generated method stub
     return null;

@@ -7,4 +7,3 @@ Bundle-Localization: plugin
 Bundle-Vendor: kalypso.org
 Export-Package: org.kalypso.model.km
 Require-Bundle: org.junit
-Bundle-ClassPath: kalypsoRRM_KalininMiljukov.jar
