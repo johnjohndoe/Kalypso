@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoRepository
 Bundle-SymbolicName: org.kalypso.repository; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: kalypsorepository.jar
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.repository,

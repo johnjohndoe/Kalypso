@@ -44,7 +44,9 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Represents a function-property.
@@ -77,4 +79,12 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    * @param properties the properties of the appinfo 
    */
   public abstract void init( final Map<String, String> properties );
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean invalidateEnvelope( final IPropertyType pt )
+  {
+    return GeometryUtilities.isGeometry( pt );
+  }
 }

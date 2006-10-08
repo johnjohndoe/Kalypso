@@ -51,7 +51,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.IDetailedFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -93,7 +92,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     {
       final IDetailedFeatureType dft = (IDetailedFeatureType) featureType;
 
-      final IFeatureContentType featureContentType = (FeatureContentType) dft.getFeatureContentType();
+      final IFeatureContentType featureContentType = dft.getFeatureContentType();
       final XmlObject[] funcProps = featureContentType.collectFunctionProperties();
       for( final XmlObject funcProp : funcProps )
       {
@@ -176,6 +175,18 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
       return handler.getValue( feature, pt, checkedValue );
 
     return DEFAULT_HANDLER.getValue( feature, pt, checkedValue );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean invalidateEnvelope( final IPropertyType pt )
+  {
+    final IFeaturePropertyHandler handler = m_handlers.get( pt );
+    if( handler != null )
+      return handler.invalidateEnvelope( pt );
+    
+    return DEFAULT_HANDLER.invalidateEnvelope( pt );
   }
 
 }

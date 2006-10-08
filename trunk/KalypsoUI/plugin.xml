@@ -861,4 +861,10 @@
           id="org.kalypso.ui.catalogs.FeatureTypeAnnotationCatalog"
           name="Feature-Type Annotation Catalog"/>
  </extension>
+ <extension
+       point="org.eclipse.ui.importWizards">
+    <category
+          id="org.kalypso.ui.importwizards.kalypso"
+          name="Kalypso"/>
+ </extension>
 </plugin>

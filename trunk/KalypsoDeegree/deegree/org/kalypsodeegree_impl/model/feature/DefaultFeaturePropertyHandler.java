@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.model.feature;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This implementation just leaves all values as they are. Used in order to avoid null-checks.
@@ -68,4 +69,13 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
   {
     return currentValue;
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean invalidateEnvelope( final IPropertyType pt )
+  {
+    return GeometryUtilities.isGeometry( pt );
+  }
+
 }

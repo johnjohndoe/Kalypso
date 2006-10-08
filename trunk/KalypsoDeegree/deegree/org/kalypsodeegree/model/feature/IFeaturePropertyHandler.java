@@ -77,4 +77,7 @@ public interface IFeaturePropertyHandler
    * @return The value which should really be returned from {@link Feature#getProperty(QName)}.
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue );
+
+  /** Return if the envelope of the feature shall be invalidated after settings this property. */
+  public boolean invalidateEnvelope( final IPropertyType pt );
 }

@@ -7,7 +7,7 @@
       </appInfo>
       <documentation>
          This extension point provides function properties for gml features. This is used to implementat &apos;function-style&apos; properties of features.
-&lt;br/&gt;
+&lt;br&gt;
 In order to use such functions, add appinfo elements to your gml application schema:
 
 &lt;pre&gt;

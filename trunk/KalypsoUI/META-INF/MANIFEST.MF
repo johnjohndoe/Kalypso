@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoUI
 Bundle-SymbolicName: org.kalypso.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: KalypsoUi.jar,
- lib/swtcalendar.jar,
+Bundle-ClassPath: lib/swtcalendar.jar,
  lib/jcommon-0.9.6.jar,
- lib/jfreechart-0.9.21.jar
+ lib/jfreechart-0.9.21.jar,
+ .
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

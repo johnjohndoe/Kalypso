@@ -40,51 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-
 /**
+ * Instances of this interface are used to filter a list of themes.
+ * 
  * @author Gernot Belger
  */
-public class FeatureThemeQNameActionFilter implements IActionFilterEx
+public interface IKalypsoThemeFilter
 {
-  public final static String ATTR_QNAME = "featureThemeQname"; //$NON-NLS-1$
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
-   */
-  public String[] getNames( )
-  {
-    return new String[] { ATTR_QNAME };
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
-   */
-  public boolean testAttribute( final Object target, final String name, final String value )
-  {
-    if( !(target instanceof IKalypsoFeatureTheme) )
-      return false;
-    
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) target;
-
-    if( ATTR_QNAME.equals( name ) )
-    {
-      final String[] strings = value.split( ";" ); //$NON-NLS-1$
-      for( final String string : strings )
-      {
-        final QName qName = QNameUtilities.createQName( string );
-
-        final IFeatureType featureType = theme.getFeatureType();
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, qName ) )
-          return true;
-      }
-    }
-
-    return false;
-  }
+  public boolean accept( final IKalypsoTheme theme );
 }

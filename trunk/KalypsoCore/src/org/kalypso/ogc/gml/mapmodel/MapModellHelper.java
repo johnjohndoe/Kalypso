@@ -45,8 +45,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypso.contribs.java.awt.HighlightGraphics;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -168,6 +172,20 @@ public class MapModellHelper
     double dist = r * Math.acos( cose );
 
     return dist * 1000;
+  }
+
+  
+  public static IKalypsoTheme[] filterThemes( final IMapModell modell, final IKalypsoThemeFilter filter )
+  {
+    final IKalypsoTheme[] allThemes = modell.getAllThemes();
+    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>( allThemes.length );
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      if( filter.accept( theme ) )
+        themes.add( theme );
+    }
+
+    return themes.toArray( new IKalypsoTheme[themes.size()] );
   }
 
 }

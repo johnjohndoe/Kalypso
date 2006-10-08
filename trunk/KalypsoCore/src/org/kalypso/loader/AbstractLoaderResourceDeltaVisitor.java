@@ -54,9 +54,9 @@ import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
  * <pre>
- *         Changes:
- *         2004-11-09 - schlienger - uses now the path of the resource as key in the map
- *         						     Path should be taken using the pathFor( IResource ) method
+ *           Changes:
+ *           2004-11-09 - schlienger - uses now the path of the resource as key in the map
+ *           						     Path should be taken using the pathFor( IResource ) method
  * </pre>
  * 
  * @author belger
@@ -122,7 +122,9 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
     final Object oldValue = m_resourceMap.get( pathFor( resource ) );
     if( oldValue != null )
     {
-      if( (delta.getFlags() & IResourceDelta.MARKERS) != 0 )
+      final int flags = delta.getFlags();
+
+      if( (flags & IResourceDelta.MARKERS) != 0 )
       {
         final IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
         for( final IMarkerDelta delta2 : markerDeltas )
@@ -134,17 +136,20 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 
       try
       {
-        switch( delta.getKind() )
+        if( (flags & (IResourceDelta.CONTENT | IResourceDelta.ENCODING)) != 0 )
         {
-          case IResourceDelta.REMOVED:
-            // todo: sollte eigentlich auch behandelt werden
-            // aber so, dass noch die chance auf ein add besteht
-            break;
-
-          case IResourceDelta.ADDED:
-          case IResourceDelta.CHANGED:
+          switch( delta.getKind() )
           {
-            m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
+            case IResourceDelta.REMOVED:
+              // todo: sollte eigentlich auch behandelt werden
+              // aber so, dass noch die chance auf ein add besteht
+              break;
+
+            case IResourceDelta.ADDED:
+            case IResourceDelta.CHANGED:
+            {
+              m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
+            }
           }
         }
       }
@@ -154,7 +159,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       }
       finally
       {
-        if( (delta.getFlags() & IResourceDelta.MARKERS) != 0 )
+        if( (flags & IResourceDelta.MARKERS) != 0 )
         {
           final IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
           for( final IMarkerDelta delta2 : markerDeltas )

@@ -41,7 +41,6 @@
 package org.kalypso.model.application;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -50,12 +49,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class KalypsoModelApplication implements IPlatformRunnable
 {
-
-  public KalypsoModelApplication( )
-  {
-    super();
-  }
-
   /**
    * @see org.eclipse.core.runtime.IPlatformRunnable#run(java.lang.Object)
    */
@@ -63,8 +56,6 @@ public class KalypsoModelApplication implements IPlatformRunnable
   {
     final Display display = PlatformUI.createDisplay();
 
-    Platform.endSplash();
-    
     final int returnCode = PlatformUI.createAndRunWorkbench( display, new KalypsoModelWorkbenchAdvisor() );
     if( returnCode == PlatformUI.RETURN_RESTART )
       return IPlatformRunnable.EXIT_RESTART;

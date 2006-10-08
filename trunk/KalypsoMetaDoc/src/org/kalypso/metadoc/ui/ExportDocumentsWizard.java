@@ -164,7 +164,7 @@ public class ExportDocumentsWizard extends Wizard
     return true;
   }
   
-  private static final class ExporterWizardNodeLabelProvider extends LabelProvider
+  protected static final class ExporterWizardNodeLabelProvider extends LabelProvider
   {
     /** key -> image */
     private final Map<ExportWizardNode, Image> m_images = new HashMap<ExportWizardNode, Image>();

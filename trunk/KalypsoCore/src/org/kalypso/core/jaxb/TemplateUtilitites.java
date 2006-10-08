@@ -97,7 +97,8 @@ public class TemplateUtilitites
 
       try
       {
-        SH_GISMAPVIEW = SCHEMA_FACTORY.newSchema( schemaUrl );
+        if( schemaUrl != null )
+          SH_GISMAPVIEW = SCHEMA_FACTORY.newSchema( schemaUrl );
       }
       catch( final SAXException e )
       {

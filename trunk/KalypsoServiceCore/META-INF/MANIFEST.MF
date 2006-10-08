@@ -7,4 +7,3 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services,
  org.kalypso.services.common
-Bundle-ClassPath: kalypsoServiceCore.jar

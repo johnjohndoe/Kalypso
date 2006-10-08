@@ -234,18 +234,20 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     if( e.widget == m_browseButton )
     {
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      
+
       final IContainer container = m_selectedProject == null ? root : m_selectedProject;
-      
+
       final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, "Auswählen einer GML Datei", new String[] { "gml" }, container, new ResourceSelectionValidator() );
       dialog.open();
       // get first element, only one element possible
       final IPath selection = (IPath) dialog.getResult()[0];
       final IFile resource = root.getFile( selection );
-      
+
       // create project path (Kalypso project-protocol)
-//      m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
-      m_source = selection.toString();
+      if( m_selectedProject == null )
+        m_source = ResourceUtilities.createURLSpec( selection );
+      else
+        m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
       m_sourceFileText.setText( selection.toString() );
 
       try
@@ -331,42 +333,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_titleList = titleList;
     setPageComplete( !m_pathList.isEmpty() );
   }
-
-  // m_feature = new HashSet();
-  // setPageComplete( false );
-  // if( !selection.isEmpty() )
-  // {
-  // final Object[] array = ( (IStructuredSelection)selection ).toArray();
-  // for( int i = 0; i < array.length; i++ )
-  // {
-  // final Object o = array[i];
-  // if( o instanceof Feature && !m_workspace.getRootFeature().equals( o ) )
-  // {
-  // Feature feature = (Feature)o;
-  // if( FeatureHelper.isCollection( feature ) )
-  // {
-  // IFeatureType[] featureType = FeatureHelper.getFeatureTypeFromCollection( feature );
-  // for( int j = 0; j < featureType.length; j++ )
-  // {
-  // IFeatureType type = featureType[j];
-  // if( type.hasGeometryProperty() )
-  // {
-  // m_feature.add( feature );
-  // setPageComplete( true );
-  // }
-  // }
-  // }
-  // else if( feature.getFeatureType().hasGeometryProperty() )
-  // {
-  // m_feature.add( o );
-  // setPageComplete( true );
-  // }
-  // }
-  //
-  // }
-  // }
-  // }
-  // }
 
   public String getSource( )
   {

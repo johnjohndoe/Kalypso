@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoAuth Plug-in
 Bundle-SymbolicName: org.kalypso.auth; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: KalypsoAuth.jar
 Bundle-Activator: org.kalypso.auth.KalypsoAuthPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

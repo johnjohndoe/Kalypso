@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoFeatureView Plug-in
 Bundle-SymbolicName: org.kalypso.featureview; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: KalypsoFeatureView.jar
 Bundle-Activator: org.kalypso.featureview.KalypsoFeatureViewPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

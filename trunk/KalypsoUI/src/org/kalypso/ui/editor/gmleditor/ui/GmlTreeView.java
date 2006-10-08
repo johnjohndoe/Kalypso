@@ -520,6 +520,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final String href = input.getHref();
       final String linktype = input.getLinktype();
+
       m_key = new PoolableObjectType( linktype, href, context );
       m_pool.addPoolListener( this, m_key );
     }
@@ -703,5 +704,4 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     // TODO propagate dirty change to GmlEditor if present
   }
-
 }

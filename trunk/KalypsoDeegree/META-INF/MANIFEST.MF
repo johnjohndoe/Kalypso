@@ -3,17 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.deegree
 Bundle-SymbolicName: org.kalypso.deegree; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: kalypsodeegree.jar,
- lib/acme/acme.jar,
+Bundle-ClassPath: lib/acme/acme.jar,
  lib/jai/jai_codec.jar,
  lib/jts/jts.jar,
  lib/jai/jai_core.jar,
  lib/jai/mlibwrapper_jai.jar,
- lib/java3d/j3dutils.jar,
  lib/java3d/vecmath.jar,
  lib/xalan-j/xalan.jar,
  lib/shiftone/shiftone-cache.jar,
- lib/deegree/deegree2004-02-13.jar
+ lib/deegree/deegree2004-02-13.jar,
+ .
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,

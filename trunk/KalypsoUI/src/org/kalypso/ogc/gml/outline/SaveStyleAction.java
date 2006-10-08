@@ -121,12 +121,15 @@ public class SaveStyleAction extends AbstractOutlineAction
       {
         GisTemplateUserStyle tus = (GisTemplateUserStyle) userStyle;
         final PoolableObjectType poolKey = tus.getPoolKey();
-        final URL context = poolKey.getContext();
-        String location = poolKey.getLocation();
-        final UrlResolver resolver = new UrlResolver();
-        url = resolver.resolveURL( context, location );
-        final IFile file = ResourceUtilities.findFileFromURL( url );
-        knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
+        final URL context = poolKey == null ? null : poolKey.getContext();
+        final String location = poolKey == null ? null : poolKey.getLocation();
+        if( location != null )
+        {
+          final UrlResolver resolver = new UrlResolver();
+          url = resolver.resolveURL( context, location );
+          final IFile file = ResourceUtilities.findFileFromURL( url );
+          knownFilename = ResourceUtilities.makeFileFromPath( file.getFullPath() );
+        }
       }
       catch( Exception e1 )
       {
@@ -148,7 +151,6 @@ public class SaveStyleAction extends AbstractOutlineAction
     {
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
-
         public URL resolveURL( String href ) throws MalformedURLException
         {
           return UrlResolverSingleton.resolveUrl( context, href );

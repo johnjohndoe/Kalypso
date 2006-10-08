@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.application;
 
+import java.util.Collections;
+
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
+import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
  * @author albert
@@ -50,9 +55,13 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 @SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
 {
-  public KalypsoModelWorkbenchAdvisor( )
+  /**
+   * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#getInitialWindowPerspectiveId()
+   */
+  @Override
+  public String getInitialWindowPerspectiveId( )
   {
-    super();
+    return ModelerPerspectiveFactory.ID;
   }
 
   @Override
@@ -62,20 +71,15 @@ public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
   }
 
   /**
-   * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
+   * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#preStartup()
    */
   @Override
-  public void postStartup( )
+  public void preStartup( )
   {
-    super.postStartup();
-  }
+    /* Disable all activities. */
+    final IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
+    workbenchActivitySupport.setEnabledActivityIds( Collections.EMPTY_SET );
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchAdvisor#preShutdown()
-   */
-  @Override
-  public boolean preShutdown( )
-  {
-    return super.preShutdown();
+    super.preStartup();
   }
 }
