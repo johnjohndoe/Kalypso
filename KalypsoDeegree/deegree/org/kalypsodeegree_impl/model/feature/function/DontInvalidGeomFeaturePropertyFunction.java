@@ -38,53 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypsodeegree_impl.model.feature.function;
 
-import javax.xml.namespace.QName;
+import java.util.Map;
 
-import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
+ * This function does nothing but prevent invalidation of geometries.
+ * 
  * @author Gernot Belger
  */
-public class FeatureThemeQNameActionFilter implements IActionFilterEx
+public class DontInvalidGeomFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  public final static String ATTR_QNAME = "featureThemeQname"; //$NON-NLS-1$
-
   /**
-   * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Properties)
    */
-  public String[] getNames( )
+  @Override
+  public void init( final Map<String, String> properties )
   {
-    return new String[] { ATTR_QNAME };
   }
 
   /**
-   * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public boolean testAttribute( final Object target, final String name, final String value )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    if( !(target instanceof IKalypsoFeatureTheme) )
-      return false;
-    
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) target;
+    return valueToSet;
+  }
 
-    if( ATTR_QNAME.equals( name ) )
-    {
-      final String[] strings = value.split( ";" ); //$NON-NLS-1$
-      for( final String string : strings )
-      {
-        final QName qName = QNameUtilities.createQName( string );
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  {
+    return currentValue;
+  }
 
-        final IFeatureType featureType = theme.getFeatureType();
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, qName ) )
-          return true;
-      }
-    }
-
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  @Override
+  public boolean invalidateEnvelope( final IPropertyType pt )
+  {
     return false;
   }
+
 }

@@ -86,7 +86,7 @@ public abstract class AbstractExportTarget implements IExportTarget
 
     final String iconLocation = config.getAttribute( "icon" );
     if( iconLocation != null )
-      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getNamespace(), iconLocation );
+      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getContributor().getName(), iconLocation );
   }
 
   /**

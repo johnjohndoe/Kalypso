@@ -407,4 +407,15 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       setContentDescription( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == ICommandTarget.class )
+      return m_commandTarget;
+    
+    return super.getAdapter(adapter);
+  }
 }

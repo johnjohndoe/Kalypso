@@ -51,7 +51,6 @@ import org.kalypso.template.types.StyledLayerType.Style;
 
 public class AddThemeCommand implements ICommand
 {
-
   private final StyledLayerType m_layer;
 
   private final GisTemplateMapModell m_mapModell;

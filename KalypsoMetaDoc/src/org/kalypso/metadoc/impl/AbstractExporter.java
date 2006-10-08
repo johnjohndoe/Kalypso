@@ -77,7 +77,7 @@ public abstract class AbstractExporter implements IExporter
 
     final String iconLocation = config.getAttribute( "icon" );
     if( iconLocation != null )
-      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getNamespace(), iconLocation );
+      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getContributor().getName(), iconLocation );
   }
 
   /**
@@ -121,6 +121,7 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
+  @SuppressWarnings("unused")
   public void init( final ISupplier supplier ) throws CoreException
   {
     m_supplier = supplier;

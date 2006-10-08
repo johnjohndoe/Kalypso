@@ -53,7 +53,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -658,7 +657,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     for( int i = 0; i < listeners.length; i++ )
     {
       final ModifyListener listener = listeners[i];
-      Platform.run( new SafeRunnable()
+      SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception
         {

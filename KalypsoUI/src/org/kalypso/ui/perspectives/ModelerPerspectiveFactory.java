@@ -51,6 +51,8 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
+  public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory";
+  
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */

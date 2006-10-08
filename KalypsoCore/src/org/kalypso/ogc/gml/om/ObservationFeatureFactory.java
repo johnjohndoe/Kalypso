@@ -63,6 +63,7 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.swe.RepresentationType;
 import org.kalypso.ogc.swe.RepresentationType.KIND;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
@@ -234,28 +235,39 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   public static void toFeature( final IObservation<TupleResult> source, final Feature targetObsFeature )
   {
+    final FeatureChange[] changes = toFeatureAsChanges( source, targetObsFeature );
+    for( final FeatureChange change : changes )
+      change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+  }
+
+  public static FeatureChange[] toFeatureAsChanges( final IObservation<TupleResult> source, final Feature targetObsFeature )
+  {
     final IFeatureType featureType = targetObsFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, OM_OBSERVATION ) )
       throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
 
-    targetObsFeature.setProperty( GML_NAME, Collections.singletonList( source.getName() ) );
-    targetObsFeature.setProperty( GML_DESCRIPTION, source.getDescription() );
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_NAME ), Collections.singletonList( source.getName() ) ) );
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_DESCRIPTION ), source.getDescription() ) );
 
     final List<MetadataObject> mdList = source.getMetadataList();
-    targetObsFeature.setProperty( GML_METADATA, mdList );
-
-    targetObsFeature.setProperty( OM_OBSERVED_PROP, source.getPhenomenon() );
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_METADATA ), mdList ) );
+    
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_OBSERVED_PROP ), source.getPhenomenon() ) );
 
     final TupleResult result = source.getResult();
 
     final IComponent[] components = result.getComponents();
 
     final Feature rd = buildRecordDefinition( targetObsFeature, components );
-    targetObsFeature.setProperty( OM_RESULTDEFINITION, rd );
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_RESULTDEFINITION ), rd ) );
 
     final String strResult = serializeResultAsString( result );
-    targetObsFeature.setProperty( OM_RESULT, strResult );
+    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_RESULT ), strResult ) );
+    
+    return changes.toArray( new FeatureChange[changes.size()] );
   }
 
   /**

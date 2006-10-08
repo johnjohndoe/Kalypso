@@ -26,13 +26,13 @@
                value="etc/kalypso16.gif"/>
          <property
                name="startupMessageRect"
-               value="0,190,400,20"/>
+               value="0,200,400,15"/>
          <property
                name="startupForegroundColor"
                value="000000"/>
          <property
                name="startupProgressRect"
-               value="0,200,400,20"/>
+               value="0,215,400,15"/>
       </product>
    </extension>
    <extension
@@ -62,5 +62,46 @@
          </presentation>
       </config>
    </extension>
+
+    <extension
+         point="org.eclipse.ui.activities">
+  
+      <activity
+            name="Model Product Activity"
+            description="Disables a lot of not wanted things."
+            id="org.kalypso.model.product.activity">
+      </activity>
+      
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ant\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.debug\.ui/.*">
+      </activityPatternBinding>
+
+      <activityPatternBinding
+            activityId="org.kalypso.model.product.activity"
+            pattern="org\.eclipse\.ui\.externaltools/.*">
+      </activityPatternBinding>
+
+      <category
+            name="Kalypso Model Product"
+            description="Disables a lot of not wanted things."
+            id="org.kalypso.model.product.categories.productCategory">
+      </category>
+
+      <categoryActivityBinding
+            activityId="org.kalypso.model.product.activity"
+            categoryId="org.kalypso.model.product.categories.productCategory">
+      </categoryActivityBinding>
+      
+      <defaultEnablement
+            id="org.kalypso.model.product.activity">
+      </defaultEnablement>
+   </extension>
+
 
 </plugin>

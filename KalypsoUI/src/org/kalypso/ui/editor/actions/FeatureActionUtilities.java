@@ -237,14 +237,14 @@ public class FeatureActionUtilities
   {
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
 
-    if( !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_NAME ) )
+    if( annotation != null && !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_NAME ) )
     {
       final String name = annotation.getValue( IAnnotation.ANNO_NAME );
       if( name != null )
         return name;
     }
 
-    if( !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_LABEL ) )
+    if( annotation != null && !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_LABEL ) )
     {
       final String name = annotation.getValue( IAnnotation.ANNO_LABEL );
       if( name != null )

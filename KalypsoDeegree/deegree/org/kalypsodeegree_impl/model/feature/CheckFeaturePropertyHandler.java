@@ -106,4 +106,12 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
     return currentValue;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean invalidateEnvelope( final IPropertyType pt )
+  {
+    return false;
+  }
+
 }

@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCore Plug-in
 Bundle-SymbolicName: org.kalypso.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: kalypsocore.jar
 Bundle-Activator: org.kalypso.core.KalypsoCorePlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
