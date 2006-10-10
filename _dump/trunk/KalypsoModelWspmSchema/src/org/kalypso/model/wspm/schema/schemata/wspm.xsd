@@ -572,7 +572,7 @@ Selection means that stationing will be against flow direction. ]]></description
 	</complexType>
 	<complexType name="RoughnessDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element ref="wspm:roughnessDefinitionMember" minOccurs="0"
 						maxOccurs="unbounded"/>
@@ -593,7 +593,7 @@ Selection means that stationing will be against flow direction. ]]></description
 	</complexType>
 	<complexType name="RoughnessDefinitionType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>
@@ -648,7 +648,7 @@ Selection means that stationing will be against flow direction. ]]></description
 	</complexType>
 	<complexType name="VegetationDefinitionCollectionType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element ref="wspm:vegetationDefinitionMember" minOccurs="0"
 						maxOccurs="unbounded"/>
@@ -669,7 +669,7 @@ Selection means that stationing will be against flow direction. ]]></description
 	</complexType>
 	<complexType name="VegetationDefinitionType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="label" type="string">
 						<annotation>

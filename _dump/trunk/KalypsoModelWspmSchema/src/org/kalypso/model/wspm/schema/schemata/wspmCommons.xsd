@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	targetNamespace="org.kalypso.model.wspmcommon" elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmcommon"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -9,7 +9,6 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- TODO: KALYPSO-Header einfügen -->
-
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -25,64 +24,9 @@
 	</complexType>
 	<!-- 
 	-->
-	<complexType name="NamedFeatureBaseType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureType">
-				<sequence>
-					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Metadaten</label>
-								<tooltip>Metadaten</tooltip>
-								<description>Metadaten</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Metadata</label>
-								<tooltip>Metadata</tooltip>
-								<description>Metadata</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="gml:description">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Beschreibung</label>
-								<tooltip>Beschreibung</tooltip>
-								<description>Beschreibung</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>description</label>
-								<tooltip>description</tooltip>
-								<description>description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="gml:name" minOccurs="1" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Bezeichnung</label>
-								<tooltip>Bezeichnung</tooltip>
-								<description>Bezeichnung</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Name</label>
-								<tooltip>Name</tooltip>
-								<description>Name</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-				<!-- Force id attribute, because KALYPSO needs it -->
-				<attribute ref="gml:id" use="required"/>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<!-- 
-	-->
 	<simpleType name="stationDouble">
 		<restriction base="decimal">
 			<fractionDigits value="4"/>
 		</restriction>
 	</simpleType>
 </schema>
-  
