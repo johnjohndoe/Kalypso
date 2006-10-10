@@ -142,7 +142,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final Feature feature = FeatureSelectionHelper.getSelectedFeature( fs );
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
-    final URL workspaceContext = workspace.getContext();
+    final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
     
     IProfil profile = null;
