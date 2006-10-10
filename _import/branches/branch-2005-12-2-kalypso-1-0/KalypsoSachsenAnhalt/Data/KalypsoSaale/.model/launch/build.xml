@@ -6,11 +6,9 @@
 	<!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
 	<!-- TODO: durch echte URLs ersetzen; zur Zeit linkt alles auf das lokale Projektverzeichnis -->
 	<!-- Scenario Normalbetrieb -->
-	<property name="szenario_EchtDwdUrl1" value="http://smdhvzwapp:8088/webdav/dwd/lm_normal.txt" />
-	<property name="szenario_EchtDwdUrl2" value="http://shalhvzwapp:8088/webdav/dwd/lm_normal.txt" />
+	<property name="szenario_EchtDwdUrl" value="${kalypso.sa.dwddav.url}/lm_normal.txt" />
 	<!-- Scenario Testbetrieb -->
-	<property name="szenario_TestDwdUrl1" value="http://smdhvzwapp:8088/webdav/dwd/lm_test.txt" />
-	<property name="szenario_TestDwdUrl2" value="http://shalhvzwapp:8088/webdav/dwd/lm_test.txt" />
+	<property name="szenario_TestDwdUrl" value="${kalypso.sa.dwddav.url}/lm_test.txt" />
 
 	<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
 	<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
@@ -51,7 +49,7 @@
 			<property name="ombrometerLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
 			<property name="gebietsniederschlagLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
 			<property name="speicherLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
-			<property name="dwdRasterRemoteURLs" valueThen="${szenario_TestDwdUrl1},${szenario_TestDwdUrl2}" valueElse="${szenario_EchtDwdUrl1},${szenario_EchtDwdUrl2}" />
+			<property name="dwdRasterRemoteURLs" valueThen="${szenario_TestDwdUrl}" valueElse="${szenario_EchtDwdUrl}" />
 
 			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
 			<property name="wiski_zukunft_link" valueThen="wiski_simulation_zukunft" valueElse="wiski_zukunft"/>
@@ -242,6 +240,8 @@
 
 	<target name="fetchRaster" depends="calculationProperties">
 		<echo message="aktualisiere DWD-Raster im Rechenfall" />
+		<echo message="Fetching from: ${kalypso.sa.dwddav.url}"/>
+		
 		<Kalypso.fetchFromURL context="${calc.url}" src="${dwdRasterRemoteURLs}" listseparator="," dest="${dwdRasterLocalPath}" />
 	</target>
 
