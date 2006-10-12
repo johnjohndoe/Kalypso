@@ -68,7 +68,7 @@ public class WaterBodyParentFunctionProperty extends FeaturePropertyFunction
   {
     final Feature parent = feature.getParent();
     
-    return parent == null ? null : "#" + parent.getId();
+    return parent == null ? null : parent.getId();
   }
 
   /**

@@ -75,6 +75,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants
 {
+  private static final QName QNAME_WATER_BODY_LINK_MEMBER = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" );
+
   public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" );
 
   private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" );
@@ -122,13 +124,13 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   public void setWaterBody( final WspmWaterBody body )
   {
-    final IPropertyType waterProp = getFeature().getFeatureType().getProperty( new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ) );
+    final IPropertyType waterProp = getFeature().getFeatureType().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
     getFeature().setProperty( waterProp, body.getFeature().getId() );
   }
 
   public WspmWaterBody getWaterBody( )
   {
-    final Object body = getFeature().getProperty( new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ) );
+    final Object body = getFeature().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
     if( body instanceof Feature )
       return new WspmWaterBody( (Feature) body );
     else
