@@ -70,7 +70,6 @@ public class TemplateUtilitites
   private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
 
   /* GisMapView */
-  
   public static final JAXBContext JC_GISMAPVIEW = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
@@ -78,10 +77,17 @@ public class TemplateUtilitites
   private static Schema SH_GISMAPVIEW = null;
 
   /* GisTableView */
-  
   public static final JAXBContext JC_GISTABLEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
 
+  
+  /* GisTreeView */
+  public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
+
+
+  /* Types */
   public static final org.kalypso.template.types.ObjectFactory OF_TYPES = new org.kalypso.template.types.ObjectFactory();
+
+  
 
 
   private TemplateUtilitites( )

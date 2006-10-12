@@ -77,6 +77,10 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object[] getChildren( final Object parentElement )
   {
+    if( m_workspace == null )
+      return new Object[] {};
+      
+    
     // Test first if we should show children
     final QName qname;
     if( parentElement instanceof Feature )
@@ -302,6 +306,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
   public IRelationType getParentFeatureProperty( final Feature feature )
   {
+    // TODO: do not just use the getParent method because root element dont have a parent
+    // use a internalParent method instead
     final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
     if( parent == null )
       return null;

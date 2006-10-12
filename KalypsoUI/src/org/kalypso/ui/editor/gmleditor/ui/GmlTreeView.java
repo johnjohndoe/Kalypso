@@ -25,11 +25,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -139,8 +138,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected CommandableWorkspace m_workspace = null;
 
-  protected Composite m_composite = null;
-
   private PoolableObjectType m_key = null;
 
   private TreeViewer m_treeViewer = null;
@@ -151,14 +148,29 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private boolean m_disposed = false;
 
+  private final Runnable m_objectLoadedCallback;
+
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
-    m_composite = composite;
+    this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
+  }
+
+  public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager )
+  {
+    this( composite, style, selectionManager, null );
+  }
+
+  /**
+   * @param objectLoadedCallback We be called each time after the tree-object was loaded
+   */
+  public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager, final Runnable objectLoadedCallback )
+  {
     m_selectionManager = selectionManager;
+    m_objectLoadedCallback = objectLoadedCallback;
 
     m_selectionManager.addSelectionListener( m_globalSelectionChangedListener );
 
-    createViewerPart();
+    createViewerPart( composite, style );
 
     m_treeViewer.addDoubleClickListener( m_doubleClickListener );
 
@@ -247,18 +259,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
   }
 
-  private void createViewerPart( )
+  private void createViewerPart( final Composite parent, final int style )
   {
-    final GridLayout layout = new GridLayout();
-    layout.numColumns = 1;
-    layout.verticalSpacing = 2;
-    layout.marginWidth = 0;
-    layout.marginHeight = 2;
-
-    // DIRTY! should be set from outside
-    m_composite.setLayout( layout );
-
-    m_treeViewer = new TreeViewer( m_composite );
+    m_treeViewer = new TreeViewer( parent, style );
     m_treeViewer.setUseHashlookup( true );
 
     // add drag and drop support
@@ -266,19 +269,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance() };
     m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
     m_treeViewer.addDropSupport( ops, transfers, new GmlTreeDropAdapter( this ) );
-
-    final GridData layoutData = new GridData();
-    layoutData.grabExcessHorizontalSpace = true;
-    layoutData.grabExcessVerticalSpace = true;
-    layoutData.horizontalAlignment = GridData.FILL;
-    layoutData.verticalAlignment = GridData.FILL;
-    m_treeViewer.getControl().setLayoutData( layoutData );
   }
 
   public void dispose( )
   {
     m_disposed = true;
-    m_composite.dispose();
     m_pool.removePoolListener( this );
 
     m_selectionManager.removeSelectionListener( m_globalSelectionChangedListener );
@@ -297,11 +292,12 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
       final Feature[] parentFeature = structureEvent.getParentFeatures();
 
-      if( !m_composite.isDisposed() )
+      final TreeViewer treeViewer = m_treeViewer;
+      final Control control = treeViewer.getControl();
+      if( !control.isDisposed() )
       {
-        final TreeViewer treeViewer = m_treeViewer;
-        // must be sync, if not we get a racing condition with handleGlobalSelection
-        m_composite.getDisplay().syncExec( new Runnable()
+        // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
+        control.getDisplay().syncExec( new Runnable()
         {
           public void run( )
           {
@@ -465,6 +461,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         }
       } );
 
+      if( m_objectLoadedCallback != null )
+        m_objectLoadedCallback.run();
+      
       if( m_workspace != null )
         display.asyncExec( new Runnable()
         {
@@ -493,7 +492,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_treeViewer.setInput( new Object[] { "" } );
   }
 
-  protected void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
+  public void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
     try
@@ -502,27 +501,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final InputSource is = new InputSource( r );
 
-      m_gisTreeview = (Gistreeview) unmarshaller.unmarshal( is );
-
-      final LayerType input = m_gisTreeview.getInput();
-
-      // set the rootPath twice (here and after object loaded), in order
-      // to suppress the dirty flag after load
-      final String rootPathString = input.getFeatureXPath();
-      final GMLXPath rootPath = new GMLXPath( rootPathString );
-      m_contentProvider.setRootPath( rootPath );
-
-      final Image waitImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.WAIT_LOADING_OBJ );
-      m_treeViewer.setLabelProvider( new ConstantLabelProvider( "Loading " + context + "...", waitImg ) );
-      m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-      m_treeViewer.getTree().setLinesVisible( false );
-      m_treeViewer.setInput( new Object[] { "" } );
-
-      final String href = input.getHref();
-      final String linktype = input.getLinktype();
-
-      m_key = new PoolableObjectType( linktype, href, context );
-      m_pool.addPoolListener( this, m_key );
+      final Gistreeview treeview = (Gistreeview) unmarshaller.unmarshal( is );
+      setInput( treeview, context );
     }
     catch( final JAXBException e )
     {
@@ -533,6 +513,35 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       monitor.done();
     }
+  }
+  
+  public void setInput( final Gistreeview treeview, final URL context )
+  {
+    // TODO: handle case where this method is called several times:
+    // - unhook pool-listener
+    // - handle root-path differently
+    
+    m_gisTreeview = treeview;
+
+    final LayerType input = m_gisTreeview.getInput();
+
+    // set the rootPath twice (here and after object loaded), in order
+    // to suppress the dirty flag after load
+    final String rootPathString = input.getFeatureXPath();
+    final GMLXPath rootPath = new GMLXPath( rootPathString );
+    m_contentProvider.setRootPath( rootPath );
+
+    final Image waitImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.WAIT_LOADING_OBJ );
+    m_treeViewer.setLabelProvider( new ConstantLabelProvider( "Loading " + context + "...", waitImg ) );
+    m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
+    m_treeViewer.getTree().setLinesVisible( false );
+    m_treeViewer.setInput( new Object[] { "" } );
+
+    final String href = input.getHref();
+    final String linktype = input.getLinktype();
+
+    m_key = new PoolableObjectType( linktype, href, context );
+    m_pool.addPoolListener( this, m_key );
   }
 
   protected void saveInput( final Writer writer, final IProgressMonitor monitor ) throws CoreException
