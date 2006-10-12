@@ -111,6 +111,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
       final Feature feature = handle.getFeature();
       final IValuePropertyType propertyType = handle.getPropertyType();
       final GM_Object value = (GM_Object) feature.getProperty( propertyType );
+      value.invalidate();
       feature.setProperty( propertyType, value );
 
       if( !feList.contains( feature ) )

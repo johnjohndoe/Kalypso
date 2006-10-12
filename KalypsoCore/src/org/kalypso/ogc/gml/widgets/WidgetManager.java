@@ -202,7 +202,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           break;
 
         case MouseEvent.BUTTON3: // Right
-          actualWidget.perform();
+          actualWidget.rightReleased( e.getPoint() );
           break;
 
         default:

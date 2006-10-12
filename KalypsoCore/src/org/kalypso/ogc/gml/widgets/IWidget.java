@@ -52,13 +52,9 @@ import org.kalypso.ogc.gml.map.MapPanel;
  */
 public interface IWidget
 {
-  public void rightReleased( final Point p );
-
-  public void clickPopup( final Point p );
-
-  public void dragged( Point p );
-
-  public void finish( );
+  public String getName( );
+  
+  public String getToolTip( );
 
   // KeyEvents
   public void keyPressed( KeyEvent e );
@@ -84,25 +80,23 @@ public interface IWidget
 
   public void doubleClickedRight( Point p );
 
+  public void rightClicked( Point p );
+  
+  public void rightPressed( Point p );
+
+  public void rightReleased( final Point p );
+  
+  public void clickPopup( final Point p );
+
   // MouseMotions
   public void moved( Point p );
+
+  public void dragged( Point p );
 
   // Graphics
   public void paint( Graphics g );
 
-  /**
-   * fuehrt die aktion aus
-   */
-  public void perform( );
-
-  public void rightClicked( Point p );
-
-  public void rightPressed( Point p );
+  public void finish( );
 
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
-
-  public String getName( );
-
-  public String getToolTip( );
-
 }
