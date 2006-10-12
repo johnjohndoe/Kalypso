@@ -479,4 +479,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     ret += ( "envelope = " + m_envelope + "\n" );
     return ret;
   }
+  
+  public void invalidate()
+  {
+    m_valid = false;
+  }
 }

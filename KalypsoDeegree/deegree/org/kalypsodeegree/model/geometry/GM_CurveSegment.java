@@ -77,7 +77,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface GM_CurveSegment extends GM_GenericCurve
 {
-
   /**
    * returns the number of points building the curve segment
    */

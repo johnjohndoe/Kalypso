@@ -197,4 +197,13 @@ public interface GM_Object
   boolean isWithinDistance( GM_Object gmo, double distance );
 
   void setCoordinateSystem( CS_CoordinateSystem crs );
+
+  /**
+   * Invalidates the transient parameters of this geometry (like envelope and centroid), so they get recalculated the
+   * next time.
+   * <p>
+   * Call this method if you change the geometry.
+   * </p>
+   */
+  public void invalidate( );
 }

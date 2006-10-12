@@ -95,5 +95,4 @@ public interface GM_GenericCurve
    * returns the curve as GM_LineString
    */
   GM_LineString getAsLineString() throws GM_Exception;
-
 }
