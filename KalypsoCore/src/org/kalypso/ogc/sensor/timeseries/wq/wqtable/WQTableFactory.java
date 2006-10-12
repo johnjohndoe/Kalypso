@@ -78,8 +78,11 @@ public class WQTableFactory implements ISerializer
         final Date validity = xmlTable.getValidity().getTime();
         final int offset = xmlTable.getOffset();
 
-        final String[] strX = xmlTable.getX().split( "," );
-        final String[] strY = xmlTable.getY().split( "," );
+        final String xses = xmlTable.getX().trim();
+        final String yses = xmlTable.getY().trim();
+
+        final String[] strX = xses.length() == 0 ? new String[0] : xses.split( "," );
+        final String[] strY = yses.length() == 0 ? new String[0] : yses.split( "," );
 
         if( strX.length != strY.length )
           throw new WQException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
