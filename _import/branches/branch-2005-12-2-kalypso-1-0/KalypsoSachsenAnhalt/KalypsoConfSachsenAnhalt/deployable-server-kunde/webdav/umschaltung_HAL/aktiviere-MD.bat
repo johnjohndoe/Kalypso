@@ -4,3 +4,4 @@ copy /Y metadocService.properties_MD ..\srvconf\IMetaDocService\metadocService.p
 copy /Y repconf_server.xml_MD ..\srvconf\IObservationService\repconf_server.xml
 copy /Y userService.properties_MD ..\srvconf\IUserService\userService.properties
 copy /Y aktiver-standort.html_MD aktiver-standort.html
+copy /Y config_md.ini D:\Programme\KalypsoClient\configuration\config.ini

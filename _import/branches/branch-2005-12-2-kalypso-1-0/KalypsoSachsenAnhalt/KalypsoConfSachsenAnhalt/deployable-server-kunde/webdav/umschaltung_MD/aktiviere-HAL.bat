@@ -4,3 +4,4 @@ copy /Y metadocService.properties_HAL ..\srvconf\IMetaDocService\metadocService.
 copy /Y repconf_server.xml_HAL ..\srvconf\IObservationService\repconf_server.xml
 copy /Y userService.properties_HAL ..\srvconf\IUserService\userService.properties
 copy /Y aktiver-standort.html_HAL aktiver-standort.html
+copy /Y config_hal.ini D:\Programme\KalypsoClient\configuration\config.ini
