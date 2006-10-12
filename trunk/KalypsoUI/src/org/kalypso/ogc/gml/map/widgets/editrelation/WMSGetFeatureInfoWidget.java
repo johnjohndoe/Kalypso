@@ -113,14 +113,6 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#perform()
-   */
-  public void perform()
-  {
-  // nothing to do here
-  }
-
-  /**
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */

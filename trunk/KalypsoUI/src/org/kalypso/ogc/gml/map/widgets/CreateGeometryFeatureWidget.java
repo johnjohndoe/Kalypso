@@ -227,10 +227,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
           geoFtps.add( ftps[i] );
       }
 
-      // TODO ask for geometry to create
-      // if( geoFtps.size() > 1 )
-      // ;
-
       if( geoFtps.size() > 0 )
         setGeometryWidget( (IKalypsoFeatureTheme) activeTheme, (IValuePropertyType) geoFtps.get( 0 ) );
     }
@@ -240,16 +236,6 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   {
     if( GeometryUtilities.isPointGeometry( ftp ) )
       myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getQName().getLocalPart(), this, theme, ftp );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
-   */
-  public void perform( )
-  {
-    // if( myWidget != null )
-    // return myWidget.performIntern();
-    // return null;
   }
 
   /**

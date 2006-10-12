@@ -137,11 +137,6 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     }
   }
 
-  public void perform( )
-  {
-    // nothing
-  }
-
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
    */
