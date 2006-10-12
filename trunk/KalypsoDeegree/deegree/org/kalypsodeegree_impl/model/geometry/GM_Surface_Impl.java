@@ -492,4 +492,15 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     ret += ( "patch = " + m_patch + "\n" );
     return ret;
   }
+  
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    m_patch.invalidate();
+    
+    super.invalidate();
+  }
 }

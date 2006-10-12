@@ -71,9 +71,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementierung of the GM_Aggregate interface
- * 
- * ------------------------------------------------------------
+ * default implementierung of the GM_Aggregate interface ------------------------------------------------------------
  * 
  * @version 8.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
@@ -98,7 +96,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * Creates a new GM_Aggregate_Impl object.
    */
-  private GM_Aggregate_Impl()
+  private GM_Aggregate_Impl( )
   {
     super( null );
   }
@@ -106,7 +104,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns the number of GM_Object within the aggregation
    */
-  public int getSize()
+  public int getSize( )
   {
     return m_aggregate.size();
   }
@@ -153,7 +151,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public void insertObjectAt( GM_Object gmo, int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > this.getSize() - 1 ) )
+    if( (index < 0) || (index > this.getSize() - 1) )
     {
       throw new GM_Exception( "invalid index/position: " + index + " to insert a geometry!" );
     }
@@ -179,7 +177,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public void setObjectAt( GM_Object gmo, int index ) throws GM_Exception
   {
-    if( ( index < 0 ) || ( index > this.getSize() - 1 ) )
+    if( (index < 0) || (index > this.getSize() - 1) )
     {
       throw new GM_Exception( "invalid index/position: " + index + " to set a geometry!" );
     }
@@ -237,7 +235,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       return null;
     }
 
-    if( index > ( this.getSize() - 1 ) )
+    if( index > (this.getSize() - 1) )
     {
       throw new GM_Exception( "invalid index/position: " + index + " to remove a geometry!" );
     }
@@ -252,7 +250,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * removes all GM_Object from the aggregation.
    */
-  public void removeAll()
+  public void removeAll( )
   {
     m_aggregate.clear();
     envelope = null;
@@ -271,7 +269,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns all GM_Objects as array
    */
-  public GM_Object[] getAll()
+  public GM_Object[] getAll( )
   {
     GM_Object[] gmos = new GM_Object[this.getSize()];
 
@@ -289,7 +287,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * returns the aggregation as an iterator
    */
-  public Iterator getIterator()
+  public Iterator getIterator( )
   {
     return m_aggregate.iterator();
   }
@@ -298,9 +296,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * returns true if no geometry stored within the collection.
    */
   @Override
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
-    return ( getSize() == 0 );
+    return (getSize() == 0);
   }
 
   /**
@@ -318,7 +316,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     {
       for( int i = 0; i < m_aggregate.size(); i++ )
       {
-        ( (GM_Object_Impl)getObjectAt( i ) ).setCoordinateSystem( crs );
+        ((GM_Object_Impl) getObjectAt( i )).setCoordinateSystem( crs );
       }
       setValid( false );
     }
@@ -350,9 +348,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   public boolean equals( Object other )
   {
     // envelope was not valid
-    if( !super.equals( other ) || !( other instanceof GM_Aggregate_Impl )
-        || !getEnvelope().equals( ( (GM_Object)other ).getEnvelope() )
-        || ( getSize() != ( (GM_Aggregate)other ).getSize() ) )
+    if( !super.equals( other ) || !(other instanceof GM_Aggregate_Impl) || !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) || (getSize() != ((GM_Aggregate) other).getSize()) )
     {
       return false;
     }
@@ -362,7 +358,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       for( int i = 0; i < getSize(); i++ )
       {
         Object o1 = getObjectAt( i );
-        Object o2 = ( (GM_Aggregate)other ).getObjectAt( i );
+        Object o2 = ((GM_Aggregate) other).getObjectAt( i );
 
         if( !o1.equals( o2 ) )
         {
@@ -400,17 +396,30 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       }
     }
     catch( Exception e )
-    {}
+    {
+    }
 
     return inter;
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = null;
     ret = "aggregate = " + m_aggregate + "\n";
-    ret += ( "envelope = " + envelope + "\n" );
+    ret += ("envelope = " + envelope + "\n");
     return ret;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    for( GM_Object gmobj : m_aggregate )
+      gmobj.invalidate();
+    
+    super.invalidate();
   }
 }

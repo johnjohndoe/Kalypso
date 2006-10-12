@@ -791,4 +791,5 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     ret += ( "envelope = " + envelope + "\n" );
     return ret;
   }
+
 }

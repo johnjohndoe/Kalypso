@@ -513,7 +513,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   protected void setValid( boolean valid )
   {
-    this.m_valid = valid;
+    m_valid = valid;
   }
 
   /**
@@ -537,5 +537,13 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     ret += ("empty = " + m_empty + "\n");
     ret += ("mute = " + mute + "\n");
     return ret;
+  }
+  
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#invalidate()
+   */
+  public void invalidate( )
+  {
+    m_valid = false;
   }
 }

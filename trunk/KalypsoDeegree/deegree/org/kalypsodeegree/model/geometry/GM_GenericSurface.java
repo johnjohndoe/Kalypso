@@ -93,4 +93,9 @@ public interface GM_GenericSurface
    */
   GM_Envelope getEnvelope();
 
+  /**
+   * @see GM_Object#invalidate()
+   */
+  public void invalidate();
+  
 }

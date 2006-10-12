@@ -294,4 +294,14 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     return true;
   }
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    boundary.invalidate();
+    
+    super.invalidate();
+  }
 }

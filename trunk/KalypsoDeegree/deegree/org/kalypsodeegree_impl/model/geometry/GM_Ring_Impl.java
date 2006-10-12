@@ -426,4 +426,15 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     ret += ( "envelope = " + envelope + "\n" );
     return ret;
   }
+  
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    m_sp = null;
+    
+    super.invalidate();
+  }
 }

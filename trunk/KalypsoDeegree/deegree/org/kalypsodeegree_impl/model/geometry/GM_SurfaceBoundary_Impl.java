@@ -352,4 +352,15 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     ret += ( "exterior = " + m_exterior + "\n" );
     return ret;
   }
+  
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    m_exterior.invalidate();
+    for( final GM_Object gmobj : m_interior )
+      gmobj.invalidate();
+  }
 }
