@@ -197,13 +197,22 @@ class DWDCopyTask extends TimerTask
         // delete source file if flag is set
         if( m_srcDel )
         {
-          /* Delete the old files. */
-          DWDFileCopyServlet.LOG.info( "Deleting " + newFile.getName().getBaseName() );
+          try
+          {
+            /* Delete the old files. */
+            DWDFileCopyServlet.LOG.info( "Deleting " + newFile.getName().getBaseName() );
 
-          final boolean deleted = newFile.delete();
-
-          if( !deleted )
+            final boolean deleted = newFile.delete();
+            if( !deleted )
+              DWDFileCopyServlet.LOG.warning( "Could not delete DWD-File \"" + newFile.getName().getBaseName() + "\"" );
+          }
+          catch( final IOException e )
+          {
             DWDFileCopyServlet.LOG.warning( "Could not delete DWD-File \"" + newFile.getName().getBaseName() + "\"" );
+
+            if( m_debug )
+              e.printStackTrace();
+          }
         }
 
         // no exception, so end loop here

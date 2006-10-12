@@ -86,6 +86,7 @@ public class DWDObservationRaster
     return values[cellPos];
   }
 
+  /** Returns all known dates by this raster. The dates are sorted in ascending order. */
   public Date[] getDates()
   {
     final SortedSet sort = new TreeSet( m_valueHash.keySet() );

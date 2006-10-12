@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -102,6 +103,15 @@ public class DWDTaskDelegate
       logger.log( "konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden" );
       logger.log( e.getLocalizedMessage() );
     }
+
+    if( obsRaster == null )
+    {
+      final Date[] dates = obsRaster.getDates();
+      final Date firstRasterDate = dates == null || dates.length == 0 ? null : dates[0];
+      logger.log( "Raster erfolgreich geladen, Startdatum ist: "
+          + DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT ).format( firstRasterDate ) );
+    }
+
     final List targetList = conf.getTarget();
     if( filter == null )
       filter = "";
