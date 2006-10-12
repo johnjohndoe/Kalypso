@@ -163,7 +163,6 @@ public class FeatureActionUtilities
     {
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
-      featureSelection.getWorkspace( feature );
       // to avoid NullPointerException: the first feature is null ( e.g. a linked feature is selected )
       if( feature == null )
         return newMenuManager;

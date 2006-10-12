@@ -75,6 +75,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -354,4 +355,17 @@ public class GisTemplateHelper
     return gismapview;
   }
 
+  public static final Gistreeview loadGisTreeView( final IStorage file ) throws JAXBException, CoreException
+  {
+    final InputSource is = new InputSource( file.getContents() );
+    if( file instanceof IEncodedStorage )
+      is.setEncoding( ((IEncodedStorage) file).getCharset() );
+    return loadGisTreeView( is );
+  }
+
+  public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISTREEVIEW.createUnmarshaller();
+    return (Gistreeview) unmarshaller.unmarshal( is );
+  }
 }

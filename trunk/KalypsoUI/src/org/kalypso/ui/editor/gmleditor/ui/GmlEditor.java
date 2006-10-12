@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
@@ -164,7 +165,13 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     super.createPartControl( parent );
 
     m_viewer = new GmlTreeView( parent, KalypsoCorePlugin.getDefault().getSelectionManager() );
-
+    final GridData layoutData = new GridData();
+    layoutData.grabExcessHorizontalSpace = true;
+    layoutData.grabExcessVerticalSpace = true;
+    layoutData.horizontalAlignment = GridData.FILL;
+    layoutData.verticalAlignment = GridData.FILL;
+    m_viewer.getTreeViewer().getControl().setLayoutData( layoutData );
+    
     // register as site selection provider
     getSite().setSelectionProvider( m_viewer );
 
