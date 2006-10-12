@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="CP1252"?>
+<Configuration xmlns="http://www.ksp.org/chart/viewerConfiguration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:style="http://www.ksp.org/chart/layerStyle"
+    xsi:schemaLocation="
+    http://www.ksp.org/chart/viewerConfiguration file:/C:/Eclipse/Kalypso/KalypsoChart/etc/binding/conf/viewerConfiguration.xsd
+    http://www.ksp.org/chart/layerStyle file:/C:/Eclipse/Kalypso/KalypsoChart/etc/binding/style/layerStyle.xsd
+    ">
+    <Chart name="ls">
+        <Title>Spiegellinien-Längsschnitt</Title>
+        <Abstract>Die ist das Ergebnis einer 1D-Spiegellinienberechnung in Form eines Längsschnitts</Abstract>
+        <LayerProvider name="org.kalypso.layerprovider.observation.WasserstandLayerProvider">
+            <Parameter name="href" value="Daten/Längsschnitt.gml"/>
+            <Parameter name="gmlxpath" value=""/>
+            <ChartElement>
+                <AxisMapping>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+                </AxisMapping>
+                <StyleLink name="LINE" ref="wspStyle"/>
+            </ChartElement>
+
+            <ChartElement>
+                <AxisMapping>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="M3SAxis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
+                </AxisMapping>
+                <StyleLink name="LINE" ref="runoffStyle"/>
+            </ChartElement>
+
+            <ChartElement>
+                <AxisMapping>
+                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
+                </AxisMapping>
+                <StyleLink name="LINE" ref="soilStyle"/>
+            </ChartElement>
+        </LayerProvider>
+
+        <DoubleAxis id="Station_Axis">
+            <Name>Station</Name>
+            <Direction>NEGATIVE</Direction>
+            <Position>BOTTOM</Position>
+            <MinVal>0.0</MinVal>
+            <MaxVal>100.0</MaxVal>
+        </DoubleAxis>
+        <DoubleAxis id="NN_Axis">
+            <Name>NN+m</Name>
+            <Direction>POSITIVE</Direction>
+            <Position>LEFT</Position>
+            <MinVal>-5.0</MinVal>
+            <MaxVal>10.0</MaxVal>
+        </DoubleAxis>
+        <DoubleAxis id="M3SAxis">
+            <Name>m³/s</Name>
+            <Direction>POSITIVE</Direction>
+            <Position>RIGHT</Position>
+            <MinVal>-5.0</MinVal>
+            <MaxVal>10.0</MaxVal>
+        </DoubleAxis>
+    </Chart>
+    <style:Style id="wspStyle">
+        <style:Line>
+            <style:LineWidth>2</style:LineWidth>
+            <style:LineStyle>SOLID</style:LineStyle>
+            <style:LineColor>0000ff</style:LineColor>
+        </style:Line>
+    </style:Style>
+    <style:Style id="soilStyle">
+        <style:Line>
+            <style:LineWidth>2</style:LineWidth>
+            <style:LineStyle>SOLID</style:LineStyle>
+            <style:LineColor>00ff00</style:LineColor>
+        </style:Line>
+    </style:Style>
+    <style:Style id="runoffStyle">
+        <style:Line>
+            <style:LineWidth>2</style:LineWidth>
+            <style:LineStyle>SOLID</style:LineStyle>
+            <style:LineColor>ff0000</style:LineColor>
+        </style:Line>
+    </style:Style>
+</Configuration>

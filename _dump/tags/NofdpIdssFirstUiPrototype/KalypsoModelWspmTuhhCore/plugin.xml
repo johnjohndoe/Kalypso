@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.kalypso.model.wspm.core.profilserializer">
+      <source
+            class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource"
+            extension="prf"
+            id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource"
+            name="PrfSource"/>
+      <sink
+            class="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
+            extension="prf"
+            id="org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink"
+            name="PrfSink"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilePointFilter">
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.VorlandProfilePointFilter"
+            description="nur Profilpunkte ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
+            id="org.kalypso.model.wspm.tuhh.core.profile.VorlandProfilePointFilter"
+            name="nur Vorländer"/>
+   </extension>
+
+</plugin>

@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmTuhhUI Plugin
+Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.ui; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.model.wspm.tuhh.ui,
+ org.kalypso.model.wspm.tuhh.ui.rules
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.kalypso.model.wspm.core,
+ org.kalypso.model.wspm.tuhh.core,
+ org.kalypso.simulation.ui,
+ org.kalypso.commons,
+ org.kalypso.deegree,
+ org.kalypso.core,
+ org.kalypso.model.wspm.ui,
+ org.kalypso.ui,
+ org.eclipse.ui.intro
+Eclipse-LazyStart: true

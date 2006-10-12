@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+    <!-- org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:default" uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.sld" />
+
+    <!-- {org.kalypso.model.wspm.tuhh}ProfileMarker -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileMarker:sld:default" uri="org.kalypso.model.wspm.tuhh.ProfileMarker.sld" />
+	
+    <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif"/>
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.properties"/>
+
+    <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif"/>
+</catalog:catalog>
+

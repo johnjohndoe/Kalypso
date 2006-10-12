@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmcommon"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<!-- schema for WSPM = 'water surface profile model' -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- 
+	-->
+	<simpleType name="stationDouble">
+		<restriction base="decimal">
+			<fractionDigits value="4"/>
+		</restriction>
+	</simpleType>
+</schema>

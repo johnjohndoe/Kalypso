@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
+   <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
+   <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
+   <extension-point id="profilserializer" name="profilserializer" schema="schema/profilserializer.exsd"/>
+   <extension-point id="profileFeatureProvider" name="profileFeatureProvider" schema="schema/profileFeatureProvider.exsd"/>
+   <extension-point id="profilePointFilter" name="profilePointFilter" schema="schema/profilePointFilter.exsd"/>
+</plugin>

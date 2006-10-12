@@ -1,0 +1,25 @@
+/* Give some space for main div.*/	
+.page-style {
+	text-align: center;
+	margin-top:100px;
+	}
+	
+#content {
+	text-align:left;
+	}
+	
+<!-- added by Albert -->
+
+div.center {
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+a.logo {
+  text-decoration:none;
+}
+
+img.logo {
+  border-style:none;
+}

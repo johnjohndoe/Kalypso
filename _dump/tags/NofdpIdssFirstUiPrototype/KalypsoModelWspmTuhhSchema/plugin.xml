@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.wspm.tuhh.schema.schemata.WspmTuhhUrlCatalog"
+            id="org.kalypso.model.wspm.tuhh.urlcatalog"/>
+   </extension>
+   <extension
+      point="org.kalypso.simulation.core.simulation">
+      <simulation
+      	 catalogClass="org.kalypso.model.wspm.tuhh.schema.schemata.WspmTuhhUrlCatalog"
+         simulationClass="org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob"
+         typeID="WspmTuhhV1.0"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+            id="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+            name="Water Body Parent"/>
+      <function
+            class="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
+            id="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
+            name="Tuhh Reach Marker List"/>
+   </extension>
+   
+</plugin>
