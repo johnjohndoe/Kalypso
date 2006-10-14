@@ -402,6 +402,9 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           final InputStreamReader reader = new InputStreamReader( contents, charset );
 
           final IProfilSource source = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+          if( source == null )
+            throw new Exception( "No Profil-Source found for type 'prf'." );
+          
           final IProfil profil = ProfilFactory.createProfil();
           if( !source.read( profil, reader ) )
           {

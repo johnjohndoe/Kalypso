@@ -311,7 +311,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     if( m_control != null && !m_control.isDisposed() )
     {
-      m_control.getDisplay().syncExec( new Runnable()
+      m_control.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {
