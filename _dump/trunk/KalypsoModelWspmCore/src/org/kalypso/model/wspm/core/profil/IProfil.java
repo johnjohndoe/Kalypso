@@ -94,7 +94,7 @@ public interface IProfil
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY property );
 
   /**
-   * gibt Null zurück wenn das profil nicht geändert wurde
+   * gibt Null zurück wenn das profil nicht geändert wurde TODO: wann ist dies der Fall?
    */
   public IProfilPoint addPoint( final double breite, final double hoehe );
 
@@ -103,32 +103,6 @@ public interface IProfil
    * @return POINT_PROPERTY[] with all current pointproperties
    */
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
-
-//  /**
-//   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste als nächsten
-//   */
-//  public IProfilPoint findNearestPoint( final double breite );
-
-//  /**
-//   * sucht den nächsten Punkt dessen x-position näher als delta an breite ist, ansonsten Null
-//   */
-//
-//  /**
-//   * @param breite
-//   * @param delta
-//   * @return
-//   */
-//  public IProfilPoint findPoint( final double breite, final double delta );
-
- // public IProfilPoint findPoint( final double breite, final double value, final POINT_PROPERTY property );
-
-//  /**
-//   * @param index
-//   * @param breite
-//   * @param delta
-//   * @return
-//   */
-//  public IProfilPoint findPoint( final int index, final double breite, final double delta );
 
   /**
    * @return das aktuelle bauwerk oder Typ Building_typ NONE
@@ -163,7 +137,6 @@ public interface IProfil
    * @return Wert zu key oder null
    */
   public Object getProperty( Object key );
-
 
   public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );
 

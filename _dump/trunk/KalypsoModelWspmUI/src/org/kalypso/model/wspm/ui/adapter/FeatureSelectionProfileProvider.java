@@ -175,6 +175,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   private IStationResult[] findResults( final WspmProfile profileMember )
   {
     final WspmWaterBody water = profileMember.getWater();
+    if( water == null )
+      return new IStationResult[] {};
+    
     final GMLWorkspace workspace = water.getFeature().getWorkspace();
 
     final List<IStationResult> results = new ArrayList<IStationResult>();
