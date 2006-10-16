@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.commons.command.ICommand;
@@ -121,5 +122,13 @@ public class WidgetActionPart implements ICommandTarget
       return null;
     
     return (CommandableWorkspace) m_part.getAdapter( CommandableWorkspace.class );
+  }
+
+  public Control getControl( )
+  {
+    if( m_part == null )
+      return null;
+
+    return (Control) m_part.getAdapter( Control.class );
   }
 }

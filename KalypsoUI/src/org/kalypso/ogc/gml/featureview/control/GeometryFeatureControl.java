@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -76,8 +77,8 @@ public class GeometryFeatureControl extends AbstractFeatureControl
   public Control createControl( final Composite parent, final int style )
   {
     /* Create a new label. */
-    m_label = new Label( parent, style );
-    
+    m_label = new Label( parent, style | SWT.WRAP );
+
     updateControl();
 
     return m_label;
@@ -95,9 +96,9 @@ public class GeometryFeatureControl extends AbstractFeatureControl
       final IPropertyType ftp = getFeatureTypeProperty();
 
       if( feature.getProperty( ftp ) != null )
-        m_label.setText( "Die Geometrie wurde gezeichnet." );
+        m_label.setText( "Um die Geometrie zu ersetzen, klicken Sie auf 'Zeichnen'." );
       else
-        m_label.setText( "Die Geometrie wurde nicht gezeichnet." );
+        m_label.setText( "Klicken Sie auf 'Zeichnen', um die Massnahme zu zeichnen." );
     }
   }
 

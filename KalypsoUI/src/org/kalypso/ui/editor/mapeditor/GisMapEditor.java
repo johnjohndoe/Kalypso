@@ -55,6 +55,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -135,6 +136,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     }
   };
 
+  private Control m_composite;
+
   public GisMapEditor( )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
@@ -175,6 +178,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( adapter == ModellEventProvider.class )
       return m_mapPanel;
 
+    if( adapter == Control.class )
+      return m_composite;
+    
     return super.getAdapter( adapter );
   }
 
@@ -244,7 +250,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     super.createPartControl( parent );
 
-    MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
+    m_composite = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
   }
 
   @Override

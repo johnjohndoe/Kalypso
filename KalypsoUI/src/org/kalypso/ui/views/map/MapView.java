@@ -343,6 +343,9 @@ public class MapView extends ViewPart implements ICommandTarget
   @Override
   public Object getAdapter( final Class adapter )
   {
+    if( adapter == Control.class )
+      return m_control;
+
     if( adapter == MapPanel.class )
       return m_mapPanel;
 
