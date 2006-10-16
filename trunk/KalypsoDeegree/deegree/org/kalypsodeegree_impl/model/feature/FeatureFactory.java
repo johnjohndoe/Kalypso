@@ -286,7 +286,10 @@ public class FeatureFactory
 
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
+   * 
+   * @deprecated Use {@link #createGMLWorkspace(QName, URL, IFeatureProviderFactory)} instead, always provide a context.
    */
+  @Deprecated
   public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final IFeatureProviderFactory factory ) throws InvocationTargetException
   {
     return createGMLWorkspace( rootFeatureQName, null, factory );
@@ -295,21 +298,28 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
   {
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
-    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
-    return createGMLWorkspace( rootFeatureType, factory );
+    return createGMLWorkspace( rootFeatureQName, null, context, factory );
   }
 
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
-  public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType, final IFeatureProviderFactory factory )
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  {
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
+    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
+    return createGMLWorkspace( rootFeatureType, context, factory );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
+  public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType, final URL context, final IFeatureProviderFactory factory )
   {
     final IGMLSchema schema = rootFeatureType.getGMLSchema();
-    final URL context = null;
     final String schemaLocation = null;
     final Feature rootFeature = FeatureFactory.createFeature( null, "root", rootFeatureType, true );
     return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory );

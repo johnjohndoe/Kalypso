@@ -52,6 +52,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -77,6 +78,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -101,7 +103,7 @@ import org.xml.sax.XMLReader;
  */
 public final class GmlSerializer
 {
-  private final static IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
+  public final static IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
   private GmlSerializer( )
   {
@@ -266,7 +268,7 @@ public final class GmlSerializer
     final GMLSchema schema = contentHandler.getGMLSchema();
     final Feature rootFeature = contentHandler.getRootFeature();
     final String schemaLocationString = contentHandler.getSchemaLocationString();
-    
+
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, null, schemaLocationString, providerFactory );
     return workspace;
@@ -274,22 +276,29 @@ public final class GmlSerializer
 
   public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException
   {
-    monitor.beginTask( "Creating gml file", 2 );
-
-    final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType, providerFactory );
-    monitor.worked( 1 );
-
-    final SetContentHelper contentHelper = new SetContentHelper()
+    try
     {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
+      monitor.beginTask( "Creating gml file", 2 );
+      final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType, ResourceUtilities.createURL( targetFile ), providerFactory );
+      monitor.worked( 1 );
+
+      final SetContentHelper contentHelper = new SetContentHelper()
       {
-        GmlSerializer.serializeWorkspace( writer, workspace );
-      }
-    };
-    contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
-    monitor.worked( 1 );
+        @Override
+        protected void write( final OutputStreamWriter writer ) throws Throwable
+        {
+          GmlSerializer.serializeWorkspace( writer, workspace );
+        }
+      };
+      contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
+      monitor.worked( 1 );
+    }
+    catch( MalformedURLException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+
   }
 
   public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
@@ -298,7 +307,7 @@ public final class GmlSerializer
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName, providerFactory );
-    
+
     // introduce further schemata into workspace
     final IGMLSchema schema = workspace.getGMLSchema();
     if( introduceNamespaces != null && schema instanceof GMLSchema )
