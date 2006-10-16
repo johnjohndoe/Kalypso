@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml,
  org.kalypso.model.wspm.core.gml.assignment,
+ org.kalypso.model.wspm.core.imports,
  org.kalypso.model.wspm.core.profil,
  org.kalypso.model.wspm.core.profil.changes,
  org.kalypso.model.wspm.core.profil.filter,
@@ -25,7 +26,8 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.profil.validator,
  org.kalypso.model.wspm.core.result,
  org.kalypso.model.wspm.core.result.impl,
- org.kalypso.model.wspm.core.strang
+ org.kalypso.model.wspm.core.strang,
+ org.kalypso.model.wspm.core.util
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.kalypso.contribs.java,
