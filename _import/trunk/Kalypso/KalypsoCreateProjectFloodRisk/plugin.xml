@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
+
 <plugin>
 
      <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="KalypsoCreateFloodRiskProject"
+            id="org.kalypso.wizard"
             name="%KalypsoCreateFloodRiskProject.name"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
       <wizard
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard"
             class="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"
-            project="true"
             icon="icons/kalypso16.gif"
-            category="org.kalypso.ui.newwizards.kalypso/KalypsoCreateFloodRiskProject"
+            id="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"
             name="%org.kalypso.wizard.KalypsoFloodRiskProjectWizard.name"
-            id="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"/>
+            project="true"/>
    </extension>
 
 </plugin>

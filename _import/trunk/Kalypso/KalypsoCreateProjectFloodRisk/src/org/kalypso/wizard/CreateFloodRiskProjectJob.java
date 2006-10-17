@@ -125,12 +125,14 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
@@ -272,6 +274,7 @@ public class CreateFloodRiskProjectJob extends Job
 
       IKalypsoTheme dummyLanduseTheme = createDummyLanduseTheme();
       GM_Envelope bbox = dummyLanduseTheme.getBoundingBox();
+      if(bbox == null) bbox = GeometryFactory.createGM_Envelope(0.0, 0.0, 1.0, 1.0);
       extent.setLeft( bbox.getMin().getX() );
       extent.setBottom( bbox.getMin().getY() );
       extent.setRight( bbox.getMax().getX() );
@@ -298,6 +301,7 @@ public class CreateFloodRiskProjectJob extends Job
       }
       // create waterlevelGrids and defaultStyles
       monitor.subTask(WizardMessages.getString("CreateFloodRiskProjectJob.monitor.6")+"..."); //$NON-NLS-1$ //$NON-NLS-2$
+      /*
       Vector targetFiles = createWaterlevelGrids( monitor );
       
       if( targetFiles == null )
@@ -305,8 +309,9 @@ public class CreateFloodRiskProjectJob extends Job
         performCancle();
         return Status.CANCEL_STATUS;
       }
+      */
       monitor.subTask(WizardMessages.getString("CreateFloodRiskProjectJob.monitor.8")+"..."); //$NON-NLS-1$ //$NON-NLS-2$
-      createWaterlevelData( targetFiles );
+      //createWaterlevelData( targetFiles );
       if( monitor.isCanceled() )
       {
         performCancle();
@@ -318,9 +323,9 @@ public class CreateFloodRiskProjectJob extends Job
       
       final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      FileWriter fw = new FileWriter( path );
-      marshaller.marshal( gismapview, fw );
-      fw.close();
+      //FileWriter fw = new FileWriter( path );
+      //marshaller.marshal( gismapview, fw );
+      //fw.close();
     }
     catch( Exception e2 )
     {
@@ -415,7 +420,10 @@ public class CreateFloodRiskProjectJob extends Job
   {
     String shapeBase = (m_workspacePath.append( m_projectHandel.getFullPath().append( "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) )).toString(); //$NON-NLS-1$
     m_landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
-    return new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString("CreateFloodRiskProjectJob.Landuse"), new FeatureSelectionManager2() ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoFeatureTheme kft = new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString("CreateFloodRiskProjectJob.Landuse"), new FeatureSelectionManager2() ); //$NON-NLS-1$ //$NON-NLS-2$
+    //ShapeFile sf = new ShapeFile( shapeBase );
+    //sf.getFileMBR();
+    return kft;
   }
 
   /**
@@ -468,7 +476,7 @@ public class CreateFloodRiskProjectJob extends Job
     }
 
     // create workspace
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "" ); //$NON-NLS-1$
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "", null ); //$NON-NLS-1$
 
     // serialize Workspace
     FileWriter fw = new FileWriter( landuseDataGML );
@@ -503,7 +511,7 @@ public class CreateFloodRiskProjectJob extends Job
     QName propertyLanduseMemberRisk = new QName(UrlCatalogFloodRisk.NS_RISKCONTEXTMODEL, "LanduseMember"); //$NON-NLS-1$
 
     // contextModel
-    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL );
+    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL, null );
     
     final GMLSchema schema      = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_CONTEXTMODEL, (String)null );
     IFeatureType ftLanduse = schema.getFeatureType(landuseFeatureType);
@@ -518,7 +526,7 @@ public class CreateFloodRiskProjectJob extends Job
     IFeatureType ftLanduseRisk = schemaRisk.getFeatureType( landuseFeatureTypeRisk );
     IFeatureType ftLanduseCollectionRisk = schemaRisk.getFeatureType(landuseCollectionTypeRisk);
     final IPropertyType featurePropertyRisk = ftLanduseRisk.getProperty( propertyNameRisk );
-    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL );
+    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL, null );
     Feature rootFeature_risk = riskContextModel.getRootFeature();
     Feature parentFeature_risk = (Feature) rootFeature_risk.getProperty( parentFeatureNameRisk );
     IRelationType featurePropertyNameRisk = (IRelationType) ftLanduseCollectionRisk.getProperty(propertyLanduseMemberRisk);
@@ -690,7 +698,7 @@ public class CreateFloodRiskProjectJob extends Job
 
     // create workspace
     IFeatureType[] types = schema.getAllFeatureTypes();
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "" ); //$NON-NLS-1$
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, waterlevelDataFile.toURL(), "", null ); //$NON-NLS-1$
     
     //IPath m_modelPath = new Path( m_workspacePath.append( m_projectHandel.getFullPath() + "/Control/waterlevelData.gml" ).toString() );
     //URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );

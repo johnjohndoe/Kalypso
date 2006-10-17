@@ -319,7 +319,7 @@ public class StatisticAnalysis
 
     // create workspace
     IFeatureType[] types = schema.getAllFeatureTypes();
-    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" ); //$NON-NLS-1$
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "", null ); //$NON-NLS-1$
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );
@@ -637,7 +637,7 @@ public class StatisticAnalysis
 
     // create workspace
     final IFeatureType[] types = schema.getAllFeatureTypes();
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "" ); //$NON-NLS-1$
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, statisticDataURL, "", null ); //$NON-NLS-1$
 
     // serialize Workspace
     FileWriter fw = new FileWriter( statisticDataURL.getFile() );

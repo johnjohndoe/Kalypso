@@ -236,7 +236,7 @@ public class CalculateDamageJob implements ISimulation
     String waterlevelDataURLPropertyName = "WaterlevelRasterData"; //$NON-NLS-1$
 
     TreeMap<Double, RectifiedGridCoverage> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage>();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML, null );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
     List waterlevelDataList = (List)waterlevelDataFeature.getProperty( waterlevelFeatureListPropertyName );

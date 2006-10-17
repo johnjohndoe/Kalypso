@@ -105,7 +105,7 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       //administrationUnitVectorData: featureList
       URL administrationUnitVectorDataGML = (URL) inputProvider.getInputForID( AdministrationUnitDataID );
       GMLWorkspace administrationUnitVectorData;
-      administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML );
+      administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML, null );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
       List featureList = (List)featureMember.getFeature( administrationUnitVectorData );
 

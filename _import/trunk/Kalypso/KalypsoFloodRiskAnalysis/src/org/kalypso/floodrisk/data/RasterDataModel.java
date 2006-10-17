@@ -93,7 +93,7 @@ public class RasterDataModel
   public RectifiedGridCoverage getRectifiedGridCoverage( URL gmlURL ) throws Exception
   {
 
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
     Feature rootFeature = workspace.getRootFeature();
 
     return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
@@ -159,7 +159,7 @@ public class RasterDataModel
     FeatureHelper.addProperty(rootFeature, ftp_rgc, rectifiedGridCoverageFeature );
     
     // create workspace
-    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, rasterDataModelGML.toURL(), "" );
+    GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, rasterDataModelGML.toURL(), "", null );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( rasterDataModelGML );
