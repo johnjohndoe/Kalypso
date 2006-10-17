@@ -84,6 +84,8 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor
  */
 public class ComboFeatureControl extends AbstractFeatureControl
 {
+  private static final Object NULL_LINK = new Object();
+
   private final ISelectionChangedListener m_listener = new ISelectionChangedListener()
   {
     public void selectionChanged( final SelectionChangedEvent event )
@@ -133,7 +135,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       {
         /* Null entry to delete link if this is allowed */
         if( rt.isNillable() )
-          m_entries.put( null, "" ); //$NON-NLS-1$
+          m_entries.put( NULL_LINK, "<kein Link>" ); //$NON-NLS-1$
 
         /* Find all substituting features. */
         final Feature feature = getFeature();
@@ -207,9 +209,14 @@ public class ComboFeatureControl extends AbstractFeatureControl
     final IPropertyType pt = getFeatureTypeProperty();
 
     final Object oldValue = getCurrentFeatureValue();
-    final Object newValue = selection.isEmpty() ? null : selection.getFirstElement();
+    final Object newSelection = selection.isEmpty() ? null : selection.getFirstElement();
+    final Object newValue = newSelection == NULL_LINK ? null : newSelection;
 
-    if( !newValue.equals( oldValue ) )
+    /* Null check first */
+    if( newValue == oldValue )
+      return;
+    
+    if( ( newValue == null && oldValue != null ) || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
       fireFeatureChange( new FeatureChange( feature, pt, newValue ) );
@@ -235,7 +242,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     for( final Object value : m_entries.keySet() )
     {
-      if( value.equals( currentFeatureValue ) )
+      if( value.equals( currentFeatureValue ) || ( value == NULL_LINK && currentFeatureValue == null ) )
       {
         m_comboViewer.setSelection( new StructuredSelection( value ), true );
         break;
