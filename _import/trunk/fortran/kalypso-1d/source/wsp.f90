@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    2:29 pm
+!     Last change:  WP    1 Aug 2006    5:28 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -924,7 +924,12 @@ if (RUN_MODUS /='KALYPSO') then
 
         read (UNIT_EIN_KM, '(I10)', IOSTAT=istat) ikg
         if (istat/=0) then
-          write (*,*) 'In WSP. Fehler bei KM-Datei.'
+          write (*,10690)
+          10690 format (//1X, 'Fehler beim Lesen der KM-Datei (teilg.***) in /PROF/ !', /, &
+                        & 1X, 'Bitte pruefen Sie diese Datei bzw. die Eingabe in WSPWIN.', //, &
+                        & 1X, 'Hinweis: Eventl. muss die Eingabe der Teilgebiete in WSPWIN', /, &
+                        & 1X, 'nur einmal geaendert werden, so dass eine neue Datei erzeugt wird.', /, &
+                        & 1X, '-> Programmabruch.')
           stop
         end if
         !write (*,*) 'In WSP. Anzahl Teilgebiete = ', ikg

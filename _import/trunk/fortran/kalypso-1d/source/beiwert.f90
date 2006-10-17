@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2006    8:29 pm
+!     Last change:  WP    1 Aug 2006    4:30 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,9 @@
 !***********************************************************************
 
 
-SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm) 
+SUBROUTINE beiwert (huew, ii, wh, h_v, huw, iueart, cq, cm)
+!MD SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
+
 
 !***********************************************************************
 !**                                                                     
@@ -105,6 +107,7 @@ SUBROUTINE beiwert (huew, ii, wh, huw, iueart, cq, cm)
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE KONSTANTEN
 
 CHARACTER(LEN=2) :: wart
 
@@ -225,15 +228,17 @@ ELSEIF (wart.eq.'rk') then
 
 ELSE
 
-  !HW      breitkroniges Wehr
-  !HW          Empirische Formel nach Knapp, S. 297
-  cq = 1.8 * (huew / lw (ii) ) **0.0544
+  !HW breitkroniges Wehr
+  !HW Empirische Formel nach Knapp, S. 297
+  !MD berichtigt am 01.08.2006
+  cq = 1.8 * ( ((huew + h_v )/ lw (ii)) ** 0.0544)
+  !cq = 1.8 * (huew / lw (ii) ) **0.0544
 
-  !HW          Grenzwert für den Überfallbeiwert eines breitkronigen Wehre
-  !HW          cq,grenz=1.7048, nach Knapp S. 295
+  !HW Grenzwert für den Überfallbeiwert eines breitkronigen Wehre
+  !HW cq,grenz=1.7048, nach Knapp S. 295
   IF (cq.gt.1.705) cq = 1.705
 
-  g2 = sqrt (2. * 9.81)
+  g2 = sqrt (2. * g)
 
   cq = cq / ( (2. / 3.) * g2)
 

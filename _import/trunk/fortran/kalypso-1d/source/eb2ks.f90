@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:25 pm
+!     Last change:  WP    1 Aug 2006   11:11 am
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -310,6 +310,8 @@ REAL 	:: a_vor_li, a_vor_re, alpha_E, alpha_I
 ibed = 0
 !WP 10.05.2004                                                          
 
+
+!write (*,*) '     In EB2KS. Anfang Subroutine. f(1) = ', f(1), ' f(3) = ', f(3), ' hr = ', hr
 
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
@@ -686,9 +688,12 @@ DO 15 WHILE(difi.gt.0.01)
   !      endif
   !***********************************************************************
 
+  !write (*,*) '        In EB2KS. Linkes Vorland. F(1) = ', f(1)
+
   !UT   FALLS FLAECHE RECHTES VORLAND GROESSER NULL
   !UT   rk = WIDERSTANDSBEIWERT, v = GESCHWINDIGKEIT, qt = ABFLUSS
   IF (f (1) .gt.1.e-06) then
+
     IF (actu.gt.0.and.actf.gt.0) then
       ! rk(1)=alsum/actu
       v (1) = qt (1) / actf
@@ -707,6 +712,8 @@ DO 15 WHILE(difi.gt.0.01)
     v (1) = 0.
 
   ENDIF
+
+  !write (*,*) '        In EB2KS. Linkes Vorland. RK(1) = ', rk(1)
 
   !***********************************************************************
   !DK   Change!!! This includes also cases where only one subsection of

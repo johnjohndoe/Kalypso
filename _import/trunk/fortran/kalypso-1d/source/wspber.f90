@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    3:04 pm
+!     Last change:  WP    1 Aug 2006   11:12 am
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -951,6 +951,10 @@ Hauptschleife: DO i = 1, maxger
         out_PROF(nprof,nr_q)%chr_kenn = 'i'         	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
         out_PROF(nprof,nr_q)%qges = q
+        !out_IND(nprof,nr_q,1)%lambda = 0.0
+        !out_IND(nprof,nr_q,2)%lambda = 0.0
+        !out_IND(nprof,nr_q,3)%lambda = 0.0
+
         num (nprof) = '0'
 
 
@@ -1068,6 +1072,8 @@ Hauptschleife: DO i = 1, maxger
       CALL br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
        & hrst, indmax, psieins, psiorts, nblatt,  &
        & nz, idr1, hgrenz, ikenn, ifroud, iwehrb)
+
+      !write (*,*) 'In WSPBER. zurueck aus BR_KONV.'
 
       ! mit vorgebenem wsp hr3 in wspanf --> berechnen wsp unverbautes
 
@@ -1278,7 +1284,12 @@ Hauptschleife: DO i = 1, maxger
       WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "1":'')')
 
 
-      !**       Bestimmung des Wasserspiegels im Profil "1"
+
+
+      ! ----------------------------------------------------------------------------------------------
+      ! P R O F I L   "1"
+      ! =================
+
       !**       --> hr oder hgrenz (wsanf = 0.)
       IF (ifroud.eq.1) then
         strbr = breite
@@ -1287,6 +1298,8 @@ Hauptschleife: DO i = 1, maxger
         strbr = 0.
         wsanf1 = hr
       ENDIF
+
+      !write (*,*) 'In WSPBER. Vor Berechnung Profil 1, IWEHRB = ', iwehrb
 
       ! iwehrb kommt aus BR_KONV, ist 0 oder 1
       IF (iwehrb.eq.0) then
@@ -1304,6 +1317,8 @@ Hauptschleife: DO i = 1, maxger
          & nz, idr1)
 
       ENDIF
+
+      !write (*,*) 'In WSPBER. Nach Berechnung Profil 1.'
 
     !**   ELSEIF ZU (nprof.eq.1)
     ELSEIF (iwehr.eq.'w'.and. MIT_WEHREN) then

@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006    1:56 pm
+!     Last change:  WP    1 Aug 2006   11:13 am
 !--------------------------------------------------------------------------
 ! This code, wspow.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -84,6 +84,25 @@ SUBROUTINE wspow (henow, strbr, q, q1, hrow, hv, rg, indmax, hvst,&
 USE DIM_VARIABLEN
 USE IO_UNITS
 
+implicit none
+
+! Calling variables
+REAL :: henow
+REAL :: strbr
+REAL :: q
+REAL :: q1
+REAL :: hrow
+REAL :: hv
+REAL :: rg
+INTEGER :: indmax
+REAL :: hvst
+REAL :: hrst
+REAL :: psieins, psiorts
+INTEGER :: nprof
+INTEGER :: hgrenz
+INTEGER :: ikenn
+INTEGER :: nblatt
+INTEGER :: nz
 CHARACTER(LEN=1) :: idr1
                                                                         
 
@@ -98,29 +117,38 @@ COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
 ! ----------------------------------------------------------------------------------
 
 
-
-! commonblock fuer die Wehrberechnung
-
-INTEGER iwmin, nokw, nwfd
-
-CHARACTER(1) iwehr
-CHARACTER(2) wart
-
-REAL xokw (maxkla), hokw (maxkla)
-REAL xtrw (maxw), htrw (maxw)
-
-INTEGER ianfw (maxw), iendw (maxw)
-
-COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw,    &
- & htrw, nwfd, iendw, ianfw
+! COMMON-Block /WEHR/ ---------------------------------------------------------
+REAL 		:: xokw (maxkla), hokw (maxkla)
+INTEGER 	:: nokw, iwmin
+REAL            :: hokwmin
+CHARACTER(LEN=1):: iwehr
+REAL 		:: xtrw (maxw), htrw (maxw)
+INTEGER         :: nwfd
+INTEGER 	:: iendw (maxw), ianfw (maxw)
+COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw, ianfw
+! -----------------------------------------------------------------------------
 
 
-INTEGER itmax_ow
+
+! Local variables
+INTEGER :: i
+CHARACTER(LEN=2) :: wart
+INTEGER :: itmax_ow
+
+REAL :: dx
+REAL :: hr, hra, hranf, hrowa
+REAL :: he1, hea
+REAL :: hva
+REAL :: dif, df
+REAL :: wsanf
+
 
 ! ------------------------------------------------------------------
 ! PROGRAMMBEGINN
 ! ------------------------------------------------------------------
                                                                         
+!write (*,*) 'In WSPOW. Start Subroutine.'
+
 IF (iwehr.eq.'w') hukmax = 0.0
                                                                         
 dx = 0.10
@@ -136,95 +164,94 @@ WRITE (UNIT_OUT_LOG, '(''bestimmung des wasserspiegels im oberwasser'',    &
    &     '' aus der energiehoehe im oberwasser'',/,''henow= '',       &
    &     f8.4)') henow
 
-      !JK    START ITERATIONSSCHLEIFE ZUR BERECHNUNG WSP IM OBERWASSER
-      !JK    ---------------------------------------------------------
-      DO 10 i = 1, itmax_ow
-                                                                        
-        !JK      SCHREIBEN IN KONTROLLFILE
-        write (UNIT_OUT_LOG, '(''it= '',i2)') i
 
-                                                                        
-        CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst,&
-        psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
-                                                                        
-        he1 = hrow + hv 
-        dif = henow - he1 
-                                                                        
-        !JK      SCHREIBEN IN KONTROLLFILE
-        WRITE (UNIT_OUT_LOG, '(''he1= '',f8.4,'' dif= '',f8.4)') he1, dif
+!JK    START ITERATIONSSCHLEIFE ZUR BERECHNUNG WSP IM OBERWASSER
+!JK    ---------------------------------------------------------
+DO 10 i = 1, itmax_ow
 
-        IF (abs (dif) .lt.1.e-04) then 
-
-          IF (hrow.gt.hukmax) then 
-            !JK            SCHREIBEN IN KONTROLLFILE
-            WRITE (UNIT_OUT_LOG, '(''abbruch der iteration im schritt'',i3,            &
-              &'' wasserspiegel oberwasser:'',f8.4,/,''energielinie '',          &
-              &''im oberwasser:'',f8.4)') i, hrow, he1
-
-            GOTO 9999 
-
-          ELSE 
-
-            !JK            SCHREIBEN IN KONTROLLFILE                                
-            WRITE (UNIT_OUT_LOG, '(''wasserspiegel oberwasser unter hukmax'',          &
-             &     '' rechne hrow = henow weiter'')')
-
-            wsanf = henow 
-                                                                        
-            CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-            hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
-            nz, idr1)                                                   
-
-            RETURN 
-
-          ENDIF 
-
-        ENDIF 
+  !JK      SCHREIBEN IN KONTROLLFILE
+  write (UNIT_OUT_LOG, '(''it= '',i2)') i
 
 
-        hrowa = hrow - dx 
-                                                                        
-        CALL wspanf (hrowa, strbr, q, q1, hra, hva, rg, indmax, hvst,   &
-        hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz,  &
-        idr1)                                                           
-                                                                        
-                                                                        
-        hea = hrowa + hva 
-        df = (hea - he1) / (hrowa - hrow) 
-                                                                        
-        IF (df.lt.1.e-04) then 
+  CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst,&
+   & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 
-          !JK         SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '(''keine loesung fuer oberwasser hrow = henow!'')')
+  he1 = hrow + hv
+  dif = henow - he1
 
-          hrow = henow 
-                                                                        
-          CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst,    &
-          hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz,&
-          idr1)                                                         
+  !JK      SCHREIBEN IN KONTROLLFILE
+  WRITE (UNIT_OUT_LOG, '(''he1= '',f8.4,'' dif= '',f8.4)') he1, dif
 
-          RETURN 
-                                                                        
-        ENDIF 
-                                                                        
-        hrow = hrow + (henow - he1) / df 
-                                                                        
-        !JK      SCHREIBEN IN KONTROLLFILE
-        WRITE (UNIT_OUT_LOG, 9810) hea, df, hrow
-        9810 FORMAT   ('hea= ',f8.4,' df= ',f8.4,' hrow= ',f8.4)
+  IF (abs (dif) .lt.1.e-04) then
 
-                                                                        
-   10 END DO 
-                                                                        
-      !JK    SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '(''keine konvergenz fuer oberwasser hrow = henow '')')
+    IF (hrow.gt.hukmax) then
+      !JK            SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(''abbruch der iteration im schritt'',i3,            &
+        &'' wasserspiegel oberwasser:'',f8.4,/,''energielinie '',          &
+        &''im oberwasser:'',f8.4)') i, hrow, he1
 
-      wsanf = henow 
-      hrow = henow 
-                                                                        
-      CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst, &
-      psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
-                                                                        
- 9999 RETURN 
-                                                                        
-      END SUBROUTINE wspow                          
+      GOTO 9999
+
+    ELSE
+
+      !JK            SCHREIBEN IN KONTROLLFILE
+      WRITE (UNIT_OUT_LOG, '(''wasserspiegel oberwasser unter hukmax'',          &
+       &     '' rechne hrow = henow weiter'')')
+
+      wsanf = henow
+
+      CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
+      hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
+      nz, idr1)
+
+      RETURN
+
+    ENDIF
+
+  ENDIF
+
+
+  hrowa = hrow - dx
+
+  CALL wspanf (hrowa, strbr, q, q1, hra, hva, rg, indmax, hvst,   &
+   & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+
+
+  hea = hrowa + hva
+  df = (hea - he1) / (hrowa - hrow)
+
+  IF (df.lt.1.e-04) then
+
+    !JK         SCHREIBEN IN KONTROLLFILE
+    WRITE (UNIT_OUT_LOG, '(''keine loesung fuer oberwasser hrow = henow!'')')
+
+    hrow = henow
+
+    CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, &
+     & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+
+    RETURN
+
+  ENDIF
+
+  hrow = hrow + (henow - he1) / df
+
+  !JK      SCHREIBEN IN KONTROLLFILE
+  WRITE (UNIT_OUT_LOG, 9810) hea, df, hrow
+  9810 FORMAT   ('hea= ',f8.4,' df= ',f8.4,' hrow= ',f8.4)
+
+
+10 END DO
+
+!JK    SCHREIBEN IN KONTROLLFILE
+WRITE (UNIT_OUT_LOG, '(''keine konvergenz fuer oberwasser hrow = henow '')')
+
+wsanf = henow
+hrow = henow
+
+CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst, &
+ & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+
+9999 RETURN
+
+END SUBROUTINE wspow                                                                      

@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:22 pm
+!     Last change:  WP    1 Aug 2006   11:08 am
 !--------------------------------------------------------------------------
 ! This code, U_WSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -386,6 +386,7 @@ IF (iprof (1:1) .eq.' ') then
 
   ns = 0	! Anzahl der Schnittpunkte gelaende-wsp je seite
   ikenn = 1   	! Schnittpunkt zwischen 2 strecken gesucht, Kennung fuer SUB schnpkt
+
 
   ! ----------------------------------------------------------------
   ! Bestimmung der Schnittpunkte des Wasserspiegels mit dem Gelaende

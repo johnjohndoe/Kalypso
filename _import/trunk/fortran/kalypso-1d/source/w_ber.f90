@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:53 pm
+!     Last change:  WP    1 Aug 2006    4:42 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -487,7 +487,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
             ENDIF
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
             !HW    SCHREIBEN IN KONTROLLFILE
             WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
@@ -500,7 +501,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
             !HW    Berechnung des Wehrueberfalls nach DU BUAT
                                                                         
-            q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5)
+            q_b = (2. / 3.) * g2 * cq (j) * (huew (j) + h_v) **1.5
                                                                         
             !HW    SCHREIBEN IN KONTROLLFILE
             WRITE (UNIT_OUT_LOG, '(/,''Breite des Wehres wl:'')')
@@ -567,8 +568,11 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
 
               tauu = h_uw (j) / hgrw (j)
-                                                                        
               taoo = huew (j) / hgrw (j)
+
+              !MD    taoo = (huew (j) + h_v ) / hgrw (j)
+              !MD    taoo = huew (j) / hgrw (j)   <- MUSS ENERGIEHÖHE DES OBERWASSERS SEIN
+
 
               !JK                    SCHREIBEN IN KONTROLLFILE
               WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4, &
@@ -583,10 +587,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                 WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
                 WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
-                taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-                 & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-                 & ) - hwmin (j) / hgrw (j)
-                                                                        
+                !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                                          !
+                ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &                    !
+                !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                                 !
+                                                                                                                                    !
+                taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &                     !
+                              &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                                              !
+
                 !HW    SCHREIBEN IN KONTROLLFILE
                 WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
                 WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
@@ -643,7 +650,9 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
+
             !HW    SCHREIBEN IN KONTROLLFILE
             WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w (Wehrueberfall)'')')
 
@@ -735,20 +744,21 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !JK                    SCHARFKANTIGES WEHR                              
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
-            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
-            WRITE (UNIT_OUT_LOG, '(''g2    = '',f8.4)') g2
-            WRITE (UNIT_OUT_LOG, '(''cq    = '',f8.4)') cq (j)
-            WRITE (UNIT_OUT_LOG, '(''huew  = '',f8.4)') huew (j)
-            WRITE (UNIT_OUT_LOG, '(''q_uea ='',f8.4)') q_uea
-            WRITE (UNIT_OUT_LOG, '(''hv    = '',f8.4)') hv
+          WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
+          WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+          WRITE (UNIT_OUT_LOG, '(''g2    = '',f8.4)') g2
+          WRITE (UNIT_OUT_LOG, '(''cq    = '',f8.4)') cq (j)
+          WRITE (UNIT_OUT_LOG, '(''huew  = '',f8.4)') huew (j)
+          WRITE (UNIT_OUT_LOG, '(''q_uea ='',f8.4)') q_uea
+          WRITE (UNIT_OUT_LOG, '(''hv    = '',f8.4)') hv
 
                                                                         
-          q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
+          q_b = (2. / 3.) * g2 * cq (j) * (huew (j) + h_v) **1.5
                                                                         
           q_w (j) = q_b * wl (j) 
           hgrw (j) = (q_b**2. / g) ** (1. / 3.) 
@@ -785,10 +795,14 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
               WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
-              taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-               & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-               & ) - hwmin (j) / hgrw (j)
-                                                                        
+              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                          !                !  !
+              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &    !                !  !
+              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                 !                !  !
+                                                                                                                       !                !  !
+              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &      !                !  !
+                             &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                              !                !  !
+
+
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
               WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
@@ -837,7 +851,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                             ------------------------                  
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         
@@ -881,19 +896,20 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !JK                    SCHARFKANTIGES WEHR                              
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
-            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
-            WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
-            WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
-            WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
-            WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
+          WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
+          WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+          WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
+          WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
+          WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
+          WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
 
                                                                         
-          q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
+          q_b = 2. / 3. * g2 * cq (j) * (huew (j) + h_v) **1.5
                                                                         
           q_w (j) = q_b * wl (j) 
           hgrw (j) = (q_b**2. / g) ** (1. / 3.) 
@@ -932,10 +948,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
               WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
-              taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-               & / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-               & ) - hwmin (j) / hgrw (j)
-                                                                        
+
+              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                                            !
+              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &                     !
+              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                                  !
+                                                                                                                                        !
+              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &                       !
+                            &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                                               !
+
+
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
               WRITE (UNIT_OUT_LOG, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')')
@@ -983,7 +1004,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                              ------------------------                 
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         
@@ -1106,19 +1128,19 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                                                                         
           IF (wart.eq.'sk') wh = hwmin (j) - hming 
                                                                         
-          CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+          CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
-            WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')') 
-            WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
-      WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
-      WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
-            WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
-      WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
+          WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
+          WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
+          WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
+          WRITE (UNIT_OUT_LOG, '(''cq   = '',f8.4)') cq (j)
+          WRITE (UNIT_OUT_LOG, '(''huew = '',f8.4)') huew (j)
+          WRITE (UNIT_OUT_LOG, '(''hv   = '',f8.4)') hv
 
-                                                                        
-          q_b = 2. / 3. * g2 * cq (j) * (huew (j) **1.5 + h_v**1.5) 
+          q_b = 2. / 3. * g2 * cq (j) * (huew (j) + h_v) **1.5
                                                                         
           q_w (j) = q_b * wl (j) 
           hgrw (j) = (q_b**2. / g) ** (1. / 3.) 
@@ -1135,9 +1157,9 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       WRITE (UNIT_OUT_LOG, '(/,''q_ue   ='',f8.4)') q_ue 
       WRITE (UNIT_OUT_LOG, '(''i      ='',10i8)')  (i, i = 1, nwfd)
-        WRITE (UNIT_OUT_LOG, '(''q_w(i) ='',10f8.4)') (q_w (i) , i = 1, nwfd)
+      WRITE (UNIT_OUT_LOG, '(''q_w(i) ='',10f8.4)') (q_w (i) , i = 1, nwfd)
       WRITE (UNIT_OUT_LOG, '(''cq(i)  ='',10f8.4)')  (cq (i) , i = 1, nwfd)
-        WRITE (UNIT_OUT_LOG, '(''hgrw(i)='',10f8.4)') (hgrw (i) , i = 1, nwfd)
+      WRITE (UNIT_OUT_LOG, '(''hgrw(i)='',10f8.4)') (hgrw (i) , i = 1, nwfd)
 
                                                                         
       IF (hr1.le.hokwmin) then 
@@ -1173,11 +1195,14 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
                                                                         
-              taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1 &
-              / g * (v_uw**2 / hgrw (j) ) **2) - v_uw**2 / (g * hgrw (j)&
-              ) - hwmin (j) / hgrw (j)                                  
-                                                                        
-                                                                        
+              !MD   FEHLER IN DER FORMEL --> KORRIGIERT
+              !taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &
+              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)
+
+              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &
+                          &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))
+
+
 !HW    SCHREIBEN IN KONTROLLFILE                                        
 
       WRITE (UNIT_OUT_LOG, '(/,''Grenzwert fuer Ueberstroemen nach Imp.bilanz'')')
@@ -1228,7 +1253,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 !                   ------------------------                            
             iueart = 1 
                                                                         
-            CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
+            CALL beiwert (huew (j), j, wh, h_v, h_uw (j), iueart, cq (j), cm)
                                                                         
             q_w (j) = q_w (j) * cm 
                                                                         

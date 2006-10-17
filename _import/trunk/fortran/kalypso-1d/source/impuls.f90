@@ -1,4 +1,4 @@
-!     Last change:  WP   24 May 2006    2:32 pm
+!     Last change:  WP   16 Jun 2006    2:43 pm
 !--------------------------------------------------------------------------
 ! This code, impuls.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -138,11 +138,20 @@ COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
 !     - output:    m --> ermittelter impuls                             
 !                                                                       
 !      **************************************************************   
-      COMMON / pfeilerstau / alpha, bnetto 
-!     ***************************************************************   
+
+! COMMON-Block /PFEILERSTAU/ --------------------------------------------------
+REAL            :: alpha
+REAL            :: bnetto
+COMMON / pfeilerstau / alpha, bnetto
+! -----------------------------------------------------------------------------
+
+
+
+
+
 !     common-bloecke boolsche operationen --> algebra                   
 ! ================================================                      
-      COMMON / angabe / xko (mpts, 2), hko (mpts, 2), na1, na2 
+COMMON / angabe / xko (mpts, 2), hko (mpts, 2), na1, na2
 ! ================================================                      
 COMMON / xr0yr0 / xr0 (mpts, max2), hr0 (mpts, max2), mr0 (max2), kr0
 COMMON / xr1yr1 / xr1 (mpts, max2), hr1 (mpts, max2), mr1 (max2), kr1

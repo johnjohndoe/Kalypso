@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:08 pm
+!     Last change:  WP    1 Aug 2006   11:15 am
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -69,6 +69,8 @@ SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
 USE DIM_VARIABLEN
 USE IO_UNITS
 USE MOD_INI
+
+implicit none
 
 REAL, INTENT(IN)     	:: staso        ! Station [km]
 REAL                    :: str1         ! Abstand zum naechsten Profil [m]
@@ -193,13 +195,15 @@ REAL            :: hss, hue, hpl, hpg
 COMMON / flaechen / ad, aue, apl, apg, hss, hue, hpl, hpg
 ! -----------------------------------------------------------------------------
 
+
 ! COMMON-Block /PFEILERSTAU/ --------------------------------------------------
+REAL            :: alpha
+REAL            :: bnetto
 COMMON / pfeilerstau / alpha, bnetto
 ! -----------------------------------------------------------------------------
 
 
 ! Local variables
-REAL :: m2, m3, m1, m
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
 REAL :: x1_orig (maxkla), h1_orig (maxkla), s_orig (maxkla)
 REAL :: x1_bruecke(maxkla), h1_bruecke(maxkla), s_bruecke(maxkla)
@@ -212,6 +216,36 @@ REAL :: x11 (maxkla), h11 (maxkla), ax1 (maxkla), ay1 (maxkla), dp1 (maxkla)
 
 INTEGER, PARAMETER :: itmax_brkon = 20
 
+INTEGER :: i, i1, i2, ifehl, ifehl2, isch
+INTEGER :: itrlio, itrreo
+INTEGER :: il, ir                       ! Punktnummer linkes und rechtes Widerlager
+INTEGER :: npl
+INTEGER :: ibiter, itbmax               ! Iterationsparameter
+INTEGER :: iartb, iart, iartt
+INTEGER :: ifkonv                       ! Konvergenzbeschreiber
+
+REAL :: m, m1, m2, m3
+REAL :: a, a1, a2, a3
+
+REAL :: qdiff, qdif1, qdif2
+REAL :: hea, heb, heaa
+REAL :: he1, he3
+REAL :: hr1, hr2, hr3, hr1n
+REAL :: wl, wl3
+REAL :: hmass                           ! Massgebende Hoehe
+REAL :: cd                              ! Widerstandsbeiwert Brückenplatte
+REAL :: dx
+REAL :: d1
+REAL :: hminn, hsohl, hdif
+REAL :: aue3
+REAL :: froud
+REAL :: rhy
+REAL :: vm
+REAL :: tm
+REAL :: qgesb, qgesa, qw, qd
+REAL :: df, dfq, dfh
+REAL :: hpf, f                          ! Hoehenverlust, Fliesstiefe bei Pfeilerstau
+REAL :: strbr
 
 
 write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
@@ -520,6 +554,8 @@ hr3 = hr
 nprof = nprof + 1
 stat (nprof) = staso
 
+!write (*,*) ' In BR_KONV. Vor call INTDAT'
+
 CALL intdat (staso, ifehl)
 
 !***********************************************************************
@@ -592,8 +628,7 @@ WRITE (UNIT_OUT_LOG, '(/,''anfangsgeometrie im uw-profil'',/)')
 !write (UNIT_OUT_LOG,*) 'Zeile 533 in brkon, Starte GEOMET!'
 
 
-CALL geomet (hr3, x1, h1, hdif, hsohl, nknot, il, ir, q, wl3, rhy,&
-           & ifehl2)
+CALL geomet (hr3, x1, h1, hdif, hsohl, nknot, il, ir, q, wl3, rhy, ifehl2)
 !WP
 !write (UNIT_OUT_LOG,*) 'Zeile 538 in brkon, Ende GEOMET!'
 
@@ -649,8 +684,7 @@ itbmax = 30
 
 1015 CONTINUE
 
-CALL geomet (heb, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, &
-           & ifehl2)
+CALL geomet (heb, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 
 IF (ifehl2.ne.0) then
 
@@ -689,8 +723,7 @@ ibiter = 0
 
 1016 CONTINUE
 
-CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, &
-           & ifehl2)
+CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 
 IF (ifehl2.ne.0) then
 
@@ -736,10 +769,16 @@ heaa = - 1000.
 
 DO 100 i = 1, itmax_brkon
 
+  !write (*,*) 'In BR_KONV. Iterationsschleife 100. i = ', i
+  !write (*,*) 'In BR_KONV. iartt = ', iartt, ' iartb = ', iartb, ' aue = ', aue
+  !write (*,*) 'In BR_KONV. dfq = ', dfq, ' dfh = ', dfh
+
   dfq = abs (q - qgesa)
   dfh = abs (heaa - heb)
 
   IF ( dfq .le. (q/100.) ) then
+
+    !write (*,*) 'In BR_KONV. dfq < q/100!'
 
     ! Energiehoehe gefunden --> weiter mit hr1=he
     hr1 = hea
@@ -801,6 +840,9 @@ DO 100 i = 1, itmax_brkon
       ENDIF
 
       iwehr = 1
+
+      !write (*,*) 'In BR_KONV. Ende (iartt == 0)'
+
       !JK  ZU VOLLKOMMENEM UEBERFALL
       GOTO 9999
 
@@ -1022,8 +1064,7 @@ DO 100 i = 1, itmax_brkon
 
       hea = hea + 0.1 * (heb - hea)
 
-      CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl,&
-       & rhy, ifehl2)
+      CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 
       isch = isch + 1
 
@@ -1069,8 +1110,7 @@ DO 100 i = 1, itmax_brkon
 
     IF (hea.lt.hmass) hea = hmass
 
-    CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl,  &
-     & rhy, ifehl2)
+    CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 
     isch = isch + 1
     CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3,  &
@@ -1115,6 +1155,8 @@ WRITE (UNIT_OUT_LOG, '(''maximale anzahl der iterationsschritte ueberschritten =
 
 200 CONTINUE
 
+!write (*,*) 'In BR_KONV. Impulsberechnung am Profil 3'
+
 ! ************************************************
 ! Impulsberechnung profil '3'
 ! ************************************************
@@ -1126,6 +1168,7 @@ iartt = 0
 ! print *,'impulsberechnung profil 3'
 
 IF ( (hr3 - hsohl) .le.0.0001) then
+
   hsohl = hmin
 
   !JK        SCHREIBEN IN KONTROLLFILE
@@ -1297,7 +1340,8 @@ ELSE
   WRITE (UNIT_OUT_LOG, '('' in iteration :'')')
 
   CALL iterat (hr, hdif, hsohl, 1, cd, a, a1, x1, h1, nknot, il,  &
-  ir, q, m, m1, staso)
+   & ir, q, m, m1, staso)
+
   hr1 = hr
   nz = nz + 8
 
@@ -1316,6 +1360,9 @@ ELSE
   WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
 
   IF (hr1.ge.hukmax.or.hr2.ge.hukmax.or.hr3.ge.hukmax) then
+
+    !write (*,*) 'In BR_KONV. Typ = Druckabfluss'
+
     !  druckabfluss
 
     !JK   SCHREIBEN IN KONTROLLFILE
@@ -1339,6 +1386,8 @@ ELSE
 
   !JK      ELSE ZU DRUCKABFLUSS
   ELSE
+
+    !write (*,*) 'In BR_KONV. Typ = kein Druckabfluss'
 
     ! Kontrolle, ob schiessende stroemung in '2'
 
@@ -1460,6 +1509,9 @@ ENDIF
 
 9999 CONTINUE
 
+!write (*,*) 'In BR_KONV. Sprungmarke 9999. IARTT = ', iartt
+
+
 IF (iartt.eq.2) then
   ! *****************************************************************
   ! Unvollkommener ueberfall
@@ -1576,6 +1628,8 @@ IF (iartt.eq.2) then
 
 !JK    ELSE ZU (iartt.eq.2)
 ELSE
+
+  !write (*,*) 'In BR_KONV. Ende Berechnung Brueckenprofil.'
 
   ! **************************************************************
   ! Vollkommener ueberfall oder impulsberechnung

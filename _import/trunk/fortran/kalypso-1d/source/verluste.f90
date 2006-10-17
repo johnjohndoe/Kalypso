@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:26 pm
+!     Last change:  WP    1 Aug 2006   11:10 am
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -59,7 +59,7 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 !**   betta1  --      Ungleichförmigkeitsbeiwert                        
 !**   dx      --      Schrittweite
 !**   f       --      durchströmte Fläche des Teilabschnittes           
-!**   falt    --      gesamte durchströmte Fläche (alt)                 
+!**   f_alt   --      gesamte durchströmte Fläche (alt)
 !**   fges    --      gesamte durchströmte Fläche                       
 !**   fges1   --      gesamte durchströmte Fläche                       
 !**   hborda  --      Einengungsverluste                                
@@ -115,6 +115,8 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE MOD_INI
+
+implicit none
 
 ! Calling variables -----------------------------------------------------------
 REAL, INTENT(IN) 	:: str          ! Abstand (Strecke) zwischen zwei Profilen
@@ -211,13 +213,30 @@ COMMON / vort / hborda, heins, horts
 
 
 ! Local variables -------------------------------------------------------------
-REAL :: GET_BORDA
-REAL :: betta
+INTEGER :: i
+INTEGER :: ife
+INTEGER :: nfre, nfli
+INTEGER :: nstat                ! Anzahl der Stationen
+
+REAL :: GET_BORDA               ! Funktion zur Bestimmung des Aufweitungsverlustes nach Borda-Carnot
+REAL :: betta                   ! Ungleichfoermigkeitsbeiwert
+REAL :: dx
+REAL :: f_alt
+REAL :: ht
+REAL :: vo, vu, vm
+REAL :: rgm
+REAL :: wurzrg
+REAL :: sohle
 
 ! istat=0      --> stationaer ungleichfoermig
 ! istat=1      --> stationaer gleichfoermig
                                                                         
                                                                         
+!write (*,*) 'In VERLUSTE. Start Subroutine.'
+!do i = 1, 3
+!  write (*,*) 'rk(',i,') = ', rk(i), '  f(',i,') = ', f(i)
+!end do
+
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
@@ -226,7 +245,7 @@ heins = 0.
 horts = 0.
 hborda = 0.
 dx = 0.05
-falt = 0.
+f_alt = 0.
                                                                         
 
 101 CONTINUE
@@ -237,6 +256,10 @@ falt = 0.
 CALL uf (hr, hi, xi, s, indmax, nfli, nfre)
 ! ------------------------------------------------------------------
                                                                         
+!write (*,*) 'In VERLUSTE. Nach call UF. hr = ', hr
+!do i = 1, 3
+!  write (*,*) 'rk(',i,') = ', rk(i), '  f(',i,') = ', f(i)
+!end do
 
 
 IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
@@ -244,17 +267,20 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ! -----------------------------------------------------------------
   ! STATIONAER UNGLEICHFOERMIGER ABFLUSS (SPIEGELLINIENBERECHNUNG)
   ! -----------------------------------------------------------------
+
+  !write (*,*) 'In VERLUSTE. fges = ', fges, '  q = ', q
+
   IF (fges .lt. 1.e-02) then
 
     hr = hr + dx
-    falt = fges
+    f_alt = fges
     GOTO 101
 
   ELSEIF ( (q/fges) .gt. 20) then
 
-    IF (abs (falt - fges) .gt. 1.e-06) then
+    IF (abs (f_alt - fges) .gt. 1.e-06) then
       hr = hr + dx
-      falt = fges
+      f_alt = fges
       ifehlg = 0
       GOTO 101
     ELSE
@@ -283,6 +309,13 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     CALL eb2kst (indmax, hr, hv, rg, q)
   ENDIF
 
+  !write (*,*) 'In VERLUSTE. Nach eb2ks.'
+  !do i = 1, 3
+  !  write (*,*) 'rk(',i,') = ', rk(i)
+  !end do
+
+
+
   ! Geschwindigkeitsverlust:
   IF (nprof.eq.1.or.istat.eq.1) then
     hvst = 0.
@@ -299,8 +332,8 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       IF (fges.lt. (fges1 - 2. * str / 7.) ) then
         ! Aufweitung > 1:7 --> Borda'scher Stossdruck
         ht = MIN (hr, hmax) - hmin
-        vo = sqrt (hv * 2 * 9.81)
-        vu = sqrt (hv1 * 2 * 9.81)
+        vo = sqrt (hv * 2 * g)
+        vu = sqrt (hv1 * 2 * g)
         hborda = GET_BORDA (vo, vu, ht)
 
       ELSE
@@ -432,13 +465,13 @@ ELSE
 
   ELSE
 
-    DO i1 = 1, indmax
+    DO i = 1, indmax
 
-      qt (i1) = 0.
-      v (i1) = 0.
-      f (i1) = 0.
-      rk (i1) = 0.
-      u (i1) = 0.
+      qt (i) = 0.
+      v (i) = 0.
+      f (i) = 0.
+      rk (i) = 0.
+      u (i) = 0.
 
     END DO
 

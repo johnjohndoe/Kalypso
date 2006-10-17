@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:40 pm
+!     Last change:  WP   16 Jun 2006    4:05 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -82,7 +82,9 @@ SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
 USE DIM_VARIABLEN
 USE IO_UNITS
 
+implicit none
 
+! Calling variables
 REAL :: wsanf                   ! Anfangswasserspiegelhöhe
 REAL, INTENT(IN) :: strbr       ! Strecke zwischen den Profilen
 REAL :: q                       ! Abfluss
@@ -105,13 +107,9 @@ INTEGER :: nz                   ! Anzahl der Zeilen des Ergebnisfiles
 !EP   deklariert. IDR1 wird in SUBR QBORDV über den Common-Blcok BV initialisiert
 !EP   Dieser Common-Block ist hier aber nicht übernehmbar, da die Variable
 !EP   bereits in der Parameterliste der SUBR übergeben wird. Daher muß IDR1
-!EP   falls über die Parameterliste übergeben werden. Entsprechend ist d
-!EP   dieser Version erweitert worden. Gleichzeitig wird sie als Charactacter definiert
+!EP   falls über die Parameterliste übergeben werden. Entsprechend ist
+!EP   diese Version erweitert worden. Gleichzeitig wird sie als Charactacter definiert
 CHARACTER(LEN=1) :: idr1
-
-
-! Local variables
-REAL :: xi (maxkla), hi (maxkla), s (maxkla)
 
 
 
@@ -151,6 +149,14 @@ COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
 REAL 		:: hborda, heins, horts
 COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
+
+
+! Local variables
+INTEGER :: igrnz, ifehl, itere1, ifehlg, istat
+REAL :: str
+REAL :: froud
+
+REAL :: xi (maxkla), hi (maxkla), s (maxkla)
 
 
 ! ------------------------------------------------------------------

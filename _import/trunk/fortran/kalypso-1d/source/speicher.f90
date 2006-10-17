@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:55 pm
+!     Last change:  WP    1 Aug 2006   11:15 am
 !--------------------------------------------------------------------------
 ! This code, speicher.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -72,18 +72,13 @@ SUBROUTINE speicher (l, hr, hv, hvst, hrst, q, station, indmax, ikenn)
 !**   hmingp  --      niedrigste Geländehöhe                            
 !**   hort    --      Auslaufverlust                                    
 !**   horts   --      Auslaufverlust                                    
-!**   hr      --      Wasserspiegelhöhe                                 
-!**   hrs     --      Reibungsverlusthöhe                               
-!**   hrst    --      Reibungsverlusthöhe                               
-!**   hs      --      Gesamtverlust                                     
+!**   hrs     --      Reibungsverlusthöhe
+!**   hs      --      Gesamtverlust
 !**   hv      --      Geschwindigkeitsverlusthöhe                       
 !**   hvs     --      Geschwindigkeitsverlusthöhe                       
-!**   hvst    --      Geschwindigkeitsverlusthöhe                       
-!**   hwsp    --      Wasserspiegelhöhe                                 
-!**   indmax  --      Anzahl der Rauheitsabschnitte                     
-!**   isstat  --      Stationsgefälle                                   
-!**   q       --      Abfluß                                            
-!**   qbv     --      Bordvollabfluß                                    
+!**   hwsp    --      Wasserspiegelhöhe
+!**   isstat  --      Stationsgefälle
+!**   qbv     --      Bordvollabfluß
 !**   qs      --      Abfluß                                            
 !**   qt      --      Teilabfluß                                        
 !**   qtp     --      Teilabfluß                                        
@@ -106,7 +101,10 @@ SUBROUTINE speicher (l, hr, hv, hvst, hrst, q, station, indmax, ikenn)
 
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE KONSTANTEN
 USE MOD_INI
+
+implicit none
 
 ! Calling variables
 INTEGER, INTENT(IN) 	:: l		! = NPROF, Nummer des aktuellen Profils
@@ -223,6 +221,11 @@ COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
 
+! Local variables
+INTEGER 	:: i
+REAL 		:: vm, tm, froud, str
+
+
 ! Wasserspiegel wsp(m+nn):
 wsp (l) = hr
 
@@ -241,7 +244,7 @@ vmp (l) = vm
 
 ! Froudzahl
 tm = fges / brges
-froud = (vm * vm) / (tm * 9.81)
+froud = (vm * vm) / (tm * g)
 froudp (l) = froud
 
 ! Geschwindigkeitsverlust:
@@ -283,7 +286,7 @@ DO i = 1, indmax
   vp (l, i) = v (i)
   qtp (l, i) = qt (i)
 
-  !write (*,*) 'In SPEICHER. QT(i) = ', qt(i)
+  !write (*,*) 'In SPEICHER. RK(i) = ', rk(i)
 
   rkp (l, i)  = rk (i)
   fbwp (l, i) = formbeiwert(i)
