@@ -182,13 +182,17 @@ public class FeatureActionUtilities
 
     final int maxOccurs = fatp.getMaxOccurs();
 
+    /* If we may not inline features we cannot create them via 'new' */
+    if( !fatp.isInlineAble() )
+      // Just return, hide menu
+      return newMenuManager;
+    
     /* Direct properties (maxoccurs = 1) can only be added if not already there. */
     if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
     {
       // Just return, hide menu
       return newMenuManager;
     }
-
     /* If maxoccurs < 0 we have a list, and we may tet if the list is already full. */
     else if( maxOccurs > 1 )
     {
