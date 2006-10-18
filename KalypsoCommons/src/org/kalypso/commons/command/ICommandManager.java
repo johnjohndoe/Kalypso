@@ -87,4 +87,6 @@ public interface ICommandManager
   public boolean isDirty();
 
   public void resetDirty();
+
+  public void clear();
 }

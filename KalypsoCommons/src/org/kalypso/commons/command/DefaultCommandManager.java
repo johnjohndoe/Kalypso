@@ -105,7 +105,7 @@ public class DefaultCommandManager implements ICommandManager
 
   }
 
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     if( stackPos < stack.size() - 1 )
     {
@@ -127,7 +127,7 @@ public class DefaultCommandManager implements ICommandManager
     checkStatus();
   }
 
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     if( stackPos >= 0 )
     {
@@ -151,10 +151,10 @@ public class DefaultCommandManager implements ICommandManager
     checkStatus();
   }
 
-  private void checkStatus()
+  private void checkStatus( )
   {
-    undoable = ( stackPos >= 0 );
-    doable = ( stackPos < stack.size() - 1 );
+    undoable = (stackPos >= 0);
+    doable = (stackPos < stack.size() - 1);
     m_dirty = true;
 
     fireCommandManagerChanged();
@@ -170,10 +170,9 @@ public class DefaultCommandManager implements ICommandManager
     m_listenerList.remove( ICommandManagerListener.class, l );
   }
 
-  private void fireCommandManagerChanged()
+  private void fireCommandManagerChanged( )
   {
-    final ICommandManagerListener[] listeners = m_listenerList
-        .getListeners( ICommandManagerListener.class );
+    final ICommandManagerListener[] listeners = m_listenerList.getListeners( ICommandManagerListener.class );
     for( int i = 0; i < listeners.length; i++ )
       listeners[i].onCommandManagerChanged( this );
   }
@@ -181,7 +180,7 @@ public class DefaultCommandManager implements ICommandManager
   /**
    * @see org.kalypso.commons.command.ICommandManager#canUndo()
    */
-  public boolean canUndo()
+  public boolean canUndo( )
   {
     return undoable;
   }
@@ -189,7 +188,7 @@ public class DefaultCommandManager implements ICommandManager
   /**
    * @see org.kalypso.commons.command.ICommandManager#canRedo()
    */
-  public boolean canRedo()
+  public boolean canRedo( )
   {
     return doable;
   }
@@ -197,7 +196,7 @@ public class DefaultCommandManager implements ICommandManager
   /**
    * @see org.kalypso.commons.command.ICommandManager#getUndoDescription()
    */
-  public String getUndoDescription()
+  public String getUndoDescription( )
   {
     if( canUndo() )
       return stack.elementAt( stackPos ).getDescription();
@@ -208,7 +207,7 @@ public class DefaultCommandManager implements ICommandManager
   /**
    * @see org.kalypso.commons.command.ICommandManager#getRedoDescription()
    */
-  public String getRedoDescription()
+  public String getRedoDescription( )
   {
     if( canRedo() )
       return stack.elementAt( stackPos + 1 ).getDescription();
@@ -216,15 +215,25 @@ public class DefaultCommandManager implements ICommandManager
     return "<cannot redo>";
   }
 
-  public boolean isDirty()
+  public boolean isDirty( )
   {
     return m_dirty;
   }
 
-  public void resetDirty()
+  public void resetDirty( )
   {
     m_dirty = false;
 
     fireCommandManagerChanged();
+  }
+
+  /**
+   * Resets the whole CommandManager and emptys the command stack.
+   */
+  public void clear( )
+  {
+    stack.clear();
+    stackPos = -1;
+    checkStatus();
   }
 }

@@ -48,6 +48,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -93,6 +94,14 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
       m_mapPanel.addModellListener( this );
     // force modellchange
     onModellChange( null );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
+   */
+  public void setSelection( final IFeatureSelection selection )
+  {
+    // does nothing on default
   }
 
   protected final void postViewCommand( final ICommand command, final Runnable runAfterCommand )

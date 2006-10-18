@@ -419,4 +419,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getFeatureProviderFactory();
   }
+
+  /**
+   * @see org.kalypso.commons.command.ICommandManager#clear()
+   */
+  public void clear( )
+  {
+    m_commandManager.clear();
+  }
 }

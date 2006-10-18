@@ -46,6 +46,7 @@ import java.awt.event.KeyEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * @author bce
@@ -53,7 +54,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 public interface IWidget
 {
   public String getName( );
-  
+
   public String getToolTip( );
 
   // KeyEvents
@@ -81,11 +82,11 @@ public interface IWidget
   public void doubleClickedRight( Point p );
 
   public void rightClicked( Point p );
-  
+
   public void rightPressed( Point p );
 
   public void rightReleased( final Point p );
-  
+
   public void clickPopup( final Point p );
 
   // MouseMotions
@@ -99,4 +100,13 @@ public interface IWidget
   public void finish( );
 
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
+
+  /**
+   * Will be called:
+   * <ul>
+   * <li>after activation</li>
+   * <li>everytime the selection changes if active</li>
+   * </ul>
+   */
+  public void setSelection( final IFeatureSelection selection );
 }
