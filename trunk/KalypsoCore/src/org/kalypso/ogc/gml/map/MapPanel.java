@@ -197,7 +197,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     setMapModell( null );
 
     m_modellEventProvider.dispose();
-    m_widgetManager.setActualWidget( null );
+    m_widgetManager.dispose();
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this ma panel still referenced from?

@@ -96,9 +96,9 @@ public class GeometryFeatureControl extends AbstractFeatureControl
       final IPropertyType ftp = getFeatureTypeProperty();
 
       if( feature.getProperty( ftp ) != null )
-        m_label.setText( "Um die Geometrie zu ersetzen, klicken Sie auf 'Zeichnen'." );
+        m_label.setText( "Um die Geometrie zu ersetzen, \nklicken Sie auf 'Zeichnen'." );
       else
-        m_label.setText( "Klicken Sie auf 'Zeichnen', um die Massnahme zu zeichnen." );
+        m_label.setText( "Klicken Sie auf 'Zeichnen', \num die Massnahme zu zeichnen." );
     }
   }
 

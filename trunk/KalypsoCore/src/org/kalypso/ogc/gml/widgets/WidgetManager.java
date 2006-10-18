@@ -52,6 +52,8 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
 /**
  * Der Controller fuer die MapView
@@ -62,7 +64,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 {
   private IWidget m_actualWidget = null;
 
-  private final MapPanel m_MapPanel;
+  private final MapPanel m_mapPanel;
 
   private final ICommandTarget m_commandTarget;
 
@@ -74,10 +76,27 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
   private final List<IWidgetChangeListener> m_widgetChangeListener = new ArrayList<IWidgetChangeListener>();
 
+  private IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
+  {
+    public void selectionChanged( IFeatureSelection selection )
+    {
+      onSelectionChanged( selection );
+    }
+  };
+
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    m_MapPanel = mapPanel;
+    m_mapPanel = mapPanel;
     m_commandTarget = commandTarget;
+
+    m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
+  }
+
+  public void dispose( )
+  {
+    setActualWidget( null );
+
+    m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
   }
 
   // MouseAdapter
@@ -127,7 +146,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
         m_lastMoved = e.getPoint();
         getActualWidget().moved( m_lastMoved );
 
-        m_MapPanel.repaint();
+        m_mapPanel.repaint();
       }
   }
 
@@ -140,7 +159,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       {
         m_lastDragged = e.getPoint();
         getActualWidget().dragged( m_lastDragged );
-        m_MapPanel.repaint();
+        m_mapPanel.repaint();
       }
 
   }
@@ -229,7 +248,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     m_actualWidget = newWidget;
 
     if( m_actualWidget != null )
-      m_actualWidget.activate( m_commandTarget, m_MapPanel );
+    {
+      m_actualWidget.activate( m_commandTarget, m_mapPanel );
+      m_actualWidget.setSelection( m_mapPanel.getSelectionManager() );
+    }
 
     fireWidgetChangeEvent( newWidget );
   }
@@ -281,4 +303,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       widget.keyReleased( e );
   }
 
+  protected void onSelectionChanged( final IFeatureSelection selection )
+  {
+    if( m_actualWidget != null )
+      m_actualWidget.setSelection( selection );
+  }
 }
