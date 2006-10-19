@@ -229,11 +229,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     if( !m_isInitialized )
       init();
 
+    if( selected ) // image can not be selected
+      return;
+
     m_requestedEnvLocalSRS = bbox;
     m_lastWidth = (int) g.getClip().getBounds().getWidth();
     m_lastHeight = (int) g.getClip().getBounds().getHeight();
-    if( selected ) // image can not be selected
-      return;
 
     if( m_buffer != null && m_bufferEnvLocalSRS.equals( m_requestedEnvLocalSRS ) )
       g.drawImage( m_buffer, 0, 0, null );

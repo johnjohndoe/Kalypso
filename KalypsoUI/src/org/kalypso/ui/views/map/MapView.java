@@ -131,7 +131,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
   private IStorage m_storage;
 
-  private StatusLineContributionItem m_statusBar;
+  private StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   public MapView( )
   {
@@ -175,22 +175,18 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   {
     super.init( site, memento );
 
-    if( memento == null )
-      return;
+    m_statusBar.setText( "< Welcome to the MapView. >" );
+    
+    final IActionBars actionBars = site.getActionBars();
+    actionBars.getStatusLineManager().add( m_statusBar );
+    actionBars.updateActionBars();
 
-    final String fullPath = memento.getString( "file" );
+    final String fullPath = memento == null ? null : memento.getString( "file" );
     if( fullPath != null )
     {
       final IPath path = Path.fromPortableString( fullPath );
       m_storage = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
     }
-
-    m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
-    m_statusBar.setText( "< Welcome to the MapView. >" );
-
-    final IActionBars actionBars = site.getActionBars();
-    actionBars.getStatusLineManager().add( m_statusBar );
-    actionBars.updateActionBars();
   }
 
   /**
@@ -383,7 +379,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
       public void run( )
       {
-        m_statusBar.setText( message );
+          m_statusBar.setText( message );
       }
     } );
   }

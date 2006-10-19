@@ -130,6 +130,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
     final MapPanel mapPanel = part == null ? null :part.getMapPanel();
 
     final boolean isEnabled = getWidget().canBeActivated( selection, mapPanel );
-    action.setEnabled( isEnabled );
+    if( action != null )
+      action.setEnabled( isEnabled );
   }
 }

@@ -765,9 +765,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
          * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
          */
         @Override
-        public void handleException( final Throwable e )
+        public void handleException( final Throwable t )
         {
-          e.printStackTrace();
+          t.printStackTrace();
         }
       };
 
