@@ -58,16 +58,6 @@ public class EditFeatureGeometryWidgetDelegate extends AbstractGisMapEditorActio
     super( WidgetHelper.getWidget( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) );
   }
 
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    /*
-     * If the selection is changed it is checked, if it fits to the action. That means, it changes the enabled state of
-     * the button.
-     */
-    refreshAction( action,selection );
-  }
-
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
@@ -76,6 +66,7 @@ public class EditFeatureGeometryWidgetDelegate extends AbstractGisMapEditorActio
   {
     super.refreshAction( action, selection );
 
+    // TODO: move this into the widget #canBeActivated
     if( action != null )
       action.setEnabled( fitsToAction( selection ) );
   }

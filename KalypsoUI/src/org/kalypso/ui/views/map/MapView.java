@@ -57,10 +57,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -72,6 +74,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -94,7 +97,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author belger
  */
-public class MapView extends ViewPart implements ICommandTarget
+public class MapView extends ViewPart implements ICommandTarget, IMapPanelListener
 {
   // public static final String ID = MapView.class.getName();
 
@@ -128,10 +131,15 @@ public class MapView extends ViewPart implements ICommandTarget
 
   private IStorage m_storage;
 
+  private StatusLineContributionItem m_statusBar;
+
   public MapView( )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
+
+    /* Register this view at the mapPanel. */
+    m_mapPanel.addMapPanelListener( this );
   }
 
   /**
@@ -176,6 +184,13 @@ public class MapView extends ViewPart implements ICommandTarget
       final IPath path = Path.fromPortableString( fullPath );
       m_storage = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
     }
+
+    m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+    m_statusBar.setText( "< Welcome to the MapView. >" );
+
+    final IActionBars actionBars = site.getActionBars();
+    actionBars.getStatusLineManager().add( m_statusBar );
+    actionBars.updateActionBars();
   }
 
   /**
@@ -323,6 +338,9 @@ public class MapView extends ViewPart implements ICommandTarget
 
     setMapModell( null );
 
+    /* Remove this view from the mapPanel. */
+    m_mapPanel.removeMapPanelListener( this );
+
     m_mapPanel.dispose();
 
     super.dispose();
@@ -350,5 +368,23 @@ public class MapView extends ViewPart implements ICommandTarget
       return m_mapPanel;
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(java.lang.String)
+   */
+  public void onMessageChanged( final String message )
+  {
+    Display display = getSite().getShell().getDisplay();
+
+    /* Update the text. */
+    display.asyncExec( new Runnable()
+    {
+
+      public void run( )
+      {
+        m_statusBar.setText( message );
+      }
+    } );
   }
 }

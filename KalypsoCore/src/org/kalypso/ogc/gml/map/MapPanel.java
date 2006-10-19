@@ -171,6 +171,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
+  private ArrayList<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
+
+  private String m_message = "";
+
   public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
@@ -428,6 +432,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( m_boundingBox == null )
       return;
+
+    final StringBuffer dump = new StringBuffer();
+    dump.append( "MinX:" + m_boundingBox.getMin().getX() );
+    dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
+    dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
+    dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
+    dump.append( "\n" );
+    System.out.println( dump.toString() );
 
     m_projection.setSourceRect( m_boundingBox );
 
@@ -837,9 +849,45 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       m_pointofInterests.remove( ofinterest );
     }
   }
-  
+
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
+  }
+
+  /**
+   * Add a listener in the mapPanel that will be notified in specific changes. <br/> At the moment there is only the
+   * message changed event.
+   */
+  public void addMapPanelListener( final IMapPanelListener l )
+  {
+    m_mapPanelListeners.add( l );
+  }
+
+  /**
+   * Removes this listener from the mapPanel.
+   */
+  public void removeMapPanelListener( final IMapPanelListener l )
+  {
+    m_mapPanelListeners.remove( l );
+  }
+
+  /**
+   * Must be invoked, if the message of the mapPanel has changed.
+   */
+  private void fireMessageChanged( )
+  {
+    for( IMapPanelListener l : m_mapPanelListeners )
+      l.onMessageChanged( m_message );
+  }
+
+  /**
+   * Sets the message of this mapPanel. Some widgets update it, so that the MapView could update the status-bar text.
+   */
+  public void setMessage( String message )
+  {
+    m_message = message;
+
+    fireMessageChanged();
   }
 }

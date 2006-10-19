@@ -44,9 +44,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * @author bce
@@ -108,5 +108,11 @@ public interface IWidget
    * <li>everytime the selection changes if active</li>
    * </ul>
    */
-  public void setSelection( final IFeatureSelection selection );
+  public void setSelection( final ISelection selection );
+
+  /**
+   * This function checks and returns if the widget may be activated. This may be used by the action delegates, to
+   * determine if the action should be enabled.
+   */
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel );
 }
