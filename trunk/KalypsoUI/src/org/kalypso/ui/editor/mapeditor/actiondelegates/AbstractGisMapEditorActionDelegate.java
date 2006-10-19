@@ -126,6 +126,10 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   @Override
   protected void refreshAction( final IAction action, final ISelection selection )
   {
-    // does nothing
+    final WidgetActionPart part = getPart();
+    final MapPanel mapPanel = part == null ? null :part.getMapPanel();
+
+    final boolean isEnabled = getWidget().canBeActivated( selection, mapPanel );
+    action.setEnabled( isEnabled );
   }
 }

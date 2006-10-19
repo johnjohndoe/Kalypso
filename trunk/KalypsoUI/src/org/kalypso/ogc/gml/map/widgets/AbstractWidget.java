@@ -44,11 +44,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -99,33 +99,26 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
-  public void setSelection( final IFeatureSelection selection )
+  public void setSelection( final ISelection selection )
   {
     // does nothing on default
+  }
+
+  /**
+   * @param selection The selection of the part, here the selection of the map which is the selection of the active theme
+   * TODO: maybe it is better to give the whole selection
+   * 
+   * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
+   */
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
+  {
+    return true;
   }
 
   protected final void postViewCommand( final ICommand command, final Runnable runAfterCommand )
   {
     m_commandPoster.postCommand( command, runAfterCommand );
   }
-
-  // public void postViewCommand( ICommand command )
-  // {
-  // if( command != null )
-  // m_commandPoster.postCommand( command, null );
-  // }
-
-  // /**
-  // * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
-  // */
-  // public void perform()
-  // {
-  // final ICommand command = performIntern();
-  // if( command != null )
-  // m_commandPoster.postCommand( command, null );
-  // }
-
-  // protected abstract ICommand performIntern();
 
   protected final GM_Position getPosition( Point pixelPoint )
   {

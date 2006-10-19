@@ -75,6 +75,7 @@ public class AbstractCreateGeometryWidgetDelegate extends AbstractGisMapEditorAc
   {
     super.refreshAction( action, selection );
 
+    // TODO: move this into the widget #canBeActivated
     if( action != null )
       action.setEnabled( fitsToAction() );
   }
