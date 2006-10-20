@@ -65,6 +65,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -79,6 +80,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.MapPartHelper;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -133,6 +135,8 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
   private StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
+  private GisMapOutlinePage m_outlinePage = null;
+
   public MapView( )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
@@ -176,7 +180,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     super.init( site, memento );
 
     m_statusBar.setText( "< Welcome to the MapView. >" );
-    
+
     final IActionBars actionBars = site.getActionBars();
     actionBars.getStatusLineManager().add( m_statusBar );
     actionBars.updateActionBars();
@@ -325,6 +329,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     m_mapModell = mapModell;
 
     m_mapPanel.setMapModell( m_mapModell );
+
+    if( m_outlinePage != null )
+      m_outlinePage.setMapModell( m_mapModell );
   }
 
   @Override
@@ -338,6 +345,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     m_mapPanel.removeMapPanelListener( this );
 
     m_mapPanel.dispose();
+
+    if( m_outlinePage != null )
+      m_outlinePage.dispose();
 
     super.dispose();
   }
@@ -357,6 +367,17 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   @Override
   public Object getAdapter( final Class adapter )
   {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
+      {
+        m_outlinePage = new GisMapOutlinePage( m_commandTarget );
+        m_outlinePage.setMapModell( m_mapModell );
+      }
+
+      return m_outlinePage;
+    }
+
     if( adapter == Control.class )
       return m_control;
 
@@ -379,7 +400,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
       public void run( )
       {
-          m_statusBar.setText( message );
+        m_statusBar.setText( message );
       }
     } );
   }
