@@ -68,7 +68,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
   private boolean m_showTables = true;
 
-  private boolean m_shouldAddValidator = false;
+  private boolean m_shouldAddValidator = true;
 
   private boolean m_shouldShowButton = true;
 
