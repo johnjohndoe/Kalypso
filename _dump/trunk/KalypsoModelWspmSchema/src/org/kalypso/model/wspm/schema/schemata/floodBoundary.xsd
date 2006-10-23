@@ -64,7 +64,7 @@
 	-->
 	<complexType name="BoundaryType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="geometry" type="gml:PolygonPropertyType">
 						<annotation>
@@ -98,7 +98,7 @@
 	</complexType>
 	<complexType name="WspPointType">
 		<complexContent>
-			<extension base="wspmcommon:NamedFeatureBaseType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="geometry" type="gml:PointPropertyType">
 						<annotation>
