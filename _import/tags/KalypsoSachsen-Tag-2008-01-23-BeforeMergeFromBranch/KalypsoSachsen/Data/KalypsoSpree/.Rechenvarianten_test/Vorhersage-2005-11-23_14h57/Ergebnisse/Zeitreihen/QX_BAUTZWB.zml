@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QX_BAUTZWB</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="187.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Bautzen-Weite Bleiche"/>
+        <metadata name="Vorhersage" value="22.11.2004 19:00:00;24.11.2004 19:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="582030"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1985-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;17.13&lt;/w1&gt;             &lt;lnk1&gt;-18.47535&lt;/lnk1&gt;             &lt;k2&gt;4.51546&lt;/k2&gt;             &lt;wgr&gt;99.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;41.39&lt;/w1&gt;             &lt;lnk1&gt;-5.41732&lt;/lnk1&gt;             &lt;k2&gt;1.68578&lt;/k2&gt;             &lt;wgr&gt;268.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-101.02&lt;/w1&gt;             &lt;lnk1&gt;-17.49665&lt;/lnk1&gt;             &lt;k2&gt;3.59036&lt;/k2&gt;             &lt;wgr&gt;440.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="380.0"/>
+        <metadata name="Messtischblattnummer" value="4852"/>
+        <metadata name="Alarmstufe 3" value="320.0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="260.0"/>
+        <metadata name="Alarmstufe 1" value="200.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-11-22T16:00:00;2004-11-22T19:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">4.010000228881836;6.889999866485596</valueArray>
+    </axis>
+</observation>
+
