@@ -45,6 +45,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -64,6 +65,8 @@ public class RuecksprungRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     try
     {
       final List<IProfilPoint> points = profil.getPoints();
@@ -81,7 +84,7 @@ public class RuecksprungRule extends AbstractValidatorRule
                 "Gauss-Rücksprung bei Breite = "
                     + String.format( IProfilConstants.FMT_STATION, x2 ), "",
                 profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString(), null );
+                    .toString(), pluginId, null );
           else if( (x2 - x1 < (Double) POINT_PROPERTY.BREITE
               .getParameter( PARAMETER.PRECISION ))
               && (y1 != y2) )
@@ -89,7 +92,7 @@ public class RuecksprungRule extends AbstractValidatorRule
                 "Senkrechte Wand bei Breite = "
                     + String.format( IProfilConstants.FMT_STATION, x2 ), "",
                 profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString(), null );
+                    .toString(), pluginId, null );
         }
 
         prevPoint = point;

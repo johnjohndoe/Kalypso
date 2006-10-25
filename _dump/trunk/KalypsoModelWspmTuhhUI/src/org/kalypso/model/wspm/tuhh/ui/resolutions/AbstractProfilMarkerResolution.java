@@ -38,60 +38,76 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.reparator;
+package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
- * Handles the standard implementation details. Should be derived by most implementors of
- * {@link org.kalypso.model.wspm.core.profil.reparator.IProfilReparator}.
+ * @author kimwerner
  */
-public abstract class AbstractProfilReparator implements IProfilReparator
+public abstract class AbstractProfilMarkerResolution implements IMarkerResolution2
 {
   /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilReparator#doChanges(org.kalypso.model.wspm.core.profil.IProfil)
+   * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
    */
-  public boolean doChanges( IProfil profil )
+  public void run( IMarker marker )
   {
-    // TODO Auto-generated method stub
-    return false;
+    final IProfil profil;
+    profil = getProfil( marker );
+    if( profil == null )
+      return;
+    resolve( profil, marker );
+  }
+
+  private final String m_label;
+
+  private final String m_description;
+
+  private final Image m_image;
+
+  private IProfil getProfil( final IMarker marker )
+  {// TODO: gib mir ein Profil
+    return null;
+  }
+
+  public AbstractProfilMarkerResolution( )
+  {
+    m_label = null;
+    m_description = null;
+    m_image = null;
+  }
+
+  public AbstractProfilMarkerResolution( final String label, final String description, final Image image )
+  {
+    m_label = label;
+    m_description = description;
+    m_image = image;
+  }
+
+  public String getLabel( )
+  {
+    return m_label;
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilReparator#hasChanges(org.kalypso.model.wspm.core.profil.IProfil)
+   * @see org.eclipse.ui.IMarkerResolution2#getDescription()
    */
-  public boolean hasChanges( IProfil profil )
+  public String getDescription( )
   {
-    // TODO Auto-generated method stub
-    return false;
-  }
 
-  private String m_id;
-  private String m_description;
-  private String m_type;
-
-  public final void setInitializationData( final IConfigurationElement config, final String propertyName,
-      final Object data )
-  {
-    m_id = config.getAttribute( "id" );
-    m_type = config.getAttribute( "type" );
-    m_description = config.getAttribute( "description" );
-  }
-
-  public final String getID( )
-  {
-    return m_id;
-  }
-
-  public final String getType( )
-  {
-    return m_type;
-  }
-
-  public final String getDescription( )
-  {
     return m_description;
   }
- 
+
+  /**
+   * @see org.eclipse.ui.IMarkerResolution2#getImage()
+   */
+  public Image getImage( )
+  {
+    return m_image;
+  }
+
+  protected abstract void resolve( final IProfil profil, final IMarker marker );
 }

@@ -125,8 +125,8 @@ public class ValidationProfilListener implements IProfilListener
   protected void revalidate( )
   {
     // bisserl hack, aber der richtige zeitpunkt, um das profil zu validieren
-    if( m_reparatorRules.repairProfile( m_pem.getProfil() ) )
-      return;
+//    if( m_reparatorRules.repairProfile( m_pem.getProfil() ) )
+//      return;
 
     final boolean validate = m_preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
     final String excludes = m_preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );

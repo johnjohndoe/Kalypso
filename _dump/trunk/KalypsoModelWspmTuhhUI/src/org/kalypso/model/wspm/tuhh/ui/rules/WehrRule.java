@@ -45,6 +45,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
@@ -85,22 +86,26 @@ public class WehrRule extends AbstractValidatorRule
 
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
   {
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     final IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.WEHR } );
     if (deviders.length < 3) return;
     if( deviders[0].getTyp()==DEVIDER_TYP.WEHR  )
     {
       final IProfilPoint point =  deviders[0].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), null ); 
+      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), pluginId, null ); 
     }
     if( deviders[deviders.length -1].getTyp()==DEVIDER_TYP.WEHR  )
     {
       final IProfilPoint point =  deviders[deviders.length -1].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), null ); 
+      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), pluginId, null ); 
     }
   }
 
   private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
   {
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     final List<IProfilPoint> points = profil.getPoints();
     for( final IProfilPoint point : points )
     {
@@ -111,7 +116,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( wk < h )
       {
-        collector.createProfilMarker( true, "Oberkante Wehr [" + String.format( IProfilConstants.FMT_STATION, b ) + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
+        collector.createProfilMarker( true, "Oberkante Wehr [" + String.format( IProfilConstants.FMT_STATION, b ) + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
       }
 
     }
@@ -119,6 +124,8 @@ public class WehrRule extends AbstractValidatorRule
 
   private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
   {
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, DEVIDER_TYP.TRENNFLAECHE );
 
     if( points.size() < 2 )
@@ -129,12 +136,12 @@ public class WehrRule extends AbstractValidatorRule
     if( Math.abs( firstPoint.getValueFor( POINT_PROPERTY.HOEHE ) - firstPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
     {
       collector.createProfilMarker( true, "Der erste Punkt[" + String.format( IProfilConstants.FMT_STATION, firstPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( firstPoint ), POINT_PROPERTY.BREITE.toString(), null );
+          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( firstPoint ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
     }
     if( Math.abs( lastPoint.getValueFor( POINT_PROPERTY.HOEHE ) - lastPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
     {
       collector.createProfilMarker( true, "Der letzte Punkt[" + String.format( IProfilConstants.FMT_STATION, lastPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( lastPoint ), POINT_PROPERTY.BREITE.toString(), null );
+          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( lastPoint ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
     }
   }
 }

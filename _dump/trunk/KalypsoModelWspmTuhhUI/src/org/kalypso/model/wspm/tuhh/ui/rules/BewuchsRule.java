@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -63,6 +64,8 @@ public class BewuchsRule extends AbstractValidatorRule
       return;
     try
     {
+      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+      
       final double[] aX = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_AX );
       final double[] aY = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_AY );
       final double[] dP = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_DP );
@@ -71,7 +74,7 @@ public class BewuchsRule extends AbstractValidatorRule
         {
           if( (aX[i] + aY[i] + dP[i] != 0) && (aX[i] * aY[i] * dP[i] == 0) )
           {
-            collector.createProfilMarker( true, "Ist ein Wert für Bewuchs Null, werden die übrigen ignoriert.", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), null );
+            collector.createProfilMarker( true, "Ist ein Wert für Bewuchs Null, werden die übrigen ignoriert.", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
           }
         }
       }

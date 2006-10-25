@@ -46,6 +46,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
@@ -96,6 +97,9 @@ public class BrueckeRule extends AbstractValidatorRule
         .getDevider( DEVIDER_TYP.DURCHSTROEMTE );
     if( devider.length != 2 )
       return;
+    
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    
     if( (devider[0].getPoint() != points.getFirst())
         || (devider[1].getPoint() != points.getLast()) )
     {
@@ -103,17 +107,18 @@ public class BrueckeRule extends AbstractValidatorRule
           .createProfilMarker(
               true,
               "Die Grenzen der durchströmten Bereiche müssen auf der ersten und der letzten Geländekoordinate liegen.",
-              "", 0, POINT_PROPERTY.BREITE.toString(), null );
+              "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, null );
     }
   }
 
   private void validateProfilLines( final IProfil profil,
       final IValidatorMarkerCollector collector ) throws Exception
   {
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     final List<IProfilPoint> points = profil.getPoints();
     for( final IProfilPoint point : points )
     {
-
       final double h = point.getValueFor( POINT_PROPERTY.HOEHE );
       final double b = point.getValueFor( POINT_PROPERTY.BREITE );
       final double ok = point.getValueFor( POINT_PROPERTY.OBERKANTEBRUECKE );
@@ -124,21 +129,21 @@ public class BrueckeRule extends AbstractValidatorRule
         collector.createProfilMarker( true, "Oberkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
-            POINT_PROPERTY.BREITE.toString(), null );
+            POINT_PROPERTY.BREITE.toString(), pluginId, null );
       }
       if( uk < h )
       {
         collector.createProfilMarker( true, "Unterkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ),
-            POINT_PROPERTY.BREITE.toString(), null );
+            POINT_PROPERTY.BREITE.toString(), pluginId, null );
       }
       if( ok < uk )
       {
         collector.createProfilMarker( true, "Oberkante Brücke ["
             + String.format( IProfilConstants.FMT_STATION, b )
             + "]unter Unterkante Brücke", "", profil.getPoints()
-            .indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
+            .indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
       }
     }
   }

@@ -45,6 +45,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -70,9 +71,11 @@ public class DoppelterPunktRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
+          final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
           if( ProfilUtil.comparePoints( new POINT_PROPERTY[] { POINT_PROPERTY.BREITE, POINT_PROPERTY.HOEHE }, prevPoint, point ) )
           {
-            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ), "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), null );
+            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ), "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
           }
         }
         prevPoint = point;

@@ -38,44 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.validation;
+package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IMarkerResolution2;
+import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author kimwerner
  */
-public class MessageMarkerResolution implements IMarkerResolution2
+public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
-  public String getLabel( )
-  {
-    return "Test quick fix";
-  }
 
-  public void run( final IMarker marker )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil, org.eclipse.core.resources.IMarker)
+   */
+  @Override
+  protected void resolve( IProfil profil, IMarker marker )
   {
+    //Test
     final String msg = marker.getAttribute( IMarker.MESSAGE, "" );
     MessageDialog.openInformation( null, "Test quick fix", "Die message des Problems ist: " + msg );
-  }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getDescription()
-   */
-  public String getDescription( )
-  {
     // TODO Auto-generated method stub
-    return null;
+    
   }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getImage()
-   */
-  public Image getImage( )
+  public MoveDeviderResolution( String label, String description, Image image )
   {
-    return null;
+    super( label, description, image );
   }
+
+  
+
+ 
 
 }

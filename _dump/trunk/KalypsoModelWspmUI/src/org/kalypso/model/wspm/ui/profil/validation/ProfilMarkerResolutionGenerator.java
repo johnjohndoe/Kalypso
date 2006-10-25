@@ -41,9 +41,11 @@
 package org.kalypso.model.wspm.ui.profil.validation;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.osgi.framework.Bundle;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -65,23 +67,38 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
    */
   public boolean hasResolutions( final IMarker marker )
   {
-    m_xstream.setClassLoader( this.getClass().getClassLoader() );
-    
-    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX, (String) null );
-    final IMarkerResolution[] mss = (IMarkerResolution[]) m_xstream.fromXML( resolutions );
+    final IMarkerResolution2[] mss = getResolutions( marker );
     return mss != null && mss.length > 0;
   }
 
   /**
    * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
    */
-  public IMarkerResolution[] getResolutions( final IMarker marker )
+  public IMarkerResolution2[] getResolutions( final IMarker marker )
   {
+    final String pluginId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID, (String) null );
+
+    final Bundle bundle = Platform.getBundle( pluginId );
+
+    final ClassLoader bundleLoader = new ClassLoader()
+    {
+      /**
+       * @see java.lang.ClassLoader#loadClass(java.lang.String)
+       */
+      @Override
+      public Class< ? > loadClass( final String name ) throws ClassNotFoundException
+      {
+        return bundle.loadClass( name );
+      }
+    };
+
+    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+
+    m_xstream.setClassLoader( bundleLoader );
+    final IMarkerResolution2[] mss = (IMarkerResolution2[]) m_xstream.fromXML( resolutions );
+    // reset class-loader in order to free the inner class
     m_xstream.setClassLoader( this.getClass().getClassLoader() );
-
-    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX, (String) null );
-
-    final IMarkerResolution[] mss = (IMarkerResolution[]) m_xstream.fromXML( resolutions );
+    
     return mss;
   }
 }

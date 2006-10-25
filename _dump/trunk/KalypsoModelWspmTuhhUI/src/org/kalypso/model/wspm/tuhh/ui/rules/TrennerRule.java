@@ -43,7 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.ui.IMarkerResolution2;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
@@ -53,7 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.ui.profil.validation.MessageMarkerResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 
 /**
  * Trennflächen und Bordvollpunkte dürfen nur innerhalb der durchströmten Bereiche liegen
@@ -71,12 +72,14 @@ public class TrennerRule extends AbstractValidatorRule
     final IProfilDevider tf[] = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
     final IProfilDevider bv[] = profil.getDevider( DEVIDER_TYP.BORDVOLL );
 
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    
     if( db == null )
-      collector.createProfilMarker( true, "keine Durchströmten Bereiche vorhanden", "", 0, "", null );
+      collector.createProfilMarker( true, "keine Durchströmten Bereiche vorhanden", "", 0, "", pluginId, null );
     if( tf != null )
       validatePosition( db, tf, profil, collector );
     else
-      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", new IMarkerResolution[] { new MessageMarkerResolution() } );
+      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, null );
     if( bv != null )
       validatePosition( db, bv, profil, collector );
 
@@ -84,7 +87,7 @@ public class TrennerRule extends AbstractValidatorRule
 
   private void validatePosition( IProfilDevider[] db, IProfilDevider[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if(db==null || db.length < 2 || toValidate==null || toValidate.length < 2)
+    if( db == null || db.length < 2 || toValidate == null || toValidate.length < 2 )
       return;
     try
     {
@@ -93,17 +96,19 @@ public class TrennerRule extends AbstractValidatorRule
       final double xleft = toValidate[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final double xright = toValidate[1].getPoint().getValueFor( POINT_PROPERTY.BREITE );
 
+      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
       if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + " [" + String.format( IProfilConstants.FMT_STATION, xleft ) + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", null );
+        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + " [" + String.format( IProfilConstants.FMT_STATION, xleft ) + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( "Dev1", null, null ) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true, toValidate[1].getTyp().toString() + " [" + String.format( IProfilConstants.FMT_STATION, xright ) + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[1].getPoint() ), "", null );
+        collector.createProfilMarker( true, toValidate[1].getTyp().toString() + " [" + String.format( IProfilConstants.FMT_STATION, xright ) + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[1].getPoint() ), "", pluginId, null );
       }
       if( toValidate[0].getPoint() == toValidate[1].getPoint() )
       {
-        collector.createProfilMarker( true, "doppelte " + toValidate[1].getTyp().toString(), "", profil.getPoints().indexOf( toValidate[1].getPoint() ), "", null );
+        collector.createProfilMarker( true, "doppelte " + toValidate[1].getTyp().toString(), "", profil.getPoints().indexOf( toValidate[1].getPoint() ), "", pluginId, null );
       }
     }
     catch( ProfilDataException e )
