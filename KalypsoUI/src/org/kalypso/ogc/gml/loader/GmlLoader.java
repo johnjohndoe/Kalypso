@@ -239,5 +239,7 @@ public class GmlLoader extends AbstractLoader
     workspace.removeCommandManagerListener( m_commandManagerListener );
 
     super.release( object );
+    
+    workspace.dispose();
   }
 }

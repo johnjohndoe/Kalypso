@@ -215,7 +215,8 @@ public class ModifyFeatureCommand implements ICommand
     }
     // }
     FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
-    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
+    final Feature[] fs =  (Feature[]) list.toArray( new Feature[list.size()] );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, fs ) );
     //    
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetFEs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }

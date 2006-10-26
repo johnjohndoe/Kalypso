@@ -11,11 +11,13 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -68,6 +70,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     if( m_rootFeature != null )
       m_rootFeature.setWorkspace( this );
+
     try
     {
       accept( new RegisterVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
@@ -76,6 +79,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       e.printStackTrace();
     }
+
+    addModellListener( new GMLWorkspaceModellListener( this ) );
   }
 
   /**
@@ -211,7 +216,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // response to this event (lead to a ConcurrentodificationException)
     final ModellEventListener[] objects = m_listener.toArray( new ModellEventListener[m_listener.size()] );
     for( int i = 0; i < objects.length; i++ )
-      objects[i].onModellChange( event );
+    {
+      try
+      {
+        objects[i].onModellChange( event );
+      }
+      catch( final Throwable t )
+      {
+        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
   }
 
   /**

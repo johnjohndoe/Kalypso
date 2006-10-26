@@ -40,9 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-public interface IGMLWorkspaceModellEvent
+/**
+ * A workspace change listener is notified of changes to features in the workspace.
+ * <p>
+ * Clients may implement this interface.
+ * </p>
+ * 
+ * @see IGmlWorkspaceDelta
+ * @see GmlWorkspace#addChangeListener(IGmlWorkspaceChangeListener)
+ * @author Gernot Belger
+ */
+public interface IGmlWorkspaceChangeListener
 {
-  public GMLWorkspace getGMLWorkspace();
+  /**
+   * Notifies this listener that some workspace changes have happened.
+   * <p>
+   * The supplied delta gives details. This delta is valid only for the duration of the invocation of this method.
+   * </p>
+   * <p>
+   * Note: This method is called by the platform; it is not intended to be called directly by clients.
+   * <p>
+   * Note that during resource change event notification, further changes to features may be disallowed.
+   * </p>
+   * 
+   * @param source
+   *          an object identifying the source of this event TODO: descripe who may this be
+   * @param delta
+   *          the workspace delta, always starts at the root feature
+   * @see IGmlWorkspaceDelta
+   */
+  public void resourceChanged( final Object source, final IGmlWorkspaceDelta delta );
 }

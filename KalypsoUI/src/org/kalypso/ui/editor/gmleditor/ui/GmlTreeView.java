@@ -324,8 +324,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-      final List featureList = fcme.getFeatures();
-      final Feature[] features = (Feature[]) featureList.toArray( new Feature[featureList.size()] );
+      final Feature[] features = fcme.getFeatures();
       final Control treeControl = m_treeViewer.getControl();
       final TreeViewer treeViewer = m_treeViewer;
       if( treeControl != null && !treeControl.isDisposed() )

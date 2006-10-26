@@ -118,7 +118,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
         feList.add( feature );
     }
 
-    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList ) );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList.toArray( new Feature[feList.size()] ) ) );
   }
 
   /**
