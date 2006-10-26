@@ -1,0 +1,27 @@
+<html>
+
+	<body>
+		<p>
+Die Zeitzone in der Diagramm- und Tabellendarstellung kann durch die Vorlage definiert sein. 
+Dazu habe ich, wie telefonisch mit euch gesprochen, die Vorlagen um den optionalen "timezone"-Element erweitert. Ist es vorhanden, dann wird die passende Zeitzone genommen und für die Darstellung benutzt. Ist es nicht vorhanden, dann wird die Default-Timezone genommen (Locale).
+
+Beim speichern einer Vorlage wird die Zeitzone nur dann geschrieben, wenn sie sich von der Default-TZ differenziert.
+
+Der Wert vom "timezone"-Element ist ein String und ist gleich der ID wie in java.util.TimeZone.getTimeZone( String ID ). Beipsiel:
+- Europe/Berlin
+- America/Los_Angeles
+- GMT+1:00
+- GMT-2:00
+wobei die zwei letzten "deprecated" sind. Man soll ein Fullname benutzen wie Europe/Berlin. Mehr Infos über Zeitzonen: http://www.timeanddate.com/
+
+NB: es gibt z.Z. keine GUI (z.B. Dialog) um die Zeitzone zu ändern, man muss es in der Vorlage (also .ott oder .odt) per Hand machen. Ich dachte ich lasse erstmal die GUI weg. Es wäre aber kein großer Aufwand etwas in die Richtung zu machen:
+- im Diagramm gibt es schon ein Eigenschaften-Dialog, man bräuchte es nur ergänzen um einen ZimeZone-Eintrag.
+- in der Tabelle gibt's noch nix.
+
+Und wie Andreas vorgeschlagen hat, könnte man es in die Preferences übernehmen. Ich denke es wäre auf jeden Fall sinnvoll, die Timezone in irgendeiner Form darzustellen (z.B. in der Statusleiste) sodass der Benutzer sieht was los ist.
+
+Ich würde vorschlagen dass Jessica zuerst schaut ob's ihr prinzipiell passt, dann können wir vielleicht was in der GUI machen.
+		<p/>
+	</body>
+
+</html>
