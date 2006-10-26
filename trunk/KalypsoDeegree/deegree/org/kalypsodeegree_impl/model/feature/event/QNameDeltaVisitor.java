@@ -38,11 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature.event;
+package org.kalypsodeegree_impl.model.feature.event;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface IGMLWorkspaceModellEvent
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.CoreException;
+import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta;
+import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor;
+
+/**
+ * Collects all deltas of a given qname.
+ * 
+ * @author Gernot Belger
+ */
+public class QNameDeltaVisitor implements IGmlWorkspaceDeltaVisitor
 {
-  public GMLWorkspace getGMLWorkspace();
+  private final List<IGmlWorkspaceDelta> m_foundDeltas = new ArrayList<IGmlWorkspaceDelta>();
+
+  private final QName m_qname;
+
+  public QNameDeltaVisitor( final QName qname )
+  {
+    m_qname = qname;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor#visit(org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta)
+   */
+  public boolean visit( final IGmlWorkspaceDelta delta ) throws CoreException
+  {
+    final QName qname = delta.getFeature().getFeatureType().getQName();
+    if( m_qname.equals( qname ) )
+      m_foundDeltas.add( delta );
+
+    return true;
+  }
+
+  public IGmlWorkspaceDelta[] getResult( )
+  {
+    if( m_foundDeltas.size() == 0 )
+      return null;
+
+    return m_foundDeltas.toArray( new IGmlWorkspaceDelta[m_foundDeltas.size()] );
+  }
+
 }

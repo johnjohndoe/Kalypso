@@ -44,7 +44,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +59,7 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
@@ -211,22 +211,29 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( modellEvent instanceof IGMLWorkspaceModellEvent )
     {
       // my workspace ?
-      if( ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() != m_workspace )
+      final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
+      if( m_workspace == null || ( changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() ) )
         return; // not my workspace
+      
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
         final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
-        final List features = featuresChangedModellEvent.getFeatures();
+        final Feature[] features = featuresChangedModellEvent.getFeatures();
+        
+        // TODO: BOTH ways (if and else) are mayor performance bugs.
+        // we MUST first determine if we zhave to restyle at all that is, if this modell event
+        // did change any features belonging to me
+        
         // optimize: i think it is faster to restyle all than to find and
         // exchange so many display elements
-        if( features.size() > m_featureList.size() / 5 )
+        if( features.length > m_featureList.size() / 5 )
           setDirty();
         else
         {
-          for( final Iterator iterator = features.iterator(); iterator.hasNext(); )
+          for( final Feature feature : features )
           {
-            final Feature feature = (Feature) iterator.next();
             // my feature ?
+            // TODO: SLOW!!
             if( m_featureList.contains( feature ) )
               restyleFeature( feature );
           }

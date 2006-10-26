@@ -40,9 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.eclipse.core.runtime.CoreException;
 
-public interface IGMLWorkspaceModellEvent
+/**
+ * An objects that visits workspace deltas.
+ * <p>
+ * Usage:
+ * 
+ * <pre>
+ *    class Visitor implements IGmlWorkspaceDeltaVisitor {
+ *        public boolean visit(IGmlWorkspaceDelta delta) {
+ *            switch (delta.getKind()) {
+ *            case IGmlWorkspaceDelta.ADDED :
+ *                // handle added feature
+ *                break;
+ *            case IGmlWorkspaceDelta.REMOVED :
+ *                // handle removed feature
+ *                break;
+ *            case IGmlWorkspaceDelta.CHANGED :
+ *                // handle changed feature
+ *                break;
+ *            }
+ *        return true;
+ *        }
+ *    }
+ *    IGmlWorkspaceDelta rootDelta = ...;
+ *    rootDelta.accept(new Visitor());
+ * </pre>
+ * 
+ * </p>
+ * <p>
+ * Clients may implement this interface.
+ * </p>
+ * 
+ * @author Gernot Belger
+ */
+public interface IGmlWorkspaceDeltaVisitor
 {
-  public GMLWorkspace getGMLWorkspace();
+  /**
+   * Visits the given workspace delta.
+   * 
+   * @return <code>true</code> if the workspace delta's children should be visited; <code>false</code> if they should
+   *         be skipped.
+   * @exception CoreException
+   *              if the visit fails for some reason.
+   */
+  public boolean visit( final IGmlWorkspaceDelta delta ) throws CoreException;
 }

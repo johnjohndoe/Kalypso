@@ -694,8 +694,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( event instanceof FeaturesChangedModellEvent )
     {
-      List features = ((FeaturesChangedModellEvent) event).getFeatures();
-      update( features.toArray(), null );
+      final Feature[] features = ((FeaturesChangedModellEvent) event).getFeatures();
+      update( features, null );
       if( m_tableCursor != null && !m_tableCursor.isDisposed() )
       {
         m_tableCursor.update();

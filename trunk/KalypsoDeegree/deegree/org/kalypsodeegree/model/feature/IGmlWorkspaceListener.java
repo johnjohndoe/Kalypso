@@ -38,11 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature.event;
+package org.kalypsodeegree.model.feature;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import javax.xml.namespace.QName;
 
-public interface IGMLWorkspaceModellEvent
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+
+/**
+ * This listeners get instantiated via the extension-point 'org.kalypso.deegree.gmlWorkspaceListener'. <br>
+ * They are used to
+ * <ul>
+ * <li>validate a workspace</li>
+ * <li>keep a workspace konsistent</li>
+ * </ul>
+ * 
+ * @author Gernot Belger
+ */
+public interface IGmlWorkspaceListener
 {
-  public GMLWorkspace getGMLWorkspace();
+  /** Init the workspace for this validator. For example revalidate the whole workspace or make the workspace consistent. */
+  public void init( final GMLWorkspace workspace );
+
+  /**
+   * React to modell events. Revalidate or make againconsistent.
+   * <p>
+   * This method should quickly decide if this validator has to do something, because it is probably called often.
+   */
+  public void onModellChange( final ModellEvent modellEvent );
+
+  /**
+   * The asociated qnames for this listener. The empty list if no qname is accosiated.
+   */
+  public QName[] getQNames( );
 }

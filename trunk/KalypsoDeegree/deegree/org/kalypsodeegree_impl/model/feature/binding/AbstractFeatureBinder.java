@@ -70,7 +70,10 @@ public class AbstractFeatureBinder
     m_qnameToBind = qnameToBind;
 
     if( !checkFeature( featureToBind, qnameToBind ) )
-      throw new IllegalArgumentException( "featureToBind does not substitute " + qnameToBind );
+    {
+      final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
+      throw new IllegalArgumentException( msg );
+    }
   }
 
   public Feature getFeature( )

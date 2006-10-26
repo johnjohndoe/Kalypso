@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -115,7 +115,7 @@ public class ChangeFeaturesCommand implements ICommand
 
   private void applyChanges( final FeatureChange[] changes )
   {
-    final List<Feature> changedFeaturesList = new ArrayList<Feature>();
+    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
@@ -124,6 +124,9 @@ public class ChangeFeaturesCommand implements ICommand
     }
 
     if( m_workspace != null )
-      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeaturesList ) );
+    {
+      final Feature[] cfs = changedFeaturesList.toArray( new Feature[changedFeaturesList.size()] );
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, cfs ) );
+    }
   }
 }
