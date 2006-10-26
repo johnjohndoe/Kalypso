@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmSchema Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.schema; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.model.wspm.schema.KalypsoModelWspmSchemaPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.contribs.java,
+ org.kalypso.model.wspm.core,
+ org.kalypso.core
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.model.wspm.schema,
+ org.kalypso.model.wspm.schema.gml
