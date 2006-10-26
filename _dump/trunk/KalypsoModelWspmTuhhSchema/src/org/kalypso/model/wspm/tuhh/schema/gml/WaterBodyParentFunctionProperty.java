@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.schema.function;
+package org.kalypso.model.wspm.tuhh.schema.gml;
 
 import java.util.Map;
 

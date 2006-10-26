@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
-import org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;

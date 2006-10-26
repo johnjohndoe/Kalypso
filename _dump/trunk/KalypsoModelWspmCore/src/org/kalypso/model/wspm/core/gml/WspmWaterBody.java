@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -48,6 +49,7 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
@@ -57,6 +59,8 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 public class WspmWaterBody implements IWspmConstants
 {
   public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" );
+
+  public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" );
 
   private final Feature m_water;
 
@@ -122,12 +126,25 @@ public class WspmWaterBody implements IWspmConstants
 
   public List getWspFixations( )
   {
-    return (List) m_water.getProperty(QNAME_WSP_FIX_MEMBER);
+    return (List) m_water.getProperty( QNAME_WSP_FIX_MEMBER );
   }
 
   public boolean isDirectionUpstreams( )
   {
     return (Boolean) m_water.getProperty( new QName( NS_WSPM, "isDirectionUpstream" ) );
+  }
+
+  public WspmReach[] getReaches( )
+  {
+    final FeatureList reaches = (FeatureList) getFeature().getProperty( QNAME_REACH_MEMBER );
+    final List<WspmReach> reachList = new ArrayList<WspmReach>( reaches.size() );
+    for( final Object object : reaches )
+    {
+      final Feature f = (Feature) object;
+      reachList.add( new WspmReach( f ){} );
+    }
+
+    return reachList.toArray( new WspmReach[reachList.size()] );
   }
 
 }

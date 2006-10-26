@@ -17,13 +17,20 @@
    <extension
          point="org.kalypso.deegree.functionProperty">
       <function
-            class="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
+            class="org.kalypso.model.wspm.tuhh.schema.gml.WaterBodyParentFunctionProperty"
             id="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
             name="Water Body Parent"/>
-      <function
-            class="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
-            id="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
-            name="Tuhh Reach Marker List"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.gmlWorkspaceListener">
+      <listener
+            class="org.kalypso.model.wspm.tuhh.schema.gml.MarkerListConsister"
+            id="org.kalypso.model.wspm.tuhh.schema.gml.MarkerListConsister"
+            name="Tuhh Marker List Consister">
+         <qname
+               localPart="ReachWspmTuhhSteadyState"
+               namespace="org.kalypso.model.wspm.tuhh"/>
+      </listener>
    </extension>
    
 </plugin>

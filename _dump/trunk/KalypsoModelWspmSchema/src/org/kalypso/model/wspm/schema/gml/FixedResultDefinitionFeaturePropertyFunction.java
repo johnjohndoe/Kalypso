@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.schema.function;
+package org.kalypso.model.wspm.schema.gml;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -98,7 +98,7 @@ public class WspmProject implements IWspmConstants
     NamedFeatureHelper.setDescription( m_wspProject, desc );
   }
 
-  protected WspmWaterBody[] getWaterBodies( )
+  public WspmWaterBody[] getWaterBodies( )
   {
     final FeatureList waters = getWaterBodyList();
     final List<WspmWaterBody> waterList = new ArrayList<WspmWaterBody>( waters.size() );

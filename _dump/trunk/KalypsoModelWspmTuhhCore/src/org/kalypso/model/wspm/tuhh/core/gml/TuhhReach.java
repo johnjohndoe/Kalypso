@@ -60,14 +60,13 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
-import org.kalypso.model.wspm.schema.function.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -145,13 +144,14 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     return (FeatureList) getFeature().getProperty( new QName( NS_WSPM_TUHH, "reachSegmentMember" ) );
   }
 
-  public FeatureList createMarkerList( )
+  public void recreateMarkerList( )
   {
     final Feature feature = getFeature();
     final IFeatureType featureType = feature.getFeatureType();
     final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MARKER_MEMBER );
 
-    final FeatureList list = FeatureFactory.createFeatureList( feature, markerRT );
+    final FeatureList list = (FeatureList) feature.getProperty( markerRT );
+    list.clear();
 
     final TuhhReachProfileSegment[] reachProfileSegments = getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
@@ -185,8 +185,6 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         }
       }
     }
-
-    return list;
   }
 
   private TuhhMarker createMarker( )
