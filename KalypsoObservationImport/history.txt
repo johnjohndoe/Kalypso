@@ -1,9 +1,0 @@
-###############################################################################
-				
-		Änderungshistorie von KalypsoPluginObservationImport
-
-NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
-
-###############################################################################
-
-- BugFix (2.3.2005, Thül/Belger) Metadatenliste aus Source wird in ZML übernommen
