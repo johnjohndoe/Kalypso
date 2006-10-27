@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -60,23 +65,44 @@ public class BewuchsRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (!profil.getProfilPoints().propertyExists( POINT_PROPERTY.BEWUCHS_AX )) )
+    if( profil == null )
       return;
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( points == null )
+      return;
+    if( !profil.getProfilPoints().propertyExists( POINT_PROPERTY.BEWUCHS_AX ) )
+      return;
+    final IProfilDevider[] devider = profil.getDevider( IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
+    final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
+    final IProfilPoint rightP = (devider.length > 1) ? devider[1].getPoint() : null;
+    if( (leftP == null) || (rightP == null) )
+      return;
+    final int leftIndex = points.indexOf( leftP );
+    final int rightIndex = points.indexOf( rightP );
+    final List<IProfilPoint> VorlandL = points.subList( 0, leftIndex );
+    final List<IProfilPoint> VorlandR = points.subList( rightIndex, points.size() );
+    final List<IProfilPoint> Flussschl = points.subList( leftIndex, rightIndex );
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+
     try
     {
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      
-      final double[] aX = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_AX );
-      final double[] aY = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_AY );
-      final double[] dP = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BEWUCHS_DP );
+      if( (validateArea( collector, VorlandL, 0, pluginId ) || validateArea( collector, VorlandR, rightIndex, pluginId )) && !Flussschl.isEmpty() )
       {
-        for( int i = 0; i < aX.length; i++ )
+        int i = leftIndex;
+        for( IProfilPoint point : Flussschl )
         {
-          if( (aX[i] + aY[i] + dP[i] != 0) && (aX[i] * aY[i] * dP[i] == 0) )
-          {
-            collector.createProfilMarker( true, "Ist ein Wert für Bewuchs Null, werden die übrigen ignoriert.", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
-          }
+          final double ax = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
+          final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
+          final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+          if( ax + ay + dp != 0 )
+            collector.createProfilMarker( false, "unnötige Bewuchsparameter", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+          i++;
         }
+        final int lastIndex = (leftIndex > 0) ? leftIndex - 1 : leftIndex;
+        if( points.get( lastIndex ).getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+        if( rightP.getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
       }
     }
     catch( Exception e )
@@ -86,4 +112,26 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
+  private boolean validateArea( final IValidatorMarkerCollector collector, final List<IProfilPoint> subList, final int fromIndex, final String pluginId ) throws ProfilDataException, CoreException
+  {
+    boolean hasValues = false;
+    if( subList.isEmpty() )
+      return false;
+    int i = fromIndex;
+    for( IProfilPoint point : subList )
+    {
+      final double ax = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
+      final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
+      final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+      if( ax + ay + dp != 0 )
+      {
+        if( ax * ay * dp == 0 )
+          collector.createProfilMarker( true, "Unvollständige Bewuchsparameter", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+        else
+          hasValues = true;
+      }
+      i++;
+    }
+    return hasValues;
+  }
 }

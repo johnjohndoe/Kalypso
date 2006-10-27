@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -56,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
@@ -75,7 +77,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public BewuchsLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
-    super(pvp, domainRange, valueRange );
+    super( pvp, domainRange, valueRange );
 
     m_pem = pvp.getProfilEventManager();
     m_color = color;
@@ -198,36 +200,36 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public void paint( GCWrapper gc )
   {
-    final Point2D[] points = getPoints();
-    for( int i = 0; i < points.length - 1; i++ )
+    final LinkedList<IProfilPoint> points = m_pem.getProfil().getPoints();
+    if( points.isEmpty() )
+      return;
+    Point2D p2dL = null;
+    boolean hasValue = false;
+    for( IProfilPoint point : points )
     {
-      final IProfilPoint pp = m_pem.getProfil().getPoints().get( i );// points[i].getX(), points[i].getY() );
+
+      final Point2D p2dR = ProfilUtil.getPoint2D( point, POINT_PROPERTY.HOEHE );
+      if( (p2dL != null) && hasValue )
+      {
+        final double xl = p2dL.getX();
+        final double yl = p2dL.getY();
+        final double xr = p2dR.getX();
+        final double yr = p2dR.getY();
+        final Point p = logical2screen( new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 ) );
+        if( (p.x - logical2screen( p2dL ).x) > 12 )
+          drawIcon( gc, new Rectangle( p.x - 10, p.y - 20, 20, 20 ) );
+      }
       try
       {
-        final double ax = pp.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
-        final double ay = pp.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
-        final double dp = pp.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
-        final Point pl = logical2screen( points[i] );
-        final double xl = points[i].getX();
-        final double yl = points[i].getY();
-        final double xr = points[i + 1].getX();
-        final double yr = points[i + 1].getY();
-        if( ax * ay * dp != 0 )
-        {
-
-          final Point2D pm = new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 );
-          final Point p = logical2screen( pm );
-
-          if( (p.x - pl.x) > 12 )
-            drawIcon( gc, new Rectangle( p.x - 10, p.y - 20, 20, 20 ) );
-        }
+        hasValue = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX ) * point.getValueFor( POINT_PROPERTY.BEWUCHS_AY ) * point.getValueFor( POINT_PROPERTY.BEWUCHS_DP ) != 0.0;
       }
-      catch( ProfilDataException e1 )
+      catch( ProfilDataException e )
       {
-        e1.printStackTrace();
+        // should never happen
+        e.printStackTrace();
       }
+      p2dL = p2dR;
     }
-
   }
 
   private void drawIcon( final GCWrapper gc, final Rectangle clipping )
@@ -248,10 +250,9 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     gc.drawOval( left + 2, top, right - left - 4, bottom - midy + 4 );
   }
 
-  
-
   /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
   protected void editProfil( Point point, Object data )
@@ -259,7 +260,8 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )

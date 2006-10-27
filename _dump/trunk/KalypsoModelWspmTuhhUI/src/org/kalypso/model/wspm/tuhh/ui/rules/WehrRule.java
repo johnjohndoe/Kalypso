@@ -51,31 +51,28 @@ import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
-
-/**
- * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
- * 
- * @author belger
- */
 public class WehrRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( (profil == null) || (profil.getBuilding() == null) || (profil.getBuilding().getTyp() != IProfilBuilding.BUILDING_TYP.WEHR) )
       return;
-
     try
     {
-      validateLimits( profil, collector );
-      validateProfilLines( profil, collector );
-      validateDevider( profil, collector );
+      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+      validateLimits( profil, collector, pluginId );
+      validateProfilLines( profil, collector, pluginId );
+      validateDevider( profil, collector, pluginId );
+      validateParams( profil, collector, pluginId );
     }
     catch( Exception e )
     {
@@ -84,64 +81,71 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
+  private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     final IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.WEHR } );
-    if (deviders.length < 3) return;
-    if( deviders[0].getTyp()==DEVIDER_TYP.WEHR  )
-    {
-      final IProfilPoint point =  deviders[0].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), pluginId, null ); 
-    }
-    if( deviders[deviders.length -1].getTyp()==DEVIDER_TYP.WEHR  )
-    {
-      final IProfilPoint point =  deviders[deviders.length -1].getPoint();
-      collector.createProfilMarker( true, "Wehrfeldtrenner [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor(POINT_PROPERTY.BREITE ) ) + "]außerhalb der Trennflächen", "", profil.getPoints().indexOf(point), POINT_PROPERTY.BREITE.toString(), pluginId, null ); 
-    }
+    if( deviders.length < 3 )
+      return;
+    int index = -1;
+    if( deviders[0].getTyp() == DEVIDER_TYP.WEHR )
+      index = profil.getPoints().indexOf( deviders[0].getPoint() );
+    if( deviders[deviders.length - 1].getTyp() == DEVIDER_TYP.WEHR )
+      index = profil.getPoints().indexOf( deviders[deviders.length - 1].getPoint() );
+    if( index > -1 )
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index, POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
   }
 
-  private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
+  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
+    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
+    final IProfilBuilding building = profil.getBuilding();
+    IProfilPoint point = ((Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) == 0.0) ? profil.getPoints().getFirst() : null;
+    if( deviders != null )
+    {
+      for( final IProfilDevider devider : deviders )
+      {
+        if( (Double) devider.getValueFor( DEVIDER_PROPERTY.BEIWERT ) == 0.0 )
+        {
+          point = devider.getPoint();
+          break;
+        }
+      }
+    }
+    if( point != null )
+      collector.createProfilMarker( true, "ungültiger Kronenparameter: 0.0", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
+  }
+
+  private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  {
     final List<IProfilPoint> points = profil.getPoints();
     for( final IProfilPoint point : points )
     {
-
       final double h = point.getValueFor( POINT_PROPERTY.HOEHE );
       final double b = point.getValueFor( POINT_PROPERTY.BREITE );
       final double wk = point.getValueFor( POINT_PROPERTY.OBERKANTEWEHR );
-
       if( wk < h )
       {
-        collector.createProfilMarker( true, "Oberkante Wehr [" + String.format( IProfilConstants.FMT_STATION, b ) + "]unter Geländehöhe", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
+        collector.createProfilMarker( true, "ungültige Wehrgeometrie [" + String.format( IProfilConstants.FMT_STATION, b ) + "]", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
       }
-
+      break;
     }
   }
 
-  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
+  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-
-    final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, DEVIDER_TYP.TRENNFLAECHE );
-
-    if( points.size() < 2 )
+    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
+    if( devider.length < 2 )
       return;
-    final IProfilPoint firstPoint = points.get( 0 );
-    final IProfilPoint lastPoint = points.get( points.size() - 1 );
-
-    if( Math.abs( firstPoint.getValueFor( POINT_PROPERTY.HOEHE ) - firstPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
-    {
-      collector.createProfilMarker( true, "Der erste Punkt[" + String.format( IProfilConstants.FMT_STATION, firstPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( firstPoint ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
-    }
+    final IProfilPoint firstPoint = devider[0].getPoint();
+    final IProfilPoint lastPoint = devider[devider.length - 1].getPoint();
+    IProfilPoint point = null;
+    if( Math.abs( firstPoint.getValueFor( POINT_PROPERTY.HOEHE ) - firstPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > (Double) POINT_PROPERTY.OBERKANTEWEHR.getParameter( PARAMETER.PRECISION ) )
+      point = firstPoint;
     if( Math.abs( lastPoint.getValueFor( POINT_PROPERTY.HOEHE ) - lastPoint.getValueFor( POINT_PROPERTY.OBERKANTEWEHR ) ) > 0.001 )
-    {
-      collector.createProfilMarker( true, "Der letzte Punkt[" + String.format( IProfilConstants.FMT_STATION, lastPoint.getValueFor( POINT_PROPERTY.BREITE ) )
-          + "]der OK-Wehr muss auf Geländehöhe liegen", "", profil.getPoints().indexOf( lastPoint ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
-    }
+      point = lastPoint;
+    if( point != null )
+      collector.createProfilMarker( true, "ungültige Wehrgeometrie [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ) + "]", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
   }
 }

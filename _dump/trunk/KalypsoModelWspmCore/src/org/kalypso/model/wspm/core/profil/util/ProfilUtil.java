@@ -80,16 +80,19 @@ public class ProfilUtil
       return null;
     }
   }
-
+/**
+ * @return  a subList include both Deviderpoints, maybee null
+ */
+  
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final DEVIDER_TYP deviderTyp )
   {
     final IProfilDevider[] deviders = profil.getDevider( deviderTyp );
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final int leftPos = (deviders.length > 1) ? points.indexOf( deviders[0].getPoint() ) : 0;
+    final int leftPos = (deviders.length > 0) ? points.indexOf( deviders[0].getPoint() ) : 0;
     final int rightPos = (deviders.length > 1) ? points.indexOf( deviders[deviders.length - 1].getPoint() ) + 1 : 0;
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
-
   }
+  
   /**
    * @throws ProfilDataException
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getValuesFor(org.kalypso.model.wspm.core.profildata.tabledata.ColumnKey)

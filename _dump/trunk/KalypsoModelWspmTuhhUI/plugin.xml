@@ -139,6 +139,11 @@
               description="Bewuchs"
               id="pasche.bewuchs"
               type="Pasche"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule"
+              description="Rauheit"
+              id="pasche.rauheit"
+              type="Pasche"/>
    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">

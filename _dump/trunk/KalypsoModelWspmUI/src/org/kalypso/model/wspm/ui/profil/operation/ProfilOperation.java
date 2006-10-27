@@ -129,9 +129,6 @@ public final class ProfilOperation extends AbstractOperation
     {
       for( final IProfilChange change : changes )
       {
-        // final Double v = change.getValue();
-        // final POINT_PROPERTY pp = change.getPointProperty() ;
-        // TODO:KIM System.out.println("->"+( pp==null?"null":pp.name())+" :" + (v==null?"null":v.toString() ) );
         try
         {
           final IProfilChange undoChange = change.doChange( hint );
