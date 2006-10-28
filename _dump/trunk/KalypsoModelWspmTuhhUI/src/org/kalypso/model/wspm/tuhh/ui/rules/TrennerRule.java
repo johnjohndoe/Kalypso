@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
@@ -55,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolutionHelp;
 
 /**
  * Trennflächen und Bordvollpunkte dürfen nur innerhalb der durchströmten Bereiche liegen
@@ -95,11 +95,11 @@ public class TrennerRule extends AbstractValidatorRule
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       if( (xleft < left) || (xleft > right)) 
       {
-        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( "Dev1", null, null ) } );
+        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(0) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true,toValidate[toValidate.length - 1].getTyp().toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( "Dev1", null, null ) } );
+        collector.createProfilMarker( true,toValidate[toValidate.length - 1].getTyp().toString() + ": unzulässige Position\r\nmehr Info", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(toValidate.length - 1),new MoveDeviderResolutionHelp() } );
       }
     }
     catch( ProfilDataException e )

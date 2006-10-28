@@ -86,11 +86,11 @@ public class BrueckeRule extends AbstractValidatorRule
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-    if( devider.length != 2 )
+    if( devider.length < 2 )
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
-    if( (devider[0].getPoint() != points.getFirst()) || (devider[1].getPoint() != points.getLast()) )
+    if( (devider[0].getPoint() != points.getFirst()) || (devider[devider.length -1].getPoint() != points.getLast()) )
     {
       collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, null );
     }

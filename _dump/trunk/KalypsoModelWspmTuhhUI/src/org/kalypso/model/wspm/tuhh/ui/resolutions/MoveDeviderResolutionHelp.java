@@ -48,9 +48,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 /**
  * @author kimwerner
  */
-public class MoveDeviderResolution extends AbstractProfilMarkerResolution
+public class MoveDeviderResolutionHelp extends AbstractProfilMarkerResolution
 {
-final private int m_deviderIndex;
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil, org.eclipse.core.resources.IMarker)
    */
@@ -67,12 +67,12 @@ final private int m_deviderIndex;
 
 final private static String getInfoBody()
 {
-  return "verschieben der Trennfläche in den durchströmten Bereich";
+  return "mehr Informationen anzeigen";
 }
-  public MoveDeviderResolution(final int deviderIndex )
+  public MoveDeviderResolutionHelp()
   {
         super(  getInfoBody(), null, null );
-        m_deviderIndex = deviderIndex;
+        
   }
 
   

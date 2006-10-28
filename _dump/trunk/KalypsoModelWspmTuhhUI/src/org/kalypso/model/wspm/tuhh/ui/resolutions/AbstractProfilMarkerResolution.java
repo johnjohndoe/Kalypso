@@ -55,11 +55,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
    */
   public void run( IMarker marker )
   {
-    final IProfil profil;
-    profil = getProfil( marker );
-    if( profil == null )
-      return;
-    resolve( profil, marker );
+    resolve( getProfil( marker ), marker );
   }
 
   private final String m_label;

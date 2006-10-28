@@ -69,10 +69,10 @@ public class WehrRule extends AbstractValidatorRule
     try
     {
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      validateLimits( profil, collector, pluginId );
+      final IProfilPoint leftP = validateLimits( profil, collector, pluginId );
       validateProfilLines( profil, collector, pluginId );
       validateDevider( profil, collector, pluginId );
-      validateParams( profil, collector, pluginId );
+      validateParams( profil, collector, pluginId,leftP );
     }
     catch( Exception e )
     {
@@ -96,12 +96,13 @@ public class WehrRule extends AbstractValidatorRule
       collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index, POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
   }
 
-  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId,final IProfilPoint p ) throws Exception
   {
 
     final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
     final IProfilBuilding building = profil.getBuilding();
-    IProfilPoint point = ((Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) == 0.0) ? profil.getPoints().getFirst() : null;
+    final Double beiwert = (Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT );
+    IProfilPoint point = ( beiwert == 0.0) ? p : null;
     if( deviders != null )
     {
       for( final IProfilDevider devider : deviders )
@@ -133,11 +134,11 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private IProfilPoint validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
     final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
     if( devider.length < 2 )
-      return;
+      return null;
     final IProfilPoint firstPoint = devider[0].getPoint();
     final IProfilPoint lastPoint = devider[devider.length - 1].getPoint();
     IProfilPoint point = null;
@@ -147,5 +148,6 @@ public class WehrRule extends AbstractValidatorRule
       point = lastPoint;
     if( point != null )
       collector.createProfilMarker( true, "ungültige Wehrgeometrie [" + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ) + "]", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
+    return firstPoint;
   }
 }
