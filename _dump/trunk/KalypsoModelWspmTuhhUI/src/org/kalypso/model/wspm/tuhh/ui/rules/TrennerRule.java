@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolutionHelp;
 
 /**
  * Trennflächen und Bordvollpunkte dürfen nur innerhalb der durchströmten Bereiche liegen
@@ -99,7 +98,7 @@ public class TrennerRule extends AbstractValidatorRule
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true,toValidate[toValidate.length - 1].getTyp().toString() + ": unzulässige Position\r\nmehr Info", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(toValidate.length - 1),new MoveDeviderResolutionHelp() } );
+        collector.createProfilMarker( true,toValidate[toValidate.length - 1].getTyp().toString() + ": unzulässige Position\r\nmehr Info", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(toValidate.length - 1) } );
       }
     }
     catch( ProfilDataException e )
