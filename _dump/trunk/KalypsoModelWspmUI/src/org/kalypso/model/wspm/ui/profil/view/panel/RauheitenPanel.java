@@ -312,7 +312,7 @@ public class RauheitenPanel extends AbstractProfilView
   @SuppressWarnings("boxing")
   void updateControls( )
   {
-    //TODO:KIMSystem.out.println( "Control" );
+
     final IProfilDevider[] devider = getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
     Boolean isBlockSetting = getViewData().useDeviderValue();
     if( !m_blockRauheit.isDisposed() )
@@ -342,7 +342,6 @@ public class RauheitenPanel extends AbstractProfilView
 
   private void setBlockValue( final Text text, final IProfilDevider devider )
   {
-   //TODO:KIM System.out.println( "setblockvalue" );
     final Double value = (Double) devider.getValueFor( DEVIDER_PROPERTY.RAUHEIT );
     try
     {

@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.ui.profil.view.chart.layer;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -59,13 +61,16 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer.EditData;
 import org.kalypso.model.wspm.ui.profil.view.panel.TrennerPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -76,6 +81,24 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class TrennerLayer extends AbstractProfilChartLayer
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer#setActivePoint(java.lang.Object)
+   */
+  @Override
+  public void setActivePoint( Object data )
+  {
+    if( data instanceof IProfilDevider )
+    {
+      final IProfilDevider devider = (IProfilDevider) data;
+      final IProfilPoint activePoint = devider.getPoint();
+      final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
+      final IStatus status = operation.execute( new NullProgressMonitor(), null );
+      operation.dispose();
+      if( !status.isOK() )
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+    }
+  }
 
   private ColorRegistry m_colorRegistry;
 
@@ -321,6 +344,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setLineWidth( 1 );
     gc.setForeground( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) );
     final m_deviders dev = m_deviders.getDevider( ((IProfilDevider) hoverData).getTyp() );
+    
+//    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+//    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();// (int) maxscreen;
+
+    
+    
     final int top = getValueRange().getScreenFrom();
     final double maxval = ProfilUtil.getMaxValueFor(getProfil(),POINT_PROPERTY.HOEHE);
     final double maxscreen = getValueRange().logical2screen( maxval );

@@ -45,7 +45,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 public abstract class AbstractValidatorRule implements IValidatorRule
 {
   private String m_id;
+
   private String m_description;
+
   private String m_type;
 
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
@@ -64,12 +66,12 @@ public abstract class AbstractValidatorRule implements IValidatorRule
   {
     return m_description;
   }
-  
+
   public String getType( )
   {
     return m_type;
   }
-  
+
   @Override
   public String toString( )
   {

@@ -40,10 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMarkerResolution2;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
 
 /**
  * @author kimwerner
@@ -55,7 +69,14 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
    */
   public void run( IMarker marker )
   {
-    resolve( getProfil( marker ), marker );
+    final IProfilEventManager pem = getProfilEventManager( marker );
+    final IProfil profil = pem == null ? null : pem.getProfil();
+    final IProfilChange[] changes = profil == null ? null : resolve( profil );
+    if( changes != null )
+    {
+      final ProfilOperation operation = new ProfilOperation( marker.getAttribute( IMarker.MESSAGE, "Profiloperation" ), pem, changes, true );
+      new ProfilOperationJob( operation ).schedule();
+    }
   }
 
   private final String m_label;
@@ -64,16 +85,34 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
 
   private final Image m_image;
 
-  private IProfil getProfil( final IMarker marker )
-  {// TODO: gib mir ein Profil
-    return null;
-  }
-
-  public AbstractProfilMarkerResolution( )
+  private IProfilEventManager getProfilEventManager( final IMarker marker )
   {
-    m_label = null;
-    m_description = null;
-    m_image = null;
+    try
+    {
+      final IResource resource = marker.getResource();
+      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
+      final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+      if( editorReferences == null )
+        return null;
+      for( final IEditorReference editorRef : editorReferences )
+      {
+        if( editorRef.getId().equals( editorId ) )
+        {
+          final IEditorPart editor = editorRef.getEditor( false );
+          final IFile editorFile = editor == null ? null : (IFile) editor.getAdapter( IFile.class );
+          final IProfilProvider2 profilProvider = (editorFile != null && editorFile.equals( resource )) ? (IProfilProvider2) editor.getAdapter( IProfilProvider2.class ) : null;
+          return profilProvider == null ? null : profilProvider.getEventManager();
+        }
+      }
+
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      return null;
+    }
+
+    return null;
   }
 
   public AbstractProfilMarkerResolution( final String label, final String description, final Image image )
@@ -105,5 +144,5 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
     return m_image;
   }
 
-  protected abstract void resolve( final IProfil profil, final IMarker marker );
+  protected abstract IProfilChange[] resolve( final IProfil profil );
 }

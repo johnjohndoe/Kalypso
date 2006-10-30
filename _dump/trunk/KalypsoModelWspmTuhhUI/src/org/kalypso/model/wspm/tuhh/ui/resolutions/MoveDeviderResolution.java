@@ -40,43 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 
 /**
  * @author kimwerner
  */
+
 public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
-final private int m_deviderIndex;
+  final private int m_deviderIndex;
+
+  final private DEVIDER_TYP m_deviderTyp;
+
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil, org.eclipse.core.resources.IMarker)
+   * verschiebt die Trennfläche auf den linken Trenner "Durchströmter Bereich"
+   * 
+   * @param deviderTyp,deviderIndex
+   *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   */
+  public MoveDeviderResolution( final int deviderIndex, final DEVIDER_TYP deviderTyp )
+  {
+    super( "verschieben der Trennfläche in den durchströmten Bereich", null, null );
+    m_deviderIndex = deviderIndex;
+    m_deviderTyp = deviderTyp;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( IProfil profil, IMarker marker )
+  protected IProfilChange[] resolve( IProfil profil )
   {
-    //Test
-    final String msg = marker.getAttribute( IMarker.MESSAGE, "" );
-    MessageDialog.openInformation( null, "Test quick fix", "Die message des Problems ist: " + msg );
-
-    // TODO Auto-generated method stub
-    
+    final IProfilDevider[] deviders1 = profil.getDevider( m_deviderTyp );
+    final IProfilDevider devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
+    if( devider1 == null )
+      return null;
+    final IProfilDevider[] deviders2 = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
+    final IProfilDevider devider2 = deviders2[0];
+    if( devider2 == null )
+      return null;
+    return new IProfilChange[] { new DeviderMove( devider1, devider2.getPoint() ), new ActiveObjectEdit( profil, devider2.getPoint(), POINT_PROPERTY.BREITE ) };
   }
-
-final private static String getInfoBody()
-{
-  return "verschieben der Trennfläche in den durchströmten Bereich";
-}
-  public MoveDeviderResolution(final int deviderIndex )
-  {
-        super(  getInfoBody(), null, null );
-        m_deviderIndex = deviderIndex;
-  }
-
-  
-
- 
 
 }

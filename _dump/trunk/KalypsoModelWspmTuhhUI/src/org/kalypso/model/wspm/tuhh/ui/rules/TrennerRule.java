@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import java.io.BufferedWriter;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -92,13 +94,14 @@ public class TrennerRule extends AbstractValidatorRule
       final double xleft = toValidate[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final double xright = toValidate[toValidate.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      if( (xleft < left) || (xleft > right)) 
+      final DEVIDER_TYP deviderTyp = toValidate[0].getTyp();
+      if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(0) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": unzulässige Position" , "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp ) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true,toValidate[toValidate.length - 1].getTyp().toString() + ": unzulässige Position\r\nmehr Info", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution(toValidate.length - 1) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp ) } );
       }
     }
     catch( ProfilDataException e )

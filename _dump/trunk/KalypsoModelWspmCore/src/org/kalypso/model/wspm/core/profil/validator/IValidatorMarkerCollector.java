@@ -62,7 +62,7 @@ public interface IValidatorMarkerCollector
    *          An array of class-names of marker resolutions (quick fixes)
    * @throws CoreException
    */
-  public void createProfilMarker( final boolean isSevere, final String message, final String description, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;
+  public void createProfilMarker( final boolean isSevere, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;
 
   /**
    * Clear all markers which may apply to this collector
