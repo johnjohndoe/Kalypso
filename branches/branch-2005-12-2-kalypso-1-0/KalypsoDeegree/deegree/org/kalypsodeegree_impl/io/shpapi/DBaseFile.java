@@ -375,6 +375,8 @@ public class DBaseFile
       }
       else if( column.type.equalsIgnoreCase( "L" ) )
       {
+        // TODO: This is wrong: L should be parsed as boolean; is there already some code which depends on this
+        // wrong implementation?
         ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.String", true );
       }
       else if( column.type.equalsIgnoreCase( "D" ) )

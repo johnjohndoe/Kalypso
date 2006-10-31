@@ -78,7 +78,6 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 public class FieldDescriptor
 {
-
   /**
    * fieldinformation as byte array
    */
@@ -119,17 +118,21 @@ public class FieldDescriptor
     // set fieldlength
     data[16] = fieldlength;
 
+    if( type.equalsIgnoreCase( "L" ) && fieldlength != 1 )
+      throw new DBaseException( "datatype 'L' must have fieldlength = 1" );
+
     // set decimalcount
     if( type.equalsIgnoreCase( "N" ) || type.equalsIgnoreCase( "F" ) )
+    {
       data[17] = decimalcount;
+      // throw DBaseException if the decimalcount is larger then the
+      // number off fields required for plotting a float number
+      // as string
+      if( data[17] > data[16] - 2 )
+        throw new DBaseException( "invalid fieldlength and/or decimalcount" );
+    }
     else
       data[17] = 0;
-
-    // throw DBaseException if the decimalcount is larger then the
-    // number off fields required for plotting a float number
-    // as string
-    if( data[17] > data[16] - 2 )
-      throw new DBaseException( "invalid fieldlength and/or decimalcount" );
 
     // work area id (don't know if it should be 1)
     data[20] = 1;
@@ -146,9 +149,7 @@ public class FieldDescriptor
    */
   public byte[] getFieldDescriptor()
   {
-
     return data;
-
   }
 
 }

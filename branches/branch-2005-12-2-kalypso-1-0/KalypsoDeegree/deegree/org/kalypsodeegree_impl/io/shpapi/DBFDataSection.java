@@ -155,41 +155,36 @@ public class DBFDataSection
 
     offset++;
 
-    byte[] b = null;
-
     // write every field on the ArrayList to the data byte array
     for( int i = 0; i < recData.size(); i++ )
     {
-
-      byte[] fddata = this.fieldDesc[i].getFieldDescriptor();
+      final byte[] fddata = this.fieldDesc[i].getFieldDescriptor();
       final Object recdata = recData.get( i );
       switch( fddata[11] )
       {
-
-      // if data type is character
       case (byte)'C':
+      {
         if( recdata != null && !( recdata instanceof String ) )
           throw new DBaseException( "invalid data type at field: " + i );
+
+        final byte[] b;
         if( recdata == null )
-        {
           b = new byte[0];
-        }
         else
-        {
           b = ( (String)recdata ).getBytes();
-        }
-        if( b.length > fddata[16] )
-          throw new DBaseException( "string contains too many characters " + (String)recdata );
-        for( int j = 0; j < b.length; j++ )
-          datasec.data[offset + j] = b[j];
-        for( int j = b.length; j < fddata[16]; j++ )
-          datasec.data[offset + j] = 0x20;
+
+        writeEntry( datasec, offset, fddata[16], b, (byte)0x20 );
+      }
         break;
+
       case (byte)'N':
+      {
         if( recdata != null && !( recdata instanceof Number ) )
           throw new DBaseException( "invalid data type at field: " + i );
 
         final int fieldLength = fddata[16];
+
+        final byte[] b;
         if( recdata == null )
         {
           b = new byte[fieldLength];
@@ -212,16 +207,28 @@ public class DBFDataSection
           { recdata } );
           b = format.getBytes();
         }
-        if( b.length > fddata[16] )
-          throw new DBaseException( "string contains too many characters " + recdata );
-        for( int j = 0; j < b.length; j++ )
-          datasec.data[offset + j] = b[j];
-        for( int j = b.length; j < fddata[16]; j++ )
-          datasec.data[offset + j] = 0x0;
+
+        writeEntry( datasec, offset, fddata[16], b, (byte)0x0 );
+      }
+        break;
+
+      case (byte)'L':
+      {
+        if( recdata != null && !( recdata instanceof Boolean ) )
+          throw new DBaseException( "invalid data type at field: " + i );
+
+        final Boolean logical = (Boolean)recdata;
+        final byte[] b = new byte[1];
+        if( logical == null || !logical.booleanValue() )
+          b[0] = 'F';
+        else
+          b[0] = 'T';
+        
+        writeEntry( datasec, offset, fddata[16], b, (byte)0x00 );
+      }
         break;
       default:
         throw new DBaseException( "data type not supported" );
-
       }
 
       offset += fddata[16];
@@ -233,12 +240,23 @@ public class DBFDataSection
 
   }
 
+  private void writeEntry( final ByteContainer datasec, final int offset, final byte length, final byte[] b,
+      final byte fillByte ) throws DBaseException
+  {
+    if( b.length > length )
+      throw new DBaseException( "Entry contains too many characters " + new String( b ) );
+
+    for( int j = 0; j < b.length; j++ )
+      datasec.data[offset + j] = b[j];
+    for( int j = b.length; j < length; j++ )
+      datasec.data[offset + j] = fillByte;
+  }
+
   /**
    * method: public byte[] getDataSection() returns the data section as a byte array.
    */
   public byte[] getDataSection()
   {
-
     // allocate memory for all datarecords on one array + 1 byte
     byte[] outdata = new byte[data.size() * recordlength + 1];
 
@@ -269,11 +287,8 @@ public class DBFDataSection
    */
   public int getNoOfRecords()
   {
-
     return data.size();
-
   }
-
 }
 
 class ByteContainer
