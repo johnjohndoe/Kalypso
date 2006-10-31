@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.kalypso.afgui.KalypsoAFGUIFramework
+Bundle-SymbolicName: KalypsoAFGUIFramework; singleton:=true
+Bundle-Version: 0.0.0
+Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
+Bundle-Vendor: org.kalypso
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
+ lib/jena_2_3/arq.jar,
+ lib/jena_2_3/commons-logging.jar,
+ lib/jena_2_3/concurrent.jar,
+ lib/jena_2_3/icu4j_3_4.jar,
+ lib/jena_2_3/jakarta-oro-2.0.8.jar,
+ lib/jena_2_3/jena.jar,
+ lib/jena_2_3/jenatest.jar,
+ lib/jena_2_3/junit.jar,
+ lib/jena_2_3/log4j-1.2.12.jar,
+ lib/jena_2_3/stax-1.1.1-dev.jar,
+ lib/jena_2_3/stax-api-1.0.jar,
+ lib/jena_2_3/xercesImpl.jar,
+ lib/jena_2_3/xml-apis.jar,
+ .

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="org.kalypso.afgui.AFGUIApplication"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.afgui.AFGUIApplication">
+         </run>
+      </application>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Framework Base Perspective"
+            class="org.kalypso.afgui.Perspective"
+            id="KalypsoAFGUIFramework.perspective">
+      </perspective>
+      <perspective
+            name="Data Centric Perspective"
+            class="org.kalypso.afgui.DataCentricPerspective"
+            id="KalypsoAFGUIFramework.datacentricperspective">
+      </perspective>
+      
+      <perspective
+            name="Expert Perspective"
+            class="org.kalypso.afgui.ExpertPerspective"
+            id="KalypsoAFGUIFramework.Expert.perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="KalypsoAFGUIFramework_product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.kalypso.afgui.AFGUIApplication"
+            name="GUI Framework Test"/>
+   </extension>
+   <extension
+         id="org.kalypso.afgui.views.WorkflowViews"
+         name="Workflow"
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.afgui.views.WorkflowView"
+            id="org.kalypso.afgui.views.WorkflowView"
+            name="Workflow"/>
+      <view
+            class="org.kalypso.afgui.views.WorkflowHelpView"
+            id="org.kalypso.afgui.views.WorkflowHelpView"
+            name="WorkflowHelpView"/>
+      <view
+            class="org.kalypso.afgui.views.ModelDataView"
+            id="org.kalypso.afgui.views.ModelDataView"
+            name="Model Data View"/>
+   </extension>
+
+</plugin>
