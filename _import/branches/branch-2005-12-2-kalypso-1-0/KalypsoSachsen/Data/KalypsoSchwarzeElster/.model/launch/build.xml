@@ -16,9 +16,12 @@
               value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
     <property name="requestQ"
               value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
+    <property name="requestQTalsperren"
+              value="${requestQ}" />
+    <property name="requestQZufluss"
+              value="${requestQ}" />
     <property name="requestW"
               value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W&lt;/axes&gt;&lt;statusAxes&gt;W&lt;/statusAxes&gt;&lt;/request&gt;" />
-
 
 	<!-- Zeitschritt der Berechnung: 3h-->
 	<property name="interval.field" value="HOUR_OF_DAY"/>
@@ -32,6 +35,12 @@
               value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
     <property name="filterQ"
               value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+
+	<property name="filterQTalsperren"
+              value="${requestQTalsperren}&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+
+	<property name="filterQZufluss"
+              value="${requestQZufluss}&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
 
 	<!--property name="filterN" 
 			  value="${requestN}&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" /-->
@@ -135,13 +144,13 @@
 		
 		<!-- Talsperren -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${talsperreLink}" from="${startsimQ}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${talsperreLink}" from="${startsimQ}" to="${stopsim}" filter="${filterQTalsperren}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Vorgaben: Zufluss und Abfluss -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${vorgabeLink}" from="${startsimQ}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="${vorgabeLink}" from="${startsimQ}" to="${stopsim}" filter="${filterQZufluss}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
@@ -174,7 +183,7 @@
 	<target name="runCalculation" description="Führt die eigentliche Simulationsrechnung durch">
 		<echo message="Berechnung wird durchgeführt: ${calc.path}"/>
 		
-		<kalypso.runCalculation calccasefolder="${calc.path}" typeid="spree">
+		<kalypso.runCalculation calccasefolder="${calc.path}" typeid="org.kalypso.model.wasy.schwarzeelster">
 		    <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
 		    <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
 

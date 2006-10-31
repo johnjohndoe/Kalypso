@@ -1,4 +1,4 @@
-#Wed Sep 13 14:28:52 CEST 2006
+#Tue Oct 31 16:04:24 CET 2006
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -113,6 +113,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_10h33/Zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h58/Zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//.prognose/prognose7/calcCase.gml=UTF-8
+encoding//Rechenvarianten/Test1/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Flusslaufparameter.gtt=UTF-8
 encoding//Rechenvarianten/20040104_test1/Zeitreihen/W_LIESKE.zml=UTF-8
 encoding//Rechenvarianten/040427/Anfangsvolumen.gtt=UTF-8
@@ -572,6 +573,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h58/Zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/W_SPREY.zml=UTF-8
 encoding//.prognose/JOHN\ DOE/Gesamtansicht.gmt=UTF-8
 encoding//Rechenvarianten/april/Anfangsvolumen.gtt=UTF-8
+encoding//Rechenvarianten/Test1/Zeitreihen/Pegel_Q.ott=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h54/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
 encoding//Rechenvarianten/20040104_test2/Zeitreihen/W_JAENKD.zml=UTF-8
