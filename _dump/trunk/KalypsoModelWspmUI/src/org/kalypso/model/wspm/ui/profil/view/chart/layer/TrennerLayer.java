@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -70,7 +69,6 @@ import org.kalypso.model.wspm.ui.profil.view.IProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer.EditData;
 import org.kalypso.model.wspm.ui.profil.view.panel.TrennerPanel;
 
 import de.belger.swtchart.EditInfo;
@@ -102,7 +100,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
   private ColorRegistry m_colorRegistry;
 
-  private enum m_deviders
+  private enum DEVIDER
   {
 
     Durchstroemte(DEVIDER_TYP.DURCHSTROEMTE, IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE, true, 0, "Durchströmter Bereich"),
@@ -110,7 +108,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     Bordvoll(DEVIDER_TYP.BORDVOLL, IProfilColorSet.COLOUR_BORDVOLLPUNKTE, false, 40, "Bordvollpunkt"),
     Wehr(DEVIDER_TYP.WEHR, IProfilColorSet.COLOUR_WEHR, false, 60, "Wehrfeldtrenner");
 
-    private m_deviders( final DEVIDER_TYP deviderTyp, final String colorKey, final boolean isclosed, final int topOffset, final String label )
+    private DEVIDER( final DEVIDER_TYP deviderTyp, final String colorKey, final boolean isclosed, final int topOffset, final String label )
     {
       m_colorKey = colorKey;
 
@@ -121,7 +119,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
     }
 
-    public final static m_deviders getDevider( DEVIDER_TYP typ )
+    public final static DEVIDER getDevider( DEVIDER_TYP typ )
     {
       switch( typ )
       {
@@ -185,9 +183,8 @@ public class TrennerLayer extends AbstractProfilChartLayer
           {
             final Boolean position = (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
             final boolean pos = position == null ? false : position;
-            
-            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, pos ? "Böschungsfuss" : "Vorland",
-                devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
+
+            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, pos ? "Böschungsfuss" : "Vorland", devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
           }
         }
       }
@@ -231,15 +228,11 @@ public class TrennerLayer extends AbstractProfilChartLayer
     try
     {
       final IProfil m_profil = getProfil();
-
-      // final double maxval = getMaxval();
-      // final double maxscreen = getValueRange().logical2screen( maxval );
       final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
       final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();// (int) maxscreen;
       gc.setLineWidth( 3 );
       gc.setLineStyle( SWT.LINE_SOLID );
-
-      for( m_deviders dev : m_deviders.values() )
+      for( DEVIDER dev : DEVIDER.values() )
       {
         if( getViewData().getDeviderVisibility( dev.getDeviderTyp() ) )
         {
@@ -247,7 +240,19 @@ public class TrennerLayer extends AbstractProfilChartLayer
           if( deviders != null )
           {
             gc.setForeground( m_colorRegistry.get( dev.getColorKey() ) );
-            drawTrenner( gc, deviders, dev, bottom, top + dev.getTopOffset() );
+            for( IProfilDevider devider : deviders )
+            {
+              final IProfilPoint point = devider.getPoint();
+              final double leftvalue = point.getValueFor( POINT_PROPERTY.BREITE );
+              final int left = (int) getDomainRange().logical2screen( leftvalue );
+              gc.drawLine( left, top + dev.getTopOffset(), left, bottom );
+            }
+            if( dev.isClosed() )
+            {
+              final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
+              final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
+              gc.drawLine( l, top + dev.getTopOffset(), r, top + dev.getTopOffset() );
+            }
           }
         }
       }
@@ -257,56 +262,6 @@ public class TrennerLayer extends AbstractProfilChartLayer
       e.printStackTrace();
     }
   }
-
-  private void drawTrenner( final GCWrapper gc, final IProfilDevider[] deviders, final m_deviders dev, final int bottom, final int top ) throws ProfilDataException
-  {
-
-    for( IProfilDevider devider : deviders )
-    {
-      final IProfilPoint point = devider.getPoint();
-      final double leftvalue = point.getValueFor( POINT_PROPERTY.BREITE );
-      final int left = (int) getDomainRange().logical2screen( leftvalue );
-      drawLine( gc, left, top, left, bottom );
-    }
-    if( dev.isClosed() )
-    {
-      final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
-      final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
-      drawLine( gc, l, top, r, top );
-    }
-
-  }
-
-//  protected double getMaxval( )
-//  {
-//    try
-//    {
-//      final List<IProfilPoint> points = getProfil().getPoints();
-//      double maxval = Double.MIN_VALUE;
-//      for( final IProfilPoint p : points )
-//        maxval = Math.max( maxval, p.getValueFor( POINT_PROPERTY.HOEHE ) );
-//      return maxval;
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//
-//      return 0;
-//    }
-//
-//  }
-
-  private void drawLine( final GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
-  {
-
-    gc.drawLine( x1, y1, x2, y2 );
-  }
-
-  /*
-   * private IProfilPoint getLeft( ) { final IProfilDevider[] deviders = getProfil().getDevider(m_deviderTyp); return
-   * deviders[0].getPoint(); } private IProfilPoint getRight( ) { final IProfilDevider[] m_devider =
-   * getProfil().getDevider(m_deviderTyp); return m_devider[m_devider.length - 1].getPoint(); }
-   */
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
@@ -343,28 +298,22 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setLineStyle( SWT.LINE_DOT );
     gc.setLineWidth( 1 );
     gc.setForeground( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) );
-    final m_deviders dev = m_deviders.getDevider( ((IProfilDevider) hoverData).getTyp() );
-    
-//    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
-//    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();// (int) maxscreen;
-
-    
-    
-    final int top = getValueRange().getScreenFrom();
-    final double maxval = ProfilUtil.getMaxValueFor(getProfil(),POINT_PROPERTY.HOEHE);
-    final double maxscreen = getValueRange().logical2screen( maxval );
-    final int bottom = (int) maxscreen + dev.getTopOffset();// (maxscreen + (m_isclosed ? ((screenTop - maxscreen) / 2)
-    // : 0));
-    try
+    if( hoverData instanceof IProfilDevider )
     {
-      final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint(getProfil(), screen2logical( editing ).getX() );
-      final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( POINT_PROPERTY.BREITE ), destinationPoint.getValueFor( POINT_PROPERTY.HOEHE ) ) );
-      gc.drawRectangle( destP.x - 5, bottom, 10, top - bottom );
-      // gc.drawText(Double.toString(destinationPoint.getValueFor(POINT_PROPERTY.BREITE)),20,20);
-    }
-    catch( ProfilDataException e )
-    {
-      e.printStackTrace();
+      final DEVIDER dev = DEVIDER.getDevider( ((IProfilDevider) hoverData).getTyp() );
+      final AxisRange valueRange = getValueRange();
+      final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+      final int top = valueRange.getScreenTo() + valueRange.getGapSpace() + dev.getTopOffset();
+      try
+      {
+        final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
+        final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( POINT_PROPERTY.BREITE ), destinationPoint.getValueFor( POINT_PROPERTY.HOEHE ) ) );
+        gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );
+      }
+      catch( ProfilDataException e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -376,7 +325,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     final IProfilDevider activeDevider = (IProfilDevider) data;
 
-    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(),screen2logical( point ).getX() );
+    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
 
     final IProfilPoint oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )
@@ -402,7 +351,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     final int bottom = clipping.y + clipping.width;
     final int midx = (left + right) / 2;
 
-    drawLine( gc, midx, top, midx, bottom );
+    gc.drawLine( midx, top, midx, bottom );
   }
 
   /**
@@ -414,10 +363,10 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
     EditInfo info = null;
     final IProfil profil = getProfil();
-    final m_deviders[] devs = m_deviders.values();
+    final DEVIDER[] devs = DEVIDER.values();
     for( int i = devs.length; i > 0; i-- )
     {
-      final m_deviders dev = devs[i - 1];
+      final DEVIDER dev = devs[i - 1];
       final DEVIDER_TYP devTyp = dev.getDeviderTyp();
       final IProfilDevider[] deviders = profil.getDevider( devTyp );
 
@@ -443,43 +392,28 @@ public class TrennerLayer extends AbstractProfilChartLayer
       }
     }
     return null;
-    /*
-     * try { EditInfo info = infoForKey( point, m_devider[0], "links" ); if( info != null ) return info; for( int i = 1;
-     * i < m_devider.length - 1; i++ ) { info = infoForKey( point, m_devider[i], "" ); } if( info != null ) return info;
-     * return infoForKey( point, m_devider[m_devider.length - 1], "rechts" ); } catch( final ProfilDataException e ) {
-     * e.printStackTrace(); } return null;
-     */
   }
 
-  private EditInfo getDeviderInfo( final Point mousePoint, final IProfilDevider devider, final m_deviders dev, int position ) throws ProfilDataException
+  private EditInfo getDeviderInfo( final Point mousePoint, final IProfilDevider devider, final DEVIDER dev, int position ) throws ProfilDataException
   {
 
     if( devider == null )
       return null;
+    final AxisRange valueRange = getValueRange();
+    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+    final int top = valueRange.getScreenTo() + valueRange.getGapSpace() + dev.getTopOffset();
     final IProfilPoint deviderPos = devider.getPoint();
-    final double maxval = ProfilUtil.getMaxValueFor(getProfil(),POINT_PROPERTY.HOEHE);
-    final int maxscreen = (int) getValueRange().logical2screen( maxval );
-    final int bottom = getValueRange().getScreenFrom();
-    final int top = maxscreen + dev.getTopOffset();
-
     final double breite = deviderPos.getValueFor( POINT_PROPERTY.BREITE );
     final Point point = logical2screen( new Point2D.Double( breite, deviderPos.getValueFor( POINT_PROPERTY.HOEHE ) ) );
-
-    final Rectangle devRect = new Rectangle( point.x - 5, top, 10, bottom - top );
+    final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
     final Rectangle pointRect = new Rectangle( point.x - 5, point.y - 5, 10, 10 );
-
     if( pointRect.contains( mousePoint.x, mousePoint.y ) )
       return null;
-
     if( devRect.contains( mousePoint.x, mousePoint.y ) )
     {
-
       return new EditInfo( this, devRect, devider, dev.getHoverInfo( devider, position + 1 ) );
-
     }
-
     return null;
-
   }
 
   /**

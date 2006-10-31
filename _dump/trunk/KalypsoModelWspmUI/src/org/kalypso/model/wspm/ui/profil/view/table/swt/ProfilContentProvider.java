@@ -188,4 +188,9 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
   {
     return m_unmodmarkerIndex;
   }
+  
+  public IProfil getProfil( )
+  {
+    return m_pem == null ? null : m_pem.getProfil();
+  }
 }

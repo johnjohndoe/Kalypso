@@ -41,10 +41,12 @@
 package org.kalypso.model.wspm.ui.profil.view.table.swt;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
@@ -56,10 +58,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
-
+import org.kalypso.model.wspm.ui.profil.view.chart.DefaultProfilColorRegistryFactory;
+import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
 
 /**
  * @author Belger
@@ -69,6 +75,14 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
   private static final String IMAGE_ERROR = "profilLabelProvider.img.error";
 
   private static final String IMAGE_WARNING = "profilLabelProvider.img.warning";
+
+  private static final String IMAGE_DEVIDER_T = "profilLabelProvider.img.devider_t";
+
+  private static final String IMAGE_DEVIDER_D = "profilLabelProvider.img.devider_d";
+
+  private static final String IMAGE_DEVIDER_B = "profilLabelProvider.img.devider_b";
+
+  private static final String IMAGE_DEVIDER_W = "profilLabelProvider.img.devider_w";
 
   private final ImageRegistry m_imgRegistry = new ImageRegistry();
 
@@ -82,16 +96,27 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   private Color m_colorWarning;
 
+  private ColorRegistry m_profilColorRegistry;
+
+  private Map<DEVIDER_TYP, Color> m_deviderColors = new HashMap<DEVIDER_TYP, Color>();
+
   public ProfilLabelProvider( final TableViewer viewer )
   {
     m_viewer = viewer;
 
     m_imgRegistry.put( IMAGE_ERROR, KalypsoModelWspmUIImages.ID_MARKER_ERROR );
     m_imgRegistry.put( IMAGE_WARNING, KalypsoModelWspmUIImages.ID_MARKER_WARNING );
+    m_imgRegistry.put( IMAGE_DEVIDER_T, KalypsoModelWspmUIImages.ID_COLOR1_LEGEND );
 
     final Display display = m_viewer.getControl().getDisplay();
     m_colorError = display.getSystemColor( SWT.COLOR_RED );
     m_colorWarning = display.getSystemColor( SWT.COLOR_YELLOW );
+
+    m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( display );
+    m_deviderColors.put( DEVIDER_TYP.BORDVOLL, m_profilColorRegistry.get( IProfilColorSet.COLOUR_BORDVOLLPUNKTE ) );
+    m_deviderColors.put( DEVIDER_TYP.TRENNFLAECHE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_TRENNFLAECHEN ) );
+    m_deviderColors.put( DEVIDER_TYP.DURCHSTROEMTE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE ) );
+    m_deviderColors.put( DEVIDER_TYP.WEHR, m_profilColorRegistry.get( IProfilColorSet.COLOUR_WEHR ) );
   }
 
   /**
@@ -130,7 +155,6 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
   public String getColumnText( final Object element, final int columnIndex )
   {
     final POINT_PROPERTY column = (POINT_PROPERTY) m_viewer.getTable().getColumn( columnIndex ).getData( COLUMN_KEY );
-
     if( column == null )
       return null;
 
@@ -218,6 +242,23 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   public Color getForeground( final Object element, int columnIndex )
   {
+    if( element instanceof IProfilPoint )
+    {
+      final IContentProvider contentProvider = m_viewer.getContentProvider();
+      if( contentProvider instanceof ProfilContentProvider )
+      {
+        final IProfil profil = ((ProfilContentProvider) contentProvider).getProfil();
+        final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
+        for( final IProfilDevider devider : deviders )
+        {
+          if( devider.getPoint() == element )
+          {
+            return m_deviderColors.get( devider.getTyp() );
+          }
+        }
+      }
+    }
+
     return null;
   }
 

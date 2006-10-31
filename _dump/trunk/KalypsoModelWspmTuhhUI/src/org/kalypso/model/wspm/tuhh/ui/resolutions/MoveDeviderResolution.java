@@ -83,7 +83,10 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
     if( devider1 == null )
       return null;
     final IProfilDevider[] deviders2 = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-    final IProfilDevider devider2 = deviders2[0];
+    if( deviders2 == null )
+      return null;
+    final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
+    final IProfilDevider devider2 = deviders2[deviderIndex2];
     if( devider2 == null )
       return null;
     return new IProfilChange[] { new DeviderMove( devider1, devider2.getPoint() ), new ActiveObjectEdit( profil, devider2.getPoint(), POINT_PROPERTY.BREITE ) };

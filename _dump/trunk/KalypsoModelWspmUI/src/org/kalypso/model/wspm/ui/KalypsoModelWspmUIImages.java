@@ -69,11 +69,19 @@ public class KalypsoModelWspmUIImages
 
   public static final ImageDescriptor ID_BUTTON_WEHR_ADD = id( "icons/obj16/wehr_add.gif" );
 
-  public static final ImageDescriptor ID_BUTTON_WEHR_DELETE = id( "icons/obj16/wehr_delete.gif" );
+  public static final ImageDescriptor ID_BUTTON_WEHR_DELETE = id( "icons/obj16/wehr_del.gif" );
 
   public static final ImageDescriptor ID_CHART_FIX_RATIO = id( "icons/elcl16/chart_fix_ratio.gif" );
-  
+
   public static final ImageDescriptor ID_ENABLED_OPEN_TABLE = id( "icons/eview16/profil_table.gif" );
+
+  public static final ImageDescriptor ID_COLOR1_LEGEND = id( "icons/obj16/legend_col1.gif" );
+
+  public static final ImageDescriptor ID_COLOR2_LEGEND = id( "icons/elcl16/chart_fix_ratio.gif" );
+
+  public static final ImageDescriptor ID_COLOR3_LEGEND = id( "icons/eview16/profil_table.gif" );
+
+  public static final ImageDescriptor ID_COLOR4_LEGEND = id( "icons/eview16/profil_table.gif" );
 
   public static final ImageDescriptor id( final String location )
   {
@@ -82,6 +90,6 @@ public class KalypsoModelWspmUIImages
 
   private KalypsoModelWspmUIImages( )
   {
-    // wir nicht instantiiert
+    // wird nicht instantiiert
   }
 }

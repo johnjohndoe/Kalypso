@@ -616,7 +616,7 @@ public class ProfilSWTTableView extends AbstractProfilView
           return;
         }
 
-        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() )
+        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isDeviderMoved() )
           refresh();
 
         if( hint.isActivePointChanged() )

@@ -82,6 +82,7 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
@@ -251,9 +252,8 @@ public class WehrPanel extends AbstractProfilView
   {
     super( pem, viewdata, null );
     m_deviderLines = new LinkedList<DeviderLine>();
-    // TODO: KIM images suchen
-    m_deleteImg = null;// KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
-    m_addImg = null;// KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
+    m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
+    m_addImg =  KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
   }
 
   @Override
