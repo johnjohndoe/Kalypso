@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,8 +14,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,13 +26,19 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.lhwzsachsen.spree.WasyCalcJob.WQInfo;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
@@ -38,19 +48,21 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
+import org.xml.sax.InputSource;
 
 /**
  * Diese Klasse sammelt alles, was mit dem Erzeugen der Nativen Daten aus den Eingabedaten zu tun hat.
  * 
  * @author Belger
  */
-public class SpreeInputWorker
+public class WasyInputWorker
 {
-  protected final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class.getName() );
+  protected final static Logger LOGGER = Logger.getLogger( WasyInputWorker.class.getName() );
 
-  private SpreeInputWorker()
+  private WasyInputWorker()
   {
   // wird nicht instantiiert
   }
@@ -64,7 +76,8 @@ public class SpreeInputWorker
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir, final ICalcDataProvider inputProvider,
-      final Properties props, final PrintWriter logwriter, final TSMap tsmap ) throws Exception
+      final Properties props, final PrintWriter logwriter, final TSMap tsmap, final TSDesc[] TS_DESCRIPTOR, final WasyCalcJob wasyJob )
+      throws Exception
   {
     try
     {
@@ -75,29 +88,38 @@ public class SpreeInputWorker
 
       logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
-      final Map map = parseControlFile( controlGmlURL, nativedir );
+      final Map map = parseControlFile( controlGmlURL, nativedir, wasyJob );
       props.putAll( map );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ) );
 
-      props.put( SpreeCalcJob.DATA_GML, workspace );
+      props.put( WasyCalcJob.DATA_GML, workspace );
 
       final String tsFilename = writeNonTs( props, logwriter, workspace );
 
-      final Date startDate = (Date)props.get( SpreeCalcJob.DATA_STARTSIM_DATE );
+      final Date startDate = (Date)props.get( WasyCalcJob.DATA_STARTSIM_DATE );
       final Calendar calendar = Calendar.getInstance();
       calendar.setTime( startDate );
-      calendar.add( Calendar.HOUR_OF_DAY , -3 );
+      calendar.add( Calendar.HOUR_OF_DAY, -3 );
       final Date volDate = calendar.getTime();
-      
-      setAnfangsstauvolumen( "V_TSQUITZ", volDate, "TS_QUITZDORF", tsmap, workspace, logwriter );
-      setAnfangsstauvolumen( "V_TSBAUTZ", volDate, "TS_BAUTZEN", tsmap, workspace, logwriter );
+
+      final Map startVolumeMap = (Map)props.get( WasyCalcJob.DATA_STARTVOLUMEMAP );
+      for( final Iterator iter = startVolumeMap.entrySet().iterator(); iter.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)iter.next();
+        final String name = (String)entry.getKey();
+        final String fid = (String)entry.getValue();
+        setAnfangsstauvolumen( name, volDate, fid, tsmap, workspace, logwriter );
+      }
 
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
-      readZML( inputProvider, tsmap );
-      calcNiederschlagsummen( tsmap );
+      readZML( inputProvider, tsmap, TS_DESCRIPTOR );
+
+      writeWQ( props, tsmap, startDate );
+
+      calcNiederschlagsummen( tsmap, TS_DESCRIPTOR );
       applyAccuracyPrediction( workspace, tsmap );
-      createTimeseriesFile( tsFilename, tsmap );
+      createTimeseriesFile( tsFilename, tsmap, TS_DESCRIPTOR );
 
       return nativedir;
     }
@@ -106,6 +128,178 @@ public class SpreeInputWorker
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
+  }
+
+  /**
+   * Create the WQ-File
+   * 
+   * @throws CalcJobServiceException
+   */
+  private static void writeWQ( final Properties props, final TSMap tsmap, final Date startSim )
+      throws CalcJobServiceException
+  {
+    final WasyCalcJob.WQInfo[] wqinfos = (WasyCalcJob.WQInfo[])props.get( WasyCalcJob.DATA_WQMAP );
+    final int wechmanParamCount = ( (Integer)props.get( WasyCalcJob.DATA_WQPARAMCOUNT ) ).intValue();
+
+    final Map paramMap = new LinkedHashMap();
+    for( int i = 0; i < wqinfos.length; i++ )
+    {
+      try
+      {
+        final WasyCalcJob.WQInfo info = wqinfos[i];
+
+        final MetadataList metadataList = tsmap.getMetadataFor( info.getZmlId() );
+        final String xml = metadataList.getProperty( TimeserieConstants.MD_WQWECHMANN );
+        if( xml == null )
+          throw new Exception( "Keine WQ-Parameter vorhanden: " + info.getZmlId() );
+        
+        final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( xml ) ) );
+        final WechmannSet wechmannSet = group.getFor( startSim );
+        final WechmannParams[] paramArray = new WechmannParams[wechmanParamCount];
+        int count = 0;
+        for( final Iterator wechIt = wechmannSet.iterator(); wechIt.hasNext(); )
+        {
+          final WechmannParams params = (WechmannParams)wechIt.next();
+          paramArray[count++] = params;
+
+          if( count == wechmanParamCount )
+            break;
+        }
+
+        paramMap.put( info, paramArray );
+      }
+      catch( final Throwable e )
+      {
+        // on any error return, because we still have a default wq file in the resources.
+        System.out.println( "Fehler beim Schreiben der WQ-Beziehung. Standardwerte werden benutzt." );
+        e.printStackTrace();
+        return;
+      }
+    }
+
+    /* Now write the params */
+    try
+    {
+      final FieldDescriptor[] fds = new FieldDescriptor[8 + ( wechmanParamCount - 1 ) * 5 + 3];
+      int fieldCounter = 0;
+      fds[fieldCounter++] = new FieldDescriptor( "PEGEL", "C", (byte)10, (byte)0 );
+
+      for( int i = 0; i < wechmanParamCount; i++ )
+      {
+        fds[fieldCounter++] = new FieldDescriptor( "W0_" + ( i + 1 ), "N", (byte)10, (byte)2 );
+        fds[fieldCounter++] = new FieldDescriptor( "LNK1_" + ( i + 1 ), "N", (byte)15, (byte)5 );
+        fds[fieldCounter++] = new FieldDescriptor( "K2_" + ( i + 1 ), "N", (byte)15, (byte)5 );
+        if( i < wechmanParamCount - 1 )
+        {
+          fds[fieldCounter++] = new FieldDescriptor( "WGR_" + +( i + 1 ) + "_" + ( i + 2 ), "N", (byte)10, (byte)1 );
+          fds[fieldCounter++] = new FieldDescriptor( "DUMMY" + ( i + 1 ), "N", (byte)10, (byte)0 );
+        }
+      }
+
+      fds[fieldCounter++] = new FieldDescriptor( "WQ_OK", "L", (byte)1, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "AST1", "N", (byte)5, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "AST2", "N", (byte)5, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "AST3", "N", (byte)5, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "AST4", "N", (byte)5, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "AST_OK", "L", (byte)1, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "TOTZEIT", "N", (byte)2, (byte)0 );
+
+      final File wqFile = (File)props.get( WasyCalcJob.DATA_WQFILE );
+      final String wqFilename = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( wqFile
+          .getAbsolutePath() );
+      final DBaseFile dbf = new DBaseFile( wqFilename, fds );
+
+      for( final Iterator iter = paramMap.entrySet().iterator(); iter.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)iter.next();
+        final WasyCalcJob.WQInfo info = (WQInfo)entry.getKey();
+        final WechmannParams[] paramArray = (WechmannParams[])entry.getValue();
+
+        final ArrayList record = new ArrayList();
+        record.add( info.getName() );
+
+        for( int i = 0; i < paramArray.length; i++ )
+        {
+          final WechmannParams params = paramArray[i];
+          if( params == null )
+          {
+            record.add( new Double( 0.0 ) ); // W0_
+            record.add( new Double( 0.0 ) ); // LNK_
+            record.add( new Double( 0.0 ) ); // K2_
+
+            if( i < wechmanParamCount - 1 )
+            {
+              record.add( new Double( 9999.9 ) ); // WGR_
+              record.add( new Integer( 0 ) ); // DUMMY
+            }
+          }
+          else
+          {
+            record.add( new Double( params.getW1() ) ); // W0_
+            record.add( new Double( params.getLNK1() ) ); // LNK_
+            record.add( new Double( params.getK2() ) ); // K2_
+
+            if( i < wechmanParamCount - 1 )
+            {
+              if( params.hasWGR() )
+
+                record.add( new Double( params.getWGR() ) ); // WGR_
+              else
+                record.add( new Double( 9999.9 ) );
+              record.add( new Integer( 0 ) ); // DUMMY
+            }
+          }
+        }
+
+        record.add( Boolean.TRUE ); // WQ_OK
+
+        final MetadataList metadata = tsmap.getMetadataFor( info.getZmlId() );
+
+        final String ast1 = metadata.getProperty( TimeserieConstants.MD_ALARM_1, "999" );
+        final String ast2 = metadata.getProperty( TimeserieConstants.MD_ALARM_2, "999" );
+        final String ast3 = metadata.getProperty( TimeserieConstants.MD_ALARM_3, "999" );
+        final String ast4 = metadata.getProperty( TimeserieConstants.MD_ALARM_4, "999" );
+
+        record.add( alarmValue( ast1 ) ); // AST1
+        record.add( alarmValue( ast2 ) ); // AST2
+        record.add( alarmValue( ast3 ) ); // AST3
+        record.add( alarmValue( ast4 ) ); // AST4
+        record.add( Boolean.TRUE ); // AST_OK
+        record.add( new Integer( info.getTotzeit() ) ); // TOTZEIT
+
+        dbf.setRecord( record );
+      }
+
+      dbf.writeAllToFile();
+      dbf.close();
+    }
+    catch( final DBaseException e )
+    {
+      throw new CalcJobServiceException( "Fehler beim Erzeugen der HW_WQ.DBF", e );
+    }
+    catch( IOException e )
+    {
+      throw new CalcJobServiceException( "Fehler beim Schreiben der HW_WQ.DBF", e );
+    }
+
+  }
+
+  /* Helper method in order to parse alarm-level strings */
+  private static Double alarmValue( final String ast1 )
+  {
+    try
+    {
+      final Double value = new Double( ast1 );
+      /* If it is near zero, return non-value */
+      if( Math.abs( value.doubleValue() ) > 1 )
+        return value;
+    }
+    catch( final NumberFormatException e )
+    {
+      // ignore, return non-value
+    }
+
+    return new Double( "999" );
   }
 
   /**
@@ -137,13 +331,13 @@ public class SpreeInputWorker
     workspace.accept( fv, "PegelCollectionAssociation/PegelMember", FeatureVisitor.DEPTH_ZERO );
   }
 
-  private static void calcNiederschlagsummen( final TSMap tsmap )
+  private static void calcNiederschlagsummen( final TSMap tsmap, final TSDesc[] TS_DESCRIPTOR )
   {
     final Date[] dates = tsmap.getDates();
 
-    for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
+    for( int i = 0; i < TS_DESCRIPTOR.length; i++ )
     {
-      final String id = SpreeCalcJob.TS_DESCRIPTOR[i].id;
+      final String id = TS_DESCRIPTOR[i].id;
       if( id.startsWith( "PA_" ) )
       {
         final String pgid = "PG" + id.substring( 2 );
@@ -181,11 +375,14 @@ public class SpreeInputWorker
   }
 
   private static void setAnfangsstauvolumen( final String name, final Date startDate, final String fid,
-      final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter )
+      final TSMap tsmap, final GMLWorkspace workspace, final PrintWriter logwriter ) throws CalcJobServiceException
   {
     // das Anfangsstauvolumen aus der GMl raussuchen und als Wert in den
     // Zeitreihen setzen
     final Feature feature = workspace.getFeature( fid );
+    if( feature == null )
+      throw new CalcJobServiceException( "Kein Feature mit id: " + fid, null );
+    
     final Object property = feature.getProperty( "Anfangsstauvolumen" );
     if( property != null && property instanceof Double )
       tsmap.putValue( name, startDate, (Double)property );
@@ -196,50 +393,50 @@ public class SpreeInputWorker
   private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace )
       throws IOException, FileNotFoundException, CalcJobServiceException
   {
-    // TODO: die Reihenfolge der Zeilen im DBF ist wichtig!
-    // zur Zeit ist es nur Zufall, dass das GML in der richtigen Reihenfolge ist
-    
-    final File vhsFile = (File)props.get( SpreeCalcJob.DATA_VHSFILE );
-    final String flpFilename = (String)props.get( SpreeCalcJob.DATA_FLPFILENAME );
-    final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
-    final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
+    // REMARK: die Reihenfolge der Zeilen im DBF ist wichtig!
+    // Das GML muss in der richtigen Reihenfolge sein.
+
+    final File vhsFile = (File)props.get( WasyCalcJob.DATA_VHSFILE );
+    final String flpFilename = (String)props.get( WasyCalcJob.DATA_FLPFILENAME );
+    final String napFilename = (String)props.get( WasyCalcJob.DATA_NAPFILENAME );
+    final String tsFilename = (String)props.get( WasyCalcJob.DATA_TSFILENAME );
 
     logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
-    StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/" + SpreeCalcJob.VHS_FILE ),
+    StreamUtilities.streamCopy( WasyInputWorker.class.getResourceAsStream( "resources/" + WasyCalcJob.VHS_FILE ),
         new FileOutputStream( vhsFile ) );
 
     logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
-    findAndWriteLayer( workspace, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP, SpreeCalcJob.FLP_GEOM, flpFilename );
+    findAndWriteLayer( workspace, WasyCalcJob.FLP_NAME, WasyCalcJob.FLP_MAP, WasyCalcJob.FLP_GEOM, flpFilename );
 
     logwriter.println( "Erzeuge _nap Datei: " + napFilename );
-    findAndWriteLayer( workspace, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP, SpreeCalcJob.NAP_GEOM, napFilename );
+    findAndWriteLayer( workspace, WasyCalcJob.NAP_NAME, WasyCalcJob.NAP_MAP, WasyCalcJob.NAP_GEOM, napFilename );
 
     final File shpfile = new File( tsFilename + ".shp" );
-    final InputStream shpresource = SpreeInputWorker.class.getResourceAsStream( "resources/HW.shp" );
+    final InputStream shpresource = WasyInputWorker.class.getResourceAsStream( "resources/HW.shp" );
     FileUtilities.makeFileFromStream( false, shpfile, shpresource );
 
     final File shxfile = new File( tsFilename + ".shx" );
-    final InputStream shxresource = SpreeInputWorker.class.getResourceAsStream( "resources/HW.shx" );
+    final InputStream shxresource = WasyInputWorker.class.getResourceAsStream( "resources/HW.shx" );
     FileUtilities.makeFileFromStream( false, shxfile, shxresource );
 
     return tsFilename;
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap )
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final TSDesc[] TS_DESCRIPTOR )
       throws CalcJobServiceException
   {
     try
     {
-      final FieldDescriptor[] fds = new FieldDescriptor[SpreeCalcJob.TS_DESCRIPTOR.length + 5];
+      final FieldDescriptor[] fds = new FieldDescriptor[TS_DESCRIPTOR.length + 5];
       fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)7, (byte)2 );
       fds[1] = new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 );
       fds[2] = new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 );
       fds[3] = new FieldDescriptor( "VON", "N", (byte)2, (byte)0 );
       fds[4] = new FieldDescriptor( "AB", "N", (byte)2, (byte)0 );
 
-      for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
+      for( int j = 0; j < TS_DESCRIPTOR.length; j++ )
       {
-        final TSDesc desc = SpreeCalcJob.TS_DESCRIPTOR[j];
+        final TSDesc desc = TS_DESCRIPTOR[j];
         final String name = desc.id;
 
         final int i = j + 5;
@@ -296,9 +493,9 @@ public class SpreeInputWorker
         calendar.add( Calendar.HOUR_OF_DAY, -3 );
         record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
 
-        for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
+        for( int j = 0; j < TS_DESCRIPTOR.length; j++ )
         {
-          final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
+          final String id = TS_DESCRIPTOR[j].id;
           final Map datesToValuesMap = valuesMap.getTimeserie( id );
 
           Double outVal = null;
@@ -306,13 +503,13 @@ public class SpreeInputWorker
           if( datesToValuesMap != null )
           {
             final Double value = ( (Double)datesToValuesMap.get( date ) );
-            
+
             // HACK: THE DBF Writer does not round double, when
             // written without decimals, it just prints out the integer part
             // so we round ourselfs
             final FieldDescriptor fd = fds[j + 5];
             final byte[] fddata = fd.getFieldDescriptor();
-            final char type = (char)fddata[11]; 
+            final char type = (char)fddata[11];
             final int decimalcount = fddata[17];
             if( value != null && type == 'N' && decimalcount == 0 )
               outVal = new Double( Math.round( value.doubleValue() ) );
@@ -344,7 +541,8 @@ public class SpreeInputWorker
   /**
    * Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map)
    */
-  public static TSMap readZML( final ICalcDataProvider inputProvider, final TSMap tsmap ) throws IOException
+  public static TSMap readZML( final ICalcDataProvider inputProvider, final TSMap tsmap, final TSDesc[] TS_DESCRIPTOR )
+      throws IOException
   {
     final URL zmlURL = inputProvider.getURLForID( "ZML" );
     final String zmlURLstr = zmlURL.toExternalForm();
@@ -353,9 +551,9 @@ public class SpreeInputWorker
     final IUrlResolver urlUtilities = new UrlUtilities();
 
     // alle Zeitreihen lesen
-    for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
+    for( int i = 0; i < TS_DESCRIPTOR.length; i++ )
     {
-      final TSDesc tsDesc = SpreeCalcJob.TS_DESCRIPTOR[i];
+      final TSDesc tsDesc = TS_DESCRIPTOR[i];
 
       final URL obsURL = urlUtilities.resolveURL( zmlURLDir, tsDesc.id + ".zml" );
       try
@@ -389,7 +587,7 @@ public class SpreeInputWorker
           LOGGER.log( Level.INFO, "ZML wurde nicht geladen: " + obsURL, se );
       }
     }
-    
+
     return tsmap;
   }
 
@@ -415,7 +613,7 @@ public class SpreeInputWorker
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL, final File nativedir ) throws CalcJobServiceException
+  public static Map parseControlFile( final URL gmlURL, final File nativedir, final WasyCalcJob wasyJob ) throws CalcJobServiceException
   {
     try
     {
@@ -429,24 +627,30 @@ public class SpreeInputWorker
 
       final String tsFilename = new File( nativedir, baseFileName ).getAbsolutePath();
       final File tsFile = new File( tsFilename + ".dbf" );
-      final String napFilename = tsFilename + SpreeCalcJob.NAP_FILE;
+      
+      final String napFilename = wasyJob.makeNapFilename( nativedir, tsFilename );
       final File napFile = new File( napFilename + ".dbf" );
-      final File vhsFile = new File( tsFilename + SpreeCalcJob.VHS_FILE );
-      final String flpFilename = tsFilename + SpreeCalcJob.FLP_FILE;
+      
+      final File vhsFile = new File( tsFilename + WasyCalcJob.VHS_FILE );
+      
+      final String flpFilename = wasyJob.makeFlpFilename( nativedir, tsFilename );
       final File flpFile = new File( flpFilename + ".dbf" );
+      
+      final File wqFile = new File( nativedir, "HW_WQ.dbf" );
 
       final Map dataMap = new HashMap();
-      dataMap.put( SpreeCalcJob.DATA_STARTSIM_DATE, startSimTime );
-      dataMap.put( SpreeCalcJob.DATA_STARTFORECAST_DATE, startForecastTime );
-      dataMap.put( SpreeCalcJob.DATA_STARTDATESTRING, startTimeString );
-      dataMap.put( SpreeCalcJob.DATA_BASEFILENAME, baseFileName );
-      dataMap.put( SpreeCalcJob.DATA_FLPFILE, flpFile );
-      dataMap.put( SpreeCalcJob.DATA_VHSFILE, vhsFile );
-      dataMap.put( SpreeCalcJob.DATA_NAPFILE, napFile );
-      dataMap.put( SpreeCalcJob.DATA_FLPFILENAME, flpFilename );
-      dataMap.put( SpreeCalcJob.DATA_NAPFILENAME, napFilename );
-      dataMap.put( SpreeCalcJob.DATA_TSFILENAME, tsFilename );
-      dataMap.put( SpreeCalcJob.DATA_TSFILE, tsFile );
+      dataMap.put( WasyCalcJob.DATA_STARTSIM_DATE, startSimTime );
+      dataMap.put( WasyCalcJob.DATA_STARTFORECAST_DATE, startForecastTime );
+      dataMap.put( WasyCalcJob.DATA_STARTDATESTRING, startTimeString );
+      dataMap.put( WasyCalcJob.DATA_BASEFILENAME, baseFileName );
+      dataMap.put( WasyCalcJob.DATA_FLPFILE, flpFile );
+      dataMap.put( WasyCalcJob.DATA_VHSFILE, vhsFile );
+      dataMap.put( WasyCalcJob.DATA_NAPFILE, napFile );
+      dataMap.put( WasyCalcJob.DATA_FLPFILENAME, flpFilename );
+      dataMap.put( WasyCalcJob.DATA_NAPFILENAME, napFilename );
+      dataMap.put( WasyCalcJob.DATA_TSFILENAME, tsFilename );
+      dataMap.put( WasyCalcJob.DATA_TSFILE, tsFile );
+      dataMap.put( WasyCalcJob.DATA_WQFILE, wqFile );
 
       return dataMap;
     }

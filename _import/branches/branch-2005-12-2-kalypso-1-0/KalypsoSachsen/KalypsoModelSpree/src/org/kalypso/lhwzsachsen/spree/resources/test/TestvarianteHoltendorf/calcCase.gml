@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpreeModell fid="root" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:ombrometer="org.kalypso.spree.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.spree.modell http://lfug-kv-01:8080/KalypsoConf/schemata/spree/modell.xsd">
+<SpreeModell fid="root" xmlns:ombrometer="org.kalypso.spree.ombrometer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.spree.modell http://lfug-kv-01:8080/KalypsoConf/schemata/spree/modell.xsd">
   <PegelCollectionAssociation>
     <PegelCollection fid="EZC_1">
       <PegelMember>
@@ -11,25 +11,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SCHIRG.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QX_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QX_SCHIRG.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>19.01</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_SCHIRG.zml" linktype="zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -69,25 +69,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_BAUTZWB.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QX_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QX_BAUTZWB.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>75.0</Bodenfeuchte>
           <BodenfeuchteMax>130.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_BAUTZWB.zml" linktype="zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -127,25 +127,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_GROEDI.zml" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_GROEDI.zml" linktype="zml" valueaxis="Wert"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_GROEDI.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>23.68</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_GROEDI.zml" linktype="zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -191,25 +191,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_JAENKD.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_JAENKD.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>24.33</Bodenfeuchte>
           <BodenfeuchteMax>200.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_JAENKD.zml" linktype="zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -249,25 +249,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink ns1:href="Zeitreihen/W_HOLTD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_HOLTD.zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QX_HOLTD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QX_HOLTD.zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD.zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>91.82</Bodenfeuchte>
           <BodenfeuchteMax>240.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink ns1:href="Zeitreihen/PA_HOLTD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_HOLTD.zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -301,25 +301,25 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SAERI.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_SAERI.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SAERI.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SAERI_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SAERI_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SAERI_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SAERI_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>30.33</Bodenfeuchte>
           <BodenfeuchteMax>310.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_SAERI.zml" linktype="zml"/>
           </Niederschlag_rechnung>
           <GEOM_EZG>
             <gml:Polygon srsName="EPSG:31469">
@@ -359,19 +359,19 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_LIESKE.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_LIESKE.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>2.0</Korrektur_Niveau>
@@ -388,19 +388,19 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_BOXBRG.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_BOXBRG.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -417,19 +417,19 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SPREY.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_SPREY.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREY.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPREY_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREY_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPREY_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREY_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -446,19 +446,19 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SPWITZ.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_SPWITZ.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -475,19 +475,19 @@
             </gml:Point>
           </Ort>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SPREMB.zml" linktype="zml"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QX_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QX_SPREMB.zml" linktype="zml"/>
           </Wasserstand_gerechnet>
           <Wasserstand_vorhersage>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB.zml" linktype="zml"/>
           </Wasserstand_vorhersage>
           <Wasserstand_vorhersage_unten>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB_unten.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB_unten.zml"/>
           </Wasserstand_vorhersage_unten>
           <Wasserstand_vorhersage_oben>
-            <TimeseriesLink ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB_oben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
@@ -509,16 +509,16 @@
             </gml:Point>
           </Ort>
           <Abgabe>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_TSQUITZ.zml" linktype="zml"/>
           </Abgabe>
           <Abgabe_plausibilisiert>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QP_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QP_TSQUITZ.zml" linktype="zml"/>
           </Abgabe_plausibilisiert>
           <Zufluss_berechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/Q_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Q_TSQUITZ.zml" linktype="zml"/>
           </Zufluss_berechnet>
           <Stauinhalt>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/V_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/V_TSQUITZ.zml" linktype="zml"/>
           </Stauinhalt>
         </Talsperre>
       </TalsperreMember>
@@ -532,16 +532,16 @@
             </gml:Point>
           </Ort>
           <Abgabe>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_TSBAUTZ.zml" linktype="zml"/>
           </Abgabe>
           <Abgabe_plausibilisiert>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/QP_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QP_TSBAUTZ.zml" linktype="zml"/>
           </Abgabe_plausibilisiert>
           <Zufluss_berechnet>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/Q_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Q_TSBAUTZ.zml" linktype="zml"/>
           </Zufluss_berechnet>
           <Stauinhalt>
-            <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Zeitreihen/V_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/V_TSBAUTZ.zml" linktype="zml"/>
           </Stauinhalt>
         </Talsperre>
       </TalsperreMember>
@@ -558,7 +558,7 @@
             </gml:Point>
           </Ort>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_RLKETTE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_RLKETTE.zml" linktype="zml"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -571,7 +571,7 @@
             </gml:Point>
           </Ort>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_LOHSA.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_LOHSA.zml" linktype="zml"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -584,7 +584,7 @@
             </gml:Point>
           </Ort>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_BWALDE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_BWALDE.zml" linktype="zml"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -597,7 +597,7 @@
             </gml:Point>
           </Ort>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_SPWIESE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_SPWIESE.zml" linktype="zml"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -610,7 +610,7 @@
             </gml:Point>
           </Ort>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QP_BURGNEU.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QP_BURGNEU.zml" linktype="zml"/>
           </Abfluss>
         </Zufluss>
       </VorgabeMember>
@@ -628,7 +628,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Sohland.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Sohland.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -642,7 +642,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Kubschütz.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Kubschütz.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -656,7 +656,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Boxberg.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Boxberg.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -670,7 +670,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_TS_Quitzdorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_TS_Quitzdorf.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -684,7 +684,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Reichenbach.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Reichenbach.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -698,7 +698,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Bad_Muskau.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Bad_Muskau.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -712,7 +712,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Krauschwitz.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Krauschwitz.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -726,7 +726,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Eibau_Walddorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Eibau_Walddorf.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -740,7 +740,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Bischofswerda.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Bischofswerda.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -754,7 +754,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Kamenz_Lückersdorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Kamenz_Lückersdorf.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -768,7 +768,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Ostritz.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Ostritz.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
@@ -782,7 +782,7 @@
             </gml:Point>
           </gml:location>
           <ombrometer:precipitation>
-            <TimeseriesLink ns1:href="Zeitreihen/Ombrometer/P_Görlitz.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Ombrometer/P_Görlitz.zml"/>
           </ombrometer:precipitation>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>

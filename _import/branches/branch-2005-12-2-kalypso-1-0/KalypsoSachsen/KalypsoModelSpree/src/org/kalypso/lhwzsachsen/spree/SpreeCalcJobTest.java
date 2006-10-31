@@ -112,7 +112,7 @@ public class SpreeCalcJobTest extends TestCase
     final String resourceBase = "/" + getClass().getPackage().getName().replace( '.', '/' )
         + "/resources/test/TestvarianteHoltendorf/";
 
-    final ResourceCalcDataProvider inputProvider = new ResourceCalcDataProvider( resourceBase );
+    final ResourceCalcDataProvider inputProvider = new ResourceCalcDataProvider( resourceBase, getClass().getClassLoader() );
     inputProvider.addResource( "CONTROL_GML", ".calculation" );
     inputProvider.addResource( "GML", "calcCase.gml" );
     inputProvider.addResource( "ZML", "Zeitreihen" );
