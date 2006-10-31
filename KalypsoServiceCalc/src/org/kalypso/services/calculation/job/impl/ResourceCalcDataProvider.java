@@ -57,12 +57,23 @@ public class ResourceCalcDataProvider implements ICalcDataProvider
 {
   private final String m_base;
   private Map m_resourceMap = new HashMap();
+  private final ClassLoader m_cl;
 
-  public ResourceCalcDataProvider( final String base )
+  /**
+   * @param cl
+   *          The class loader used to load the added resources.
+   * @see #addResource(String, String)
+   */
+  public ResourceCalcDataProvider( final String base, final ClassLoader cl )
   {
     m_base = base;
+    m_cl = cl;
   }
 
+  /**
+   * @param resourcePath
+   *          Path to the resource, will be loaded via the class loader given in the constructor.
+   */
   public void addResource( final String id, final String resourcePath )
   {
     m_resourceMap.put( id, resourcePath );
@@ -74,8 +85,8 @@ public class ResourceCalcDataProvider implements ICalcDataProvider
   public URL getURLForID( final String id ) throws CalcJobServiceException
   {
     final String resourcePath = (String)m_resourceMap.get( id );
-    
-    return getClass().getResource( m_base + resourcePath );
+
+    return m_cl.getResource( m_base + resourcePath );
   }
 
   /**
