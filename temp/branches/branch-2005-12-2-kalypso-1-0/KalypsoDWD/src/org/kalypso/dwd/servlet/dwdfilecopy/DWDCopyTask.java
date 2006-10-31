@@ -139,7 +139,7 @@ class DWDCopyTask extends TimerTask
     }
     catch( FileSystemException e )
     {
-      DWDFileCopyServlet.LOG.warning( "Error resloving the URI: " + e.getLocalizedMessage() );
+      DWDFileCopyServlet.LOG.warning( "Error resolving the URI: " + e.getLocalizedMessage() );
       return;
     }
     finally

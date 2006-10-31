@@ -104,7 +104,7 @@ public class DWDTaskDelegate
       logger.log( e.getLocalizedMessage() );
     }
 
-    if( obsRaster == null )
+    if( obsRaster != null )
     {
       final Date[] dates = obsRaster.getDates();
       final Date firstRasterDate = dates == null || dates.length == 0 ? null : dates[0];
