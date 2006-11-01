@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  */
 public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-  public static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
+  public static final String NSRGC = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
 
   public static final QName TYPENAME = new QName( NSRGC, "RangeSetType" );
 
