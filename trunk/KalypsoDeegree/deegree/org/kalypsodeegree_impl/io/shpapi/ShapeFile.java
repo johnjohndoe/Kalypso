@@ -672,10 +672,9 @@ public class ShapeFile
 
   /**
    */
-  private void initDBaseFile( final Feature[] features ) throws DBaseException
+  private void initDBaseFile( final IFeatureType featT ) throws DBaseException
   {
     // count regular fields
-    IFeatureType featT = features[0].getFeatureType();
     IPropertyType[] ftp = featT.getProperties();
 
     // get properties names and types and create a FieldDescriptor
@@ -744,7 +743,8 @@ public class ShapeFile
   {
     Debug.debugMethodBegin( this, "writeShape" );
 
-    // TODO: check length 0
+    if( features.length ==  0 )
+      throw new Exception( "Can't write an empty shape." );
 
     int nbyte = 0;
     int geotype = -1;
@@ -760,11 +760,13 @@ public class ShapeFile
     // Set the Offset to the end of the fileHeader
     int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
 
+    final IFeatureType featureType = features[0].getFeatureType();
     // initialize the dbasefile associated with the shapefile
-    initDBaseFile( features );
+    initDBaseFile( featureType );
 
     // loop throug the Geometries of the feature collection anf write them
     // to a bytearray
+    final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
@@ -773,13 +775,12 @@ public class ShapeFile
 
       // write i'th features properties to a ArrayList
       final ArrayList<Object> vec = new ArrayList<Object>();
-      IPropertyType[] ftp = features[0].getFeatureType().getProperties();
       for( int j = 0; j < ftp.length; j++ )
       {
         final Object value = feature.getProperty( ftp[j] );
         if( !(ftp[j] instanceof IValuePropertyType) )
           continue;
-        final IValuePropertyType ivp = (IValuePropertyType) ftp[i];
+        final IValuePropertyType ivp = (IValuePropertyType) ftp[j];
         final Class clazz = ivp.getValueClass();
         if( clazz == Integer.class || clazz == Byte.class || clazz == Character.class || clazz == Float.class || clazz == Double.class || clazz == Number.class || clazz == Date.class
             || clazz == Long.class || clazz == String.class )
