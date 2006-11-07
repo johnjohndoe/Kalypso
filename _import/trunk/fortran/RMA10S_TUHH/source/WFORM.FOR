@@ -16,6 +16,9 @@ c      EC  is elevation of weir crest
 c      L   is width of crest
 c      ITP is switch controlling surface type 0 = paved, 1 = gravel
 C      WIDEM is total embankment width
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: H1, H2
+!-
 c
 c      test direction of flow
 c
