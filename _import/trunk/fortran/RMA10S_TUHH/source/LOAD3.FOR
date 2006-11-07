@@ -16,8 +16,14 @@ cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
       USE BLK11MOD
       USE BLK10
       USE BLKSUBMOD
-      USE BLKSANMOD
+!NiS,Nov06: Correction of small error
+      !USE BLKSANMOD
+      USE BLKSANDMOD
+      !-
       SAVE
+!NiS,may06:testing for non defined variables
+!      implicit none
+!-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -45,14 +51,18 @@ C...... Set direction for 1D - 2D junction node plus other initialise.
 C-
       IF(IENT .EQ. 0) THEN
         CALLGETCON
+        !NiS,may06: copy of element and point number
         NPSAV=NP
         NESAV=NE
+
+        !NiS,may06: do for every element
         DO 140 N=1,NE
           NN=NFIXH(N)
 cipk oct96 save original order
 C          nelord(n)=nfixh(n)
 CZZZ
             if (nn .eq. 0)  goto 140
+          !NiS,may06: other way round, to every equation processing number an element number is stored
           NREORD(NN)=N
   140   CONTINUE
         IENT=IENT+1
@@ -60,11 +70,26 @@ CZZZ
 
       EXTLDEL=0
 
+      !NiS,may06: back substitution of point and element saver
       NP=NPSAV
       NE=NESAV
 
+      !NiS,may06: do for every node
 
+!NiS,may06: test
+!      OPEN(9999,'testfile.txt')
+!-
       do n=1,np
+
+!NiS,may06: test
+!      testing variable iactvbc
+!      IF(iactvbc(n).gt.0 .and. maxn.eq.1)
+!    +   WRITE(9999,*) 'iactvbc(',N,') =', iactvbc(N)
+!      testing node assignment at surface
+!      IF(N.ne.nsurf(n)) WRITE(9999,*) 'NSURF(',N,') = ', NSURF(N)
+!      testing the nodes below
+!      if (nref(n).ne.0) WRITE(9999,*) 'NREF(',N,') = ', NREF(N)
+!-
 
           IF(MOD(NFIX(N),100)/10 .EQ. 2) THEN
             ibc=iactvbc(n)
@@ -88,68 +113,103 @@ CZZZ
 	    endif
       enddo
 
+!NiS,may06: test
+!      CLOSE(9999)
+!-
+
 c      write(75,*) 'load-76 nfix(93),nfix(634)',nfix(93),nfix(634),
 c     +    maxn,iteqv(maxn)
 
 C-
 C-.....COPY HEAD SPECS AND FIX BOUNDARY CONDITIONS.....
 C-
+      !NiS,may06: set degree of freedom number
       NDF=6
+      !NiS,may06: NA.eq.1, ALWAYS!
       NA = 10**(6-NDF)
+      !NiS,may06: store temporary array for boundary conditions of every node
       DO 195 J = 1, NP
-      NLOC(J)=NFIX(J)*10+NFIX1(J)
-      IF( MOD( NLOC(J)/100,10 ) .EQ. 2 ) NLOC(J) = NLOC(J) - 200
-      NLOC(J) = NLOC(J) / NA
+        !NiS,may06: bring NFIX and NFIX1 together into one array
+        NLOC(J)=NFIX(J)*10+NFIX1(J)
+        !NiS,may06: if salinity part-value equals 2, then subtract 200
+        IF( MOD( NLOC(J)/100,10 ) .EQ. 2 ) NLOC(J) = NLOC(J) - 200
+        !NiS,may06: NA.eq.1; ALWAYS!
+        NLOC(J) = NLOC(J) / NA
+
   195 CONTINUE
 C-
 C-    SET UP NBC ARRAY
 C-
       DO 197 N=1,NP
-      NTHREE(N)=1
-      NBC(N,7)=-1
-      DO 197 M=1,NDF
-  197 NBC(N,M)=-1
+        NTHREE(N)=1 !NiS,may06: at the beginning every element is 3D
+        NBC(N,7)=-1 !NiS,may06: NBC(N,M), M=1..7 are evaluated by -1
+        DO 197 M=1,NDF
+  197     NBC(N,M)=-1
+      !NiS,may06: end of do-loop 197
 
+!NiS,may06: testing
+!      OPEN(9998, 'testfile.txt')
+!-
+
+      !NiS,may06: for every element
       DO 199 J=1,NE
+!NiS,may06: testing
+!      if (maxn.eq.1) WRITE(9998,*) 'IMAT(',J,') = ', IMAT(J)
+!-
+
 
 CIPK DEC00 REVISE TO ALLOW FOR GATE STRUCTURE
 
-          NM=IMAT(J)
+        NM=IMAT(J)
+        !NiS,may06: IMAT .lt. 1 means deactivated element; jump over that
         IF(NM .LT. 1) GO TO 199
 CIPK JUN05
+        !NiS,may06: 3D- or special elements; jump over that
         IF(NM .GT. 900  .AND.  NM .LT. 5001  .AND.  IGTP(J) .EQ. 0
      +    .AND. NFCTP(J) .EQ. 0)
      +    GO TO 199
 CIPK OCT98 CONVERT TO F90
+        !NiS,may06: every element that is in the range of 1-899 and 1001+
         IF(NM .LT. 900  .OR. NM .GT. 1000) THEN
-          L=MOD(NM,100)
+          L=MOD(NM,100) !NiS,may06: for every normal element
         ELSE
-            L=NM
+          L=NM !NiS,may06: for special elements
         ENDIF
+        !NiS,may06: if no turbulent exchange coefficient, jump over element
         IF(ORT(L,1) .EQ. 0.) GO TO 199
+
         ILK=1
+
+        !NiS,may06: ITEQV.eq.5 means forced reduction to plan view
         IF(ITEQV(MAXN) .EQ. 5) THEN
           IF(J .GT. NEM) GO TO 1991
           DO 1950 K=1,8
             NCON(K)=NOPS(J,K)
             IF(NCON(K) .GT. 0) NCN=K
  1950     CONTINUE
+        !NiS,may06: every other case instead of forced reduction to plan view
         ELSE
           NCN=NCORN(J)
           DO 1951 K=1,NCN
+            !NiS,may06: get local corner nodes of processed element
             NCON(K)=NOP(J,K)
  1951     CONTINUE
         ENDIF
+        !NiS,may06: special cases for 3D-elements
         IF(NCN .EQ. 15) ILK=2
         IF(NCN .EQ. 13) ILK=3
         IF(NCN .EQ. 10) ILK=2
+        !NiS,may06: process every node of element
         DO 198 K=1,NCN
+          !NiS,may06: local copy of processed node number
           N=NCON(K)
 C-
 C........ Setup for special case inflow quality conditions
 C-
+          !NiS,may06: no velocities, so no direction is applied
           IF (VEL(2,N) .EQ. 0. .AND. VEL(1,N) .EQ. 0) THEN
             VDIR = 0.
+          !NiS,may06: superposition of component velocities for direction of flow
           ELSE
             VDIR=ATAN2(VEL(2,N),VEL(1,N))
           ENDIF
@@ -194,8 +254,10 @@ cipk sep96              nloc(n)=1+10*(nloc(n)/10)
 cipk sep96              VEL(6,N)=SPEC(N,6)
 cipk sep96            ENDIF
           ENDIF
+          !NiS,may06: store pointer for every node, that is not 3D
           IF(NCN .LT. 9  .AND.  IMAT(J) .LT. 1000) NTHREE(N)=0
           NDS=2
+          !NiS,may06: NDF is always greater than 3, that means all the concentrations
           IF(NDF .GT. 3) THEN
             DO 1970 KK=4,NDF
               NBC(N,KK)=0
@@ -219,6 +281,10 @@ CIPK JUN02
           NBC(N,7)=0
   198   CONTINUE
   199 CONTINUE
+
+      !NiS,may06:testing
+      !CLOSE(9998)
+      !-
         
  1991 CONTINUE
 C
@@ -486,6 +552,7 @@ C-
         IF(IMAT(NN) .EQ. 0) GO TO 260
 cipk oct98 update to f90
         NTYP=NETYP(NN)
+        !NiS,may06: NTYP.eq. 18 means 2D-3D-transition element
         IF(NTYP .EQ. 18) THEN
           DO 230 ITM=1,3
             NNL=NOP(NN,ITM+4)
@@ -500,6 +567,7 @@ cipk may02 switch ndf to 7
               IF(ITM .NE. 2) NBC(ND3,J)=-NNL
   229       CONTINUE
   230     CONTINUE
+        !NiS,may06: NCORN.eq.5 and IMAT.lt.901 means 1D-2D-transition element
         ELSEIF(NCORN(NN) .EQ. 5  .AND. IMAT(NN) .LT. 901) THEN
           NLN=NOP(NN,3)
           DO 235 K=4,5
@@ -511,6 +579,9 @@ cipk may02 switch ndf to 7
             IF(NLN .EQ. NOP(NN,K)) GO TO 250
             ND=NOP(NN,K)
             IF(ND .EQ. 0) GO TO 250
+!NiS,may06:testing transition
+!            WRITE(*,*) 'Element: ', NN
+!-
             NBC(ND,1)= -NLN
             NBC(ND,2)= -NLN
             NBC(ND,3)=-NLN
@@ -523,25 +594,13 @@ C
 CIPK JUN05     test for totally submerged control structure
 C              set equations to by-pass
 C
+        !NiS,may06: IMAT.gt.903 and IMAT.lt.990 means control structure transition
         ELSEIF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 
 cipk JUN05 first analyse 2-d structures
-          SIDL1=DIST(NOP(NN,1),NOP(NN,3))
-          SIDL2=DIST(NOP(NN,7),NOP(NN,5))
-          NMID1=NOP(NN,2)
-          NMID2=NOP(NN,6)
-          IF(ELTON(NMID1,1) .NE. 0) THEN
-            NAD1=ELTON(NMID1,1)
-          ELSE
-            NAD1=ELTON(NMID1,2)
-          ENDIF            
-          IF(ELTON(NMID2,1) .NE. 0) THEN
-            NAD2=ELTON(NMID2,1)
-          ELSE
-            NAD2=ELTON(NMID2,2)
-          ENDIF            
-          IF(NCORN(NN) .EQ. 8) THEN
 
+        
+          IF(NCORN(NN) .EQ. 8) THEN
             DO K=1,3
               N1=NOP(NN,K)
               N2=NOP(NN,8-K)
@@ -554,8 +613,8 @@ cipk JUN05 first analyse 2-d structures
                   CALL WFORM(Q1,VEL(3,N1),WSLL(N1),WV1,VEL(3,N2)
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
                 ELSE
-	            CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
-	          ENDIF
+	          CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+	        ENDIF
 
                 IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                   CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
@@ -666,6 +725,8 @@ c       now do middle elements
 
 c       now do 1-d structures
 
+      !NiS,may06,com: initialize equations for 1D-elements;
+      !NiS,may06,com: get corner nodes
             N1=NOP(NN,1)
             N2=NOP(NN,3)
             IF(N1 .GT. 0) THEN
@@ -677,6 +738,7 @@ c       now do 1-d structures
                 NBC(N2,2)=0
               ENDIF
             ENDIF
+            !NiS,may06,com: get midside node
             N1=NOP(NN,2)
             IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
@@ -689,6 +751,7 @@ c       now do 1-d structures
 CIPK JUN05 FINISHED CHANGES
   
   
+        !NiS,may06,com: NTYP.eq.17 or NTYP.eq.27 means 1D- or 2D-laterally averaged junction element
         ELSEIF(MOD(NTYP,10) .EQ. 7) THEN
 C          WRITE(*,*) 'NN,NCORN(NN),NOP(NN,1)',NN,NCORN(NN),NOP(NN,1)
           NLN=NOP(NN,1)
@@ -711,6 +774,7 @@ C          WRITE(*,*) 'ND,NLN,NBC(ND,4)',ND,NLN,NBC(ND,4)
         ENDIF
 cipk oct98 update to f90
       IMMT=IMAT(NN)
+      !NiS,may06,com: (Last two digits of IMAT).gt.90 means ctrl.strc.elts.
       IF(MOD(IMMT,100) .GT. 90) THEN
         IK=1
         NCN=NCORN(NN)
@@ -868,6 +932,7 @@ C
 C
 C...... This node has a 2-d definition
 C
+          !NiS,may06: if NREF(N) was zero, N is a 2D-node
           M=NREF(N)+1
           IF(M .EQ. 1) GO TO 270
 C
@@ -1118,6 +1183,7 @@ CIPK MAY02 Eliminate mid-sides
 	  enddo
 	ENDIF
 
+!NiS,jun06,comment: At this point the equation numbers will be assigned to the NBC-array
 C
 C...... Rearrange array
 C
@@ -1162,8 +1228,12 @@ CIPK MAY02 SWITCH NDF TO 7
   310 CONTINUE
  3111     continue
 ccycw added for full 3D optimisation 19/06/96 currently testing
+      !NiS,may06:if reordering within RMA10S should be done, then ioptim.eq.2
       if(ioptim .LT. 2) then
 C         write(76,*) 'load ivrsid1',ivrsid
+         !NiS,may06: testing
+         !WRITE(*,*)'go to optim'
+         !-
          call optim
          ioptim=1+IOPTIM
 C         write(76,*) 'load ivrsid2',ivrsid
@@ -1176,8 +1246,10 @@ C         write(76,*) 'load ivrsid2',ivrsid
             endif
          enddo
       endif
+
 cipk oct96  go to calculate DRODXIN
       call presr
+
       do n=1,ne
         nn=nelord(n)
 cipk feb98
