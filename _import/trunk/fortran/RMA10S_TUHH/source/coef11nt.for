@@ -1,5 +1,6 @@
 cipk  last update jul 05 2006 use perim for hydraulic radius in friction	      
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT AND H DEFINITION
+CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -28,8 +29,25 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKDRMOD
       USE BLKSSTMOD
       USE BLKSANMOD
+!NiS,apr06: adding block for DARCY-WEISBACH friction
+      USE PARAKalyps
+!-
       SAVE
+
+!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
+!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
+!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
+!           also as real, kind=8.
+      REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
+!-
+
 C
+!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
+      REAL :: lambda
+!-
+!NiS,jul06: declaring waterdepth for proper parameter-passing
+      REAL (KIND=8) :: h
+!-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKE.COM'
@@ -565,9 +583,18 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       VECQ = ABS(R)
       IF(H .LE. 0.) H=0.001
 
+!NiS,apr06: adding possibility of FrictionFactor calculation with
+!           Colebrook white to apply DARCY-WEISBACH equation: Therefore,
+!           the if-clause has also to be changed because surface friction
+!           is deactivated!
+!-
 cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
-      IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
+  !NiS,apr06: changing test:
+  !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
+      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
+     +   ORT(NR,5) /= -1)) THEN
+  !-
         IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
 
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
@@ -628,8 +655,15 @@ cipk jul06 use perim
 !        End DJW Changes
 !
 !**************************************************************
-          ENDIF
         ENDIF
+
+!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(NR,5) == -1) THEN
+
+        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+     +             nn, morph, gl_bedform, mel, c_wr(nn))
+        FFACT = lambda/8.0
+!-
       ENDIF
 
 cipk dec00 modify friction for high flow gates
