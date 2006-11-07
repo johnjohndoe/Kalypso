@@ -1,3 +1,4 @@
+C     Last change:  AF   17 Jul 2006   10:28 am
 cipk  last update April 24 1997
       SUBROUTINE AMF(H,HSIG,AKAPM,ATM,ABM,AM,DAMH,ISWT)
 c
@@ -13,6 +14,11 @@ c     = 1 to transform H to HSIG
 c
 cipk apr97
       common /epor/ efpor
+
+!NiS,jul06: Declaration of HSIG and H
+      REAL(KIND=8) :: hsig, h
+!-
+
 C
       IF(ISWT .EQ. 0) THEN
 C
