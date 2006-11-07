@@ -29,6 +29,9 @@ C
       REAL J11,J12,J21,J22
 cipk sep95 add real*8
       REAL*8 S
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: h
+!-
 
 CIPK OCT98      DATA IND/1,0,2,0,1,0,2,0,1,0,2,0,3,0,4,0,5,0,6,0,5,0,6,0,5,0,6,0
 CIPK OCT98     +        ,3,0,4,0,48*0/

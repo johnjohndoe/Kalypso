@@ -32,6 +32,10 @@ C-
      3  WAITX(16),DL(2,2)
      4 ,VXX(8),VY(8),VDX(8),VDY(8),ST(8),SDT(8),UBFC(8),VBFC(8)
 
+!NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
+      REAL(KIND=8) :: H, WH1, WH2
+!-
+
 cipk may00 add cross velocity
 
       DIMENSION U(8),DAFL(8),V(8)
