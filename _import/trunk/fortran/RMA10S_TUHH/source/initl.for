@@ -24,6 +24,9 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE BLKCDMOD
       USE BLKABMOD
       USE PARAMMOD
+!NiS,apr06: add module for Kalypso-specific calculations
+      USE PARAKalyps
+!-
       
 C	INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -183,7 +186,10 @@ CIPK APR06
      +                ,STR10(MAXP),STR20(MAXP)
      +                ,STR11(MAXP),STR21(MAXP))
 
-      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
+!NiS,apr06: increase the number of element characteristics array ORT(:,:)
+!      ALLOCATE   (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
+      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,17),NFIXH(MAXE)
+!-
      3             ,TH(MAXE),AREA(MAXE),NCORN(MAXE),IMATL(MAXE)
      7             ,NOPS(MAXE,8),NCRN(MAXE),LNO(MAXE),SIDF(MAXE)
      +             ,SIDQ(MAXE,3),ZMANN(MAXE),CHEZ(MAXE),NETYP(MAXE)
@@ -558,7 +564,10 @@ CIPK NOV97
           NOPSS(J,K)=0
 	  ENDDO
         IMAT(J)=0
-        DO K=1,14
+!NiS,apr06: increased number of variables:
+!        DO K=1,14
+        DO K=1,17
+!-
           ORT(J,K)=0.
         ENDDO
         LISTEL(J)=0
@@ -678,5 +687,36 @@ CIPK MAR01
 	  ADDTMP(J,1)=-9999.
 	  ADDSED(J)=-9999.
 	ENDDO
+
+!NiS,apr06: allocate and initialize the aour-array
+      ALLOCATE (aour(maxp))
+      do j=1,maxp
+        aour(j) = 0
+      ENDDO
+!-
+!NiS,apr06: allocating arrays for roughness calculation in DARCY-WEISBACH-equation
+      ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
+      ALLOCATE (C_WR(MaxE))
+      ALLOCATE (mh(MaxE), mvx(MaxE), mvy(MaxE), mvxvy(MaxE))
+      ALLOCATE (rausv(4,MaxP))
+      DO j=1, MaxE
+        CNIKU(j)     = 0.0
+        DURCHBAUM(j) = 0.0
+        ABST(j)      = 0.0
+      ENDDO
+!-
+!NiS,apr06: allocating arrays for neighbourhood relations
+      ALLOCATE (nconnect(1:MaxP),neighb(1:MaxP,0:100),mcord(1:MaxE,1:2))
+!-
+
+!NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
+!           formrauheit
+      allocate (gl_bedform(1:MaxE,1:4))
+      do i = 1, MaxE
+        do j = 1,4
+          gl_bedform(i,j) = 0
+        enddo
+      enddo
+!-      
       RETURN
 	END

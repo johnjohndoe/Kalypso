@@ -14,6 +14,9 @@ CIPK  LAST UPDATE MAY 1 1996
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKFTMOD
+!NiS,may06: Module for Kalypso-Use
+      USE paraKALYPS
+!-
 	!********************** DJW 20/07/04
       USE WBMMODS
       !********************** 
@@ -29,6 +32,14 @@ C-
 CIPK APR06
       REAL*8 VDUM
       DIMENSION TV(3),TVD(3)
+!NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
+      CHARACTER(LEN=20)    :: inquiretest
+      INTEGER              :: dummy(3)
+!-
+!NiS,jul06: Declaring variable types for proper call of amf
+      REAL(KIND=8) :: VAAA, HTP, H, HS
+!-
+
 C-
 C-.....INPUT INITIAL CONDITIONS, IF SPECIFIED.....
 C-
@@ -36,74 +47,93 @@ C-
       NXX = NB
       NB = IABS(NB)
 
+      !NiS,apr06: Making an INQUIRE-test for finding the format of restarting; Restarting from Kalypso-2D-file means FORMATTED file
+      INQUIRE(nb,FORM=inquiretest)
+
+      RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
+        WRITE(*,*) ' Going to RDKALYPSO for restarting'
+        call RDKALYPS(dummy(1),dummy(2),dummy(3),2)
+        npx = maxp-1
+        ndx = 9
+        !NiS,may06: Testausgabe
+        !WRITE(*,*) tett,npx,ndx,iyrr,ndf
+        !OPEN(4567, FILE='Restart_kalypso.txt')
+        !DO j=1,npx
+        !  WRITE(4567,*) j,(vel(k,j),vdot(k,j),K=1,7),vvel(j),
+     +  !                hel(j),hdet(j)
+        !enddo
+        !CLOSE(4567)
+        !-
+      ELSE
+
 CIPK APR06   READ FOR SUS SED DATA ONLY
-      IF(ITIMESINIT .EQ. 1) GO TO 120
+        IF(ITIMESINIT .EQ. 1) GO TO 120
 
-      REWIND NB
-      READ(NB) TETT,NPX,NDX,IYRR
-      REWIND NB
-      WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
-      IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
-        READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npx)
-
-      ELSEIF(LSAND .GT. 0) THEN
+        REWIND NB
+        READ(NB) TETT,NPX,NDX,IYRR
+        REWIND NB
+        WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
+        IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
           READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npx)
-     +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
+     +      ,VVELDUM,J=1,NPX)
+     +      ,(helDUM,hdetDUM,j=1,npx)
+
+        ELSEIF(LSAND .GT. 0) THEN
+          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +      ,VVELDUM,J=1,NPX)
+     +      ,(helDUM,hdetDUM,j=1,npx)
+     +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
 	ELSE
 	  IF(INEWBED .EQ. 0) THEN
-          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npX)
-     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
-     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
-     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +        ,VVELDUM,J=1,NPX)
+     +        ,(helDUM,hdetDUM,j=1,npX)
+     +        ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
+     +        ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
+     &        ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
 	  ELSE
 	    READ(NB) TETT,NPX,NDX,IYRR
 	    REWIND (NB)
-          READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
-     +           ,VVELDUM,J=1,NPX)
-     +     ,(helDUM,hdetDUM,j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
+     +        ,VVELDUM,J=1,NPX)
+     +        ,(helDUM,hdetDUM,j=1,npX)
+          ENDIF
         ENDIF
-      ENDIF
-      RETURN
+        RETURN
       
 CIPK APR06 READ FOR MAIN DATA BUT DO NOT READ SS VALUES
-  120 CONTINUE            
-      IF(NB .GE. 100 ) GO TO 165
-      REWIND NB
-      READ(NB) TETT,NPX,NDX,IYRR
-      REWIND NB
-      WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
-      IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
-        READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npx)
-
-      ELSEIF(LSAND .GT. 0) THEN
+  120   CONTINUE
+        IF(NB .GE. 100 ) GO TO 165
+        REWIND NB
+        READ(NB) TETT,NPX,NDX,IYRR
+        REWIND NB
+        WRITE(*,*) TETT,NPX,NDX,IYRR,NDF
+        IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
           READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npx)
-     +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
+     +      ,VVEL(J),J=1,NPX)
+     +      ,(hel(j),hdet(j),j=1,npx)
+
+        ELSEIF(LSAND .GT. 0) THEN
+          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +      ,VVEL(J),J=1,NPX)
+     +      ,(hel(j),hdet(j),j=1,npx)
+     +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
 	ELSE
 	  IF(INEWBED .EQ. 0) THEN
-          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +        ,VVEL(J),J=1,NPX)
+     +        ,(hel(j),hdet(j),j=1,npX)
 CIPK APR06     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
 CIPK APR06     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
 CIPK APR06     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
 	  ELSE
 	    READ(NB) TETT,NPX,NDX,IYRR
 	    REWIND (NB)
-          READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NPX)
-     +     ,(hel(j),hdet(j),j=1,npX)
+            READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
+     +        ,VVEL(J),J=1,NPX)
+     +        ,(hel(j),hdet(j),j=1,npX)
      	  ENDIF
-      ENDIF	    
+        ENDIF
 
 
 
@@ -111,9 +141,11 @@ CIPK SEP02 ADD RESTART DATA FOR BED
 CIPK SEP02 ADD ICE THICKNESS READ IF NEEDED
 cipk aug98 add line above for consistent restart
 
-      IF(ICESW .GT. 0) THEN
-        READ(NB) (ICETHK(J) ,J=1,NPM)
-	ENDIF
+        IF(ICESW .GT. 0) THEN
+          READ(NB) (ICETHK(J) ,J=1,NPM)
+        ENDIF
+      ENDIF RESTARTTEST
+!-
 
 cipk FEB04  add IOV option
       IF(IOV .EQ. 1) THEN
@@ -256,7 +288,6 @@ C     IF(ICK .EQ. 1) VEL(4,J)=TEMP
 	  Deallocate (wbm_NewConditions)
 	End If
 !********************************************************************end djw 20/07/04
-
 
 C-
 C...... Set up 1-D velocities
