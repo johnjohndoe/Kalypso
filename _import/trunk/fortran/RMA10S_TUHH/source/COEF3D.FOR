@@ -17,6 +17,9 @@ cycw aug94 add double precision salt
       REAL*8 S
       REAL J11,J12,J13,J21,J22,J23,J31,J32,J33
 C-
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: h
+!-
 CIPK AUG05      INCLUDE 'BLK10.COM'
       INCLUDE 'BLKE.COM'
 C-
