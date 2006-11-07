@@ -30,6 +30,9 @@ crrr aug97 add character lines
       CHARACTER*256 LINE256
       CHARACTER*80  FMT
 C-
+!NiS,jul06: Consistent data types for variable passing
+      REAL(KIND=8) :: HTP
+!-
 C-.....ASSIGN PROPER COEFS.....
 C-
       DO 350 NN=1,NPM
