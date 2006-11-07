@@ -8,6 +8,9 @@ cIPK  LAST UPDATE APR 27 1996
       USE BLK11MOD
       USE BLKDRMOD
       USE BLKSANMOD
+!NiS,apr06: adding module for Kalypso-specific calculations
+      USE PARAKalyps
+!-
       SAVE
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -99,6 +102,23 @@ CIPK OCT02
       LAB(N)=M
   242 CONTINUE
   245 CONTINUE
+
+!NiS,apr06: transformation of output for subroutine write_Kalypso and cwr-calculation. Part taken from Kalypso-2D; and changed
+!           with proper arrays
+      ! Knotenwerte (2D-Knoten) zur Ausgabe vorbereiten:
+      DO i = 1, np
+	! velocity in x-direction
+        rausv (1, i) = xvel (1, i) 
+	! velocity in y-direction
+        rausv (2, i) = xvel (2, i) 
+	! watersurface elevation
+        !rausv (3, i) = xvel (3, i)
+        rausv (3, i) = WSLL(i)
+	! real flow depth
+        rausv (4, i) = vel (3, i) 
+      END DO
+!-
+
 CIPK OCT02
       IF(ICESW .EQ. 0) THEN
 
