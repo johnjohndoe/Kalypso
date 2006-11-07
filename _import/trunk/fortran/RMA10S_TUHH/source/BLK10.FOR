@@ -1,3 +1,4 @@
+C     Last change:  WP   23 Feb 2006   12:11 pm
       MODULE BLK10 
 
       REAL*8 R1,RKEEP
@@ -12,6 +13,10 @@
       ALLOCATABLE   EQ(:,:),LHED(:),QQ(:),PVKOL(:)
 
       INTEGER    LBMAX,LQ,IVRSID,MAXFIL,MFW
+
+cWP Feb 2006
+      INTEGER    NBS
+c-
       
 
 
