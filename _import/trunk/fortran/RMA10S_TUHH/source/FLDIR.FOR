@@ -11,9 +11,12 @@ CIPK AUG05      DIMENSION ITAB(MNP)
 C-
 C...... Analyse the elements for connections
 C-
+      !NiS,may06: initialize the ITAB-array
       DO 180 N=1,NPM
         ITAB(N)=0
   180 CONTINUE
+
+      !NiS,may06: 1D-elements or control-structure elements (IGTP.ne.0 gives "GATE TYPE")
       DO 220 M=1,NEM
         IF(IMAT(M) .GT. 0) THEN
 
@@ -30,6 +33,8 @@ CIPK DEC00 ALLOW FOR GATE STRUCTURE
           ENDIF
         ENDIF
   220 CONTINUE
+
+      !NiS,may06: special control-structure elements
       DO 500 N=1,NEM
         IF(IMAT(N) .GT. 900  .AND.  IMAT(N) .LT. 1000) THEN
 C-
@@ -79,6 +84,8 @@ C-
   450     CONTINUE
         ENDIF
   500 CONTINUE
+
+      !NiS,may06: für jeden 2D-horizontal averaged elements; alle Knoten mit mehr als einem Layer (NDEP(N).gt.1)
       DO 600 N=1,NPM
         IF(NDEP(N) .GT. 1) THEN
           DO 570 K=2,NDEP(N)
