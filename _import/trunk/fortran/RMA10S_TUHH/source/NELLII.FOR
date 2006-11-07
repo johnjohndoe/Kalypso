@@ -20,6 +20,9 @@ C
 c      dimension drodz(64),dudz(64),dvdz(64),h(64),a0(64),z(64),
 c     .          epsxz(64),epsyz(64),difz(64),rho(64)
 C 
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: h
+!-
 C      COEFFICIENTS THAT COME FROM MELLOR YAMADA
 C 
       DATA ITM/0/

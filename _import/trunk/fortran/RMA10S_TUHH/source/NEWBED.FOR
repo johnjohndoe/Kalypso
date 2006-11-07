@@ -28,6 +28,9 @@ CIPK AUG05	INCLUDE 'BLKDR.COM'
 crrr aug97 add character lines
       CHARACTER*256 LINE256
       CHARACTER*80  FMT
+!NiS,jul06: Consistent data types for passing paramters
+      REAL(KIND=8) :: HTP
+!-
 C-
 C-.....ASSIGN PROPER COEFS.....
 C-

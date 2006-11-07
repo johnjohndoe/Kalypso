@@ -8,6 +8,10 @@ CIPK  NEW ROUTINE FEB 27 2004
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05	INCLUDE 'BLKDR.COM'
 
+!NiS,jul06: Consistent data type for passing parameters
+      REAL(KIND=8) :: VTEMP
+!-
+
 	DATA ITIME/0/
 
 	IF(ITIME .EQ. 0) THEN

@@ -14,6 +14,9 @@ C-
      +           4,4,4,4/
 
       INTEGER*2 NETT
+!NiS,jul06: For calling compatibility D must also be real, kind=8
+      REAL(KIND=8) :: D
+!-
       REAL*8 T
 C
 C     USE NETYP TO DETERMINE OUR ELEMENT TYPE
@@ -78,6 +81,9 @@ CIPK AUG05	INCLUDE 'BLKSAND.COM'
      +           4,4,4,4/
 
       INTEGER*2 NETT
+!NiS,jul06: For calling compatibility D must also be real, kind=8
+      REAL(KIND=8) :: D
+!-
       REAL*8 T
 C
 C     USE NETYP TO DETERMINE OUR ELEMENT TYPE

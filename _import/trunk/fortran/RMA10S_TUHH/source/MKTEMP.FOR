@@ -22,6 +22,9 @@ CIPK sep02
       COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
       INTEGER*2 NETT
+!NiS,jul06: For calling compatibility D must also be real, kind=8
+      REAL(KIND=8) :: D
+!-
       REAL*8 T
 C-
       DIMENSION ITINC(24)
