@@ -1,5 +1,3 @@
-C     Last change:  M    14 Jul 2006    3:56 pm
-cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -17,6 +15,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
+C     Last change:  IPK   5 Oct 98    2:21 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -27,26 +26,9 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKDRMOD
       USE BLKSSTMOD
       USE BLKSANMOD
-!NiS,apr06: adding block for DARCY-WEISBACH friction
-      USE PARAKalyps
-!-
       SAVE
-
-!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
-!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
-!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
-!           also as real, kind=8.
-      REAL(KIND=8) :: HS, HD, HD1, HDX, dum1, HS1, HSX
-!-
-
 C
-!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
-      REAL :: lambda
-!-
-!NiS,jul06: declaring waterdepth for proper parameter-passing
-      REAL (KIND=8) :: h
-!-
-CIPK AUG05      INCLUDE 'BLK10.COM'
+CIPKAUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKE.COM'
       INCLUDE 'BLKH.COM'
@@ -133,7 +115,7 @@ CIPK OCT02  add logic to make ice cover functions linear
         QWLI(1)=QICE(NOP(NN,1))
         QWLI(3)=QICE(NOP(NN,3))
       ELSE
-CIPK MAR06 fix undefined
+CIPK MAR06 fix undefined     
         THKI(1)=0.
         QWLI(1)=0.
         THKI(3)=0.
@@ -144,9 +126,6 @@ C-
 C- INITIALIZE MATRICES AND VARIABLES
 C-
       NEF=NCN*NDF
-      !NiS,jul06:testing
-        if (nn.eq.4465) WRITE(*,*) nef, 'nef ist gleich'
-      !-
       DO 77 I=1,NEF
       F(I) = 0.0
       DO 77 J=1,NEF
@@ -528,53 +507,45 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       VECQ = ABS(R)
       IF(H .LE. 0.) H=0.001
 
-!NiS,apr06: adding possibility of FrictionFactor calculation with
-!           COLEBROOK-WHITE to apply DARCY-WEISBACH equation: Therefore,
-!           the if-clause has also to be changed because surface friction
-!           is deactivated!
 cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
-  !NiS,apr06: changing if-clause:
-  !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
-      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
-  !-
+      IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
         IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
 
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(MAT) .GT. 0.) THEN
-	    IF(H+ABED .LT. ELMMIN(MAT) ) THEN
+	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
               FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
-	    ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN
+	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
               FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
-	    ELSE
-	      FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
+	      ELSE
+	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
               FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
-     +     	    *FCOEF/(H**0.333)
-	    ENDIF
+     +     	       *FCOEF/(H**0.333)
+	      ENDIF
 CIPK SEP04  ADD MAH OPTION
           ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
-	    TEMAN=0.
+	      TEMAN=0.
             IF(HMAN(MAT,2) .GT. 0) THEN 
-	      TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
-	    ENDIF
-	    TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
+	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
+	      ENDIF
+	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
-	    DO K=1,4
-	      IF(H .LT. MANTAB(MAT,K,1)) THEN
-	        IF(K .EQ. 1) THEN
-	          TEMAN=MANTAB(MAT,1,2)
-	        ELSE
-	          FACT=(H-MANTAB(MAT,K-1,1))/
-     +                 (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
-	          TEMAN=MANTAB(MAT,K-1,2)
-     +                  +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+	      DO K=1,4
+	        IF(H .LT. MANTAB(MAT,K,1)) THEN
+	          IF(K .EQ. 1) THEN
+	            TEMAN=MANTAB(MAT,1,2)
+	          ELSE
+	            FACT=(H-MANTAB(MAT,K-1,1))/
+     +                  (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
+	            TEMAN=MANTAB(MAT,K-1,2)
+     +            +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+	          ENDIF
+	          GO TO 280
 	        ENDIF
-	        GO TO 280
-	      ENDIF
-	    ENDDO
-	    TEMAN=MANTAB(MAT,4,2)
+	      ENDDO
+	      TEMAN=MANTAB(MAT,4,2)
   280       CONTINUE
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSE
@@ -586,24 +557,15 @@ CIPK SEP04  ADD MAH OPTION
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
-Cipk may06 replace NR with MAT
-C            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
-            FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
+            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
 !
 !        End DJW Changes
 !
 !**************************************************************
-
           ENDIF
         ENDIF
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      ELSEIF (ORT(NR,5) == -1) THEN
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
-        FFACT = lambda/8.0
-!-
       ENDIF
 
 cipk dec00 modify friction for high flow gates
@@ -759,9 +721,6 @@ C-
       IA=1-NDF
       DO 305 M = 1, NCN
       IA=IA+NDF
-      !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   305 CONTINUE
   310 CONTINUE
@@ -809,9 +768,6 @@ C-
       IA=1-NDF
       DO 320 M = 1, NCN
       IA=IA+NDF
-      !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   320 CONTINUE
   325 CONTINUE
@@ -831,9 +787,6 @@ C-
           IA=1-NDF
           DO 329 M=1,NCN
             IA=IA+NDF
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+(DNX(M)*FEEAN+XN(M)*FEEBN)*
      +                    QFACT(M)
   329     CONTINUE
@@ -856,9 +809,6 @@ C
       EB=XM(M)*TX
       DO 360 N = 1, NCN
       IB=IB+NDF
-      !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
   360 CONTINUE
       EA=XM(M)*TB
@@ -866,9 +816,6 @@ C
       IB=3-2*NDF
       DO 363 N=1,NCNX
       IB=IB+2*NDF
-      !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
   363 CONTINUE
   365 CONTINUE
@@ -896,18 +843,12 @@ CMAY93          FEECN=XO(M)*T3
           IB=1-NDF
           DO 385 N=1,NCN
             IB=IB+NDF
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XN(N)*FEEAN*QFACT(N)
   385     CONTINUE
           IB=3-2*NDF
           DO 390 N=1,NCNX
             IB=IB+2*NDF
 CMAY93           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DMX(N)*FEECN+XM(N)*FEEEN
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*FEEEN
   390     CONTINUE
         ENDIF
@@ -925,9 +866,6 @@ CIPK MAY02
           IB=-4
           DO N=1,NCNX
             IB=IB+8
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)+FEEBN*DMX(N)
           ENDDO
   	  ENDDO
@@ -955,9 +893,6 @@ cipk aug98
         DO 410 N=1,NCN
           IB=IB+4
           IF(NSTRT(NCON(N),1) .EQ. 0) THEN
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XO(N)+FEEBN*DOX(N)
           ENDIF
   410   CONTINUE
@@ -989,18 +924,12 @@ C-
      +      *QFACT(L)
         IF(L .EQ. 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
-        !NiS,jul06:testing
-        if (na.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12; na'
-        !-
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
       ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
         IF(NREF(N1) .EQ. 0) THEN
           NA=(L-1)*NDF+1
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA
           DO 6667 KK=1,NEF
-            !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
-            !-
             ESTIFM(NA,KK)=0.
  6667     CONTINUE
           F(NA)=0.

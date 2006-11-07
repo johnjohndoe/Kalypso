@@ -1,4 +1,3 @@
-C     Last change:  JAJ   3 Jul 2006    9:34 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -28,9 +27,7 @@ C-
       COMMON/BLKE/ ESTIFM(80,80)
 C-
 CAUG93IPK  COMMON LDEST(80),NK(80)
-cWP2006      COMMON NK(80), see NUMBOPT1.FOR!
-      COMMON NK(120)
-
+      COMMON NK(80)
 CIPK AUG05       DIMENSION QR(MFW),NCON(20)
       DIMENSION NCON(20)
 C-
@@ -83,28 +80,24 @@ C
         K=K-1
         N=NFIXH(K)
         IF(N .LE. NE  .AND.  N .GT. 0) THEN
-          IF(ICOLLAPE(N) .EQ. 1  .AND.  IMAT(N)/1000 .NE. 1) GO TO 480
+         IF(ICOLLAPE(N) .EQ. 1  .AND.  IMAT(N)/1000 .NE. 1) GO TO 480
 
           IF(IMAT(N) .GT. 0) THEN
-!NiS,may06:testing
-!            WRITE(*,*) 'here i am'
-!-
-            ncn=20
-            IF(ITEQV(MAXN) .EQ. 5) THEN
-              DO  I=1,8
-                NCON(I)=NOPS(N,I)
-                IF(NCON(I) .GT. 0) NCN=I
-              ENDDO
-            ELSE
-              DO I=1,NCN
+
+          ncn=20
+          IF(ITEQV(MAXN) .EQ. 5) THEN
+            DO  I=1,8
+              NCON(I)=NOPS(N,I)
+              IF(NCON(I) .GT. 0) NCN=I
+            ENDDO
+          ELSE
+            DO I=1,NCN
               NCON(I)=NOP(N,I)
             ENDDO
           ENDIF
           MRC=N
 cipk oct98 update to f90
           NTYP=NETYP(N)
-
-          !NiS,may06: for junction elements (7 (1D) or 17 (2D))
           IF(MOD(NTYP,10) .EQ. 7) THEN
 CIPK JAN99 SKIP OUT FOR 2DV
             if(ntyp .NE. 17) THEN
@@ -153,24 +146,12 @@ CIPK MAY02 SWITCH NDF TO 7
 
       NELL=0
       NELM=0
-
-!NiS,may06: reactivate test
-      DO N=1,NP
-          if (n.eq.12816 .or. n.eq.12790 .or. n.eq.12791 .or.n.eq.3286)
-     +                 WRITE(*,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
-        DO m=1,4
-          !WRITE(*,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
-          if (nbc(n,m).lt.0) WRITE(*,*) 'nbc',nrx,N,NBC(N,M)
-        ENDDO
-      ENDDO
-!-
-
-!NiS,may06:activate for testing and change unit from 75 to *
-!      do n=1,nszf
-!        write(75,*) 'nlst',n,nlstel(n),netyp(n)
-!        write(*,*) 'nlst',n,nlstel(n),netyp(n)
-!      enddo
-!-
+c      DO N=1,NP
+c        WRITE(75,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
+c      ENDDO
+c      do n=1,nszf
+c        write(75,*) 'nlst',n,nlstel(n),netyp(n)
+c      enddo
 
 C
 C     ASSEMBLY
@@ -194,11 +175,6 @@ C-
       N=NFIXH(NELM)
 
 c      write(75,*) 'front',n,nelm,netyp(n),imat(n)
-
-!NiS,may06:testing
-!      write(*,*) 'front',n,nelm,netyp(n),imat(n),ncn,ndf
-!-
-
       IF (N .EQ. 0)  GO TO 380
       IF(IMAT(N) .LT. 1) GO TO 18
       CALL SECOND(SINC)
@@ -246,7 +222,7 @@ CIPK MAR05
 	      ELSE
                 CALL COEF2DNT(N,NRX)
 	      ENDIF
-      	    ELSE
+      	  ELSE
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2(N,NRX)
@@ -260,9 +236,6 @@ CIPK MAR05
 	  CALL SECOND(SOUC)
 	  TSURC=SOUC-SINC+TSURC
 	ELSE
-!NiS,may06: testing
-!          WRITE(*,*) NETYP(N)/10, 'NETYP(N)/10', N
-!-
 	  IF(NETYP(N)/10 .EQ. 2) THEN
 
 cipk nov99 skip if collapsing to 2-d
@@ -291,33 +264,33 @@ C     Process   horizontal 2d
 
 		IF(NRX .EQ. 2) GO TO 18
 cipk jan97
-                if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
-     +            then
-                  if(nell .eq. 1)  then
-                    write(75,*) 'going to smag'
+            if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
+     +        then
+                    if(nell .eq. 1)  then
+                      write(75,*) 'going to smag'
+                    endif
+CIPK MAR05
+                    IF(INOTR .EQ. 0) THEN
+                      CALL COEF2D(N,NRX)
+	            ELSE
+	              CALL COEF2DNT(N,NRX)
+	            ENDIF
+            ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2)
+     +        THEN
+CIPK MAR05
+                    IF(INOTR .EQ. 0) THEN
+                      CALL COEF2D(N,NRX)
+	            ELSE
+	              CALL COEF2DNT(N,NRX)
+	            ENDIF
+                  else
+CIPK MAR05
+                    IF(INOTR .EQ. 0) THEN
+                      CALL COEF2(N,NRX)
+	            ELSE
+	              CALL COEF2NT(N,NRX)
+	            ENDIF
                   endif
-CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
-                    CALL COEF2D(N,NRX)
-	          ELSE
-	            CALL COEF2DNT(N,NRX)
-	          ENDIF
-                ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND.
-     +            IDIFSW .EQ. 2) THEN
-CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
-                    CALL COEF2D(N,NRX)
-	          ELSE
-	            CALL COEF2DNT(N,NRX)
-	          ENDIF
-                else
-CIPK MAR05
-                  IF(INOTR .EQ. 0) THEN
-                    CALL COEF2(N,NRX)
-	          ELSE
-	            CALL COEF2NT(N,NRX)
-	          ENDIF
-                endif
 cipk jan97 end changes
 	      ELSE
 CIPK JAN99
@@ -340,31 +313,11 @@ C      Process one-d elements
 
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
-              !NiS,may06: testing
-              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
-              !-
               IF(INOTR .EQ. 0) THEN
                 CALL COEF1(N,NRX)
               ELSE
-      !NiS,jul06:testing
-      if(ncorn(n).lt.6.AND.(ibn(nop(n,1)).eq.1
-     +                  .or.ibn(nop(n,3)).eq.1))then
-        do i = 1,3
-          WRITE(*,*)(nbc(nop(4465,i),z),z=1,7),'nop:',nop(n,i)
-        end do
-        WRITE(*,*)'Element ',n,' (Rand)'
-        WRITE(*,*) 'Gleichungen'
-        do i = 1, 12
-        WRITE(*,'(6f10.1)') (estifm(i,j),j=1,6)
-        end do
-      end if
-      !-
-
                 CALL COEF1NT(N,NRX)
               ENDIF
-              !NiS,may06: testing
-              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' nach'
-              !-
 	      CALL SECOND(SOUC)
 	      TCOEF1=SOUC-SINC+TCOEF1
 	    ENDIF
@@ -407,37 +360,27 @@ cipk jan99
        
       ENDIF
 
-!NiS,may06: testing
-!      WRITE(*,*)'element: ', N, ', NCN: ', NCN,ndf
-!-
       NBN = NCN*NDF
 
       DO 21 LK=1,NBN
-	LDEST(LK)=0 !NiS,may06: position of special degree of freedom (lk) in equation solution window
-	NK(LK)=0 !???
+	LDEST(LK)=0
+	NK(LK)=0
    21 CONTINUE
       KC=0
       DO 23 J=1,NCN
 	IF(ITEQV(MAXN) .EQ. 5) THEN
 	  I=NOPS(N,J)
 	ELSE
-	  I=NOP(N,J) !NiS,may06: i becomes node number
+	  I=NOP(N,J)
 	ENDIF
-	DO 22 L=1,NDF !NiS,may06: for every degree of freedom
-	  KC=KC+1     !NiS,may06: count loop
+	DO 22 L=1,NDF
+	  KC=KC+1
 CIPK JAN99
-          if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
-
-!Nis,mun06:testing
-!          if(i.eq.12816 .or. i.eq.12790 .or. i.eq.12791)
-!     +     WRITE(*,*) 'in front:', i, nbc(i,1), n
-!-
-
-	  LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
-	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
+          if(i .eq. 0) go to 22
+	  LL=NBC(I,L)
+	  NK(KC)=LL
 	  IF(LL .NE. 0) THEN
-	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
-                                             !           NK(KC) negative as pointer, that degree of freedom can be taken out
+	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL
 	  ENDIF
    22   CONTINUE
    23 CONTINUE
@@ -445,11 +388,11 @@ C-
 C...... Set up heading vectors
 C-
       LFZ=1
-      DO 52 LK=1,NBN !NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
-	NODE=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
-	IF(NODE.EQ.0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
-	LM=IABS(NODE) !NiS,may06: get absolute number
-	LL=IPOINT(LM) !NiS,may06: IPOINT is always zero at the first call
+      DO 52 LK=1,NBN
+	NODE=NK(LK)
+	IF(NODE.EQ.0) GO TO 52
+	LM=IABS(NODE)
+	LL=IPOINT(LM)
 	IF(LL .NE. 0) THEN
 	  LDEST(LK)=LL
 	  IF(NODE .LT. 0) LHED(LL)=NODE
@@ -479,8 +422,6 @@ C
    40     LFZ=LFZZ
 	ENDIF
    52 CONTINUE
-
-
 CIPK FEB04
       DO L=1,LCOL
 	  LEQ=ABS(LHED(L))
@@ -524,12 +465,10 @@ CIPK FEB04
       WRITE(75,9821) (N,(NBC(N,M),M=1,4),N=1,NP)
       STOP
    54 CONTINUE
-
-      !NiS,jun06,comment: Assembly of global matrix within the solution window
-      DO 57 L=1,NBN  !for every nodal degree of freedom (row of element matrix)
-	IF(NK(L) .NE. 0) THEN  !if equation is present
-	  LL=LDEST(L)  !take the solution window slot
-	  DO 56 K=1,NBN  !then take again every nodal degree of freedom (column of element matrix)
+      DO 57 L=1,NBN
+	IF(NK(L) .NE. 0) THEN
+	  LL=LDEST(L)
+	  DO 56 K=1,NBN
 	  IF(NK(K) .NE. 0) THEN
 	    KK=LDEST(K)
 	    EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)

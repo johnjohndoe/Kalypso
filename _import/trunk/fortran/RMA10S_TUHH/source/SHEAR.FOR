@@ -97,10 +97,6 @@ C.....................................................................
           U=VEL(1,I)
           V=VEL(2,I)
           UV=SQRT(U*U+V*V)
-CIPK MAR06
-          IF(ITSTMOD .EQ. 1) THEN
-            UV=TSTVAR(1)
-          ENDIF
 C****** AVERAGE VEL BASED ON BOTTOM VEL / UMIN... NOT CORRECT SINCE
 C****** SINCE VEL / UMIN = SURFACE VELOCITY
 c          WRITE(78,*) N,I,U,V,UV,UMIN

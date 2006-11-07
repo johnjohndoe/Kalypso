@@ -1,5 +1,3 @@
-C     Last change:  M    14 Jul 2006    4:00 pm
-cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -17,6 +15,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
+C     Last change:  IPK   5 Oct 98    2:21 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -27,25 +26,8 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKDRMOD
       USE BLKSSTMOD
       USE BLKSANMOD
-!NiS,apr06: adding block for DARCY-WEISBACH friction
-      USE PARAKalyps
-!-
       SAVE
-
-!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
-!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
-!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
-!           also as real, kind=8.
-      REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
-!-
-
 C
-!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
-      REAL :: lambda
-!-
-!NiS,jul06: declaring waterdepth for proper parameter-passing
-      REAL (KIND=8) :: h
-!-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKE.COM'
@@ -133,7 +115,7 @@ CIPK OCT02  add logic to make ice cover functions linear
         QWLI(1)=QICE(NOP(NN,1))
         QWLI(3)=QICE(NOP(NN,3))
       ELSE
-cipk mar06
+cipk mar06      
         THKI(1)=0.
         QWLI(1)=0.
         THKI(3)=0.
@@ -328,19 +310,6 @@ c       SSLOP total side slope
       DSLOX=(SS1(N2)+SS2(N2)-SS1(N1)-SS2(N1))/TEMP
       DSLOX1=(SS1(N2)-SS1(N1))/TEMP
       DSLOX2=(SS2(N2)-SS2(N1))/TEMP
-
-
-CIPK MAY06
-	IF(NTX .NE. 0) THEN
-        H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2) 
-cipk jul06 define dhdx earlier         
-        DHDX=VEL(3,N1)*DMX(1)+VEL(3,N2)*DMX(2)
-        DUM=1.
-      ELSE
-        H=1.0
-        DHDX=0.
-      ENDIF
-
 
 c           PERIM Wetted perimeter	      
       PERIM=WID+H*(SQRT(1.+SSLOP1**2)+SQRT(1.+SSLOP2**2))
@@ -583,62 +552,48 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       VECQ = ABS(R)
       IF(H .LE. 0.) H=0.001
 
-!NiS,apr06: adding possibility of FrictionFactor calculation with
-!           Colebrook white to apply DARCY-WEISBACH equation: Therefore,
-!           the if-clause has also to be changed because surface friction
-!           is deactivated!
 cipk nov98 adjust for surface friction
 CIPK APR99 ADJUST NR TO MAT
-  !NiS,apr06: changing if-clause:
-  !    IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
-      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
-  !-
+      IF(ORT(MAT,5) .GT. 0.  .OR.  ORT(MAT,13) .GT. 0.) THEN
         IF(ORT(MAT,5) .LT. 1.0  .AND.  ORT(MAT,13) .LT. 1.0) then
 
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
-	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN
-cipk jul06 use perim	      
-                FFACT=(MANMIN(MAT))**2*FCOEF/((ACR/PERIM)**0.333)
+          IF(MANMIN(MAT) .GT. 0.) THEN
+	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
+              FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
 	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
-cipk jul06 use perim	      
-                FFACT=(MANMAX(MAT))**2*FCOEF/((ACR/PERIM)**0.333)
+              FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
 	      ELSE
 	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
-cipk jul06 use perim	      
               FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
-     +     	       *FCOEF/((ACR/PERIM)**0.333)
+     +     	       *FCOEF/(H**0.333)
 	      ENDIF
-
 CIPK SEP04  ADD MAH OPTION
-        ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
-	  TEMAN=0.
-          IF(HMAN(MAT,2) .GT. 0) THEN
-	    TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
-	  ENDIF
-	  TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
-cipk jul06 use perim	      
-          FFACT=TEMAN**2*FCOEF/((ACR/PERIM)**0.333)
-        ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
-	  DO K=1,4
-	    IF(H .LT. MANTAB(MAT,K,1)) THEN
-	      IF(K .EQ. 1) THEN
-	        TEMAN=MANTAB(MAT,1,2)
-	      ELSE
-	        FACT=(H-MANTAB(MAT,K-1,1))/
-     +               (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
-	        TEMAN=MANTAB(MAT,K-1,2)
-     +               +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+          ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
+	      TEMAN=0.
+            IF(HMAN(MAT,2) .GT. 0) THEN 
+	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
 	      ENDIF
-	      GO TO 280
-	    ENDIF
-	  ENDDO
-	  TEMAN=MANTAB(MAT,4,2)
-
-  280     CONTINUE
-cipk jul06 use perim	      
-          FFACT=TEMAN**2*FCOEF/((ACR/PERIM)**0.333)
-        ELSE
+	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
+            FFACT=TEMAN**2*FCOEF/(H**0.333)
+          ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
+	      DO K=1,4
+	        IF(H .LT. MANTAB(MAT,K,1)) THEN
+	          IF(K .EQ. 1) THEN
+	            TEMAN=MANTAB(MAT,1,2)
+	          ELSE
+	            FACT=(H-MANTAB(MAT,K-1,1))/
+     +                  (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
+	            TEMAN=MANTAB(MAT,K-1,2)
+     +            +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+	          ENDIF
+	          GO TO 280
+	        ENDIF
+	      ENDDO
+	      TEMAN=MANTAB(MAT,4,2)
+  280       CONTINUE
+            FFACT=TEMAN**2*FCOEF/(H**0.333)
+          ELSE
 !**************************************************************
 !
 !   DJW 09/02/03 : Friction Factor Modification to adjust for Roughness Calcs
@@ -647,25 +602,15 @@ cipk jul06 use perim
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
-CIPK MAY06 REPLACE NR WITH MAT
-cipk jul06 use perim	      
-          FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/((ACR/PERIM)**0.333)
-
+            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
 !
 !        End DJW Changes
 !
 !**************************************************************
+          ENDIF
         ENDIF
-
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      ELSEIF (ORT(NR,5) == -1) THEN
-
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
-        FFACT = lambda/8.0
-!-
       ENDIF
 
 cipk dec00 modify friction for high flow gates
@@ -1095,21 +1040,6 @@ C     WRITE(*,7777) NN,((ESTIFM(I,J),J=1,12),I=1,12)
 C     WRITE(*,7777) NN,(F(I),I=1,12)
 C     WRITE(*,7778) (R1(N),N=1,NSZF)
 C7778 FORMAT(1P5E12.4)
-
-C      DO I=1,12
-C        IF(F(I) .NE. 0.) THEN
-C          WRITE(235,7780) NN,I,F(I)
-C 7780     FORMAT(2I8,1PE15.6)          
-C        ENDIF
-C        DO J=1,12
-C      
-C          IF(ESTIFM(I,J) .NE. 0.) THEN
-C            WRITE(234,7779) NN,I,J,ESTIFM(I,J)
-C 7779       FORMAT(3I8,1PE15.6)        
-C          ENDIF
-C        ENDDO
-C      ENDDO
-
       RETURN
 *-
 *...... Special case for junction element

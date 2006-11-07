@@ -1,4 +1,5 @@
-C     Last change:  AF   17 Jul 2006   11:01 am
+CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
+CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND
 CIPK  LAST UPDATE MAY 02 2003 add ELEMENT TYPE DROPOUT FOR EROSION/SETTLING
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 CIPK  LAST UPDATE AUG 4  2002 REVISIT WIND STRESS COEFFICIENTS
@@ -40,6 +41,7 @@ CIPK  LAST UPDATE NOV 20 1997 ADD ELEMENT COUNTING
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
+C     Last change:  IPK   3 Oct 98    4:30 pm
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
@@ -49,12 +51,6 @@ CIPK  LAST UPDATED SEP 19 1995
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKTSMOD
-!NiS,mar06: Making Kalypso-2D specific arrays accessable
-      USE ParaKalyps
-!NiS,mar06: add the module Parammod because the occuring error while compiling is caused by a variable
-!           that is defined within that module (NLAYMX)
-      USE Parammod
-!-
       SAVE
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -64,19 +60,8 @@ CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
 CIPK AUG05      INCLUDE 'BLKSED.COM'
 
-!NiS,mar06: new variable definitions
-      INTEGER :: k,NL,kmax
-      CHARACTER(LEN=5)::IDString
-      INTEGER :: istat_temp
-!-
-!NiS,jul06: Consistent data types for passing parameters
-      REAL(KIND=8) :: HTP
-!-
-
 CIPK JUL01
-!NiS,jul06: Consistent data length for passing it as a parameter
-!      CHARACTER*48 ANAME
-      CHARACTER*96 ANAME
+      CHARACTER*48 ANAME
 C-
       ALLOCATABLE IFXSAL(:)
       DIMENSION SALBC(3),QDM(3)
@@ -136,13 +121,11 @@ C        edd1(k)=1.0
 C        edd2(k)=0.0
 C        edd3(k)=0.0
 C      enddo
-
-cWP Feb 2006, following variables are not used anymore
-c      MMM1=MNP
-c      MMM2=MEL
-c      MMM3=MEQ
-c      MMM6=MFW
-c      MMM8=NBS
+      MMM1=MNP
+      MMM2=MEL
+      MMM3=MEQ
+      MMM6=MFW
+      MMM8=NBS
 C      WRITE(LOUT,6140)MMM1,MMM2,MMM3,MMM6,MMM8
 C
 C                                       READ AND PRINT TITLE AND CONTROL
@@ -165,8 +148,6 @@ cipk aug02 expand to 80 char
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr96 add line type C0
       IF(ID(1:2) .NE. 'C0') THEN
 cipk sep04
@@ -201,8 +182,6 @@ CIPK DEC03      IF(TBFACT .EQ. 0.) TBFACT=0.2
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 cipk end changes apr 96
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .NE. 'C1') THEN
 cipk sep04
         CLOSE(75)
@@ -235,8 +214,7 @@ cipk sep96 add iedsw
 CIPK JUL99 reverse tbfact and tbmin order
 
 cipk jan01 add max layer test
-cWP Feb 2006 Change NLAYM to NLAYMX
-      IF(NDP .LT. -1*(NLAYMX+1)) THEN
+      IF(NDP .LT. -1*(NLAYM+1)) THEN
 cipk sep04
         CLOSE(75)
         OPEN(75,FILE='ERROR.OUT')
@@ -264,8 +242,6 @@ C
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .NE. 'C2') THEN
 cipk sep04
         CLOSE(75)
@@ -281,8 +257,6 @@ CIPK DEC99 SET UP INITIAL ELEV
       ELEV1=ELEV
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .NE. 'C3') THEN
 cipk sep04
         CLOSE(75)
@@ -312,8 +286,6 @@ c
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .NE. 'C4') THEN
 cipk sep04
         CLOSE(75)
@@ -338,8 +310,6 @@ c
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF(ID(1:2) .NE. 'C5') THEN
 cipk sep04
         CLOSE(75)
@@ -350,19 +320,8 @@ cipk sep04
         STOP 'LOOKING FOR C5'
       ENDIF 
       READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
-!NiS,may06: In the case of Kalypso-2D format input file for geometry, it is among other things predetermined, from which time step to start.
-!           This timestep is saved in the global variable iaccyc. If the value is (iaccyc > 1), it means, that the beginning time step is not
-!           the over all beginning. For that reason, no steady calculation can be started. This means, that the user has to be informed about
-!           the occuring error, if  (iaccyc > 1) .and. (NITI /= 0)
-      IF (iaccyc > 1 .and. NITI /= 0) THEN
-        WRITE (*,*)' If you want to start a steady state calculation, ',
-     +    'no beginning time step > 1 should be entered.'
-        WRITE (*,*)' Execution terminated.!'
-        STOP
-      ENDIF
-!-
       READ(DLINEXTRA,5011) NBSFRQ
-CIPK AUG02 ADD NBSFRQ ABOVE
+CIPK AUG02 ADD NBSFRQ ABOVE 
       write(*,*) 'read c5'
 C
       WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
@@ -384,11 +343,10 @@ CIPK AUG02 ADD NBSFRQ ABOVE AND BELOW
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
+
       IF(ID(1:2) .EQ. 'C6') THEN
-cipk mar06 allow for output file rewind
+cipk mar06 allow for output file rewind      
         READ(DLIN,'(3I8)') IOUTFREQ,IOUTRST,IOUTRWD
         call ginpt(lin,id,dlin)
 	  WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
@@ -407,10 +365,9 @@ CIPK MAR06 ADD TESTMODE
       
         READ(DLIN,'(I8,8F8.0)') ITSTMOD,TSTVAR
         call ginpt(lin,id,dlin)
-
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   
 cipk dec99 add initial condition
       IF(ID(1:3) .EQ. 'INI') THEN
       
@@ -418,23 +375,19 @@ cipk dec99 add initial condition
         call ginpt(lin,id,dlin)
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 cipk MAY02 add sand data
       IF(ID(1:3) .EQ. 'SND') THEN
       
         LSAND=6 
         call ginpt(lin,id,dlin)
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk APR05 add CLAY data
       IF(ID(1:3) .EQ. 'SED') THEN
         READ(DLIN,'(I8)') INEWBED
         LSS=6 
         call ginpt(lin,id,dlin)
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAY02 add BEDLOAD OPTION data
       IF(ID(1:3) .EQ. 'BED') THEN
       
@@ -442,7 +395,6 @@ cipk MAY02 add BEDLOAD OPTION data
         call ginpt(lin,id,dlin)
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk aug02 add BEDLOAD OPTION data
       ZSTDEP=0.
       IF(ID(1:3) .EQ. 'ZDP') THEN
@@ -469,7 +421,7 @@ cipk aug02 add BEDLOAD OPTION data
 !
 !  DJW Feb 2005.  Adding Option For Scaling Factors to apply to RW
 !
-C      FACTMORPH=1.
+      FACTMORPH=1.
       IF(ID(1:3) .EQ. 'RUF') THEN
       
         READ(DLIN,'(2F8.0)') RWFACT, RWMIN
@@ -481,8 +433,6 @@ C      FACTMORPH=1.
 !      
 
 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk SEP02 add sand data
    20 CONTINUE
       IF(ID(1:3) .EQ. 'CRS') THEN
@@ -492,9 +442,8 @@ cipk SEP02 add sand data
 	  GO TO 20
       ENDIF
 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk may03 add cutout opton for settling/erosion for element types
+
       IF(ID(1:3) .EQ. 'DRP') THEN
       
         READ(DLIN,'(9I8)') (IEDROP(N),N=1,9)
@@ -502,7 +451,7 @@ cipk may03 add cutout opton for settling/erosion for element types
 
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       IF(ID(1:2) .EQ. 'CV') THEN
 cipk apr97 add to data read for equation dropout
         READ(DLIN,'(6F8.0,i8,f8.0)') (CONV(J),J=1,6),idrpt,drfact
@@ -529,8 +478,8 @@ cipk apr97
       endif
 cipk apr97
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK  FEB04 add IOV option
+
       IF(ID(1:3) .EQ. 'IOV') THEN
         IOV=1
         CALL GINPT(LIN,ID,DLIN)
@@ -539,7 +488,7 @@ CIPK  FEB04 add IOV option
       ENDIF
 cipk FEB04 end addition
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 cipk feb97 add line to select optimisation
       IF(ID(1:3) .EQ. 'IOP') THEN
         READ(DLIN,'(F8.2)') W2FACT
@@ -554,8 +503,8 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
       ENDIF
 cipk feb97 end changes
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK dec02 add input of data for ice on surface
+
       IF(ID(1:4) .EQ. 'ICE1') THEN
         READ(DLIN,'(8F8.0,i8)')ROW,CHEAT,TMED,HTR,XLAT,ROSN,ROIC,TICE,
      +	  ICESW
@@ -581,9 +530,8 @@ cipk sep04
       ELSE
         ICESW=0
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK NOV99 ADD DATA LINE FOR 3-D TO 2-D COLLAPSE
+      
       IF(ID(1:3) .EQ. 'COL') THEN
         READ(DLIN,'(F8.2)') TRANSIT
         ITRANSIT=1
@@ -596,10 +544,11 @@ CIPK NOV99 ADD DATA LINE FOR 3-D TO 2-D COLLAPSE
         call ginpt(lin,id,dlin)
 cipk revised unit
         OPEN(UNIT=78,FILE='COL.DAT',STATUS='UNKNOWN')
+
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK MAR01 ADD DATA LINE FOR TIME STEP LENGTHENING
+      
       IF(ID(1:3) .EQ. 'TST') THEN
         READ(DLIN,'(I8,2F8.0)') NODETR,TRELEV,TRFACT
         WRITE(LOUT,6103)
@@ -607,8 +556,9 @@ CIPK MAR01 ADD DATA LINE FOR TIME STEP LENGTHENING
         call ginpt(lin,id,dlin)
       ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 CIPK MAR01 ADD DATA LINE FOR RECYCLING FLOW
+      
    24 CONTINUE
       IF(ID(1:3) .EQ. 'PWR') THEN
 CIPK OCT01 ADD NADTYP OPTION TO INPUT AND OUTPUT
@@ -626,8 +576,9 @@ CIPK SEP01 ADD ADDMAX
       ENDIF
 cipk aug01 add Multi PWR line option
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 CIPK JAN03 ADD DATA LINE FOR EQUILIBRIUM TEMPERATURE FORMULATION
+      
 	METEQ=0
       IF(ID(1:3) .EQ. 'EQT') THEN
         READ(DLIN,'(3F8.0)') EQTEMP,XKRAT,EXTING
@@ -643,98 +594,47 @@ CIPK HAN03 END ADDITION
 C-
 C-.....READ ELEMENT CHARACTERISTICS.....
 C-
-
-!NiS,apr06: Add switch for calculation of tree roughness, this option can only be calculated in combination
-!           with equivalent sand-roughnesses in DARCY-WEISBACH equation
-      IF (ID(1:6) == 'VEGETA') THEN
-        IVEGETATION = 1
-        call ginpt(lin,id,dlin)
-      ELSE
-        IVEGETATION = 0
-      END IF
-!-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       NMAT=0
    25 CONTINUE
       IF(ID(1:3) .EQ. 'ED1') THEN
         READ(DLIN,5030) J,(ORT(J,K),K=1,7)
-        write(*,*) 'read ed1'
+      write(*,*) 'read ed1'
 
         IF(NMAT .LT. J) NMAT=J
         NDATLN=NDATLN+1
-!NiS,apr06: After adding the option of vegetation roughness calculation, the user must be
-!           informed about wrong combination of Parameters; the new concept says, that, if
-!           the value (ORT(J,5) == -1.0) there are equivalent sand roughnesses applied. These
-!           correspond with the vegetation roughness calculation (Pasche/Lindner). The other
-!           roughness approaches (MANNING-parameter; CHEZY-parameter) do not correspond. If
-!           the user wants to calculate with vegetation roughnesses, the IPASCHE-switch is
-!           set to 1 (see above). If so, all the ORT(J,5) parameters MUST be -1.0 to show, that
-!           an additional line is read in for the definition of the element material class:
-        IF (IVEGETATION ==1 .and. ORT(J,5) /= -1.0) THEN
-          write ( *,6810) !Error message, see below!
-          write (75,6810)
-          stop
-        END IF
-!-
 CIPK NOV97      READ(LIN,7000) ID,DLIN
         call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'ED2') THEN
 cipk nov97  add extra friction
 CIPK NOV98 ADD SURFACE FICTION
           READ(DLIN,5031) (ORT(J,K),K=8,14)
-          write(*,*) 'read ed2'
+      write(*,*) 'read ed2'
 cipk mar98 
           if(ort(j,12) .eq. 0.) ort(j,12)=1.
           NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-  	  IF(ID(1:3) .EQ. 'ED3') THEN
+  	    IF(ID(1:3) .EQ. 'ED3') THEN
             READ(DLIN,5032) IT1,TT1,TT2
-!NiS,apr06: commenat added
-            write(*,*) 'read ed3'
-!-
             call ginpt(lin,id,dlin)
             IF(IEDSW .LT. 0) THEN
                IEDSW1(J)=IT1
             ENDIF
 	      IF(TT1 .GT. 0.) THEN
-                TBFACT1(J)=TT1
+              TBFACT1(J)=TT1
 	      ENDIF
 	      IF(TT2 .GT. 0.) THEN
 	        TBMIN1(J)=TT2
-              ENDIF
-          ELSEIF(IEDSW .LT. 0) THEN
+            ENDIF
+          ELSEIF(IEDSW .LT. 0) THEN	      
 cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
             WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
             WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
             STOP
-	  ENDIF
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!NiS,apr06: add element type specifications for equivalent sand roughness and vegetation calculation
-          IF (ID(1:3) == 'ED4') THEN
-!NiS,apr06: commenat added
-            write(*,*) 'read ed4'
-!-
-            !NiS,apr06: The line can be read in the way given here, if the ORT(J,5)-value is
-            !           not equal to -1.0, it has no effect!
-            READ(DLIN,5033) (ORT(J,K), K=15,17)
-            write(*,*) j,(ORT(J,K), K=15,17)
-            call ginpt(lin,id,dlin)
-          ELSEIF(IVEGETATION == 1 .OR. ORT(J,5) == -1.0) THEN
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,*) 'ERROR -- EXPECTED ED4 DATA LINE'
-            WRITE(*,*) 'ERROR -- EXPECTED ED4 DATA LINE'
-            STOP
-          ENDIF
-!-
+	    ENDIF
           GO TO 25
         ELSE
 cipk sep04
@@ -757,11 +657,7 @@ cipk sep04
         IF(ORT(J,1) .NE. 0.) THEN
 cipk mar98 change limit to 12
 cipk nov98 change limit to 13
-
-!NiS,apr06: increased number of field entries, because of DARCY-WEISBACH-equation and tree roughness
-!          WRITE(LOUT,6031) J,(ORT(J,K),K=1,14)
-          WRITE(LOUT,6031) J,(ORT(J,K),K=1,17)
-!-
+          WRITE(LOUT,6031) J,(ORT(J,K),K=1,14)
         ENDIF
       ENDDO
 
@@ -800,8 +696,6 @@ cipk dec03     Copy to all element types
         ENDDO
       ENDIF
       	 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
 Cipk mar01  add data for variable Manning n and drag force
 c
@@ -819,8 +713,6 @@ CIPK SEP04
 	  WRITE(LOUT,6033) J,ELMMIN(J),MANMIN(J),ELMMAX(J),MANMAX(J)
 	  CALL GINPT (LIN,ID,DLIN)
 	  GO TO 35
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK SEP04  ADD MAH and MAT OPTIONS
       ELSEIF(id(1:3) .eq. 'MAH') THEN
        READ(DLIN,'(2I8,4F8.0)') J,IMAN(J),(HMAN(J,K),K=1,4)
@@ -848,7 +740,6 @@ CIPK SEP04  ADD MAH and MAT OPTIONS
 	  CALL GINPT (LIN,ID,DLIN)
 	  GO TO 35
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ELSEIF(id(1:3) .eq. 'MAT') THEN
        READ(DLIN,'(I8,8F8.0)') J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
         IF(NH1 .EQ. 0) THEN
@@ -858,9 +749,9 @@ CIPK SEP04  ADD MAH and MAT OPTIONS
 	  WRITE(LOUT,6055) J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
 	  CALL GINPT (LIN,ID,DLIN)
 	  GO TO 35
+
 	ENDIF
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       N=0
    36 CONTINUE
       IF(id(1:3) .eq. 'DRG') THEN
@@ -873,138 +764,10 @@ CIPK SEP04  ADD MAH and MAT OPTIONS
 	  CALL GINPT (LIN,ID,DLIN)
 	  GO TO 36
 	ENDIF
+
 C
 cipk feb01 reading of continuity lines moved to GETGEO
 C-
-
-!NiS,mar06: In the case of Kalypso-2D model input data, the continuity line block
-!           is put back to this place; the lines are ignored if the geometry is in
-!           another format. In former versions of RMA10S, the continuity lines were
-!           read for every model-format at this point. (I guess)
-!
-!           The block starts with SCL and ends with ECL, so that the code recognizes
-!           a continuity-line block
-
-      IF (IFILE == 60 .AND. IGEO == 2) THEN
-        IF (id == 'SCL') THEN
-          READ(DLIN,*) NCL
-          kmax = NCL
-          IF (NCL > 0) THEN
-            READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN
-            all_CL: DO k=1,kmax
-              NL = 1
-
-              IF (ID /= 'CC1') then
-                close (75)
-                OPEN(75,'ERROR.dat')
-                WRITE ( *, 6801) k
-                WRITE (75, 6801) k
-                stop
-              ENDIF
-
-              READ (IDString,'(I5)') I
-              READ (DLIN,'(9I8)') (LINE(I,J),J=1,9)
-              IF(I>NCL) NCL = I
-
-              IF (LINE(I,1) == 0) THEN
-                close (75)
-                OPEN (75,'ERROR.dat')
-                WRITE( *,6802)
-                WRITE(75,6802)
-                stop
-              END IF
-
-              ENDLESS: DO
-                READ(lin,'(A3,A5,A72)') ID,IDString,DLIN
-                NL = NL + 9
-                IF(ID/='CC2') EXIT ENDLESS
-                READ(DLIN,'(9I8)') (LINE(I,J),J=NL,NL+8)
-              ENDDO ENDLESS
-
-              LMT_Loop: DO j=1,350
-                IF (LINE(I,j)==0) THEN
-                  LMT(I) = j-1
-                  EXIT LMT_Loop
-                ENDIF
-              ENDDO LMT_Loop
-
-              IF (LMT(I) == 0) LMT(I)=350
-            ENDDO all_CL
-
-            IF(ID=='ECL') THEN
-              write ( *,6901)
-              write (75,6901)
-	      CALL GINPT(lin,ID,DLIN)
-            ELSE
-              CLOSE(75)
-              OPEN(75,'ERROR.dat')
-              write ( *,6803)
-              write (75,6803)
-              stop
-            ENDIF
-          ELSE
-            WRITE( *,6902)
-            WRITE(75,6902)
-            CALL GINPT(lin,ID,DLIN)
-          ENDIF
-        ELSE
-          WRITE( *,6902)
-          WRITE(75,6902)
-        ENDIF
-
-!NiS,mar06: For the case of non-Kalypso-2D-format but nevertheless a
-!           continuity line block being entered, this should be told to
-!           the user and jumped over.
-      ElSE
-        IF(ID == 'SCL') THEN
-!NiS,mar06: Just an information message
-          write ( *,6906)
-          write (75,6906)
-          DO WHILE (ID/='ECL')
-            istat_temp = 0
-            READ(lin,'(A3)',iostat = istat_temp)ID
-            if (istat_temp /= 0) then
-              close (75)
-              OPEN(75,'ERROR.dat')
-              WRITE( *,6804)
-              WRITE(75,6804)
-              stop
-            end if
-          END DO
-	  CALL GINPT(lin,ID,DLIN)
-        ENDIF
-      ENDIF
-
-!NiS,mar06	write control
-
-      WRITE( *,6903)NCL
-      WRITE(75,6903)NCL
-      lines_schreiben: do i=1,NCL
-        IF(LINE(NCL,1)==0) CYCLE lines_schreiben
-        WRITE( *,6904)I,LINE(i,1),LINE(i,LMT(i))
-        WRITE(75,6904)I,LINE(i,1),LINE(i,LMT(i))
-      ENDDO lines_schreiben
-      WRITE( *,6905)
-      WRITE(75,6905)
-!NiS,mar06:     format descriptors for information messages; error messages at
-!               the end of this subroutine
- 6901 FORMAT(5x,'--- End of continuity line input block! ---')
- 6902 FORMAT(5x,'--- no continuity lines defined! ---')
- 6903 FORMAT(/
-     +       5x,'-----------------------------------',/
-     +       5x,'Control-output:',/
-     +       5x,'max ID-No. ',I3,/
-     +       5x,'continuity lines.')
- 6904 FORMAT(5x,'ID: ',I4,', 1.: ',I4,', last: ',I4,)
- 6905 FORMAT(5x,'-----------------------------------')
- 6906 FORMAT(5x,'---------------------------------',/
-     +       5x,'Continuity line definition in',/
-     +       5x,'in control file only allowed for',/
-     +       5x,'Kalypso-2D input format!',/
-     +       5x,'continued after CL-Block!',/
-     +       5x,'---------------------------------')
-      WRITE(*,*)'Just informational: ', id(1:6)
-!NiS,mar06: End of CONTINUITYLINEBLOCK-
 
 CIPK SEP96 ADD OCEAN BOUNDARY NODE LIST
 
@@ -1035,28 +798,9 @@ C-
 C-.....READ GENERATED GEOMETRY DATA
 C-
       write(*,*) 'going to getgeo'
+   
       CALL GETGEO
       write(*,*) 'back from getgeo'
-
-!NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
-!           At this point the IMAT-array is not modified by additions for element
-!           type pointer. These changes are made in threed.subroutine, which is
-!           started below.
-      !NiS,may06: testing
-      !OPEN(UNIT=357, FILE='roughnesstest.txt')
-      DO J=1,MaxE
-      !  WRITE(357,*) ' element    : ', J
-      !  WRITE(357,*) ' Material   : ', IMAT(J)
-      !  WRITE(357,*) ' Sandrauheit: ', ORT(IMAT(J),15)
-      !  WRITE(357,*) ' Baumabstand: ', ORT(IMAT(J),16)
-      !  WRITE(357,*) ' Baumdurchm.: ', ORT(IMAT(J),17)
-      !  WRITE(357,*) ' Ende Element ', J
-        CNIKU(J)     = ORT(IMAT(J),15)
-        ABST(J)      = ORT(IMAT(J),16)
-        DURCHBAUM(J) = ORT(IMAT(J),17)
-      END DO
-      !close (357,STATUS='keep')
-!-
 
 CIPK JUN02 GET LIST OF ACTIVE NODES INCLUDING NODES WITH ORT NON ZERO
       
@@ -1073,7 +817,6 @@ CIPK JUN02 GET LIST OF ACTIVE NODES INCLUDING NODES WITH ORT NON ZERO
 	  ENDIF
 	ENDDO
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN02   IBNA IS NOW ZERO FOR INACTIVE NODES
 C-
 C-..... Read reorder array if there is input
@@ -1092,11 +835,8 @@ CIPK JAN99 END ADDITION
         N2=N1+8
         IF(N2 .GT. NE) N2=NE
         NDATLN=NDATLN+1
-
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'RO ') THEN
           READ(DLIN,5010) (NFIXH(J),J=N1,N2)
           IF(N2 .LT. NE) GO TO 70
@@ -1139,8 +879,6 @@ CIPK NOV97      IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
 CIPKNOV97       IF(HMNN .LT. 0.) VEL(3,J)=-HMNN
       ENDDO
    80 CONTINUE
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C-.....READ EXTERNAL SLOPE SPECS.....
 C-
@@ -1155,8 +893,6 @@ CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         GO TO 81
       ENDIF
 C-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
 C  Read fixed salinity nodes and values
 C
@@ -1167,8 +903,6 @@ C
         NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'SA1') THEN
           WRITE(LOUT,6036) SALBC
           READ(DLIN,5010) (IFXSAL(K),K=1,9)
@@ -1197,8 +931,6 @@ cipk sep04
         N1=1
    83   N1=N1+9
         N9=N1+8
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'SA1') THEN
           READ(DLIN,5010) (IFXSAL(K),K=N1,N9)
           WRITE(LOUT,5010) (IFXSAL(K),K=N1,N9)
@@ -1219,15 +951,13 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
         ENDIF
         GO TO 82
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
 C  Read straight line mid-side nodes
 C
-      IF(ID(1:3) .EQ. 'ST1') THEN                               !NiS,mar06,comment:
-        READ(DLIN,5010) (IMIDD(K),K=1,9)                        !
-        WRITE(LOUT,6037) (IMIDD(K),K=1,9)                       !This part of the code does not do what the handbook says. Therefore see pages
-        NDATLN=NDATLN+1                                         !41/42 in the handbook release of September 2005
+      IF(ID(1:3) .EQ. 'ST1') THEN
+        READ(DLIN,5010) (IMIDD(K),K=1,9)
+        WRITE(LOUT,6037) (IMIDD(K),K=1,9)
+        NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 C
@@ -1238,8 +968,6 @@ C
         N1=1
   116   N1=N1+9
         N9=N1+8
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         IF(ID(1:3) .EQ. 'ST1') THEN
           READ(DLIN,5010) (IMIDD(K),K=N1,N9)
           WRITE(LOUT,5010) (IMIDD(K),K=N1,N9)
@@ -1247,15 +975,13 @@ C
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K)
+            N = IMIDD(K) 
             IF(N .GT. 0) NSTRT(N,2)=1
           ENDDO
           GO TO 116
         ENDIF
 
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
 C  Read Coefficients for salinity distribution at 2-d 3-d junctions
 C
@@ -1272,17 +998,15 @@ C
         NDATLN=NDATLN+1
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
 C  Read list of nodes and associated coefficient number for salinity distr.
 C
         IF(ID(1:3) .EQ. 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=1,9)
-          WRITE(LOUT,5010) (IMIDD(K),K=1,9)                                     !NiS,mar06,comment:
-          NDATLN=NDATLN+1                                                       !
-CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN                                !This part of the code does not do, what the handbook says. See
-      call ginpt(lin,id,dlin)                                                   !therefore page 42 in the handbook release of September 2005
+          WRITE(LOUT,5010) (IMIDD(K),K=1,9)
+          NDATLN=NDATLN+1
+CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN
+      call ginpt(lin,id,dlin)
           DO K = 1, 9
             N = IMIDD(KK)
             IF(N .GT. 0) ICPON(N)=J
@@ -1305,38 +1029,13 @@ cipk sep04
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K)
+            N = IMIDD(K) 
             IF(N .GT. 0) ICPON(N)=J
           ENDDO
           GO TO 193
         ENDIF
         GO TO 192
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!       CONTROL VOLUME FEM (CVFEM)-CONTROL                                      !
-!                                                                               !
-!NiS,mar06      At this point the switch for CVFEM-method is introduced for the !
-!               user entry "CVFEM" in the last line before "ENDGEO". If the user!
-!               does not enter anything the switch is set to 0, if he enters    !
-!               CVFEM it is set to 1; there should be a depending reading option!
-!               whether FEM should be set to 1 or 2 like it is done in Kalypso2D!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF (ID(1:5) == 'CVFEM') THEN
-        write (*,*) 'Control-Volume method, you have chosen, is not',
-     +              'yet. It will be calculated with Galerkin method'
-        FEM = 0
-        !FEM = 1
-      ELSE
-        FEM = 0
-      ENDIF
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!	End of CONTROL VOLUME FEM (CVFEM)-CONTROL				!
-!                                                                               !
-!NiS,mar06                                                                      !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
       IF(ID(1:6) .NE. 'ENDGEO') THEN
 cipk sep04
@@ -1346,6 +1045,8 @@ cipk sep04
         WRITE(75,*) 'ERROR AT END OF GEOMETRIC INPUT NO -ENDGEO- FOUND'
         STOP
       ENDIF
+
+
 
       CALL INITSED(IBIN)
 
@@ -1969,10 +1670,8 @@ C
 CIPK AUG95 ADD CALL TO GET MET DATA
       CALL INMET(LOUT,NMETF,TET)
 
-CIPK APR06
-      call getinit(ibin,1)
+      call getinit(ibin)
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C-..... Read reorder array if there is input
 C-
@@ -2027,11 +1726,6 @@ C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
 *     CALL BFORM(0)
 C-
-cipk may06
-      IF(LSS .GT. 0) THEN
-        CALL GETMAS
-      ENDIF
-
 CIPK JUL01
       CALL FILE(2,ANAME)
 
@@ -2049,9 +1743,6 @@ CIPK AUG02
  5030 FORMAT( I8, 8F8.0)
  5031 FORMAT(8X,8F8.0)
  5032 FORMAT(8X,I8,2F8.0)
-!Nis,apr06: new format
- 5033 FORMAT(8x,3f8.0)
-!-
 cipk apr96 add format
 CIPK OCT96 UPDATE FORMAT
 cipk jan97 update format
@@ -2059,7 +1750,7 @@ CIPK DEC00 UPDATE FORMAT
  5061 FORMAT(4I8,F8.0,I8,2f8.2,I8)
  6000 FORMAT( 1H1  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA
      1M RMA-10S'/ 10X, 'THREE-DIMENSIONAL HYDRODYNAMICS  WITH SALINITY-T
-     2EMPERATURE-SEDIMENT'/18X,'VERSION 3.5d MAy 2006')
+     2EMPERATURE-SEDIMENT'/18X,'VERSION 3.5B MARCH 2006')
  6005 FORMAT( 5X, A72 )
 cipk apr96 add format and change start of 6010
 CIPK OCT96 UPDATE FORMAT
@@ -2122,10 +1813,7 @@ cipk mar98 add to format for additional parameter
      1'  NUM   X-X TURB   X-Y TURB   Y-X TURB   Y-Y TURB CHEZY-MANN   X-
      2Z TURB   Y-Z TURB     X DIFF     Y DIFF     Z DIFF  BANK-FRIC'
      3,'  MARSH FAC SURF MANN   MIN DIFF')
-!NiS,apr06: increased number of field entries:
-! 6031 FORMAT( I5,1P14E11.3)
- 6031 FORMAT( I5,1P17E11.3)
-!-
+ 6031 FORMAT( I5,1P14E11.3)
 CIPK MAR01
  6032 FORMAT(/'VARIABLE MANNING COEFFICIENTS HAVE BEEN DEFINED'/
      +'   EL TYPE    ELEV MIN     MAN MIN    ELEV MAX     MAN MAX')
@@ -2232,53 +1920,10 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
      + 5X,'CALIBRATION PARAMETER - 3        ',F8.4/
      + 5X,'CALIBRATION PARAMETER - 4        ',F8.4/
      + 5X,'TRANSITION VELOCITY FOR HEAT FLUX',F8.3/)
-
-!NiS,mar06      new formats for Error handling messages
- 6801        FORMAT(5x,'------------------------------------',/
-     +              5x,'Wrong Definition of Continuity line!',/
-     +              5x,I3,' st/nd/rd/th "CC1" is missing!',/
-     +              5x,'Program will be stopped!',/
-     +              5x,'-----------------------------------')
- 6802        FORMAT(5x,'------------------------------',/
-     +              5x,'Wrong Definition of Continuity',/
-     +              5x,'line with ID-No.: ',I3,/
-     +              5x,'Program will be stopped!',/
-     +              5x,'------------------------------')
- 6803        FORMAT(5x,'------------------------------------',/
-     +              5x,'no end of continuity line block',/
-     +              5x,'condition. The sign "ECL" is missing',/
-     +              5x,'Program will be stopped!',/
-     +              5x,'------------------------------------')
- 6804        FORMAT(5x,'----------------------------------------',/
-     +              5x,'Although no continuity line to read,',/
-     +              5x,'the start of continuity block sign "SCL"',/
-     +              5x,'exists. To continue without reading',/
-     +              5x,'that block an end of continuity block',/
-     +              5x,'sign is necessary.',/
-     +              5x,'Program is stopped!',/
-     +              5x,'----------------------------------------')
-!-
-
-!NiS,apr06: new format for error handling while proceeding on
-!           element material definitions:
- 6810        FORMAT(5x,'---------------------------------------------',/
-     +              5x,'ERROR - Calculation only works if there',/
-     +              5x,'are equivalent sand roughnesses and in',/
-     +              5x,'in combination with vegetation roughness',/
-     +              5x,'calculation: Delete the line "PASCHE" from',/
-     +              5x,'control file or fill in the correct parameter',/
-     +              5x,'configuration.'
-     +              5x,'---------------------------------------------')
-!-
-
       END
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk feb97 new subroutine to process input files
       SUBROUTINE GINPT(IIN,ID,DLIN)
-
       CHARACTER ID*8,DLIN*72
-
 cipk jan03  ADD AN EXTRA 8 CHARACTERS
       CHARACTER*8 DLINEXTRA
       COMMON /DLINF/ DLINEXTRA
@@ -2319,10 +1964,7 @@ cipk sep04
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
       SUBROUTINE GINPT10(IIN,ID,DLIN)
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
-!NiS,jul06: Length of variable does not fit the calling length
-!      CHARACTER ID*8,DLIN*88
-      CHARACTER ID*8,DLIN*80
-!-
+      CHARACTER ID*8,DLIN*88
   100 CONTINUE
       READ(IIN,7000) ID,DLIN
       write(75,7000) id,dlin

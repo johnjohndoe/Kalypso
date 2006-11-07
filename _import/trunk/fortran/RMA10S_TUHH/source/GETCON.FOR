@@ -12,6 +12,9 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
           NCN=NCORN(N)
 	    DO M=1,NCN
             DO I=1,12
+            IF(ELTON(NOP(N,M),I) .EQ. N) THEN
+	        GO TO 250
+	      ENDIF
 		    IF(ELTON(NOP(N,M),I) .EQ. 0) THEN
 	          ELTON(NOP(N,M),I) = N
 	          GO TO 250
@@ -19,6 +22,7 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
 	      ENDDO
   	      WRITE(75,*) 
      +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+            WRITE(75,*) (ELTON(NOP(N,M),I),I=1,12)
             WRITE(*,*)
      +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
 	      STOP

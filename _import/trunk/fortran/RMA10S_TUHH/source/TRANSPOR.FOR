@@ -1,3 +1,4 @@
+CIPK LAST UPDATE MAR 05 2006 REMOVE PRIBT STATEMENTS
 CIPK DEC02 ADD TEST FOR STRAY DIRECTIONS
 
       SUBROUTINE TRANSPOR(HS,TPS,WDIR,VRR,CDIR,D50MM,D90MM,RNU,SGSA,RHOW
@@ -60,8 +61,9 @@ CIPK JUN02      IF(PHI.GE.180.) PHI = 360. - PHI
       if(phi.eq.0.)phi=0.1
       if(phi.eq.180.)phi=179.9
       if(phi.eq.360.)phi=359.9
-      write(108,'(i5,5f10.2)') 
-     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
+CIPK MAR06
+C      write(108,'(i5,5f10.2)') 
+C     +   node,cdir/pi*180.,wdir/pi*180.,cang,wang,phi
       NN     = 12
       G      = 9.81
       phi    = phi/180.*pi
@@ -694,8 +696,9 @@ CIPK JUN02
       WRITE(75,'(''   TOTAL L. TR. COMPONENT IN WAVE DIR.   (KG/SM) ='',
      *E10.4)')STW
 	else
-	  write(108,'(i5,4f10.3,3f10.2)') 
-     +   node,stvec,stx,sty,stc,stw,STCC/(HDS*VRR)*1000.,rmat(1,2)
+CIPK MAR06
+C	  write(108,'(i5,4f10.3,3f10.2)') 
+C     +   node,stvec,stx,sty,stc,stw,STCC/(HDS*VRR)*1000.,rmat(1,2)
 	endif
 	RETURN
       END

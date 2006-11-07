@@ -10,8 +10,10 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05	INCLUDE 'BLKSST.COM'
 CIPK AUG05	INCLUDE 'BLKSAND.COM'
 
+
       CHARACTER*8 IDSW
-      CHARACTER*80 DLINSW,SWANDIR
+      CHARACTER*72 DLINSW,SWANDIR ! DJW 28/10/05 Changed from 80 to 72.  This managed to get it working!
+
 
       DATA ITIME/0/
 
@@ -45,6 +47,12 @@ C     First time open the SWAN defaults file
 	      SWANFL1=TRIM(SWANDIR)//TRIM(DLINSW)
           ELSEIF(IDSW(1:6) .EQ. 'EDTFL2') THEN
 	      SWANFL2=TRIM(SWANDIR)//TRIM(DLINSW)
+cAdded Capability to handle EDTFL3 here : Note Extras can be added if required djw 24/01/05
+          ELSEIF(IDSW(1:6) .EQ. 'EDTFL3') THEN
+	      SWANFL3=TRIM(SWANDIR)//TRIM(DLINSW)
+       
+
+
           ELSEIF(IDSW(1:7) .EQ. 'FWAVOUT') THEN
 	      SWANOUT=TRIM(SWANDIR)//TRIM(DLINSW)
  	    ELSEIF(IDSW(1:7) .EQ. 'SWANCTL') THEN
@@ -54,6 +62,11 @@ cipk jan03 add RMAPTS file
  	    ELSEIF(IDSW(1:7) .EQ. 'FRMPTS') THEN
 	      SWANPTS=TRIM(SWANDIR)//TRIM(DLINSW)
 
+C DJW 10/06/04  Add Check for Number of Meshes
+          ELSEIF(IDSW(1:5) .EQ. 'IMESH') THEN
+	      READ(DLINSW,*) ISWMESH 
+         
+C DJW 10/06/04 End of Changes
 
           ELSEIF(IDSW(1:7) .EQ. 'ENDDATA') THEN
 	      GO TO 210
@@ -72,9 +85,11 @@ cipk jan03 add RMAPTS file
         ENDDO
   220   CONTINUE
 	  CLOSE(106)
-
+C     DJW 10/06/04 Surrounding If block added to trap if there is a single mesh.
+      IF (ISWMESH.GT.1) THEN
         OPEN(106,FILE=SWANFL2,STATUS='OLD',FORM='FORMATTED')
 
+      
         DO N=1,100
           READ(106,'(A120)') SWANDAT(N,2)
           IF(SWANDAT(N,2)(1:4) .EQ. 'STOP') THEN
@@ -82,7 +97,23 @@ cipk jan03 add RMAPTS file
             GO TO 250
           ENDIF
         ENDDO
-  250   CONTINUE
+      END IF
+  250 CONTINUE
+C     DJW 24/01/04 Added Capability for a third mesh
+      IF (ISWMESH.GT.2) THEN
+        OPEN(106,FILE=SWANFL3,STATUS='OLD',FORM='FORMATTED')
+        DO N=1,100
+          READ(106,'(A120)') SWANDAT(N,3)
+          IF(SWANDAT(N,3)(1:4) .EQ. 'STOP') THEN
+            NLINSW3=N
+            GO TO 260
+          ENDIF
+        ENDDO
+      END IF
+  260 CONTINUE
+  
+  
+  
 
 	  CLOSE(106)
 C    Now get the first line of the Swan values
@@ -242,7 +273,21 @@ c       Now interpolate
         STRESS(K,2)=STR20(K)+FCTI*(STR21(K)-STR20(K))
 	  WAVEHT(K)=WAVEHT0(K)+FCTI*(WAVEHT1(K)-WAVEHT0(K))
 	  PEAKPRD(K)=PEAKPRD0(K)+FCTI*(PEAKPRD1(K)-PEAKPRD0(K))
-	  WAVEDR(K)=WAVEDR0(K)+FCTI*(WAVEDR1(K)-WAVEDR0(K))
+	  !
+	  !  djw 18/04/05
+	  !
+	  !  Altered to consider the case when a direction of zero is calculated
+	  !  Due to the wave model being dry nearshore at low tide.  In this case
+	  !  a value equal to the other end of the interpolation is adopted
+	  !
+	  !WAVEDR(K)=WAVEDR0(K)+FCTI*(WAVEDR1(K)-WAVEDR0(K))
+	  If (WAVEHT0(K).EQ.0.0) Then
+	     WAVEDR(K) = WAVEDR1(K)
+        Else If (WAVEHT1(K).EQ.0.0) Then
+           WAVEDR(K) = WAVEDR0(K)
+	  Else
+	     WAVEDR(K)=WAVEDR0(K)+FCTI*(WAVEDR1(K)-WAVEDR0(K))
+        End If
       ENDDO
       RETURN
       END

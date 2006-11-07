@@ -19,6 +19,12 @@
       QRH=(FLWCS(NCTR,NRHI,NCHI)-FLWCS(NCTR,NRHI-1,NCHI))*WTR
      +    +FLWCS(NCTR,NRHI-1,NCHI)
 	Q=(QRH-QRL)*WTC+QRL
+	
+	Diff = ABS(H1-H2)
+	IF (Diff.gt.0.02) Then
+	dummy = 0
+	End If
+
 
 	RETURN
 	END

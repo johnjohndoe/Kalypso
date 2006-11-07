@@ -1,5 +1,6 @@
-C     Last change:  AF   13 Jul 2006   11:14 am
-
+CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
+cipk  last update mar 07 2006 add call to ginpt for limits option
+CIPK  LAST UPDATE MAR 05 2006 ADD ALLOCATION TO USE NODAL PROPS
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 04 2002 ADD WAVE DATA INITIALIZATION
 CIPK  LAST UPDATE MAY 28 2002 ADD STRESS INITIALIZATION
@@ -22,9 +23,6 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE BLKCDMOD
       USE BLKABMOD
       USE PARAMMOD
-!NiS,apr06: add module for Kalypso-specific calculations
-      USE PARAKalyps
-!-
       
 C	INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -58,7 +56,7 @@ c     Initialisation of values
       call ginpt(Lin,id,dlin)
       IF(ID(1:8) .EQ. 'ENDLIMIT') THEN
 cipk mar06  add call for ENDLIMIT case
-        call ginpt(Lin,id,dlin)
+      call ginpt(Lin,id,dlin)
         GO TO 250
       ELSEIF(ID(1:2) .EQ. 'TI') THEN
         GO TO 250
@@ -103,8 +101,8 @@ C        READ(DLIN,'(I8)') MAXSTP
       WRITE(LOUT,6000) MFWW
       WRITE(LOUT,6001) NBSS
       WRITE(LOUT,6014) NLAYMX
-      WRITE(LOUT,6015) MXSEDLAY      
-CIPKMAR06
+      WRITE(LOUT,6015) MXSEDLAY
+CIPKMAR06            
       WRITE(LOUT,6004) NCQOBS
       WRITE(LOUT,6005) NQLDS
       WRITE(LOUT,6006) NCHOBS
@@ -133,6 +131,7 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
      + ,LDEST(MFWW),QR(MFWW))
 	ALLOCATE (LHS(NBS),QS(NBS))
+
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
 
@@ -165,7 +164,7 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
      +           ,EVISXZ(MAXP),EVISYZ(MAXP),DVISZ(MAXP)
      +           ,UDST(MAXP),VDST(MAXP),UUDST(MAXP),UVDST(MAXP)
      +           ,VVDST(MAXP),SDST(MAXP),TDST(MAXP),SEDST(MAXP)
-     +           ,IMID(MAXP,2),IPASST(MAXP))
+     +           ,IMID(MAXP,2))
 
       ALLOCATE   (NDRY(MAXP),NDRYO(MAXP),IPT(MAXP),DREC(MAXP),
      +               IMATO(MAXE),LISTEL(MAXE)
@@ -182,10 +181,7 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
      +                ,STR10(MAXP),STR20(MAXP)
      +                ,STR11(MAXP),STR21(MAXP))
 
-!NiS,apr06: increase the number of element characteristics array ORT(:,:)
-!      ALLOCATE   (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
-      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,17),NFIXH(MAXE)
-!-
+      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
      3             ,TH(MAXE),AREA(MAXE),NCORN(MAXE),IMATL(MAXE)
      7             ,NOPS(MAXE,8),NCRN(MAXE),LNO(MAXE),SIDF(MAXE)
      +             ,SIDQ(MAXE,3),ZMANN(MAXE),CHEZ(MAXE),NETYP(MAXE)
@@ -230,7 +226,6 @@ CIPK MAR06
      +           ,VSANDND(MAXP),ISMODEND(MAXP)
      +           ,SDND(1,MAXP))
 
-
       ALLOCATE   (WAVEHT(MAXP),PEAKPRD(MAXP),WAVEDR(MAXP)
      +                ,WAVEHT0(MAXP),PEAKPRD0(MAXP),WAVEDR0(MAXP)
      +                ,WAVEHT1(MAXP),PEAKPRD1(MAXP),WAVEDR1(MAXP)
@@ -259,12 +254,6 @@ CIPK MAR06
       ALLOCATE (ICETHK(MAXP),QICE(MAXP),WNDSP(MAXP),WNDDR(MAXP)
      +,SNOWD(MAXP),AIRTMP(MAXP),ICETHKOL(MAXP),SIGMA(MAXP,2))
 
-CIPK MAY06
-      ALLOCATE (TMSAND(0:MAXP),TMSSAND(0:MAXP))
-      TMSAND=0
-      TMSSAND=0
-
-
 CIPK AUG05 ZERO ARRAYS
       ITAB=0
       CRSLOP=0.
@@ -288,7 +277,7 @@ CIPK AUG05 ZERO ARRAYS
       IDONE=0
       DELBED=0.
       GP=0.
-
+      
 CIPK MAR06
       SGSAND=0.
       CLDEND=0.
@@ -301,6 +290,7 @@ CIPK MAR06
       VSANDND=0.
       ISMODEND=0
       SDND=0.
+
 
       WAVEHT=0.
       PEAKPRD=0.
@@ -561,10 +551,7 @@ CIPK NOV97
           NOPSS(J,K)=0
 	  ENDDO
         IMAT(J)=0
-!NiS,apr06: increased number of variables:
-!        DO K=1,14
-        DO K=1,17
-!-
+        DO K=1,14
           ORT(J,K)=0.
         ENDDO
         LISTEL(J)=0
@@ -684,36 +671,5 @@ CIPK MAR01
 	  ADDTMP(J,1)=-9999.
 	  ADDSED(J)=-9999.
 	ENDDO
-
-!NiS,apr06: allocate and initialize the aour-array
-      ALLOCATE (aour(maxp))
-      do j=1,maxp
-        aour(j) = 0
-      ENDDO
-!-
-!NiS,apr06: allocating arrays for roughness calculation in DARCY-WEISBACH-equation
-      ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
-      ALLOCATE (C_WR(MaxE))
-      ALLOCATE (mh(MaxE), mvx(MaxE), mvy(MaxE), mvxvy(MaxE))
-      ALLOCATE (rausv(4,MaxP))
-      DO j=1, MaxE
-        CNIKU(j)     = 0.0
-        DURCHBAUM(j) = 0.0
-        ABST(j)      = 0.0
-      ENDDO
-!-
-!NiS,apr06: allocating arrays for neighbourhood relations
-      ALLOCATE (nconnect(1:MaxP),neighb(1:MaxP,0:100),mcord(1:MaxE,1:2))
-!-
-
-!NiS,jul06: allocating the (for the moment) dummy gl_bedform array to pass variables correctly to the subroutine 
-!           formrauheit
-      allocate (gl_bedform(1:MaxE,1:4))
-      do i = 1, MaxE
-        do j = 1,4
-          gl_bedform(i,j) = 0
-        enddo
-      enddo
-!-      
       RETURN
 	END

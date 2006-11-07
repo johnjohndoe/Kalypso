@@ -1,4 +1,4 @@
-C     Last change:  M    14 Jul 2006    4:01 pm
+CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -25,6 +25,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
+C     Last change:  IPK   5 Oct 98    2:53 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -39,22 +40,8 @@ CIPK  LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
-!NiS,apr06: adding module for DARCY-WEISBACH friction
-      USE PARAKalyps
-!-
       SAVE
-
-!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
-!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
-!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
-!           also as real, kind=8.
-      REAL(KIND=8) :: HS, HM, DUM1
-!-
-
 C
-!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
-      REAL :: lambda
-!-
 cycw aug94 add double precision salt
       REAL*8 SALT
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -103,11 +90,7 @@ C-
       DATA FCOEF/14.47/,THRESH/1.0E-3/,PI/3.14159/
 C
 CIPK MAR05
-cWP      data  pi/3.14159/
-
-	IF(NN .EQ.  362) THEN
-	AAA=0
-	ENDIF
+      data  pi/3.14159/
 
       IF (GRAV .LT. 32.)  THEN
         FCOEF = GRAV
@@ -161,7 +144,7 @@ CIPK JUN05 MOVE LOOP
 cipk jun05
       inovel=0
       if(iteqv(maxn) .eq. 2) inovel=1
-      if(iteqv(maxn) .eq. 8) inovel=2
+      if(iteqv(maxn) .eq. 8)  inovel=2
       if(iteqv(maxn) .eq. 9) inovel=3
 
 cipk oct98 update to f90
@@ -236,8 +219,8 @@ cipk jan97          IF(IEDSW .EQ. 4)
           CX=COS(THNN)
           SA=SIN(THNN)
         ENDIF
-      ELSE
-        IF(IDIFSW .EQ. 9  .OR. IDIFSW .EQ. 1) THEN
+	ELSE
+	  IF(IDIFSW .EQ. 9  .OR. IDIFSW .EQ. 1) THEN
           CX=COS(THNN)
           SA=SIN(THNN)
         ELSEIF(IDIFSW .GT. 1  .AND. IDIFSW .LT. 6) THEN
@@ -263,7 +246,7 @@ c     Normalize velocity vector length
             SA=SIN(THNN)
           ENDIF
         ENDIF
-      ENDIF
+	ENDIF
 
 cipk mar03 end changes
 cipk sep96 move up this computation
@@ -627,7 +610,10 @@ cipk jun02
 	  GAIN=GAIN+XM(M)*GAN(MR)
 	  WSELL=WSELL+WSLL(MR)*XM(M)
 CIPK SEP02
-        EXTL=EXTL+XM(M)*EXTLD(MR)
+CIPK DEC05
+        IF(ICK .EQ. 6) THEN
+          EXTL=EXTL+XM(M)*EXTLD(MR)
+        ENDIF
 cipk jan00 correct location for azer
 C        AZER=AZER+XM(M)*AO(MR)
         BETA3=BETA3+XM(M)*VDOT(3,MR)
@@ -678,6 +664,9 @@ c      r=r/5.
 c      s=s/5.
 
 CIPK NOV97  275 CONTINUE
+
+CIPK DEC05
+      EXTL=EXTL+EXTLDEL(NN)
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
       IF(H+AZER .LT. ABED) THEN
@@ -843,88 +832,82 @@ CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
       VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
       IF(H .LE. 0.0) H=0.001
 
-!NiS,apr06: adding possibility of FrictionFactor calculation with
-!           COLEBROOK-WHITE to apply DARCY-WEISBACH equation: Therefore,
-!           the if-clause has also to be changed because surface friction
-!           is deactivated!
-cipk nov98 adjust for surface friction
-  !NiS,apr06: changing if-clause:
-  !    IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
-      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
-     +   ORT(NR,5) /= -1)) THEN
-  !-
-CIPK SEP02
-	EFMAN=0.
-        IF(ORT(NR,5) .LT. 1.0  .AND.  ORT(NR,13) .LT. 1.0) then
 
+cipk nov98 adjust for surface friction
+      IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
+CIPK SEP02
+	  EFMAN=0.
+        IF(ORT(NR,5) .LT. 1.0  .AND.  ORT(NR,13) .LT. 1.0) then
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(NR) .GT. 0.) THEN
-	    IF(H+AZER .LT. ELMMIN(NR) ) THEN
+	      IF(H+AZER .LT. ELMMIN(NR) ) THEN 
               FFACT=(MANMIN(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMIN(NR)
-            ELSEIF(H+AZER .GT. ELMMAX(NR) ) THEN
+	        EFMAN=MANMIN(NR)
+          ELSEIF(H+AZER .GT. ELMMAX(NR) ) THEN 
               FFACT=(MANMAX(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMAX(NR)
-            ELSE
-	      FSCL=(H+AZER-ELMMIN(NR))/(ELMMAX(NR)-ELMMIN(NR))
+	        EFMAN=MANMAX(NR)
+          ELSE
+	        FSCL=(H+AZER-ELMMIN(NR))/(ELMMAX(NR)-ELMMIN(NR))
               FFACT=(MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR)))**2
-     +     	    *FCOEF/(H**0.333)
+     +     	       *FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR))
-	    ENDIF
+	        EFMAN=MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR))
+	  ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-          ELSEIF(HMAN(NR,2) .GT. 0  .OR. HMAN(NR,3) .GT. 0.) THEN
-	    TEMAN=0.
+        ELSEIF(HMAN(NR,2) .GT. 0  .OR. HMAN(NR,3) .GT. 0.) THEN
+	      TEMAN=0.
             IF(HMAN(NR,2) .GT. 0) THEN 
-	      TEMAN=HMAN(NR,3)*EXP(-H/HMAN(NR,2))
-	    ENDIF
-	    TEMAN=TEMAN+HMAN(NR,1)/H**HMAN(NR,4)
+	        TEMAN=HMAN(NR,3)*EXP(-H/HMAN(NR,2))
+	      ENDIF
+	      TEMAN=TEMAN+HMAN(NR,1)/H**HMAN(NR,4)
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(NR,1,2) .GT. 0.) THEN
-	    DO K=1,4
-	      IF(H .LT. MANTAB(NR,K,1)) THEN
-	        IF(K .EQ. 1) THEN
-	          TEMAN=MANTAB(NR,1,2)
-	        ELSE
-	          FACT=(H-MANTAB(NR,K-1,1))/
-     +                 (MANTAB(NR,K,1)-MANTAB(NR,K-1,1))
-	          TEMAN=MANTAB(NR,K-1,2)
-     +                  +FACT*(MANTAB(NR,K,2)-MANTAB(NR,K-1,2))
+	      DO K=1,4
+	        IF(H .LT. MANTAB(NR,K,1)) THEN
+	          IF(K .EQ. 1) THEN
+	            TEMAN=MANTAB(NR,1,2)
+	          ELSE
+	            FACT=(H-MANTAB(NR,K-1,1))/
+     +                  (MANTAB(NR,K,1)-MANTAB(NR,K-1,1))
+	            TEMAN=MANTAB(NR,K-1,2)
+     +            +FACT*(MANTAB(NR,K,2)-MANTAB(NR,K-1,2))
+	          ENDIF
+	          GO TO 280
 	        ENDIF
-	        GO TO 280
-	      ENDIF
-	    ENDDO
-	    TEMAN=MANTAB(NR,4,2)
+	      ENDDO
+	      TEMAN=MANTAB(NR,4,2)
   280       CONTINUE
             FFACT=TEMAN**2*FCOEF/(H**0.333)
 
 cipk mar05
             DFFDH=-FFACT/(H*3.0)
           ELSE
-            FFACT=(ORT(NR,5)+ORT(NR,13))**2*FCOEF/(H**0.333)
-
+!**************************************************************
+!
+!   DJW 31/10/05 : Friction Factor Modification to adjust for Roughness Calcs
+!
+!**************************************************************
+!
+!            FFACT=(ORT(NR,5)+ORT(NR,13))**2*FCOEF/(H**0.333)
+	      FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
+!
+!**************************************************************
+!
+!        End DJW Changes
+!
+!**************************************************************
 
 cipk mar05
             DFFDH=-FFACT/(H*3.0)
-	  ENDIF
-
+	    endif
 cipk mar05
         ELSE
           DFFDH=0.
         ENDIF
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      ELSEIF (ORT(NR,5) == -1) THEN
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn))
-        FFACT = lambda/8.0
-
-      !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear
-        DFFDH = 0.
-      !-
-!-
       ENDIF
+
 
 CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 

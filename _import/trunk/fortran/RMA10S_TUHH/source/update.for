@@ -1,9 +1,9 @@
-C     Last change:  AF   17 Jul 2006   12:22 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Jan 16 2000 fix bug from SL condition
+C     Last change:  IPK   5 Oct 98    2:15 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE APR 30 1996
       SUBROUTINE UPDATE
@@ -16,9 +16,7 @@ C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
-!NiS,jul06: Consistent data types for passing paramters
-      REAL(KIND=8) H, H1, VT, HS
-!-
+
 cipk apr05
       common /epor/ efpor
 C-
@@ -140,12 +138,6 @@ cipk dec97 define urfcc
       URFCC =1.0
       ITEST=0
       DO 150 J = 1, NP
-
-!NiS,jun06:testing
-!        if (j.eq.12816.or.j.eq.12790.or.j.eq.12791)
-!     +  WRITE(*,*) r1(nbc(j,kk)), j
-!-
-
 	IF(J .EQ. 1332) THEN
 	AAA=0
 	ENDIF
@@ -168,12 +160,6 @@ c
         ENDIF
       ENDIF
       EX=R1(I)*URFC*urfcc
-
-!nis,jun06:testing
-!        if (j.eq.12816.or.j.eq.12790.or.j.eq.12791)
-!     +     WRITE(*,*) ex, r1(i),urfc,urfcc
-!-
-
 cik dec97 end changes
       AEX = ABS( EX )
       EAVG(K) = EAVG(K) + AEX
@@ -200,38 +186,12 @@ cipk jun05
       ENDIF
       EX=EX*FCA
       IF( K .GT. 2 ) GO TO 140
-
-      !NiS,jun06: testing
-      !IF(adif(j).ne.0) WRITE(*,*) 'Knoten',J, alfa(j), adif(j)
-      !-
-
       IF(ADIF(J) .NE. 0.) EX=EX/COS(ADIF(J))
-
-!NiS,jun06:testing for the strang if-construct, perhaps fortran 77: It tests, whether the number is negativ, zero or positiv. In dependency of that,
-!          the first, second or third command/jumpmarker ist reached.
-!      IF(alfa(j)) 9991, 9992, 9993
-! 9991 WRITE(*,*) '9991', alfa(j), j
-!9992 WRITE(*,*) '9992', alfa(j), j
-! 9993 WRITE(*,*) '9993', alfa(j), j
-!-
-
       IF( ALFA(J)  ) 130, 140,130
 cipk jan00  130 VEL(K,J) = VEL(K,J) + EX*COS(ALFA(J) )
 cipk jan00      VEL(K+1,J) = VEL(K+1,J) + EX*SIN(ALFA(J) )
 cipk jan00      GO TO 150
   130 CONTINUE
-
-!nis,jun06:testing
-!WRITE(*,*) j, alfa(j)
-!-
-      !NiS,jun06:testing
-      !if (j.eq.12816.or.j.eq.12790.or.j.eq.12791) then
-      if (j.eq.12790) then
-        write(*,*) 'vor',vel(1,j),vel(2,j),vel(3,j),alfa(j),ex,adif(j)
-      endif
-      !-
-
-
       IF(K .EQ. 1) THEN
         VEL(K,J) = VEL(K,J) + EX*COS( ALFA(J) )
         VEL(K+1,J) = VEL(K+1,J) + EX*SIN( ALFA(J) )
@@ -239,14 +199,6 @@ cipk jan00      GO TO 150
         VEL(K-1,J) = VEL(K-1,J) - EX*SIN( ALFA(J) )
         VEL(K,J)   = VEL(K  ,J) + EX*COS( ALFA(J) )
       ENDIF
-
-      !NiS,jun06:testing
-      !if (j.eq.12816.or.j.eq.12790.or.j.eq.12791) then
-      if (j.eq.12790) then
-        write(*,*) 'nach',vel(1,j),vel(2,j),vel(3,j),alfa(j),ex,adif(j)
-      endif
-      !-
-
       GO TO 150
 CIPK NOV97
   140 IF(K .NE. 3) GO TO 149
@@ -326,7 +278,7 @@ CIPK MAY02 ALLOW FOR ICK=7
 CIPK AUG01
       IF(ABS(EMAX(K)) .GT. CONV(K)) NCNV(K)=1      
   160 CONTINUE
-      WRITE(75,'(''NCNV-160'',9i5)') MAXN,(NCNV(I),I=1,7),nconv
+      WRITE(75,'(''NCNV-160'',9i5)'),MAXN,(NCNV(I),I=1,7),nconv
 C-
 C-.....OUTPUT RESULTS OF CHANGES.....
 C-
@@ -357,14 +309,7 @@ CAUG93IPK  WRITE(*,6011) J,EAVG(J),EMAX(J),NMX(J),IVAR(J,1),IVAR(J,2),ICYC
 CIPK MAY02 EXPAND TO 7
       WRITE(LITR,6040)TET,ICYC,MAXN,NSZF,(EMAX(J),NMX(J),J=1,7),
      +   (EAVG(J),J=1,7)
-
-!NiS,mar06: Change of format-descriptor because number of descriptors does
-!           not fit the number of written Variables; increasing number
-!           from 6 to 7
-! 6040 FORMAT(F8.1,I5,I3,I6,6(F10.4,I5),6(F9.4))
- 6040  FORMAT(F8.1,I5,I3,I6,7(F10.4,I5),7(F9.4))
-
-
+ 6040 FORMAT(F8.1,I5,I3,I6,6(F10.4,I5),6(F9.4))
 C      NKCONV(MAXN)=NCONV
 C      IF(NCONV .EQ. 1) THEN
 C        DO 205 MB=MAXN-1,1,-1
@@ -405,6 +350,24 @@ CIPK FEB03    RESET ALL FOR NON-CONVERGENCE
 	    ENDIF
 	  ENDDO
       ENDIF
+!*************************************************************************DJW 04/08/04
+!
+!     Checks Salinity Values against maximum and minimum permissible values and resets
+!     to keep within an appropriate range as appropriate
+!
+!*************************************************************************
+      SalLowPerm = 0.0001
+	SalHighPerm = 250
+      Do J = 1,NP
+	  If (Vel(4,J).LT.SalLowPerm) Then
+          Vel(4,J) = SalLowPerm
+        End If
+	  If (Vel(4,J).GT.SalHighPerm) Then ! djw Salinity High Overide can be commented out if a crash is to be forced to 
+          Vel(4,J) = SalHighPerm          ! Enable debugging
+	  End If
+	End Do
+!*************************************************************************END DJW 04/08/04
+
   207 CONTINUE
       write(*,*) nconv,conv(1),conv(2),conv(3)
 C

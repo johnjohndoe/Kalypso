@@ -1,4 +1,4 @@
-      SUBROUTINE SWITON(K,ISWT,IYRR,DAYOFY,TET)
+      SUBROUTINE SWITON(K,ISWT,IYRR,DAYOFY,TET,QFACT)
 	USE TSVAR
       INTEGER DAYOFY
 
@@ -15,6 +15,16 @@
         IF(RTIME .GE. CTIMEON(K,L)) THEN
 	    IF(RTIME .LT. CTIMEOF(K,L)) THEN
 	      ISWT=0
+CIPK DEC05
+            QFACT=1.
+            IF(RTIME .LT. HTIMEON(K,L))	THEN
+             if(HTIMEON(K,L) .GT. CTIMEON(K,L)) 
+     +       QFACT=(RTIME- CTIMEON(K,L))/(HTIMEON(K,L)- CTIMEON(K,L))
+            ENDIF
+            IF(RTIME .GT. HTIMEOF(K,L))	THEN
+             IF(CTIMEOF(K,L) .GT. HTIMEOF(K,L))
+     +       QFACT=1.-(RTIME- HTIMEOF(K,L))/(CTIMEOF(K,L)- HTIMEOF(K,L))
+            ENDIF
 	      RETURN
 	    ENDIF
 	  ELSE

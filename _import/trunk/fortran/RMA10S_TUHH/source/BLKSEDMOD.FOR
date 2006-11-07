@@ -49,12 +49,12 @@ c-    VSST   = settling velocity
 
       ALLOCATABLE NLAYTND(:),GAWND(:),UNND(:),GABND(:),TTLAYND(:)
      +           ,GACND(:),WEGTND(:),ERCND(:),SSND(:,:),GBND(:,:)
-     +           ,TLAYND(:,:),GADND(:,:),TAUCDND(:),EROST(:,:)
+     +           ,TLAYND(:,:),GADND(:,:),TAUCDND(:)
 
       REAL TAUCDM,GAWM,GABM,ERCM,UNM,GACM
       INTEGER NLAYTM
 
-      ALLOCATABLE GBM(:),SSM(:),GADM(:),TLAYM(:),EROSTM(:)
+      ALLOCATABLE GBM(:),SSM(:),GADM(:),TLAYM(:)
 
       ALLOCATABLE  TLAY(:),GAD(:),SS(:), GB(:)
 
@@ -78,9 +78,6 @@ C     DEPINCR=  increment of depth over simulation
      +            THICK(:,:),SST(:,:),TM(:),TMD(:) 
      +           ,BEDORIG(:),DEPINCR(:),BEDELO(:)
 
-CIPK MAY06
-      REAL*8 TMSED,TMSSED
-      ALLOCATABLE TMSED(:),TMSSED(:)
       ALLOCATABLE SSTOM(:),SMVALM(:),GBOM(:),THICKOM(:)
 
 
