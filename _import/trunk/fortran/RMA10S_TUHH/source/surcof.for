@@ -29,6 +29,10 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKSST.COM'
 C      INCLUDE 'RKEP.COM'
 C-
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: h
+!-
+
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
       REAL*8 SALT,xl,yl
       COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
