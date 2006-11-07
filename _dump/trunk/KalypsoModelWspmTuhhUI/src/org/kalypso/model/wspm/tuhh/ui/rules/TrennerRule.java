@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 
 /**
@@ -74,9 +75,9 @@ public class TrennerRule extends AbstractValidatorRule
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     if( db == null )
-      collector.createProfilMarker( true, "keine Durchströmten Bereiche vorhanden", "", 0, "", pluginId, null );
+      collector.createProfilMarker( true, "keine Durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution(new DEVIDER_TYP[]{DEVIDER_TYP.DURCHSTROEMTE } ) }  );
     if( tf == null )
-      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, null );
+      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId,  new IMarkerResolution2[] { new AddDeviderResolution(new DEVIDER_TYP[]{DEVIDER_TYP.TRENNFLAECHE } ) } );
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
   }

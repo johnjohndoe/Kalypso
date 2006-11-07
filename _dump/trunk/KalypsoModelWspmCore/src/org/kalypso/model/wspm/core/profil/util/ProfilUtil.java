@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.core.profil.util;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,6 +81,17 @@ public class ProfilUtil
       // no Point available
       return null;
     }
+  }
+  public static final HashMap<IProfilPoint,IProfilDevider> getDdeviderPoints(final IProfil profil)
+  {
+    final HashMap<IProfilPoint,IProfilDevider> pointMap = new HashMap<IProfilPoint,IProfilDevider>();
+    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
+    if (deviders==null){return pointMap;}
+    for (final IProfilDevider devider :deviders)
+    {
+      pointMap.put( devider.getPoint(), devider );
+    }
+    return pointMap;
   }
 /**
  * @return  a subList include both Deviderpoints, maybee null
