@@ -57,6 +57,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
@@ -106,7 +107,10 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
     m_imgRegistry.put( IMAGE_ERROR, KalypsoModelWspmUIImages.ID_MARKER_ERROR );
     m_imgRegistry.put( IMAGE_WARNING, KalypsoModelWspmUIImages.ID_MARKER_WARNING );
-    m_imgRegistry.put( IMAGE_DEVIDER_T, KalypsoModelWspmUIImages.ID_COLOR1_LEGEND );
+    m_imgRegistry.put( IMAGE_DEVIDER_T, KalypsoModelWspmUIImages.ID_COLOR4_LEGEND );
+    m_imgRegistry.put( IMAGE_DEVIDER_B, KalypsoModelWspmUIImages.ID_COLOR1_LEGEND );
+    m_imgRegistry.put( IMAGE_DEVIDER_W, KalypsoModelWspmUIImages.ID_COLOR2_LEGEND );
+    m_imgRegistry.put( IMAGE_DEVIDER_D, KalypsoModelWspmUIImages.ID_COLOR3_LEGEND );
 
     final Display display = m_viewer.getControl().getDisplay();
     m_colorError = display.getSystemColor( SWT.COLOR_RED );
@@ -134,18 +138,28 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
         final Map<IProfilPoint, Collection<IMarker>> markerIndex = ((ProfilContentProvider) contentProvider).getMarkerIndex();
         final Collection<IMarker> markers = markerIndex.get( element );
         final Integer severity = worstOf( markers );
-        if( severity == null )
-          return null;
-
-        if( IMarker.SEVERITY_ERROR == severity )
-          return m_imgRegistry.get( IMAGE_ERROR );
-        if( IMarker.SEVERITY_WARNING == severity )
-          return m_imgRegistry.get( IMAGE_WARNING );
-
+        final DEVIDER_TYP deviderTyp = (element instanceof IProfilPoint) ? getDeviderTyp( (IProfilPoint) element ) : null;
+        if( severity != null )
+        {
+          if( IMarker.SEVERITY_ERROR == severity )
+            return m_imgRegistry.get( IMAGE_ERROR );
+          if( IMarker.SEVERITY_WARNING == severity )
+            return m_imgRegistry.get( IMAGE_WARNING );
+        }
+        if( deviderTyp != null )
+        {
+          if( deviderTyp == DEVIDER_TYP.DURCHSTROEMTE )
+            return m_imgRegistry.get( IMAGE_DEVIDER_D );
+          if( deviderTyp == DEVIDER_TYP.TRENNFLAECHE )
+            return m_imgRegistry.get( IMAGE_DEVIDER_T );
+          if( deviderTyp == DEVIDER_TYP.BORDVOLL )
+            return m_imgRegistry.get( IMAGE_DEVIDER_B );
+          if( deviderTyp == DEVIDER_TYP.WEHR )
+            return m_imgRegistry.get( IMAGE_DEVIDER_W );
+        }
         return null;
       }
     }
-
     return null;
   }
 
@@ -244,21 +258,30 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
   {
     if( element instanceof IProfilPoint )
     {
-      final IContentProvider contentProvider = m_viewer.getContentProvider();
-      if( contentProvider instanceof ProfilContentProvider )
+      return m_deviderColors.get( getDeviderTyp( (IProfilPoint) element ) );
+    }
+    return null;
+  }
+
+  public final DEVIDER_TYP getDeviderTyp( final IProfilPoint point )
+  {
+    final IContentProvider contentProvider = m_viewer.getContentProvider();
+    if( contentProvider instanceof ProfilContentProvider )
+    {
+      final IProfil profil = ((ProfilContentProvider) contentProvider).getProfil();
+      final IProfilDevider[] deviders = profil == null ? null : profil.getDevider( DEVIDER_TYP.values() );
+      if( deviders == null )
       {
-        final IProfil profil = ((ProfilContentProvider) contentProvider).getProfil();
-        final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
-        for( final IProfilDevider devider : deviders )
+        return null;
+      }
+      for( final IProfilDevider devider : deviders )
+      {
+        if( devider.getPoint() == point )
         {
-          if( devider.getPoint() == element )
-          {
-            return m_deviderColors.get( devider.getTyp() );
-          }
+          return devider.getTyp();
         }
       }
     }
-
     return null;
   }
 
