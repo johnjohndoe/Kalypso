@@ -3,7 +3,7 @@ cipk  last update August 1 2001 correct bug that occurs when IMAT=0 in elements
 CIPK  LAST UPDATE APR 21 2001  ADD NRELSF FOR SIDE ELEMENTS
 cipk  last update Nov 8 1999 reset values for eddy coefficients for potential collapse
 cipk  last update Jan 3 1999
-C     Last change:  IPK   5 Oct 98    3:34 pm
+C     Last change:  WP   23 Feb 2006   12:31 pm
 CIPK  LATEST UPDATE NOV 17 1997
       SUBROUTINE THREED
       USE BLK10MOD
@@ -335,7 +335,8 @@ C-
       N3DV=0
       DO 420 M=2,NCN,2
         NCT=0
-        DO 360 L=1,NLAYM
+cWP Feb 2006, Change NLAYM to NLAYMX
+        DO 360 L=1,NLAYMX
           NSEQ(M,L)=0
   360   CONTINUE
 C-
@@ -522,7 +523,8 @@ C...... Prepare for NFIXH definition
 C-
   430 DO 460 KT=1,3,2
         NCT=0
-        DO 433 L=1,NLAYM
+cWP Feb 2006, Change NLAYM to NLAYMX
+        DO 433 L=1,NLAYMX
           NSEQ(KT,L)=0
   433   CONTINUE
         J1=NOP(N,KT)
