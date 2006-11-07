@@ -1,3 +1,4 @@
+CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option
@@ -40,8 +41,23 @@ CIPK  LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
+!NiS,apr06: adding block for DARCY-WEISBACH friction
+      USE PARAKalyps
+!-
       SAVE
+
+!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
+!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
+!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
+!           also as real, kind=8.
+      REAL(KIND=8) :: HS, HM, DUM1
+!-
+
 C
+!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
+      REAL :: lambda
+!-
+
 cycw aug94 add double precision salt
       REAL*8 SALT
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -142,7 +158,7 @@ CIPK JUN05 MOVE LOOP
 cipk jun05
       inovel=0
       if(iteqv(maxn) .eq. 2) inovel=1
-      if(iteqv(maxn) .eq. 8)  inovel=2
+      if(iteqv(maxn) .eq. 8) inovel=2
       if(iteqv(maxn) .eq. 9) inovel=3
 
 cipk oct98 update to f90
@@ -155,7 +171,7 @@ CIPK JUN05
 c   
 c     Test for and determine whether conrol structure now operates as an
 c     ordinary element.  If one node is above transition then treat as
-c     a  normal lement
+c     a  normal element
       if(ntx .eq. 1) then
         if(imat(nn) .gt. 900) then
           if(inovel .gt. 0) return
@@ -834,9 +850,17 @@ CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
       VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
       IF(H .LE. 0.0) H=0.001
 
-
+!NiS,apr06: adding possibility of FrictionFactor calculation with
+!           COLEBROOK-WHITE to apply DARCY-WEISBACH equation: Therefore,
+!           the if-clause has also to be changed because surface friction
+!           is deactivated!
+!-
 cipk nov98 adjust for surface friction
-      IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
+  !NiS,apr06: changing test:
+  !    IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
+      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
+     +   ORT(NR,5) /= -1)) THEN
+  !-
 CIPK SEP02
 	  EFMAN=0.
         IF(ORT(NR,5) .LT. 1.0  .AND.  ORT(NR,13) .LT. 1.0) then
@@ -903,6 +927,15 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 !**************************************************************
 	    endif
         ENDIF
+!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(NR,5) == -1) THEN
+        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+     +             nn, morph, gl_bedform, mel, c_wr(nn))
+        FFACT = lambda/8.0
+!-
+
+
+
       ENDIF
 
 CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
@@ -1693,15 +1726,30 @@ cipk dec97 end changes
 C-
 C...... For 1D - 2D junctions adjust equation for direction
 C-
-      DO 1050 N=1,NCN,2
-        M=NCON(N)
-        IF(ADIF(M) .NE. 0.) THEN
-          NEQ=NDF*NCN
-          IA=NDF*(N-1)+1
+      DO 1050 N=1,NCN,2 !NiS,jun06,comment: just the corner nodes
+        M=NCON(N)  !NiS,jun06,comment: get the node number
+        IF(ADIF(M) .NE. 0.) THEN  !NiS,jun06,com: ADIF(M).ne.0 if it is a junction-corner-node
+          NEQ=NDF*NCN             !NiS,jun06,com: number of element equations
+          IA=NDF*(N-1)+1          !NiS,jun06,com: get the element-DOF of the 1. junction-corner-node DOF
+
+!NiS,may06:testing
+!      WRITE(*,*)'element: ',NN
+!      WRITE(*,*)'NEQ: ',NEQ
+!      WRITE(*,*)'IA: ',IA
+!      WRITE(*,*)'nbc(node=',M,',2): ', nbc(M,2)
+!      WRITE(*,*)SIN(adif(m)), COS(adif(m)), SIN(adif(m))/COS(adif(m))
+!-
           DO 1040 I=1,NEQ
+            !NiS,jun06,com: Because it is only one direction, the part of the junction-corner-node DOF as to be projected on the correct direction for processing
             ESTIFM(I,IA)=ESTIFM(I,IA)+ESTIFM(I,IA+1)*SIN(ADIF(M))
      1                   /COS(ADIF(M))
  1040     CONTINUE
+          !NiS,jun06:testing
+          !  write (*,*)M,(estifm(zzz,ia),zzz=1,3)
+          !  write (*,*)M,(estifm(zzz,ia+1),zzz=1,3)
+          !  write (*,*)M,(estifm(zzz,ia+2),zzz=1,3)
+          !-
+
         ENDIF
  1050 CONTINUE
       IF(NR .GT. 90) GO TO 1310
