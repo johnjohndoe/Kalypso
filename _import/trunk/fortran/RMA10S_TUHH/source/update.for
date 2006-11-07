@@ -16,7 +16,9 @@ C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
-
+!NiS,jul06: Consistent data types for passing paramters
+      REAL(KIND=8) H, H1, VT, HS
+!-
 cipk apr05
       common /epor/ efpor
 C-
@@ -309,7 +311,14 @@ CAUG93IPK  WRITE(*,6011) J,EAVG(J),EMAX(J),NMX(J),IVAR(J,1),IVAR(J,2),ICYC
 CIPK MAY02 EXPAND TO 7
       WRITE(LITR,6040)TET,ICYC,MAXN,NSZF,(EMAX(J),NMX(J),J=1,7),
      +   (EAVG(J),J=1,7)
- 6040 FORMAT(F8.1,I5,I3,I6,6(F10.4,I5),6(F9.4))
+
+!NiS,mar06: Change of format-descriptor because number of descriptors does
+!           not fit the number of written Variables; increasing number
+!           from 6 to 7
+! 6040 FORMAT(F8.1,I5,I3,I6,6(F10.4,I5),6(F9.4))
+ 6040  FORMAT(F8.1,I5,I3,I6,7(F10.4,I5),7(F9.4))
+
+
 C      NKCONV(MAXN)=NCONV
 C      IF(NCONV .EQ. 1) THEN
 C        DO 205 MB=MAXN-1,1,-1
