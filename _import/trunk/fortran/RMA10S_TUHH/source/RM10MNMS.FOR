@@ -255,8 +255,12 @@ C-                    REVISION 4.1a
 C-                      JULY 1989
 C-
 
+!NiS,may06: The program needs access to that module, because iaccyc must be accessable
+      USE Blk10mod
+!-
+
       LOGICAL PRESS_ANYKEY
-	LOGICAL STARPROC
+      LOGICAL STARPROC
       CHARACTER*96 FNAM0,FNAMEX
       INTEGER*2 N1,STATUS
       n1=1
@@ -266,7 +270,7 @@ COMMENT OUT  "IF PRESS_ANYKEY.... "  AND   " N1=2 " STATEMENTS FOR DEBUGGING
 CCC      if (press_anykey(fnam0)) goto 99999
 C        WRITE(*,'(A)') FNAM0
 CCC        n1=2
-        CALL GETARG(N1,FNAM0,STATUS)
+cWP        CALL GETARG(N1,FNAM0,STATUS)
 C        write(*,*) 'n1',n1,status
 C        WRITE(*,'(A)') FNAM0
 
@@ -281,14 +285,14 @@ C        WRITE(*,'(A)') FNAM0
 
 c       write(*,*) 'THIS EXECUTABLE HAS SPECIAL CODING FOR EL DATA LINES'
 cipk apr02
-        if(status .eq. -1  .or. fnam0(1:5) .eq. 'dummy') then
+cWP        if(status .eq. -1  .or. fnam0(1:5) .eq. 'dummy') then
           WRITE(*,6000)
- 6000     FORMAT(/' Enter RMA-10 input file name')
+ 6000     FORMAT(/' Enter RMA-10 input file name: ',/)
 CIPK JUN05
-          call fileopen(fnam0)
-CIPK JUN05          READ(*,5000) FNAM0
+cWP          call fileopen(fnam0)
+          READ(*,*) FNAM0
 CIPK JUN05 5000     FORMAT(A48)
-        endif
+cWP        endif
         WRITE(*,'(A)') FNAM0
 CCC      FNAMEX='D:\Rmalf95\Rmagen\RMAGEN70\rmagen70\Release\rmagen70-3M.EX
 CCC     +E'
@@ -301,7 +305,12 @@ CCC	endif
 C-
 C...... Open files
 C-
-        CALL FILE(1,FNAM0)
+  !NiS,may06: The variable iaccyc shows the timestep to start from. For opening the files it is important,
+  !           that the program acts on the assumption, that it will start with the first time step or steady
+  !           state
+      iaccyc = 1
+  !-
+      CALL FILE(1,FNAM0)
 C-
 
         CALL GETGEO1

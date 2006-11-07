@@ -1,3 +1,4 @@
+CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
 CIPK  LAST UPDATE MAR 07 2006 CORRECT TO ADD SAND OUTPUT
 cipk  LAST UPDATE aug 09 2005 correct to get BSHEAR OUTPUT
@@ -17,6 +18,9 @@ CIPK  NEW ROUTINE jULY 9 2001
       USE BLKSANMOD
       USE BLKSSTMOD
 	USE WBMMODS ! djw 02/11/04
+!NiS,apr06: add module for new Kalypso-2D-specific calculations
+      USE PARAKalyps
+!-
 
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
@@ -32,6 +36,9 @@ cipk aug98 add character statement
       CHARACTER*6  INUM
       DIMENSION CURRENT(5),TARGT(5),IREC(40),FREC(40)
       CHARACTER*4 IPACKB(1200),IPACKT(77)
+!NiS,jul06: Consistent data types for passing parameters
+      REAL(KIND=8) :: VTM, HTP, VH, H, HS
+!-
 
       DATA (IREC(I),I=1,40) / 40*0 /
       DATA (FREC(I),I=1,40) / 40*0. /
@@ -196,10 +203,29 @@ CIPK JUN03 SETUP STRESS WEIGHTING
 
       IF(ICORDIN .NE. 0) CALL GENT
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,apr06: Initializing c_wr-values out of file or to default values 1.3. input-cwr-file
+!           must have the same name as geometry-file with suffix .cwr
+!
+!           This option is only activated, if VEGETA is entered in input file at proper place
+!           Else set to (c_wr(i) = 1.0)
+      IF (IVEGETATION /= 0) THEN
+        WRITE(*,*)'going to cwr_init'
+        CALL cwr_init
+      ELSE
+        DO i = 1,MaxE
+          c_wr(i) = 1.0
+        ENDDO
+      ENDIF
+!-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C.......  Establish flow directions for one dimensional elements
 C-
       CALL FLDIR
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                 NiS,apr06: Start of STEADY STATE CALCULATION
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C......TEST FOR STEADY STATE
 C-
@@ -345,6 +371,24 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
       IF(NCONV .EQ. 2) GO TO 350
   300 CONTINUE
       KRESTF=1
+!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE STEADY STATE ITERATION, IF NOT CONVERGED
+      IF (itefreq.ne.0) THEN
+        IF (mod(maxn,itefreq).eq.0) THEN
+          IF (IKALYPSOFM /= 0) THEN
+            WRITE(*,*)' Entering write_Kalypso',
+     +                ' steady state, after Iteration = ',maxn
+            CALL write_KALYPSO
+            WRITE(*,*)'back from write_kalypso'
+          END IF
+        ENDIF
+      ENDIF
+!-
+!NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
+!           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
+        IF (IVEGETATION /= 0) THEN
+          CALL get_element_cwr
+        END IF
+!-
       IF(MAXN .LT. NITA) GO TO 200
 C-
 C......TEST ON MAXIMUM TIME
@@ -370,6 +414,19 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
 	End Do
 !*************************************************************************END DJW 04/08/04
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,apr06: calculating the cwr-values for trees; adding temporary simulation of maxn.eq.0
+!           Updating the cwr-values for trees after convergence
+        temp_maxn = maxn
+        maxn = 0
+        IF (IVEGETATION /= 0) THEN
+          CALL get_element_cwr
+        END IF
+        maxn = temp_maxn
+!-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if(niti .eq. 0) go to 400
 C-
 C......STORE AS A SINGLE PRECISION ARRAY
 C-
@@ -381,13 +438,31 @@ cipk mar95 add a line to save dhdt
         VSING(7,J)=VDOT(3,J)
   320 CONTINUE
 
+!-
+!NiS,may06,comment: Writing output files in different formats
+!-
 CIPK MAR00
+      !NiS,apr06,comment: Writing RMA-outputfile after steady state converged solution
       IF(IRMAFM .GT. 0) THEN
         WRITE(IRMAFM) TETT,NP,NDG,NE,IYRR,((VSING(K,J),K=1,NDF),VVEL(J)
      1  ,WSLL(J),J=1,NP),(DFCT(J),J=1,NE),(VSING(7,J),J=1,NP)
       ENDIF
 
+!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE STEADY STATE SOLUTION
+      IF (IKALYPSOFM /= 0) THEN
+        !NiS,may06: initializing MaxN shows subroutine write_Kalypso, that
+        !           the call is for solution printing
+        temp_maxn = maxn
+        MAXN = 0
+        WRITE(*,*)' Entering write_Kalypso',
+     +            ' for STEADY STATE SOLUTION.'
+        call write_KALYPSO
+        WRITE(*,*)'back from write_kalypso'
+        MAXN = temp_maxn
+      END IF
+!-
 CIPK AUG02
+      !NiS,apr06,comment: Writing SMS-outputfile after steady state converged solution
       IF(ISMSFM .GT. 0) THEN
         DO JJ=1,NEM
 	    IMATL(JJ)=IMAT(JJ)
@@ -409,6 +484,7 @@ CIPK AUG02
   	ENDIF
 
 
+      !NiS,apr06,comment: writing control output file after steady state converged solution
       IF(NOPT .GT. 0) THEN
 CIPK MAY96 ADD YEAR TO FILE
 C       WRITE(NOPT) TET,NP,NDG,NE,((VSING(K,J),K=1,NDF),VVEL(J)
@@ -417,10 +493,15 @@ C       WRITE(NOPT) TET,NP,NDG,NE,((VSING(K,J),K=1,NDF),VVEL(J)
       ENDIF
 CIPK MAR95 ADD DHDT TO WRITE     1  ,J=1,NP),(DFCT(J),J=1,NE)
 CIPK DEC97 MOVE SKIP TO DYNAMIC SOLUTION
+
+!NiS,apr06,comment: End option, if just steady state is desired
       IF(NCYC .GT. 0) GO TO 400
       CALL ZVRS(1)
 CIPK JUL01      STOP
       RETURN
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,apr06: END OF STEADY STATE BLOCK!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C......DYNAMIC SOLUTION DESIRED
 C-
@@ -437,12 +518,28 @@ C-
           CALL SANDX
         ENDIF
 
-      DO 800 N=1,NCYC
-CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL      
-      IF(MOD(N,IOUTRWD) .EQ. 0) THEN
-        REWIND LOUT
-      ENDIF 
-      write(*,*) 'starting cycle',n
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,may06: For the case of Kalypso-2D format geometry input file, there might be a later time step than the first to strart from. If so,
+!           the boundary condition update is cycled till the correct boundary conditions of the step to start from is reached.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!NiS,mar06: Renaming the 800-dO-LOOP to Main_dynamic_Loop; to leave and cycle it easier.
+!      DO 800 N=1,NCYC
+      Main_dynamic_Loop: do n=1,ncyc
+!-
+!NiS,may06: calculation is only started with Kalypso-2D-geometry file, if the cycle iaccyc is reached; the user gives iaccyc in control file
+!           as timestep to start from
+        LaterTimestep: IF (IFILE == 60 .and.
+     +                     IGEO == 2 .and. n < iaccyc) THEN
+          !NiS,may06: This part of the if-clause is for simulating the update of the boundary conditions. The purpose is to read through
+          !           time step date lines, that are not interesting, when starting from a later time step than the first. After reading through
+          !           that data, the next time step can be read, as long as firstly the wanted starting cycle exceeds the current cycle number.
+          CALL INPUTD(IBIN)
+          WRITE(*,*) 'cycle main loop'
+          CYCLE Main_dynamic_Loop
+          !-
+        ELSE
+          write(*,*) 'starting cycle',n
 CIPK JUN02
         MAXN=1
         IT=N
@@ -457,20 +554,26 @@ CIPK REVISE TO SETUP HEL
         DO J=1,NP
           DO K=1,NDF
 cipk dec00
-            V2OL(K,J)=VDOTO(K,J)
-            VOLD(K,J)=VEL(K,J)
-            VDOTO(K,J)=VDOT(K,J)
-            IESPC(K,J)=0
+              V2OL(K,J)=VDOTO(K,J)
+              VOLD(K,J)=VEL(K,J)
+              VDOTO(K,J)=VDOT(K,J)
+              IESPC(K,J)=0
+            ENDDO
+            H2OL(J)=HDOT(J)
+            HOL(J)=HEL(J)
+            HDOT(J)=HDET(J)
           ENDDO
-          H2OL(J)=HDOT(J)
-          HOL(J)=HEL(J)
-          HDOT(J)=HDET(J)
-        ENDDO
-        ICYC=ICYC+1
+          !NiS,may06,comment: ICYC was initiated in INITL.subroutine
+          ICYC=ICYC+1
+
 C-
 C...... UPDATE OF BOUNDARY CONDITIONS
 C-
-        CALL INPUTD(IBIN)
+          CALL INPUTD(IBIN)
+
+        ENDIF LaterTimestep
+!-
+
 CIPK AUG95 ADD A CALL TO UPDATE MET VALUES
 cipk oct02 move heatex to use projections for heat budget
 C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
@@ -528,7 +631,11 @@ C-
               VEL(K,J)=VSING(K,J)
             ENDDO
 CIPK NOV97  457   CONTINUE
-            CALL AMF(HEL(J),VSING(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
+  !NiS,jul06: The usage of single and double precision waterdepth for calling of amf is used in the code. For
+  !           consistency, the single precision waterdepth is replaced with double precision.
+  !            CALL AMF(HEL(J),VSING(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
+            CALL AMF(HEL(J),VEL(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
+  !-
             WSLL(J) = HEL(J) + ADO(J)
           ENDDO  
 CIPK NOV97  458 CONTINUE
@@ -676,12 +783,14 @@ C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
 C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
 C-
-C......ITERATION LOOP
-C-
-        NITA=NITN
-        MAXN=0
-	  ITPAS=0
-  465   MAXN=MAXN+1
+C......ITERATION LOOP                                                   !NiS,apr06:     starting iteration sequence
+C-                                                                      !		initialization:
+        NITA=NITN                                                       !               NITA = maximum number of iterations of timestep, local copy
+        MAXN=0                                                          !               NITN = maximum number of iterations of timestep, global value
+	  ITPAS=0                                                       !               ITPAS= ???
+  465   MAXN=MAXN+1                                                     !               MAXN = actual iteration number; first initialized, then incremented
+                                                                        !-
+
 cipk oct02
         IF(MAXN .EQ. 1) THEN
 	          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
@@ -830,15 +939,37 @@ CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
         TETT=(DAYOFY-1)*24.+TET
         WRITE(75,*) 'TET,DAYOFY',TET,TETT,DAYOFY
 
-        IF(NCONV .EQ. 2) GO TO 750
+        !NiS,apr06,comment: If convergent result files for this timestep have to be written
+        IF(NCONV .EQ. 2) GO TO 750                              
   700   CONTINUE
 
 C      END OF ITERATION LOOP
 
+!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE DYNAMIC RUN ITERATION, IF NOT CONVERGED
+        IF (itefreq.ne.0) THEN
+          IF (MOD(maxn,itefreq).eq.0) THEN
+            IF (IKALYPSOFM /= 0) THEN
+            WRITE(*,*)' Entering write_Kalypso',
+     +                ' dynamic at time step ', icyc+iaccyc-1,
+     +                ' after Iteration = ',maxn
+              call write_KALYPSO
+            WRITE(*,*)'back from write_kalypso'
+            ENDIF
+          ENDIF
+        ENDIF
+!-
+!NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
+!           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
+        IF (IVEGETATION /= 0) THEN
+          CALL get_element_cwr
+        END IF
+!-
 
-        IF (MAXN .LT. NITA) GO TO 465
+        !NiS,apr06,comment: Start next iteration, until maximum number of iterations is reached
+        IF (MAXN .LT. NITA) GO TO 465                           
 
-  750   CONTINUE
+        !NiS,apr06,comment: Writing results after the timestep
+  750   CONTINUE                                                
         write(75,*) 'rma10-668 at 750 continue'
 CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
         IF(LSAND .GT. 0) THEN
@@ -854,6 +985,17 @@ C
         write(75,*) 'rma10-674 going to bedlbed'
 	    CALL BEDLBED
         ENDIF
+
+!NiS,apr06: calculating the cwr-values for trees.
+!           This option is only activated, if VEGETA is entered in input file at proper place
+        temp_maxn = maxn
+        maxn=0
+        IF (IVEGETATION /= 0) THEN
+          CALL get_element_cwr
+        END IF
+        maxn=temp_maxn
+!-
+
 CIPK SEP02   LOGIC FOR RESTART FILE MOVED DOWN
 C-
 C......SAVE RESTART CONDITIONS ON FILE
@@ -900,10 +1042,15 @@ cipk aug98 add line above for consistent restart
 C-
 C......SAVE ON RESULTS FILE
 C-
+
+!NiS,apr06: Adding KALYPS-2D results file as option
 CIPK MAR00
         IF((NOPT .GT. 0  .OR.  IRMAFM .GT. 0 .OR. IBEDOT .GT. 0
      + .OR. IWAVOT .GT. 0 .OR. ISMSFM2 .GT. 0
-     + .or. ISMSFM .gt. 0 .or. ismsfm1 .gt. 0)  .AND. N .GE. IRSAV) THEN
+!     + .or. ISMSFM .gt. 0 .or. ismsfm1 .gt. 0)  .AND. N .GE. IRSAV) THEN
+     + .or. ISMSFM .gt. 0 .or. ismsfm1 .gt. 0)  .AND. N .GE. IRSAV
+     + .or. IKALYPSOFM > 0) THEN
+!-
 
 Cipk mar03 add option that allows output at a set frequency
 
@@ -944,6 +1091,15 @@ c      12   WSLL                water surface elevation
 c      13   DFCT                stratification multiplier by element
 c      14   VSING subscript(7)  water column potential by node
 
+!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE DYNAMIC RUN
+            IF (IKALYPSOFM /= 0) THEN
+              MAXN = 0
+              WRITE(*,*)' Entering write_Kalypso',
+     +            ' after dynamic time step ', icyc+iaccyc-1
+              call write_KALYPSO
+              WRITE(*,*)'back from write_kalypso'
+            END IF
+!-
 
 CIPK AUG02
             IF(ISMSFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
@@ -971,7 +1127,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
             !
             WBM = .FALSE.
             IF (WBM) THEN
-	        IF (wbm_Initiated.EQ..FALSE.) THEN
+	        IF (.not. wbm_Initiated) THEN
                 CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
      +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
  	        END IF
@@ -1180,7 +1336,10 @@ CIPK SEP02 ADD RESTART DATA FOR BED
 
           ENDIF
         ENDIF
-  800 CONTINUE
+!NiS,may06: Renaming 800-DO-Loop to Main_dynamic_Loop
+!  800 CONTINUE
+      ENDDO Main_dynamic_Loop
+!-
       CALL ZVRS(1)
 CIPK JUL01      STOP
       RETURN
