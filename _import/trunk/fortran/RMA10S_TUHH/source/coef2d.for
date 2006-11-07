@@ -1,3 +1,4 @@
+CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
 cipk  last update june 27 2005 add control structure option
@@ -38,8 +39,22 @@ cipk  New routine for Smagorinsky closure Jan 1997
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
+!NiS,apr06: adding block for DARCY-WEISBACH friction
+      USE PARAKalyps
+!-
       SAVE
+
+!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
+!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
+!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
+!           also as real, kind=8.
+      REAL(KIND=8) :: HS, HM, DUM1
+!-
+
 C
+!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
+      REAL :: lambda
+!-
       REAL*8 SALT
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK SEP02
@@ -717,8 +732,17 @@ CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
       VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
       IF(H .LE. 0.0) H=0.001
 
+!NiS,apr06: adding possibility of FrictionFactor calculation with
+!           COLEBROOK-WHITE to apply DARCY-WEISBACH equation: Therefore,
+!           the if-clause has also to be changed because surface friction
+!           is deactivated!
+!-
 cipk nov98 adjust for surface friction
-      IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
+  !NiS,apr06: changing test:
+  !    IF(ORT(NR,5) .GT. 0.  .OR.  ORT(NR,13) .GT. 0.) THEN
+      IF(ORT(NR,5) .GT. 0.  .OR.  (ORT(NR,13) .GT. 0. .and.
+     +   ORT(NR,5) /= -1)) THEN
+  !-
 CIPK SEP02
 	  EFMAN=0.
         IF(ORT(NR,5) .LT. 1.0  .AND.  ORT(NR,13) .LT. 1.0) then
@@ -786,6 +810,15 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 !**************************************************************	 
          endif
         ENDIF
+!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(NR,5) == -1) THEN
+        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+     +             nn, morph, gl_bedform, mel, c_wr(nn))
+        FFACT = lambda/8.0
+!-
+
+
+
       ENDIF
 
 cIPK MAR03 ADD MINIMUM TEST

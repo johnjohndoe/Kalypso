@@ -1,3 +1,4 @@
+C     Last change:  AF   17 Jul 2006   10:35 am
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -25,6 +26,25 @@ C-
      +          ,INWGT,INSTR,INBNWGT,INBNSTR,IGEO,IOWGT,IOBNWGT,ICORDIN
      +          ,IOV,IYKK,IDTM,TTEM,LNNAM,IWVIN,IWVFC,INOTR,INCSTR
      +          ,INTIMS,INEWBED,IDEBUG,IMESHOUT,IOUTRWD,IMASSOUT
+!NiS,mar06      add MAXA as dimensioner for arc-array, MaxT for number of 1D-2D-TRANSITION ELEMENTS
+     +          ,MaxA, MaxT
+!-
+!NiS,apr06      add IKALYPSOFM and KALYPRST as unit specifier for output file and restart-in file in KALYPSO-2D-format in global use
+     +          ,IKALYPSOFM, KALYPRST
+!-
+!NiS,may06: Adding the character-variable ct. This is used for generation of output file names; the FNAM38 is deactivated again, because
+!           the output file name will be generated automatically with the scheme of Kalyps-2D.
+      CHARACTER(LEN=1) :: ct
+      CHARACTER(LEN=32):: modellein, modellaus, modellrst
+      INTEGER          :: iaccyc
+!-
+
+!NiS,apr:       former variables of the common.cfg-file in the KALYPSO-2D version move to this module because they
+!               are used here, if those informations about material and so on are used:
+      INTEGER           :: irk
+      CHARACTER(LEN=120):: rk_zeile(100)
+!-
+
 CIPK MAY06 ASS IMASSOUT     
 CIPK MAR06 ADD IOUTRWD     
       REAL    
@@ -39,6 +59,8 @@ CIPK MAR06 ADD IOUTRWD
      +          ,tbfact,tbmin,TRANSIT
      +          ,ELEV1,TRELEV,TRFACT
      +          ,ZSTDEP
+!NiS,apr06: adding tett as global variable because it is used in different subroutines
+     +          ,tett
 
       REAL      CINT(100),CPOW(100),AJ(100),BJ(100),CJ(100)
      +         ,GAMJ(100),QD(100),DJ(100)
@@ -62,6 +84,10 @@ CIPK MAR06 ADD IOUTRWD
 cipk may02
       real*8 vel,ao,cord,AORIG
 
+!Nis,mar06      specialized declaration of ALFA and wss, so that the input-reading with binary files don't cause an error
+      REAL(KIND=4) :: ALFA,wss
+!-
+
       ALLOCATABLE CORD(:,:),VEL(:,:),AO(:),AORIG(:)
 
       ALLOCATABLE CORDS(:,:),NBC(:,:),SPEC(:,:),ITAB(:),
@@ -80,7 +106,10 @@ cipk may02
      +           ,DROXIN(:),DRODXN(:),DROYIN(:),DRODYN(:)
      +           ,irbd(:),nfixsav(:)
      +           ,IESPC(:,:)
-     +           ,iactv(:,:),HEL(:),HOL(:),HDET(:)
+!NiS,jul06: For consistent data types declaration below
+!     +           ,iactv(:,:),HEL(:),HOL(:),HDET(:)
+     +           ,iactv(:,:),HOL(:),HDET(:)
+!-
      +           ,HDOT(:)
      +           ,jpoint(:),SIDN(:),XTLN(:)
      +           ,widbs(:),wss(:),ICOLLAP(:),WSLL(:)
@@ -96,8 +125,11 @@ cipk may02
 cipk apr06 add IPASST
 C-
 
+!NiS,jul06: Variable HEL has to be real,kind=8 because of calling problems for amf
+      REAL(KIND=8), ALLOCATABLE :: HEL(:)
+!-
 
-
+C-
       REAL MANMIN,MANMAX,MANTAB
 
       ALLOCATABLE  NOP(:,:),IMAT(:),
@@ -120,6 +152,10 @@ C-
     
 C     LAYER VARIABLE
       ALLOCATABLE  THL(:),THLAY(:,:)
+
+!NiS,apr06: for data exchange with kalypso-reading and writing modules
+      REAL(KIND=8), ALLOCATABLE :: aour(:)!,fehler(:,:),
+!-
 
       END MODULE
 
