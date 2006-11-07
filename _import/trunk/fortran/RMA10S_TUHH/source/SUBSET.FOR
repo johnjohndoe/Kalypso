@@ -38,6 +38,7 @@ CIPK JUL04 Use TRC to allow for units
 
       DO  NN=1,NE
         IF(IMAT(NN) .NE. 0) THEN
+          !NiS,Com: only for control structure elements (this if-clause nearly the whole subroutine)
           IF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 CIPK JUN05
            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
