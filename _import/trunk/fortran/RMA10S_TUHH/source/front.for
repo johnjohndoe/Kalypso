@@ -27,7 +27,9 @@ C-
       COMMON/BLKE/ ESTIFM(80,80)
 C-
 CAUG93IPK  COMMON LDEST(80),NK(80)
-      COMMON NK(80)
+cWP2006      COMMON NK(80), see NUMBOPT1.FOR!
+      COMMON NK(120)
+
 CIPK AUG05       DIMENSION QR(MFW),NCON(20)
       DIMENSION NCON(20)
 C-
@@ -98,6 +100,8 @@ C
           MRC=N
 cipk oct98 update to f90
           NTYP=NETYP(N)
+
+          !NiS,may06: for junction elements (7 (1D) or 17 (2D))
           IF(MOD(NTYP,10) .EQ. 7) THEN
 CIPK JAN99 SKIP OUT FOR 2DV
             if(ntyp .NE. 17) THEN
@@ -175,6 +179,11 @@ C-
       N=NFIXH(NELM)
 
 c      write(75,*) 'front',n,nelm,netyp(n),imat(n)
+
+!NiS,may06:testing
+!      write(*,*) 'front',n,nelm,netyp(n),imat(n),ncn,ndf
+!-
+
       IF (N .EQ. 0)  GO TO 380
       IF(IMAT(N) .LT. 1) GO TO 18
       CALL SECOND(SINC)
@@ -236,6 +245,9 @@ CIPK MAR05
 	  CALL SECOND(SOUC)
 	  TSURC=SOUC-SINC+TSURC
 	ELSE
+!NiS,may06: testing
+!          WRITE(*,*) NETYP(N)/10, 'NETYP(N)/10', N
+!-
 	  IF(NETYP(N)/10 .EQ. 2) THEN
 
 cipk nov99 skip if collapsing to 2-d
@@ -363,24 +375,25 @@ cipk jan99
       NBN = NCN*NDF
 
       DO 21 LK=1,NBN
-	LDEST(LK)=0
-	NK(LK)=0
+	LDEST(LK)=0 !NiS,may06: position of special degree of freedom (lk) in equation solution window
+	NK(LK)=0 !???
    21 CONTINUE
       KC=0
       DO 23 J=1,NCN
 	IF(ITEQV(MAXN) .EQ. 5) THEN
 	  I=NOPS(N,J)
 	ELSE
-	  I=NOP(N,J)
+	  I=NOP(N,J) !NiS,may06: i becomes node number
 	ENDIF
-	DO 22 L=1,NDF
-	  KC=KC+1
+	DO 22 L=1,NDF !NiS,may06: for every degree of freedom
+	  KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
-          if(i .eq. 0) go to 22
-	  LL=NBC(I,L)
-	  NK(KC)=LL
+          if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
+	  LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
+	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
 	  IF(LL .NE. 0) THEN
-	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL
+	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
+                                             !           NK(KC) negative as pointer, that degree of freedom can be taken out
 	  ENDIF
    22   CONTINUE
    23 CONTINUE
@@ -388,11 +401,11 @@ C-
 C...... Set up heading vectors
 C-
       LFZ=1
-      DO 52 LK=1,NBN
-	NODE=NK(LK)
-	IF(NODE.EQ.0) GO TO 52
-	LM=IABS(NODE)
-	LL=IPOINT(LM)
+      DO 52 LK=1,NBN !NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
+	NODE=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
+	IF(NODE.EQ.0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
+	LM=IABS(NODE) !NiS,may06: get absolute number
+	LL=IPOINT(LM) !NiS,may06: IPOINT is always zero at the first call
 	IF(LL .NE. 0) THEN
 	  LDEST(LK)=LL
 	  IF(NODE .LT. 0) LHED(LL)=NODE
@@ -465,10 +478,12 @@ CIPK FEB04
       WRITE(75,9821) (N,(NBC(N,M),M=1,4),N=1,NP)
       STOP
    54 CONTINUE
-      DO 57 L=1,NBN
-	IF(NK(L) .NE. 0) THEN
-	  LL=LDEST(L)
-	  DO 56 K=1,NBN
+
+      !NiS,jun06,comment: Assembly of global matrix within the solution window
+      DO 57 L=1,NBN  !for every nodal degree of freedom (row of element matrix)
+	IF(NK(L) .NE. 0) THEN  !if equation is present
+	  LL=LDEST(L)  !take the solution window slot
+	  DO 56 K=1,NBN  !then take again every nodal degree of freedom (column of element matrix)
 	  IF(NK(K) .NE. 0) THEN
 	    KK=LDEST(K)
 	    EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
