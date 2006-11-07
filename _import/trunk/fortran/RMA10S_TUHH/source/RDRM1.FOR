@@ -5,23 +5,35 @@ CIPK  LAST UPDATE SEP 6 2004  add error file
       USE BLK10MOD
 
 cipk aug05	INCLUDE 'BLK10.COM'
-	REAL*8 CX,CY
+      REAL*8 CX,CY
       CHARACTER DLINE*140,ID1*3,DLIN2*77,BLANK*20
-	DIMENSION ILN(8)
+      DIMENSION ILN(8)
 
       data blank/'                    '/ 
 
+!NiS,may06,com: (Over)Reading header lines, that are interesting for other programs, only the IFORM-switch in the second line
+!                   is interesting for file format
+!-
       READ(ifile,'(A80)') TITLE
       READ(IFILE,'(100X,I5)') IFORM
       READ(IFILE,'(A80)') TITLE
 
       NP=0
-	NE=0
+	  NE=0
 cipk jun06
       NPTEMP=0
       NETEMP=0	
   100	CALL GINPT1(IFILE,DLINE)
 
+!NiS,may06,com: ELEMENT READING BLOCK
+!     reading block one of RM1-geometry file. In that block the element informations are written down:
+!     J         = running number of element; user specified ID
+!     ILN(1-8)  = nodenumbers of element, anticlockwise direction, altering between corner nodes and midside nodes
+!     IMT       = Element type number, for assignment of roughnesses (roughness classes)
+!     EDIR      = principal axis-direction
+!     INU       = running number of element internal for the program; user has no influence. This number is different from J, if there was a
+!                 reordering sequence
+!-
       READ(DLINE,'(10I5,F10.3,I5)') J,ILN,IMT,EDIR,INU
 	IF(ILN(1) .EQ. 0  .AND.  (J .EQ. 9999  .OR.  J .EQ. 99999)) THEN
         GO TO 120
@@ -45,6 +57,11 @@ cipk jun06
   
   120 continue  
   
+!NiS,may06,com: end of element read block
+
+!NiS,may06,com: take over user specified ID-numbers as internal calculation numbers, if no number was assigned
+!               (that means no reordering was applied)
+!-
       IF(KSWIT .EQ. 0) THEN
 
       DO N=1,NE
@@ -52,9 +69,15 @@ cipk jun06
 	    NFIXH(N)=N
 	  ENDIF
       ENDDO
+!NiS,may06,com: NODE READING BLOCK
+!     reading of node informations, that can for 2D-nodes and 3D-basis-nodes be the ID-number, x- and y- coordinates as well as the bottom elevation.
+!     For 1D-nodes there are additional informations concerning the cross section of the simulated river.
+!-
       endif
+      !NiS,apr06,com: read next line and test for TABS in line
       CALL GINPT1(IFILE,DLINE)
 
+      !NiS,apr06,com: analyse DLINE for stored informations
       IF(IFORM .LT. 2) THEN
         READ(DLINE,'(I10,9F10.0,I10,F10.0)')  J, CX, CY, BELEV,                   &
      &               WDTHX,SS1X,SS2X,WDSX,WEL,SSSO,LOCK1,BS11  
@@ -63,7 +86,7 @@ cipk jun06
      &      WDTHX,SS1X,SS2X,WDSX,WEL,SSSO,LOCK1,BS11  
       ENDIF
 
-
+      !NiS,apr06,com: test for end condition of block
 	IF(DLINE(11:30) .eq. blank
      +  .AND.  (J .EQ. 9999  .OR.  J .EQ. 99999)) THEN
 	  GO TO 140
@@ -88,12 +111,21 @@ CIPK NOT IN RMA10        BS1(J)=BS11
 	NCL=0
   140 CONTINUE
 
+!NiS,may06,com: End of dimension reading; informations necessary for dimensioning arrays are read; return from RDRM1 in this case:
       IF(KSWIT .EQ. 1) THEN
         write(*,*) 'ne',netemp                                                                         
         REWIND IFILE
         RETURN
       ENDIF
+!-
 
+!NiS,may06: Copy elevation field, because this might be given out in Kalypso-2D format
+      do i = 1, MaxP
+        aour(i) = ao(i)
+      end do
+!-
+!NiS,may06,com: CONTINUITY LINES READING BLOCK
+!NiS,may06,com: Read initial line for continuity block
       CALL GINPT1(IFILE,DLINE)
       IF(DLINE(1:7) .EQ. 'ENDDATA') GO TO 375
       IF(DLINE(26:29) .NE. 'NCLM') GO TO 140
@@ -119,6 +151,8 @@ cipk may05  REPLACE IFILE WITH DLINE2
               ENDIF
             ENDDO
             LMT(J)=350
+            !NiS,mar06,com:
+            !LMT(I)=350 should be right!, not LMT(J)
             GO TO 330
           ELSEIF(ID1 .EQ. 'END') THEN
             GO TO 375
@@ -132,6 +166,29 @@ cipk may05  REPLACE IFILE WITH DLINE2
   375 CONTINUE
 
 	close(ifile)
+
+!NiS,mar06: insert output testblock
+!	  OPEN(UNIT=555,FILE='test-s.txt')
+!          do zzz=1,np
+!	    WRITE(555,*)cord(zzz,1),cord(zzz,2),AO(zzz),wss(zzz)
+!          ENDdo
+!          CLOSE(555,STATUS='keep')
+!          OPEN(UNIT=555,FILE='test2-s.txt')
+!          do yyy=1,ne
+!            WRITE(555,*)(NOP(yyy,K),K=1,8),IMAT(yyy),TH(yyy),NFIXH(yyy)
+!          enddo
+!          CLOSE(555,STATUS='keep')
+!          OPEN(UNIT=555,FILE='test3-s.txt')
+!          do yyy=1,np
+!            WRITE(555,*)WIDTH(yyy),SS1(yyy),SS2(yyy),WIDS(yyy)
+!          enddo
+!          CLOSE(555,STATUS='keep')
+!          OPEN(555,FILE='test4-s.txt')
+!          do yyy=1,NCL
+!            WRITE(555,*)(line(yyy,k),k=1,lmt(yyy))
+!          enddo
+!          CLOSE(555,STATUS='keep')
+!-
 
 	RETURN
 	END
