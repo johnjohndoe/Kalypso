@@ -270,7 +270,7 @@ CCC        n1=2
 C        write(*,*) 'n1',n1,status
 C        WRITE(*,'(A)') FNAM0
 
-        WRITE(*,*) 'YOU ARE EXECUTING VERSION 3.5B OF RMA10S'
+        WRITE(*,*) 'YOU ARE EXECUTING VERSION 3.5D OF RMA10S'
         WRITE(*,*)' COPYRIGHT  RESOURCE MODELLING ASSOCIATES PTY LTD'
         WRITE(*,*)' 9 DUMARESQ STREET'
         WRITE(*,*)' GORDON 2072'

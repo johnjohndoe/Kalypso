@@ -76,7 +76,8 @@ c     ICFL=0
       IDRYC=0
 CIPK AUG95 MAKE ALPHA 1.8
       ALPHA=1.8
-CIPK JUN05      ALPHA=2.0
+
+CCC      ALPHA=2.0
 cipk feb01 add thetcn
       thetcn=1./alpha
 C-
@@ -491,7 +492,7 @@ cipk dec99 test for delta = 0
         if(delt .gt. 0.) then
 
           ALTM=1.8/DELT
-C          ALTM=2.0/DELT
+CIPK          ALTM=2.0/DELT
 CIPK MAY02
           ALPHASN=1.8
           ALPHASN=2.0

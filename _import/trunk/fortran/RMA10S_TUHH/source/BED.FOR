@@ -1,3 +1,4 @@
+cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
       USE BLK10MOD
@@ -50,6 +51,8 @@ cipk aug05 update to allow redefinition of bed
       DO N=1,NPM
         TM(N)=0.
       ENDDO
+cipk apr06   make a first call to get sed initial conditions
+      CALL GETINIT(IBIN,0)
       CALL FORMBED(1)
       RETURN
    10 CONTINUE
@@ -254,12 +257,12 @@ C..... READ NEXT RECORD
         IF(ID(1:4) .NE. 'CBMT') THEN
           GO TO 500
         ENDIF
-        READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
-        if (NLA .gt. mxsedlay)  then
-          write(*,*) '  lt > mlayer ', N,NLA,TEMP1
-          write(75,*) '  lt > mlayer ', N,NLA,TEMP1
-          stop 
-        endif
+c        READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
+c        if (NLA .gt. mxsedlay)  then
+c          write(*,*) '  lt > mlayer ', N,NLA,TEMP1
+c          write(75,*) '  lt > mlayer ', N,NLA,TEMP1
+c          stop 
+c        endif
 
         GO TO 440
   500   CONTINUE

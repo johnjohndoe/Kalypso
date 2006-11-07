@@ -236,6 +236,7 @@ C
       USE BLKDRMOD
       USE BLKSEDMOD
       USE BLKSANMOD
+      USE BLKTSMOD
 	!      
 	!  DJW 19/01/04 Include WBM Modules
 	!
@@ -371,6 +372,10 @@ C     * 5X,I3,F8.6,5F12.4,F12.6)
 C
 C  use the method of choice for sediment transport
 C
+CIPK MAR06
+          IF(ITSTMOD .EQ. 1) THEN
+            vels=TSTVAR(1)
+          ENDIF
         if(vels .gt. 0.00001) then
 cipk mar06  add node nunbers to calls below
           ISMODE=ISMODEND(NN)

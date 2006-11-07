@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -557,7 +558,8 @@ CIPK SEP04  ADD MAH OPTION
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
-            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
+CIPK MAY06  MOVE NR TO MAT
+            FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
 !

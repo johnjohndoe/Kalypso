@@ -1,3 +1,4 @@
+CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
 cipk last update apr 7 2000 correct interpolation function for 3-d
@@ -36,7 +37,7 @@ C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
         WRITE(LOUT,6003) DAYOFY,TET
  6000 FORMAT( '1'  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA
      +M RMA-10S'/ 10X, 'SAND TRANSPORT '
-     +      /,10X,'VERSION 3.5B MARCH 2006 '///)
+     +      /,10X,'VERSION 3.5D MAY 2006 '///)
 C 6003 FORMAT( / 5X,'...RESULTS AFTER',F9.2,' HOURS OF DYNAMIC SIMULATION
 C     1...' /)
  6003 FORMAT( / 5X,'...RESULTS AT DAY',F7.0,'  HOUR', F9.2,'...')
@@ -220,6 +221,16 @@ CIPK MAY02 UPDATE BED ELEVATION
 	  VEL(2,N)=VEL(2,N)/RATIO
 	  VDOT(1,N)=VDOT(1,N)/RATIO
 	  VDOT(2,N)=VDOT(2,N)/RATIO
+cipk jun06 test	  VEL(6,N)=VEL(6,N)/RATIO
+cipk jun06 test	  VDOT(6,N)=VDOT(6,N)/RATIO
+cipk jun06 get total masses by node for susp sed and bed 	   
+        RHOBS=1000.*CONP*SGSAND(N)
+	   TMSAND(N)=tthick(n)*rhobs
+     +   +(alpha2(n))*delt/1000.*(ALPHA-1.)/ALPHA
+	   TMSSAND(N)=DEP*VEL(6,N)/1000.
+	  VEL(6,N)=VEL(6,N)/RATIO
+	  VDOT(6,N)=VDOT(6,N)/RATIO
+
      	ENDDO
       
  !     Else
@@ -229,6 +240,37 @@ CIPK MAY02 UPDATE BED ELEVATION
 !	End If
 	! End DJW Changes 11/06/04
 
+cipk may06 put total mass in subscript '0'   
+      TMSAND(0)=0
+      TMSSAND(0)=0
+      DO N=1,NE
+        NCN=NCORN(N)
+        IF(NCN .EQ. 6) THEN
+        TMSAND(0)=TMSAND(0)+
+     +  (TMSAND(NOP(N,1))+TMSAND(NOP(N,3))+TMSAND(NOP(N,5)))*
+     +           (AREA(N)/3.)        
+        TMSSAND(0)=TMSSAND(0)+
+     +  (TMSSAND(NOP(N,1))+TMSSAND(NOP(N,3))+TMSSAND(NOP(N,5)))*
+     +           (AREA(N)/3.)        
+        ELSEIF(NCN .EQ. 8) THEN
+        TMSAND(0)=TMSAND(0)+
+     +  (TMSAND(NOP(N,1))+TMSAND(NOP(N,3))+TMSAND(NOP(N,5))+
+     +            TMSAND(NOP(N,7)))*(AREA(N)/4.)  
+        TMSSAND(0)=TMSSAND(0)+
+     +  (TMSSAND(NOP(N,1))+TMSSAND(NOP(N,3))+TMSSAND(NOP(N,5))+
+     +            TMSSAND(NOP(N,7)))*(AREA(N)/4.)  
+        ENDIF      
+      ENDDO
+      
+      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
+
+      WRITE(LOUT,9999) TMSAND(0),TMSSAND(0),TMSAND(0)+TMSSAND(0)
+   76 continue      
+      if(IMASSOUT .gt. 0) then      
+        WRITE(24,9999) TET,TMSAND(0),TMSSAND(0),TMSAND(0)+TMSSAND(0)
+      endif
+ 9999 FORMAT(F10.3,1PE20.8,1PE20.8,1PE20.8) 
+      
 
       RETURN
       END

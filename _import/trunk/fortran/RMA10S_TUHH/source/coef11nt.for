@@ -1,3 +1,5 @@
+cipk  last update jul 05 2006 use perim for hydraulic radius in friction	      
+CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT AND H DEFINITION
 CIPK  LAST UPDATE mar 23 2006 correct ice initial values 
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -311,6 +313,17 @@ c       SSLOP total side slope
       DSLOX1=(SS1(N2)-SS1(N1))/TEMP
       DSLOX2=(SS2(N2)-SS2(N1))/TEMP
 
+CIPK MAY06 
+	IF(NTX .NE. 0) THEN
+        H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2) 
+cipk jul06 define dhdx earlier         
+        DHDX=VEL(3,N1)*DMX(1)+VEL(3,N2)*DMX(2)
+        DUM=1.
+      ELSE
+        H=1.0
+        DHDX=0.
+      ENDIF
+
 c           PERIM Wetted perimeter	      
       PERIM=WID+H*(SQRT(1.+SSLOP1**2)+SQRT(1.+SSLOP2**2))
 c           DPERMH rate of change of wetted perimeter wrt H
@@ -560,13 +573,16 @@ CIPK APR99 ADJUST NR TO MAT
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(MAT) .GT. 0.) THEN
 	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
-              FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
+cipk jul06 use perim	      
+              FFACT=(MANMIN(MAT))**2*FCOEF/((ACR/PERIM)**0.333)
 	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
-              FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
+cipk jul06 use perim	      
+              FFACT=(MANMAX(MAT))**2*FCOEF/((ACR/PERIM)**0.333)
 	      ELSE
 	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
+cipk jul06 use perim	      
               FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
-     +     	       *FCOEF/(H**0.333)
+     +     	       *FCOEF/((ACR/PERIM)**0.333)
 	      ENDIF
 CIPK SEP04  ADD MAH OPTION
           ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
@@ -575,7 +591,8 @@ CIPK SEP04  ADD MAH OPTION
 	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
 	      ENDIF
 	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+cipk jul06 use perim	      
+            FFACT=TEMAN**2*FCOEF/((ACR/PERIM)**0.333)
           ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
 	      DO K=1,4
 	        IF(H .LT. MANTAB(MAT,K,1)) THEN
@@ -592,7 +609,8 @@ CIPK SEP04  ADD MAH OPTION
 	      ENDDO
 	      TEMAN=MANTAB(MAT,4,2)
   280       CONTINUE
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+cipk jul06 use perim	      
+            FFACT=TEMAN**2*FCOEF/((ACR/PERIM)**0.333)
           ELSE
 !**************************************************************
 !
@@ -601,8 +619,9 @@ CIPK SEP04  ADD MAH OPTION
 !**************************************************************
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
-
-            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
+CIPK MAY06 REPLACE NR WITH MAT
+cipk jul06 use perim	      
+            FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/((ACR/PERIM)**0.333)
 !
 !**************************************************************
 !
@@ -1040,7 +1059,23 @@ C     WRITE(*,7777) NN,((ESTIFM(I,J),J=1,12),I=1,12)
 C     WRITE(*,7777) NN,(F(I),I=1,12)
 C     WRITE(*,7778) (R1(N),N=1,NSZF)
 C7778 FORMAT(1P5E12.4)
+
+C      DO I=1,12
+C        IF(F(I) .NE. 0.) THEN
+C          WRITE(235,7780) NN,I,F(I)
+C 7780     FORMAT(2I8,1PE15.6)          
+C        ENDIF
+C        DO J=1,12
+C      
+C          IF(ESTIFM(I,J) .NE. 0.) THEN
+C            WRITE(234,7779) NN,I,J,ESTIFM(I,J)
+C 7779       FORMAT(3I8,1PE15.6)        
+C          ENDIF
+C        ENDDO
+C      ENDDO
+
       RETURN
+    
 *-
 *...... Special case for junction element
 *-

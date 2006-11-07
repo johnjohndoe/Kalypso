@@ -1,3 +1,6 @@
+CIPK LAST UPDATE may 30 2006 add mass output and refine compuatation of mass laid down
+CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
+CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
 CIPK LAST UPDATE JAN 23 2005 ALLOW FOR RECORD OF BED CHANGES
 CIPK LAST UPDATE APRIL 18 1999 ADD CHECK FOR MUD FLATS TO CUT OFF SDEP/ERS
 CIPK LAST UPDATE fEB 18 1999 FIX ERROR IN PRINTING ORDER AND BEDELEV
@@ -67,11 +70,24 @@ C-
         VST=VS(N)
         IF(TAU .GT. TAUCD) TAU=TAUCD
         IF(TAUO .GT. TAUCD) TAUO=TAUCD
-        TEMP=((3.*TAUCD-2.*TAUO-TAU)*CSO+
-     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
+        
+cipk may06 refine computation of added mass
+c        TEMP=((3.*TAUCD-2.*TAUO-TAU)*CSO+
+c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
+c        TEMP1=3.*TAUCD-TAUO-2.*TAU/(3.*TAUCD)
 C
-        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
-     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
+c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
+c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
+c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
+c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
+        tmTMP1=deprat(nn)*delt*cs
+        deprato=VS(nn)*(1.-TAUO/TAUCD)
+        TMTMP2=DEPRATO*DELT*CSO
+c        TMTMP2A=TEMP1*ABS(VST)*DELT*CS
+C        write(215,*) nn,temp,vst,delt
+C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
+        TM(NN)=((ALPHA-1.)*TMTMP2+TMTMP1)/ALPHA
+cipk may06 end updates       
         TM(NN)=TM(NN)/1000.
         DELBED(NN)=BEDEL(NN)
         IF(TM(NN).LE.0.)GO TO 350
@@ -94,14 +110,14 @@ C.......................................................................
 
 C   ..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
 c
-        NL=TM(NN)/WEGT
+cipk apr06        NL=TM(NN)/WEGT
  
 cipk apr99        if (lt .gt. mlayer+10)  then
 cipk aug05        if (nl .gt. mlayer+10)  then
-        if (nl .gt. mxsedlay+10)  then
-           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
-           stop 
-        endif
+cipk apr06        if (nl .gt. mxsedlay+10)  then
+cipk apr06           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
+cipk apr06           stop 
+cipk apr06        endif
 
 
 crrr aug97 add largely new logic to statment "350 CONTINUE"
@@ -194,7 +210,7 @@ C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
 C*********************************************************************
       IF(II .NE. 1) THEN
 cipk apr97 add option
-        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
+CIPK APR06        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
 C        WRITE(181,80)
         DO 480 I=1,NPM
           N=I
@@ -212,59 +228,88 @@ C          WRITE(181,82)I,BSHEAR(I),BC,BEDEL(I),DMER,SER,DR,EDM
   480   CONTINUE
       ENDIF
 
+CIPK APR06 INIIALIZE IPASST
+      DO N=1,NPM
+        IPASST(N)=0
+      ENDDO
+
 c update bed elevation for flow calculation
-      
+cipk may06 skip of morphology off
+
+      IF(FACTMORPH .NE. 1.) GO TO  7777 
       DO M=1,NEM
 
        IF(IMAT(M) .GT. 0) THEN
         DO K=1,NCORN(M),2
 	    N=NOP(M,K) 
-  	    DEP=VEL(3,N)
-	    AO(N)=AO(N)+DEPINCR(N)
-          ADO(N)=ADO(N)+DEPINCR(N)
-          ADB(N)=ADB(N)+DEPINCR(N)
-          ADT(N)=ADT(N)+DEPINCR(N)
-          HEL(N)=WSLL(N)-ADO(N)
-          CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-          VEL(3,N)=HTP
-	    RATIO=vel(3,n)/DEP
-	    VEL(1,N)=VEL(1,N)/RATIO
-	    VEL(2,N)=VEL(2,N)/RATIO
-	    VDOT(1,N)=VDOT(1,N)/RATIO
-	    VDOT(2,N)=VDOT(2,N)/RATIO
-          BEDEL(N)=DELBED(N)
-          BEDELO(N)=BEDEL(N)
-          DEPINCR(N)=0.
-        ENDDO
-        DO K=2,NCORN(M),2
-          N1=NOP(M,K-1)
-	    N=NOP(M,K)
-          IF(K .LT. NCORN(M)) THEN
-	      N2=NOP(M,K+1)
-	    ELSE
-            N2=NOP(M,1)
-	    ENDIF
-	    DEP=VEL(3,N)
-	    VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
-	    AO(N)=(AO(N1)+AO(N2))/2.
-	    ADO(N)=(ADO(N1)+ADO(N2))/2.
-	    ADB(N)=(ADB(N1)+ADB(N2))/2.
-	    ADT(N)=(ADT(N1)+ADT(N2))/2.
-          BEDEL(N)=(BEDEL(N1)+BEDEL(N2))/2.
-          BEDELO(N)=BEDEL(N)
-	    RATIO=vel(3,n)/DEP
-	    VEL(1,N)=VEL(1,N)/RATIO
-	    VEL(2,N)=VEL(2,N)/RATIO
-	    VDOT(1,N)=VDOT(1,N)/RATIO
-	    VDOT(2,N)=VDOT(2,N)/RATIO
+CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
+	    IF(IPASST(N) .EQ. 0) THEN
+	      IPASST(N)=1
+      	      DEP=VEL(3,N)
+	      AO(N)=AO(N)+DEPINCR(N)
+              ADO(N)=ADO(N)+DEPINCR(N)
+              ADB(N)=ADB(N)+DEPINCR(N)
+              ADT(N)=ADT(N)+DEPINCR(N)
+              HEL(N)=WSLL(N)-ADO(N)
+              CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+              VEL(3,N)=HTP
+	      RATIO=vel(3,n)/DEP
+	      VEL(1,N)=VEL(1,N)/RATIO
+	      VEL(2,N)=VEL(2,N)/RATIO
+	      VDOT(1,N)=VDOT(1,N)/RATIO
+	      VDOT(2,N)=VDOT(2,N)/RATIO
+cipk update suspended sed
+	      VEL(6,N)=VEL(6,N)/RATIO
+	      VDOT(6,N)=VDOT(6,N)/RATIO
+              BEDEL(N)=DELBED(N)
+              BEDELO(N)=BEDEL(N)
+              DEPINCR(N)=0.
+            ENDIF
         ENDDO
 	 ENDIF
 	ENDDO
+cipk may06 separate loops to assure correct updating
+      DO M=1,NEM
+
+       IF(IMAT(M) .GT. 0) THEN
+        DO K=2,NCORN(M),2
+            N1=NOP(M,K-1)
+	    N=NOP(M,K)
+            IF(K .LT. NCORN(M)) THEN
+	      N2=NOP(M,K+1)
+	    ELSE
+              N2=NOP(M,1)
+	    ENDIF
+CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
+	    IF(IPASST(N) .EQ. 0) THEN
+	      IPASST(N)=1
+	      DEP=VEL(3,N)
+	      VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
+	      AO(N)=(AO(N1)+AO(N2))/2.
+	      ADO(N)=(ADO(N1)+ADO(N2))/2.
+	      ADB(N)=(ADB(N1)+ADB(N2))/2.
+	      ADT(N)=(ADT(N1)+ADT(N2))/2.
+              BEDEL(N)=(BEDEL(N1)+BEDEL(N2))/2.
+              BEDELO(N)=BEDEL(N)
+	      RATIO=vel(3,n)/DEP
+	      VEL(1,N)=VEL(1,N)/RATIO
+	      VEL(2,N)=VEL(2,N)/RATIO
+	      VDOT(1,N)=VDOT(1,N)/RATIO
+	      VDOT(2,N)=VDOT(2,N)/RATIO
+cipk may06 update susp sed	      
+	      VEL(6,N)=VEL(6,N)/RATIO
+	      VDOT(6,N)=VDOT(6,N)/RATIO
+	    ENDIF
+          ENDDO
+	 ENDIF
+	ENDDO
+ 7777 CONTINUE	
 C
 C... PRINT OUT LAYER PROPERTIES.
 C
 cipk apr97 add option
-      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
+cipk  modify to allow mass computation at all steps
+      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 60
 
 crrr aug97 revise print format and structure
       WRITE(LINE256,'(A)')
@@ -282,8 +327,8 @@ crrr aug97 revise print format and structure
      &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
       WRITE(LOUT,'(A)') LINE256
       
-      
-
+   60 continue
+   
       INT = (NP+5)/6
       MLAYRS = MIN(NLAYT,5)
       DO 75 NN=1,NPM
@@ -314,10 +359,13 @@ cipk jan05
          IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
              GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
-             TVN = TVN + THICKO(NN,L)*GAD(L)
+             TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
 	   ENDIF
+cipk may06 get nodal masses for susp sed and bed 	   
+	   TMSED(NN)=TVN+(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+	   TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
 
 C
 C Print layer info
@@ -330,6 +378,7 @@ cipk jan99     &          N, BSHEAR(N), TVN, SUMTHICK*1000.,
 cipk jan99     &             (1000. * THICK(NN,L),L=1,NLAYT),
 cipk jan99     &             (1000. * THICKO(NN,L),L=1,NLAYO(N))
 cipk jan99         ENDIF
+      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 75
          IF (NLAY(NN) .GT. 0 .OR. NLAYO(NN) .GT. 0) THEN
 c             SUMTHICK = BEDEL(N) - AO(N)
              MLAYRS = NLAY(NN)
@@ -339,7 +388,37 @@ c             SUMTHICK = BEDEL(N) - AO(N)
      &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
          ENDIF
    75 CONTINUE
+cipk may06 put total mass in subscript '0'   
+      TMSED(0)=0
+      TMSSED(0)=0
+      DO N=1,NE
+        NCN=NCORN(N)
+        IF(NCN .EQ. 6) THEN
+        TMSED(0)=TMSED(0)+
+     +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5)))*
+     +           (AREA(N)/3.)        
+        TMSSED(0)=TMSSED(0)+
+     +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5)))*
+     +           (AREA(N)/3.)        
+        ELSEIF(NCN .EQ. 8) THEN
+        TMSED(0)=TMSED(0)+
+     +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5))+
+     +            TMSED(NOP(N,7)))*(AREA(N)/4.)  
+        TMSSED(0)=TMSSED(0)+
+     +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5))+
+     +            TMSSED(NOP(N,7)))*(AREA(N)/4.)  
+        ENDIF      
+      ENDDO
+      
+      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
 
+      WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
+   76 continue      
+      if(IMASSOUT .gt. 0) then      
+        WRITE(24,9999) TET,TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
+      endif
+ 9999 FORMAT(F10.3,1PE20.8,1PE20.8,1PE20.8) 
+      
 
 C
 c

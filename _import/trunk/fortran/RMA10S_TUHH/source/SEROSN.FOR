@@ -1,3 +1,4 @@
+cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
 CIPK LAST UPDATE MARCH 25 MAJOR REWRITE 
@@ -51,6 +52,9 @@ crr aug97 new units for temal2
 cipk mar00
          serat(n)=0.
          SERAT(NN) = 0.
+         
+cipk jun06  test for marshing
+         if(wsll(n) .lt. ao(n)) go to 500
 
 cipk mar06         
          seratnewl=0

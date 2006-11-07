@@ -24,7 +24,8 @@ C-
      +          ,NBSFRQ,IWAVOT,ISMSFM2,IDIFSW
      +          ,INWGT,INSTR,INBNWGT,INBNSTR,IGEO,IOWGT,IOBNWGT,ICORDIN
      +          ,IOV,IYKK,IDTM,TTEM,LNNAM,IWVIN,IWVFC,INOTR,INCSTR
-     +          ,INTIMS,INEWBED,IDEBUG,IMESHOUT,IOUTRWD
+     +          ,INTIMS,INEWBED,IDEBUG,IMESHOUT,IOUTRWD,IMASSOUT
+CIPK MAY06 ASS IMASSOUT     
 CIPK MAR06 ADD IOUTRWD     
       REAL    
      1           GRAV,ROAVG,OMEGA
@@ -91,7 +92,8 @@ cipk may02
      1            ,DIVID(:),XVEL(:,:),LAB(:)
      +            ,EVISXZ(:),EVISYZ(:),DVISZ(:)
      +            ,UDST(:),VDST(:),UUDST(:),UVDST(:)
-     +            ,VVDST(:),SDST(:),TDST(:),SEDST(:),IMID(:,:)
+     +            ,VVDST(:),SDST(:),TDST(:),SEDST(:),IMID(:,:),IPASST(:)
+cipk apr06 add IPASST
 C-
 
 

@@ -26,6 +26,9 @@ CIPK MAR05
      +           ,SDND(:,:)
       REAL*8 ELEVB
       ALLOCATABLE ELEVB(:)
+CIPK JUN06
+      REAL*8 TMSAND,TMSSAND
+      ALLOCATABLE TMSAND(:),TMSSAND(:)
 
       ALLOCATABLE 
      +              SD(:),GPB(:,:)

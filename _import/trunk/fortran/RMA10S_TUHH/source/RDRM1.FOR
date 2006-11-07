@@ -1,3 +1,5 @@
+CIPK  LAST UPDATE JUN 20 2006  FIX ERROR NO INITIALIZATION OF nptemp ETC
+CIPK  LAST UPDATE MAY 23 2006  FIX ERROR READING CCLINES
 CIPK  LAST UPDATE SEP 6 2004  add error file
       SUBROUTINE RDRM1(NPTEMP,NETEMP,KSWIT)
       USE BLK10MOD
@@ -15,6 +17,9 @@ cipk aug05	INCLUDE 'BLK10.COM'
 
       NP=0
 	NE=0
+cipk jun06
+      NPTEMP=0
+      NETEMP=0	
   100	CALL GINPT1(IFILE,DLINE)
 
       READ(DLINE,'(10I5,F10.3,I5)') J,ILN,IMT,EDIR,INU
@@ -38,14 +43,16 @@ cipk aug05	INCLUDE 'BLK10.COM'
 	  GO TO 100
       ENDIF	  
   
-  120 continue                                                                           
+  120 continue  
+  
+      IF(KSWIT .EQ. 0) THEN
 
       DO N=1,NE
 	  IF(NFIXH(N) .EQ. 0) THEN
 	    NFIXH(N)=N
 	  ENDIF
       ENDDO
-
+      endif
       CALL GINPT1(IFILE,DLINE)
 
       IF(IFORM .LT. 2) THEN
@@ -82,6 +89,7 @@ CIPK NOT IN RMA10        BS1(J)=BS11
   140 CONTINUE
 
       IF(KSWIT .EQ. 1) THEN
+        write(*,*) 'ne',netemp                                                                         
         REWIND IFILE
         RETURN
       ENDIF
@@ -100,7 +108,8 @@ CIPK NOT IN RMA10        BS1(J)=BS11
           NCL=MAX(NCL,I)
           READ(IFILE,'(A3,A77)',end=375) ID1,DLIN2
           IF(ID1 .EQ. 'CC2') THEN
-            READ(IFILE,'(5X,9I8)') (LINE(I,J),J=NL,NL+8)
+cipk may05  REPLACE IFILE WITH DLINE2
+            READ(DLIN2,'(5X,9I8)') (LINE(I,J),J=NL,NL+8)
           ELSEIF(ID1 .EQ. 'CC1'  .OR.  ID1 .EQ. 'END') THEN
             DO K=1,350
               IF(LINE(I,K) .EQ. 0) THEN

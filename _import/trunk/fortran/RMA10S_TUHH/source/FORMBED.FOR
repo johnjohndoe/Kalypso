@@ -1,3 +1,6 @@
+CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
+CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
+CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
 CIPK LAST UPDATE MARCH 30 2006 CORRECT A SUBSCRIPT ERROR
 CIPK LAST UPDATE JAN 23 2005 ALLOW FOR RECORD OF BED CHANGES
 CIPK LAST UPDATE APRIL 18 1999 ADD CHECK FOR MUD FLATS TO CUT OFF SDEP/ERS
@@ -69,12 +72,12 @@ C.......................................................................
 
 C   ..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
 c
-        NL=TM(NN)/WEGT
+cipk apr06        NL=TM(NN)/WEGT
  
-        if (nl .gt. mxsedlay+10)  then
-           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
-           stop 
-        endif
+cipk apr06        if (nl .gt. mxsedlay+10)  then
+cipk apr06           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
+cipk apr06           stop 
+cipk apr06        endif
 
 
 crrr aug97 add largely new logic to statment "350 CONTINUE"
@@ -151,12 +154,17 @@ CIPK JAN05
 
   350 CONTINUE
 
+C   BEDEL IS NOW LEVEL OF BED
 
       DO N=1,NPM
         IF(IMID(N,1) .GT. 0) THEN
           NN = N
-          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1          
           NLAYTND(NN)=MAX(NLAYTND(IMID(NN,1)),NLAYTND(IMID(NN,2)))
+CIPK MAY06 SET DENSITY
+          do l=1,nlaytnd(nn)
+            gadnd(nn,l)=(gadnd(IMID(NN,1),l)+gadnd(IMID(NN,2),l))/2.
+          enddo
           BEDORIG(NN)=(BEDORIG(IMID(NN,1))+BEDORIG(IMID(NN,2)))/2.
           BEDEL(NN)=(BEDEL(IMID(NN,1))+BEDEL(IMID(NN,2)))/2.
           TM(NN)=(TM(IMID(NN,1))+TM(IMID(NN,2)))/2.
@@ -179,7 +187,7 @@ CIPK MAR06
 
 
 
-c        BEDEL is the total thickness of mud
+c        BEDEL is the total thickness of mud (OUT OF DATE)
 
 C********************************************************************
 C    SET OLD CONCENTRATIONS AND SHEARS TO NEW VALUES.
@@ -222,7 +230,7 @@ C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
 C*********************************************************************
       IF(II .NE. 1) THEN
 cipk apr97 add option
-        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
+CIPK SKIP THIS TEST        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
 C        WRITE(181,80)
         DO 480 I=1,NPM
           N=I
@@ -240,49 +248,61 @@ C          WRITE(181,82)I,BSHEAR(I),BC,BEDEL(I),DMER,SER,DR,EDM
   480   CONTINUE
       ENDIF
 
+CIPK APR06 INIIALIZE IPASST
+      DO N=1,NPM
+        IPASST(N)=0
+      ENDDO
+
 c update bed elevation for flow calculation
       
       DO M=1,NEM
 
        IF(IMAT(M) .GT. 0) THEN
         DO K=1,NCORN(M),2
-	    N=NOP(M,K) 
-  	    DEP=VEL(3,N)
-	    AO(N)=AO(N)+DEPINCR(N)
-          ADO(N)=ADO(N)+DEPINCR(N)
-          ADB(N)=ADB(N)+DEPINCR(N)
-          ADT(N)=ADT(N)+DEPINCR(N)
-          HEL(N)=WSLL(N)-ADO(N)
-          CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-          VEL(3,N)=HTP
-	    RATIO=vel(3,n)/DEP
-	    VEL(1,N)=VEL(1,N)/RATIO
-	    VEL(2,N)=VEL(2,N)/RATIO
-	    VDOT(1,N)=VDOT(1,N)/RATIO
-	    VDOT(2,N)=VDOT(2,N)/RATIO
-	    
+	    N=NOP(M,K)
+CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
+	    IF(IPASST(N) .EQ. 0) THEN
+	      IPASST(N)=1
+  	      DEP=VEL(3,N)
+	      AO(N)=AO(N)+DEPINCR(N)
+              ADO(N)=ADO(N)+DEPINCR(N)
+              ADB(N)=ADB(N)+DEPINCR(N)
+              ADT(N)=ADT(N)+DEPINCR(N)
+              HEL(N)=WSLL(N)-ADO(N)
+              CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+              VEL(3,N)=HTP
+	      RATIO=vel(3,n)/DEP
+	      VEL(1,N)=VEL(1,N)/RATIO
+	      VEL(2,N)=VEL(2,N)/RATIO
+	      VDOT(1,N)=VDOT(1,N)/RATIO
+	      VDOT(2,N)=VDOT(2,N)/RATIO
+	    ENDIF 
         ENDDO
         DO K=2,NCORN(M),2
           N1=NOP(M,K-1)
 	    N=NOP(M,K)
-          IF(K .LT. NCORN(M)) THEN
+            IF(K .LT. NCORN(M)) THEN
 	      N2=NOP(M,K+1)
 	    ELSE
-            N2=NOP(M,1)
+              N2=NOP(M,1)
 	    ENDIF
-	    DEP=VEL(3,N)
-	    VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
-	    AO(N)=(AO(N1)+AO(N2))/2.
-	    ADO(N)=(ADO(N1)+ADO(N2))/2.
-	    ADB(N)=(ADB(N1)+ADB(N2))/2.
-	    ADT(N)=(ADT(N1)+ADT(N2))/2.
-	    BEDELO(N)=(BEDEL(N1)-AORIG(N1)+BEDEL(N2)-AORIG(N2))/2.
-          BEDEL(N)=BEDELO(N)
-	    RATIO=vel(3,n)/DEP
-	    VEL(1,N)=VEL(1,N)/RATIO
-	    VEL(2,N)=VEL(2,N)/RATIO
-	    VDOT(1,N)=VDOT(1,N)/RATIO
-	    VDOT(2,N)=VDOT(2,N)/RATIO
+CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
+	    IF(IPASST(N) .EQ. 0) THEN
+	      IPASST(N)=1
+ 	      DEP=VEL(3,N)
+	      VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
+	      AO(N)=(AO(N1)+AO(N2))/2.
+	      ADO(N)=(ADO(N1)+ADO(N2))/2.
+	      ADB(N)=(ADB(N1)+ADB(N2))/2.
+	      ADT(N)=(ADT(N1)+ADT(N2))/2.
+	      BEDELO(N)=(BEDEL(N1)-AORIG(N1)+BEDEL(N2)-AORIG(N2))/2.
+              BEDEL(N)=BEDELO(N)
+	      RATIO=vel(3,n)/DEP
+	      VEL(1,N)=VEL(1,N)/RATIO
+	      VEL(2,N)=VEL(2,N)/RATIO
+	      VDOT(1,N)=VDOT(1,N)/RATIO
+	      VDOT(2,N)=VDOT(2,N)/RATIO
+	    ENDIF
         ENDDO
 	 ENDIF
 	ENDDO
@@ -307,8 +327,6 @@ crrr aug97 revise print format and structure
      & '          (N/m2)    (m)       (Kg/m2)   (mm) ',
      &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
       WRITE(LOUT,'(A)') LINE256
-      
-      
 
       INT = (NP+5)/6
       MLAYRS = MIN(NLAYT,5)
@@ -340,7 +358,7 @@ cipk jan05
          IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
              GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
-             TVN = TVN + THICKO(NN,L)*GAD(L)
+             TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
 	   ENDIF
@@ -365,7 +383,6 @@ c             SUMTHICK = BEDEL(N) - AO(N)
      &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
          ENDIF
    75 CONTINUE
-
 
 C
 c

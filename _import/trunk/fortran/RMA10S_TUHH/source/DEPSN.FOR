@@ -1,3 +1,4 @@
+cipk last update JUNE 5 2006  add test marshing
 CIPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
 C_____________________________________________________________________
       SUBROUTINE DEPSN
@@ -25,11 +26,16 @@ C
          I=N
          IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
          DEPRAT(I)=0.
+         
+cipk jun06  test for marshing
+         if(wsll(i) .lt. ao(i)) go to 500
+
          IF(TAUCD .GT. BSHEAR(I)) THEN
 C          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
            DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)
          ENDIF
        ENDIF
+  500  continue       
       ENDDO
       RETURN
       END

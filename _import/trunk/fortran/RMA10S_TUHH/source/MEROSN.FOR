@@ -1,3 +1,5 @@
+cipk last update JUNE 5 2006  add test marshing
+cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
 cipk last update dec 16 2004 fix 3-D bug 
 cipk last update apr 7 2000 correct interpolation function for 3-d
@@ -43,12 +45,18 @@ CIPKSEP05
         DO J=1,NLAYT
           SS(J)=SSND(N,J)
           GAD(J)=GADND(N,J)
+CIPK MAY06          
+          EROSTM(J)=EROST(N,J)
         ENDDO
                 
        EDOT(N)=0.
 cipk mar00
        edot(nn)=0.
+cipk jun06  test for marshing
+       if(wsll(n) .lt. ao(n)) go to 100
+       
        ES=BSHEAR(N)/ALPHA+(1.-1./ALPHA)*ESRO(N)
+
 C
 C     CHECK IF ANY EROSION WILL OCCUR.
 C
@@ -57,19 +65,27 @@ C
 C     **** TOP LAYER ERODES    ******
 C
 crrr aug97  rearrang to loop through layers
-        NL = NLAY(NN)
+
+CIPK MAY06 CORRECT TO SETTING OF NL
+        NL = NLAYTND(NN)
+
         IF (NL .EQ. NLAYT) NL = NLAYT - 1
 crrr aug97 loop through all layers
         DO 20 J=1,NL
+        
+CIPK MAY06  TEST FOR ZERO THICKNESS
+         
+          IF(THICK(NN,J) .EQ. 0.) GO TO20
 C
 crrr aug97 test for shear stress level to skip out
            IF (ES .LT. SS(J)) GO TO 30
-
-           EDOT(N) = EDOT(N) + THICK(NN,J)*GAD(J)
+CIPK MAY06
+           IF(EROSTM(J) .EQ. 0.) THEN
+             EDOT(N) = EDOT(N) + THICK(NN,J)*GAD(J)
 cipk mar00
-           edot(nn)=edot(n)
-           BEDEL(NN) = BEDEL(NN)-THICK(NN,J)
-           THICK(NN,J)=0.
+             edot(nn)=edot(n)
+             BEDEL(NN) = BEDEL(NN)-THICK(NN,J)
+             THICK(NN,J)=0.
 C
 C   IF IT IS A FULLY CONSOLIDATED BOTTOM LAYER IT WILL UNDERGO SURFACE
 C  EROSION AND IS CONSIDERED IN SUBROUTINE SEROSN,
@@ -77,8 +93,32 @@ C
 c        IF(SST(NN,J) .GT. SS(NLAYT)-0.00001.AND.
 c     .   SST(NN,J) .LT. SS(NLAYT)+0.00001) GO TO 11
 c        IF(SST(NN,J) .GT. ES) GO TO 11
-            SST(NN,J)=0.
+             SST(NN,J)=0.
+           ELSE
+             seratnewl= EROSTM(J)*(ES/SS(J)-1.)
+             INDC = 1           
+             TMERODE = SERATNEWL*DELT
+             DTHK = TMERODE/GAD(J)
+CIPK MAY06             EDOT(NN)=SERATNEWL*DELT
 
+C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED.
+
+             BALAN = THICK(NN,J) - DTHK
+             IF(BALAN .LE. 0) THEN
+               BEDEL(NN) = BEDEL(NN) - THICK(NN,J)
+               AMASER=THICK(NN,J)*GAD(J)
+               SERATNEWL=AMASER/DELT
+               DELTREM=DELT*(1.-THICK(NN,J)/DTHK)
+               THICK(NN,J) = 0.
+               EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+             ELSE
+               BEDEL(NN) = BEDEL(NN) - DTHK
+               THICK(NN,J) = THICK(NN,J) - DTHK
+               EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+               GO TO 30
+             ENDIF            
+             
+           ENDIF
    20   CONTINUE
 
    30   CONTINUE
@@ -93,6 +133,8 @@ crr aug97 end changes
 cipk mar00
         edot(nn)=edot(n)
        ENDIF
+cipk jun06       
+  100  continue       
       ENDDO
 
       DO N=1,NPM
