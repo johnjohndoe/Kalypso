@@ -12,7 +12,12 @@ cipk  last update April 26 1996  many changes
 CIPK AUG05      INCLUDE 'PARAM.COM'
 cipk nov97  do not include BLK10.COM
 cipk dec97 move to param.com      PARAMETER (NCHBS=10,NCHOBS=200)
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
+
+!NiS,jul06: Add IWINDIN for correct memory interpretation
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
+      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
+!-
+
 CIPK AUG05      INCLUDE 'BLK11.COM'
 C
 CIPK DEC97 CHANGE LIMIT TO NHDS
@@ -25,7 +30,11 @@ CIPK DEC97 CHANGE LIMIT TO NHDS
       DIMENSION QQAL(*)
 CIPK SEP04
       CHARACTER*32 FNAMT
-      CHARACTER*80 HTITLE,DLIN
+!NiS,jul06: Adjust length of string variable for proper parameter passing
+!      CHARACTER*80 HTITLE,DLIN
+      CHARACTER*80 HTITLE
+      CHARACTER*72 DLIN
+!-
       CHARACTER*8 ID
       DATA NHYD/0/,ITIMEH/0/
 C      WRITE(*,*) 'N,TIME',N,TIME

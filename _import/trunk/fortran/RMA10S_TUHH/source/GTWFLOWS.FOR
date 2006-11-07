@@ -10,6 +10,9 @@ cipk  new routine Mar 1 2000
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
+!NiS,jul06: Consistent data types for passing paramters
+      REAL(KIND=8) :: WH1, WH2
+!-
 
       DATA ITIM/0/
 

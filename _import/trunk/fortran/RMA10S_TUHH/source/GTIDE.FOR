@@ -6,7 +6,12 @@ cipk  last update Jan 17 1996
       subroutine GTIDE(TTIDE,IYRR,DAYOFY,TIME,TDTIM,QQAL)
       SAVE
 cipk APR96 add common
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
+
+!NiS,jul06: Add IWINDIN for correct memory interpretation
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
+      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
+!-
+
 C
 C     Generate time series of tidal elevations at a station 
 C     from harmonic constants for a given starting time and 
