@@ -1,10 +1,18 @@
+C     Last change:  NiS  12 May 2006   10:22 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update July 18 199 fix problem with combined SL and SN data
 C     Last change:  IPK   3 Oct 98    4:08 pm
 cipk  last update Sep 3 1996   Add ocean boundary capability
-      SUBROUTINE BLINE(NTR)
+      SUBROUTINE BLINE(NTR) 
+!NiS,may06,com:
+!NTR shows calling position
+!NTR.eq.0 steady start
+!NTR.eq.1 dynamic start
+!NTR.gt.1 during iteration
+!-
+
       USE BLK10MOD
       USE BLKSUBMOD
       SAVE
@@ -32,12 +40,13 @@ C
       IFORM(N)=0
       IOD(N)=0
   180 CONTINUE
+      !NiS,may06,com: during iteration NTR.gt.1
       IF(NTR .GT. 1) GO TO 240
 cipk sep96 add definitions
       DO N=1,NP
         ION(N)=1
         NFIXSAV(N)=NFIX(N)
-	  NFIXSV1(N)=NFIX1(N)
+	    NFIXSV1(N)=NFIX1(N)
       ENDDO
       DO 230 N=1,NPM
   230 NFIXK(N)=NFIX(N)
@@ -45,7 +54,7 @@ cipk sep96 add definitions
 CIPK  SEP96 DEFINE NFIXSAV
       DO N=1,NP
         NFIX(N)=NFIXSAV(N)
-	  NFIX1(N)=NFIXSV1(N)
+	    NFIX1(N)=NFIXSV1(N)
       ENDDO
 C-
 C.....  COMPUTE BOUNDARY MID-SIDE NODES
@@ -100,56 +109,60 @@ C-
           IF (J .GT. 0)  IBN(J)=2
         ENDIF
   290 CONTINUE
+      !NiS,may06,com: for every element
       DO 600 N=1,NEM
 
 CIPK OCT98 REVISE FOR F90
-      MTYP=IMAT(N)
-      IF(MTYP .LT. 1) GO TO 600
-      IF(MOD(MTYP,100) .GT. 90) GO TO 600
+        MTYP=IMAT(N)
+        IF(MTYP .LT. 1) GO TO 600
+        IF(MOD(MTYP,100) .GT. 90) GO TO 600
 
 CIPK DEC00 ALLOW FOR GATE STRUCTURE
 CIPK JUN05
-      IF(MTYP .GT. 900  .AND.  MTYP .LT. 5000  .AND. IGTP(N) .EQ. 0
-     +  .AND.  NFCTP(N) .EQ. 0)
+        IF(MTYP .GT. 900  .AND.  MTYP .LT. 5000  .AND. IGTP(N) .EQ. 0
+     +    .AND.  NFCTP(N) .EQ. 0)
      +     GO TO 600
-      NCN=NCRN(N)
-      IF(NCN .EQ. 5) NCN=3
-      DO 590 M=2,NCN,2
-        N2=NOPS(N,M)
-        N1=NOPS(N,M-1)
-        N3=NOPS(N,1)
-        IF(M .LT. NCN) N3=NOPS(N,M+1)
+        NCN=NCRN(N)
+        IF(NCN .EQ. 5) NCN=3
+        DO 590 M=2,NCN,2
+          N2=NOPS(N,M) !NiS,may06: Midsidenode
+          N1=NOPS(N,M-1) !NiS,may06: first node
+          N3=NOPS(N,1) !NiS,may06: second node; midside of 2D-part, if transition element
+          IF(M .LT. NCN) N3=NOPS(N,M+1)
 C-
 C...... Skip slope calculation for sides that have fixed flow or elevation
 C-
-      IF(IBN(N2) .EQ. 1) THEN
+          IF(IBN(N2) .EQ. 1) THEN
 C-
 C...... Get direction of outward normal for 2-d plan elements
 C-
-        IF(NCN .GT. 3) THEN
-          CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
+        !NiS,may06,com: 2D/3D-part: transition elements with normally ncn.eq.5 are here declared with ncn.eq.3, so only 1D
+            IF(NCN .GT. 3) THEN
+              CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,1)
-        ELSE
-          CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
+        !NiS,may06,com: 1D-part
+            ELSE
+              CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,2)
-        ENDIF
-          VOUTN(N1)=SRT(1)
-          VOUTN(N2)=SRT(2)
-          VOUTN(N3)=SRT(3)
-        NFK=NFIXK(N2)/100
-        IF(NFK .LT. 113  .AND.  NFK .NE. 2) THEN
+            ENDIF
+            VOUTN(N1)=SRT(1)
+            VOUTN(N2)=SRT(2)
+            VOUTN(N3)=SRT(3)
+            NFK=NFIXK(N2)/100
+            !NiS,may06: following is related to the first three digits for boundary condition of nodal input-line
+            IF(NFK .LT. 113  .AND.  NFK .NE. 2) THEN
 
 CIPK JUN05
-          N1=NOP(N,M-1)
-          N3=NOP(N,1)
-          IF(M .LT. NCN) N3=NOP(N,M+1)
-          if(ncn .lt. 6) then
-            IF(IBN(N1) .GE. 10) IBN(N1)=15
-            IF(IBN(N3) .GE. 10) IBN(N3)=15
-          else
-            if(ibn(n1) .eq. 10) ibn(n1)=15
-            if(ibn(n3) .eq. 10) ibn(n3)=15
-          endif
+              N1=NOP(N,M-1)
+              N3=NOP(N,1)
+              IF(M .LT. NCN) N3=NOP(N,M+1)
+              if(ncn .lt. 6) then
+                IF(IBN(N1) .GE. 10) IBN(N1)=15
+                IF(IBN(N3) .GE. 10) IBN(N3)=15
+              else
+                if(ibn(n1) .eq. 10) ibn(n1)=15
+                if(ibn(n3) .eq. 10) ibn(n3)=15
+              endif
 
           H1=VEL(3,N1)
           H3=VEL(3,N3)
@@ -192,6 +205,8 @@ CIPK JUN05
   600 CONTINUE
 
 CIPK JUN05  SETUP FOR SUBMERGENGE
+      !NiS,may06,com: NTR shows position of calling this subroutine
+      !Nis,may06,com: It shows the task of the subroutine
       IF(NTR .GT. 0) THEN
         CALL SUBSET
       ENDIF
