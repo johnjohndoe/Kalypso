@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModel1D2D
+Bundle-SymbolicName: KalypsoModel1D2D; singleton:=true 
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: 
+ org.kalypso.deegree,
+ org.kalypso.jwsdp,
+ org.kalypso.commons,
+ org.kalypso.core,
+ org.kalypso.optimize,
+ org.junit,
+ org.kalypso.simulation.core,
+ org.apache.jakarta_log4j
+Eclipse-LazyStart: true 
