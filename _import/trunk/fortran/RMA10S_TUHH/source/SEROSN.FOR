@@ -52,7 +52,7 @@ crr aug97 new units for temal2
 cipk mar00
          serat(n)=0.
          SERAT(NN) = 0.
-         
+
 cipk jun06  test for marshing
          if(wsll(n) .lt. ao(n)) go to 500
 
@@ -109,19 +109,25 @@ C   CHECK IF ANY MATERIAL ON BED
          DO 30 L=1,NLAYO(N)
             IF (THICKO(N,L) .LE. 0.)  GO TO 30
             IF (BSHEAR(NN) .LE. SSTO(N,L)) THEN
+c  shear stres too small skip to end of loop            
               SERATNEWL=SERATOLD+SERATNEWL
+c             newval=mass from full layers+new layer                
               GO TO 1
             ELSE
               seratold1 = SMVAL(N,L)*(BSHEAR(NN)/SSTO(N,L)-1.)
+c             seratold1 is rate for this layer assuming full erosion              
               OLDEROD=SERATOLD1*DELTREM
               GADLN = (GBO(N,L)-GAW)*GAC/(GAC-GAW)
               DTHKOLD = OLDEROD/GADLN
               BALOLD  = THICKO(N,L) - DTHKOLD
+c  rates for this layer computed  balold positive means all taken so finalize
 C-    ONLY THIS LAYER ERODED
               IF (BALOLD .GT. 0.0) THEN
                 BEDEL(N) = BEDEL(N) - DTHKOLD
                 THICKO(N,L) = THICKO(N,L) - DTHKOLD
+c  new thickness computed add to accumulate more erosion                
                 SERATNEWL=SERATOLD+SERATOLD1*DELTREM/DELT+SERATNEWL
+c               newval=mass from full layer+current+new layer                
                 GO TO 1
               ELSE
 C-    MORE THAN THIS LAYER MAY BE ERODED.
@@ -168,6 +174,17 @@ C
 c          WRITE(239,*) N,SERAT(N)
         ENDIF 
       ENDDO
+      
+CIPK AUG06 LOOK FOR OVERLOADING OF ELEMENTS AND ADD DIFFUSION
+cipkexp      IOVLDN=0
+cipkexp      DO N=1,NPM
+cipkexp        PROJCONC=(EDOT(N)+SERAT(N))*DELT/VEL(3,N)
+cipkexp        IF(PROJCONC .GT. 100)THEN
+cipkexp          IOVLDN(N)=1
+cipkexp          WRITE(*,*) IT,N,PROJCONC
+cipkexp          WRITE(215,*) IT,N,PROJCONC
+cipkexp        ENDIF
+cipkexp      ENDDO
 
 cipk apr00 corect for 3-d using top and bottom element only
       ncn=0
