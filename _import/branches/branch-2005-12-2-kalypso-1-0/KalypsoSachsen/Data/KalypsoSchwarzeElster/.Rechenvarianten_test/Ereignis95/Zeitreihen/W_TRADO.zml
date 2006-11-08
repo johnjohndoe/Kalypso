@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>unbekannt</name>
+    <metadataList>
+        <metadata name="Name" value="unbekannt"/>
+        <metadata name="Entstehung" value="Request-Mechanismus"/>
+        <metadata name="Vorhersage" value="16.05.1995 13:00:00;27.05.1995 02:00:00"/>
+        <metadata name="WQ-Parameter">
+            <data>&lt;![CDATA[&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;wechmann xmlns="wechmann.kalypso.org"&gt;
+    &lt;set&gt;
+        &lt;validity format="yyyy-MM-dd'T'HH:mm:ss"&gt;0001-01-01T00:00:00&lt;/validity&gt;
+        &lt;params&gt;
+            &lt;w1&gt;19.59&lt;/w1&gt;
+            &lt;lnk1&gt;-5.52446&lt;/lnk1&gt;
+            &lt;k2&gt;1.58793&lt;/k2&gt;
+            &lt;wgr&gt;-1.0&lt;/wgr&gt;
+        &lt;/params&gt;
+    &lt;/set&gt;
+&lt;/wechmann&gt;
+
+]]&gt;</data>
+        </metadata>
+        <metadata name="Szenario" value=""/>
+        <metadata name="Zeitzone" value="Europe/Berlin"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">0.48;0.52;0.48;0.52;1.95;4.57;5.92;6.5;6.9;7.2;7.51;7.82;8.03;8.14;8.35;8.57;8.46;8.03;7.1;6.02;5.27;4.48;4.15;3.74;3.58;3.43;3.27;3.05;2.9</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">1995-05-13T01:00:00;1995-05-13T04:00:00;1995-05-13T07:00:00;1995-05-13T10:00:00;1995-05-13T13:00:00;1995-05-13T16:00:00;1995-05-13T19:00:00;1995-05-13T22:00:00;1995-05-14T01:00:00;1995-05-14T04:00:00;1995-05-14T07:00:00;1995-05-14T10:00:00;1995-05-14T13:00:00;1995-05-14T16:00:00;1995-05-14T19:00:00;1995-05-14T22:00:00;1995-05-15T01:00:00;1995-05-15T04:00:00;1995-05-15T07:00:00;1995-05-15T10:00:00;1995-05-15T13:00:00;1995-05-15T16:00:00;1995-05-15T19:00:00;1995-05-15T22:00:00;1995-05-16T01:00:00;1995-05-16T04:00:00;1995-05-16T07:00:00;1995-05-16T10:00:00;1995-05-16T13:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
+        <valueArray separator=";">8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8;8</valueArray>
+    </axis>
+</observation>
+
