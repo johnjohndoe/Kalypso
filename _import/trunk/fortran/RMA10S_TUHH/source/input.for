@@ -684,11 +684,20 @@ C-
       END IF
 !-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,sep06: Add switch for approach of boundary-condition-transformation
+      IF (ID(1:6) == 'KAL_BC') THEN
+        BSWIT = 2
+        call ginpt(lin,id,dlin)
+      ELSE
+        BSWIT = 1
+      END IF
+!-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       NMAT=0
    25 CONTINUE
       IF(ID(1:3) .EQ. 'ED1') THEN
         READ(DLIN,5030) J,(ORT(J,K),K=1,7)
-      write(*,*) 'read ed1'
+        write(*,*) 'read ed1'
 
         IF(NMAT .LT. J) NMAT=J
         NDATLN=NDATLN+1
@@ -714,7 +723,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 cipk nov97  add extra friction
 CIPK NOV98 ADD SURFACE FICTION
           READ(DLIN,5031) (ORT(J,K),K=8,14)
-      write(*,*) 'read ed2'
+          write(*,*) 'read ed2'
 cipk mar98 
           if(ort(j,12) .eq. 0.) ort(j,12)=1.
           NDATLN=NDATLN+1
@@ -723,7 +732,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-  	    IF(ID(1:3) .EQ. 'ED3') THEN
+  	  IF(ID(1:3) .EQ. 'ED3') THEN
             READ(DLIN,5032) IT1,TT1,TT2
 !NiS,apr06: commenat added
             write(*,*) 'read ed3'
@@ -733,11 +742,11 @@ cipk dec03 add element dependence IEDSW
                IEDSW1(J)=IT1
             ENDIF
 	      IF(TT1 .GT. 0.) THEN
-              TBFACT1(J)=TT1
+                TBFACT1(J)=TT1
 	      ENDIF
 	      IF(TT2 .GT. 0.) THEN
 	        TBMIN1(J)=TT2
-            ENDIF
+              ENDIF
           ELSEIF(IEDSW .LT. 0) THEN	      
 cipk sep04
             CLOSE(75)
@@ -745,7 +754,7 @@ cipk sep04
             WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
             WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
             STOP
-	    ENDIF
+	  ENDIF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,apr06: add element type specifications for equivalent sand roughness and vegetation calculation
           IF (ID(1:3) == 'ED4') THEN
@@ -1256,10 +1265,10 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
 C
 C  Read straight line mid-side nodes
 C
-      IF(ID(1:3) .EQ. 'ST1') THEN
-        READ(DLIN,5010) (IMIDD(K),K=1,9)
-        WRITE(LOUT,6037) (IMIDD(K),K=1,9)
-        NDATLN=NDATLN+1
+      IF(ID(1:3) .EQ. 'ST1') THEN                               !NiS,mar06,comment:
+        READ(DLIN,5010) (IMIDD(K),K=1,9)                        !
+        WRITE(LOUT,6037) (IMIDD(K),K=1,9)                       !This part of the code does not do what the handbook says. Therefore see pages
+        NDATLN=NDATLN+1                                         !41/42 in the handbook release of September 2005
 CIPK NOV97        READ(LIN,'(A8,A72)') ID,DLIN
         call ginpt(lin,id,dlin)
 C
@@ -1311,10 +1320,10 @@ C  Read list of nodes and associated coefficient number for salinity distr.
 C
         IF(ID(1:3) .EQ. 'CP1') THEN
           READ(DLIN,5010) (IMIDD(K),K=1,9)
-          WRITE(LOUT,5010) (IMIDD(K),K=1,9)
-          NDATLN=NDATLN+1
-CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN
-      call ginpt(lin,id,dlin)
+          WRITE(LOUT,5010) (IMIDD(K),K=1,9)                                     !NiS,mar06,comment:
+          NDATLN=NDATLN+1                                                       !
+CIPK NOV97          READ(LIN,'(A8,A72)') ID,DLIN                                !This part of the code does not do, what the handbook says. See
+      call ginpt(lin,id,dlin)                                                   !therefore page 42 in the handbook release of September 2005
           DO K = 1, 9
             N = IMIDD(KK)
             IF(N .GT. 0) ICPON(N)=J
@@ -1355,8 +1364,9 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
 !               whether FEM should be set to 1 or 2 like it is done in Kalypso2D!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF (ID(1:5) == 'CVFEM') THEN
-        write (*,*) 'Control-Volume method, you have chosen, is not',
-     +              'yet. It will be calculated with Galerkin method'
+        write (*,*)'Control-Volume method, you have chosen, is not',
+     +             'available yet. It will be calculated with Galerkin',
+     +             'method'
         FEM = 0
         !FEM = 1
       ELSE
@@ -2062,13 +2072,12 @@ C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
 *     CALL BFORM(0)
 C-
-CIPK JUL01
-
 cipk may06
       IF(LSS .GT. 0) THEN
         CALL GETMAS
       ENDIF
-      
+
+CIPK JUL01
       CALL FILE(2,ANAME)
 
       RETURN
