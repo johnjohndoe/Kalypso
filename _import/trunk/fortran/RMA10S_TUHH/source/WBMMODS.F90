@@ -1,3 +1,4 @@
+!Nis LAST UPDATE JUN XX 2006 Changes for the use in Lahey
 !*************************************************************************************************
 !
 !  Module   		  : WBMMODS.f90
@@ -392,12 +393,18 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-Character(500)          :: Line
+!NiS,jun06: Changes for usage with Lahey
+!Character(500)          :: Line
+Character(500)          :: Line, temp_line
+!-
 Integer(4)              :: CurrentNode
 Integer (4)             :: i
 Integer (4)             :: StartPos
 Integer (4)             :: EndPos
 Character(50)           :: LineParts(10)
+!NiS,jun06: Changes for usage with Lahey
+INTEGER :: istat
+!-
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -411,8 +418,17 @@ OPEN (3300, File = wbm_InitConsFile)
 !
 !  Loops Through Each Line and assigns to array
 !
-Do While (.not.EOF(3300))
-  Read (3300,'(a)') Line
+!NiS,jun06: Changes for usage with Lahey
+!Do While (.not.EOF(3300))
+!  Read (3300,'(a)') Line
+reading: Do
+
+  Read (3300,'(a)', IOSTAT=istat) temp_line
+  if (istat /= 0) EXIT reading
+
+  Line = temp_line
+!-
+
   If (Line(2:3).NE.'GE ') Then
      StartPos = 1
      EndPos = 1
@@ -431,7 +447,9 @@ Do While (.not.EOF(3300))
      Read(LineParts(8),*) wbm_newConditions(6,CurrentNode)
      Read(LineParts(8),*) wbm_newConditions(7,CurrentNode)
   End If
-End Do
+!NiS,jun06: Changes for usage with Lahey
+End Do reading
+!-
 Close (3300)
 !*************************************************************************************************
 
@@ -477,13 +495,19 @@ INTEGER (4)                             :: NumNodes
 !     VARIABLE DECLARATIONS - LOCAL VARIABLES
 !
 !*************************************************************************************************
-Character(500)          :: Line
+!NiS,jun06: Changes for usage with Lahey
+!Character(500)          :: Line
+Character(500)          :: Line, temp_line
+!-
 Integer(4)              :: CurrentNode
 Integer (4)             :: i
 Integer (4)             :: StartPos
 Integer (4)             :: EndPos
 Character(50)           :: LineParts(10)
 Real (4)                :: CurrentBedLevel
+!NiS,jun06: Changes for usage with Lahey
+INTEGER :: istat
+!-
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -505,8 +529,16 @@ OPEN (3301, File = wbm_ScourLimFile)
 !
 !  Loops Through Each Line and assigns to array
 !
-Do While (.not.EOF(3301))
-  Read (3301,'(a)') Line
+!NiS,jun06: Changes for usage with Lahey
+!Do While (.not.EOF(3301))
+!  Read (3301,'(a)') Line
+reading: Do
+  Read (3301,'(a)',IOSTAT=istat) temp_line
+  if (istat/=0) exit reading
+
+  Line = temp_line
+!-
+
   If (Line(2:3).NE.'GE ') Then
      StartPos = 1
      EndPos = 1
@@ -524,7 +556,9 @@ Do While (.not.EOF(3301))
      Read(LineParts(6),*) wbm_ScourLims(CurrentNode)
      wbm_ScourLims(CurrentNode)  = CurrentBedLevel - wbm_ScourLims(CurrentNode) ! converts to an available thickness
   End If
-End Do
+!NiS,jun06: Changes for usage with Lahey
+End Do reading
+!-
 Close (3301)
 !*************************************************************************************************
 

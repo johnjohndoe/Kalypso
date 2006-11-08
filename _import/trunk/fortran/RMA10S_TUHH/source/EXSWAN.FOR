@@ -1,4 +1,4 @@
-C     Last change:  K     8 Nov 2006    2:53 pm
+CWP   Last change:  K     FEB 2006
       SUBROUTINE EXSWAN
       USE BLK10MOD
       USE BLK11MOD
@@ -75,6 +75,7 @@ c	else
 c	   write(*,*) 'came out bad'
 c	   STOP
 c	endif
+
 C
 C     Handles Execution of Wave Model for Second Nested Mesh
 C     DJW 10/06/04 Included Surrounding Conditional If based on number of Meshes to be used.
@@ -176,12 +177,13 @@ C          SWANDAT(N,2)=SWANDAT(N,2)(1:9)//TSDAT ! DJW 10/06/04
          ENDDO
          CLOSE(106)
 
-         if(starproc(SWANEX,SWANFLX)) then
-            write(*,*) 'came out OK'
-	   else
-	      write(*,*) 'came out bad'
-	      STOP
-	   endif
+cWP JAN 2006, starproc is visual fortran subroutine, not available with Lahey FORTRAN
+c         if(starproc(SWANEX,SWANFLX)) then
+c            write(*,*) 'came out OK'
+c	   else
+c	      write(*,*) 'came out bad'
+c	      STOP
+c	   endif
       END IF
 C
 C     Finish of Execution of Third SWAN Mesh.

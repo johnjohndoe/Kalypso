@@ -258,10 +258,12 @@ C-
 !NiS,may06: The program needs access to that module, because iaccyc must be accessable
       USE Blk10mod
 !-
-      USE IFQWIN
-CIPK COMPAQ use DFLIB
-      INTEGER(4) exmode, result
 
+!NiS,Nov06: Not available in Lahey
+!      USE IFQWIN
+!CIPK COMPAQ use DFLIB
+!      INTEGER(4) exmode, result
+!-
 
       LOGICAL PRESS_ANYKEY
 	LOGICAL STARPROC
@@ -323,11 +325,11 @@ C-
 
 99999 continue
 
-cipk aug06
-      result = SETEXITQQ(QWIN$EXITNOPERSIST)
 !NiS,Nov06: Seems, that the above function is not available
+!cipk aug06
+!      result = SETEXITQQ(QWIN$EXITNOPERSIST)
 !           If so, use:
-!     STOP
+      STOP
 !-
 
       END
