@@ -253,10 +253,15 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( model == null || model.getThemeSize() == 0 ) // no maps ...
     {
+      String welcomeText = "Kartenvorlage wird geladen ...";
+
+      if( model != null && model.getThemeSize() == 0 )
+        welcomeText = "Keine Themen vorhanden";
+
       g.setColor( Color.white );
       g.fillRect( 0, 0, getWidth(), getHeight() );
       g.setColor( Color.black );
-      g.drawString( "Kalypso", getWidth() / 2, getHeight() / 2 );
+      g.drawString( welcomeText, getWidth() / 2 - (g.getFontMetrics().stringWidth( welcomeText ) / 2), getHeight() / 2 );
       return;
     }
 
