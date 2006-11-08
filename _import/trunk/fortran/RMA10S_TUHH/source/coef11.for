@@ -542,38 +542,38 @@ CIPK APR99 ADJUST NR TO MAT
 
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(MAT) .GT. 0.) THEN
-	    IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
+	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
               FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
-	    ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
+	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
               FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
-	    ELSE
-	      FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
+	      ELSE
+	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
               FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
-     +     	    *FCOEF/(H**0.333)
-	    ENDIF
+     +     	       *FCOEF/(H**0.333)
+	      ENDIF
 CIPK SEP04  ADD MAH OPTION
           ELSEIF(HMAN(MAT,2) .GT. 0  .OR. HMAN(MAT,3) .GT. 0.) THEN
-	    TEMAN=0.
+	      TEMAN=0.
             IF(HMAN(MAT,2) .GT. 0) THEN 
-	      TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
-	    ENDIF
-	    TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
+	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
+	      ENDIF
+	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
-	    DO K=1,4
-	      IF(H .LT. MANTAB(MAT,K,1)) THEN
-	        IF(K .EQ. 1) THEN
-	          TEMAN=MANTAB(MAT,1,2)
-	        ELSE
-	          FACT=(H-MANTAB(MAT,K-1,1))/
-     +                 (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
-	          TEMAN=MANTAB(MAT,K-1,2)
-     +                  +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+	      DO K=1,4
+	        IF(H .LT. MANTAB(MAT,K,1)) THEN
+	          IF(K .EQ. 1) THEN
+	            TEMAN=MANTAB(MAT,1,2)
+	          ELSE
+	            FACT=(H-MANTAB(MAT,K-1,1))/
+     +                  (MANTAB(MAT,K,1)-MANTAB(MAT,K-1,1))
+	            TEMAN=MANTAB(MAT,K-1,2)
+     +            +FACT*(MANTAB(MAT,K,2)-MANTAB(MAT,K-1,2))
+	          ENDIF
+	          GO TO 280
 	        ENDIF
-	        GO TO 280
-	      ENDIF
-	    ENDDO
-	    TEMAN=MANTAB(MAT,4,2)
+	      ENDDO
+	      TEMAN=MANTAB(MAT,4,2)
   280       CONTINUE
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSE
