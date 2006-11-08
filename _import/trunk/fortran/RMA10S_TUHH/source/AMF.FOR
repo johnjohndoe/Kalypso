@@ -1,4 +1,3 @@
-C     Last change:  AF   17 Jul 2006   10:28 am
 cipk  last update April 24 1997
       SUBROUTINE AMF(H,HSIG,AKAPM,ATM,ABM,AM,DAMH,ISWT)
 c
