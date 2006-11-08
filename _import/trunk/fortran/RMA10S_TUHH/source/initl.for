@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
 cipk  last update mar 07 2006 add call to ginpt for limits option
@@ -168,7 +169,8 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
      +           ,EVISXZ(MAXP),EVISYZ(MAXP),DVISZ(MAXP)
      +           ,UDST(MAXP),VDST(MAXP),UUDST(MAXP),UVDST(MAXP)
      +           ,VVDST(MAXP),SDST(MAXP),TDST(MAXP),SEDST(MAXP)
-     +           ,IMID(MAXP,2),IPASST(MAXP))
+     +           ,IMID(MAXP,2),IPASST(MAXP),IOVLDN(MAXP))
+CIPK sep06 ADD IOVLDN (currently not used)
 CIPK APR06
 
       ALLOCATE   (NDRY(MAXP),NDRYO(MAXP),IPT(MAXP),DREC(MAXP),
@@ -212,8 +214,9 @@ C     LAYER VARIABLE
 
       ALLOCATE  (DEPRAT(MAXP),BSHEAR(MAXP),VS(MAXP),
      +           EDOT(MAXP),UST(MAXP),SERAT(MAXP),ESRO(MAXP)
-     +          ,NLAYO(MAXP),NLAY(MAXP),BEDEL(MAXP),TM(MAXP),TMD(MAXP) 
-     +          ,BEDORIG(MAXP),DEPINCR(MAXP),BEDELO(MAXP))
+     +          ,NLAYO(MAXP),NLAY(MAXP),BEDEL(MAXP),TM(MAXP),TMD(0:MAXP) 
+     +          ,BEDORIG(MAXP),DEPINCR(MAXP),BEDELO(MAXP),DEPRATO(MAXP))
+cipk sep06  add  DEPRAT0 and to TMD
 
 
       ALLOCATE      (CRSLOP(MAXE),TRSLOP(MAXP),srate(MAXP),gpbsav(MAXP)   
@@ -468,6 +471,8 @@ CIPK MAR01
           STR1(J,K)=0.
           STR2(J,K)=0.
         ENDDO
+cipk sep06
+        DEPRATO(J)=0
         DEPRAT(J)=0.
         BSHEAR(J)=0.
         VS(J)=0.

@@ -1,3 +1,4 @@
+CIPK LAST UPDATE SEP 05 2006 REVISE MASS COMPUTATION
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF. AND INITIAL MASS 
       SUBROUTINE GETMAS
 C-
@@ -48,8 +49,10 @@ cipk jan05
              TVN = TVN + THICKO(NN,L)*GADLN
            ENDDO
 	   ENDIF
-cipk may06 get nodal masses for susp sed and bed 	   
-	   TMSED(NN)=TVN+(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+cipk may06 get nodal masses for susp sed and bed 
+CIPK SEP06 UPDATE COMPUTATION	   
+	   TMSED(NN)=TVN
+C	   +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
 	   TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
 
    75 CONTINUE
@@ -59,19 +62,30 @@ cipk may06 put total mass in subscript '0'
       DO N=1,NE
         NCN=NCORN(N)
         IF(NCN .EQ. 6) THEN
-        TMSED(0)=TMSED(0)+
+CIPK AUG06 UPDATE TO ADD CORNERS
+        TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5)))*
-     +           (AREA(N)/3.)        
-        TMSSED(0)=TMSSED(0)+
+     +           (AREA(N)/6.)+        
+     +  (TMSED(NOP(N,2))+TMSED(NOP(N,4))+TMSED(NOP(N,6)))*
+     +           (AREA(N)/2.)        
+        TMSSED(0)=TMSSED(0)-
      +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5)))*
-     +           (AREA(N)/3.)        
+     +           (AREA(N)/6.)+        
+     +  (TMSSED(NOP(N,2))+TMSSED(NOP(N,4))+TMSSED(NOP(N,6)))*
+     +           (AREA(N)/2.)        
         ELSEIF(NCN .EQ. 8) THEN
-        TMSED(0)=TMSED(0)+
+        TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5))+
-     +            TMSED(NOP(N,7)))*(AREA(N)/4.)  
-        TMSSED(0)=TMSSED(0)+
+     +            TMSED(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSED(NOP(N,2))+TMSED(NOP(N,4))+TMSED(NOP(N,6))+
+     +            TMSED(NOP(N,8)))*(AREA(N)/3.)  
+        TMSSED(0)=TMSSED(0)-
      +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5))+
-     +            TMSSED(NOP(N,7)))*(AREA(N)/4.)  
+     +            TMSSED(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSSED(NOP(N,2))+TMSSED(NOP(N,4))+TMSSED(NOP(N,6))+
+     +            TMSSED(NOP(N,8)))*(AREA(N)/3.)
+
+
         ENDIF      
       ENDDO
       
@@ -83,7 +97,7 @@ cipk may06 put total mass in subscript '0'
         WRITE(24,9999) TET,TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
       endif
  9999 FORMAT('      TIME    MASS IN SEDIMENT           SUSPENDED',
-     + '               TOTAL'/F10.3,1PE20.8,1PE20.8,1PE20.8) 
+     + '               TOTAL'/F10.3,1PE20.10,1PE20.10,1PE20.10) 
       
 
       RETURN

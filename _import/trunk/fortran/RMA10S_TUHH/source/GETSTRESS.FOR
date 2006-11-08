@@ -203,11 +203,6 @@ C
 cipk aug05              READ(INBNSTR,ERR=286,END=285) TTTV,NV,IYDD
               READ(INBNSTR,ERR=286,END=285) IDYY,TTTV,NV,IYDD
      +            ,(K,(STR2(K,J),J=1,6),L=1,NV)
-            if(idebug .eq. 1) then
-            DO K=1,NV
-             WRITE(234,'(I8,6F15.3)')K,XUSR(K),YUSR(K),(STR2(K,J),J=3,6)
-            ENDDO
-            endif
 
           ENDIF
           NVK=NV
@@ -281,6 +276,11 @@ C-
           HRINC=0.
           WRITE(75,*) 'GETSST-169  FCTI',FCTI
 
+            if(idebug .eq. 1) then
+            DO K=1,100
+             WRITE(234,'(I8,6F15.3)')K,XUSR(K),YUSR(K),(STR2(K,J),J=3,6)
+            ENDDO
+            endif
           DO N=1,NP
               STRESS(N,1)=0.
               STRESS(N,2)=0.
