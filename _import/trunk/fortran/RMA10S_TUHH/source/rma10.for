@@ -238,6 +238,12 @@ C-
       MAXN=0
   200 MAXN=MAXN+1
 C     REWIND IVS
+
+!NiS,sep06: For usage of boundary condition in the way of Kalypso-2D, a special counter for the number of
+!           iterations in steady case is applied
+      npr = maxn
+!-
+
 C-
 C......  Process dry nodes
 C-
@@ -268,9 +274,25 @@ c     set IACTV to be active for all
       ENDIF
 cipk mar01 end change
 
+!nis,oct06,testing:
+      WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
+      WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
+      WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
+      WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
+!-
+
 cipk apr97 end change
       write(*,*) 'ENTERING BLINE'
       CALL BLINE(MAXN)
+
+!nis,oct06,testing:
+      WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
+      WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
+      WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
+      WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
+!-
+
+
 
       ICK=ITEQS(MAXN)+4
 
@@ -284,8 +306,21 @@ CIPK JAN02 SET SIDFF TO ZERO
 cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
+      !NiS,jul06:testing
+      !do i = 12600, maxp
+      !  write (*,'(1x,i5,1x,3(f4.1,1x),i1)')i,(vel(j,i),j=1,3),ibn(i)
+      !end do
+      !-
+
       write(*,*) 'entering load'
       CALL LOAD
+
+      !NiS,jul06:testing
+      !do i = 1, maxp
+      !  if(i.gt.2180.and.i.lt.2190)WRITE(*,*)'nbc:',i,(nbc(i,j),j=1,3)
+      !end do
+      !-
+
 C-
 C......  Compute areas of continuity lines for stage flow input
 C-
@@ -509,6 +544,11 @@ C 400 NCYC=TMAX*3600./DELT+0.5
       IDRYC=0
 CIPK JUN02
 	MAXN=0
+
+!nis,sep06: Initialize the iteration counter for steady case
+      NPR = maxn
+!-
+
 C-
 C......LOOP ON NUMBER OF TIME STEPS
 C-
@@ -566,6 +606,7 @@ cipk dec00
           HOL(J)=HEL(J)
           HDOT(J)=HDET(J)
         ENDDO
+!NiS,may06,com: ICYC was initiated in INITL.subroutine
         ICYC=ICYC+1
 C-
 C...... UPDATE OF BOUNDARY CONDITIONS
