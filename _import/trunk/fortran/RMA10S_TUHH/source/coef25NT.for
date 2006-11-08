@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
@@ -146,6 +147,32 @@ C      TVOL(NN)=0.
 c
 cipk sep96 move up thislogic
 c
+CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
+      IF(LSS .GT. 0  .AND.  IAVEL .EQ. 1) THEN
+        IF(NCN .EQ. 6) THEN
+      edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5)))/6.+        
+     +  (edot(NOP(NN,2))+edot(NOP(NN,4))+edot(NOP(NN,6)))/2.    
+      seratm=-(serat(NOP(NN,1))+serat(NOP(NN,3))+serat(NOP(NN,5)))/6.+        
+     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6)))/2.   
+      depratm=
+     +-(deprat(NOP(NN,1))+deprat(NOP(NN,3))+deprat(NOP(NN,5)))/6.+        
+     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6)))/2.  
+        elseif(ncn .eq. 8)then
+      edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5))+
+     +            edot(NOP(NN,7)))/12.+ 
+     +  (edot(NOP(NN,2))+edot(NOP(NN,4))+edot(NOP(NN,6))+
+     +            edot(NOP(NN,8)))/3.  
+      seratm=-(serat(NOP(NN,1))+serat(NOP(NN,3))+serat(NOP(NN,5))+
+     +            serat(NOP(NN,7)))/12.+ 
+     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6))+
+     +            serat(NOP(NN,8)))/3.  
+      depratm=-(deprat(NOP(NN,1))+deprat(NOP(NN,3))+deprat(NOP(NN,5))+
+     +            deprat(NOP(NN,7)))/12.+ 
+     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6))+
+     +            deprat(NOP(NN,8)))/3.  
+
+        endif
+      ENDIF
 
 CIPK JUN05 MOVE LOOP
       NEF=NCN*NDF
@@ -756,12 +783,19 @@ CIPK SEP05          DO M=1,NCN
 CIPK SEP05            MR=NOP(NN,M)
 CIPK SEP05            ALP1=ALP1+DEPRAT(MR)*XN(M)
 CIPK SEP05            ALP2=ALP2+(EDOT(MR)+SERAT(MR))*XN(M)
-          DO M=1,NCNX
-            MC = 2*M - 1
-            MR=NCON(MC)
-            ALP1 = ALP1 + XM(M)*DEPRAT(MR)
-            ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)            
-          ENDDO
+
+CIPK AUG06 ADD AVERAGE TEST
+          IF(IAVEL .EQ. 0) THEN
+            DO M=1,NCNX
+              MC = 2*M - 1
+              MR=NCON(MC)
+              ALP1 = ALP1 + XM(M)*DEPRAT(MR)
+             ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)            
+            END DO
+          ELSE
+            alp1=depratm
+            alp2=edotm+seratm
+          ENDIF
         ENDIF
 
         GRATE=0.0
@@ -789,8 +823,11 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
 	  SIGMAZ=0.
 	ENDIF
       IF(WSELL .LT. ABED) THEN
-        grate=0.
-	  srcsnk=0.
+CIPK AUG06
+        IF(LSS .EQ. 0) THEN
+          grate=0.
+          srcsnk=0.
+        ENDIF
 cipk aug02  make wind stress zero over dry areas
   	  sigmax=0.
 	  sigmaz=0.
@@ -798,9 +835,6 @@ cipk aug02  make wind stress zero over dry areas
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
-      IF(NN .EQ. 4117) THEN
-	AAA=0
-	ENDIF
       do ned=1,9
 
         IF(IMMT .EQ. iedrop(ned)) THEN
@@ -814,8 +848,11 @@ c
 	  if(WSLL(mr) -ao(mr) .lt. zstdep) then
 	    sigmax=0.
 	    sigmaz=0.
-          grate=0.
-	    srcsnk=0.
+CIPK AUG06
+          IF(LSS .EQ. 0) THEN
+            grate=0.
+            srcsnk=0.
+          ENDIF
 cipk may03  reduce nodal rates to zero
 	    alpha1(mr)=0.
 	    alpha2(mr)=0.
@@ -1064,6 +1101,12 @@ CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
 
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 291
+CIPK AUG06
+      IF(ICNSV .EQ. 1) THEN
+          QIN=BETA3/H+(DRDX+DSDZ)+(R*DHDX+S*DHDZ)/H
+      ENDIF
+
+
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
@@ -1173,7 +1216,8 @@ C     equilibrium method
         FRNY=AMU*DIFY*DSALDY*H
         FRN=AMU*H*(R*DSALDX+S*DSALDY)
      1   -AMU*(SIDFQQ*(SIDQ(NN,ICK-3)-SALT)+EXTL)
-     +   -AMU*H*(SRCSNK+GRATE*SALT)
+     +   -AMU*H*(SRCSNK+(GRATE-QIN)*SALT)
+CIPK AUG06  ADD QIN IN ABOVE     
 CIPK SEP02 ADD EXTL FROM SLUMP SOURCE
 CIPK NOV97 ADJUST LINE ABOVE FOR SALINITY LOADING
 CIPK AUG95    ADD LINE ABOVE FOR RATE TERMS
@@ -1489,7 +1533,8 @@ cipk aug96      T1=0.
 cipk aug96      IF(ICYC .GT. 0) T1=AMU*ALTM*H
 CIPK NOV97 REWRITE FOR NEW UNITS OF SIDF      T1=-AMU*H*(SIDF(NN)+GRATE)
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  TEN WITH SIFFQQ MAY04
-      T1=-AMU*(GRATE*H-SIDFQQ)
+        T1=-AMU*((GRATE-QIN)*H-SIDFQQ)
+CIPK ADD QIN TO THE ABOVE      
 C      T1=0.
         IF(ICYC .GT. 0) T1= T1 + AMU*ALTM*H
         T2=AMU*DIFX*H

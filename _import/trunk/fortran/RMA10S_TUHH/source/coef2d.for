@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE SEP 05 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
 CIPK  LAST UPDATE SEP 29 2005 MAKE ALP1 AND ALP2 INTERPOLATION LINEAR
@@ -126,6 +127,33 @@ C      TVOL(NN)=0.
         DO 63 N=1,NCN
           NCON(N)=NOP(NN,N)
    63   CONTINUE
+      ENDIF
+
+CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
+      IF(LSS .GT. 0  .AND.  IAVEL .EQ. 1) THEN
+        IF(NCN .EQ. 6) THEN
+      edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5)))/6.+        
+     +  (edot(NOP(NN,2))+edot(NOP(NN,4))+edot(NOP(NN,6)))/2.    
+      seratm=-(serat(NOP(NN,1))+serat(NOP(NN,3))+serat(NOP(NN,5)))/6.+        
+     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6)))/2.   
+      depratm=
+     +-(deprat(NOP(NN,1))+deprat(NOP(NN,3))+deprat(NOP(NN,5)))/6.+        
+     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6)))/2.  
+        elseif(ncn .eq. 8)then
+      edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5))+
+     +            edot(NOP(NN,7)))/12.+ 
+     +  (edot(NOP(NN,2))+edot(NOP(NN,4))+edot(NOP(NN,6))+
+     +            edot(NOP(NN,8)))/3.  
+      seratm=-(serat(NOP(NN,1))+serat(NOP(NN,3))+serat(NOP(NN,5))+
+     +            serat(NOP(NN,7)))/12.+ 
+     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6))+
+     +            serat(NOP(NN,8)))/3.  
+      depratm=-(deprat(NOP(NN,1))+deprat(NOP(NN,3))+deprat(NOP(NN,5))+
+     +            deprat(NOP(NN,7)))/12.+ 
+     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6))+
+     +            deprat(NOP(NN,8)))/3.  
+
+        endif
       ENDIF
 
 CIPK JUN05 MOVE LOOP
@@ -649,12 +677,18 @@ CIPK SEP05          DO M=1,NCN
 CIPK SEP05            MR=NOP(NN,M)
 CIPK SEP05            ALP1=ALP1+DEPRAT(MR)*XN(M)
 CIPK SEP05            ALP2=ALP2+(EDOT(MR)+SERAT(MR))*XN(M)
-          DO M=1,NCNX
-            MC = 2*M - 1
-            MR=NCON(MC)
-            ALP1 = ALP1 + XM(M)*DEPRAT(MR)
-            ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)            
-          ENDDO
+CIPK AUG06 ADD AVERAGE TEST
+          IF(IAVEL .EQ. 0) THEN
+            DO M=1,NCNX
+              MC = 2*M - 1
+              MR=NCON(MC)
+              ALP1 = ALP1 + XM(M)*DEPRAT(MR)
+             ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)            
+            END DO
+          ELSE
+            alp1=depratm
+            alp2=edotm+seratm
+          ENDIF
         ENDIF
         GRATE=0.
 	  SRCSNK=0.
@@ -677,8 +711,11 @@ CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
 	  SIGMAZ=0.
 	ENDIF
       IF(WSELL .LT. ABED) THEN
-        grate=0.
-	  srcsnk=0.
+CIPK AUG06
+        IF(LSS .EQ. 0) THEN
+          grate=0.
+          srcsnk=0.
+        ENDIF
 cipk aug02  make wind stress zero over dry areas
   	  sigmax=0.
 	  sigmaz=0.
@@ -700,8 +737,11 @@ c
 	  if(WSLL(mr) -ao(mr) .lt. zstdep) then
 	    sigmax=0.
 	    sigmaz=0.
-          grate=0.
-	    srcsnk=0.
+CIPK AUG06
+          IF(LSS .EQ. 0) THEN
+            grate=0.
+            srcsnk=0.
+          ENDIF
 cipk may03  reduce nodal rates to zero
 	    alpha1(mr)=0.
 	    alpha2(mr)=0.
@@ -914,6 +954,11 @@ CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
 	  TDRAGX = 0.0
 	  TDRAGY = 0.0
 	ENDIF
+CIPK SEP06 ADD QIN 
+      QIN=0.
+      IF(ICNSV .EQ. 1) THEN
+          QIN=BETA3/H+(DUDX+DVDY)+(R*DHDX+S*DHDZ)/H
+      ENDIF
 
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 291
@@ -1039,8 +1084,8 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
 CIPK MAY04 USE SIDFQQ
       FRN=AMU*H*(R*DSALDX+S*DSALDY)
      1   -AMU*(SIDFQQ*(SIDQ(NN,ICK-3)-SALT)+EXTL)
-     +   -AMU*H*(SRCSNK+GRATE*SALT)
- 
+     +   -AMU*H*(SRCSNK+(GRATE-QIN)*SALT)
+CIPK AUG06 ADD QIN ABOVE
         IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*H
         IA=0
         DO 295 M=1,NCN
@@ -1399,7 +1444,8 @@ C     equilibrium method
 CIPK NOV97 REWRITE FOR NEW UNITS OF SIDF      T1=-AMU*H*(SIDF(NN)+GRATE)
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
 CIPK MAY04 USE SIDFQQ   
-        T1=-AMU*(GRATE*H-SIDFQQ)
+        T1=-AMU*((GRATE-QIN)*H-SIDFQQ)
+CIPK AUG06 ADD QIN TO THE ABOVE      
         IF(ICYC .GT. 0) T1= T1 + AMU*ALTM*H
         T2=AMU*DIFX*H
         T3=AMU*DIFY*H
