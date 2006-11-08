@@ -6,9 +6,21 @@ C-
       REAL*8 WAITT,WAITR,WAITTH,WAITRH
       COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
+      !nis,oct06,com: Gauss-Points for interval [0;1]
       DATA AFACT/0.0694319,0.3300095,0.6699905,0.9305682/
+      !nis,oct06,com: Gauss-point-weights
       DATA HFACT/0.3478548,2*0.6521451,0.3478548/
       DATA SLOAD/-1.,+1./
+
+      !nis,oct,com: dnal(3,4) is the definition (see blkh.com)
+      !             the storage order is columnwise, so one row (i=1,2,3oder4) is equal to
+      !             entry (dnal(1,i,);dnal(2,i);dnal(3,i))
+      !             DNAL describes the values (unpraezise: geometrische Lagefaktoren auf einer Laenge)
+      !
+      !             column1: 
+      !             column2: Gauss-Points for interval [-4,;4]
+      !             column3:
+      !-
       DATA DNAL/
      1    -2.7222728, 3.4445456,-0.7222728,
      2    -1.6799620, 1.3599240, 0.3200380,
