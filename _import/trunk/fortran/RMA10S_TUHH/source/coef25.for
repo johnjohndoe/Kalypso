@@ -122,7 +122,13 @@ C
 CIPK MAR03  REPLACE TH(NN) WITH THNN
 
       THNN=TH(NN)
-	 
+!NiS,jun06:testing
+!IF(nn.eq.4207) WRITE(*,*)th(nn),nn, 'richtung th'
+!IF(nn.eq.4207) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
+!IF(nn.eq.2500) WRITE(*,*)th(nn),nn, 'richtung th'
+!IF(nn.eq.2500) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
+!-
+
       IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 C
 C-
@@ -1772,15 +1778,36 @@ C...... For 1D - 2D junctions adjust equation for direction
 C-
       DO 1050 N=1,NCN,2           !NiS,jun06,com: just the corner nodes
         M=NCON(N)                 !NiS,jun06,com: get the node number
+!NiS,may06: testing other nodes
+!      IF(adif(m).eq.0.and.(nn.eq.4464 .or. nn.eq. 4463 .or.
+!     +  nn.eq.4462.or.nn.eq.1901))
+!     +  then
+!        WRITE(*,*) 'element: ', NN
+!        WRITE(*,*)'nbc(node=',M,',2): ', nbc(M,2)
+!      endif
+!-
         IF(ADIF(M) .NE. 0.) THEN  !NiS,jun06,com: ADIF(M).ne.0 if it is a junction-corner-node
           NEQ=NDF*NCN             !NiS,jun06,com: number of element equations
           IA=NDF*(N-1)+1          !NiS,jun06,com: get the element-DOF of the 1. junction-corner-node DOF
 
+!NiS,may06:testing
+!      WRITE(*,*)'element: ',NN
+!      WRITE(*,*)'NEQ: ',NEQ
+!      WRITE(*,*)'IA: ',IA
+!      WRITE(*,*)'nbc(node=',M,',2): ', nbc(M,2)
+!      WRITE(*,*)SIN(adif(m)), COS(adif(m)), SIN(adif(m))/COS(adif(m))
+!-
           DO 1040 I=1,NEQ
             !NiS,jun06,com: Because it is only one direction, the part of the junction-corner-node DOF as to be projected on the correct direction for processing
             ESTIFM(I,IA)=ESTIFM(I,IA)+ESTIFM(I,IA+1)*SIN(ADIF(M))
      1                   /COS(ADIF(M))
  1040     CONTINUE
+!NiS,jun06:testing
+!            write (*,*)M,(estifm(zzz,ia),zzz=1,3)
+!           write (*,*)M,(estifm(zzz,ia+1),zzz=1,3)
+!           write (*,*)M,(estifm(zzz,ia+2),zzz=1,3)
+!-
+
         ENDIF
  1050 CONTINUE
       IF(NR .GT. 90) GO TO 1310

@@ -145,6 +145,13 @@ C-
 C- INITIALIZE MATRICES AND VARIABLES
 C-
       NEF=NCN*NDF
+      !nis,oct06,testing:
+      WRITE(*,*) 'ndf: ', ndf
+      !-
+
+      !NiS,jul06:testing
+      !  if (nn.eq.4465) WRITE(*,*) nef, 'nef ist gleich'
+      !-
       DO 77 I=1,NEF
       F(I) = 0.0
       DO 77 J=1,NEF
@@ -238,22 +245,35 @@ C-
       NR=NCON(1)
       DO 100 K = 1, NCN
       N=NCON(K)
+      !nis,oct06,com: angular difference between nodal tangent and element direction
       ANGDIF=TH(NN)-ALFA(N)
+      !nis,oct06,com: fixing direction factor in dependency of nodal vector direction compared to element direction
       IF(ABS(ANGDIF) .GT. 1.5708  .AND.  ABS(ANGDIF) .LT. 4.71779) THEN
+        !nis,oct06,com: flow direction in opposite to element definition direction
         QFACT(K)=-1.0
         QQFACT(K)=-1.0
       ELSE
+        !nis,oct06,com: flow direction in equal direction to element definition direction
         QFACT(K)=1.0
         QQFACT(K)=1.0
       ENDIF
+
+      !nis,oct06,com: distance from first node to actual node (1,2,3) in components
       DX=CORD(N,1)-CORD(NR,1)
       DY=CORD(N,2)-CORD(NR,2)
+      !nis,oct06,com: Projection onto the chord between the corner nodes
+      !               XL becomes length of chord-component
+      !               YL becomes distance of node from chord
       XL(K)=DX*CXX+DY*SAA
       YL(K)=-DX*SAA+DY*CXX
   100 CONTINUE
+
+!nis,oct06,com: boundary condition
 CIPK JAN03
       EINA=EINX(NN)*CX+EINY(NN)*SA
 
+
+      !nis,oct,com: What is this loop for?
       DO 107 K=1,NCN
 C     IF(QFACT(K) .LT. 1.) WRITE(*,4599) NN,K,NCON(K)  ,QFACT(K)
 C4599 FORMAT('FOR ELEMENT NN K NOP  QFACT'/(3I5,F10.2)
@@ -274,17 +294,34 @@ CIPK MAY04 RESET ELEMENT INFLOW
       ENDIF
       SIDFQQ=SIDF(NN)
 
+!*******************************************************************************
+!GAUSS NODE LOOP GAUSS NODE LOOP GAUSS NODE LOOP GAUSS NODE LOOP GAUSS NODE LOOP
+!*******************************************************************************
+
+      !nis,oct06,com: Loop over Gauss nodes
       DO 500 I = 1, NGP
-      TEMP=(DNAL(2,I)*XL(2)+DNAL(3,I)*XL(3))
+
+
+      TEMP= (DNAL(2,I)*XL(2) + DNAL(3,I)*XL(3))
+
 C-
 C......DEFINE SHAPE FUNCTIONS
 C-
+
+      !nis,oct06,com: quadratic weighting function (for example Reddy[1984],p.255)
+      !nis,oct06,com: (1-xi)(1-2xi) = 1-xi-2xi+2x^2 = psi1 (xi=0   => psi=1)
+      !nis,oct06,com: (1-xi)*4*xi   = 4xi - 4xi^2   = psi2 (xi=1/2 => psi=1)
+      !nis,oct06,com: (2xi-1)*xi    = 2xi^2 - xi    = psi3 (xi=1   => psi=1)
       XN(1)=(1.-AFACT(I))*(1.-2.*AFACT(I))
       XN(2)=(1.-AFACT(I))*4.*AFACT(I)
       XN(3)=(2.*AFACT(I)-1.)*AFACT(I)
+
+      !nis,oct06,com: derivatives of the weighting functions devided by 'TEMP'
+      !nis,oct06,com: TEMP is not yet clear
       DNX(1)=(4.*AFACT(I)-3.)/TEMP
       DNX(2)=(4.-8.*AFACT(I))/TEMP
       DNX(3)=(4.*AFACT(I)-1.)/TEMP
+
       IF(NTX .EQ. 0) THEN
         DYDX=YL(2)*DNX(2)+YL(3)*DNX(3)
         ALF=ATAN(DYDX)
@@ -298,10 +335,17 @@ C-
           DNX(J)=DNX(J)/TFR
   240   CONTINUE
       ENDIF
+
+      !nis,oct06,com: linear weighting functions
+      !               1-xi = psi1 => psi(0) = 1
+      !               xi   = psi2 => psi(1) = 1
       XM(1)=1.-AFACT(I)
       XM(2)=AFACT(I)
+      !nis,oct06,com: derivatives of linear weighting functions
+      !nis,oct06,com: TEMP is not yet clear
       DMX(1)=-1./TEMP
       DMX(2)=1./TEMP
+
       IF(NSTRT(NCON(2),1) .EQ. 0) THEN
         DO 242 J=1,3
           XO(J)=XN(J)
@@ -313,6 +357,8 @@ C-
         DOX(1)=DMX(1)
         DOX(3)=DMX(2)
       ENDIF
+
+      !nis,oct06,com: Calculate the cross sectional values at actual GAUSS point
       N1=NCON(1)
       N2=NCON(3)
       WID=WIDTH(N1)*XM(1)+WIDTH(N2)*XM(2)
@@ -352,38 +398,69 @@ CIPK MAY02
 C-
 C......ESTABLISH VELOCITIES
 C-
+
+      !nis,oct06,com: Calculate the nodal velocities and their derivatives
       DO 250 M=1,NCN
-      MR=NCON(M)
-      VX(M)=VEL(1,MR)/UDST(MR)
-      VY(M)=VEL(2,MR)/VDST(MR)
-      ST(M)=VEL(ICK,MR)/SDST(MR)
-      VDX(M)=VDOT(1,MR)/UDST(MR)
-      VDY(M)=VDOT(2,MR)/VDST(MR)
-      SDT(M)=VDOT(ICK,MR)/SDST(MR)
-      IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
-        NBOT=NREF(MR)+NDEP(MR)-1
-        UBFC(M)=UDST(NBOT)
-      ELSE
-        UBFC(M)=1.0
-      ENDIF
+        MR=NCON(M)
+
+        !nis,oct06,com: calculate vx and vy; for 1D, udst and vdst are .eq. 1
+        VX(M)=VEL(1,MR)/UDST(MR)
+        VY(M)=VEL(2,MR)/VDST(MR)
+
+        ST(M)=VEL(ICK,MR)/SDST(MR)
+
+        !nis,oct06,com: calculate the derivatives of vx and vy
+        VDX(M)=VDOT(1,MR)/UDST(MR)
+        VDY(M)=VDOT(2,MR)/VDST(MR)
+
+        SDT(M)=VDOT(ICK,MR)/SDST(MR)
+
+        IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
+          NBOT=NREF(MR)+NDEP(MR)-1
+          UBFC(M)=UDST(NBOT)
+        ELSE
+          UBFC(M)=1.0
+        ENDIF
+
   250 CONTINUE
+
+
+      !nis,oct06,com: Calculate the velocity and further
       DO 270 M=1,NCN
-      MR=NCON(M)
-      ANGDIF=TH(NN)-ALFA(MR)
-      CX=COS(ALFA(MR))
-      SA=SIN(ALFA(MR))
-      R=R+XN(M)*(VX(M)*CX+VY(M)*SA)*QFACT(M)
-      DRDX=DRDX+DNX(M)*(VX(M)*CX+VY(M)*SA)*QFACT(M)
-      IF(NSTRT(MR,1) .EQ. 0) THEN
-        SALT=SALT+XO(M)*ST(M)
-        DSALDT=DSALDT+XO(M)*SDT(M)
-        DSALDX=DSALDX+DOX(M)*ST(M)
+        !nis,oct06,com: elementnode
+        MR=NCON(M)
+        !nis,oct06,com: angulardifference
+        ANGDIF=TH(NN)-ALFA(MR)
+
+        !nis,oct06,com: cos and sin of direction
+        CX=COS(ALFA(MR))
+        SA=SIN(ALFA(MR))
+
+        !nis,oct06,testing:
+        !WRITE(*,*) (vx(m)*cx+vy(m)*sa),SQRT(vx(m)**2+vy(m)**2)
+        !-
+
+        !nis,oct06,com: addition of nodal velocities with weighting
+        R    = R + XN(M)* (VX(M)*CX + VY(M)*SA) * QFACT(M)
+        !nis,oct06,com: addition of nodal derivative, derivative is in approximation function
+        DRDX = DRDX + DNX(M) * (VX(M)*CX + VY(M)*SA) * QFACT(M)
+
+        !nis,oct06,com: concentration things
+        IF(NSTRT(MR,1) .EQ. 0) THEN
+          SALT=SALT+XO(M)*ST(M)
+          DSALDT=DSALDT+XO(M)*SDT(M)
+          DSALDX=DSALDX+DOX(M)*ST(M)
 CIPK MAY02
-        GAIN=GAIN+XO(M)*GAN(MR)
-      ENDIF
-      IF(ICYC.LT.1) GO TO 270
-      BETA1=BETA1+XN(M)*(VDX(M)*CX+VDY(M)*SA)*QFACT(M)
+          GAIN=GAIN+XO(M)*GAN(MR)
+        ENDIF
+
+        IF(ICYC.LT.1) GO TO 270
+
+        !nis,oct06,com: addition of nodal derivative, derivative is in velocity
+        BETA1 = BETA1 + XN(M) * (VDX(M)*CX + VDY(M)*SA) * QFACT(M)
   270 CONTINUE
+
+
 C-
 C...... AKE is the momentum correction coefficient
 C       UBF and VBF are corrections to bottom velocity
@@ -404,32 +481,33 @@ cipk APR99 add for more flexible width term
       wssg=0.
 
       DO 275 M=1,NCNX
-      MC = 2*M - 1
-      MR=NCON(MC)
-      AKE=AKE+XM(M)*UUDST(MR)
-      UBF=UBF+XM(M)*UBFC(MC)
-      BETA3=BETA3+XM(M)*VDOT(3,MR)
-      DHDX = DHDX + DMX(M)*VEL(3,MR)
+        MC = 2*M - 1
+        MR=NCON(MC)
+        AKE=AKE+XM(M)*UUDST(MR)
+        UBF=UBF+XM(M)*UBFC(MC)
+        BETA3=BETA3+XM(M)*VDOT(3,MR)
+        DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
-      IF (IDNOPT.GE.0) THEN
-        DAODX = DAODX + DMX(M)*AO(MR)
-        abed=abed+xm(m)*ao(mr)
-      ELSE
-        DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
+        IF (IDNOPT.GE.0) THEN
+          DAODX = DAODX + DMX(M)*AO(MR)
+          abed=abed+xm(m)*ao(mr)
+        ELSE
+          DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
 cipk mar01 fix ao to ado
-        abed=abed+xm(m)*(ado(mr)+ame(m))
-      ENDIF
+          abed=abed+xm(m)*(ado(mr)+ame(m))
+        ENDIF
 cipk apr99 add line for storage sideslope
-      bsel=bsel+xm(m)*widbs(mr)
-      wssg=wssg+xm(m)*wss(mr)
-      RHO=RHO+XM(M)*DEN(MR)
-      DRODX=DRODX+DMX(M)*DEN(MR)
+        bsel=bsel+xm(m)*widbs(mr)
+        wssg=wssg+xm(m)*wss(mr)
+        RHO=RHO+XM(M)*DEN(MR)
+        DRODX=DRODX+DMX(M)*DEN(MR)
 c      IF(ICYC .LT.1) GO TO 275
 cipk feb05      SIGMAX=SIGMAX+XM(M)*(SIGMA(MR,1)*CXX+SIGMA(MR,2)*SAA)
 CIPK MAY02  ADD STRESS TERM
-      SIGMAX=SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
-     +                      +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
+        SIGMAX = SIGMAX+XM(M)*((SIGMA(MR,1)+STRESS(MR,1))*CXX
+     +           +(SIGMA(MR,2)+STRESS(MR,2))*SAA)
   275 CONTINUE
+
 CIPK NOV97
   276 CONTINUE
       AZER=AO(N1)*XM(1)+AO(N2)*XM(2)
@@ -664,6 +742,10 @@ C.....MOTION EQUATIONS.....
 C
       IA=1-NDF
       DO 285 M = 1, NCN
+      !nis,oct06,com: motion equation
+      !               IA becomes: 1, 1+NDF, 1+2*NDF
+      !               It is always the equation number of the motion equation no.1
+      !-
       IA = IA + NDF
       F(IA) = F(IA) - AMS*(XN(M)*FRN + DNX(M)*FRNX)*QFACT(M)
   285 CONTINUE
@@ -674,9 +756,12 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
       FRNC=ACR*DRDX+DACR*R-SIDFT
       IF(ICYC.GT.0) FRNC=FRNC+BETA3*WTOT
       DO 290 M=1,NCNX
-      IA = 3 + 2*NDF*(M-1)
-      F(IA) = F(IA) - AMW*XM(M)*FRNC
+        IA = 3 + 2*NDF*(M-1)
+        !nis,oct,com: continuity equation, just for the corner nodes
+        !             IA becomes: 3, 3+2NDF
+        F(IA) = F(IA) - AMW*XM(M)*FRNC
   290 CONTINUE
+
 C-
 C......THE SALINITY EQUATION
 C-
@@ -756,6 +841,9 @@ C-
       IA=1-NDF
       DO 305 M = 1, NCN
       IA=IA+NDF
+      !NiS,jul06:testing
+      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   305 CONTINUE
   310 CONTINUE
@@ -803,6 +891,9 @@ C-
       IA=1-NDF
       DO 320 M = 1, NCN
       IA=IA+NDF
+      !NiS,jul06:testing
+      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   320 CONTINUE
   325 CONTINUE
@@ -822,6 +913,9 @@ C-
           IA=1-NDF
           DO 329 M=1,NCN
             IA=IA+NDF
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+(DNX(M)*FEEAN+XN(M)*FEEBN)*
      +                    QFACT(M)
   329     CONTINUE
@@ -844,6 +938,9 @@ C
       EB=XM(M)*TX
       DO 360 N = 1, NCN
       IB=IB+NDF
+      !NiS,jul06:testing
+      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
   360 CONTINUE
       EA=XM(M)*TB
@@ -851,6 +948,9 @@ C
       IB=3-2*NDF
       DO 363 N=1,NCNX
       IB=IB+2*NDF
+      !NiS,jul06:testing
+      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
   363 CONTINUE
   365 CONTINUE
@@ -878,12 +978,18 @@ CMAY93          FEECN=XO(M)*T3
           IB=1-NDF
           DO 385 N=1,NCN
             IB=IB+NDF
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XN(N)*FEEAN*QFACT(N)
   385     CONTINUE
           IB=3-2*NDF
           DO 390 N=1,NCNX
             IB=IB+2*NDF
 CMAY93           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DMX(N)*FEECN+XM(N)*FEEEN
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*FEEEN
   390     CONTINUE
         ENDIF
@@ -901,6 +1007,9 @@ CIPK MAY02
           IB=-4
           DO N=1,NCNX
             IB=IB+8
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)+FEEBN*DMX(N)
           ENDDO
   	  ENDDO
@@ -928,6 +1037,9 @@ cipk aug98
         DO 410 N=1,NCN
           IB=IB+4
           IF(NSTRT(NCON(N),1) .EQ. 0) THEN
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XO(N)+FEEBN*DOX(N)
           ENDIF
   410   CONTINUE
@@ -959,12 +1071,18 @@ C-
      +      *QFACT(L)
         IF(L .EQ. 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
+        !NiS,jul06:testing
+        if (na.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12; na'
+        !-
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
       ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
         IF(NREF(N1) .EQ. 0) THEN
           NA=(L-1)*NDF+1
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA
           DO 6667 KK=1,NEF
+            !NiS,jul06:testing
+            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !-
             ESTIFM(NA,KK)=0.
  6667     CONTINUE
           F(NA)=0.
@@ -1019,14 +1137,29 @@ c lcr eq por
  1300 CONTINUE
  1305 CONTINUE
  1320 CONTINUE
+
+      !nis,Oct,com: Install element residual values into global vector. NCN.eq.3 for 1D-elements and 1D-2D-elements.
       DO 1050 I=1,NCN
-      J=NCON(I)
-      IA=NDF*(I-1)
-      DO 1050 K=1,NDF
-      IA=IA+1
-      JA=NBC(J,K)
-      IF(JA.EQ.0) GO TO 1050
-      R1(JA)=R1(JA)+F(IA)
+        !nis,Oct06,com: Get actual node number
+        J=NCON(I)
+        !nis,Oct06,com: Get the first element equation number; first means x-velocity; ndf is fixed depending on what should be calculated.
+        IA=NDF*(I-1)
+        !nis,Oct06,com: Do for every nodal degree of freedom
+        DO 1050 K=1,NDF
+          !nis,Oct06,com: Increasing by one means next nodal degree of freedom
+          IA=IA+1
+          !nis,Oct06,com: Get the global equation number of node-degree-of-freedom
+          JA=NBC(J,K)
+
+          !nis,oct06,testing,deactivated
+          !WRITE(*,*)'ndf in loop: ', ndf
+          !WRITE(*,*)'local residuum: ', f(ia), ia
+          !-
+
+          !nis,Oct06,com: Jump over deactivated node-degree-of-freedom
+          IF(JA.EQ.0) GO TO 1050
+          !nis,Oct06,com: Install element residuum F(IA) into global residuum R1(JA)
+          R1(JA)=R1(JA)+F(IA)
  1050 CONTINUE
 C     WRITE(*,7777) NN,((ESTIFM(I,J),J=1,12),I=1,12)
 C     WRITE(*,7777) NN,(F(I),I=1,12)

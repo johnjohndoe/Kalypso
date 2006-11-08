@@ -82,18 +82,20 @@ C
         K=K-1
         N=NFIXH(K)
         IF(N .LE. NE  .AND.  N .GT. 0) THEN
-         IF(ICOLLAPE(N) .EQ. 1  .AND.  IMAT(N)/1000 .NE. 1) GO TO 480
+          IF(ICOLLAPE(N) .EQ. 1  .AND.  IMAT(N)/1000 .NE. 1) GO TO 480
 
           IF(IMAT(N) .GT. 0) THEN
-
-          ncn=20
-          IF(ITEQV(MAXN) .EQ. 5) THEN
-            DO  I=1,8
-              NCON(I)=NOPS(N,I)
-              IF(NCON(I) .GT. 0) NCN=I
-            ENDDO
-          ELSE
-            DO I=1,NCN
+!NiS,may06:testing
+!            WRITE(*,*) 'here i am'
+!-
+            ncn=20
+            IF(ITEQV(MAXN) .EQ. 5) THEN
+              DO  I=1,8
+                NCON(I)=NOPS(N,I)
+                IF(NCON(I) .GT. 0) NCN=I
+              ENDDO
+            ELSE
+              DO I=1,NCN
               NCON(I)=NOP(N,I)
             ENDDO
           ENDIF
@@ -156,6 +158,24 @@ c      ENDDO
 c      do n=1,nszf
 c        write(75,*) 'nlst',n,nlstel(n),netyp(n)
 c      enddo
+
+!NiS,may06: reactivate test
+!      DO N=1,NP
+!          if (n.eq.12816 .or. n.eq.12790 .or. n.eq.12791 .or.n.eq.3286)
+!     +                 WRITE(*,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
+!        DO m=1,4
+!          !WRITE(*,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
+!          if (nbc(n,m).lt.0) WRITE(*,*) 'nbc',nrx,N,NBC(N,M)
+!        ENDDO
+!      ENDDO
+!-
+
+!NiS,may06:activate for testing and change unit from 75 to *
+!      do n=1,nszf
+!        write(75,*) 'nlst',n,nlstel(n),netyp(n)
+!        write(*,*) 'nlst',n,nlstel(n),netyp(n)
+!      enddo
+!-
 
 C
 C     ASSEMBLY
@@ -231,7 +251,7 @@ CIPK MAR05
 	      ELSE
                 CALL COEF2DNT(N,NRX)
 	      ENDIF
-      	  ELSE
+      	    ELSE
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2(N,NRX)
@@ -276,33 +296,33 @@ C     Process   horizontal 2d
 
 		IF(NRX .EQ. 2) GO TO 18
 cipk jan97
-            if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
-     +        then
-                    if(nell .eq. 1)  then
-                      write(75,*) 'going to smag'
-                    endif
-CIPK MAR05
-                    IF(INOTR .EQ. 0) THEN
-                      CALL COEF2D(N,NRX)
-	            ELSE
-	              CALL COEF2DNT(N,NRX)
-	            ENDIF
-            ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2)
-     +        THEN
-CIPK MAR05
-                    IF(INOTR .EQ. 0) THEN
-                      CALL COEF2D(N,NRX)
-	            ELSE
-	              CALL COEF2DNT(N,NRX)
-	            ENDIF
-                  else
-CIPK MAR05
-                    IF(INOTR .EQ. 0) THEN
-                      CALL COEF2(N,NRX)
-	            ELSE
-	              CALL COEF2NT(N,NRX)
-	            ENDIF
+                if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
+     +            then
+                  if(nell .eq. 1)  then
+                    write(75,*) 'going to smag'
                   endif
+CIPK MAR05
+                  IF(INOTR .EQ. 0) THEN
+                    CALL COEF2D(N,NRX)
+	          ELSE
+	            CALL COEF2DNT(N,NRX)
+	          ENDIF
+                ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND.
+     +            IDIFSW .EQ. 2) THEN
+CIPK MAR05
+                  IF(INOTR .EQ. 0) THEN
+                    CALL COEF2D(N,NRX)
+	          ELSE
+	            CALL COEF2DNT(N,NRX)
+	          ENDIF
+                else
+CIPK MAR05
+                  IF(INOTR .EQ. 0) THEN
+                    CALL COEF2(N,NRX)
+	          ELSE
+	            CALL COEF2NT(N,NRX)
+	          ENDIF
+                endif
 cipk jan97 end changes
 	      ELSE
 CIPK JAN99
@@ -325,11 +345,31 @@ C      Process one-d elements
 
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
+              !NiS,may06: testing
+              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
+              !-
               IF(INOTR .EQ. 0) THEN
                 CALL COEF1(N,NRX)
               ELSE
+!NiS,jul06:testing
+!      if(ncorn(n).lt.6.AND.(ibn(nop(n,1)).eq.1
+!     +                  .or.ibn(nop(n,3)).eq.1))then
+!       do i = 1,3
+!          WRITE(*,*)(nbc(nop(4465,i),z),z=1,7),'nop:',nop(n,i)
+!        end do
+!        WRITE(*,*)'Element ',n,' (Rand)'
+!        WRITE(*,*) 'Gleichungen'
+!        do i = 1, 12
+!        WRITE(*,'(6f10.1)') (estifm(i,j),j=1,6)
+!        end do
+!      end if
+!-
+
                 CALL COEF1NT(N,NRX)
               ENDIF
+              !NiS,may06: testing
+              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' nach'
+              !-
 	      CALL SECOND(SOUC)
 	      TCOEF1=SOUC-SINC+TCOEF1
 	    ENDIF
@@ -372,6 +412,9 @@ cipk jan99
        
       ENDIF
 
+!NiS,may06: testing
+!      WRITE(*,*)'element: ', N, ', NCN: ', NCN,ndf
+!-
       NBN = NCN*NDF
 
       DO 21 LK=1,NBN
@@ -389,6 +432,12 @@ cipk jan99
 	  KC=KC+1     !NiS,may06: count loop
 CIPK JAN99
           if(i .eq. 0) go to 22 !NiS,may06: loop cycle, if node is zero
+
+!Nis,mun06:testing
+!          if(i.eq.12816 .or. i.eq.12790 .or. i.eq.12791)
+!     +     WRITE(*,*) 'in front:', i, nbc(i,1), n
+!-
+
 	  LL=NBC(I,L) !NiS,may06: LL becomes global equation number of the degree of freedom L at node I
 	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
 	  IF(LL .NE. 0) THEN
