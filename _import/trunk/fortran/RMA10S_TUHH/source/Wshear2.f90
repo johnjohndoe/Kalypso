@@ -52,7 +52,9 @@ DO N=1,NP
 		XKN=2.5*D90
 !		If wave boundary layer turbulence regime is smooth calculate smooth friction factor
         IF(RA .LT. 1.E6  .AND.  FSA/XKN .GT. 1000.) THEN
-			XFW=0.035*RA**-0.16
+!NiS,Nov06: Invalid operator without brackets for exponent
+			XFW=0.035*RA**(-0.16)
+!-
 !		Else if wave regime is rough calculate rough friction factor (Swart formula)
 		ELSE
 			XFW=EXP(5.21*(XKN/FSA)**0.194-5.98)

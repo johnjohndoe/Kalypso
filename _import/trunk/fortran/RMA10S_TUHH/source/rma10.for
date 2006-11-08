@@ -771,7 +771,10 @@ C       TET=TET+DELT/3600.
 cipk mar06
           CALL KINVIS
 ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
-		CALL SHEAR1
+!NiS,Nov06: Seems, that the name of the first shear-Subroutine is not correct. Change SHEAR1 to WSHEAR1
+!		CALL SHEAR1
+		CALL WSHEAR1
+!-
 		CALL WSHEAR2      
 c          CALL SHEAR
 CIPK JUN97
@@ -1131,7 +1134,10 @@ cipk aug05 correct to get BSHEAR OUTPUT
             !
             WBM = .FALSE.
             IF (WBM) THEN
-	        IF (wbm_Initiated.EQ..FALSE.) THEN
+!NiS,Nov06: Mixing logical type with arithmetic is not possible in Lahey
+!	        IF (wbm_Initiated.EQ..FALSE.) THEN
+               IF (.not.wbm_Initiated) THEN
+!-
                 CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
      +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
  	        END IF

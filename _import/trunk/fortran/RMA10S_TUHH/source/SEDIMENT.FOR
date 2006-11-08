@@ -405,7 +405,10 @@ cc	if(nn .eq. 4361) iswtt=1
 	!  wavecm is called
 	!
 	  IF (WBM) THEN
-	    IF (wbm_Initiated.EQ..FALSE.) THEN
+!NiS,Nov06: Mixing logical type with arithmetic is not possible in Lahey
+!	    IF (wbm_Initiated.EQ..FALSE.) THEN
+            IF (.not.wbm_Initiated) THEN
+!-
            CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
      +     Counter,wbm_IT,wbm_MannTransOld, wbm_BedHeight)
  	    END IF
@@ -491,7 +494,11 @@ cipk mar03 change n to nn
 	!  Also calls routine to initiate the calculation
 	!
       If (WBM) Then
-	  IF (wbm_Initiated.EQ..FALSE.) THEN
+
+!NiS,Nov06: Mixing Logical type with arithmetic is not possible in Lahey
+!	  IF (wbm_Initiated.EQ..FALSE.) THEN
+          IF (.not.wbm_Initiated) THEN
+!-
           CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
      +	Counter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
 	  END IF

@@ -59,12 +59,16 @@ C
 C
 C     IF WAVE REGIME IS SMOOTH CALCULATE SMOOTH FRICTION FACTOR
 C
-          XFW=0.035*RA**-0.16
+!NiS,Nov06: Invalid operator without brackets at exponent
+          XFW=0.035*RA**(-0.16)
+!-
 C
 C     IF WAVE REGIME IS NOT SMOOTH CALCULATE ROUGH FRICTION FACTOR
 C
         ELSE
-          XFW=0.04*(FSA/XKN)**-0.25
+!NiS,Nov06: Invalid operator without brackets at exponent
+          XFW=0.04*(FSA/XKN)**(-0.25)
+!-
 	  ENDIF
 
 C
