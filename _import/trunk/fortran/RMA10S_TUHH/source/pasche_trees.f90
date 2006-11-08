@@ -1,4 +1,4 @@
-!     Last change:  AF   17 Jul 2006   12:44 pm
+!     Last change:  K    23 Oct 2006    8:57 am
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -75,8 +75,8 @@ INTEGER :: i, cycle_number
 
 ! Main procedure to calculate the slope of the watersurface
 ! for all nodes.
-call GET_NODE_SLOPE(slope, eslope)
 
+call GET_NODE_SLOPE(slope, eslope)
 
 ! Initialising of parameters
 DO i=1,ne
@@ -149,13 +149,13 @@ all_elements: do i = 1, ne
 
     !WP Now changing slope from water surface slope to
     !WP energy slope.  ( mslope(i) -> meslope(i) )
+
     call get_cwr(meslope(i), 	&
                & mh(i),		&
                & abst(i), 	&
                & durchbaum(i), 	&
                & lambda_s, 	&
                & c_wr(i))
-
   end if
 
 end do all_elements
@@ -186,11 +186,17 @@ if (maxn.eq.0) then
   ENDIF
 !NiS,jun06: name creation dependent on steady or dynamic as well as within iteration or after convergence:
 else
-  IF (icyc.eq.0.and.MOD(maxn,itefreq).eq.0) then
-    WRITE (name_cwr,'(A,I3.3,A)')'steady_Ite_',maxn,'.cwr'
-  ELSEIF (icyc.ne.0.and.MOD(maxn,itefreq).eq.0) then
-    WRITE (name_cwr,'(A,I3.3,A)')ct,cycle_number,'_Ite',maxn,'.cwr'
-  ENDIF
+  !nis,sep06: solve problem, that tree-resistance can only be read, if the itefreq was not equal to 0, now it is possible.
+  if (itefreq.ne.0) then
+  !-
+    IF (icyc.eq.0.and.MOD(maxn,itefreq).eq.0) then
+      WRITE (name_cwr,'(A,I3.3,A)')'steady_Ite_',maxn,'.cwr'
+    ELSEIF (icyc.ne.0.and.MOD(maxn,itefreq).eq.0) then
+      WRITE (name_cwr,'(A,I3.3,A)')ct,cycle_number,'_Ite',maxn,'.cwr'
+    ENDIF
+  !nis,sep06: See change definition above
+  endif
+  !-
 ENDIF
 !-
 
@@ -236,6 +242,10 @@ REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: eslope   ! Calculated slope of e
 INTEGER  			:: first_loc		! Neighbour nodes of the flow vector
 INTEGER  			:: second_loc		! Neighbour nodes of the flow vector
 
+!nis,sep06: Declaring missing variable and overgiving the proper value
+INTEGER                         :: nodecnt
+!-
+
 REAL(KIND=4), DIMENSION(1:2) 	:: angle_v              ! direction of the actual flow vector
 REAL(KIND=4), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
 REAL(KIND=4), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow vector and the vector to the
@@ -251,6 +261,10 @@ LOGICAL, DIMENSION(1:MaxP)       :: marker_slope        ! Marker if slope has be
 INTEGER         		:: i,j,m
 
 
+!nis,sep06: nodecnt value must be specified, it is not global
+nodecnt = np
+!-
+
 outer: do i = 1, nodecnt
 
   slope(i) = 0.0
@@ -265,7 +279,6 @@ outer: do i = 1, nodecnt
     marker_slope(i) = .false.
     CYCLE outer
   end if
-
 
   ! For each neighbour node the angle between the velocity
   ! vector and the vector from point i to neighbour j is
@@ -443,7 +456,9 @@ eliminate: do
        temp_eslope= 0.0
 
        all_neighb: do j = 1, nconnect(i)
-
+         !nis,oct06,testing:
+         !WRITE(*,*)'Knoten: ',i , 'nachbarn: ', nconnect(i)
+         !-
          if ( marker_slope(neighb(i,j)) ) then
            temp_anz   = temp_anz + 1
            temp_slope = temp_slope + slope(neighb(i,j))
@@ -667,6 +682,7 @@ slope(pn) = ABS( (cross_h - rausv(3,pn)) / d_cross_pn )
 
 ! Slope of energy level
 he_cross = cross_h + ((cross_v**2)/(2*9.81))
+
 eslope(pn) = ABS( (he_cross - he_pn) / d_cross_pn )
 
 end subroutine GET_SLOPE
@@ -1023,6 +1039,8 @@ iteration_a_NL: do			! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
      & (1 + (g * a_NL * I_R)/((v**2)/2))**(-2.14)) / 2
 
   if (i > 50) then       		! Keine Konvergenz nach 100 Iterationen
+    WRITE(*,*) 'Fehlerhaftes Element ist: '
+    WRITE(*,*) 'anl = ', a_nl
     GET_A_NL = 0.0                      ! Der Wert 0.0 zeigt dem aufrufenden Programm
     GOTO 100                            ! an, dass die Iteration NICHT erfolgreich war!
   END if
@@ -1178,6 +1196,7 @@ if (lexist) then
 
 !NiS,apr06: unit name has changed; changed iout to Lout
   write (Lout, 1010)
+  write (*   , 1010)
 !-
   1010 format (1X, 'Die entsprechende C_WR Datei existiert bereits!')
   !NiS,apr06: name of variable changed; changed mel to MaxE
@@ -1186,6 +1205,7 @@ if (lexist) then
 else
   !NiS,apr06: unit name changed; changed iout to Lout
   write (Lout, 1011)
+  write (*   , 1011)
   !-
   1011 format (1X, 'Es muessen neue C_WR Werte erzeugt werden...')
 
@@ -1199,7 +1219,8 @@ else
   end do
 
   !NiS,apr06: unit name changed; changed iout to Lout
-  write (Lout,1012)
+  write (Lout, 1012)
+  write (*   , 1012)
   !-
   1012 format (1X, '...fertig!')
 
@@ -1211,6 +1232,7 @@ end if
 
 !NiS,apr06: unit name changed, changed iout to Lout
 write (Lout,1100)
+write (*   ,1100)
 !-
 1100 format (/1X, '-------------------------------------------------------' /&
             & 1X, 'Initialisierung von C_WR beendet'                        /&
