@@ -4,7 +4,6 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K     8 Nov 2006    2:58 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -47,7 +46,7 @@ C-
 C...... Set direction for 1D - 2D junction node plus other initialise.
 C-
       IF(IENT .EQ. 0) THEN
-        CALLGETCON
+        CALL GETCON
         !NiS,may06: copy of element and point number
         NPSAV=NP
         NESAV=NE
@@ -66,6 +65,16 @@ CZZZ
       ENDIF
 
       EXTLDEL=0
+
+      !NiS,may06: testing
+      !testing IHGNN and JLIN
+      !WRITE(*,*)IHGNN, 'ihgnn'
+      !WRITE(*,*)JLIN(ihgnn), 'JLIN(',ihgnn,')'
+      !testing ICK
+      !WRITE(*,*) ICK, 'ICK'
+      !testing MR
+      !WRITE(*,*)Mr1,'MR1'
+      !-
 
       !NiS,may06: back substitution of point and element saver
       NP=NPSAV
@@ -737,6 +746,11 @@ c       now do 1-d structures
       !NiS,may06,com: get corner nodes
             N1=NOP(NN,1)
             N2=NOP(NN,3)
+!NiS,may06: testing 1D-elements
+!WRITE(*,*) 'Element: ', NN
+!WRITE(*,*) 'ISUBMEL: ', ISUBMEL(NN)
+!-
+
             IF(N1 .GT. 0) THEN
               IF(ISUBMEL(nn) .EQ. 1) THEN
                 N2=NOP(NN,3)
@@ -1227,10 +1241,21 @@ C-
 CIPK MAY02 SWITCH NDF TO 7
         DO 305 M=1,7
           IF(NBC(N,M) .LT. 0) THEN
+
+!NiS,may06:testing the transitions
+!      IF(n.eq.12816.or.n.eq.12790.or.n.eq.12791) WRITE(*,*) N,M,nbc(n,m)
+!-
+
             NRF=-NBC(N,M)
               itmp = nbc(nrf,m)
               if (nrf .gt. n  .and. itmp .lt. 0)  goto 305
             NBC(N,M)=NBC(NRF,M)
+
+!NiS,may06:testing the transitions
+!      IF(n.eq.12816.or.n.eq.12790.or.n.eq.12791) WRITE(*,*) N,M,nbc(n,m)
+!-
+
+
           ENDIF
   305   CONTINUE
   310 CONTINUE
