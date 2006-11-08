@@ -40,41 +40,103 @@ C-
 
       DATA NCALL/0/
       IF( NCL .LE. 0 ) RETURN
+
+      !nis,sep06,com: Jump over, if not called the first time
       IF( NCALL .GT. 0 ) GO TO 140
+      !nis,sep06,com: Show that it was called minimum one time
       NCALL = 1
 C-
 C-..... Augment continuity lists.....
 C-
+      !nis,sep06,com: Run through every CCL to overgive the real number of nodes
       DO 125 J = 1, NCL
         M = LMT(J)
 cipk feb01  skip out for zero lines
+        !nis,sep06,com: Cycle loop, if CCL has no node
         IF(M .EQ. 0) GO TO 125
+        !nis,sep06,com: ITEMP(K) temporaryly stores the CCL J
         DO 113 K = 1, M
           ITEMP(K) = LINE(J,K)
   113   CONTINUE
+        !nis,sep06,com: Calculate the real number of nodes of CCL J
         LMT(J) = 2*LMT(J)-1
+        !nis,sep06,com: Copy of real number of nodes of CCL J
         NN = LMT(J)
+        !nis,sep06,com: Counter for corner nodes
         N = 0
+        !nis,sep06,com: Jump over, if the CCL consist only of one node
         IF(M .EQ. 1) GO TO 125
+
+        !nis,sep06: New, taken from Kalypso-2D-code. Initializing the fields
+        !           line(J,L) and lineimat (J,L) for the CCL J. The values of line(J,L) are
+        !           temporaryly stored in ITEMP(L), so nothing can happen.
+        !           lineimat(J,L) is a new field for the storage of the material
+        !           type to improve the calculation of boundary conditions at inflows/outflows
+        do l=1,nn
+          line(j,l) = 0
+          lineimat(j,l) = 0
+        end do
+        !-
+
+
+        !nis,sep06,com: Loop for restructuring saved CCL J;
+        !               Originally only the corner nodes were saved
+        !               Afterwards the midside nodes are stored in between the corneer nodes
+        !nis,sep06: the CCL has only to be runned through all segments. The segments always begin
+        !           with one of the nodes. The last node starts no segment, so it can be taken out
+        !           of the loop.
+        !DO 124 L = 1, NN, 2
         DO 124 L = 1, NN-2, 2
+        !-
+
+          !nis,sep06,com: Count the number of segments
           N = N + 1
+          !nis,sep06,com: Get the two actual corner nodes in CCL J
           NA = ITEMP(N)
           NC = ITEMP(N+1)
+          !nis,sep06,com: Rearrange the storage of those nodes with a space in between
           LINE(J,L) = NA
           LINE(J,L+2) = NC
+          !nis,sep06,com: Run through all elements to find the midside node between the two actual nodes
           DO 123 JJ = 1, NE
+
+            !nis,sep06: If the material type of the adjacent element is 0, no flow
+            !           can occur there: Jump over that segment
+            if (imat(jj).eq.0) GO TO 123
+            !-
+
+            !nis,sep06,com: Get number of corner nodes (element arcs)
             NCN=NCORN(JJ)
+            !nis,sep06,com: Run through all arcs of element to find the midside node
             DO 117 KK = 1, NCN, 2
+              !nis,sep06,com: Get the two corner nodes of actual arc
               KKK = MOD(KK+2,NCN)
               IF(KKK .EQ. 0) KKK=3
 CIPK OCT98 CONVERT TO F90
               N1 = ABS(NOP(JJ,KK))
               N2 = ABS(NOP(JJ,KKK))
+              !nis,sep06,com: Compare corner nodes with actual nodes of CCL J
+              !               If it fits at one element process the midside
+              !               node at marker 115
               IF( NA .EQ. N1 .AND. NC .EQ. N2 ) GO TO 115
               IF( NC .EQ. N1 .AND. NA .EQ. N2 ) GO TO 115
+              !nis,sep06,com: If the comparison doesn't fit, cycle loop
               GO TO 117
 CIPK OCT98 CONVERT TO F90
+              !nis,sep06,com: enter the correct midside node reference into the CCL J
   115         LINE(J,L+1) = ABS(NOP(JJ,KK+1))
+
+              !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
+              lineimat(j,l+1) = ABS(imat(jj))
+
+                !nis,testing
+                !WRITE(*,*) 'Overgiving Lineimat(',j,',',k,'): ',
+!     +                      lineimat(j,l), lineimat(j,l+1)
+                !-
+              !-
+
+              !nis,sep06,com: end loop, if the correct midside node is found and go back
+              !               to cycle loop over CCL segments
               GO TO 124
   117       CONTINUE
   123     CONTINUE

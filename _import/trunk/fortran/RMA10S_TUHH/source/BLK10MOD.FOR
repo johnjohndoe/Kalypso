@@ -40,6 +40,11 @@ cipk aug06  add input options
       INTEGER          :: iaccyc
 !-
 
+!nis,sep06: Adding switch for chosing approach of boundary condition transformation
+      INTEGER          :: BSWIT
+      INTEGER          :: npr !steady state counter for iterations
+!-
+
 !NiS,apr:       former variables of the common.cfg-file in the KALYPSO-2D version move to this module because they
 !               are used here, if those informations about material and so on are used:
       INTEGER           :: irk
