@@ -448,6 +448,7 @@ public class WasyInputWorker
   {
     try
     {
+      // TODO: get flag from outside!!
       final boolean spree = false;
 
       final Map fdList = new LinkedHashMap();

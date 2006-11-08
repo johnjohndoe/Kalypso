@@ -475,6 +475,7 @@ public abstract class WasyCalcJob implements ICalcJob
     {
       final Feature feature = (Feature)iter.next();
 
+      // TODO: get flag from outside!
       final boolean spree = false;
 
       final Date date;
