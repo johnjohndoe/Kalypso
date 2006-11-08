@@ -1,3 +1,4 @@
+C     Last change:  K    25 Sep 2006    3:03 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -72,6 +73,9 @@ CIPK MAR06 ADD IOUTRWD
      +         ,GAMJ(100),QD(100),DJ(100)
       INTEGER   LINE(50,350),LMT(50),JLIN(50),ITLVL(65),ITEQV(65)
      +         ,ITEQS(65),IURVL(65),NCNV(7)
+!Nis,sep06: adding lineimat(50,350) for storage of material of line segments
+     +         ,lineimat(50,350)
+!-
       REAL      STQ(50),STQA(50),STQE(50),STQC(50),STQT(50),ALN(50)
      +         ,CONV(7)
      
