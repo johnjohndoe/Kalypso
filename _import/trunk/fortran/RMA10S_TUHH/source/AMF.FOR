@@ -75,3 +75,13 @@ C
       ENDIF
       RETURN
       END
+c     H is the true depth
+c     HSIG is the transformed depth in the model (VEL(3,*)
+c     AKAPM is effective porosity
+c     ATM is the depth at the top of the range
+c     ABM is the depth at the bottom of the range
+c     AM is the adjustment to the bottom elevation measured from ADO 
+c     DAMH is the rate of change of the adjustment to the bottom elevation
+c     = 0 to transform HSIG to H
+c     = 1 to transform H to HSIG
+

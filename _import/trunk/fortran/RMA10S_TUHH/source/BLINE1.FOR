@@ -77,7 +77,10 @@ C-
           MCL=2
         ENDIF
 CIPK JUN05
+!nis,oct06,com:
+!          from, till, increment (only midside node for none-1D-elts!)
         DO M=MCL,NCN,MCL
+!-
           K=NOPS(N,M)
 CIPK JUN05
           IF(K .GT. 0) THEN
@@ -111,6 +114,13 @@ C-
       !NiS,may06,com: for every element
       DO 600 N=1,NEM
 
+        !nis,oct06,testing:
+        !if (n.eq.194) then
+        !  WRITE(*,*) '545: ',xslp(545),yslp(545)
+        !  WRITE(*,*) '546: ',xslp(546),yslp(546)
+        !endif
+        !-
+
 CIPK OCT98 REVISE FOR F90
         MTYP=IMAT(N)
         IF(MTYP .LT. 1) GO TO 600
@@ -124,9 +134,9 @@ CIPK JUN05
         NCN=NCRN(N)
         IF(NCN .EQ. 5) NCN=3
         DO 590 M=2,NCN,2
-          N2=NOPS(N,M) !NiS,may06: Midsidenode
+          N2=NOPS(N,M)   !NiS,may06: midsidenode
           N1=NOPS(N,M-1) !NiS,may06: first node
-          N3=NOPS(N,1) !NiS,may06: second node; midside of 2D-part, if transition element
+          N3=NOPS(N,1)   !NiS,may06: second node; midside of 2D-part, if transition element
           IF(M .LT. NCN) N3=NOPS(N,M+1)
 C-
 C...... Skip slope calculation for sides that have fixed flow or elevation
@@ -211,7 +221,40 @@ CIPK JUN05  SETUP FOR SUBMERGENGE
       ENDIF
 
 C-
+
+!nis,oct06,testing:
+!      gefunden=0
+!-
+
       DO 701 N=1,NPM
+
+!nis,oct06,testing:
+!      if (n.EQ.(nop(194,1)-1).OR.n.eq.nop(194,1)
+!     +                       .OR.n.eq.(nop(194,1)+1).or.
+!     +    n.EQ.(nop(194,3)-1).OR.n.EQ.nop(194,3)
+!     +                       .OR.n.eq.(nop(194,3)+1).or.
+!     +    n.EQ.(nop(194,5)-1).OR.n.EQ.nop(194,5)
+!     +                       .OR.n.eq.(nop(194,5)+1).or.
+!     +    n.EQ.(nop(194,7)-1).OR.n.EQ.nop(194,7)
+!     +                       .OR.n.eq.(nop(194,7)+1)) then
+!
+!      if ((alfa(545).ne.0.0.or.alfa(546).ne.0.0)
+!     +     .and.gefunden.lt.2) then
+!     +                       ) then
+!        gefunden=gefunden+1
+!        WRITE(*,*) 'Randwerte verändert! Element:',n
+!        WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
+!        WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
+!        WRITE(*,*) ntr
+!      end if
+!
+!        WRITE(*,*) 'Habe Punkt gefunden2!'
+!        WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
+!        WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
+!      endif
+!-
+
+
       NFIX(N)=NFIXK(N)
       IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
 
@@ -219,6 +262,13 @@ CIPK OCT98  CONVERT TO F90
       NFTYP=NFIXK(N)
       NQB=MOD(NFTYP,100)
       NLFT=NFTYP/100
+
+      !nis,oct06,testing
+      !  if (n.eq.545.or.n.eq.546) then
+      !    WRITE(*,*) 'nlft: ', nlft
+      !  end if
+      !-
+
       IF(NLFT .EQ. 0) ALFA(N)=0.
       IF(MOD(NLFT,10) .EQ. 2) THEN
 C-
@@ -311,6 +361,14 @@ cycw aug96 end additions
         ENDIF
 ***
       ELSE
+
+        !nis,oct06,testing
+        !if (n.eq.545.or.n.eq.546) then
+        !  WRITE(*,*) 'richtige Schleife'
+        !  WRITE(*,*) n,iod(n),xslp(n),yslp(n),alfa(n)
+        !end if
+        !-
+
         IF(NFIX(N) .LE. 10010) GO TO 610
         IF(IOD(N) .EQ. 0) GO TO 700
 C-
@@ -327,6 +385,8 @@ CIPK JUN05
         IF(ALFAK(N) .NE. 0.  .AND. IBN(N) .NE. 15) THEN
           ALFA(N)=ALFAK(N)
         ELSEIF(XSLP(N) .NE. 0.) THEN
+
+          !nis,oct06,com: Here the angle of the flow-direction is set
           ALFA(N)=ATAN(YSLP(N)/XSLP(N))
         ELSE
           IF(YSLP(N) .EQ. 0.) GO TO 700
@@ -583,6 +643,10 @@ C-
           N1=NOPS(N,3)
           N2=NOPS(N,4)
           N3=NOPS(N,5)
+!NiS,may06: testing
+!          write(*,*) 'nodes: ', N1,n2,n3
+!          WRITE(*,*) 'angles: ', alfa(n1), alfa(n2), alfa(n3)
+!-
           ADIF(N2)=ALFA(N2)-ALFA(N1)
           IF(ADIF(N2) .GT. PI2) THEN
             ALFA(N2)=ALFA(N2)-2.*PI2
@@ -599,6 +663,10 @@ C-
             ALFA(N3)=ALFA(N3)+2.*PI2
             ADIF(N3)=ALFA(N3)-ALFA(N1)
           ENDIF
+!NiS,may06: testing
+!          WRITE(*,*) 'adifs: ', adif(n1), adif(n2), adif(n3)
+!          WRITE(*,*) 'ntr: ', ntr
+!-
           IF(NTR .GT. 0) THEN
             K=NREF(N2)+1
             IF(K .GT. 1  .AND.  NDEP(N2) .GT. 0) THEN
