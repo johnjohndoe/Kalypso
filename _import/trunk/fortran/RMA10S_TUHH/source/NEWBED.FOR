@@ -1,3 +1,5 @@
+CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
+CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
 CIPK LAST UPDATE may 30 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -31,6 +33,8 @@ crrr aug97 add character lines
 !NiS,jul06: Consistent data types for passing paramters
       REAL(KIND=8) :: HTP
 !-
+CIPK SEP06
+      REAL*8 TVN
 C-
 C-.....ASSIGN PROPER COEFS.....
 C-
@@ -61,7 +65,8 @@ ccc      AT(NN)=0.
         TM(NN)=0.
         TMD(NN)=0.
 cipk apr99
-        if(wsll(nn) .lt. ao(nn)) go to 200
+CIPK AUG06   SKIP TEST
+CIPK AUG06        if(wsll(nn) .lt. ao(nn)) go to 200
 
         IF(ESRO(NN) .GT. TAUCD  .AND.  BSHEAR(NN) .GT. TAUCD) GO TO 200
 C-
@@ -84,8 +89,8 @@ c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
 c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
 c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
         tmTMP1=deprat(nn)*delt*cs
-        deprato=VS(nn)*(1.-TAUO/TAUCD)
-        TMTMP2=DEPRATO*DELT*CSO
+CIPK REVISE TO USE OLD DEPRATO
+        TMTMP2=DEPRATO(NN)*DELT*CSO
 c        TMTMP2A=TEMP1*ABS(VST)*DELT*CS
 C        write(215,*) nn,temp,vst,delt
 C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
@@ -359,16 +364,24 @@ C Calculate total dry mass of new bed
             SUMTHICK = SUMTHICK + THICK(NN,L)
          ENDDO
 cipk jan05
-         IF(NLAYO(NN) .GT. 0) THEN
+          IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
              GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
              TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
-	   ENDIF
+	  ENDIF
 cipk may06 get nodal masses for susp sed and bed 	   
-	   TMSED(NN)=TVN+(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+CIPK AUG06 REVISE MASS COMPUTATION
+	   TMSED(NN)=TVN
 	   TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
+     +   +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+	   TMSADD(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))*delt/(1000.
+     +   *ALPHA)+TMASSLEFT(NN)
+         TMLF=TMASSLEFT(NN)
+	   TMASSLEFT(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))*delt/1000.
+     +   *(ALPHA-1.)/ALPHA
+	   TMSDEP(NN)=(DEPRAT(NN)*VEL(6,NN))*delt/1000.
 
 C
 C Print layer info
@@ -394,33 +407,99 @@ c             SUMTHICK = BEDEL(N) - AO(N)
 cipk may06 put total mass in subscript '0'   
       TMSED(0)=0
       TMSSED(0)=0
+CIPK AUG06
+      TMSADD(0)=0.
+      TMD(0)=0
+      TMSDEP(0)=0
+
       DO N=1,NE
         NCN=NCORN(N)
         IF(NCN .EQ. 6) THEN
-        TMSED(0)=TMSED(0)+
+
+CIPK AUG06 REVISE TO FULL ELEMENT INTEGRATION
+
+        TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5)))*
-     +           (AREA(N)/3.)        
-        TMSSED(0)=TMSSED(0)+
+     +           (AREA(N)/6.)+        
+     +  (TMSED(NOP(N,2))+TMSED(NOP(N,4))+TMSED(NOP(N,6)))*
+     +           (AREA(N)/2.)        
+        TMSSED(0)=TMSSED(0)-
      +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5)))*
-     +           (AREA(N)/3.)        
+     +           (AREA(N)/6.)+        
+     +  (TMSSED(NOP(N,2))+TMSSED(NOP(N,4))+TMSSED(NOP(N,6)))*
+     +           (AREA(N)/2.)        
+        TMSADD(0)=TMSADD(0)-
+     +  (TMSADD(NOP(N,1))+TMSADD(NOP(N,3))+TMSADD(NOP(N,5)))*
+     +           (AREA(N)/6.)+        
+     +  (TMSADD(NOP(N,2))+TMSADD(NOP(N,4))+TMSADD(NOP(N,6)))*
+     +           (AREA(N)/2.)        
+
+        TMSDEP(0)=TMSDEP(0)-
+     +  (TMSDEP(NOP(N,1))+TMSDEP(NOP(N,3))+TMSDEP(NOP(N,5)))*
+     +           (AREA(N)/6.)+        
+     +  (TMSDEP(NOP(N,2))+TMSDEP(NOP(N,4))+TMSDEP(NOP(N,6)))*
+     +           (AREA(N)/2.)        
+
+         TMD(0)= TMD(0)-
+     +  (serat(NOP(N,1))+serat(NOP(N,3))+serat(NOP(N,5)))*
+     +           (AREA(N)*delt/6000.)+        
+     +  (serat(NOP(N,2))+serat(NOP(N,4))+serat(NOP(N,6)))*
+     +           (AREA(N)*delt/2000.)        
+     + -(edot(NOP(N,1))+edot(NOP(N,3))+edot(NOP(N,5)))*
+     +           (AREA(N)*delt/6000.)+        
+     +  (edot(NOP(N,2))+edot(NOP(N,4))+edot(NOP(N,6)))*
+     +           (AREA(N)*delt/2000.)        
+         
         ELSEIF(NCN .EQ. 8) THEN
-        TMSED(0)=TMSED(0)+
+        TMSED(0)=TMSED(0)-
      +  (TMSED(NOP(N,1))+TMSED(NOP(N,3))+TMSED(NOP(N,5))+
-     +            TMSED(NOP(N,7)))*(AREA(N)/4.)  
-        TMSSED(0)=TMSSED(0)+
+     +            TMSED(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSED(NOP(N,2))+TMSED(NOP(N,4))+TMSED(NOP(N,6))+
+     +            TMSED(NOP(N,8)))*(AREA(N)/3.)  
+        TMSSED(0)=TMSSED(0)-
      +  (TMSSED(NOP(N,1))+TMSSED(NOP(N,3))+TMSSED(NOP(N,5))+
-     +            TMSSED(NOP(N,7)))*(AREA(N)/4.)  
+     +            TMSSED(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSSED(NOP(N,2))+TMSSED(NOP(N,4))+TMSSED(NOP(N,6))+
+     +            TMSSED(NOP(N,8)))*(AREA(N)/3.)
+        TMSADD(0)=TMSADD(0)-
+     +  (TMSADD(NOP(N,1))+TMSADD(NOP(N,3))+TMSADD(NOP(N,5))+
+     +            TMSADD(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSADD(NOP(N,2))+TMSADD(NOP(N,4))+TMSADD(NOP(N,6))+
+     +            TMSADD(NOP(N,8)))*(AREA(N)/3.)
+        TMSDEP(0)=TMSDEP(0)-
+     +  (TMSDEP(NOP(N,1))+TMSDEP(NOP(N,3))+TMSDEP(NOP(N,5))+
+     +            TMSDEP(NOP(N,7)))*(AREA(N)/12.)+ 
+     +  (TMSDEP(NOP(N,2))+TMSDEP(NOP(N,4))+TMSDEP(NOP(N,6))+
+     +            TMSDEP(NOP(N,8)))*(AREA(N)/3.)
+
+         TMD(0)= TMD(0)-
+     + (serat(NOP(N,1))+serat(NOP(N,3))+serat(NOP(N,5))+serat(NOP(N,7)))
+     +          *(AREA(N)*delt/12000.)+        
+     + (serat(NOP(N,2))+serat(NOP(N,4))+serat(NOP(N,6))+serat(NOP(N,8)))
+     +          *(AREA(N)*delt/3000.)        
+     +-(edot(NOP(N,1))+edot(NOP(N,3))+edot(NOP(N,5))+edot(NOP(N,7)))
+     +          *(AREA(N)*delt/12000.)+        
+     + (edot(NOP(N,2))+edot(NOP(N,4))+edot(NOP(N,6))+edot(NOP(N,8)))
+     +          *(AREA(N)*delt/3000.)        
+c     +  (TMD(NOP(N,1))+TMD(NOP(N,3))+TMD(NOP(N,5))+TMD(NOP(N,7)))*
+c     +           (AREA(N)/6.)+        
+c     +  (TMD(NOP(N,2))+TMD(NOP(N,4))+TMD(NOP(N,6))+TMD(NOP(N,8)))*
+c     +           (AREA(N)/2.)        
         ENDIF      
       ENDDO
       
       IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
 
-      WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
+CIPK SEP06 ADD TO OUTPUT DATA
+      WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0),TMSADD(0)
+     +  ,TMD(0),TMSDEP(0)
    76 continue      
       if(IMASSOUT .gt. 0) then      
         WRITE(24,9999) TET,TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
+     +  ,TMSADD(0),TMD(0),TMSDEP(0)
+
       endif
- 9999 FORMAT(F10.3,1PE20.8,1PE20.8,1PE20.8) 
+ 9999 FORMAT(F10.3,1PE20.10,1PE20.10,1P4E20.10) 
       
 
 C

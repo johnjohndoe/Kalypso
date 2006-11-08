@@ -1,3 +1,4 @@
+cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
 CIPK  LAST UPDATE MAR 07 2006 CORRECT TO ADD SAND OUTPUT
@@ -425,8 +426,6 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
         maxn = temp_maxn
 !-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if(niti .eq. 0) go to 400
 C-
 C......STORE AS A SINGLE PRECISION ARRAY
 C-
@@ -539,7 +538,11 @@ C-
           CYCLE Main_dynamic_Loop
           !-
         ELSE
-          write(*,*) 'starting cycle',n
+CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL      
+      IF(MOD(N,IOUTRWD) .EQ. 0) THEN
+        REWIND LOUT
+      ENDIF 
+      write(*,*) 'starting cycle',n
 CIPK JUN02
         MAXN=1
         IT=N
@@ -554,18 +557,16 @@ CIPK REVISE TO SETUP HEL
         DO J=1,NP
           DO K=1,NDF
 cipk dec00
-              V2OL(K,J)=VDOTO(K,J)
-              VOLD(K,J)=VEL(K,J)
-              VDOTO(K,J)=VDOT(K,J)
-              IESPC(K,J)=0
-            ENDDO
-            H2OL(J)=HDOT(J)
-            HOL(J)=HEL(J)
-            HDOT(J)=HDET(J)
+            V2OL(K,J)=VDOTO(K,J)
+            VOLD(K,J)=VEL(K,J)
+            VDOTO(K,J)=VDOT(K,J)
+            IESPC(K,J)=0
           ENDDO
-          !NiS,may06,comment: ICYC was initiated in INITL.subroutine
-          ICYC=ICYC+1
-
+          H2OL(J)=HDOT(J)
+          HOL(J)=HEL(J)
+          HDOT(J)=HDET(J)
+        ENDDO
+        ICYC=ICYC+1
 C-
 C...... UPDATE OF BOUNDARY CONDITIONS
 C-
@@ -768,14 +769,17 @@ C       TET=TET+DELT/3600.
         IF (LSS .GT. 0) THEN
           CALL SETVEL
 cipk mar06
-          CALL KINVIS          
-          CALL SHEAR
+          CALL KINVIS
+ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
+		CALL SHEAR1
+		CALL WSHEAR2      
+c          CALL SHEAR
 CIPK JUN97
-          CALL WSHEAR1
+c          CALL WSHEAR1
+ciat mar06 end changes          
           CALL DEPSN
           CALL MEROSN
           CALL SEROSN
-
 	  ENDIF
 
 C        DO NNN=1,NPM
@@ -783,13 +787,13 @@ C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
 C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
 C-
-C......ITERATION LOOP                                                   !NiS,apr06:     starting iteration sequence
-C-                                                                      !		initialization:
-        NITA=NITN                                                       !               NITA = maximum number of iterations of timestep, local copy
-        MAXN=0                                                          !               NITN = maximum number of iterations of timestep, global value
-	  ITPAS=0                                                       !               ITPAS= ???
-  465   MAXN=MAXN+1                                                     !               MAXN = actual iteration number; first initialized, then incremented
-                                                                        !-
+C......ITERATION LOOP     !NiS,apr06:     starting iteration sequence
+C-                        !		initialization:
+        NITA=NITN         !               NITA = maximum number of iterations of timestep, local copy
+        MAXN=0            !               NITN = maximum number of iterations of timestep, global value
+	  ITPAS=0             !               ITPAS= ???
+  465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
+                          !-
 
 cipk oct02
         IF(MAXN .EQ. 1) THEN
@@ -1127,7 +1131,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
             !
             WBM = .FALSE.
             IF (WBM) THEN
-	        IF (.not. wbm_Initiated) THEN
+	        IF (wbm_Initiated.EQ..FALSE.) THEN
                 CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
      +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
  	        END IF
@@ -1260,12 +1264,16 @@ CIPK MAR06 CORRECT TO GET SAND OUTPUT
      +     ,    (WAVEHT(J)*SIN(WAVEDR(J)),J=1,NP),(VVEL(J),J=1,NP)
      +     ,    (VSING(3,J),J=1,NP),(WSLL(J),J=1,NP),(TRRAT(J),J=1,NP)
               ELSEIF(LSS .GT. 0) THEN
-                NQL=8
+cipk sep06 allow for new params
+                NQL=11
                 WRITE(IWAVOT) TETT,NQL,NP,IYRR
      +     ,    (SWH(J)*COS(WVDR(J)),J=1,NP)
      +     ,    (SWH(J)*SIN(WVDR(J)),J=1,NP),(VVEL(J),J=1,NP)
      +     ,    (VSING(3,J),J=1,NP),(WSLL(J),J=1,NP)
      +     ,    (SPWP(J),J=1,NP),(AWL(J),J=1,NP),(SWH(J),J=1,NP)
+     +     ,    (serat(J),J=1,NP),(DEPRAT(J),J=1,NP),(edot(j),j=1,np)
+cipk sep06 add line above     
+C     +     ,    (edot(j)*delt/vel(3,j),j=1,np)
 
 C     SPWP(N)    Spectral peak wave period (hours)
 

@@ -1,4 +1,3 @@
-!Nis LAST UPDATE JUN XX 2006 Changes for the use in Lahey
 !*************************************************************************************************
 !
 !  Module   		  : WBMMODS.f90
@@ -393,14 +392,12 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-Character(500)          :: Line, temp_line
+Character(500)          :: Line
 Integer(4)              :: CurrentNode
 Integer (4)             :: i
 Integer (4)             :: StartPos
 Integer (4)             :: EndPos
 Character(50)           :: LineParts(10)
-LOGICAL                 :: EOF
-INTEGER :: istat
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -414,13 +411,8 @@ OPEN (3300, File = wbm_InitConsFile)
 !
 !  Loops Through Each Line and assigns to array
 !
-reading: Do                !While (.not.EOF(3300))
-
-  Read (3300,'(a)', IOSTAT=istat) temp_line
-  if (istat /= 0) EXIT reading
-
-  Line = temp_line
-
+Do While (.not.EOF(3300))
+  Read (3300,'(a)') Line
   If (Line(2:3).NE.'GE ') Then
      StartPos = 1
      EndPos = 1
@@ -439,9 +431,7 @@ reading: Do                !While (.not.EOF(3300))
      Read(LineParts(8),*) wbm_newConditions(6,CurrentNode)
      Read(LineParts(8),*) wbm_newConditions(7,CurrentNode)
   End If
-
-End Do reading
-
+End Do
 Close (3300)
 !*************************************************************************************************
 
@@ -487,15 +477,13 @@ INTEGER (4)                             :: NumNodes
 !     VARIABLE DECLARATIONS - LOCAL VARIABLES
 !
 !*************************************************************************************************
-Character(500)          :: Line, temp_line
+Character(500)          :: Line
 Integer(4)              :: CurrentNode
 Integer (4)             :: i
 Integer (4)             :: StartPos
 Integer (4)             :: EndPos
 Character(50)           :: LineParts(10)
 Real (4)                :: CurrentBedLevel
-LOGICAL                 :: EOF
-INTEGER :: istat
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -517,12 +505,8 @@ OPEN (3301, File = wbm_ScourLimFile)
 !
 !  Loops Through Each Line and assigns to array
 !
-reading: Do
-  Read (3301,'(a)',IOSTAT=istat) temp_line
-  if (istat/=0) exit reading
-
-  Line = temp_line
-
+Do While (.not.EOF(3301))
+  Read (3301,'(a)') Line
   If (Line(2:3).NE.'GE ') Then
      StartPos = 1
      EndPos = 1
@@ -540,7 +524,7 @@ reading: Do
      Read(LineParts(6),*) wbm_ScourLims(CurrentNode)
      wbm_ScourLims(CurrentNode)  = CurrentBedLevel - wbm_ScourLims(CurrentNode) ! converts to an available thickness
   End If
-End Do reading
+End Do
 Close (3301)
 !*************************************************************************************************
 

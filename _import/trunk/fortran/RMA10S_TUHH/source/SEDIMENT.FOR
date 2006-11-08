@@ -405,7 +405,7 @@ cc	if(nn .eq. 4361) iswtt=1
 	!  wavecm is called
 	!
 	  IF (WBM) THEN
-	    IF (.not. wbm_Initiated) THEN
+	    IF (wbm_Initiated.EQ..FALSE.) THEN
            CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
      +     Counter,wbm_IT,wbm_MannTransOld, wbm_BedHeight)
  	    END IF
@@ -491,7 +491,7 @@ cipk mar03 change n to nn
 	!  Also calls routine to initiate the calculation
 	!
       If (WBM) Then
-	  IF (.not. wbm_Initiated) THEN
+	  IF (wbm_Initiated.EQ..FALSE.) THEN
           CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
      +	Counter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
 	  END IF

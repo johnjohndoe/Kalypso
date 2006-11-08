@@ -258,9 +258,13 @@ C-
 !NiS,may06: The program needs access to that module, because iaccyc must be accessable
       USE Blk10mod
 !-
+      USE IFQWIN
+CIPK COMPAQ use DFLIB
+      INTEGER(4) exmode, result
+
 
       LOGICAL PRESS_ANYKEY
-      LOGICAL STARPROC
+	LOGICAL STARPROC
       CHARACTER*96 FNAM0,FNAMEX
       INTEGER*2 N1,STATUS
       n1=1
@@ -319,6 +323,11 @@ C-
 
 99999 continue
 
-      STOP
+cipk aug06
+      result = SETEXITQQ(QWIN$EXITNOPERSIST)
+!NiS,Nov06: Seems, that the above function is not available
+!           If so, use:
+!     STOP
+!-
 
       END
