@@ -655,6 +655,7 @@ cipk jul06 use perim
 !        End DJW Changes
 !
 !**************************************************************
+          ENDIF
         ENDIF
 
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
