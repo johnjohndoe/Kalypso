@@ -26,7 +26,11 @@ CIPK  LAST UPDATE OCT 1 1996
       USE BLK11MOD
       USE BLKDRMOD
       USE BLKSUBMOD
+      USE PARAMMOD
       SAVE
+!NiS,jul06: Consistent data types for passing parameters
+      INTEGER :: n, m, a
+!-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG03 ADD
@@ -49,10 +53,22 @@ CIPK MAY02 ADD CHARACTER VARIABLES
 C-
 C-    Set limits for testing
 C-
-      MMM1=MNP
-      MMM2=MEL
+
+cWP Feb 2006, not used in this subroutine
+cWP      MMM1=MNP
+cWP      MMM2=MEL
+
 cipk feb01
       NCLL=0
+
+CNiS,mar06: show values of geometry recognition
+        WRITE(*,*)' IFILE=  ', IFILE    
+        WRITE(*,*)' IGEO=   ', IGEO
+        WRITE(*,*)' ISMSGN= ', ISMSGN
+CNis,mar06: control output for maximum values
+        WRITE(*,*)' MaxP=   ', MAXP
+        WRITE(*,*)' MaxE=   ', MAXE
+
 
 CIPK AUG02
       IF(ISMSGN .GT. 0) THEN
@@ -61,22 +77,36 @@ CIPK SEP05 ALLOW FOR FIRST CALL
       ENDIF 
 C-
 cipk may02
+
+!NiS,mar06,com: End of first reading-block
+
 C-    Read header from 2-d geometry file to test for size and type
 C-
+
+!NiS,mar06,com: start of second reading block: RMA-files binary or ASCII
+
       IF( IFILE .NE. 0 )  THEN
 CIPK JUN03
+       !NiS,mar06,com: binary-file (IGEO.eq.1)
        IF(IGEO .EQ. 1) THEN       
          READ(IFILE) HEADSH
+         !NiS,mar06,com: Setting long/short-binary file format (ILONG=1 means long; ILONG=0 means short)
          IF(HEADSH .EQ. 'RMAGEN') THEN
            ILONG=1
            REWIND IFILE
            READ(IFILE) HEADING
+
+          write(*,*) 'In GETGEO. ILONG = ',ILONG, ' HEADING = ',HEADING
+
          ELSE
            ILONG=0
            REWIND IFILE
          ENDIF
          READ (IFILE) N,M
          IERR=0
+
+!NiS,mar06,com: Stop inbetween of reading-block 2
+
          IF(N .GT. MAXP) THEN
 CIPK SEP04 CREATE ERROR FILE
            CLOSE(75)
@@ -99,9 +129,17 @@ CIPK SEP04 CREATE ERROR FILE
            WRITE(75,*) ' Number of elements on file = ',M
            IERR=1
          ENDIF
+
+!NiS,mar06,com: Ende ABFRAGEBLOCK
+
+!NiS,mar06,com: Control output of net size, that was recognized within the first reading
+
          write(75,*) 'initial read', n,m
          IF(IERR  .EQ. 1) STOP
          REWIND IFILE
+
+!NiS,mar06,com: reading block for RMA-binary file (geo-format)
+
 C-
 C     Now read 2-d geometry file
 C-
@@ -129,18 +167,42 @@ CIPK SEP04 CREATE ERROR FILE
 	   ENDIF
          rewind (ifile)
 
+!NiS,mar06,com: reading block for binary geometry data, that is node and element data
+
 CIPK MAY02  MAJOR CHANGE TO ALLOW FOR REAL*8 CORD ETC
-         
+
+
+cWP Feb 2006 Error while opening binary file with Lahey FORTRAN, likely
+cWP Feb 2006 because of wrong internal record length of binary file.
+cWP Feb 2006 Now detailled check for READ statement!
+!NiS,mar06:     problem solved; error source was the compiling option
+!               in the automake.fig file, which builts every real
+!               variables to real(kind=8) variables. For proper reading
+!               kind=4 variables are needed. After deleting that option
+!               out of the automake.fig file, the program worked.
+
          IF(ILONG .EQ. 1) THEN
            READ(IFILE) HEADING
 
-           READ (IFILE,ERR=21, END=21)
-     1     N,M,((CORD(J,K),K=1,2), ALFA(J),wss(J),J=1,N),
+           WRITE(*,1010)
+ 1010      FORMAT(/1X, 'Now start reading binary GEO-FILE...')
+
+!NiS,may06: Lahey version
+!           READ (IFILE,ERR=21, END=21)
+           READ (IFILE,ERR=21)
+     1     n,m,((cord(j,k),K=1,2), ALFA(j),wss(j),J=1,N),
      2     ((NOP(J,K),K=1,8),IMAT(J),TH(J),NFIXH(J),J=1,M)
      +    ,(WIDTH(J),SS1(J),SS2(J),WIDS(J),J=1,N)
+
+           WRITE(*,1011)
+ 1011      FORMAT(/1X, '...finished first part!')
+
            write(75,*) 'REAL*8 format',n,m
          ELSE
-           READ (IFILE,ERR=21, END=21)
+!NiS,may06: Lahey version
+!           READ (IFILE,ERR=21, END=21)
+           READ (IFILE,ERR=21)
+!-           
      1     N,M,((CORDS(J,K),K=1,2), ALFA(J),wss(J),J=1,N),
      2     ((NOPSS(J,K),K=1,8),IMAT(J),TH(J),NFIXHS(J),J=1,M)
      +    ,(WIDTH(J),SS1(J),SS2(J),WIDS(J),J=1,N)
@@ -167,7 +229,12 @@ cipk feb00 copy wss to ao  because ao is real*8
 cipk apr99 add more flexibility to reading files, allow for sloping overbank
 
 CIPK JUL00 NEED TO REMOVE END= FOR LAHEY
-          read(ifile,err=24, end=24) id8
+
+!NiS,may06: Lahey version
+!          read(ifile,err=24, end=24) id8
+          read(ifile,err=24) id8
+!-          
+
           if(id8(1:6) .eq. 'part-2') then
             write(75,*) 'reading part 2'
             iwdbs=1
@@ -175,7 +242,10 @@ CIPK JUL00 NEED TO REMOVE END= FOR LAHEY
           else
             iwdbs=0
           endif
-          read(ifile,err=24,end=24) id8
+!NiS,may06: Lahey version
+!          read(ifile,err=24,end=24) id8
+          read(ifile,err=24) id8
+!-          
           if(id8(1:6) .eq. 'part-3') then
             write(75,*) 'reading part 3'
             read(ifile,err=262) ncll,((line(j,k),k=1,350),j=1,ncll)
@@ -230,11 +300,68 @@ c         GO TO 49
 c   48    WRITE(LOUT,*) 'NO LAYER DATA ON GEOMETRIC FILE'
 c   49    CONTINUE
 CIPK JUN03
-       ELSE
+!NiS,mar06: Change because of additional option in if-block
+!       ELSE
+       ELSEIF (IGEO == 0) THEN
          CALL RDRM1(N,M,0)
          NCLL=NCL
+
+!NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
+!-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
+!OPEN(5555,'testRm1.rm1')
+!do i = 1, maxe
+!  if (nop(i,1) /= 0) then
+!    WRITE(5555,*)i,(nop(i,j),j=1,8),imat(i),imato(i),nfixh(i)
+!  end if
+!ENDDO
+!do i = 1, maxp
+!  write (5555,*)i,(cord(i,j),j=1,2), ao(i)
+!end do
+!do i = 1, ncl
+!  write (5555,*) (line(i,j),j = 1, lmt(i))
+!end do
+!CLOSE(5555, STATUS='keep')
+!-
+
+
+!NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
+       ELSEIF (IGEO ==2) then
+         call rdkalyps(n,m,a,0)
+  !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
+         NCLL = NCL
+  !-
+
+!NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
+!-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
+!         OPEN(5555,'testKalypso.rm1')
+!         do i = 1, maxe
+!           if (nop(i,1) /= 0) then
+!             istat = 0
+!             WRITE(5555,FMT=2001,IOSTAT=istat)i,(nop(i,j),j=1,8),imat(i)
+!     +        ,0.0,nfixh(i)
+!             if (istat /= 0) then
+!               write (*,*) 'Fehler beim Schreiben'
+!             end if
+! 2001        FORMAT(10I5,F10.3,I5)
+!           end if
+!         ENDDO
+!         WRITE(5555,'(i5)')9999
+!         WRITE(*,*)'justinfo: ',maxe
+!         do i = 1, (maxp-1)
+!           write (5555,2002)i,(cord(i,j),j=1,2), ao(i),0,0.0
+! 2002      format (I10, 2(F16.6,'    '),F10.3,
+!     +  '                                                            ',
+!     +  I10,F10.4)
+!         end do
+!         WRITE(5555,'(i5)')9999
+!         CLOSE(5555, STATUS='keep')
+!-
+
        ENDIF
       ENDIF
+!-
+
+!NiS,mar06,com: End of geometry reading block
 
 CIPK FEB01 BEGIN NEW LOCATION FOR CC LINE READ
 
@@ -246,8 +373,10 @@ CIPK AUG02
       NCL=NCLL
       NCLM=NCLL
    28 CONTINUE
-cipk feb03  close geometry file 
-      if(ifile .gt. 0) close (ifile)
+!NiS,may06: The geometry file must not be closed because of RESTART OPTION
+cipk feb03  close geometry file
+!      IF(ifile .gt. 0) close (ifile)
+!-
       IF(ID(1:3) .EQ. 'CC1') THEN
         READ(ID(5:8),'(I4)') NCLT
         IF(NCLT .NE. 0) THEN
@@ -291,6 +420,8 @@ cipk feb03  close geometry file
       ELSE
         WRITE(LOUT,6115)
       ENDIF
+
+!NiS,mar06,com: reading block for 3D-geometry
 
 CIPK FEB01 END NEW LOCATION FOR CC LINE READ
 
@@ -345,13 +476,18 @@ cipk nov97          READ(LIN,'(A8,A72)') ID,DLIN
 C
 C    USE ELEMENT TYPES TO ASSIGN MANNINGS N IF VALUE LESS THAN  -1.0-
 C-
+!NiS,apr06: skip assignement, if the value (ORT(I,5) == -1):
+
 cipk oct98 update to f90
             IMMT=IMAT(I)
             J=MOD(IMMT,100)
             IF(NOP(I,6) .EQ. 0) J=IMAT(I)
             IF(ORT(J,5) .GT. 1.) THEN
               CHEZ(I)=ORT(J,5)
-            ELSE
+  !NiS,apr06: skipping, if ORT(J,5)==-1:
+  !          ELSE
+            ELSEIF(ORT(J,5) /= -1) THEN
+  !In the case of ORT(J,5)=-1 there is no assignement
               ZMANN(I)=ORT(J,5)
             ENDIF
           ENDIF
@@ -367,16 +503,24 @@ C-
           IF( J .LT. LE ) LE = J
           DO 70 K = 1, 20
             NCORN(J)=K-1
-            IF(NOP(J,K) .EQ. 0) GO TO 72
+            IF( NOP(J,K) .EQ. 0) GO TO 72
             IF( NOP(J,K) .GT. NP ) NP = NOP(J,K)
             IF( NOP(J,K) .LT. LP ) LP = NOP(J,K)
    70     CONTINUE
           NCORN(J)=20
    72     CONTINUE
+!NiS,may06: for Kalypso output increase MaxT by one for every 1D-2D-TRANSITION ELEMENT (NCORN = 5); MaxT was initialized in getgeo1.subroutine
+          IF (ncorn(j) .eq. 5) MaxT = MaxT + 1
+!-
           IF(IFIT .EQ. 0) NCRN(J)=NCORN(J)
 C-
 C....... Establish preliminary element types
 C-
+
+cWP Jan 2006, writing informations
+!        write (*, 999) J, NCORN(J), IMAT(J)
+!  999   format (1X, 'ELEM ', I8, ' NCORN(J) = ', I4, '  IMAT(J) = ', I4)
+
           IF(NCORN(J) .GT. 5) THEN
             NETYP(J)=16
           ELSEIF(IMAT(J) .GT. 900) THEN
@@ -385,8 +529,14 @@ cipk jan99
 C
 C        Insert pointers to inform about junction elements
 C
+
+cWP Jan 2006, writing informations
+        write (*, 1000)
+ 1000   format (/1X, 'In GETGEO. Line 391.')
           KK=NOP(J,1)
           KL=NOP(J,3)  
+        write (*, 1001) KK, KL
+ 1001   format (1X, 'KK = ', I10, '  KL = ', I10)
           JPOINT(KK)=KL
           JPOINT(KL)=KK
           KK=NOP(J,2)
@@ -501,24 +651,30 @@ C-
 C-
 C     Now fill midside coordinates, widths etc.
 C-
-            DO K=2,NCN,2
-              N1=NOP(J,K-1)
-              N2=NOP(J,K)
-              N3=MOD(K+1,NCN)
-              IF(N3 .EQ. 0) N3=NCN
-              N3=NOP(J,N3)
-              AO(N2)=0.5*(AO(N1)+AO(N3))
-              IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
-                WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
-                WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
-                SS1(N2)=0.5*(SS1(N1)+SS2(N3))
-                SS2(N2)=0.5*(SS1(N1)+SS2(N3))
-              ENDIF
-              IF(CORD(N2,1) .LE. VOID) THEN
-                CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
-                CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
-              ENDIF
-            ENDDO
+!NiS,may06: For net-file in Kalypso-2D-format, the midside filling is done in RDKALYPS.subroutine, skip then
+            IF(IGEO .NE. 2) THEN
+
+              DO K=2,NCN,2
+                N1=NOP(J,K-1)
+                N2=NOP(J,K)
+                N3=MOD(K+1,NCN)
+                IF(N3 .EQ. 0) N3=NCN
+                N3=NOP(J,N3)
+                AO(N2)=0.5*(AO(N1)+AO(N3))
+                IF(WIDTH(N1) .GT. 0.  .AND.  WIDTH(N3) .GT. 0.) THEN
+                  WIDTH(N2)=0.5*(WIDTH(N1)+WIDTH(N3))
+                  WIDS(N2)=0.5*(WIDS(N1)+WIDS(N3))
+                  SS1(N2)=0.5*(SS1(N1)+SS2(N3))
+                  SS2(N2)=0.5*(SS1(N1)+SS2(N3))
+                ENDIF
+                IF(CORD(N2,1) .LE. VOID) THEN
+                  CORD(N2,1)=0.5*(CORD(N1,1)+CORD(N3,1))
+                  CORD(N2,2)=0.5*(CORD(N1,2)+CORD(N3,2))
+                ENDIF
+              ENDDO
+            ENDIF
+!-
+
           ENDIF
         ENDDO
 C-
@@ -602,14 +758,16 @@ C-
               IF(ID(1:3) .EQ. 'LD2') THEN
                 READ(DLIN,'(2I8)') J,NTS
 cipk feb99
-                if(nts .gt. nlaym) then
+cWP Feb 2006, Change NLAYM to NLAYMX
+                if(nts .gt. nlaymx) then
 CIPK SEP04 CREATE ERROR FILE
   	            CLOSE(75)
                   OPEN(75,FILE='ERROR.OUT')
-	  
-                  WRITE(75,*) 'Too many layers Increase NLAYM in PARAM.'
+
+cWP Feb 2006, Change NLAYM to NLAYMX	  
+                 WRITE(75,*) 'Too many layers Increase NLAYMX in PARAM.'
      +            ,'COM'
-                  WRITE(*,*) 'Too many layers Increase NLAYM in PARAM.C'
+                 WRITE(*,*) 'Too many layers Increase NLAYMX in PARAM.C'
      +            ,'OM'
                   stop 'Too many layers defined'
                 endif
@@ -644,12 +802,14 @@ C-
 C-
 C      Test for limit violation on MLAY parameter
 C-
-                IF (J .GT. MLAY)  THEN
+
+cWP Feb 2006, Change MLAY to NLAYMX
+                IF (J .GT. NLAYMX)  THEN
 CIPK SEP04 CREATE ERROR FILE
   	            CLOSE(75)
                   OPEN(75,FILE='ERROR.OUT')
-                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', MLAY
-                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', MLAY
+                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
+                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
                   STOP
                 ENDIF
 CIPK JAN99 ALLOW FOR J=0
@@ -705,13 +865,14 @@ C-
   817       IF(ID(1:3) .EQ. 'LD3') THEN
               READ(DLIN,'(2I8)') J,NTS
 cipk feb99
-                if(nts .gt. nlaym) then
+cWP Feb 2006, Change NLAYM to NLAYMX
+                if(nts .gt. nlaymx) then
 CIPK SEP04 CREATE ERROR FILE
   	            CLOSE(75)
                   OPEN(75,FILE='ERROR.OUT')
-                  WRITE(75,*) 'Too many layers Increase NLAYM in PARAM.'
+                 WRITE(75,*) 'Too many layers Increase NLAYMX in PARAM.'
      +            ,'COM'
-                  WRITE(*,*) 'Too many layers Increase NLAYM in PARAM.C'
+                 WRITE(*,*) 'Too many layers Increase NLAYMX in PARAM.C'
      +            ,'OM'
 
                   stop 'Too many layers defined'
@@ -790,12 +951,14 @@ C
 C     Process individual nodal values
 C
               ELSEIF(J .LE. MAXP) THEN
-                IF (J .GT. MLAY)  THEN
+
+cWP Feb 2006, Change MLAY to NLAYMX
+                IF (J .GT. NLAYMX)  THEN
 CIPK SEP04 CREATE ERROR FILE
   	            CLOSE(75)
                   OPEN(75,FILE='ERROR.OUT')
-                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', MLAY
-                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', MLAY
+                  WRITE(*,*)  ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
+                  WRITE(75,*) ' ERROR  ',J, '  EXCEEDS  MLAY = ', NLAYMX
                   STOP
                 ENDIF
                 IF(J .GT. 0) THEN
@@ -1003,8 +1166,10 @@ cipk aug97 2nd part of change for alfak
             ALFAK(N3)=0.0001
           ENDIF
 cipk aug97 end changes
-          WRITE(*,*) ' SETTING ALFAK,WIDTH, OLD WIDTH',N3,WIDTH(N3)
-     +                ,WIDTO
+!NiS,may06: adding alfak to output
+          WRITE(*,*) ' SETTING ALFAK,WIDTH, OLD WIDTH',N3, alfak(n3)
+     +                , WIDTH(N3), WIDTO
+!-
         ENDIF
   195 CONTINUE
 
