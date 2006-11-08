@@ -1,4 +1,3 @@
-C     Last change:  AF   17 Jul 2006   10:35 am
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -26,6 +25,8 @@ C-
      +          ,INWGT,INSTR,INBNWGT,INBNSTR,IGEO,IOWGT,IOBNWGT,ICORDIN
      +          ,IOV,IYKK,IDTM,TTEM,LNNAM,IWVIN,IWVFC,INOTR,INCSTR
      +          ,INTIMS,INEWBED,IDEBUG,IMESHOUT,IOUTRWD,IMASSOUT
+     +          ,ICNSV,IAVEL 
+cipk aug06  add input options    
 !NiS,mar06      add MAXA as dimensioner for arc-array, MaxT for number of 1D-2D-TRANSITION ELEMENTS
      +          ,MaxA, MaxT
 !-
@@ -122,6 +123,8 @@ cipk may02
      +            ,EVISXZ(:),EVISYZ(:),DVISZ(:)
      +            ,UDST(:),VDST(:),UUDST(:),UVDST(:)
      +            ,VVDST(:),SDST(:),TDST(:),SEDST(:),IMID(:,:),IPASST(:)
+     +            ,IOVLDN(:)
+cipk sep06 add IOVLDN
 cipk apr06 add IPASST
 C-
 
@@ -129,7 +132,6 @@ C-
       REAL(KIND=8), ALLOCATABLE :: HEL(:)
 !-
 
-C-
       REAL MANMIN,MANMAX,MANTAB
 
       ALLOCATABLE  NOP(:,:),IMAT(:),

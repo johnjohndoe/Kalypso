@@ -21,7 +21,8 @@ c-    ESRO   = array of previous bed shears
 
       ALLOCATABLE  DEPRAT(:),BSHEAR(:),VS(:),
      +             EDOT(:),UST(:),SERAT(:)
-     +            ,ESRO(:)
+     +            ,ESRO(:),DEPRATO(:)
+cipk sep06 add deprato
 
 c-
 c-    CRCON1 = constant in settling rate equation
@@ -78,10 +79,10 @@ C     DEPINCR=  increment of depth over simulation
      +            THICK(:,:),SST(:,:),TM(:),TMD(:) 
      +           ,BEDORIG(:),DEPINCR(:),BEDELO(:)
 
-CIPK MAY06
-      REAL*8 TMSED,TMSSED
-      ALLOCATABLE TMSED(:),TMSSED(:)
-      ALLOCATABLE SSTOM(:),SMVALM(:),GBOM(:),THICKOM(:)
+CIPK MAY06 and sep06
+      REAL*8 TMSED,TMSSED,TMSADD,TMASSLEFT,TMSDEP
+      ALLOCATABLE TMSED(:),TMSSED(:),TMSADD(:),TMASSLEFT(:)
+      ALLOCATABLE SSTOM(:),SMVALM(:),GBOM(:),THICKOM(:),TMSDEP(:)
 
 
 

@@ -56,7 +56,7 @@ cipk feb01  skip out for zero lines
         NN = LMT(J)
         N = 0
         IF(M .EQ. 1) GO TO 125
-        DO 124 L = 1, NN, 2
+        DO 124 L = 1, NN-2, 2
           N = N + 1
           NA = ITEMP(N)
           NC = ITEMP(N+1)
@@ -78,8 +78,29 @@ CIPK OCT98 CONVERT TO F90
               GO TO 124
   117       CONTINUE
   123     CONTINUE
+CIPK JUL02 TEST FOR FAILURE TO FIND CONTINUITY LINE
+          IF(LINE(J,L+1) .EQ. 0) THEN
+CIPK SEP04
+            IF(IERR .NE. 1) THEN
+	        CLOSE(75)
+	        OPEN(75,file='ERROR.OUT')
+	      ENDIF
+	      WRITE(*,*) 'ERROR PROCESSING CONTINUITY LINE ',J
+	      WRITE(75,*) 'ERROR PROCESSING CONTINUITY LINE ',J
+	      WRITE(*,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
+     +      LINE(J,L),LINE(J,L+2)
+	      WRITE(75,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
+     +      LINE(J,L),LINE(J,L+2)
+	      IERR=1
+		ENDIF
   124   CONTINUE
   125 CONTINUE
+CIPK JUL02
+      IF(IERR .EQ. 1) THEN
+	  WRITE(*,*) 
+     +   'EXECUTION TERMINATED - FULL LIST OF ERRORS IN ERROR.OUT'
+	  STOP
+	ENDIF      
 
 CIPK JUL01
       IF(IOCON .GT. 0) THEN
