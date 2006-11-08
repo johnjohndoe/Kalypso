@@ -1,4 +1,3 @@
-C     Last change:  NiS  12 May 2006   10:22 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
