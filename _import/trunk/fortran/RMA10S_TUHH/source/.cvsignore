@@ -2,6 +2,8 @@
 *.AF
 *.m
 *.M
+*.K
+*.k
 *.mod
 *.bak
 *.jaj

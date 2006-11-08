@@ -1,4 +1,4 @@
-C     Last change:  WP   23 Feb 2006   11:01 am
+C     Last change:  K     8 Nov 2006    2:53 pm
       SUBROUTINE EXSWAN
       USE BLK10MOD
       USE BLK11MOD
@@ -125,6 +125,7 @@ c	else
 c	   write(*,*) 'came out bad'
 c	   STOP
 c	endif
+      END IF
 C
 C     Finish of Execution of Second SWAN Mesh.
 C     END DJW CHANGES 10/06/04

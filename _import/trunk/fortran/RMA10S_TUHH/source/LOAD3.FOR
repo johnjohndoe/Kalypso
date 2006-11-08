@@ -4,7 +4,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  IPK   5 Oct 98    3:39 pm
+C     Last change:  K     8 Nov 2006    2:58 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -16,10 +16,7 @@ cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
       USE BLK11MOD
       USE BLK10
       USE BLKSUBMOD
-!NiS,Nov06: Correction of small error
-      !USE BLKSANMOD
-      USE BLKSANDMOD
-      !-
+      USE BLKSANMOD
       SAVE
 !NiS,may06:testing for non defined variables
 !      implicit none
