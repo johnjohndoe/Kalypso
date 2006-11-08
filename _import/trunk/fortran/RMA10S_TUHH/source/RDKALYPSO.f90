@@ -1,4 +1,3 @@
-!     Last change:  JAJ  18 May 2006    8:21 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1621,12 +1620,12 @@ DO i = 1, arccnt
     ELSE
       !Interpolate cross sectional informations for midside nodes, if necessary
       IF(WIDTH (nop(arc(i,3),2)) .eq. 0) THEN
-        width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),2)) + width (nop(arc(i,3),2)))
-        ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),2))   + ss1 (nop(arc(i,3),2)))
-        ss2 (nop(arc(i,3),2))   = 0.5 * (ss2 (nop(arc(i,3),2))   + ss2 (nop(arc(i,3),2)))
-        wids (nop(arc(i,3),2))  = 0.5 * (wids (nop(arc(i,3),2))  + wids (nop(arc(i,3),2)))
-        widbs (nop(arc(i,3),2)) = 0.5 * (widbs (nop(arc(i,3),2)) + widbs (nop(arc(i,3),2)))
-        wss (nop(arc(i,3),2))   = 0.5 * (wss (nop(arc(i,3),2))   + wss (nop(arc(i,3),2)))
+        width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),1)) + width (nop(arc(i,3),3)))
+        ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),1))   + ss1 (nop(arc(i,3),3)))
+        ss2 (nop(arc(i,3),2))   = 0.5 * (ss2 (nop(arc(i,3),1))   + ss2 (nop(arc(i,3),3)))
+        wids (nop(arc(i,3),2))  = 0.5 * (wids (nop(arc(i,3),1))  + wids (nop(arc(i,3),3)))
+        widbs (nop(arc(i,3),2)) = 0.5 * (widbs (nop(arc(i,3),1)) + widbs (nop(arc(i,3),3)))
+        wss (nop(arc(i,3),2))   = 0.5 * (wss (nop(arc(i,3),1))   + wss (nop(arc(i,3),3)))
       END IF
     END IF
   ENDIF
@@ -1806,7 +1805,6 @@ neighbours: do i=1,elcnt
 
 end do neighbours
 
-
 ! Ausduennung des urspruenglich mehrfach bestimmten Feldes
 ! (Jedem Knoten wurde ein anderer Knoten mehrfach als Nachbar zugewiesen)
 
@@ -1849,7 +1847,6 @@ do i=1,nodecnt
   end do
 
 end do
-
 
 
 !NiS,mar06: unit name changed; changed iout to Lout
