@@ -1,3 +1,4 @@
+cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
 cipk  last update june 27 2005 add control structure option
@@ -17,7 +18,8 @@ cipk  last update April 28 1997
 CIPK  LAST UPDATE jAN 22 1997
 CIPK  AUG 95  SIGNIFICANT CHANGES TO FILE
       SUBROUTINE FILE(NT,FNAM0)
-cintel      USE IFPORT
+      USE IFPORT
+CIPK COMPAQ      USE DFLIB
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -200,11 +202,7 @@ cipk sep99 add test for blank initial characters
           FNAME(K-KS+1:K-KS+1)=FNAMIN(K:K)
         ENDDO
  
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!NiS,mar06,comment:
-!Start of if-clause, which test for the control and input files. The file will be recognized with
-!the first eight digits of a line
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,mar06,com: Start of test for file type; first 8 digits show type
 
         IF(ID .EQ. 'OUTFIL  ') THEN
           LOUT=3
@@ -841,7 +839,6 @@ CIPK MAY06
       GO TO 200
   210 CONTINUE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 cipk sep99
       if(iermsg .eq. 1) then
@@ -995,6 +992,7 @@ CIPK JUN05
       IF(IMESHOUT .GT. 0) WRITE(LOUT,6054) FNAM35
  6054 FORMAT(' OUTPUT MESHED RM1 FORMAT FILE NAME   ',A96)
 CIPK MAY06
+CIPK SEP06 CHANGE IMASSOUT
       IF(IMASSOUT .GT. 0) WRITE(LOUT,6055) FNAM38
  6055 FORMAT(' OUTPUT MASS BALANCE FILE NAME   ',A96)
 C-
@@ -1007,9 +1005,11 @@ C-
       RETURN
       END
 c
+C************************************************************************
 
+c
+C************************************************************************
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       function lenstr(str,iswt)
 c
 c  Find length of string (position of last non-blank character or period)
