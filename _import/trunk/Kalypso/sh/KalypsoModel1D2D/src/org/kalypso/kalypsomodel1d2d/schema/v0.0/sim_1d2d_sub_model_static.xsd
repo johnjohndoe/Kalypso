@@ -22,22 +22,30 @@
 		substitutionGroup="wb:staticModel"/ -->
 		
 	<xs:complexType name="StaticModelPropertyType1D2D">
+		<xs:annotation>
+			<xs:documentation>
+				To define a static model property for a 1d 2d simulation model
+			</xs:documentation>
+		</xs:annotation>
 		<xs:complexContent>
 			<xs:restriction base="wb:StaticModelPropertyType">
 				<xs:sequence>
-					<xs:element ref="wb:StaticModel1D2D"/>
+					<xs:element 
+						ref="wb:StaticModel1D2D"
+						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
+	
 	<xs:element 
 		name="StaticModel1D2D" 
 		type="wb:StaticModelType1D2D" 
 		substitutionGroup="wb:StaticModel">
 		<xs:annotation>
 			<xs:documentation>
-				Static model for combined 1D 2D unsteady simualtion  
+				Static model element for combined 1D 2D unsteady simualtion  
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -72,9 +80,12 @@
 					<xs:element 
 						name="terrainModel"
 						type="wb:TerrainModelPropertyType"/>
-					<xs:element ref="wb:discretisationModel"/>
-					<xs:element ref="wb:flowResistanceModel"/>
-					<xs:element ref="wb:flowRelationshipModel"/>
+					<xs:element 
+						ref="wb:discretisationModel"/>
+					<xs:element 
+						ref="wb:flowResistanceModel"/>
+					<xs:element 
+						ref="wb:flowRelationshipModel"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -88,29 +99,44 @@
 		name="TerrainModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property type to associate an element type for associating
+				Property type to defined terrain model of a 1d 2d static model
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence minOccurs="0">
-			<xs:element ref="wb:TerrainModel"/>
+		<xs:sequence>
+			<xs:element 
+				ref="wb:TerrainModel"
+				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<xs:element 
 		name="TerrainModel" 
-		type="wb:TerrainModelType"/>
+		type="wb:TerrainModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Terrain model element with one terrain elevation element and 
+				and rougthness layer polygon elements.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 		
 	<xs:complexType 
 		name="TerrainModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Defined a terrain model type that contains an elevation model
+				and a rougthness layer polygon 
+			</xs:documentation>
+		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
 				name="terrainElevation"
-				type="wb:TerrainModelPropertyType"
+				type="wb:TerrainElevationModelPropertyType"
 				minOccurs="1" maxOccurs="1"/>
 			<xs:element 
 				name="rougthnessLayerPolygons"
-				type="wb:RougthnessLayerPolynomCollectionType"
+				type="wb:RougthnessLayerPolygonCollectionType"
 				minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -119,7 +145,7 @@
 		name="TerrainElevationModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property type to associate an element type for associating
+				To define an elevation model element for typicaly a terrain model
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence minOccurs="0">
@@ -205,31 +231,31 @@
 	<!-- check this about best practice -->
 			
 	<xs:complexType 
-		name="RougthnessLayerPolynomCollectionType">
+		name="RougthnessLayerPolygonCollectionType">
 		<xs:complexContent>
 			<xs:restriction 
 				base=" gml:FeatureCollectionType ">
 				<xs:sequence>
 					<xs:element ref="wb:rougthnessLayerMember"/>
-					<xs:element ref="wb:rougthnessLayerPolynomMembers"/>
+					<xs:element ref="wb:rougthnessLayerPolygonMembers"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
 	<xs:element
-		name="rougthnessLayerPolynomMembers"
-		type="wb:RougthnessLayerPolynomArrayPropertyType"/>
+		name="rougthnessLayerPolygonMembers"
+		type="wb:RougthnessLayerPolygonArrayPropertyType"/>
 	<xs:element 
 		name="rougthnessLayerMember"
-		type="wb:RougthnessLayerPolynomPropertyType"/>
+		type="wb:RougthnessLayerPolygonPropertyType"/>
 		
-	<xs:complexType name="RougthnessLayerPolynomArrayPropertyType">
+	<xs:complexType name="RougthnessLayerPolygonArrayPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeatureArrayPropertyType">
 				<xs:sequence>
 					<xs:element 
-						ref="gml:_Feature " 
+						ref="wb:RougthnessPolygon" 
 						minOccurs="0" 
 						maxOccurs="unbounded"/>
 				</xs:sequence>
@@ -237,22 +263,29 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType 
-		name="RougthnessLayerPolynomPropertyType">
+		name="RougthnessLayerPolygonPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="wb:RougthnessPolynom"/>
+					<xs:element ref="wb:RougthnessPolygon"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element 
-		name="RougthnessPolynom"
-		type="wb:RougthnessPolynomType"
-		substitutionGroup="gml:_Feature"/>
+		name="RougthnessPolygon"
+		type="wb:RougthnessPolygonType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation>
+				Represents an area with uniform roughtness. 
+				The rogthness is identify by a key
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 		
-	<xs:complexType name="RougthnessPolynomType">
+	<xs:complexType name="RougthnessPolygonType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
@@ -1175,7 +1208,16 @@
 			<xs:extension 
 				base="wb:AbstractFlowRelationshipType">
 				<xs:sequence>
-					
+					<xs:element name="q">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="h">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1200,7 +1242,16 @@
 			<xs:extension 
 				base="wb:AbstractFlowRelationshipType">
 				<xs:sequence>
-					
+					<xs:element name="a">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="h">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1225,7 +1276,16 @@
 			<xs:extension 
 				base="wb:AbstractFlowRelationshipType">
 				<xs:sequence>
-					
+					<xs:element name="wl">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="dis">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1250,7 +1310,21 @@
 			<xs:extension 
 				base="wb:AbstractFlowRelationshipType">
 				<xs:sequence>
-					
+					<xs:element name="wlHeadWatter">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="wl">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="h">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1281,6 +1355,5 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	
+
 </xs:schema>
