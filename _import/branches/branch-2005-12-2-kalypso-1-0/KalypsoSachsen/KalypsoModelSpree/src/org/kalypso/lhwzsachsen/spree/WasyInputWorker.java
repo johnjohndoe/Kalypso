@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +61,21 @@ public class WasyInputWorker
 {
   protected final static Logger LOGGER = Logger.getLogger( WasyInputWorker.class.getName() );
 
+  private static String WECHMANN_EMPTY;
+
+  static
+  {
+    try
+    {
+      // wird nicht instantiiert
+      WECHMANN_EMPTY = org.kalypso.commons.java.net.UrlUtilities.toString( WasyInputWorker.class.getResource( "resources/wechmannEmpty.xml" ), "UTF8" );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
   private WasyInputWorker()
   {
   // wird nicht instantiiert
@@ -76,8 +90,8 @@ public class WasyInputWorker
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir, final ICalcDataProvider inputProvider,
-      final Properties props, final PrintWriter logwriter, final TSMap tsmap, final TSDesc[] TS_DESCRIPTOR, final WasyCalcJob wasyJob )
-      throws Exception
+      final Properties props, final PrintWriter logwriter, final TSMap tsmap, final TSDesc[] TS_DESCRIPTOR,
+      final WasyCalcJob wasyJob ) throws Exception
   {
     try
     {
@@ -149,11 +163,17 @@ public class WasyInputWorker
         final WasyCalcJob.WQInfo info = wqinfos[i];
 
         final MetadataList metadataList = tsmap.getMetadataFor( info.getZmlId() );
-        final String xml = metadataList.getProperty( TimeserieConstants.MD_WQWECHMANN );
+        final String xml = metadataList == null ? null : metadataList.getProperty( TimeserieConstants.MD_WQWECHMANN );
         if( xml == null )
-          throw new Exception( "Keine WQ-Parameter vorhanden: " + info.getZmlId() );
-        
-        final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( xml ) ) );
+          System.out.println( "Keine W-Q Wechmann-Parameter vorhanden für: " + info.getZmlId() );
+
+        /*
+         * Falls die Zeitreihe nicht existiert oder keine Wechmann-Metadaten hat, werden Standardwerte rausgeschrieben.
+         * (Vermutlich Fall Schwarze-Elster: nicht berücksichtigte Unterwasserpegel)
+         */
+        final String wechmannXml = xml == null ? WECHMANN_EMPTY : xml;
+
+        final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( wechmannXml ) ) );
         final WechmannSet wechmannSet = group.getFor( startSim );
         final WechmannParams[] paramArray = new WechmannParams[wechmanParamCount];
         int count = 0;
@@ -171,8 +191,9 @@ public class WasyInputWorker
       catch( final Throwable e )
       {
         // on any error return, because we still have a default wq file in the resources.
-        System.out.println( "Fehler beim Schreiben der WQ-Beziehung. Standardwerte werden benutzt." );
+        System.out.println( "Fehler beim Schreiben der W-Q Beziehung. Standardwerte werden benutzt." );
         e.printStackTrace();
+        System.out.println();
         return;
       }
     }
@@ -182,7 +203,7 @@ public class WasyInputWorker
     {
       final FieldDescriptor[] fds = new FieldDescriptor[8 + ( wechmanParamCount - 1 ) * 5 + 3];
       int fieldCounter = 0;
-      fds[fieldCounter++] = new FieldDescriptor( "PEGEL", "C", (byte)10, (byte)0 );
+      fds[fieldCounter++] = new FieldDescriptor( "PEGEL", "C", (byte)11, (byte)0 );
 
       for( int i = 0; i < wechmanParamCount; i++ )
       {
@@ -255,10 +276,10 @@ public class WasyInputWorker
 
         final MetadataList metadata = tsmap.getMetadataFor( info.getZmlId() );
 
-        final String ast1 = metadata.getProperty( TimeserieConstants.MD_ALARM_1, "999" );
-        final String ast2 = metadata.getProperty( TimeserieConstants.MD_ALARM_2, "999" );
-        final String ast3 = metadata.getProperty( TimeserieConstants.MD_ALARM_3, "999" );
-        final String ast4 = metadata.getProperty( TimeserieConstants.MD_ALARM_4, "999" );
+        final String ast1 = metadata == null ? "999" : metadata.getProperty( TimeserieConstants.MD_ALARM_1, "999" );
+        final String ast2 = metadata == null ? "999" : metadata.getProperty( TimeserieConstants.MD_ALARM_2, "999" );
+        final String ast3 = metadata == null ? "999" : metadata.getProperty( TimeserieConstants.MD_ALARM_3, "999" );
+        final String ast4 = metadata == null ? "999" : metadata.getProperty( TimeserieConstants.MD_ALARM_4, "999" );
 
         record.add( alarmValue( ast1 ) ); // AST1
         record.add( alarmValue( ast2 ) ); // AST2
@@ -382,7 +403,7 @@ public class WasyInputWorker
     final Feature feature = workspace.getFeature( fid );
     if( feature == null )
       throw new CalcJobServiceException( "Kein Feature mit id: " + fid, null );
-    
+
     final Object property = feature.getProperty( "Anfangsstauvolumen" );
     if( property != null && property instanceof Double )
       tsmap.putValue( name, startDate, (Double)property );
@@ -427,51 +448,63 @@ public class WasyInputWorker
   {
     try
     {
-      final FieldDescriptor[] fds = new FieldDescriptor[TS_DESCRIPTOR.length + 5];
-      fds[0] = new FieldDescriptor( "DZAHL", "N", (byte)7, (byte)2 );
-      fds[1] = new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 );
-      fds[2] = new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 );
-      fds[3] = new FieldDescriptor( "VON", "N", (byte)2, (byte)0 );
-      fds[4] = new FieldDescriptor( "AB", "N", (byte)2, (byte)0 );
+      final boolean spree = false;
+
+      final Map fdList = new LinkedHashMap();
+
+      if( spree )
+        fdList.put( "DZAHL", new FieldDescriptor( "DZAHL", "N", (byte)7, (byte)2 ) );
+      else
+        fdList.put( "DATUM", new FieldDescriptor( "DATUM", "N", (byte)7, (byte)2 ) );
+
+      fdList.put( "STUNDE", new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 ) );
+
+      if( spree )
+      {
+        fdList.put( "DATUM", new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 ) );
+        fdList.put( "VON", new FieldDescriptor( "VON", "N", (byte)2, (byte)0 ) );
+        fdList.put( "AB", new FieldDescriptor( "AB", "N", (byte)2, (byte)0 ) );
+      }
 
       for( int j = 0; j < TS_DESCRIPTOR.length; j++ )
       {
         final TSDesc desc = TS_DESCRIPTOR[j];
         final String name = desc.id;
 
-        final int i = j + 5;
-
+        final FieldDescriptor fd;
         if( name.startsWith( "S_" ) )
-          fds[i] = new FieldDescriptor( name, "C", (byte)5, (byte)0 );
+          fd = new FieldDescriptor( name, "C", (byte)5, (byte)0 );
         else if( name.startsWith( "W_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+          fd = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
         else if( name.startsWith( "Q_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else if( name.startsWith( "QX_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else if( name.startsWith( "WV_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
+          fd = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
         else if( name.startsWith( "QV_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else if( name.startsWith( "QP_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)8, (byte)3 );
+          fd = new FieldDescriptor( name, "N", (byte)8, (byte)3 );
         else if( name.startsWith( "PG_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)6, (byte)1 );
+          fd = new FieldDescriptor( name, "N", (byte)6, (byte)1 );
         else if( name.startsWith( "PP_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)3, (byte)0 );
+          fd = new FieldDescriptor( name, "N", (byte)3, (byte)0 );
         else if( name.startsWith( "PA_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else if( name.startsWith( "V_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else if( name.startsWith( "ZG_" ) )
-          fds[i] = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+        else
+          throw new IllegalStateException( "TS Descriptor with wrong type: " + name );
+        
+        fdList.put( name, fd );
       }
 
-      final DBaseFile dbf = new DBaseFile( tsFilename, fds );
+      final DBaseFile dbf = new DBaseFile( tsFilename, (FieldDescriptor[])fdList.values().toArray( new FieldDescriptor[fdList.size()] ) );
 
       // Werte schreiben
-      final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
-      final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
       final Calendar calendar = Calendar.getInstance();
 
       final Date[] dateArray = valuesMap.getDates();
@@ -485,13 +518,17 @@ public class WasyInputWorker
         final ArrayList record = new ArrayList();
 
         calendar.setTime( date );
-        record.add( new Double( specialDateFormat.format( date ) ) );
+        record.add( new Double( WasyCalcJob.DF_DZAHL.format( date ) ) );
         record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
-        record.add( dateFormat.format( date ) );
-        calendar.add( Calendar.HOUR_OF_DAY, -3 );
-        record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
-        calendar.add( Calendar.HOUR_OF_DAY, -3 );
-        record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+
+        if( spree )
+        {
+          record.add( WasyCalcJob.DF_DATUM.format( date ) );
+          calendar.add( Calendar.HOUR_OF_DAY, -3 );
+          record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+          calendar.add( Calendar.HOUR_OF_DAY, -3 );
+          record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
+        }
 
         for( int j = 0; j < TS_DESCRIPTOR.length; j++ )
         {
@@ -507,7 +544,7 @@ public class WasyInputWorker
             // HACK: THE DBF Writer does not round double, when
             // written without decimals, it just prints out the integer part
             // so we round ourselfs
-            final FieldDescriptor fd = fds[j + 5];
+            final FieldDescriptor fd = (FieldDescriptor)fdList.get( id );
             final byte[] fddata = fd.getFieldDescriptor();
             final char type = (char)fddata[11];
             final int decimalcount = fddata[17];
@@ -613,7 +650,8 @@ public class WasyInputWorker
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL, final File nativedir, final WasyCalcJob wasyJob ) throws CalcJobServiceException
+  public static Map parseControlFile( final URL gmlURL, final File nativedir, final WasyCalcJob wasyJob )
+      throws CalcJobServiceException
   {
     try
     {
@@ -627,15 +665,15 @@ public class WasyInputWorker
 
       final String tsFilename = new File( nativedir, baseFileName ).getAbsolutePath();
       final File tsFile = new File( tsFilename + ".dbf" );
-      
+
       final String napFilename = wasyJob.makeNapFilename( nativedir, tsFilename );
       final File napFile = new File( napFilename + ".dbf" );
-      
+
       final File vhsFile = new File( tsFilename + WasyCalcJob.VHS_FILE );
-      
+
       final String flpFilename = wasyJob.makeFlpFilename( nativedir, tsFilename );
       final File flpFile = new File( flpFilename + ".dbf" );
-      
+
       final File wqFile = new File( nativedir, "HW_WQ.dbf" );
 
       final Map dataMap = new HashMap();

@@ -54,6 +54,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.InputSource;
 
+import com.braju.format.Format;
+
 /**
  * <p>
  * Der gemeinsame Rechenservice für Spree- und Schwarze-Elster Modell
@@ -92,6 +94,12 @@ public abstract class WasyCalcJob implements ICalcJob
     }
   }
 
+  /** Datumsformat für spalte 'DZAHL' in dbf file */
+  public static final DateFormat DF_DZAHL = new SimpleDateFormat( "yyMM.dd" );
+  
+  /** Datumsformat für spalte 'DATUM' in dbf file */
+  public static final DateFormat DF_DATUM = new SimpleDateFormat( "dd.MM.yyyy" );
+  
   public static final String VHS_FILE = "_vhs.dbf";
 
   public static final String FLP_NAME = "FlusslaufModell";
@@ -155,7 +163,7 @@ public abstract class WasyCalcJob implements ICalcJob
   public static final Object DATA_WQFILE = "wqFile";
 
   public static final Object DATA_LABEL = "label";
-  
+
   public static final Object DATA_STARTVOLUMEMAP = "anfangsstauvolumen";
 
   /**
@@ -185,13 +193,14 @@ public abstract class WasyCalcJob implements ICalcJob
       final Properties props = new Properties();
       monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
       pw.println( "Dateien für Rechenkern werden erzeugt" );
-      
+
       final TSMap tsmap = new TSMap();
       props.put( DATA_WQMAP, getWQMap() );
       props.put( DATA_WQPARAMCOUNT, getWQParamCount() );
-      props.put( DATA_STARTVOLUMEMAP , getStartVolumeMap() );
-      
-      final File exedir = WasyInputWorker.createNativeInput( tmpdir, inputProvider, props, pw, tsmap, TS_DESCRIPTOR(), this );
+      props.put( DATA_STARTVOLUMEMAP, getStartVolumeMap() );
+
+      final File exedir = WasyInputWorker.createNativeInput( tmpdir, inputProvider, props, pw, tsmap, TS_DESCRIPTOR(),
+          this );
 
       final File nativedir = new File( tmpdir, ".native" );
       final File nativeindir = new File( nativedir, "in" );
@@ -455,7 +464,6 @@ public abstract class WasyCalcJob implements ICalcJob
     ///////////////////
     final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
 
-    final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = new GregorianCalendar();
 
     // Die erzeugten Daten sammeln
@@ -467,11 +475,26 @@ public abstract class WasyCalcJob implements ICalcJob
     {
       final Feature feature = (Feature)iter.next();
 
-      final String dateString = (String)feature.getProperty( "DATUM" );
-      final Date date = dateFormat.parse( dateString );
+      final boolean spree = false;
+
+      final Date date;
+      if( spree )
+      {
+        final String dateString = (String)feature.getProperty( "DATUM" );
+        date = DF_DATUM.parse( dateString );
+      }
+      else
+      {
+        final Number dzahl = (Number)feature.getProperty( "DATUM" );
+        final String dzahlStr = Format.sprintf( "%7.2f", new Object[] {dzahl } );
+
+        date = DF_DZAHL.parse( dzahlStr );
+      }
+
       final int hour = ( (Number)feature.getProperty( "STUNDE" ) ).intValue();
       calendar.setTime( date );
       calendar.add( Calendar.HOUR_OF_DAY, hour );
+
       dates.add( calendar.getTime() );
 
       for( int j = 0; j < TS_DESCRIPTOR.length; j++ )
