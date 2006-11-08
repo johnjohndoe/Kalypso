@@ -5,9 +5,9 @@ CIPK  LAST UPDATE SEP 6 2004  add error file
       USE BLK10MOD
 
 cipk aug05	INCLUDE 'BLK10.COM'
-      REAL*8 CX,CY
+	REAL*8 CX,CY
       CHARACTER DLINE*140,ID1*3,DLIN2*77,BLANK*20
-      DIMENSION ILN(8)
+	DIMENSION ILN(8)
 
       data blank/'                    '/ 
 
@@ -19,7 +19,7 @@ cipk aug05	INCLUDE 'BLK10.COM'
       READ(IFILE,'(A80)') TITLE
 
       NP=0
-	  NE=0
+	NE=0
 cipk jun06
       NPTEMP=0
       NETEMP=0	
