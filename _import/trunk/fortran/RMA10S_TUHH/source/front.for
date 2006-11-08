@@ -393,7 +393,7 @@ CIPK JAN99
 	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
 	  IF(LL .NE. 0) THEN
 	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
-                                             !           NK(KC) negative as pointer, that degree of freedom can be taken out
+                                         !           NK(KC) negative as pointer, that degree of freedom can be taken out
 	  ENDIF
    22   CONTINUE
    23 CONTINUE
@@ -480,10 +480,10 @@ CIPK FEB04
    54 CONTINUE
 
       !NiS,jun06,comment: Assembly of global matrix within the solution window
-      DO 57 L=1,NBN  !for every nodal degree of freedom (row of element matrix)
+      DO 57 L=1,NBN        !for every nodal degree of freedom (row of element matrix)
 	IF(NK(L) .NE. 0) THEN  !if equation is present
-	  LL=LDEST(L)  !take the solution window slot
-	  DO 56 K=1,NBN  !then take again every nodal degree of freedom (column of element matrix)
+	  LL=LDEST(L)          !take the solution window slot
+	  DO 56 K=1,NBN        !then take again every nodal degree of freedom (column of element matrix)
 	  IF(NK(K) .NE. 0) THEN
 	    KK=LDEST(K)
 	    EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
