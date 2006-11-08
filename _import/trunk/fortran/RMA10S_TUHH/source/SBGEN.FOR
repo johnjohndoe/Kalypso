@@ -102,8 +102,12 @@ C
         ENDIF
       ENDDO
   204 CONTINUE
+
+!nis,sep06,com: discharge-boundary condition for a continuity line
       IF(ID(1:2) .EQ. 'QC') THEN
         IQGEN=IQGEN+1
+
+        !nis,sep06,com: just an number of inflows test
 CIPK DEC97 REFINE TEST FOR TOO MANY FLOWS
         IF(IQGEN .GT. NQLDS) THEN
 cipk sep04
@@ -113,21 +117,41 @@ cipk sep04
           WRITE(*,*) 'ERROR STOP TOO MANY INFLOWS'
           STOP 'TOO MANY INFLOWS'
         ENDIF
+        !-
+
+        !nis,sep06,com: Look for CCL-outflows/inflows
 CIPK DEC97 END ADDITION
+        !nis,sep06,com: write header for output-file, that includes a line with a headers for all columns
         IF(IQGEN .EQ. 1) THEN
           WRITE(LOUT,6033)
         ENDIF
+        !nis,sep06,com: If no hydrograph file for that boundary condition, then read values out of control file
         IF(NHYDQ(IQGEN) .EQ. 0) THEN
+          !nis,sep06,com: read value line
           READ(DLIN,5034) J,LN,QF,QDIR,QQAL,LABL
+          !nis,sep06,com: meaning of the values
+          ! J    = number of CCL, where discharge runs through
+          ! LN   = layer number for the specified discharge; enter 0 for 1D or 2D depth averaged flow
+          ! QF   = total discharge crossing the CCL
+          ! QDIR = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)
+          ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
+          ! LABL = 1 for using a hydrograph file in dynamic solution; chose 0 for a steady or specified solution
+          !-
+
 CIPK NOV97          READ(IBIN,7000) ID,DLIN
+          !nis,sep06,com: read new file line into memory
           call ginpt(ibin,id,dlin)
 cipk APR96 save data to a scratch file
+          !nis,sep06,com: Scratch file storage if appropriate
           if(isvs .eq. 1) then
             write(nscrin,7000) id,dlin
           endif
+          !nis,sep06,com: increase counter for
           NDATLN=NDATLN+1
+          !nis,sep06,com: Control output
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL,LABL
 
+          !nis,sep06,com: Power Station control, not for standard inflow
 CIPK AUG01   ADD FOR POWER STATION RECYCLING
           IF(NOUTCC(J) .NE. 0  .AND. ICYC .GT. 0) THEN
 	      IF(AVES(NOUTCC(J)) .GT. -100.) THEN
@@ -152,9 +176,16 @@ CIPK AUG01   ADD FOR POWER STATION RECYCLING
 	      WRITE(75,*) 'POWER',J,QF,TINC,QQAL
 	    ENDIF
 
-
+          !nis,sep06,com: Call QGEN for not 3D-continuity line outflow/inflow
+          ! Passed variables are:
+          ! J    = number of CCL
+          ! QF   = total discharge of inflow
+          ! QDIR = direction of total discharge crossing the CCL; measured from the principal x-axis in ANTICLOCKWISE RADIANS)
+          ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
+          !-
           IF (LN .EQ. 0) THEN
              CALL QGEN(J,QF,QDIR,QQAL)
+          !nis,sep06,com: Call QGEN for 3D-continuity line outflow/inflow
           ELSE
 C
 C            Apply flows to single 3d layer
@@ -162,6 +193,8 @@ C
              call QGENSPCL(0,LN,J,QF,QDIR,QQAL)
 C      
           ENDIF              
+
+          !nis,sep06,com:
           IF(LABL .EQ. 1) THEN
  5034       FORMAT(2I8,2F8.1,3F8.2,I8)
             NHYDQ(IQGEN)=J
@@ -174,6 +207,9 @@ C
           GO TO 204
         ENDIF
       ENDIF
+!nis,sep06,com: End of discharge-boundary condition for a continuity line
+
+
 C-
 C...... Input head for a continuity line if required
 C-
