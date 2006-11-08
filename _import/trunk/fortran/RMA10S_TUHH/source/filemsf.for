@@ -21,6 +21,7 @@ cintel      USE IFPORT
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
+      USE parakalyps
 	!*******************  DJW 20/07/04
       USE WBMMODS
 	!*******************
@@ -43,7 +44,13 @@ CIPK SEP04 REMOVE FNAM ADDD FNAMMES
      +            ,FNAM14,FNAM15,FNAM16,FNAM17,FNAMIN,fnam18,FNAM19
      +            ,FNAM20,FNAM24,FNAM25,FNAM23,FNAM26,FNAM27,FNAM28
      +            ,FNAM29,FNAM30,FNAM31,FNAM32,FNAM21,FNAM22,FNAM33
-     +            ,FNAM34,FNAM35,FNAM36,FNAM37,FNAM38
+     +            ,FNAM34,FNAM35,FNAM36,FNAM37, FNAM38
+
+!NiS,may06:
+      INTEGER :: rst_error !iostat-variable
+      CHARACTER (LEN = 20) :: INQUIRETEST
+!-
+
 CIPK JUN05 ADD FNAM33,FNAM34
 CIPK jun0302 ADD FNAM26,FNAM27,FNAM28,FNAM29
 CIPK AUG02 ADD FNAM24,FNAM25
@@ -56,17 +63,27 @@ CIPK AUG98 ADD COMMAND LINE
 CIPK DEC00      DATA VOID/-1.E20/
       LIN=2
       LOUT=3
+
+!NiS,mar06,com: In dependency of the switch NT, two general jobs are possible for file.subroutine
+!               NT = 1: First call (called from RMA10.program); the general files are read and opened
+!               NT = 2: Second call (called from input.subroutine); output file LOUT is opened
+!-
+      !NiS,mar06,com: Second call
       IF( NT .EQ. 2) THEN
         CLOSE (LOUT)
           FNAME=FNAM(1:LNNAM) // '.out'
         OPEN(LOUT,FILE=FNAME,STATUS='UNKNOWN')
         RETURN
+      !NiS,mar06,com: First call
       ELSE
 CIPK MAY02
 C......IWVIN  = INPUT WAVE DATA FILE
         IWVIN=0
 C......IWVFC  = INPUT SURFACE STRESS FILE
         IWVFC=0
+!NiS,apr06: adding KALYPSO-2D unit initializations:
+        IKALYPSOFM = 0 !Kalypso-2D input file
+!-
 C......JBEDOT = OUTPUT BED DATA FILE
         JBEDOT=0
         IFILE=0
@@ -156,7 +173,11 @@ cipk jun01  this is logic to determine the driectory of the initial r10 file
         write(*,'(a)') fnam0(1:lnnnam)
       if(lnnnam .gt. 0) then
         fnamd=fnam0(1:lnnnam)
-        statud = CHANGEDIRQQ(fnamd)
+
+cWP Jan 2006, Intel FORTRAN subroutine, not available in Lahey FORTRAN
+cWP Jan 2006, seems to have no function at all ??!!
+cWP        statud = CHANGEDIRQQ(fnamd)
+
       endif
 
   200 CONTINUE
@@ -179,6 +200,12 @@ cipk sep99 add test for blank initial characters
           FNAME(K-KS+1:K-KS+1)=FNAMIN(K:K)
         ENDDO
  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,mar06,comment:
+!Start of if-clause, which test for the control and input files. The file will be recognized with
+!the first eight digits of a line
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         IF(ID .EQ. 'OUTFIL  ') THEN
           LOUT=3
           LNNAM=LENSTR(FNAME,0)
@@ -192,6 +219,8 @@ CIPK SEP04
           IMESOUT=75
 		OPEN(IMESOUT,FILE=FNAMMES,STATUS='UNKNOWN')
           CALL ZVRS(0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'METFIL  ') THEN
           IIQ=30
           MMET=1
@@ -203,6 +232,8 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM12=FNAME
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'BCFIL   ') THEN
           IBUP=61
 cipk oct99 add iostat test
@@ -213,6 +244,115 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM11=FNAME
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!NiS,may06: Changed concept for Kalypso-input files. If the user decides to run RMA10S with Kalypso-2D modell format, he has to
+!           enter additional informations. These informations are concerning the suffix of result files, the first letter of result files
+!           and the timestep, at which to start from. Generally this concept is the same as it is in Kalypso-2D. If the value of that is <= 1, then
+!           no restart data will be read. The only exception of that is a restart file in another format. If there is a restart file in another
+!           format, then it is considered in the case of starting time step == 1. The user has no option, for writing result file. If he is
+!           working with Kalyso-2D geometry input, at least a Kalypso-2D format output and restartable file will be generated.
+        ELSEIF(ID .EQ. 'INKALYPS') THEN                                         !INPUT-Netzdatei im Kalypso-2D Format
+          !identification of geometry file kind
+          IFILE = 60
+          IGEO  = 2
+          !open the file
+          OPEN(IFILE,FILE=FNAME, STATUS='OLD', IOSTAT=IOERR)
+          !test for error on opening sequence
+          IF(IOERR /= 0) THEN
+            CALL IOSMsG(IOERR)
+            IERMSF = 1
+          ENDIF
+
+          !make input file name globally accessable
+          IF (LEN(TRIM(FNAME)) > 32) THEN
+            CLOSE (75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(75,*) ' ERROR - MODELL NAME TO LONG; ONLY 32 DIGITS',
+     +                  ' ALLOWED'
+            WRITE(*,*)  ' ERROR - MODELL NAME TO LONG; ONLY 32 DIGITS',
+     +                  ' ALLOWED'
+            WRITE(75,*) '   EXECUTION TERMINATED'
+            WRITE(*,*) '   EXECUTION TERMINATED'
+            STOP
+          ENDIF
+          FNAM2=FNAME
+          !Read additional informations; THEY HAVE TO BE THERE!!!
+          READ(LIN,'(A8,A96)') ID,FNAMIN
+          !Error, if the additional control informations were not entered
+          IF (ID(1:7) /= 'CONTROL') THEN
+            CLOSE(75)
+            OPEN(75,FILE='ERROR.OUT')
+            WRITE(75,*) ' ERROR - NO ADDITIONAL CONTROL DATA FOR INPUT'
+            WRITE(*,*) ' ERROR - NO ADDITIONAL CONTROL DATA FOR INPUT'
+            WRITE(75,*) '   EXECUTION TERMINATED'
+            WRITE(*,*) '   EXECUTION TERMINATED'
+            STOP
+          ENDIF
+          !If additional CONTROL-line, read data
+          itefreq = 0 !Set default value
+          READ (FNAMIN,*,iostat = ioerr) ct, iaccyc, modellaus, itefreq
+          IF (ioerr .EQ.-1 .or. itefreq .eq.0) THEN
+            WRITE(*   , *) 'no results after iteration will be written'
+            WRITE(Lout, *) 'no results after iteration will be written'
+            ioerr = 0
+          ELSE
+            WRITE (*,*) 'Output file will be written every',itefreq,
+     +                  'st/nd/th iteration.'
+            WRITE (Lout,*) 'Output file will be written every',itefreq,
+     +                  'st/nd/th iteration.'
+          ENDIF
+          itefreq = itefreq
+          !Determine the unit number of output file; Hope this unit is not used yet, but
+          !testing yields, that this number is free.
+          IKALYPSOFM = 77
+          !Restarting is also predetermined. It is dependent on the time step to start from. If
+          !the timestep to start from is (iaccyc == 1), then no restart file is taken because it
+          !is started from the first step. If the value (iaccyc > 1), then restarting is forced:
+          IF (iaccyc > 1) THEN
+            NB     = ifile       !unit number of restart file is the same as input file
+            KRESTF = 1
+            iutub  = 1
+            FNAM3  = FNAM2    !name of restart file is in Kalypso-2D case the same as geometry-file
+          ELSE
+          !time step to start from is always, when used, the first one:
+            iaccyc = 1
+          !If the first step to calculate is the first time step or the steady state step, then
+          !a restart file can be specified or the modell input file can be used as restart file.
+            READ(LIN,'(A8,A96)') ID, FNAMIN
+            IF (ID(1:7) == 'RESTART') THEN
+              IF (TRIM(FNAMIN) == FNAM2 .OR. TRIM(FNAMIN) == '' ) THEN
+                NB = ifile
+                FNAM3 = FNAM2
+              ELSE
+                NB = 62
+                FNAM3 = TRIM(FNAMIN)
+                open (nb, FILE=fnamin, STATUS='OLD',  iostat=IOERR)
+                !test for error on opening sequence
+                IF(IOERR /= 0) THEN
+                  CALL IOSMsG(IOERR)
+                  IERMSF = 1
+                ENDIF
+              ENDIF
+              KRESTF = 1
+              iutub  = 1
+            ELSE
+              BACKSPACE (LIN)
+            ENDIF
+          END IF
+!-
+!NiS,may06: Writing results file in Kalypso format, when input is not Kalypso-format
+        ELSEIF(ID .EQ. 'OUTKALYP') THEN
+          IF (IGEO .ne. 2) THEN
+            IKALYPSOFM = 77
+            READ (FNAMIN,*,iostat = ioerr) ct, modellaus, itefreq
+            IF (ioerr.ne.0) THEN
+              WRITE(*   , *) 'ERROR - DATA LINE OUTKALYP INCOMPLETE'
+              WRITE(Lout, *) 'ERROR - DATA LINE OUTKALYP INCOMPLETE'
+              ioerr = 0
+            ENDIF
+          ENDIF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'INGEO   ') THEN
           IFILE=60
 CIPK JUN03
@@ -225,24 +365,29 @@ cipk oct99 add iostat test
             IERMSG=1
           ENDIF
           FNAM2=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK AUG02
         ELSEIF(ID .EQ. 'INSMSBIN') THEN
           ISMSGN=60
           OPEN(ISMSGN,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
           FNAM2=FNAME
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97 add file type option
         ELSEIF(ID .EQ. 'INBNGEO ') THEN
           IFILE=60
 CIPK JUN03
           IGEO=1
-          OPEN(IFILE,FILE=FNAME,STATUS='OLD',FORM='BINARY'
-     +        ,IOSTAT=IOERR )
+
+!msf version	OPEN(IFILE,FILE=FNAME,STATUS='OLD',FORM='BINARY'
+!msf version	+        ,RECL=2 , IOSTAT=IOERR )
+
+
 cdec version          OPEN(IFILE,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
 cipk oct99 add iostat test
-clah version          OPEN(IFILE,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
-clah version     +        ,IOSTAT=IOERR)
+
+      OPEN(IFILE,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
+     +        ,IOSTAT=IOERR)
           IF(IOERR .NE. 0) THEN
             CALL IOSMSG(IOERR)
             IERMSG=1
@@ -250,109 +395,145 @@ clah version     +        ,IOSTAT=IOERR)
 
           FNAM2=FNAME
         ELSEIF(ID .EQ. 'INRST   ') THEN
-          NB=62
-          KRESTF=1
+!NiS,may06: The restart file can't be opened, if the input file is in Kalypso-2D format
+!           and the variable iaccyc, that shows the beginning time step, is (iaccyc > 1)
+          IF (IFIlE == 60 .and. IGEO == 2 .and. iaccyc > 1) then
+            WRITE (*,*)' You have chosen to give a restart file. ',
+     +        'If you want to restart from external file, then the ',
+     +        'beginning time step must be less than 2. The restart ',
+     +        'informations are read from geometry input file, this ',
+     +        'command line is skipped.'
+            CONTINUE
+          ELSE
+            NB=62
+            KRESTF=1
 cipk jan97
           iutub=1
 cipk oct99 add iostat test
-          OPEN(NB,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED'
-     +        ,IOSTAT=IOERR)
-          IF(IOERR .NE. 0) THEN
-            CALL IOSMSG(IOERR)
-            IERMSG=1
-          ENDIF
+            OPEN(NB,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED'
+     +          ,IOSTAT=IOERR)
+            IF(IOERR .NE. 0) THEN
+              CALL IOSMSG(IOERR)
+              IERMSG=1
+            ENDIF
 
-          FNAM3=FNAME
+            FNAM3=FNAME
+          ENDIF
+!-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'INBNRST ') THEN
-          NB=62
-          KRESTF=1
+          IF (IFIlE == 60 .and. IGEO == 2 .and. iaccyc > 1) then
+            WRITE (*,*)' You have chosen to give a restart file. ',
+     +        'If you want to restart from external file, then the ',
+     +        'beginning time step must be less than 2. The restart ',
+     +        'informations are read from geometry input file, this ',
+     +        'command line is skipped.'
+            CONTINUE
+          ELSE
+            NB=62
+            KRESTF=1
 cipk jan97
-          iutub=1
-          OPEN(NB,FILE=FNAME,STATUS='OLD',FORM='BINARY'
-     +        ,IOSTAT=IOERR)
+            iutub=1
+!msf version          OPEN(NB,FILE=FNAME,STATUS='OLD',FORM='BINARY'
+!msf version     +        ,IOSTAT=IOERR)
 cipk dec version          OPEN(NB,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
 cipk oct99 add iostat test
-clah version          OPEN(NB,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
-clah version     +        ,IOSTAT=IOERR)
-          IF(IOERR .NE. 0) THEN
-            CALL IOSMSG(IOERR)
-            IERMSG=1
-          ENDIF
+            OPEN(NB,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
+     +          ,IOSTAT=IOERR)
+            IF(IOERR .NE. 0) THEN
+              CALL IOSMSG(IOERR)
+              IERMSG=1
+            ENDIF
 
-          FNAM3=FNAME
+            FNAM3=FNAME
+          ENDIF
+!-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'OUTRST  ') THEN
           NLL=63
           OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM4=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'OUTBNRST') THEN
           NLL=63
-          OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version          OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-clah version          OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(NLL,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM4=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'OUTRES  ') THEN
           NOPT=64
           OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM5=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97 add file type option
         ELSEIF(ID .EQ. 'OUTBNRES') THEN
           NOPT=64
-          OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version       OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-clah version          OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(NOPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM5=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'VELFIL  ') THEN
           NIPT=65
           OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM7=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97 add file type option
         ELSEIF(ID .eq. 'VELBNFIL') THEN
           NIPT=65
-          OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version       OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-clah version          OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(NIPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM7=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUT2GE  ') THEN
           NAINPT=68
           OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM8=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97
         ELSEIF(ID .eq. 'OUTBN2GE') THEN
           NAINPT=68
-          OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version       OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-clah version          OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(NAINPT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM8=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUT3GE  ') THEN
           IFOT=67
           OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM9=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97
         ELSEIF(ID .eq. 'OUTBN3GE') THEN
           IFOT=67
-          OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version       OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-clah version          OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(IFOT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM9=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'IN3DGE  ') THEN
           IFIT=66
           OPEN(IFIT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM11=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk apr97
         ELSEIF(ID .eq. 'IN3DBNGE') THEN
           IFIT=66
-          OPEN(IFIT,FILE=FNAME,STATUS='OLD',FORM='BINARY'
-     +        ,IOSTAT=IOERR)
+!msf version          OPEN(IFIT,FILE=FNAME,STATUS='OLD',FORM='BINARY'
+!msf version     +        ,IOSTAT=IOERR)
 cipk dec version       OPEN(IFIT,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
 cipk oct99 add iostat test
-clah version          OPEN(IFIT,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
-clah version     +        ,IOSTAT=IOERR)
+      OPEN(IFIT,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT'
+     +        ,IOSTAT=IOERR)
           IF(IOERR .NE. 0) THEN
             CALL IOSMSG(IOERR)
             IERMSG=1
           ENDIF
 
           FNAM11=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'INELTFL ') THEN
           IQEUNIT=14
 cipk oct99 add iostat test
@@ -363,6 +544,7 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM13=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INELEV  ') THEN
           IHUNIT=12
 cipk oct99 add iostat test
@@ -373,6 +555,7 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM14=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INHYD   ') THEN
           IQUNIT=11
 cipk oct99 add iostat test
@@ -383,6 +566,7 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM15=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INHARM  ') THEN
           key=13
 cipk oct99 add iostat test
@@ -393,20 +577,22 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM16=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK AUG98 ADD OPTIONS
         ELSEIF(ID .eq. 'BWINDIN ') THEN
           IWINDIN=69
 cipk oct99 add iostat test
-          OPEN(UNIT=69,FILE=FNAME,STATUS='OLD',FORM='BINARY',
-     +    IOSTAT=IOERR)
+!msf version          OPEN(UNIT=69,FILE=FNAME,STATUS='OLD',FORM='BINARY',
+!msf version     +    IOSTAT=IOERR)
 cipk dec version       OPEN(UNIT=69,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
-cipk lah          OPEN(UNIT=69,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT')
+      OPEN(UNIT=69,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT')
           IF(IOERR .NE. 0) THEN
             CALL IOSMSG(IOERR)
             IERMSG=1
           ENDIF
 
           FNAM17=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'AWINDIN ') THEN
           IWINDIN=70
 cipk oct99 add iostat test
@@ -417,14 +603,16 @@ cipk oct99 add iostat test
           ENDIF
 
           FNAM17=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK AUG98 END ADDITIONS
 CIPK MAR00 ADD RMA FORMAT OUTPUT
         ELSEIF(ID .eq. 'OUTBNRMA') THEN
           IRMAFM=71
-          OPEN(IRMAFM,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
+!msf version          OPEN(IRMAFM,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY')
 cipk dec version       OPEN(IRMAFM,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-cipk lah          OPEN(IRMAFM,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(IRMAFM,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM18=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUL02  MOVE HEADER FORMATION TO LATER
 CIPK MAR00 END ADDITIONS
 *-
@@ -438,11 +626,10 @@ cipk oct99 add iostat test
           ENDIF
 
 cipk apr01 correct definition of fnam19
-
           FNAM19=FNAME
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Cipk jul01 add OUTCON option
-
         ELSEIF(ID .eq. 'OUTCON  ') THEN
           IOCON=21
           OPEN(UNIT=21,FILE=FNAME,STATUS='UNKNOWN',IOSTAT=IOERR)
@@ -453,6 +640,7 @@ Cipk jul01 add OUTCON option
 
           FNAM20=FNAME
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK MAY02 ADD WAVE DATA FILE
         ELSEIF(ID .eq. 'INWAVE  ') THEN
           IWVIN=101
@@ -463,7 +651,7 @@ CIPK MAY02 ADD WAVE DATA FILE
             IERMSG=1
           ENDIF
           FNAM21=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INBNWAVE') THEN
           IWVIN=101
           OPEN(IWVIN,FILE=FNAME,STATUS='OLD',FORM='BINARY'
@@ -473,7 +661,7 @@ CIPK MAY02 ADD WAVE DATA FILE
             IERMSG=1
           ENDIF
           FNAM21=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK MAY02 ADD SURFACE STRESS DATA FILE
         ELSEIF(ID .eq. 'INSSTR  ') THEN
           IWVFC=102
@@ -484,7 +672,7 @@ CIPK MAY02 ADD SURFACE STRESS DATA FILE
             IERMSG=1
           ENDIF
           FNAM22=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INBNSSTR') THEN
           IWVFC=102
           OPEN(IWVFC,FILE=FNAME,STATUS='OLD',FORM='BINARY'
@@ -494,7 +682,7 @@ CIPK MAY02 ADD SURFACE STRESS DATA FILE
             IERMSG=1
           ENDIF
           FNAM22=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INDFSSTR') THEN
           IWVFC=104
           OPEN(IWVFC,FILE=FNAME,STATUS='OLD',FORM='FORMATTED'
@@ -504,7 +692,7 @@ CIPK MAY02 ADD SURFACE STRESS DATA FILE
             IERMSG=1
           ENDIF
           FNAM22=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTBNBED') THEN
           IBEDOT=103
           OPEN(IBEDOT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY'
@@ -514,24 +702,23 @@ CIPK MAY02 ADD SURFACE STRESS DATA FILE
             IERMSG=1
           ENDIF
           FNAM23=FNAME
-
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK AUG02 ADD SMS FORMAT OUTPUT
         ELSEIF(ID .eq. 'OUTSMS  ') THEN
           ISMSFM=73
           OPEN(ISMSFM,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM24=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTSMS1 ') THEN
           ISMSFM1=74
           OPEN(ISMSFM1,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM25=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'SWANFL  ') THEN
 	    SWANFL=FNAME
           ISWANR=1
 	    FNAM26=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTBNICE') THEN
           IBEDOT=103
           OPEN(IBEDOT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY'
@@ -541,13 +728,12 @@ CIPK AUG02 ADD SMS FORMAT OUTPUT
             IERMSG=1
           ENDIF
           FNAM23=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTSMS2 ') THEN
           ISMSFM2=81
           OPEN(ISMSFM2,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
           FNAM27=FNAME
-
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTBNWAV') THEN
           IWAVOT=82
           OPEN(IWAVOT,FILE=FNAME,STATUS='UNKNOWN',FORM='BINARY'
@@ -557,68 +743,70 @@ CIPK AUG02 ADD SMS FORMAT OUTPUT
             IERMSG=1
           ENDIF
           FNAM28=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD WEIGHTING ASCII  FILE
         ELSEIF(ID .eq. 'INWGT   ') THEN
           INWGT=10
           OPEN(INWGT,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
           FNAM36=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD WEIGHTING BINARY FILE
         ELSEIF(ID .eq. 'INBNWGT ') THEN
           INBNWGT=10
-          OPEN(INBNWGT,FILE=FNAME,STATUS='OLD',FORM='BINARY')
+!msf version          OPEN(INBNWGT,FILE=FNAME,STATUS='OLD',FORM='BINARY')
 cipk dec version       OPEN(INBNWGT,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-cipk lah version       OPEN(INBNWGT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(INBNWGT,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM37=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD WEIGHTING ASCII STRESS FILE FOR WEIGHTING
         ELSEIF(ID .eq. 'INSTRESS') THEN
           INSTR=15
           OPEN(INSTR,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
           FNAM27=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'INBNSTRS') THEN
           INBNSTR=15
-          OPEN(INBNSTR,FILE=FNAME,STATUS='OLD',FORM='BINARY')
+!msf version          OPEN(INBNSTR,FILE=FNAME,STATUS='OLD',FORM='BINARY')
 cipk dec version       OPEN(INBNSTR,FILE=FNAME,STATUS='UNKNOWN',FORM='UNFORMATTED')
-cipk lah version       OPEN(INBNSTR,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
+      OPEN(INBNSTR,FILE=FNAME,STATUS='UNKNOWN',ACCESS='TRANSPARENT')
           FNAM29=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD RM1 input file
         ELSEIF(ID(1:5) .eq. 'INRM1') THEN
           IGEO=0
           IFILE=60
           OPEN(IFILE,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
           FNAM2=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'OUTWGT  ') THEN
           IOWGT=16
           OPEN(16,FILE=FNAME,STATUS='UNKNOWN')
           FNAM30=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'OUTBNWGT') THEN
           IOBNWGT=17
-          OPEN(17,FILE=FNAME,STATUS='OLD',FORM='BINARY')
+!msf version          OPEN(17,FILE=FNAME,STATUS='OLD',FORM='BINARY')
 cipk dec version          OPEN(17,FILE=FNAME,STATUS='OLD',FORM='UNFORMATTED')
-cipk lah        OPEN(17,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT')
+      OPEN(17,FILE=FNAME,STATUS='OLD',ACCESS='TRANSPARENT')
           FNAM31=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'INSRCORD') THEN
           ICORDIN=19
           OPEN(19,FILE=FNAME,STATUS='OLD')
           FNAM32=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN05 ADD INCSTR input file
         ELSEIF(ID(1:6) .eq. 'INCSTR') THEN
           INCSTR=20
           OPEN(INCSTR,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
           FNAM33=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN05 ADD INTIMS input file
         ELSEIF(ID(1:6) .eq. 'INTIMS') THEN
           INTIMS=22
           OPEN(INTIMS,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
           FNAM34=FNAME
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN05 ADD MESH OUTPUT file FROM TRIANGULATION
         ELSEIF(ID(1:7) .eq. 'MESHOUT') THEN
           IMESHOUT=23
@@ -649,8 +837,12 @@ CIPK MAY06
       ELSEIF(ID .EQ. 'ENDFIL  ') THEN
         GO TO 210
       ENDIF
+
       GO TO 200
   210 CONTINUE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 cipk sep99
       if(iermsg .eq. 1) then
         write(*,*) 'Execution terminated after errors opening file(s)'
@@ -660,6 +852,9 @@ CIPK SEP04 CREATE ERROR FILE
         write(75,*) 'Execution terminated after errors opening file(s)'
         stop
       endif
+
+
+!NiS,mar06,comment: LAYOUTBLOCK for output file
 cipk dec01 add geometry file name to information
 c         first the directory, then the file name
 CIPK JUL02 REMOVE CONDITION      IF(IRMAFM .EQ. 71) THEN
@@ -667,7 +862,7 @@ CIPK      START FORMING HEADER
       DO J=11,1000
         HEADER(J:J)=' '
       ENDDO
-      HEADER(1:10)='RMA10     ' 
+      HEADER(1:10)='RMA10     '
       CALL DATE_AND_TIME(DATEC,TIMEC,ZONEC,DTI)
       HEADER(11:20)=DATEC
       HEADER(21:30)=TIMEC
@@ -691,7 +886,13 @@ CIPK SEP04 CREATE ERROR FILE
         WRITE(75,*) ' ERROR ---- NO OUTPUT FILE DEFINED'
         WRITE(75,*) '   EXECUTION TERMINATED'
         STOP
-      ENDIF 
+      ENDIF
+
+!NiS,may06: global use of geometry file name and restart file name
+      modellein = FNAM2
+      modellrst = FNAM3
+!-
+
       WRITE(LOUT,6010) FNAM0
  6010 FORMAT(' RMA-10 INPUT FILE NAME  ',A96)
       IF(MMET .GT. 0) WRITE(LOUT,6016) FNAM12
@@ -747,7 +948,7 @@ cipk MAY02
  6035 FORMAT(' OUTPUT BED DATA FILE NAME     ',A96)
 
 CIPK AUG02
-      IF(ISMSGN .EQ. 61) WRITE(LOUT,6042) FNAM2
+      IF(ISMSGN .EQ. 61) WRITE(LOUT,6042) FNAM2                 !NiS,mar06,comment: unit number should be 60 not 61
  6042 FORMAT(' INPUT SMS BIN GEOMETRY FILE NAME     ',A96)
 C      IF(IBEDOT .EQ. 103) WRITE(LOUT,6043) FNAM23
 C 6043 FORMAT(' OUTPUT ICE DATA FILE NAME     ',A96)
@@ -777,7 +978,7 @@ CIPK JUN03
         WRITE(LOUT,6044) FNAM32
  6044   FORMAT(' INPUT COORDINATE FILE NAME  ',A96)
       ENDIF
-     
+
       IF(IWVFC .EQ. 104) WRITE(LOUT,6045) FNAM22
  6045 FORMAT(' INPUT WAVE DATA DIRECTORY FILE NAME     ',A96)
       IF(ISWANR .EQ. 1) WRITE(LOUT,6046) FNAM26
@@ -794,7 +995,7 @@ CIPK JUN05
       IF(IMESHOUT .GT. 0) WRITE(LOUT,6054) FNAM35
  6054 FORMAT(' OUTPUT MESHED RM1 FORMAT FILE NAME   ',A96)
 CIPK MAY06
-      IF(AMASSOUT .GT. 0) WRITE(LOUT,6055) FNAM38
+      IF(IMASSOUT .GT. 0) WRITE(LOUT,6055) FNAM38
  6055 FORMAT(' OUTPUT MASS BALANCE FILE NAME   ',A96)
 C-
         NSCR=9
@@ -806,11 +1007,9 @@ C-
       RETURN
       END
 c
-C************************************************************************
 
-c
-C************************************************************************
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       function lenstr(str,iswt)
 c
 c  Find length of string (position of last non-blank character or period)
@@ -833,6 +1032,9 @@ c
 10    continue
       return
       end
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       subroutine iosmsg(ioerr)
         write(*,*) 'Cannot open file, error reported'
       return
