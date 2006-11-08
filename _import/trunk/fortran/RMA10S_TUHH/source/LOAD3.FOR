@@ -157,7 +157,6 @@ C-
 !      if (maxn.eq.1) WRITE(9998,*) 'IMAT(',J,') = ', IMAT(J)
 !-
 
-
 CIPK DEC00 REVISE TO ALLOW FOR GATE STRUCTURE
 
         NM=IMAT(J)
@@ -177,7 +176,6 @@ CIPK OCT98 CONVERT TO F90
         ENDIF
         !NiS,may06: if no turbulent exchange coefficient, jump over element
         IF(ORT(L,1) .EQ. 0.) GO TO 199
-
         ILK=1
 
         !NiS,may06: ITEQV.eq.5 means forced reduction to plan view
@@ -598,9 +596,22 @@ C
         ELSEIF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 
 cipk JUN05 first analyse 2-d structures
-
-        
+          SIDL1=DIST(NOP(NN,1),NOP(NN,3))
+          SIDL2=DIST(NOP(NN,7),NOP(NN,5))
+          NMID1=NOP(NN,2)
+          NMID2=NOP(NN,6)
+          IF(ELTON(NMID1,1) .NE. 0) THEN
+            NAD1=ELTON(NMID1,1)
+          ELSE
+            NAD1=ELTON(NMID1,2)
+          ENDIF            
+          IF(ELTON(NMID2,1) .NE. 0) THEN
+            NAD2=ELTON(NMID2,1)
+          ELSE
+            NAD2=ELTON(NMID2,2)
+          ENDIF            
           IF(NCORN(NN) .EQ. 8) THEN
+
             DO K=1,3
               N1=NOP(NN,K)
               N2=NOP(NN,8-K)
@@ -613,8 +624,8 @@ cipk JUN05 first analyse 2-d structures
                   CALL WFORM(Q1,VEL(3,N1),WSLL(N1),WV1,VEL(3,N2)
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
                 ELSE
-	          CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
-	        ENDIF
+	            CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+	          ENDIF
 
                 IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                   CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
@@ -1246,10 +1257,8 @@ C         write(76,*) 'load ivrsid2',ivrsid
             endif
          enddo
       endif
-
 cipk oct96  go to calculate DRODXIN
       call presr
-
       do n=1,ne
         nn=nelord(n)
 cipk feb98

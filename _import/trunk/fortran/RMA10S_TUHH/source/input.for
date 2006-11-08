@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND
@@ -408,8 +409,13 @@ cipk mar06 allow for output file rewind
 	  IOUTRWD=NCYC+1
       ENDIF
 
+CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL
+      ICNSV=0
+      IAVEL=0
+
 CIPK MAR06 ADD TESTMODE
 
+   18 CONTINUE
       IF(ID(1:4) .EQ. 'TEST') THEN
       
         READ(DLIN,'(I8,8F8.0)') ITSTMOD,TSTVAR
@@ -422,31 +428,41 @@ cipk dec99 add initial condition
       
         READ(DLIN,'(F8.0)') ELEV1
         call ginpt(lin,id,dlin)
-      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAY02 add sand data
-      IF(ID(1:3) .EQ. 'SND') THEN
+      ELSEIF(ID(1:3) .EQ. 'SND') THEN
       
         LSAND=6 
         call ginpt(lin,id,dlin)
-      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk APR05 add CLAY data
-      IF(ID(1:3) .EQ. 'SED') THEN
+      ELSEIF(ID(1:3) .EQ. 'SED') THEN
         READ(DLIN,'(I8)') INEWBED
         LSS=6 
         call ginpt(lin,id,dlin)
-      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAY02 add BEDLOAD OPTION data
-      IF(ID(1:3) .EQ. 'BED') THEN
+      ELSEIF(ID(1:3) .EQ. 'BED') THEN
       
         LBED=1 
         call ginpt(lin,id,dlin)
+CIPK SEP06
+      ELSEIF(ID(1:5) .EQ. 'CONSV') THEN
+      
+        ICNSV=1 
+        call ginpt(lin,id,dlin)
+      ELSEIF(ID(1:4) .EQ. 'AVEL') THEN
+      
+        IAVEL=1 
+        call ginpt(lin,id,dlin)
+      ELSE
+        GO TO 19
       ENDIF
+      GO TO 18
+   19 CONTINUE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk aug02 add BEDLOAD OPTION data
