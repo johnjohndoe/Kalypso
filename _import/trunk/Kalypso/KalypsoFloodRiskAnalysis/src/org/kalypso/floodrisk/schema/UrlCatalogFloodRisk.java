@@ -56,6 +56,8 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 {
+  public static final String NS_GML = "http://www.opengis.net/gml";
+
   public static final String NS_CONTEXTMODEL = "http://www.tuhh.de/floodrisk/contextModel";
 
   public static final String NS_RISKCONTEXTMODEL = "http://www.tuhh.de/floodrisk/riskContextModel";
@@ -66,9 +68,9 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 
   public static final String NS_RECTIFIEDGRIDCOVERAGE = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
 
-  public static final String NS_WATERLEVELDATA = "http://www.tuhh.de/floodrisk/floodrisk/waterlevelData";
+  public static final String NS_WATERLEVELDATA = "http://www.tuhh.de/floodrisk/waterlevelData";
 
-  public static final String NS_STATISTICDATA = "http://www.tuhh.de/floodrisk/floodrisk/statisticData";
+  public static final String NS_STATISTICDATA = "http://www.tuhh.de/floodrisk/statisticData";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)

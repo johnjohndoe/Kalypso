@@ -263,7 +263,7 @@ public class ContextModel
    */
   private Integer getID( String fid, IFeatureType featureType )
   {
-    String id = fid.replaceFirst( featureType.getName(), "" );
+    String id = fid.replaceFirst( featureType.getQName().getLocalPart(), "" );
     return new Integer( id );
   }
 

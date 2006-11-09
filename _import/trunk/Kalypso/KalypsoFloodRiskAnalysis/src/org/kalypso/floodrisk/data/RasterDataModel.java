@@ -47,17 +47,12 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -133,29 +128,35 @@ public class RasterDataModel
 
     QName rootFeatureTypeName = new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "RasterDataModel");
     //QName rgcFeatureTypePropertyName = new QName(UrlCatalogFloodRisk.NS_RECTIFIEDGRIDCOVERAGE, "RectifiedGridCoverageMember");
-    QName rgcFeatureTypePropertyName = new QName(NS.GML3, "RectifiedGridCoverageType");
 
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
     Feature rootFeature = FeatureFactory.createFeature( null, "RasterDataModel0", rootFeatureType, true );
+
+    QName rgcFeatureTypePropertyName = new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "RectifiedGridCoverageMember");
     IPropertyType ftp_rgc = rootFeatureType.getProperty( rgcFeatureTypePropertyName );
-    //IFeatureType aaa = ((IRelationType) ftp_rgc).getTargetFeatureType();
     
-    /* Feature type:
-    {http://www.tuhh.de/floodrisk/rectifiedGridCoverage}RectifiedGridCoverage
-    - {http://www.opengis.net/gml}boundedBy
-    - {http://www.opengis.net/gml}rectifiedGridDomain
-    - {http://www.opengis.net/gml}rangeSet
-    - {http://www.opengis.net/gml}coverageFunction
-    - {http://www.opengis.net/gml}metaDataProperty
-    - {http://www.opengis.net/gml}description
-    - {http://www.opengis.net/gml}name
-    */
+    // TODO Dejan: Ubaciti gridDomain i rangeSet u rectifiedGridCoverageFeature
+    
     // create feature: RectifiedGridCoverage
-    Object[] properties = new Object[] { null, grid.getGridDomain(), grid.getRangeSet(), null, null, null, null };
-    //Object[] properties = new Object[] { "", "", null, grid.getGridDomain(), grid.getRangeSet() };
-    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( rootFeature, "RectifiedGridCoverage0", rootFeatureType, properties );
+    
+    //Object[] properties = new Object[] { null, null, null, null, null, new RectifiedGridDomainAsFeature(rootFeature, rootFeatureType, null, null, grid.getGridDomain()), grid.getRangeSet() };
+    
+    //Feature gridFeature = FeatureFactory.createFeature( null, "RectifiedGridDomain0", schema.getFeatureType( new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "rectifiedGridDomain") ), true );
+    
+    //Object[] properties = new Object[] { null, null, null, null, null, grid.getGridDomain(), grid.getRangeSet() };
+    //Object[] properties = new Object[] { grid.getGridDomain(), grid.getRangeSet() };
+    final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( rootFeature, "RectifiedGridCoverage0", rootFeatureType, true );
+    
+    //rectifiedGridCoverageFeature.setProperty( new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "rectifiedGridDomain"), grid.getGridDomain() );
+    //rectifiedGridCoverageFeature.setProperty( new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "rangeSet"), grid.getRangeSet() );
+    
+    //IPropertyType aaa = schema.getFeatureType( rootFeatureTypeName ).getProperty( new QName(UrlCatalogFloodRisk.NS_RASTERDATAMODEL, "rectifiedGridDomain") );
+    //FeatureHelper.addProperty(rectifiedGridCoverageFeature, aaa, grid.getGridDomain());
+    //FeatureHelper.setProperties( result, props )
     //final Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( rootFeature, "RectifiedGridCoverage0", ((IFeatureType) ftp_rgc).getTargetFeatureType(), properties );
     //FeatureHelper.addProperty(rootFeature, rootFeatureType., rectifiedGridCoverageFeature );
+    
+    // check if ftp_rgc == null
     FeatureHelper.addProperty(rootFeature, ftp_rgc, rectifiedGridCoverageFeature );
     
     // create workspace
@@ -163,8 +164,8 @@ public class RasterDataModel
 
     // serialize Workspace
     FileWriter fw = new FileWriter( rasterDataModelGML );
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    registry.toString();
+    //final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    //registry.toString();
     GmlSerializer.serializeWorkspace( fw, workspace );
     fw.close();
   }

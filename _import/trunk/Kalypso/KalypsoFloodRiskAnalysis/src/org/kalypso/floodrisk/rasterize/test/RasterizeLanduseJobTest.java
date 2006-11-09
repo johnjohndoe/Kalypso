@@ -62,7 +62,7 @@ public class RasterizeLanduseJobTest extends TestCase
 
   private void testRasterizeLanduse( RasterizeLanduseJob job ) throws SimulationException
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
+    String base = "D://Dejan//eclipse3.2//runtime-Risk//fff//";
     // Input
     int numInputBeans = 3;
     SimulationDataPath[] input = new SimulationDataPath[numInputBeans];

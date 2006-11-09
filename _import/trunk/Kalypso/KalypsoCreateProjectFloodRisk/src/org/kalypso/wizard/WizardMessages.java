@@ -6,8 +6,6 @@ import java.util.ResourceBundle;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author huebsch
  */
 public class WizardMessages
