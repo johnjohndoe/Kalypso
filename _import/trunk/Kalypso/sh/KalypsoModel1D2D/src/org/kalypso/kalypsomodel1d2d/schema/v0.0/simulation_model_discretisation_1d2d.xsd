@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  
+	Provide schema elements to model flow relationships
+	
+	@author Patrice Congo
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	<!-- remote from ogc -->
+	<!-- xs:import 	
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
+
+	<!-- local modified for successful binding -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+		
+		
+		<!--***********************************************************************
+		Definition discretisation Model 
+		********************************************************************-->
+	<xs:element 
+		name="discretisationModel" 
+		type="wb:DiscretisationModel1D2DPropertyType"/>
+	<xs:complexType name="DiscretisationModel1D2DPropertyType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence>
+					
+					<xs:element 
+						name="feComplexElements"
+						type="wb:FEComplexElementsPropertyType"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element
+						name="feElements"
+						type="wb:FEElementsPropertyType"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element
+						name="feNodes"
+						type="wb:FENodePropertyType"/>
+						
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:element 
+		name="FENode"
+		type="wb:FENodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents a node in a finite element network.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="FENodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The type for finite elements node.  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb:FEAbstractNodeType">
+				<xs:sequence>
+					<xs:element 	
+						ref="gml:pointProperty" 
+						minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	<xs:complexType name="DirectedFENodePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:FENode"/>
+		</xs:sequence>
+		<xs:attribute name="orientation" type=" gml:SignType " default="+"/>
+		<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>
+	</xs:complexType>
+
+	<xs:element 
+		name="FEEdge"
+		type="wb:FEEdgeType">
+	
+	</xs:element>
+	
+	<xs:complexType 
+		name="FEEdgeType">
+		<xs:annotation>
+			<xs:documentation>
+				Edge in a finite element network.
+				It is defined by 2 FE nodes and a middle node.
+				Tow cases are possible:
+					==For a real edge these 3 node muss have different 
+						geometric properties.
+					==Single point edge are also possible, in that case the all
+				
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base=" gml:AbstractTopoPrimitiveType">
+				<xs:sequence>	
+					<xs:choice>
+						<xs:sequence>
+							<xs:element 
+								name="directedFENode"
+								type="wb:DirectedFENodePropertyType"
+								minOccurs="2" 
+								maxOccurs="2"/>
+							<xs:element
+								name="middleNode"
+								type="wb:FENodeType"
+								minOccurs="1" maxOccurs="1"/>
+						</xs:sequence>
+						
+						<xs:element 
+							name="node"
+							type="wb:FENodeType"/>					
+					</xs:choice>
+					<xs:element
+						name="container"
+						type="wb:FEEdgeContainerPropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="FEDirectedEdgePropertyType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element ref="wb:FEEdge"/>
+		</xs:sequence>
+		<xs:attribute name="orientation" type="gml:SignType" default="+"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+
+	<!--  Abstracs edges, elements, complex element -->
+	
+	<xs:complexType 
+		name="FENodePropertyType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element ref="wb:_FENode"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
+		name="_FENode"
+		abstract="true"
+		type="wb:FEAbstractNodeType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for all finite elements
+			</xs:documentation>
+		</xs:annotation>		
+	</xs:element>
+		
+	<xs:complexType 
+		name="FEAbstractNodeType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Abtracts type for the finite elements nodes.
+				Its container property linkt it to the containing super
+				elements. In this case edges.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractTopologyType">
+				<xs:sequence>
+					<xs:element
+						name="container"
+						type="wb:FEEdgeContainerPropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	
+	<xs:complexType name="FEEdgesPropertyType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element ref="wb:_FEEdge"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
+		name="_FEEdge"
+		abstract="true"
+		type="wb:FEAbstractEdgeType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for all finite element
+			</xs:documentation>
+		</xs:annotation>		
+	</xs:element>
+		
+	<xs:complexType 
+		name="FEAbstractEdgeType"
+		abstract="true">
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractTopologyType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	
+	<xs:complexType name="FEElementsPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element ref="wb:_FEElement"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="_FEElement"
+		abstract="true"
+		type="wb:FEAbstractElementType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for all finite element
+			</xs:documentation>
+		</xs:annotation>		
+	</xs:element>
+	
+	<xs:complexType 
+		name="FEAbstractElementType"
+		abstract="true">
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractTopologyType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<xs:complexType name="FEComplexElementsPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element ref="wb:_FEComplexElement"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="_FEComplexElement"
+		abstract="true"
+		type="wb:FEAbstractComplexeElementType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for all finite element
+			</xs:documentation>
+		</xs:annotation>		
+	</xs:element>	
+	<xs:complexType 
+		name="FEAbstractComplexeElementType"
+		abstract="true">
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractTopologyType">
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	<!-- **************** concrete elements -->
+	<xs:element 
+		name="FE1DElement"
+		type="wb:FE1DElementType"
+		substitutionGroup="wb:_FEElement"
+	/>
+	<xs:complexType name="FE1DElementType">
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractElementType">
+				<xs:sequence>
+						<xs:element 
+						name="directedEdge"
+						type="wb:FEEdgeType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	<!-- ==============================2 D Element ============================ -->
+	<xs:complexType name="FE2DElementsPropertyType">
+		<xs:complexContent>
+			<xs:restriction base="wb:FEComplexElementsPropertyType">
+				<xs:sequence minOccurs="1" maxOccurs="unbounded">
+					<xs:element ref="wb:FE2DElement"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element 
+		name="FE2DElement"
+		type="wb:FE2DElementType"
+		substitutionGroup="wb:_FEElement"/>
+	
+	<xs:complexType name="FE2DElementType">
+		<xs:annotation>
+			<xs:documentation>
+				An 2D fe element is define bei 3 edges or 4 edges.
+				singular edges cannot be used.
+				the edges mus build a close kurve.				
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractElementType">
+				<xs:choice>
+					<xs:sequence>
+						<xs:element 
+							name="directedEdge"
+							type="wb:FEEdgeType"
+							minOccurs="3" maxOccurs="3"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element 
+							name="directedEdge"
+							type="wb:FEEdgeType"
+							minOccurs="4" maxOccurs="4"/>
+					</xs:sequence>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- ================================================================ -->
+	<xs:element 
+		name="ContinuityLine"
+		type="wb:FEContinuityLineType"
+		substitutionGroup="wb:_FEElement"
+		/>
+	<xs:complexType name="FEContinuityLineType">
+		<xs:annotation>
+			<xs:documentation>
+				A continuity is defined by a set of edges which for a kurve.
+				==the resulting kurve is open
+				==and non self-crossing
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractElementType">
+					<xs:sequence>
+						<xs:element 
+							name="directedEdge"
+							type="wb:FEEdgeType"
+							minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- ================================================================= -->
+	<xs:element 
+		name="Junction1D2D"
+		type="wb:FEJunction1D2DType"
+		substitutionGroup="wb:_FEElement"/>
+	<xs:complexType name="FEJunction1D2DType">
+		<xs:annotation>
+			<xs:documentation>
+				A 1D 2D junction. It is a curve element made of edges.
+				The starting and ending node must belong to finit element 
+				from different nature. the starting point is from a one d structure
+				and the ending node is a 2D network or a continuity line.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractElementType">
+					<xs:sequence>
+						<xs:element 
+							name="directedEdge"
+							type="wb:FEEdgeType"
+							minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- ================================================================= -->
+	<xs:element 
+		name="Bridge"
+		type="wb:FEBridgeType"
+		substitutionGroup="wb:_FEElement"/>
+	<xs:complexType name="FEBridgeType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractElementType">
+					<xs:sequence>
+						<xs:element 
+							name="directedEdge"
+							type="wb:FEEdgeType"
+							minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element
+							name="shape"
+							type="gml:GeometryPropertyType"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<!-- ======================Main Channel=============================== -->
+	<xs:element 
+		name="MainChannel"
+		type="wb:FEMainChannelType"
+		substitutionGroup="wb:_FEComplexElement"/>
+	<xs:complexType name="FEMainChannelType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractComplexeElementType">
+					<xs:sequence>
+						<xs:element 
+							name="channel2DElement"
+							type="wb:FE2DElementsPropertyType"
+							minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	<!-- ======================Channel Foreland============================= -->
+	<xs:element 
+		name="MainForeland"
+		type="wb:FEChannelForelandType"
+		substitutionGroup="wb:_FEComplexElement"/>
+	<xs:complexType name="FEChannelForelandType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:FEAbstractComplexeElementType">
+					<xs:sequence>
+						<xs:element 
+							name="foreland2DElement"
+							type="wb:FE2DElementsPropertyType"
+							minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	<!-- **************** Container types **************************** -->
+	
+	<xs:complexType name="FEEdgeContainerPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+		<xs:element ref="wb:FE1DElement"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:complexType name="FENodeContainerPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+		<xs:element ref="wb:FEEdge"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:complexType name="FEElementContainerPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+		<xs:element ref="wb:_FEComplexElement"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	
+		
+</xs:schema>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  
+	Provide schema elements to model flow relationships
+	
+	@author Patrice Congo
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	<!-- remote from ogc -->
+	<!-- xs:import 	
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
+
+	<!-- local modified for successful binding -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+		
+		
+			<!--*********************************************************************** 
+		Definition terrain Model 
+		********************************************************************-->
+<!-- xs:element name="terrainModel" type="xs:string"/ -->
+
+	<xs:complexType 
+		name="TerrainModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property type to defined terrain model of a 1d 2d static model
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wb:TerrainModel"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+		name="TerrainModel" 
+		type="wb:TerrainModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Terrain model element with one terrain elevation element and 
+				and rougthness layer polygon elements.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+		
+	<xs:complexType 
+		name="TerrainModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Defined a terrain model type that contains an elevation model
+				and a rougthness layer polygon 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				name="terrainElevation"
+				type="wb:TerrainElevationModelPropertyType"
+				minOccurs="1" maxOccurs="1"/>
+			<xs:element 
+				name="rougthnessLayerPolygons"
+				type="wb:RougthnessLayerPolygonCollectionType"
+				minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType 
+		name="TerrainElevationModelPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				To define an elevation model element for typicaly a terrain model
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:TerrainElevationModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="TerrainElevationModel"
+		type="wb:TerrainElevationModelType"
+		/>
+	<xs:complexType 
+		name="TerrainElevationModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Abstracts a terrain elevation. which kann hold a digital
+				elevation model, which is just a cloud of points or a  
+				triangulated irregular network
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element 
+						name="digitalElevationModel"
+						type="wb:DigitalElevationModelPropertyType"/>
+					<xs:element ref="wb:triangulatedIrregularNetwork"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+		
+	<xs:complexType name="DigitalElevationModelPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Propriety type to hold a digital elevation model element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:DigitalElevationModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="DigitalElevationModel" 
+		type="wb:DigitalElevationModelType" 
+		substitutionGroup="gml:posList"/>
+		
+	<!-- can be put in the controlPoint of TIN -->
+	<xs:complexType name="DigitalElevationModelType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents cloud of points with (x y z) cordinates
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:DirectPositionListType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- +++++++++ -->
+	<xs:element 
+		name="triangulatedIrregularNetwork" 
+		type="wb:TriangulatedIrregularNetworkPropertyType"/>
+	<xs:complexType name="TriangulatedIrregularNetworkPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:TriangulatedIrregularNetwork"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<xs:element 
+		name="TriangulatedIrregularNetwork" 
+		type="wb:TriangulatedIrregularNetworkType" 
+		substitutionGroup="gml:Surface"/>
+	<!-- check surface subs -->
+	<xs:complexType 
+		name="TriangulatedIrregularNetworkType">
+		<xs:complexContent>
+			<xs:extension base="gml:TinType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- check this about best practice -->
+			
+	<xs:complexType 
+		name="RougthnessLayerPolygonCollectionType">
+		<xs:complexContent>
+			<xs:restriction 
+				base=" gml:FeatureCollectionType ">
+				<xs:sequence>
+					<xs:element ref="wb:rougthnessLayerMember"/>
+					<xs:element ref="wb:rougthnessLayerPolygonMembers"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element
+		name="rougthnessLayerPolygonMembers"
+		type="wb:RougthnessLayerPolygonArrayPropertyType"/>
+	<xs:element 
+		name="rougthnessLayerMember"
+		type="wb:RougthnessLayerPolygonPropertyType"/>
+		
+	<xs:complexType name="RougthnessLayerPolygonArrayPropertyType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureArrayPropertyType">
+				<xs:sequence>
+					<xs:element 
+						ref="wb:RougthnessPolygon" 
+						minOccurs="0" 
+						maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType 
+		name="RougthnessLayerPolygonPropertyType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeaturePropertyType">
+				<xs:sequence minOccurs="0">
+					<xs:element ref="wb:RougthnessPolygon"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element 
+		name="RougthnessPolygon"
+		type="wb:RougthnessPolygonType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation>
+				Represents an area with uniform roughtness. 
+				The rogthness is identify by a key
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+		
+	<xs:complexType name="RougthnessPolygonType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="gml:polygonProperty"/>
+					<xs:element 
+						name="rougthnessID"
+						type="xs:string"
+						minOccurs="1"	
+						maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
