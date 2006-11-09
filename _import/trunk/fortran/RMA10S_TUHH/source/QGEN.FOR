@@ -1,5 +1,5 @@
 cipk  last update feb 09 2001 allow for zero length cc lines
-C     Last change:  IPK   5 Oct 98    1:49 pm
+C     Last change:  K     9 Nov 2006    9:56 am
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
       !nis,sep06,com: Overgiven variables:
@@ -13,6 +13,9 @@ C     Last change:  IPK   5 Oct 98    1:49 pm
 !nis,sep06: Usage of module necessary for using amf-subroutine
       USE BLKDRMOD
 !-
+!nis,nov06: Usage of ParaKalyps for Darcy-Subroutine
+      USE ParaKalyps
+!-
       SAVE
 C-
 C-..... Generate specified total flow boundary conditions
@@ -24,9 +27,16 @@ C-
 
 !nis,sep06: changes for good variable passing
 !      REAL     :: lambda, betspeck, betd, fliesstiefe
-      REAL     :: lambda, betspeck, betd
+      REAL         :: lambda, betspeck, betd
+      !nis,nov06: cwr_line for intentinout-property of Darcy-subroutine
+      REAL         :: cwr_line
+      !-
       REAL(KIND=8) :: fliesstiefe
-      REAL(KIND=8) :: d1,d2,d3,d1v,d3v
+      !nis,nov06: For proper passing d2 must be KIND=4
+      !REAL(KIND=8) :: d1,d2,d3,d1v,d3v
+      REAL(KIND=8) :: d1,d3,d1v,d3v,d2_kind8
+      REAL         :: d2
+      !-
 !-
 
       REAL     :: cos_in_grad, sin_in_grad
@@ -678,12 +688,18 @@ C-
             !nis,sep06,com: Average the water depth for the midside node
             d2 = (d1 + d3) / 2.0
 
+              !nis,nov06,testing
+              !WRITE(*,*) 'test:', lineimat(j,k+1)
+              !WRITE(*,*) 'test:', ort(lineimat(j,k+1),5)
+              !WRITE(*,*) 'test:', cniku(lineimat(j,k+1))
+              !-
+
             !nis,testing
             !WRITE(*,*) 'd1,d2,d3,d1v,d3v: ', d1,d2,d3,d1v,d3v
             !-
 
             !nis,sep06,com: If roghness-value.gt.0 applied Darcy-Weisbach-law (ks-value)
-            IF (ort (lineimat (j, k + 1), 5) .gt.0.) then
+            IF (cniku (lineimat (j, k + 1)) .gt.0.) then
 !             Darcy-Weisbach
                                                                         
               !nis,sep06,com: Beginning corner node of the actual CCL-segment (1/6 of the element width)
@@ -692,8 +708,15 @@ C-
               vecq = sqrt (vel (1, na) **2 + vel (2, na) **2)
               !nis,sep06,com: Calculate the flow resistance of the beginning corner node of the actual CCL-segment
               !    darcy (lambda, vecq, h,  ks,                           a,  dp, nn, morph, bedform, mel, c_wr)
-              CALL darcy (lambda, vecq, d1, ort (lineimat(j, k + 1), 5),
-     +                    0., 0., 0,  0,     bedform, mel, 1.0)
+              !nis,nov06: Replacing 1.0 by cwr_line for intentinout property of the Darcy-Subroutine and adding variable setting before
+              !           usage of gl_bedform is necessary because, the parameter is already in the Darcy-Subroutine, but there are no
+              !           calculations for that yet.
+              cwr_line = 1.0
+!              CALL darcy (lambda, vecq, d1, ort (lineimat(j, k + 1), 5),
+!     +                    0., 0., 0,  0,     bedform, mel, cwr_line)
+              CALL darcy (lambda, vecq, d1, cniku (lineimat(j, k + 1)),
+     +                    0., 0., 0,  0,     gl_bedform, mel, cwr_line)
+              !-
               !nis,sep06,com: teilline represents the Conveyance factor of the element part.
               teilline(k) = teilline(k) + xl*(d1** (3./2.)) *
      +                      ((78.48/lambda)**0.5)
@@ -706,8 +729,24 @@ C-
               !nis,sep06,com: Calculate the flow velocity at the midside node of the actual CCL-segment
               IF (ncc.gt.0) vecq = sqrt (vel(1,ncc)**2 + vel(2,ncc)**2)
               !nis,sep06,com: Calculate the flow resistance of the midside node of the actual CCL-segment
-              CALL darcy (lambda, vecq, d2, ort (lineimat (j, k+1), 5),
-     +                    0., 0., 0,  0, bedform, mel, 1.0)
+              !nis,nov06: Replacing 1.0 by cwr_line for intentinout property of the Darcy-Subroutine and adding variable setting before,
+              !           usage of gl_bedform is necessary because, the parameter is already in the Darcy-Subroutine, but there are no
+              !           calculations for that yet.
+              !           d2 must be KIND=4, so it is set by a temporary variable.
+              cwr_line = 1.0
+              d2_kind8 = d2
+              !nis,nov06,testing
+              !WRITE(*,*) 'd2_kind8:', d2_kind8
+              !WRITE(*,*) 'd2:      ', d2
+              !STOP 'testing finished'
+              !-
+!              CALL darcy (lambda, vecq, d2, ort (lineimat (j, k+1), 5),
+!     +                    0., 0., 0,  0, bedform, mel, 1.0)
+
+              CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(j,k+1)),
+     +                    0., 0., 0,  0,    gl_bedform, mel, cwr_line)
+              d2 = d2_kind8
+              !-
               !nis,sep06,com: Calculate the Conveyance factor of the midside node of the actual CCL-segment
               teilline (k + 1) = xl * 4 * (d2** (3. / 2.) ) *
      +                           ((78.48/lambda)**0.5)
@@ -717,8 +756,15 @@ C-
               !nis,sep06,com: Calculate the total velocity of the ending corner node of the actual CCL-segment
               vecq = sqrt (vel (1, nc) **2 + vel (2, nc) **2)
               !nis,sep06,com: Calculate the flow resistance of the ending corner node of the actual CCL-segment
-              CALL darcy (lambda, vecq, d3, ort (lineimat (j, k+1),5),
-     +                    0., 0., 0,  0, bedform, mel, 1.0)
+              !nis,nov06: Replacing 1.0 by cwr_line for intentinout property of the Darcy-Subroutine and adding variable setting before,
+              !           usage of gl_bedform is necessary because, the parameter is already in the Darcy-Subroutine, but there are no
+              !           calculations for that yet.
+              cwr_line = 1.0
+!              CALL darcy (lambda, vecq, d3, ort (lineimat (j, k+1),5),
+!     +                    0., 0., 0,  0, bedform, mel, 1.0)
+              CALL darcy (lambda, vecq, d3, cniku(lineimat (j, k+1)),
+     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line)
+!-
               !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
               teilline (k + 2) = teilline (k + 2) + xl * (d3**(3./2.)) *
      +                           ((78.48/lambda)**0.5)
