@@ -99,30 +99,30 @@ public class SchwarzeElsterCalcJob extends WasyCalcJob
       new TSDesc( "QV_NEUWIE", true, "W_NEUWIE", false ),
       new TSDesc( "QP_NEUWIE", true, "W_NEUWIE", false ),
 
-      new TSDesc( "QV_ZUNIEM", false, null, true ),
+      new TSDesc( "QV_ZUNIEM", false, null, false ),
       new TSDesc( "QP_ZUNIEM" ),
 
       new TSDesc( "Q_SPNIEM", true, "QV_SPNIEM", false ),
-      new TSDesc( "QV_SPNIEM", false, null, true ),
+      new TSDesc( "QV_SPNIEM", false, null, false ),
       new TSDesc( "QP_SPNIEM", true, "QV_SPNIEM", false ),
       new TSDesc( "V_SPNIEM", true, "QV_SPNIEM", false ),
 
-      new TSDesc( "QV_RLKETTE", false, null, true ),
+      new TSDesc( "QV_RLKETTE", false, null, false ),
       new TSDesc( "QP_RLKETTE" ),
 
-      new TSDesc( "W_BIEHLEN", false, null, true ),
+      new TSDesc( "W_BIEHLEN", false, null, false ),
       new TSDesc( "Q_BIEHLEN" ),
       new TSDesc( "QX_BIEHLEN", true, "W_BIEHLEN", false ),
       new TSDesc( "WV_BIEHLEN" ),
       new TSDesc( "QV_BIEHLEN", true, "W_BIEHLEN", false ),
       new TSDesc( "QP_BIEHLEN", true, "W_BIEHLEN", false ),
 
-      new TSDesc( "QV_KLETTW", false, null, true ),
+      new TSDesc( "QV_KLETTW", false, null, false ),
       new TSDesc( "QP_KLETTW" ),
 
       new TSDesc( "QP_LIPSA" ),
 
-      new TSDesc( "W_LAUCHH", false, null, true ),
+      new TSDesc( "W_LAUCHH", false, null, false ),
       new TSDesc( "Q_LAUCHH" ),
       new TSDesc( "QX_LAUCHH", true, "W_LAUCHH", false ),
       new TSDesc( "WV_LAUCHH" ),
@@ -228,6 +228,14 @@ public class SchwarzeElsterCalcJob extends WasyCalcJob
   public String makeFlpFilename( final File nativedir, final String tsFilename )
   {
     return new File( nativedir, "KORRPAR" ).getAbsolutePath();
+  }
+
+  /**
+   * @see org.kalypso.lhwzsachsen.spree.WasyCalcJob#isSpreeFormat()
+   */
+  public boolean isSpreeFormat()
+  {
+    return false;
   }
 
 }

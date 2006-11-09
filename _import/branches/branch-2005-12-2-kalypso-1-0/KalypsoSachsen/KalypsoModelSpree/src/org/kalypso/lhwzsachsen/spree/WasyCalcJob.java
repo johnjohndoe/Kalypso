@@ -96,10 +96,10 @@ public abstract class WasyCalcJob implements ICalcJob
 
   /** Datumsformat für spalte 'DZAHL' in dbf file */
   public static final DateFormat DF_DZAHL = new SimpleDateFormat( "yyMM.dd" );
-  
+
   /** Datumsformat für spalte 'DATUM' in dbf file */
   public static final DateFormat DF_DATUM = new SimpleDateFormat( "dd.MM.yyyy" );
-  
+
   public static final String VHS_FILE = "_vhs.dbf";
 
   public static final String FLP_NAME = "FlusslaufModell";
@@ -117,18 +117,6 @@ public abstract class WasyCalcJob implements ICalcJob
   }
 
   public static final String NAP_NAME = "Einzugsgebiet";
-
-  public static final String NAP_GEOM = "Ort";
-
-  public static final Map NAP_MAP = new LinkedHashMap();
-
-  static
-  {
-    NAP_MAP.put( "PEGEL", "Name" );
-    NAP_MAP.put( "MIN", "BodenfeuchteMin" );
-    NAP_MAP.put( "VORFEUCHTE", "Bodenfeuchte" );
-    NAP_MAP.put( "MAX", "BodenfeuchteMax" );
-  }
 
   public static final Object DATA_STARTFORECAST_STRING = "startDate";
 
@@ -470,16 +458,15 @@ public abstract class WasyCalcJob implements ICalcJob
     final Map valuesMap = new HashMap();
     final Collection dates = new ArrayList();
 
+    final boolean isSpreeFormat = isSpreeFormat();
+
     final TSDesc[] TS_DESCRIPTOR = TS_DESCRIPTOR();
     for( final Iterator iter = features.iterator(); iter.hasNext(); )
     {
       final Feature feature = (Feature)iter.next();
 
-      // TODO: get flag from outside!
-      final boolean spree = false;
-
       final Date date;
-      if( spree )
+      if( isSpreeFormat )
       {
         final String dateString = (String)feature.getProperty( "DATUM" );
         date = DF_DATUM.parse( dateString );
@@ -487,7 +474,8 @@ public abstract class WasyCalcJob implements ICalcJob
       else
       {
         final Number dzahl = (Number)feature.getProperty( "DATUM" );
-        final String dzahlStr = Format.sprintf( "%7.2f", new Object[] {dzahl } );
+        final String dzahlStr = Format.sprintf( "%7.2f", new Object[]
+        { dzahl } );
 
         date = DF_DZAHL.parse( dzahlStr );
       }
@@ -684,4 +672,6 @@ public abstract class WasyCalcJob implements ICalcJob
   public abstract String makeNapFilename( final File nativedir, final String tsFilename );
 
   public abstract String makeFlpFilename( final File nativeDir, final String tsFilename );
+
+  public abstract boolean isSpreeFormat();
 }

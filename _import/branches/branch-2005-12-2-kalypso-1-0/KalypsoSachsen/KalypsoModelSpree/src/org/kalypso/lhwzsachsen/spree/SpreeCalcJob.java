@@ -244,4 +244,12 @@ public class SpreeCalcJob extends WasyCalcJob
   {
     return tsFilename + "_flp";
   }
+
+  /**
+   * @see org.kalypso.lhwzsachsen.spree.WasyCalcJob#isSpreeFormat()
+   */
+  public boolean isSpreeFormat()
+  {
+    return true;
+  }
 }

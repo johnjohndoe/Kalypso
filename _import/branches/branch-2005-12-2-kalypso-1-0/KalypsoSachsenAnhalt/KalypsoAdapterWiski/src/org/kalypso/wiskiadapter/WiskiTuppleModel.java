@@ -77,7 +77,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
       m_wiskiBegin = Calendar.getInstance( m_tzWiski );
       m_wiskiBegin.setTime( tsinfo.getWiskiBegin() );
       // offset is directly adapted to take care of kalypso conventions
-      m_wiskiOffset = tsinfo.getWiskiOffset().intValue();
+      m_wiskiOffset = tsinfo.getWiskiOffset().intValue() /* + 1 */;
       m_wiskiDateOffsetField = WiskiUtils.getConversionCalendarField( tsinfo.getWiskiTimeLevel() );
     }
 

@@ -58,7 +58,7 @@ import org.kalypso.services.calculation.service.CalcJobInfoBean;
 /**
  * @author Gernot Belger
  */
-public class SpreeCalcJobTest extends TestCase
+public class SchwarzeElsterCalcJobTest extends TestCase
 {
   public void setUp() throws Exception
   {
@@ -69,13 +69,13 @@ public class SpreeCalcJobTest extends TestCase
 
   public void testCalcJob() throws Exception
   {
-    final File tmpDir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
+    final File tmpDir = org.kalypso.contribs.java.io.FileUtilities.createNewTempDir( "SchwarzeElsterCalcJobTest" );
 
-    final SpreeCalcJob job = new SpreeCalcJob();
+    final SchwarzeElsterCalcJob job = new SchwarzeElsterCalcJob();
     final ICalcMonitor monitor = new CalcJobInfoBean();
 
     final String resourceBase = "/" + getClass().getPackage().getName().replace( '.', '/' )
-        + "/resources/test/spree/TestvarianteHoltendorf/";
+        + "/resources/test/schwarzeelster/Ereignis95/";
 
     final ResourceCalcDataProvider inputProvider = new ResourceCalcDataProvider( resourceBase, getClass().getClassLoader() );
     inputProvider.addResource( "CONTROL_GML", ".calculation" );
@@ -95,7 +95,7 @@ public class SpreeCalcJobTest extends TestCase
   {
     // nur die Zeitreihen vergleichen
     final File resultDir = resultEater.getResult( "ERGEBNISSE" );
-    final URL resultURL = getClass().getResource( "resources/test/spree/TestvarianteHoltendorf/Ergebnisse/" );
+    final URL resultURL = getClass().getResource( "resources/test/schwarzeelster/Ereignis95/Ergebnisse/" );
 
     final File zmlDir = new File( resultDir, "Zeitreihen" );
     final URL zmlURL = new URL( resultURL, "Zeitreihen/" );

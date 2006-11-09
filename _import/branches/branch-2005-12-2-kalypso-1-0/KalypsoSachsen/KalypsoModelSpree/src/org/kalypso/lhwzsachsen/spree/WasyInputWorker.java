@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,14 +69,15 @@ public class WasyInputWorker
     try
     {
       // wird nicht instantiiert
-      WECHMANN_EMPTY = org.kalypso.commons.java.net.UrlUtilities.toString( WasyInputWorker.class.getResource( "resources/wechmannEmpty.xml" ), "UTF8" );
+      WECHMANN_EMPTY = org.kalypso.commons.java.net.UrlUtilities.toString( WasyInputWorker.class
+          .getResource( "resources/wechmannEmpty.xml" ), "UTF8" );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
     }
   }
-  
+
   private WasyInputWorker()
   {
   // wird nicht instantiiert
@@ -133,7 +135,7 @@ public class WasyInputWorker
 
       calcNiederschlagsummen( tsmap, TS_DESCRIPTOR );
       applyAccuracyPrediction( workspace, tsmap );
-      createTimeseriesFile( tsFilename, tsmap, TS_DESCRIPTOR );
+      createTimeseriesFile( tsFilename, tsmap, TS_DESCRIPTOR, wasyJob.isSpreeFormat() );
 
       return nativedir;
     }
@@ -430,7 +432,7 @@ public class WasyInputWorker
     findAndWriteLayer( workspace, WasyCalcJob.FLP_NAME, WasyCalcJob.FLP_MAP, WasyCalcJob.FLP_GEOM, flpFilename );
 
     logwriter.println( "Erzeuge _nap Datei: " + napFilename );
-    findAndWriteLayer( workspace, WasyCalcJob.NAP_NAME, WasyCalcJob.NAP_MAP, WasyCalcJob.NAP_GEOM, napFilename );
+    writeNapfile( workspace, napFilename );
 
     final File shpfile = new File( tsFilename + ".shp" );
     final InputStream shpresource = WasyInputWorker.class.getResourceAsStream( "resources/HW.shp" );
@@ -443,24 +445,72 @@ public class WasyInputWorker
     return tsFilename;
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final TSDesc[] TS_DESCRIPTOR )
+  private static void writeNapfile( final GMLWorkspace workspace, final String napFilename )
       throws CalcJobServiceException
   {
     try
     {
-      // TODO: get flag from outside!!
-      final boolean spree = false;
+      final FeatureType featureType = workspace.getFeatureType( WasyCalcJob.NAP_NAME );
+      if( featureType == null )
+        throw new CalcJobServiceException(
+            "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Einzugsgebiete nicht gefunden: ", null );
 
+      final FieldDescriptor[] fds = new FieldDescriptor[4];
+      fds[0] = new FieldDescriptor( "PEGEL", "C", (byte)15, (byte)0 );
+      fds[1] = new FieldDescriptor( "MIN", "N", (byte)8, (byte)2 );
+      fds[2] = new FieldDescriptor( "VORFEUCHTE", "N", (byte)8, (byte)2 );
+      fds[3] = new FieldDescriptor( "MAX", "N", (byte)8, (byte)2 );
+
+      final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP850" );
+      Charset.availableCharsets();
+
+      final Feature[] features = workspace.getFeatures( featureType );
+      for( int i = 0; i < features.length; i++ )
+      {
+        final ArrayList record = new ArrayList( 4 );
+
+        final Feature feature = features[i];
+        
+        final String name = (String)feature.getProperty( "Name" );
+        final String nameOut = name.length() > 15 ? name.substring( 0, 14 ) : name;
+        
+        record.add( nameOut );
+        record.add( feature.getProperty( "BodenfeuchteMin" ) );
+        record.add( feature.getProperty( "Bodenfeuchte" ) );
+        record.add( feature.getProperty( "BodenfeuchteMax" ) );
+
+        dbfFile.setRecord( record );
+      }
+
+      dbfFile.writeAllToFile();
+      dbfFile.close();
+    }
+    catch( final IOException e )
+    {
+      throw new CalcJobServiceException( "Fehler beim Schreiben der NA-Korrekturparameter: " + napFilename, e );
+    }
+    catch( final DBaseException e )
+    {
+      throw new CalcJobServiceException( "Fehler beim Schreiben der NA-Korrekturparameter: " + napFilename, e );
+    }
+
+  }
+
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final TSDesc[] TS_DESCRIPTOR, final boolean isSpreeFormat )
+      throws CalcJobServiceException
+  {
+    try
+    {
       final Map fdList = new LinkedHashMap();
 
-      if( spree )
+      if( isSpreeFormat )
         fdList.put( "DZAHL", new FieldDescriptor( "DZAHL", "N", (byte)7, (byte)2 ) );
       else
         fdList.put( "DATUM", new FieldDescriptor( "DATUM", "N", (byte)7, (byte)2 ) );
 
       fdList.put( "STUNDE", new FieldDescriptor( "STUNDE", "N", (byte)2, (byte)0 ) );
 
-      if( spree )
+      if( isSpreeFormat )
       {
         fdList.put( "DATUM", new FieldDescriptor( "DATUM", "C", (byte)10, (byte)0 ) );
         fdList.put( "VON", new FieldDescriptor( "VON", "N", (byte)2, (byte)0 ) );
@@ -474,7 +524,7 @@ public class WasyInputWorker
 
         final FieldDescriptor fd;
         if( name.startsWith( "S_" ) )
-          fd = new FieldDescriptor( name, "C", (byte)5, (byte)0 );
+          fd = new FieldDescriptor( name, "C", (byte)1, (byte)0 );
         else if( name.startsWith( "W_" ) )
           fd = new FieldDescriptor( name, "N", (byte)5, (byte)0 );
         else if( name.startsWith( "Q_" ) )
@@ -488,22 +538,23 @@ public class WasyInputWorker
         else if( name.startsWith( "QP_" ) )
           fd = new FieldDescriptor( name, "N", (byte)8, (byte)3 );
         else if( name.startsWith( "PG_" ) )
-          fd = new FieldDescriptor( name, "N", (byte)6, (byte)1 );
+          fd = new FieldDescriptor( name, "N", (byte)5, (byte)1 );
         else if( name.startsWith( "PP_" ) )
           fd = new FieldDescriptor( name, "N", (byte)3, (byte)0 );
         else if( name.startsWith( "PA_" ) )
-          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
-        else if( name.startsWith( "V_" ) )
-          fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
+          fd = new FieldDescriptor( name, "N", (byte)6, (byte)2 );
+        else if( name.startsWith( "V_" ) ) // REMARK: bei der Spree ists hier 6:2; sollte aber keinen Unterschied machen
+          fd = new FieldDescriptor( name, "N", (byte)7, (byte)3 );
         else if( name.startsWith( "ZG_" ) )
           fd = new FieldDescriptor( name, "N", (byte)7, (byte)2 );
         else
           throw new IllegalStateException( "TS Descriptor with wrong type: " + name );
-        
+
         fdList.put( name, fd );
       }
 
-      final DBaseFile dbf = new DBaseFile( tsFilename, (FieldDescriptor[])fdList.values().toArray( new FieldDescriptor[fdList.size()] ) );
+      final DBaseFile dbf = new DBaseFile( tsFilename, (FieldDescriptor[])fdList.values().toArray(
+          new FieldDescriptor[fdList.size()] ) );
 
       // Werte schreiben
       final Calendar calendar = Calendar.getInstance();
@@ -522,7 +573,7 @@ public class WasyInputWorker
         record.add( new Double( WasyCalcJob.DF_DZAHL.format( date ) ) );
         record.add( new Integer( calendar.get( Calendar.HOUR_OF_DAY ) ) );
 
-        if( spree )
+        if( isSpreeFormat )
         {
           record.add( WasyCalcJob.DF_DATUM.format( date ) );
           calendar.add( Calendar.HOUR_OF_DAY, -3 );
@@ -556,8 +607,11 @@ public class WasyInputWorker
           }
 
           // die Erste Zeile darf keine Talsperrenabgabe enthalten
-          if( id.startsWith( "QV_TS" ) && i == 0 )
-            outVal = null;
+          if( i == 0 )
+          {
+            if( id.startsWith( "QV_TS" ) )
+              outVal = null;
+          }
 
           record.add( outVal );
         }
@@ -572,7 +626,7 @@ public class WasyInputWorker
     {
       e1.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler beim Scheiben der Zeitreihen", e1 );
+      throw new CalcJobServiceException( "Fehler beim Schreiben der Zeitreihen", e1 );
     }
   }
 

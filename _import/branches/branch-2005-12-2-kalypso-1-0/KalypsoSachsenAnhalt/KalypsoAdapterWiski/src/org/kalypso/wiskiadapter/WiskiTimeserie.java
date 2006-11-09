@@ -237,6 +237,8 @@ public class WiskiTimeserie implements IObservation
 
       m_cachedDr = dr;
 
+      // TODO: also apply wiski-offset to request!
+      
       try
       {
         final String useType;
