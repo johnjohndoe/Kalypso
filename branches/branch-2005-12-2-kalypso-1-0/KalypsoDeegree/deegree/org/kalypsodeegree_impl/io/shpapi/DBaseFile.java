@@ -183,11 +183,19 @@ public class DBaseFile
     filemode = 0;
   }
 
+  public DBaseFile( String url, FieldDescriptor[] fieldDesc )
+  {
+    this( url, fieldDesc, null );
+  }
+
   /**
    * constructor <BR>
    * only for writing a dBase file <BR>
+   * name of the charset string value will be encoded with. If null, the default charset will be used.
+   * 
+   * @see String#getBytes(java.lang.String)
    */
-  public DBaseFile( String url, FieldDescriptor[] fieldDesc )
+  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc, final String charset )
   {
     m_defaultFileShapeType = -1;
     fname = url;
@@ -196,7 +204,7 @@ public class DBaseFile
     header = new DBFHeader( fieldDesc );
 
     // create data section
-    dataSection = new DBFDataSection( fieldDesc );
+    dataSection = new DBFDataSection( fieldDesc, charset );
 
     filemode = 1;
   }
@@ -506,20 +514,18 @@ public class DBaseFile
         pos = 0;
       }
 
-      
-      
       // Changed by Belger
       // The Old version did not respect Charset Conversion
       // REMARK:
       // the old version also filtered every whitespace 'char(32)'
-      // but i think what to be done is just to trim() the returned string 
+      // but i think what to be done is just to trim() the returned string
       final byte[] bytes = new byte[column.size];
       for( int i = 0; i < bytes.length; i++ )
       {
         final int kk = (int)pos + column.position + i;
         bytes[i] = dataArray[kk];
       }
-      
+
       final String charsetname = CharsetUtilities.getDefaultCharset();
       return new String( bytes, charsetname ).trim();
     }

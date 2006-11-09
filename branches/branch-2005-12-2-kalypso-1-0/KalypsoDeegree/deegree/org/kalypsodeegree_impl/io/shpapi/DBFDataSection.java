@@ -61,6 +61,7 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import com.braju.format.Format;
@@ -95,13 +96,17 @@ public class DBFDataSection
 
   private ArrayList data = new ArrayList();
 
-  /**
-   * constructor
-   */
-  public DBFDataSection( FieldDescriptor[] fieldDesc )
-  {
+  private final String m_charset;
 
+  /**
+   * @param charset
+   *          name of the charset string value will be encoded with.
+   * @see String#getBytes(java.lang.String)
+   */
+  public DBFDataSection( final FieldDescriptor[] fieldDesc, final String charset )
+  {
     this.fieldDesc = fieldDesc;
+    m_charset = charset;
 
     // calculate length of the data section
     recordlength = 0;
@@ -170,8 +175,19 @@ public class DBFDataSection
         final byte[] b;
         if( recdata == null )
           b = new byte[0];
-        else
+        else if( m_charset == null )
           b = ( (String)recdata ).getBytes();
+        else
+        {
+          try
+          {
+            b = ( (String)recdata ).getBytes( m_charset );
+          }
+          catch( final UnsupportedEncodingException e )
+          {
+            throw new DBaseException( "Unsupported encoding: " + e.getLocalizedMessage() );
+          }
+        }
 
         writeEntry( datasec, offset, fddata[16], b, (byte)0x20 );
       }
@@ -223,7 +239,7 @@ public class DBFDataSection
           b[0] = 'F';
         else
           b[0] = 'T';
-        
+
         writeEntry( datasec, offset, fddata[16], b, (byte)0x00 );
       }
         break;

@@ -92,7 +92,6 @@ public class DBFHeader
    */
   public DBFHeader( FieldDescriptor[] fieldDesc )
   {
-
     // allocate memory for the header
     header = new byte[32 + fieldDesc.length * 32 + 1];
 
@@ -127,7 +126,6 @@ public class DBFHeader
 
     // set field terminator
     header[header.length - 1] = 0x0D;
-
   }
 
   /**
