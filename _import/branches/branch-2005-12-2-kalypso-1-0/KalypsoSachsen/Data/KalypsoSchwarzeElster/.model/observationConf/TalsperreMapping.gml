@@ -10,7 +10,7 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_TSQUITZ.zml" ns1:type="simple" linktype="zml"/>
       </in1ObservationLink>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_SPKNAPP.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_SPKNAP.zml"/>
       </outObservationLink>
     </MappingObservation>
   </mappingMember>

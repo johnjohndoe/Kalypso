@@ -4,10 +4,10 @@
     <MappingObservation fid="MappingObservation1">
       <gml:name>Trado 1</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SE.02PG...553011"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582010" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SE.02PG...9553011"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_TRADO.zml"/>
@@ -18,10 +18,10 @@
     <MappingObservation fid="MappingObservation2">
       <gml:name>Schönau</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582030" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SE.02PG...554120"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582030" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SE.02PG...9554120"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_SCHOEN.zml"/>
@@ -32,10 +32,10 @@
     <MappingObservation fid="MappingObservation3">
       <gml:name>Zescha</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583121" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SE.02PG...554220"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583121" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SE.02PG...9554220"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_ZESCHA.zml"/>
@@ -46,10 +46,10 @@
     <MappingObservation fid="MappingObservation4">
       <gml:name>Neuwiese</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583250" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SE.02PG...553020"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583250" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SE.02PG...9553020"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/W_NEUWIE.zml"/>
