@@ -474,7 +474,8 @@ public abstract class WasyCalcJob implements ICalcJob
       else
       {
         final Number dzahl = (Number)feature.getProperty( "DATUM" );
-        final String dzahlStr = Format.sprintf( "%7.2f", new Object[]
+        // IMPORTENT: add leading zeros to avoid bug for the years 2000-2009
+        final String dzahlStr = Format.sprintf( "%07.2f", new Object[]
         { dzahl } );
 
         date = DF_DZAHL.parse( dzahlStr );
@@ -606,6 +607,7 @@ public abstract class WasyCalcJob implements ICalcJob
 
   /**
    * Schreibt eine Vorhersagezeitreihe und ihre umhüllenden
+   * @param accuracy In Prozent per 60h
    */
   private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy,
       final boolean writeUmhuellende ) throws Exception
@@ -635,18 +637,21 @@ public abstract class WasyCalcJob implements ICalcJob
     final Calendar calEnd = Calendar.getInstance();
     calEnd.setTime( endPrediction );
 
-    final long dayOfMillis = 1000 * 60 * 60 * 24;
+//    final long dayOfMillis = 1000 * 60 * 60 * 24;
+    final long millisOf60hours = 1000 * 60 * 60 * 60;
 
-    final double endOffest = accuracy
-        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
+    final double endAccuracy = accuracy
+        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
 
+    final double endFactor = 1 + endAccuracy / 100;
+    
     final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "-",
-        TimeserieConstants.TYPE_WATERLEVEL, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 1, 1 / endFactor, "*",
+        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
             + "_unten.zml" ), "- Spur Unten" );
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "+",
-        TimeserieConstants.TYPE_WATERLEVEL, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 1, endFactor, "*",
+        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
             + "_oben.zml" ), "- Spur Oben" );
   }
 
