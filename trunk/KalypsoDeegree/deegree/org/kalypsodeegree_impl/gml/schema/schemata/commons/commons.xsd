@@ -62,5 +62,12 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+	
+	<!-- Defines a color based on a string. It uses the format #RGB (Hex). -->
+	<simpleType name="color">
+		<restriction base="string">
+			<pattern value="^#[0-9a-fA-F]{6}"></pattern>
+		</restriction>
+	</simpleType>
 </schema>
   

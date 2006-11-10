@@ -72,6 +72,12 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
     m_typeQName = new QName( NS.XSD_SCHEMA, xsdTypeName );
   }
 
+  public XsdBaseTypeHandler( final QName qname, final Class valueClass )
+  {
+    m_valueClass = valueClass;
+    m_typeQName = qname;
+  }
+
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
