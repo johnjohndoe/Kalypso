@@ -319,7 +319,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     catch( Exception e )
     {
       logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
-          + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
+          + " [%/60h] als Vorhersagegenauigkeit angenommen." );
     }
     // Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
     //    if(accuracyProp==null)
@@ -333,7 +333,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     //TODO if measured does not exists
 
     // find values at startPrediction
-    final String axisType = TimeserieConstants.TYPE_WATERLEVEL;
+    final String axisType = TimeserieConstants.TYPE_RUNOFF;
 
     // from predicted timeseries
     final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
@@ -348,13 +348,17 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
     catch( Exception e )
     {
+//      logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
+//          + ") kann nicht als Wasserstand berechnet werden. Möglicherweise ungültige WQ-Beziehung am Messpegel." );
       logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
-          + ") kann nicht als Wasserstand berechnet werden. Möglicherweise ungültige WQ-Beziehung am Messpegel." );
+          + ") liegt nicht vor." );
       throw e;
     }
 
-    double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
+    final double calcStartValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
         startPrediction );
+    final double calcEndValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
+        endPrediction );
 
     double deltaMeasureCalculation;
     try
@@ -369,7 +373,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
       double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis,
           startPrediction );
-      deltaMeasureCalculation = measureValue - calcValue;
+      deltaMeasureCalculation = measureValue - calcStartValue;
     }
     catch( Exception e )
     {
@@ -404,10 +408,14 @@ public class NaModelInnerCalcJob implements ICalcJob
         getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ),
         getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
         getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ) };
-    //    accuracyPrediction // cm/day
-    final long dayOfMillis = 1000 * 60 * 60 * 24;
-    final double endOffest = accuracyPrediction
-        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
+    
+    //  accuracyPrediction // %/60h
+    final long millisOf60hours = 1000 * 60 * 60 * 60;
+    // endAccuracy: %/simulationRange
+    final double endAccuracy = accuracyPrediction
+        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
+
+    final double endOffset = calcEndValue * ( endAccuracy / 100 );
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
@@ -428,8 +436,8 @@ public class NaModelInnerCalcJob implements ICalcJob
     final double[] operandEnd = new double[]
     {
         offsetEndPrediction,
-        offsetEndPrediction - endOffest,
-        offsetEndPrediction + endOffest };
+        offsetEndPrediction - endOffset,
+        offsetEndPrediction + endOffset };
     final String[] sufix = new String[]
     {
         " - Spur Mitte",
