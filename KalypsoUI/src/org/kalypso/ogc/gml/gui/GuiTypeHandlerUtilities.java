@@ -84,5 +84,7 @@ public class GuiTypeHandlerUtilities
 
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );
     guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
+
+    guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) );
   }
 }

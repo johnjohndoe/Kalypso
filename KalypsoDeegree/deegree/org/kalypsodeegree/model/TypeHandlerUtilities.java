@@ -60,6 +60,7 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
@@ -82,7 +83,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GenericGM_ObjectBindingTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandlerGml3;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
 
 /**
  * @author doemming
@@ -523,6 +523,60 @@ public class TypeHandlerUtilities
           return value.toString();
         }
       } );
+
+      // <element name="color" type="color" />
+      registry.registerTypeHandler( new XsdBaseTypeHandler<RGB>( new QName( NS.COMMON, "color" ), RGB.class )
+      {
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
+         */
+        @Override
+        public RGB convertToJavaValue( String xmlString )
+        {
+          if( xmlString.length() == 7 )
+          {
+            RGB rgb = new RGB( 0, 0, 0 );
+            
+            String red = xmlString.substring( 1, 3 );
+            rgb.red = Integer.decode( "0x" + red );
+            
+            String green = xmlString.substring( 3, 5 );
+            rgb.green = Integer.decode( "0x" + green );
+            
+            String blue = xmlString.substring( 5, 7 );
+            rgb.blue = Integer.decode( "0x" + blue );
+
+            return rgb;
+          }
+          else
+            return null;
+        }
+
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+         */
+        @Override
+        public String convertToXMLString( RGB value )
+        {
+          if( value == null )
+            return new String( "" );
+
+          String red = Integer.toHexString( value.red );
+          if( red.length() < 2 )
+            red = "0" + red;
+
+          String green = Integer.toHexString( value.green );
+          if( green.length() < 2 )
+            green = "0" + green;
+
+          String blue = Integer.toHexString( value.blue );
+          if( blue.length() < 2 )
+            blue = "0" + blue;
+
+          return new String( "#" + red + green + blue );
+        }
+      } );
+
     }
     catch( final Exception e )
     {
@@ -557,8 +611,8 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
 
-//    {http://www.opengis.net/gml}GeometryPropertyType
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName(NS.GML3,"GeometryPropertyType"), GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
+    // {http://www.opengis.net/gml}GeometryPropertyType
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GeometryPropertyType" ), GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
     // TODO: the next line is wrong; GM_Envelope is no GM_Object
     // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
     // "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
