@@ -112,7 +112,6 @@ import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -414,7 +413,7 @@ public class CreateFloodRiskProjectJob extends Job
   {
     String shapeBase = (m_workspacePath.append( m_projectHandel.getFullPath().append( "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) )).toString(); //$NON-NLS-1$
     m_landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
-    KalypsoFeatureTheme kft = new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString("CreateFloodRiskProjectJob.Landuse"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoFeatureTheme kft = new KalypsoFeatureTheme( new CommandableWorkspace( m_landuseShapeWS ), "featureMember", WizardMessages.getString("CreateFloodRiskProjectJob.Landuse"), null, null ); //$NON-NLS-1$ //$NON-NLS-2$
     //ShapeFile sf = new ShapeFile( shapeBase );
     //sf.getFileMBR();
     return kft;
