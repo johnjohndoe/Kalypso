@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
 /**
  * A workspace change listener is notified of changes to features in the workspace.
  * <p>
@@ -66,8 +68,8 @@ public interface IGmlWorkspaceChangeListener
    * @param source
    *          an object identifying the source of this event TODO: descripe who may this be
    * @param delta
-   *          the workspace delta, always starts at the root feature
+   *          the workspace delta, always starting with a null feature
    * @see IGmlWorkspaceDelta
    */
-  public void resourceChanged( final Object source, final IGmlWorkspaceDelta delta );
+  public void resourceChanged( final Object source, final GMLWorkspace workspace, final IGmlWorkspaceDelta delta );
 }
