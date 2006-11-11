@@ -816,7 +816,8 @@ public class FeatureHelper
    * This methods finds the {@link IRelationType} of its parent, which contains the given feature.
    * <p>
    * Example: Feature A has a property 'child' which is a relation and contains feature b. So
-   * {@link #findParentRelation(b)} returns the relation type 'child'.
+   * {@link #findParentRelation(b)} returns the relation type 'child'. TODO: this is quite time consuming and has
+   * conflicts with the function properties. Each feature just should know which is its parent property!
    * 
    * @return <code>null</code> if the feature has no parent or no property of its parent contains this feature.
    * @throws NullPointerException

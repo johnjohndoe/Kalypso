@@ -89,7 +89,8 @@ public interface IGmlWorkspaceDelta
    * <ul>
    *    <li>a value of a property was set</li>
    *    <li>the list value of a property has changed (an item was added or removed)</li>
-   * </ul>.    
+   * </ul>.
+   * If this flag is set, {@link #getProperty()} returns the changed property.    
    * 
    * @see IResourceDelta#getKind()
    */

@@ -31,7 +31,7 @@ public interface GMLWorkspace extends ModellEventProvider
   public Feature[] getFeatures( final IFeatureType ft );
 
   /**
-   * Returns the linked feature that has the given id or null if not found.
+   * Returns the feature that has the given id or null if not found.
    */
   public Feature getFeature( final String id );
 
