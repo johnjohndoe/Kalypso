@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta;
 import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor;
 
@@ -68,7 +67,7 @@ public class QNameDeltaVisitor implements IGmlWorkspaceDeltaVisitor
   /**
    * @see org.kalypsodeegree.model.feature.event.IGmlWorkspaceDeltaVisitor#visit(org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta)
    */
-  public boolean visit( final IGmlWorkspaceDelta delta ) throws CoreException
+  public boolean visit( final IGmlWorkspaceDelta delta )
   {
     final QName qname = delta.getFeature().getFeatureType().getQName();
     if( m_qname.equals( qname ) )
