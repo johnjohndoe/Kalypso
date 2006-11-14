@@ -1065,7 +1065,7 @@
         <para>Es werden das ausführbare Programm nebst Programmbibliotheken
         sowie alle gleichbleibenden Parameterdaten in das temporäre
         Verzeichnis kopiert. Diese Daten finden sich gesammelt im Paket
-        <filename>/KalypsoModelSpree/src/org/Kalypso/lhwzsachsen/spree/resources/exe</filename>
+        <filename>/KalypsoModelSpree/src/org/Kalypso/lhwzsachsen/spree/resources/exe/spree</filename>
         <abbrev>bzw.</abbrev>
         <filename>/KalypsoModelSpree/src/org/Kalypso/lhwzsachsen/spree/resources/exe/schwarzeelster</filename>.</para>
       </listitem>
