@@ -46,31 +46,31 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
+ * FloodRisk namespace catalog
  * 
- * UrlCatalogFloodRisk
- * <p>
- * 
- * created by
- * 
- * @author Nadja Peiler (15.06.2005)
+ * @author Dejan Antanaskovic
  */
 public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 {
-  public static final String NS_GML = "http://www.opengis.net/gml";
+  public static final String NS_XML                         = "http://www.w3.org/2001/XMLSchema";
+  public static final String NS_GML                         = "http://www.opengis.net/gml";
+  public static final String NS_CONTEXTMODEL                = "http://www.tuhh.de/floodrisk/contextModel";
+  public static final String NS_RISKCONTEXTMODEL            = "http://www.tuhh.de/floodrisk/riskContextModel";
+  public static final String NS_RASTERDATAMODEL             = "http://www.tuhh.de/floodrisk/rasterData";
+  public static final String NS_VECTORDATAMODEL             = "http://www.tuhh.de/floodrisk/vectorData";
+  //public static final String NS_RECTIFIEDGRIDCOVERAGE       = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
+  public static final String NS_WATERLEVELDATA              = "http://www.tuhh.de/floodrisk/waterlevelData";
+  public static final String NS_STATISTICDATA               = "http://www.tuhh.de/floodrisk/statisticData";
 
-  public static final String NS_CONTEXTMODEL = "http://www.tuhh.de/floodrisk/contextModel";
-
-  public static final String NS_RISKCONTEXTMODEL = "http://www.tuhh.de/floodrisk/riskContextModel";
-
-  public static final String NS_RASTERDATAMODEL = "http://www.tuhh.de/floodrisk/rasterData";
-
-  public static final String NS_VECTORDATAMODEL = "http://www.tuhh.de/floodrisk/vectorData";
-
-  public static final String NS_RECTIFIEDGRIDCOVERAGE = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
-
-  public static final String NS_WATERLEVELDATA = "http://www.tuhh.de/floodrisk/waterlevelData";
-
-  public static final String NS_STATISTICDATA = "http://www.tuhh.de/floodrisk/statisticData";
+  public static final String PREFIX_XML                     = "xs:";
+  public static final String PREFIX_GML                     = "gml:";
+  public static final String PREFIX_CONTEXTMODEL            = "risk_cm:";
+  public static final String PREFIX_RISKCONTEXTMODEL        = "risk_rcm:";
+  public static final String PREFIX_RASTERDATAMODEL         = "risk_rd:";
+  public static final String PREFIX_VECTORDATAMODEL         = "risk_vd:";
+  //public static final String PREFIX_RECTIFIEDGRIDCOVERAGE   = "risk_rgc:";
+  public static final String PREFIX_WATERLEVELDATA          = "risk_wld:";
+  public static final String PREFIX_STATISTICDATA           = "risk_sd:";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -78,13 +78,13 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_CONTEXTMODEL, myClass.getResource( "ContextModel.xsd" ) );
-    catalog.put( NS_RISKCONTEXTMODEL, myClass.getResource( "RiskContextModel.xsd" ) );
-    catalog.put( NS_RASTERDATAMODEL, myClass.getResource( "RasterDataModel.xsd" ) );
-    catalog.put( NS_VECTORDATAMODEL, myClass.getResource( "VectorDataModel.xsd" ) );
-    catalog.put( NS_RECTIFIEDGRIDCOVERAGE, myClass.getResource( "rectifiedGridCoverage.xsd" ) );
-    catalog.put( NS_WATERLEVELDATA, myClass.getResource( "WaterlevelData.xsd" ) );
-    catalog.put( NS_STATISTICDATA, myClass.getResource( "StatisticData.xsd" ) );
+    catalog.put( NS_CONTEXTMODEL,           myClass.getResource( "ContextModel.xsd" ) );
+    catalog.put( NS_RISKCONTEXTMODEL,       myClass.getResource( "RiskContextModel.xsd" ) );
+    catalog.put( NS_RASTERDATAMODEL,        myClass.getResource( "RasterDataModel.xsd" ) );
+    catalog.put( NS_VECTORDATAMODEL,        myClass.getResource( "VectorDataModel.xsd" ) );
+    //catalog.put( NS_RECTIFIEDGRIDCOVERAGE,  myClass.getResource( "rectifiedGridCoverage.xsd" ) );
+    catalog.put( NS_WATERLEVELDATA,         myClass.getResource( "WaterlevelData.xsd" ) );
+    catalog.put( NS_STATISTICDATA,          myClass.getResource( "StatisticData.xsd" ) );
   }
 
 }

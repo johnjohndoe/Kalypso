@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_rd="http://www.tuhh.de/floodrisk/rasterData">
-	<!-- =========================================================== -->
-	<!--Imports===================================================== -->
+<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/rasterData" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_rd="http://www.tuhh.de/floodrisk/rasterData">
+	<!--Imports=========================================================== -->
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="base/gml.xsd"/>
 	<!-- =========================================================== -->
 	<xs:annotation>
@@ -10,133 +9,19 @@
 		</xs:appinfo>
 	</xs:annotation>
 	<!-- =========================================================== -->
-	<!-- RasterDataModel============================================ -->
-	<!-- =========================================================== -->
+	<!-- RasterDataModel=========================================================== -->
 	<xs:element name="RasterDataModel" type="risk_rd:RasterDataModelType"/>
 	<xs:complexType name="RasterDataModelType">
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:restriction base="gml:RectifiedGridCoverageType">
 				<xs:sequence>
-					<xs:element name="RectifiedGridCoverageMember" type="risk_rd:RectifiedGridCoverageMemberAssociationType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="RectifiedGridCoverageMemberAssociationType">
-		<xs:complexContent>
-			<xs:restriction base="gml:FeaturePropertyType">
-				<xs:sequence>
-					<xs:element ref="risk_rd:RectifiedGridCoverage"/>
+					<xs:group ref="gml:StandardObjectProperties"/>
+					<!--<xs:element ref="gml:boundedBy" minOccurs="0"/>-->
+					<xs:element ref="gml:rectifiedGridDomain"/>
+					<xs:element ref="gml:rangeSet"/>
+					<!--<xs:element ref="gml:coverageFunction" minOccurs="0"/>-->
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="RectifiedGridCoverage" type="risk_rd:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
-	<xs:complexType name="RectifiedGridCoverageType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence>
-					<xs:element name="rectifiedGridDomain" type="risk_rd:RectifiedGridDomainType"/>
-					<xs:element name="rangeSet" type="risk_rd:RangeSetType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:complexType name="RectifiedGridDomainType">
-		<xs:sequence>
-			<xs:element ref="risk_rd:RectifiedGrid"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:complexType name="RangeSetType">
-		<xs:sequence>
-			<xs:element name="File" type="risk_rd:FileType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:complexType name="FileType">
-		<xs:sequence>
-			<xs:element name="fileName" type="xs:anyURI"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<!-- grids.xsd================================================== -->
-	<!-- =========================================================== -->
-	<xs:element name="_ImplicitGeometry" type="gml:AbstractGeometryType" abstract="true" substitutionGroup="gml:_Geometry"/>
-	<!-- =========================================================== -->
-	<xs:element name="Grid" type="risk_rd:GridType" substitutionGroup="risk_rd:_ImplicitGeometry"/>
-	<!-- =========================================================== -->
-	<xs:complexType name="GridType">
-		<xs:annotation>
-			<xs:documentation>Implicitly defines an unrectified grid, which is a network composed of two or more sets of equally spaced parallel lines in which the members of each set intersect the members of the other sets at right angles.</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractGeometryType">
-				<xs:sequence>
-					<xs:element name="limits" type="risk_rd:GridLimitsType"/>
-					<!-- <xs:element name="axisName" type="string" maxOccurs="unbounded"/> -->
-				</xs:sequence>
-				<xs:attribute name="dimension" type="xs:positiveInteger" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:complexType name="GridLimitsType">
-		<xs:sequence>
-			<xs:element name="GridEnvelope" type="risk_rd:GridEnvelopeType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:complexType name="GridEnvelopeType">
-		<xs:annotation>
-			<xs:documentation>Provides grid coordinate values for the diametrically opposed corners of an envelope that bounds a section of grid. The value of a single coordinate is the number of offsets from the origin of the grid in the direction of a specific axis.</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="low" type="risk_rd:integerList"/>
-			<xs:element name="high" type="risk_rd:integerList"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<xs:element name="RectifiedGrid" type="risk_rd:RectifiedGridType" substitutionGroup="risk_rd:Grid"/>
-	<!-- =========================================================== -->
-	<xs:complexType name="RectifiedGridType">
-		<xs:annotation>
-			<xs:documentation>A rectified grid has an origin and vectors that define its post locations.</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="risk_rd:GridType">
-				<xs:sequence>
-					<xs:element name="origin" type="gml:PointPropertyType"/>
-					<xs:element name="offsetVector" type="risk_rd:VectorType" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<!-- VectorType (geometryBasic0d1d.xsd)========================= -->
-	<!-- =========================================================== -->
-	<xs:complexType name="VectorType">
-		<xs:annotation>
-			<xs:documentation>A Vector is an ordered set of numbers called coordinates that represent a position in a coordinate reference system (CRS). For some application the components of the position may be adjusted to yield a unit vector.</xs:documentation>
-		</xs:annotation>
-		<xs:simpleContent>
-			<xs:extension base="risk_rd:doubleList"/>
-		</xs:simpleContent>
-	</xs:complexType>
-	<!-- =========================================================== -->
-	<!-- basicTypes.xsd============================================= -->
-	<!-- =========================================================== -->
-	<xs:simpleType name="doubleList">
-		<xs:annotation>
-			<xs:documentation>XML List based on XML Schema double type.  An element of this type contains a space-separated list of double values</xs:documentation>
-		</xs:annotation>
-		<xs:list itemType="xs:double"/>
-	</xs:simpleType>
-	<xs:simpleType name="integerList">
-		<xs:annotation>
-			<xs:documentation>XML List based on XML Schema integer type.  An element of this type contains a space-separated list of integer values</xs:documentation>
-		</xs:annotation>
-		<xs:list itemType="xs:integer"/>
-	</xs:simpleType>
 </xs:schema>
