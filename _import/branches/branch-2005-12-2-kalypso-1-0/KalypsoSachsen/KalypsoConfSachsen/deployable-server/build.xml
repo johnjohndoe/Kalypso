@@ -103,7 +103,16 @@
         </copy>
     </target>
 
-    <target name="co-sachsen-model-spree" depends="prepare">
+    <target name="co-sachsen-model-schwarzeelster" depends="prepare">
+        <echo message="Checkout the schwarze-elster-model for Sachsen" />
+
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoSachsen/Data/KalypsoSchwarzeElster" />
+            <param name="pName" value="SchwarzeElster" />
+        </antcall>
+    </target>
+
+	<target name="co-sachsen-model-spree" depends="prepare">
         <echo message="Checkout the spree-model for Sachsen" />
 
         <antcall target="co-model">
@@ -121,7 +130,7 @@
         </antcall>
     </target>
 
-    <target name="co-sachsen-models" depends="co-sachsen-model-spree,co-sachsen-model-weisseelster">
+    <target name="co-sachsen-models" depends="co-sachsen-model-schwarzeelster,co-sachsen-model-spree,co-sachsen-model-weisseelster">
     </target>
 
     <!-- Callable CVS checkout target 
