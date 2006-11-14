@@ -127,7 +127,7 @@ public class KMUpdateWizardPage extends WizardPage
   public KMUpdateWizardPage( final CommandableWorkspace workspace, IFeatureSelection selection )
   {
     super( "Kalinin-Miljukov-Parameter aktualisieren ",// 
-        "Berechnung und Export der Kalinin-Miljukov(KM) Parameter aus 1D-Simulationsergebnissen in die NA-Modelldaten", null );
+    "Berechnung und Export der Kalinin-Miljukov(KM) Parameter aus 1D-Simulationsergebnissen in die NA-Modelldaten", null );
     m_workspace = workspace;
     final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
     m_selection = new Feature[allFeatures.length];
@@ -539,19 +539,19 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( km == null )
     {
-      errorLogger.log( log + " keine Parametersatz gefunden\n" );
+      errorLogger.log( log + " Kein Parametersatz gefunden\n" );
       return result;
     }
     final Double kmStart = km.getKmStart();
     final Double kmEnd = km.getKmEnd();
     if( kmStart == null || kmEnd == null )
     {
-      errorLogger.log( log + " Kilometrierung (start oder ende) nicht vollstaendig\n" );
+      errorLogger.log( log + " Kilometrierung (Start oder Ende) nicht vollstaendig\n" );
       return result;
     }
     if( kmStart.compareTo( kmEnd ) > 0 )
     {
-      errorLogger.log( log + " bei Kilometrierung wird die Regel 'start[km] < ende[km]' verletzt\n" );
+      errorLogger.log( log + " Bei Kilometrierung wird die Regel 'start[km] < ende[km]' verletzt\n" );
       return result;
     }
     final List<File> list = new ArrayList<File>();
@@ -569,7 +569,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     if( list.isEmpty() )
     {
-      errorLogger.log( log + " es wurden keine Profildateien zugewiesen\n" );
+      errorLogger.log( log + " Es wurden keine Profildateien zugewiesen\n" );
       return result;
     }
     final File[] files = list.toArray( new File[list.size()] );
@@ -584,12 +584,12 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( kmParameter.length < max )
     {
-      errorLogger.log( log + " bestehenden Objekt hat noch keine KM_Parameter-Eintraege. (Genau 5 sind gefordert). Abhilfe: Parameter in Tabelle hinzufuegen.\n" );
+      errorLogger.log( log + " Bestehendes Objekt hat noch keine KM-Parameter Eintraege. (Genau 5 sind gefordert). Abhilfe: Parameter in Tabelle hinzufuegen.\n" );
       // TODO add new features
     }
     else
     {
-      detailedLogger.log( log + " Berechnete Parameter\n" );
+      detailedLogger.log( log + " Berechnete Parameter:\n" );
       for( int i = 0; i < kmParameter.length; i++ )
       {
         final Feature kmParameterFE = kmParameter[i];

@@ -1,5 +1,8 @@
 package org.kalypso.model.km;
 
+/*
+ * Eine Reihe der KM-Dateien
+ */
 public class Row
 {
 	private final double m_hNN;
