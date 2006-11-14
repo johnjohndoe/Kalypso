@@ -102,7 +102,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="wb:AbstractModelType">
 				<xs:sequence>
 					<xs:element  
 						ref="wb:staticModel"
@@ -119,18 +119,21 @@
 						minOccurs="1" maxOccurs="1"/>
 					<xs:element 
 						ref="wb:evaluationModel"
-						minOccurs="1" maxOccurs="1"/>
-						
+						minOccurs="1" maxOccurs="1"/>						
 					<xs:element 
-						ref="wb:additionalModelProperties"
-						minOccurs="0" maxOccurs="unbounded"/>					
+						ref="wb:additionalModelProperty"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element
+						ref="wb:overridingModel"
+						minOccurs="0"
+						maxOccurs="unbounded"/>					
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
 	<xs:complexType 
-		name="AbstractSubmodelType"
+		name="AbstractModelType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -150,49 +153,21 @@
 		a class groups modell properties related to the same modelling issue.
 	-->
 	<xs:element 
-			name="additionalModelProperties"
-			type="wb:AdditionalModelPropertiesType">
+			name="additionalModelProperty"
+			type="wb:AdditionalModelPropertyType"
+			block="substitution">
 		<xs:annotation>
-			<xs:documentation>
-				To associate additional model properties to the model
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="AdditionalModelPropertiesType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="wb:AdditionalModelPropertyClass"/>
-			<xs:element ref="wb:AdditionalModelProperty"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
-	
-	<xs:element 
-		name="AdditionalModelPropertyClass"
-		type="wb:AdditionalModelPropertyClassType"
-		abstract="true"
-		substitutionGroup="gml:_GML">
-		<xs:annotation>
-			<xs:documentation>
-				Substitution head for new model property class,
-				which are intended to extend the simulation model
-				with new property
+			<xs:documentation>s 
+				To associate an additional model property to a simualtion model.
+				A additional property must not be required for a simulation model.
+				A simulation model is therefore consistent and simulable without all 
+				additional properties. They may be think like helper data structures 
+				for the application. An example is a temporary cross layer check 
+				data structure.
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	
-	<xs:complexType 
-		name="AdditionalModelPropertyClassType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				Defines the base type for element, which represents
-				a new model property class
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType"/>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:element 
 		name="AdditionalModelProperty"
 		type="wb:AdditionalModelPropertyType"
@@ -216,13 +191,15 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="gml:AbstractFeatureType">
+				base="gml:AbstractGMLType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>	
 	
 	
-	<!-- Static model Model modelling -->
+	<!-- =====================================================================
+				staticModel property element 
+		===================================================================-->
 	<xs:element 
 		name="staticModel"
 		type="wb:StaticModelPropertyType"
@@ -237,6 +214,9 @@
 		</xs:annotation>
 	</xs:element>
 	
+	<!-- =====================================================================
+			StaticModelPropertyType
+		================================================================== -->
 	<xs:complexType 
 		name="StaticModelPropertyType"
 		abstract="true">
@@ -250,6 +230,10 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>	
+	
+	<!-- =====================================================================
+			StaticModel element
+		================================================================== -->
 	<xs:element 
 		name="StaticModel"
 		type="wb:AbstractStaticModelType"
@@ -257,6 +241,7 @@
 		>
 		<xs:annotation>
 			<xs:documentation>
+				Substititution group head for static model 
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -268,13 +253,14 @@
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for static models.
 				An static model describe the object which is being assessed.
-				It model properties that change slowly. 
+				The property modeled by a static model are typicaly changing 
+				slowly. 
 				E.g. the rougthness for a flood area.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractSubmodelType">
+				base="wb:AbstractModelType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -303,8 +289,13 @@
 			</xs:documentation>
 		</xs:annotation>		
 	</xs:element>
-		
-	<xs:complexType name="OperationalModelPropertyType">
+	
+	<!-- =====================================================================
+		OperationalPropertyType
+		================================================================== -->	
+	<xs:complexType 
+		name="OperationalModelPropertyType"
+		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete operational model property type.
@@ -334,19 +325,19 @@
 			<xs:documentation xml:lang="en">
 				Provides the base substitution group type for operational models.
 				An operational model describe the trigger for the process which is
-				being modelled. E.g. Watter discharge for flood modelling.
+				being modelled. E.g. Run off event, Watter discharge for flood modelling.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractSubmodelType">
+				base="wb:AbstractModelType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-<!--*************************************************************************** 
+<!--==========================================================================
 	Control Model modelling 
-	************************************************************************-->
+	=======================================================================-->
 	<xs:element 
 		name="controlModel"
 		type="wb:ControlModelPropertyType"
@@ -390,22 +381,23 @@
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
-				Provides the base substitution group type for operational models.
-				An operational model describe the trigger for the process which is
-				being modelled. E.g. Watter discharge for flood modelling.
+				Provides the base substitution group type for control models.
+				A control model contains the concepts used to control the 
+				simulation run. E.g convergence parameter for simulation 
+				algorithm or the time domain for a simulation.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractSubmodelType">
+				base="wb:AbstractModelType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
 	
-	<!-- **********************************************************************
-		Result Model modelling 
-		********************************************************************-->
+	<!-- =====================================================================
+		resultModel property element 
+		===================================================================-->
 	<xs:element 
 		name="resultModel"
 		type="wb:ResultModelPropertyType"
@@ -436,7 +428,13 @@
 	<xs:element 
 		name="ResultModel"
 		type="wb:AbstractControlModelType"
-		/>
+		>
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for relt model
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	
 	<xs:complexType 
 		name="AbstractResultModelType"
@@ -452,7 +450,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractSubmodelType"><!-- "gml:AbstractFeatureType" -->
+				base="wb:AbstractModelType"><!-- "gml:AbstractFeatureType" -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -503,12 +501,63 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractSubmodelType">
+				base="wb:AbstractModelType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-</xs:schema>
 
+<!-- =========================================================================
+		overridingModel property element
+	====================================================================== -->
+	<xs:element 
+		name="overridingModel"
+		type="wb:OverridingModelPropertyType"
+		block="substitution">
+		<xs:annotation>
+			<xs:documentation>
+				Use to override the behavior of a model
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="OverridingModelPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all overriding model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="wb:OverridingModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+		name="OverridingModel"
+		abstract="true"
+		type="wb:AbstractOverridingModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for overriding models
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType 
+		name="AbstractOverridingModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				The base type for all overriding model element.
+				This overriding concept is used to enfore property values for
+				feature, which normaly are computed throught a cross layer, 
+				cross model computation.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb:AbstractModelType"/>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
 
 
 
