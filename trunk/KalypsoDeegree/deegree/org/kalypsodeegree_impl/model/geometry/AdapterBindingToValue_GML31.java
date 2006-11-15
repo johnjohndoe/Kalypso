@@ -64,7 +64,6 @@ import ogc31.www.opengis.net.gml.LinearRingType;
 import ogc31.www.opengis.net.gml.MultiLineStringType;
 import ogc31.www.opengis.net.gml.MultiPointType;
 import ogc31.www.opengis.net.gml.MultiPolygonType;
-import ogc31.www.opengis.net.gml.ObjectFactory;
 import ogc31.www.opengis.net.gml.PointArrayPropertyType;
 import ogc31.www.opengis.net.gml.PointPropertyType;
 import ogc31.www.opengis.net.gml.PointType;
@@ -101,8 +100,6 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   final static ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
 
   final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
-  final static ObjectFactory gml3Fac = new ObjectFactory();
 
   final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 

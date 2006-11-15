@@ -406,6 +406,12 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     {
       System.out.println( e );
     }
+    /* May be the case if there are two identical points in one object, return null in this case */
+    catch( IllegalArgumentException e )
+    {
+      System.out.println( e );
+    }
+    
     return intersection;
   }
 

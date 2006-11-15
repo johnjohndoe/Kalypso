@@ -59,12 +59,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
- * 
  * Wizard to import a raster from another format (e.g. ascii) to gml
  * 
  * @author Nadja Peiler
@@ -151,7 +149,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
             try
             {
               monitor.beginTask( "Lese Rasterdaten", 100 );
-              RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
+              RectifiedGridCoverage2 rasterGrid = GridUtils.importGridArc( fileSource, cs );
               monitor.worked( 50 );
               if( monitor.isCanceled() )
               {

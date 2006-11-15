@@ -398,18 +398,20 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
 
     // 3. try
     if( schema == null && m_useSchemaCatalog )
+    {
       try
       {
-        new GMLSchemaException( "" );
-
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
         schema = schemaCatalog.getSchema( uri.toString(), (String) null );
       }
       catch( Exception e )
       {
+        /* Log it, because the following SaxExyception eats the innner exception */
+        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + m_schemaLocationHint
             + ") (schemaLocation was " + m_schemaLocationString + ")", e ) );
       }
+    }
 
     if( schema == null )
     {
