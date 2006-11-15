@@ -62,7 +62,6 @@ import ogc31.www.opengis.net.gml.LinearRingType;
 import ogc31.www.opengis.net.gml.MultiLineStringType;
 import ogc31.www.opengis.net.gml.MultiPointType;
 import ogc31.www.opengis.net.gml.MultiPolygonType;
-import ogc31.www.opengis.net.gml.ObjectFactory;
 import ogc31.www.opengis.net.gml.PointType;
 import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
@@ -97,8 +96,6 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   final static ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
 
   final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
-  final static ObjectFactory gml3Fac = new ObjectFactory();
 
   final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 
@@ -154,13 +151,13 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   private MultiPolygonType createMultiPolygonType( GM_MultiSurface multiSurface, String csNameDefault )
   {
     final String csName = getCSName( multiSurface, csNameDefault );
-    final MultiPolygonType multiPolygonType = gml3Fac.createMultiPolygonType();
+    final MultiPolygonType multiPolygonType = KalypsoOGC31JAXBcontext.GML3_FAC.createMultiPolygonType();
     final List<PolygonPropertyType> polygonMember = multiPolygonType.getPolygonMember();
     final GM_Surface[] allSurfaces = multiSurface.getAllSurfaces();
     for( int i = 0; i < allSurfaces.length; i++ )
     {
       final GM_Surface surface = allSurfaces[i];
-      final PolygonPropertyType polygonPropertyType = gml3Fac.createPolygonPropertyType();
+      final PolygonPropertyType polygonPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createPolygonPropertyType();
       final PolygonType polygonType = createPolygonType( surface, csName );
       polygonPropertyType.setPolygon( polygonType );
       polygonMember.add( polygonPropertyType );
@@ -172,13 +169,13 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   private MultiLineStringType createMultiLineStringType( GM_MultiCurve multiCurve, String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( multiCurve, csNameDefault );
-    final MultiLineStringType multiLineStringType = gml3Fac.createMultiLineStringType();
+    final MultiLineStringType multiLineStringType = KalypsoOGC31JAXBcontext.GML3_FAC.createMultiLineStringType();
     final List<LineStringPropertyType> lineStringMember = multiLineStringType.getLineStringMember();
     final GM_Curve[] allCurves = multiCurve.getAllCurves();
     for( int i = 0; i < allCurves.length; i++ )
     {
       final GM_Curve curve = allCurves[i];
-      final LineStringPropertyType lineStringPropertyType = gml3Fac.createLineStringPropertyType();
+      final LineStringPropertyType lineStringPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createLineStringPropertyType();
       final LineStringType lineStringType = createLineStringType( curve, csName );
       lineStringPropertyType.setLineString( lineStringType );
       lineStringMember.add( lineStringPropertyType );
@@ -189,7 +186,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   private MultiPointType createMultiPointType( GM_MultiPoint multiPoint, String csNameDefault )
   {
     final String csName = getCSName( multiPoint, csNameDefault );
-    final MultiPointType multiPointType = gml3Fac.createMultiPointType();
+    final MultiPointType multiPointType = KalypsoOGC31JAXBcontext.GML3_FAC.createMultiPointType();
     final GM_Point[] allPoints = multiPoint.getAllPoints();
 
     final List<PointType> pointList = multiPointType.getPointMembers().getPoint();
@@ -206,22 +203,22 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   private PolygonType createPolygonType( GM_Surface surface, String csNameDefault )
   {
     final String csName = getCSName( surface, csNameDefault );
-    final PolygonType polygonType = gml3Fac.createPolygonType();
+    final PolygonType polygonType = KalypsoOGC31JAXBcontext.GML3_FAC.createPolygonType();
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
     final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
     final GM_Ring[] interiorRings = surfaceBoundary.getInteriorRings();
 
     // exterior
-    final LinearRingType linearRingType = gml3Fac.createLinearRingType();
+    final LinearRingType linearRingType = KalypsoOGC31JAXBcontext.GML3_FAC.createLinearRingType();
 
     final CoordinatesType coordinatesType = createCoordinatesType( exteriorRing.getPositions() );
     linearRingType.setCoordinates( coordinatesType );
-    final JAXBElement<LinearRingType> linearRing = gml3Fac.createLinearRing( linearRingType );
+    final JAXBElement<LinearRingType> linearRing = KalypsoOGC31JAXBcontext.GML3_FAC.createLinearRing( linearRingType );
 
-    final AbstractRingPropertyType abstractRingPropertyType = gml3Fac.createAbstractRingPropertyType();
+    final AbstractRingPropertyType abstractRingPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createAbstractRingPropertyType();
     abstractRingPropertyType.setRing( linearRing );
 
-    final Exterior exterior = gml3Fac.createExterior( abstractRingPropertyType );
+    final Exterior exterior = KalypsoOGC31JAXBcontext.GML3_FAC.createExterior( abstractRingPropertyType );
 
     polygonType.setExterior( exterior );
     // interior
@@ -232,16 +229,16 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
       for( int i = 0; i < interiorRings.length; i++ )
       {
         final GM_Ring ring = interiorRings[i];
-        final LinearRingType interiorLinearRingType = gml3Fac.createLinearRingType();
+        final LinearRingType interiorLinearRingType = KalypsoOGC31JAXBcontext.GML3_FAC.createLinearRingType();
 
         final CoordinatesType interiorCoordinatesType = createCoordinatesType( ring.getPositions() );
         interiorLinearRingType.setCoordinates( interiorCoordinatesType );
-        final JAXBElement<LinearRingType> interiorLinearRing = gml3Fac.createLinearRing( interiorLinearRingType );
+        final JAXBElement<LinearRingType> interiorLinearRing = KalypsoOGC31JAXBcontext.GML3_FAC.createLinearRing( interiorLinearRingType );
 
-        final AbstractRingPropertyType interiorAbstractRingPropertyType = gml3Fac.createAbstractRingPropertyType();
+        final AbstractRingPropertyType interiorAbstractRingPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createAbstractRingPropertyType();
         interiorAbstractRingPropertyType.setRing( interiorLinearRing );
 
-        final Interior interior = gml3Fac.createInterior( interiorAbstractRingPropertyType );
+        final Interior interior = KalypsoOGC31JAXBcontext.GML3_FAC.createInterior( interiorAbstractRingPropertyType );
         interiorContainer.add( interior );
       }
     }
@@ -253,7 +250,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   private LineStringType createLineStringType( GM_Curve lineString, String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( lineString, csNameDefault );
-    final LineStringType lineStringType = gml3Fac.createLineStringType();
+    final LineStringType lineStringType = KalypsoOGC31JAXBcontext.GML3_FAC.createLineStringType();
     final GM_LineString asLineString = lineString.getAsLineString();
     final GM_Position[] positions = asLineString.getPositions();
     final CoordinatesType coordinatesType = createCoordinatesType( positions );
@@ -264,7 +261,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 
   private PointType createPointType( GM_Point point, String csNameDefault )
   {
-    final PointType pointType = gml3Fac.createPointType();
+    final PointType pointType = KalypsoOGC31JAXBcontext.GML3_FAC.createPointType();
     final GM_Position position = point.getPosition();
     // TODO: coordinates is deprecates; use pos instead
     final CoordinatesType coordinatesType = createCoordinatesType( new GM_Position[] { position } );
@@ -275,7 +272,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 
   private CoordinatesType createCoordinatesType( GM_Position[] positions )
   {
-    final CoordinatesType coordinatesType = gml3Fac.createCoordinatesType();
+    final CoordinatesType coordinatesType = KalypsoOGC31JAXBcontext.GML3_FAC.createCoordinatesType();
     coordinatesType.setCs( COORDINATES_SEPARATOR );
     coordinatesType.setDecimal( DECIMAL_SEPARATOR );
     coordinatesType.setTs( TUPPLE_SEPARATOR );
@@ -352,10 +349,10 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     final GM_Position min = geometry.getMin();
     final GM_Position max = geometry.getMax();
 
-    final EnvelopeType envelopeType = gml3Fac.createEnvelopeType();
+    final EnvelopeType envelopeType = KalypsoOGC31JAXBcontext.GML3_FAC.createEnvelopeType();
 
-    final DirectPositionType lowerCorner = gml3Fac.createDirectPositionType();
-    final DirectPositionType upperCorner = gml3Fac.createDirectPositionType();
+    final DirectPositionType lowerCorner = KalypsoOGC31JAXBcontext.GML3_FAC.createDirectPositionType();
+    final DirectPositionType upperCorner = KalypsoOGC31JAXBcontext.GML3_FAC.createDirectPositionType();
 
     final List<Double> lowers = lowerCorner.getValue();
     lowers.clear();

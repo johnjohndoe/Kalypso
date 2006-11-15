@@ -151,6 +151,7 @@ public final class GmlSerializer
       inputSource.setEncoding( charsetEncoding );
 
       final Source source = new SAXSource( reader, inputSource );
+      
       final StreamResult result = new StreamResult( writer );
 
       final TransformerFactory tFac = TransformerFactory.newInstance();

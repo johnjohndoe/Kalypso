@@ -198,6 +198,7 @@ public class GMLSAXFactory
     final String localPart = prefixedQName.getLocalPart();
 
     final Object value = feature.getProperty( vpt );
+
     if( value == null )
     {
       // write empty tag if this property is required
