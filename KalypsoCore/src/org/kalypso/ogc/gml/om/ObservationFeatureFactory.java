@@ -164,7 +164,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
       final XsdBaseTypeHandler handler = typeHandlers[nb];
       try
       {
-        final Object value = handler.convertToJavaValue( token );
+        final Object value;
+        if( "null".equals( token ) )
+          value = null;
+        else
+          value = handler.convertToJavaValue( token );
         record.setValue( component, value );
       }
       catch( final NumberFormatException e )
@@ -248,13 +252,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
       throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-    
+
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_DESCRIPTION ), source.getDescription() ) );
 
     final List<MetadataObject> mdList = source.getMetadataList();
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_METADATA ), mdList ) );
-    
+
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_OBSERVED_PROP ), source.getPhenomenon() ) );
 
     final TupleResult result = source.getResult();
@@ -266,7 +270,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final String strResult = serializeResultAsString( result );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_RESULT ), strResult ) );
-    
+
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
@@ -376,8 +380,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
           buffer.append( " " );
 
         final Object value = record.getValue( comp );
-
-        final String strValue = handler.convertToXMLString( value );
+        final String strValue;
+        if( value == null )
+          strValue = "null";
+        else
+          strValue = handler.convertToXMLString( value );
 
         buffer.append( strValue );
       }
