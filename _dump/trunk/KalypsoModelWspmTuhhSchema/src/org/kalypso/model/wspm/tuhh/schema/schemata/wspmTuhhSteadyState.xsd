@@ -800,10 +800,6 @@
 					kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
 					kapp:property="tuhh:waterBodyLinkMember">
 				</kapp:functionProperty>
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.MarkerListFunctionProperty"
-					kapp:property="tuhh:markerMember">
-				</kapp:functionProperty>
 			</appinfo>
 		</annotation>
 		<complexContent>

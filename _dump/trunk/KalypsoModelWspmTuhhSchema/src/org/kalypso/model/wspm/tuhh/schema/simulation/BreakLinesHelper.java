@@ -73,11 +73,13 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -182,8 +184,8 @@ public class BreakLinesHelper implements IWspmConstants
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
-    final LinkedList<GM_Position> leftPoints = new LinkedList<GM_Position>();
-    final LinkedList<GM_Position> rightPoints = new LinkedList<GM_Position>();
+    final LinkedList<GM_Point> leftPoints = new LinkedList<GM_Point>();
+    final LinkedList<GM_Point> rightPoints = new LinkedList<GM_Point>();
 
     if( reachProfileSegments.length > 0 )
     {
@@ -192,15 +194,12 @@ public class BreakLinesHelper implements IWspmConstants
 
       // we assume that all points have the same crs
 
-      CS_CoordinateSystem crs = null;
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
         if( geometry == null ) // ignore profiles without geometry
           continue;
 
-        if( crs == null ) // search the crs, we assume that all geometries have the same crs
-          crs = geometry.getCoordinateSystem();
         final WspmProfile profileMember = reach.getProfileMember();
 
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
@@ -208,7 +207,7 @@ public class BreakLinesHelper implements IWspmConstants
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
 
-        GM_Position[] points = null;
+        GM_Point[] points = null;
         if( useWsp )
         {
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
@@ -227,10 +226,11 @@ public class BreakLinesHelper implements IWspmConstants
             leftPoints.add( points[0] );
             rightPoints.add( points[points.length - 1] );
           }
-          for( final GM_Position pos : points )
+
+          for( final GM_Point pos : points )
           {
             final Feature pointFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BOUNDARY, "wspPointMember" ), new QName( NS_WSPM_BOUNDARY, "WspPoint" ) );
-            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), GeometryFactory.createGM_Point( pos, crs ) );
+            pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), pos );
             pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "station" ), station );
             pointFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "wsp" ), wsp );
           }
@@ -238,13 +238,17 @@ public class BreakLinesHelper implements IWspmConstants
       }
 
       final List<GM_Position> posList = new ArrayList<GM_Position>();
-      for( GM_Position pos : leftPoints )
-        posList.add( pos );
-      for( final ListIterator<GM_Position> iter = rightPoints.listIterator( rightPoints.size() ); iter.hasPrevious(); )
-        posList.add( iter.previous() );
 
+      for( GM_Point pos : leftPoints )
+        posList.add( pos.getPosition() );
+      for( final ListIterator<GM_Point> iter = rightPoints.listIterator( rightPoints.size() ); iter.hasPrevious(); )
+        posList.add( iter.previous().getPosition() );
+
+      final GM_Point firstLeftPoint = leftPoints.getFirst();
+      /* We assume here that all points have the same crs */
+      final CS_CoordinateSystem crs = firstLeftPoint.getCoordinateSystem();
       // add first point to close the ring
-      posList.add( leftPoints.getFirst() );
+      posList.add( firstLeftPoint.getPosition() );
 
       final GM_Surface surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
       rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface );
@@ -253,13 +257,13 @@ public class BreakLinesHelper implements IWspmConstants
     }
   }
 
-  private static GM_Position[] calculateWspPoints( final IProfil profil, final double wspHoehe ) throws ProfilDataException
+  private static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe ) throws ProfilDataException
   {
     final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
     final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
     final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
     if( ppRW == null || ppHW == null ) // ignore profile without geo-coordinates
-      return new GM_Position[] {};
+      return new GM_Point[] {};
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final IProfilPoint firstPoint = points.getFirst();
@@ -287,16 +291,21 @@ public class BreakLinesHelper implements IWspmConstants
     if( lastY < wspHoehe )
       intersections.add( new Double( lastX ) );
 
-    final GM_Position[] poses = new GM_Position[intersections.size()];
+    final GM_Point[] poses = new GM_Point[intersections.size()];
     int count = 0;
     for( final Double x : intersections )
     {
       final double rw = rwLine.getYFor( x, false );
       final double hw = hwLine.getYFor( x, false );
-      final GM_Position position = GeometryFactory.createGM_Position( rw, hw, wspHoehe );
-      poses[count++] = position;
+
+      final String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+      final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+      final GM_Point point = GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
+
+      poses[count++] = point;
     }
 
     return poses;
   }
+
 }
