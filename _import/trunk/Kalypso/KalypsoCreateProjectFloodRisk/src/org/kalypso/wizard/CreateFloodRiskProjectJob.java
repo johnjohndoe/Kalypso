@@ -126,6 +126,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -562,7 +563,7 @@ public class CreateFloodRiskProjectJob extends Job
     for( int i = 0; i < m_waterlevelGrids.size(); i++ )
     {
       File sourceFile = (File) m_waterlevelGrids.get( i );
-      RectifiedGridCoverage grid = GridUtils.importGridArc( sourceFile, m_waterlevelCooSystem );
+      RectifiedGridCoverage2 grid = GridUtils.importGridArc( sourceFile, m_waterlevelCooSystem );
       String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
       File waterlevelDir = (m_workspacePath.append( m_projectHandel.getFullPath().append( "/Waterlevel" ) )).toFile(); //$NON-NLS-1$
       waterlevelDir.mkdir();
@@ -688,7 +689,8 @@ public class CreateFloodRiskProjectJob extends Job
     {
       final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName.getLocalPart() + identifier, waterlevelFeatureType, true );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
-      waterlevelFeature.setProperty( featureProperty, waterlevelFile );
+      // TODO: check if this is right
+      waterlevelFeature.setProperty( featureProperty, waterlevelFile.getLocationURI().toASCIIString() );
       FeatureHelper.addProperty( rootFeature, waterlevelMember, waterlevelFeature );
       identifier = identifier + 1;
     }

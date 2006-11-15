@@ -93,6 +93,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.w3c.dom.Document;
 
 /**
@@ -170,7 +171,7 @@ public class CalculateDamageJob implements ISimulation
 
       // calculate annualDamage
       Vector tempGrids = DamageAnalysis.calculateTempGridsAnnualDamage( damageGrids );
-      RectifiedGridCoverage annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
+      RectifiedGridCoverage2 annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
 
       monitor.setProgress( 20 );
 

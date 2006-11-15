@@ -51,6 +51,7 @@ import org.kalypso.floodrisk.mathTool.ParseFunction;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
@@ -423,7 +424,7 @@ public class DamageAnalysis
    * @return annualDamageGrid(RectifiedGridCoverage)
    * @throws Exception
    */
-  public static RectifiedGridCoverage calculateAnnualDamage( Vector tempGrids ) throws Exception
+  public static RectifiedGridCoverage2 calculateAnnualDamage( Vector tempGrids ) throws Exception
   {
     System.out.println( Messages.getString("damageAnalysis.DamageAnalysis.CalculateAnnualDamageGrid") ); //$NON-NLS-1$
     RectifiedGridCoverage firstGrid = (RectifiedGridCoverage)tempGrids.firstElement();
@@ -468,7 +469,10 @@ public class DamageAnalysis
        */
     }//for k
     RangeSet annualDamage_rangeSet = new RangeSet( annualDamageGrid_rangeSetData, null );
-    RectifiedGridCoverage annualDamageGrid = new RectifiedGridCoverage( annualDamage_gridDomain, annualDamage_rangeSet );
+    RectifiedGridCoverage2 annualDamageGrid = RectifiedGridCoverage2.createRectifiedGridCoverage();
+    annualDamageGrid.setGridDomain( annualDamage_gridDomain );
+    annualDamageGrid.setRangeSet( annualDamage_rangeSet );
+      
     return annualDamageGrid;
   }
 
