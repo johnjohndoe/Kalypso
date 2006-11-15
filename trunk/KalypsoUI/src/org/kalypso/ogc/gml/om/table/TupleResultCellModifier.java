@@ -97,7 +97,7 @@ public class TupleResultCellModifier implements ICellModifier
     {
       if( handler instanceof XsdBaseTypeHandler )
       {
-        final Object valueToSet = handler.parseType( value.toString() );
+        final Object valueToSet = value == null ? null : handler.parseType( value.toString() );
 
         /* Set value and inform listeners */
         record.setValue( component, valueToSet );

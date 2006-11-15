@@ -222,7 +222,16 @@ public class GMLSAXFactory
       {
         try
         {
-          th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context, m_gmlVersion );
+          if( singleValue == null )
+          {
+            /* Write empty tag if we have one null value */
+            /* Maybe change behaviour according to min/max-occurs */
+            m_handler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+            // TODO: put default value if element is not nullable?
+            m_handler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+          }
+          else
+            th.marshal( prefixedQName, singleValue, m_handler, lexicalHandler, context, m_gmlVersion );
         }
         catch( TypeRegistryException e )
         {

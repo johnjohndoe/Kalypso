@@ -346,6 +346,10 @@ public class TypeHandlerUtilities
         public String convertToXMLString( final BigDecimal value )
         {
           // TODO: format according to fraction digits
+          
+          // TODO: decide this from outside!
+          // GML should write/read the empty string
+          // Observations should read/write 'null'
           return value == null ? "" : value.toString();
         }
       } );

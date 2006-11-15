@@ -82,6 +82,8 @@ public class FeatureComponent implements IComponent
   public String getName( )
   {
     final Feature phenomenon = getPhenomenon();
+    if( phenomenon == null )
+      return "<unknown phenomenon>";
     return (String) FeatureHelper.getFirstProperty( phenomenon, ObservationFeatureFactory.GML_NAME );
   }
 
