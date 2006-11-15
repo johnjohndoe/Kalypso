@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  
+	Provide the abstrat model (framework) for creating simulation models.
+	A simulation model is an abtraction of all aspects about
+	a natural process. E.g. an unteady process. 
+	The model is focused and made for a simulation. 
+	It also supports the following 3 pahse simulation workflow:
+	i) the pre-processing phase where the input data are gathered
+	ii)the processing phase where the simulation takes place
+	iii)the post processing phase where the result of the simulation is 
+	evaluation.
+	
+	The aspects modelled are:
+	==Input or pre-processing part
+		==The static model, which modells the object in or on which 
+			the process is happening, the river area.
+		==The operational sub model, which modells the phisical evant that triggers 
+	    	the process. A dicke break, modelled as a discharge a point.
+		==The control sub model, which is contained the data used to control and 
+	    	tuned the simulation kernel. E.g. the simulation location in time, the 
+	    	convergence requirements for the simulation algorithm.
+	==Output or processing part
+		==The result model, which represents the simulation result. 
+		but is also an abtraction of the process aspect the simulation is targeting.
+		E.g. Water levels, innundaton areas
+	==Evaluation or postprocessng part
+		==Evaluation model, that represents model on how the simulation model can 
+		be viewed and interpreted
+	The simulation model is an inegrativ data model, and contains all data generated 
+	or process during the worklow
+		
+	@author Patrice Congo
+-->
+
+
+<xs:schema 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	
+	<!-- remote from ogc -->
+	<!-- xs:import 	
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
+
+	<!-- local modified for successful binding -->
+	<!-- xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="file:///D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/ -->
+	<xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+	<!-- xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="file:///G:/tuhh_workspace/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/ -->
+		
+			<!-- xs:import 
+			namespace="http://www.opengis.net/gml" 
+			schemaLocation="D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/ 
+			-->
+			
+	<!-- xs:include schemaLocation="rougthness_model.xsd"/ -->
+	<!--  xs:include schemaLocation="river_area_model.xsd"/ -->
+	<!-- xs:include schemaLocation="simulation_control_model.xsd"/-->
+	
+	
+	<!-- xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d"
+		schemaLocation="./rougthness_model.xsd"
+		/-->
+	<!-- ==============================================================
+						global element declarations
+		============================================================== -->
+	<!-- Root element.
+		RiverNetworkSimulationModel --> 
+	<!-- wieso substitute to _gml -->
+	
+	<xs:element 
+			name="SimulationModel"
+			type="simBase:SimulationModelType"
+			substitutionGroup="gml:_Feature">
+	</xs:element>
+	
+	<xs:complexType  
+			name="SimulationModelType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents a simulation model.
+				It is made of a static model, an operational  model, 
+				a simulation control model, a result model, and an 
+				evaluation model.
+				Addtional properties may be added to the using an element
+				which as additionalModelPropertyClass as substition group.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType">
+				<xs:sequence>
+					<xs:element  
+						ref="simBase:staticModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:operationalModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:controlModel"
+						minOccurs="1"
+						maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:resultModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:evaluationModel"
+						minOccurs="1" maxOccurs="1"/>						
+					<xs:element 
+						ref="simBase:additionalModelProperty"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element
+						ref="simBase:overridingModel"
+						minOccurs="0"
+						maxOccurs="unbounded"/>					
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType 
+		name="AbstractModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base type for all sub models. 
+				E.g. static, operational, control , result and evaluation 
+				submodel of a simulation model.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- Modell property class 
+		a class groups modell properties related to the same modelling issue.
+	-->
+	<xs:element 
+			name="additionalModelProperty"
+			type="simBase:AdditionalModelPropertyType"
+			block="substitution">
+		<xs:annotation>
+			<xs:documentation>s 
+				To associate an additional model property to a simualtion model.
+				A additional property must not be required for a simulation model.
+				A simulation model is therefore consistent and simulable without all 
+				additional properties. They may be think like helper data structures 
+				for the application. An example is a temporary cross layer check 
+				data structure.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element 
+		name="AdditionalModelProperty"
+		type="simBase:AdditionalModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Represents the substitution head for Additional 
+				model properties
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType 
+		name="AdditionalModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for extension
+				when creating an element which may be use as 
+				AdditionalModelProperty.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractGMLType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+	
+	
+	<!-- =====================================================================
+				staticModel property element 
+		===================================================================-->
+	<xs:element 
+		name="staticModel"
+		type="simBase:StaticModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				Use to associate a static model to a simmulation model.
+				Concrete models should provide a substitute for this property
+				element. E.g. the 1d2d model should provide a staticModel1D2D
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<!-- =====================================================================
+			StaticModelPropertyType
+		================================================================== -->
+	<xs:complexType 
+		name="StaticModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all concrete staticModel property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:StaticModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<!-- =====================================================================
+			StaticModel element
+		================================================================== -->
+	<xs:element 
+		name="StaticModel"
+		type="simBase:AbstractStaticModelType"
+		abstract="true"
+		>
+		<xs:annotation>
+			<xs:documentation>
+				Substititution group head for static model 
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="AbstractStaticModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for static models.
+				An static model describe the object which is being assessed.
+				The property modeled by a static model are typicaly changing 
+				slowly. 
+				E.g. the rougthness for a flood area.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	
+	<!--*********************************************************************** 
+		Operational Model modelling 
+		To create a concrete operational model
+			==Provide an extention of AbstractOperationalModelType
+			==Provide an element of that concrete type, belonging to
+				the substititions group of OperationaModel
+			==Provide an extenion of OperationalModelPropertyType
+			==Provide an element of that type, with ist substitution group 
+				set tp operationalModel
+		********************************************************************-->
+	<xs:element 
+		name="operationalModel"
+		type="simBase:OperationalModelPropertyType">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				Use to associate an operational model to a simmulation model.
+				Concrete models should provide a substitute for this property
+				element. E.g. the 1d2d model should provide an operationalModel1D2D
+			</xs:documentation>
+		</xs:annotation>		
+	</xs:element>
+	
+	<!-- =====================================================================
+		OperationalPropertyType
+		================================================================== -->	
+	<xs:complexType 
+		name="OperationalModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all concrete operational model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:OperationalModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	<xs:element 
+		name="OperationalModel"
+		type="simBase:AbstractOperationalModelType"
+		abstract="true"
+		>
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for all concrete OperationalModel element
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="AbstractOperationalModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for operational models.
+				An operational model describe the trigger for the process which is
+				being modelled. E.g. Run off event, Watter discharge for flood modelling.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+<!--==========================================================================
+	Control Model modelling 
+	=======================================================================-->
+	<xs:element 
+		name="controlModel"
+		type="simBase:ControlModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				Use to associate a conrol model to a simulation model.
+				Concrete models should provide a substitute for this property
+				element. E.g. the 1d2d model should provide a controlModel1D2D
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="ControlModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all concrete control model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:ControlModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	<xs:element 
+		name="ControlModel"
+		type="simBase:AbstractControlModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head  for all concrete model types
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="AbstractControlModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for control models.
+				A control model contains the concepts used to control the 
+				simulation run. E.g convergence parameter for simulation 
+				algorithm or the time domain for a simulation.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<!-- =====================================================================
+		resultModel property element 
+		===================================================================-->
+	<xs:element 
+		name="resultModel"
+		type="simBase:ResultModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				Use to associate a result model to a simmulation model.
+				Concrete models should provide a substitute for this property
+				element. E.g. the 1d2d model should provide a resultModel1D2D
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType 
+		name="ResultModelPropertyType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				The root type of all concrete result model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:ResultModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	<xs:element 
+		name="ResultModel"
+		type="simBase:AbstractControlModelType"
+		>
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for relt model
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="AbstractResultModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for result models.
+				A Result Model describes the result of a simulation.
+				It is an abtraction of observation which can be made about
+				the assessed process. 
+				E.g. Watter level at a point for flood modelling.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType"><!-- "gml:AbstractFeatureType" -->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- **********************************************************************
+		Evaluation modelling 
+		********************************************************************-->
+	<xs:element 
+		name="evaluationModel"
+		type="simBase:EvaluationModelPropertyType">
+		<xs:annotation>
+			<xs:documentation 
+				xml:lang="en">
+				Use to associate an evaluation modell to a simulation model.
+				Concrete models should provide a substitute for this property
+				element. E.g. the 1d2d model should provide an evaluationModel1D2D
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="EvaluationModelPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all concrete evaluation model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:evaluationModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	<xs:element 
+		name="EvaluationModel"
+		type="simBase:AbstractEvaluationModelType"
+		/>
+	
+	<xs:complexType 
+		name="AbstractEvaluationModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for result models.
+				A Result Model describes the result of a simulation.
+				It is an abtraction of observation which can be made about
+				the assessed process. 
+				E.g. Watter level at a point for flood modelling.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+<!-- =========================================================================
+		overridingModel property element
+	====================================================================== -->
+	<xs:element 
+		name="overridingModel"
+		type="simBase:OverridingModelPropertyType"
+		block="substitution">
+		<xs:annotation>
+			<xs:documentation>
+				Use to override the behavior of a model
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="OverridingModelPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The root type of all overriding model property type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="simBase:OverridingModel"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<xs:element 
+		name="OverridingModel"
+		abstract="true"
+		type="simBase:AbstractOverridingModelType">
+		<xs:annotation>
+			<xs:documentation>
+				Substitution head for overriding models
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType 
+		name="AbstractOverridingModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				The base type for all overriding model element.
+				This overriding concept is used to enfore property values for
+				feature, which normaly are computed throught a cross layer, 
+				cross model computation.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:AbstractModelType"/>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
+
+
+
+
+
+
+
+
