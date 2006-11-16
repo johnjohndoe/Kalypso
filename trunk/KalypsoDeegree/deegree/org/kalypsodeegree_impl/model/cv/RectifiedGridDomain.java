@@ -181,7 +181,6 @@ public class RectifiedGridDomain
    */
   public GM_Envelope getGM_Envelope( int lowX, int lowY, int highX, int highY, CS_CoordinateSystem cs ) throws Exception
   {
-
     double minX = m_origin.getX() + (lowX * m_offset[0]);
     double minY = m_origin.getY() + (lowY * m_offset[1]);
     GM_Position min = GeometryFactory.createGM_Position( minX, minY );
@@ -229,23 +228,26 @@ public class RectifiedGridDomain
     int lowX = (int) getGridRange().getLow()[0];
     int lowY = (int) getGridRange().getLow()[1];
 
-    if( (env.getMin().getX() - getOrigin( cs ).getX()) > 0 )
+    final GM_Envelope envelope = getGM_Envelope( cs );
+    final GM_Position origin = envelope.getMin();
+    
+    if( (env.getMin().getX() - origin.getX()) > 0 )
     {
-      lowX = (int) ((env.getMin().getX() - getOrigin( cs ).getX()) / getOffsetX( cs ));
+      lowX = (int) ((env.getMin().getX() - origin.getX()) / getOffsetX( cs ));
     }
 
-    if( (env.getMin().getY() - getOrigin( cs ).getY()) > 0 )
+    if( (env.getMin().getY() - origin.getY()) > 0 )
     {
-      lowY = (int) ((env.getMin().getY() - getOrigin( cs ).getY()) / getOffsetY( cs ));
+      lowY = (int) ((env.getMin().getY() - origin.getY()) / getOffsetY( cs ));
     }
 
-    int highX = (int) ((env.getMax().getX() - getOrigin( cs ).getX()) / getOffsetX( cs ));
+    int highX = (int) ((env.getMax().getX() - origin.getX()) / getOffsetX( cs ));
     if( highX > (int) getGridRange().getHigh()[0] )
     {
       highX = (int) getGridRange().getHigh()[0];
     }
 
-    int highY = (int) ((env.getMax().getY() - getOrigin( cs ).getY()) / getOffsetY( cs ));
+    int highY = Math.abs(  (int) ((env.getMax().getY() - origin.getY()) / getOffsetY( cs )) );
     if( highY > (int) getGridRange().getHigh()[1] )
     {
       highY = (int) getGridRange().getHigh()[1];
