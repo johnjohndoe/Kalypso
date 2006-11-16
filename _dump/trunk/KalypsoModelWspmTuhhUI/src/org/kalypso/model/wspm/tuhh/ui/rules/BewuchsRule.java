@@ -55,6 +55,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution;
 
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
@@ -74,7 +76,7 @@ public class BewuchsRule extends AbstractValidatorRule
       return;
     final IProfilDevider[] devider = profil.getDevider( IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
     final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
-    final IProfilPoint rightP = (devider.length > 1) ? devider[1].getPoint() : null;
+    final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length-1].getPoint() : null;
     if( (leftP == null) || (rightP == null) )
       return;
     final int leftIndex = points.indexOf( leftP );
@@ -86,7 +88,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
     try
     {
-      if( (validateArea( collector, VorlandL, 0, pluginId ) || validateArea( collector, VorlandR, rightIndex, pluginId )) && !Flussschl.isEmpty() )
+      if( (validateArea( collector, VorlandL, 0, pluginId ) | validateArea( collector, VorlandR, rightIndex, pluginId )) && !Flussschl.isEmpty() )
       {
         int i = leftIndex;
         for( IProfilPoint point : Flussschl )
@@ -100,9 +102,9 @@ public class BewuchsRule extends AbstractValidatorRule
         }
         final int lastIndex = (leftIndex > 0) ? leftIndex - 1 : leftIndex;
         if( points.get( lastIndex ).getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0) } );
         if( rightP.getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution(devider.length -1) } );
       }
     }
     catch( Exception e )

@@ -114,7 +114,9 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
 
     return null;
   }
-
+/**
+ * 
+ */
   public AbstractProfilMarkerResolution( final String label, final String description, final Image image )
   {
     m_label = label;

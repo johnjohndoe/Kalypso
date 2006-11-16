@@ -60,6 +60,8 @@ public interface IValidatorMarkerCollector
    *          the plugin-id from which to instantiate the resolutionClasses
    * @param resolutionClasses
    *          An array of class-names of marker resolutions (quick fixes)
+   *          <p>
+   *          these classes must not contain references to Objects, only simple Datatypes are allowed
    * @throws CoreException
    */
   public void createProfilMarker( final boolean isSevere, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;

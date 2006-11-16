@@ -75,9 +75,9 @@ public class TrennerRule extends AbstractValidatorRule
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     if( db == null )
-      collector.createProfilMarker( true, "keine Durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution(new DEVIDER_TYP[]{DEVIDER_TYP.DURCHSTROEMTE } ) }  );
+      collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( DEVIDER_TYP.DURCHSTROEMTE ) } );
     if( tf == null )
-      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId,  new IMarkerResolution2[] { new AddDeviderResolution(new DEVIDER_TYP[]{DEVIDER_TYP.TRENNFLAECHE } ) } );
+      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( DEVIDER_TYP.TRENNFLAECHE ) } );
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
   }
@@ -96,11 +96,11 @@ public class TrennerRule extends AbstractValidatorRule
       final DEVIDER_TYP deviderTyp = toValidate[0].getTyp();
       if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": unzulässige Position" , "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp ) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": unzulässige Position", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp ) } );
       }
     }
     catch( ProfilDataException e )

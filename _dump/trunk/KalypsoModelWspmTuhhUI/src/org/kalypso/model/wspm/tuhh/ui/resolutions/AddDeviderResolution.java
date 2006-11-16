@@ -52,15 +52,15 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
 
 public class AddDeviderResolution extends AbstractProfilMarkerResolution
 {
-  final private DEVIDER_TYP[] m_deviderTypes;
+  final private DEVIDER_TYP m_deviderType;
 
   /**
    * erzeugt fehlende Trennfläche
    */
-  public AddDeviderResolution( final DEVIDER_TYP[] deviderTypes )
+  public AddDeviderResolution( final DEVIDER_TYP deviderType )
   {
     super( "fehlende Trennflächen erzeugen", null, null );
-    m_deviderTypes = deviderTypes;
+    m_deviderType = deviderType;
   }
 
   /**
@@ -70,18 +70,15 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( IProfil profil )
   {
-    if( m_deviderTypes.length == 0 )
+    if( m_deviderType == null )
     {
       return null;
     }
-    final IProfilChange[] changes = new IProfilChange[m_deviderTypes.length * 2];
+    final IProfilChange[] changes = new IProfilChange[2];
     final IProfilPoint firstP = profil.getPoints().getFirst();
     final IProfilPoint lastP = profil.getPoints().getLast();
-    for( int i = 0; i < m_deviderTypes.length; i++ )
-    {
-      changes[i * 2] = new DeviderAdd( profil, m_deviderTypes[i], firstP );
-      changes[i * 2 + 1] = new DeviderAdd( profil, m_deviderTypes[i], lastP );
-    }
+    changes[0] = new DeviderAdd( profil, m_deviderType, firstP );
+    changes[1] = new DeviderAdd( profil, m_deviderType, lastP );
     return changes;
   }
 
