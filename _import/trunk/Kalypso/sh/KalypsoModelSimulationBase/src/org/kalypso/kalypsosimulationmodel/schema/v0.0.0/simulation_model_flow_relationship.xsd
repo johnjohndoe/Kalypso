@@ -8,7 +8,7 @@
 
 
 <xs:schema 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
@@ -27,11 +27,7 @@
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
 	
-	<xs:import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-		schemaLocation="./simulation_model_math.xsd"
-		/>
-	
+	<xs:include schemaLocation="simulation_model_math.xsd"/>
 		<!--***********************************************************************
 		Definition flowRelationship model 
 		********************************************************************-->
@@ -41,33 +37,55 @@
 	<!-- ==========================Marh Parameter Coverage================== -->
 		<xs:element 
 			name="FlowRelationshipCoverage"
-			type="wb:FlowRelationshipCoverageType">
+			type="simBase:FlowRelationshipCoverageType">
+			<xs:annotation>
+				<xs:documentation>
+					Represents a multipoint coverage with flow Relationship elements
+					(_FlowRelationship and subtituable) as range set values 
+				</xs:documentation>
+			</xs:annotation>
 		</xs:element>
+		
 		<xs:complexType 
 			name="FlowRelationshipCoverageType">
+			<xs:annotation>
+				<xs:documentation>
+					Specifies a multipoint coverage with flow Relationship elements
+					(_FlowRelationship and subtituable) as range set values 
+				</xs:documentation>
+			</xs:annotation>			
 			<xs:complexContent>
 				<xs:restriction 
 					base="gml:MultiPointCoverageType">
 					<xs:sequence>
 						<xs:element ref="gml:multiPointDomain"/>
-						<xs:element ref="wb:flowRelationshipRangeSet"/>
+						<xs:element ref="simBase:flowRelationshipRangeSet"/>
 						<xs:element ref="gml:coverageFunction" minOccurs="0"/>
 					</xs:sequence>
 				</xs:restriction>
 			</xs:complexContent>		
 		</xs:complexType>
+		
 		<xs:element 
 			name="flowRelationshipRangeSet"
 			substitutionGroup="gml:rangeSet">
+			<xs:annotation>
+				<xs:documentation>
+					Range Set containing only an array of flow relationships;
+					(_FlowRelationship and its substitutes)
+				</xs:documentation>
+			</xs:annotation>
 			<xs:complexType>
 				<xs:complexContent>
 					<xs:restriction 
 						base="gml:RangeSetType">
-						<xs:choice>
+						<!--xs:choice-->
+						<xs:sequence>	
 							<xs:element 
-								ref="wb:FlowRelationshipValueArray" 
-								maxOccurs="unbounded"/>
-						</xs:choice>
+								ref="simBase:FlowRelationshipValueArray" 
+								minOccurs="1" maxOccurs="1"/>
+							</xs:sequence>
+						<!--/xs:choice-->
 					</xs:restriction>
 				</xs:complexContent>
 			</xs:complexType>		
@@ -82,7 +100,7 @@
 			<xs:restriction 
 				base="gml:ValuePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="wb:_FlowRelationship"/>
+					<xs:element ref="simBase:_FlowRelationship"/>
 				</xs:sequence>
 				<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>
 			</xs:restriction>
@@ -92,7 +110,7 @@
 	
 	<xs:element 
 		name="_FlowRelationship"
-		type="wb:AbstractFlowRelationshipType"
+		type="simBase:AbstractFlowRelationshipType"
 		substitutionGroup="gml:_Object"
 		abstract="true">
 		<xs:annotation>
@@ -119,8 +137,8 @@
 	
 	<xs:element 
 		name="QOverH"
-		type="wb:QOverHType"
-		substitutionGroup="wb:_FlowRelationship">
+		type="simBase:QOverHType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define RMAS10S style vertical distribution 
@@ -134,7 +152,7 @@
 		name="QOverHType">
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element name="q">
 						<xs:simpleType>
@@ -157,8 +175,8 @@
 	====================================================================== -->
 	<xs:element 
 		name="AOverH"
-		type="wb:AOverHType"
-		substitutionGroup="wb:_FlowRelationship">
+		type="simBase:AOverHType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define a area waterlevel relationship based on
@@ -182,7 +200,7 @@
 		
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element 
 						name="a"
@@ -211,9 +229,9 @@
 			AOverHPolynom element
 	====================================================================== -->
 	<xs:element 
-		name="AOverH"
-		type="wb:AOverHType"
-		substitutionGroup="wb:_FlowRelationship">
+		name="AOverHPolynom"
+		type="simBase:AOverHType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define a area waterlevel polynom only relationship
@@ -228,7 +246,7 @@
 		name="AOverHPolynomType">
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element 
 						ref="simBase:Polynom1D"
@@ -238,25 +256,35 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	
+	<!-- =====================================================================
+			WlDisRel element
+	====================================================================== -->
 	<xs:element 
-		name="WlDisRel"
-		type="wb:WlDisRelType"
-		substitutionGroup="wb:_FlowRelationship">
+		name="FlowRelWlDis"
+		type="simBase:FlowRelWlDisType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
-				Difine a watterlevel discharge relationship based on set of control
-				point and an optional 1D polynom
+				Define a watterlevel discharge relationship based on set of control
+				point and an optional polynom
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	
-	
+	<!-- ======================================================================
+		FlowRelWldisType
+	======================================================================= -->	
 	<xs:complexType 
-		name="WlDisRelType">
+		name="FlowRelWlDisType">
+		<xs:annotation>
+			<xs:documentation>
+				Type for watterlevel discharge relationship based on set of control
+				point and an optional polynom
+			</xs:documentation>
+		</xs:annotation>		
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element name="waterLevel">
 						<xs:simpleType>
@@ -272,66 +300,99 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- ================================================================ -->
+	
+	<!-- =====================================================================
+			FlowRelWlWlDis element
+	====================================================================== -->
 	<xs:element 
-		name="WlWlDisRel"
-		type="wb:WlWlDisRelType"
-		substitutionGroup="wb:_FlowRelationship">
+		name="FlowRelWlWlDis"
+		type="simBase:FlowRelWlWlDisType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
-				Element to define RMAS10S style vertical distribution 
-				of eddy viscosity
+				Element to define a waterlevl water level relationship based
+				on control point and an optional 2D polynom
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	
 	
+	<!-- =====================================================================
+			WlWlDisReltType
+	====================================================================== -->
 	<xs:complexType 
-		name="WlWlDisRelType">
+		name="FlowRelWlWlDisType">
+		<xs:annotation>
+			<xs:documentation>
+				Type for waterlevel water level discharge relationship based
+				on control points and an optional 2D polynom
+			</xs:documentation>
+		</xs:annotation>
+		
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
-					<xs:element name="wlHeadWater">
+					<xs:element 
+						name="wlHeadWater"
+						minOccurs="1" maxOccurs="1">
 						<xs:simpleType>
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="wlBottomWater">
+					<xs:element 
+						name="wlBottomWater"
+						minOccurs="1" maxOccurs="1">
 						<xs:simpleType>
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="discharge">
+					<xs:element 
+						name="discharge"
+						minOccurs="1" maxOccurs="1">
 						<xs:simpleType>
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
+					<xs:element ref="simBase:Polynom2D"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- ================================================================ -->
+	<!-- =====================================================================
+		WlAreaDisRel
+	====================================================================== -->
 	<xs:element 
-		name="WlAreaDisRel"
-		type="wb:WlAreaRelType"
-		substitutionGroup="wb:_FlowRelationship">
+		name="FlowRelWlAreaDis"
+		type="simBase:FlowRelWlAreaType"
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
-				Element to define RMAS10S style vertical distribution 
-				of eddy viscosity
+				Defines a watter level area relationship based on control, 
+				measured, interpolation point and optionaly a 1D fitting
+				polynom
 			</xs:documentation>
 		</xs:annotation>
 				
 	</xs:element>
 	
 	
+	<!-- =====================================================================
+		FlowWlAreaType
+	====================================================================== -->
 	<xs:complexType 
-		name="WlAreaRelType">
+		name="FlowRelWlAreaType">
+		<xs:annotation>
+			<xs:documentation>
+				Type for watter level area relationship based on control, 
+				measured, interpolation points and optionaly a 1D fitting 
+				polynom
+			</xs:documentation>
+		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractFlowRelationshipType">
+				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element name="waterLevel">
 						<xs:simpleType>
@@ -342,7 +403,8 @@
 						<xs:simpleType>
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
-					</xs:element>			
+					</xs:element>
+					<xs:element ref="simBase:Polynom1D"/>			
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

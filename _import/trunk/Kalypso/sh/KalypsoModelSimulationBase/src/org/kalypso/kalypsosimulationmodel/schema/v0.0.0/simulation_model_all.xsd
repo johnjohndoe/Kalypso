@@ -1,0 +1,20 @@
+<xs:schema 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+	<!-- ***************************IMPORTS********************************* -->
+	<!--xs:import 
+		namespace="http://www.opengis.net/gml" 
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/-->
+	
+	<!-- **************************INCLUDES********************************** -->
+	<!-- xs:include schemaLocation="simulation_model.xsd"/ -->
+	<xs:include 
+		schemaLocation="simulation_model_finite_elements_discretisation.xsd"/>
+	
+</xs:schema>

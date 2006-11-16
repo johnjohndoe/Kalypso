@@ -51,10 +51,14 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  * 
  * @author Patrice Congo
  */
-public class UrlCatalog1D2D extends AbstractUrlCatalog
+public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 {
-
-  /**
+	final public String CURRENT_VERSION="v.0.0.0";
+	final public String SIM_MODEL_REL_PATH=CURRENT_VERSION+"/simulation_model_all.xsd";
+	final public String SIM_MODEL_NS="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
+	final public String SIM_MODEL_NS_PREFIX="simBase";
+  
+	/**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
@@ -63,6 +67,9 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
 		  				final Map<String, URL> catalog, 
 		  				Map<String, String> prefixes )
   {
-    //catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.9/control.xsd" ) );
+    catalog.put( 
+    			SIM_MODEL_NS, 
+    			myClass.getResource( SIM_MODEL_REL_PATH ) );
+    prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
   }
 }
