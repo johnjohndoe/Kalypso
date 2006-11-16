@@ -69,21 +69,18 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.Raster;
-import java.awt.image.SampleModel;
 import java.awt.image.renderable.ParameterBlock;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.TreeMap;
-import java.util.Vector;
 
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RasterFactory;
 import javax.media.jai.TiledImage;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
-import org.kalypsodeegree.graphics.sld.ColorMapEntry;
-import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -95,7 +92,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -105,14 +102,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements RasterDisplayElement, Serializable
 {
+  public static final int mode_intervalColorMapping = 0;
+
+  public static final int mode_valueColorMapping = 1;
 
   private TiledImage m_surrogateTiledImage;
 
   private boolean m_valid = false;
-
-  private final int mode_intervalColorMapping = 0;
-
-  private final int mode_valueColorMapping = 1;
 
   /**
    * Creates a new RasterDisplayElement_Impl object.
@@ -133,10 +129,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       RasterSymbolizer rasterSym = (RasterSymbolizer) getSelectedSymbolizer();
 
       Feature feature = getFeature();
-      RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature .getProperty( "rectifiedGridDomain" );
-      RangeSet rangeSet = (RangeSet) feature.getProperty( "rangeSet" );
+      final RectifiedGridCoverage2 coverage = new RectifiedGridCoverage2( feature );
 
-      Raster surrogateRaster = getSurrogateRaster( rgDomain, rangeSet, rasterSym );
+      Raster surrogateRaster = getSurrogateRaster( coverage, rasterSym );
       m_surrogateTiledImage = new TiledImage( getSurrogateImage( surrogateRaster ), true );
       m_valid = true;
     }
@@ -250,12 +245,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     BufferedImage buffer = new BufferedImage( (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight(), BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
-    // bufferGraphics.setColor(Color.GREEN);
+
     // draw a transparent backround on the bufferedImage
-    bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
+    bufferGraphics.setColor( new Color( 255, 0, 255, 128 ) );
     bufferGraphics.fillRect( 0, 0, (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight() );
+
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
+
     // draw bufferedImage on the screen
     g2.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
   }
@@ -297,89 +294,31 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * @param gridDomain
    * @return surrogate raster
    */
-  private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet, RasterSymbolizer rasterSym )
+  private Raster getSurrogateRaster( final RectifiedGridCoverage2 coverage, final RasterSymbolizer rasterSym )
   {
-    int mode = rasterSym.getMode();
-    TreeMap intervalMap = null;
-    if( mode == mode_intervalColorMapping )
-    {
-      intervalMap = rasterSym.getIntervalMap();
-    }
+    final int mode = rasterSym.getMode();
 
-    int nCols = gridDomain.getNumColumns();
-    int nRows = gridDomain.getNumRows();
-    SampleModel sampleModel = RasterFactory.createBandedSampleModel( DataBuffer.TYPE_INT, nCols, nRows, 4 );
-    DataBuffer dataBuffer = sampleModel.createDataBuffer();
-    Vector rangeSetData = rangeSet.getRangeSetData();
-    for( int i = 0; i < rangeSetData.size(); i++ )
+    TreeMap treeColorMap = null;
+    if( mode == mode_intervalColorMapping )
+      treeColorMap = rasterSym.getIntervalMap();
+    else if( mode == mode_valueColorMapping )
+      treeColorMap = rasterSym.getColorMap();
+
+    try
     {
-      Vector rangeSetDataRow = (Vector) rangeSetData.get( i );
-      for( int j = 0; j < rangeSetDataRow.size(); j++ )
-      {
-        Color actualColor = Color.DARK_GRAY;
-        int alphaValue = 255;
-        if( rangeSetDataRow.get( j ) != null )
-        {
-          double actualValue = ((Double) rangeSetDataRow.get( j )).doubleValue();
-          switch( mode )
-          {
-            case mode_intervalColorMapping:
-            {
-              Iterator it = intervalMap.keySet().iterator();
-              while( it.hasNext() )
-              {
-                Interval interval = (Interval) it.next();
-                if( interval.contains( actualValue ) )
-                {
-                  actualColor = (Color) intervalMap.get( interval );
-                  alphaValue = actualColor.getAlpha();
-                  break;
-                }
-              }
-              break;
-            }
-            case mode_valueColorMapping:
-            {
-              TreeMap colorMap = rasterSym.getColorMap();
-              if( colorMap.containsKey( new Double( actualValue ) ) )
-              {
-                ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( new Double( actualValue ) );
-                actualColor = colorMapEntry.getColor();
-                double opacity = colorMapEntry.getOpacity();
-                alphaValue = (int) Math.round( opacity * 255 );
-              }
-              break;
-            }
-          }
-        }
-        else
-        {
-          TreeMap colorMap = rasterSym.getColorMap();
-          double nullValue = -9999;
-          if( colorMap.containsKey( new Double( nullValue ) ) )
-          {
-            ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( new Double( nullValue ) );
-            actualColor = colorMapEntry.getColor();
-            double opacity = colorMapEntry.getOpacity();
-            alphaValue = (int) Math.round( opacity * 255 );
-          }
-          else
-          {
-            actualColor = Color.WHITE;
-            alphaValue = 0;
-          }
-        }
-        int redValue = actualColor.getRed();
-        int greenValue = actualColor.getGreen();
-        int blueValue = actualColor.getBlue();
-        dataBuffer.setElem( 0, j + (i * nCols), redValue );
-        dataBuffer.setElem( 1, j + (i * nCols), greenValue );
-        dataBuffer.setElem( 2, j + (i * nCols), blueValue );
-        dataBuffer.setElem( 3, j + (i * nCols), alphaValue );
-      }
+      final RectifiedGridCoverageDoubleRaster raster = new RectifiedGridCoverageDoubleRaster( coverage.getFeature() );
+      final DataBufferRasterWalker pwo = new DataBufferRasterWalker( treeColorMap, mode );
+      raster.walk( pwo, new NullProgressMonitor() );
+
+      final Point origin = new Point( 0, 0 );
+      final Raster surrogateRaster = RasterFactory.createWritableRaster( pwo.getSampleModel(), pwo.getBuffer(), origin );
+      return surrogateRaster;
     }
-    Point origin = new Point( 0, 0 );
-    Raster surrogateRaster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, origin );
-    return surrogateRaster;
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      // TODO: return default raster ??
+      return null;
+    }
   }
 }

@@ -1,7 +1,6 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 

@@ -54,12 +54,15 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * VirtualRasterFeatureTypeProperty
  * <p>
+ * Diese VirtualProperty sollte unter KalypsoDeegree liegen, sie benötigt aber das lokal eingestellte Koordinatensystem
+ * und wurde deshalb in KalypsoUI abgelegt
+ * <p>
+ * Bessere Lösung für das Raster wäre die Property RectifiedGridDomain des Rasters als GeometryProperty zu definieren,
+ * dies ist momentan nicht möglich bzw. mit großen Veränderungen verbunden
+ * <p>
  * created by
  * 
- * @author Nadja Peiler (27.05.2005) Diese VirtualProperty sollte unter KalypsoDeegree liegen, sie benötigt aber das
- *         lokal eingestellte Koordinatensystem und wurde deshalb in KalypsoUI abgelegt Bessere Lösung für das Raster
- *         wäre die Property RectifiedGridDomain des Rasters als GeometryProperty zu definieren, dies ist momentan nicht
- *         möglich bzw. mit großen Veränderungen verbunden
+ * @author Nadja Peiler (27.05.2005)
  */
 
 /**
