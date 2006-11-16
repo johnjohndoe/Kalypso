@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gis.doubleraster;
 
-import com.bce.gis.operation.hmo2fli.DoubleProvider;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
