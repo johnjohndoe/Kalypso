@@ -159,8 +159,8 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     try
     {
       final ObjectFactory fac = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      //final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+      //final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
       // marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
       // );
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
@@ -177,7 +177,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
         rasterSymbolizerElement.setColorMap( colorMapElement );
       }
       StringWriter writer = new StringWriter();
-      marshaller.marshal( rasterSymbolizerElement, writer );
+      //marshaller.marshal( rasterSymbolizerElement, writer );
       writer.close();
       // System.out.println( writer.toString() );
       return ((writer.toString()).replaceFirst( "<?.*?>", "" )).trim();

@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.model.cv;
 
+import java.net.URI;
 import java.util.Vector;
 
 /**

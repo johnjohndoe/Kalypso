@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 
 /**
- * @author Nadja
+ * @author Nadja Peiler
  */
 public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyType
 {

@@ -10,6 +10,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
@@ -18,19 +19,22 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+
 /**
- * Copy of Nadja Peilers RectifiedGridDomainTypeHandler for the GML3 Namespace.
+ * Modified Nadja Peiler's RectifiedGridDomainTypeHandler for the GML3 Namespace.
  * <p>
- * We use this tpye handler instead of using java-binding, because the java binding classes are not correect. The
- * binding classes do not support getting/setting of the grid-domain.
+ * We are using this true handler instead of using java-binding, because the java binding classes are not correct.
+ * The binding classes do not support getting/setting of the grid-domain.
  * </p>
- * TypeHandler for GridDomain of RectifiedGridCoverages
+ * TypeHandler for GridDomain of RectifiedGridCoverage
  * 
- * @author N. Peiler
+ * @author Dejan Antanaskovic
  */
 public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final QName TYPENAME = new QName( NS.GML3, "RectifiedGridDomainType" );
+  
+  public RectifiedGridDomainTypeHandlerGml3(){}
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -55,29 +59,30 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
-    RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
+    final RectifiedGridDomain gridDomain = (RectifiedGridDomain)((Feature) object).getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
+    //RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
     Document ownerDocument = node.getOwnerDocument();
 
-    Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "rgc:RectifiedGrid" );
+    Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "gml:RectifiedGrid" );
     e_rectifiedGrid.setAttribute( "dimension", "2" );
 
-    Element e_limits = ownerDocument.createElementNS( NS.GML3, "rgc:limits" );
-    Element e_gridEnvelope = ownerDocument.createElementNS( NS.GML3, "rgc:GridEnvelope" );
+    Element e_limits = ownerDocument.createElementNS( NS.GML3, "gml:limits" );
+    Element e_gridEnvelope = ownerDocument.createElementNS( NS.GML3, "gml:GridEnvelope" );
     GridRange gridRange = gridDomain.getGridRange();
     double[] lows = gridRange.getLow();
     String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
     double[] highs = gridRange.getHigh();
     String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
-    Element e_low = ownerDocument.createElementNS( NS.GML3, "rgc:low" );
+    Element e_low = ownerDocument.createElementNS( NS.GML3, "gml:low" );
     e_low.appendChild( ownerDocument.createTextNode( stringLows ) );
-    Element e_high = ownerDocument.createElementNS( NS.GML3, "rgc:high" );
+    Element e_high = ownerDocument.createElementNS( NS.GML3, "gml:high" );
     e_high.appendChild( ownerDocument.createTextNode( stringHighs ) );
     e_gridEnvelope.appendChild( e_low );
     e_gridEnvelope.appendChild( e_high );
     e_limits.appendChild( e_gridEnvelope );
     e_rectifiedGrid.appendChild( e_limits );
 
-    Element e_origin = ownerDocument.createElementNS( NS.GML3, "rgc:origin" );
+    Element e_origin = ownerDocument.createElementNS( NS.GML3, "gml:origin" );
     GM_Point origin;
     try
     {
@@ -96,22 +101,22 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     {
       System.out.println( e );
     }
-    Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:coordinates" );
-    e_coordinates.setAttribute( "cs", "," );
-    e_coordinates.setAttribute( "decimal", "." );
-    e_coordinates.setAttribute( "ts", " " );
-    String stringOrigin = new String( origin.getX() + "," + origin.getY() );
+    Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:pos" );
+    //e_coordinates.setAttribute( "cs", "," );
+    //e_coordinates.setAttribute( "decimal", "." );
+    //e_coordinates.setAttribute( "ts", " " );
+    String stringOrigin = new String( origin.getX() + " " + origin.getY() );
     e_coordinates.appendChild( ownerDocument.createTextNode( stringOrigin ) );
     e_point.appendChild( e_coordinates );
     e_origin.appendChild( e_point );
     e_rectifiedGrid.appendChild( e_origin );
 
     double[] offset = gridDomain.getOffset();
-    Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
+    Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
     String offsetVector1 = new String( "0.0" + " " + offset[1] );
     e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
     e_rectifiedGrid.appendChild( e_offsetVector1 );
-    Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
+    Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
     String offsetVector2 = new String( offset[0] + " " + "0.0" );
     e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );

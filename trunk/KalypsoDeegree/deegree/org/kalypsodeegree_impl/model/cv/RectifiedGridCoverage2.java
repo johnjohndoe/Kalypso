@@ -35,6 +35,14 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
     return new RectifiedGridCoverage2( feature );
   }
 
+  public static RectifiedGridCoverage2 createRectifiedGridCoverage( final RectifiedGridDomain gridDomain, final RangeSetType rangeSet ) throws InvocationTargetException
+  {
+    RectifiedGridCoverage2 coverage = createRectifiedGridCoverage();
+    coverage.setGridDomain( gridDomain );
+    coverage.setRangeSet( rangeSet );
+    return coverage;
+  }
+  
   public RectifiedGridCoverage2( final Feature feature )
   {
     super( feature, QNAME_RECTIFIED_GRID_COVERAGE );
