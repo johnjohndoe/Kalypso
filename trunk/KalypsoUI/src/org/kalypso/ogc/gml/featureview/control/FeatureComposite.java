@@ -82,6 +82,7 @@ import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
+import org.kalypso.template.featureview.ColorLabelType;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
@@ -301,6 +302,22 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
 
       final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( geometryLabelType.getStyle() ) );
+
+      addFeatureControl( vfc );
+
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+        m_formToolkit.adapt( control, true, true );
+
+      return control;
+    }
+    else if( controlType instanceof ColorLabelType )
+    {
+      final ColorLabelType colorLabelType = (ColorLabelType) controlType;
+
+      final ColorFeatureControl vfc = new ColorFeatureControl( feature, ftp );
+
+      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( colorLabelType.getStyle() ) );
 
       addFeatureControl( vfc );
 

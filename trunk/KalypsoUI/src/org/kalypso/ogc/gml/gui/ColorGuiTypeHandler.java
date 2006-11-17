@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
+import org.kalypso.template.featureview.ColorLabelType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
@@ -100,7 +101,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     final CompositeType composite = factory.createCompositeType();
 
     final GridLayout layout = factory.createGridLayout();
-    layout.setNumColumns( 2 );
+    layout.setNumColumns( 3 );
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
     composite.setLayout( factory.createGridLayout( layout ) );
@@ -117,6 +118,18 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     textData.setGrabExcessHorizontalSpace( true );
     text.setLayoutData( factory.createGridData( textData ) );
 
+    // Label for the color
+    ColorLabelType type = factory.createColorLabelType();
+    type.setStyle( "SWT.NONE" );
+    type.setProperty( qname );
+
+    final GridDataType typeData = factory.createGridDataType();
+    typeData.setHorizontalAlignment( "GridData.FILL" );
+    typeData.setGrabExcessHorizontalSpace( false );
+    typeData.setHeightHint( 20 );
+    typeData.setWidthHint( 20 );
+    type.setLayoutData( factory.createGridData( typeData ) );
+
     // Knopf
     final Button button = factory.createButton();
     final GridDataType buttonData = factory.createGridDataType();
@@ -128,6 +141,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
     control.add( factory.createText( text ) );
+    control.add( factory.createColorlabel( type ) );
     control.add( factory.createButton( button ) );
 
     return factory.createComposite( composite );

@@ -42,8 +42,6 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
