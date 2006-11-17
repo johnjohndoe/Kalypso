@@ -86,7 +86,7 @@
 	<xs:element 
 			name="SimulationModel"
 			type="simBase:SimulationModelType"
-			substitutionGroup="gml:_Feature">
+			substitutionGroup="simBase:_Model">
 	</xs:element>
 	
 	<xs:complexType  
@@ -132,6 +132,11 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<xs:element 
+		name="_Model"
+		type="simBase:AbstractModelType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
 	<xs:complexType 
 		name="AbstractModelType"
 		abstract="true">
@@ -154,7 +159,7 @@
 	-->
 	<xs:element 
 			name="additionalModelProperty"
-			type="simBase:AdditionalModelPropertyType"
+			type="simBase:AdditionalModelPropertyAssociationType"
 			block="substitution">
 		<xs:annotation>
 			<xs:documentation>s 
@@ -168,9 +173,9 @@
 		</xs:annotation>
 	</xs:element>
 	
-	<xs:element 
-		name="AdditionalModelProperty"
-		type="simBase:AdditionalModelPropertyType"
+	<!--xs:element 
+		name="additionalModelProperty"
+		type="simBase:AdditionalModelPropertyAssociationType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -178,6 +183,31 @@
 				model properties
 			</xs:documentation>
 		</xs:annotation>
+	</xs:element-->
+	<xs:complexType 
+		name="AdditionalModelPropertyAssociationType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Provides the base substitution group type for extension
+				when creating an element which may be use as 
+				AdditionalModelProperty.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction
+				base="gml:AssociationType">
+				<xs:sequence>
+					<xs:element ref="simBase:AdditionalModelProperty"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>	
+	<xs:element 
+		name="AdditionalModelProperty"
+		type="simBase:AdditionalModelPropertyType"
+		substitutionGroup="gml:_GML">
+	
 	</xs:element>
 	<xs:complexType 
 		name="AdditionalModelPropertyType"
@@ -194,8 +224,7 @@
 				base="gml:AbstractGMLType">
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>	
-	
+	</xs:complexType>
 	
 	<!-- =====================================================================
 				staticModel property element 
@@ -238,6 +267,7 @@
 		name="StaticModel"
 		type="simBase:AbstractStaticModelType"
 		abstract="true"
+		substitutionGroup="gml:_Feature"
 		>
 		<xs:annotation>
 			<xs:documentation>
@@ -309,6 +339,7 @@
 	<xs:element 
 		name="OperationalModel"
 		type="simBase:AbstractOperationalModelType"
+		substitutionGroup="simBase:_Model"
 		abstract="true"
 		>
 		<xs:annotation>
@@ -368,6 +399,7 @@
 	<xs:element 
 		name="ControlModel"
 		type="simBase:AbstractControlModelType"
+		substitutionGroup="simBase:_Model"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -428,6 +460,7 @@
 	<xs:element 
 		name="ResultModel"
 		type="simBase:AbstractControlModelType"
+		substitutionGroup="simBase:_Model"
 		>
 		<xs:annotation>
 			<xs:documentation>
@@ -485,6 +518,7 @@
 	<xs:element 
 		name="EvaluationModel"
 		type="simBase:AbstractEvaluationModelType"
+		substitutionGroup="simBase:_Model"
 		/>
 	
 	<xs:complexType 

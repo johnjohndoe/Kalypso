@@ -54,6 +54,8 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 public class UrlCatalog1D2D extends AbstractUrlCatalog
 {
 
+	final static public String MODEL_1D2D_NS="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d";
+	final static public String MODEL_1D2D_NS_PREFIX="wb1d2d";
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
@@ -63,6 +65,7 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
 		  				final Map<String, URL> catalog, 
 		  				Map<String, String> prefixes )
   {
-    //catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.9/control.xsd" ) );
+    catalog.put( MODEL_1D2D_NS, myClass.getResource( "v0.0/sim_1d2d_model.xsd" ) );
+    prefixes.put(MODEL_1D2D_NS, MODEL_1D2D_NS_PREFIX);
   }
 }

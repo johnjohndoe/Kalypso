@@ -3,7 +3,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 	<!-- ***************************IMPORTS********************************* -->

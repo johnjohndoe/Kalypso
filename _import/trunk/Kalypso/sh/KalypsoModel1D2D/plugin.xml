@@ -6,6 +6,12 @@
         <simulation
               catalogClass="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
               simulationClass="org.kalypso.kalypsomodel1d2d.sim.SimMode1D2DCalcJob"
-              typeID="KalypsoNA"/>
+              typeID="KalypsoModel1D2D"/>
+     </extension>
+     <extension
+           point="org.kalypso.contribs.java.urlCatalog">
+        <catalog
+              class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
+              id="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"/>
      </extension>
 </plugin>

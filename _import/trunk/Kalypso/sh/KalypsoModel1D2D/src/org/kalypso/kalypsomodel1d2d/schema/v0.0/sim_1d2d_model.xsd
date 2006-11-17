@@ -6,6 +6,12 @@
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
 	<!-- ***************************IMPORTS********************************* -->
 	<xs:import 
 		namespace="http://www.opengis.net/gml" 
@@ -28,7 +34,8 @@
 	
 	<!-- **************************INCLUDES********************************** -->
 	<!-- xs:include schemaLocation="simulation_model.xsd"/ -->
-	<xs:include 
+	<xs:include schemaLocation="simulation_model_discretisation_1d2d.xsd"></xs:include>
+	<!-- xs:include 
 		schemaLocation="sim_1d2d_sub_model_static.xsd"/>
 	<xs:include 
 		schemaLocation="sim_1d2d_sub_model_operational.xsd"/>
@@ -88,5 +95,5 @@
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType> 
-	
+	-->
 </xs:schema>

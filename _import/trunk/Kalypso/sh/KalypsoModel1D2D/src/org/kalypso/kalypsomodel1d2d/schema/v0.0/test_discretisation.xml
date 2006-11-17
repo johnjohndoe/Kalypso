@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wb1d2d:FE1D2DDiscretisationModel 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="
+     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
+     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd
+     http://www.tu-harburg.de/wb/kalypso/schemata/1d2d D:\congo\eclipse_base\kalypso_workspace\KalypsoModel1D2D\src\org\kalypso\kalypsomodel1d2d\schema\v0.0\simulation_model_discretisation_1d2d.xsd
+     http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model_finite_elements_discretisation.xsd
+     "
+     xmlns:gml="http://www.opengis.net/gml"
+     xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+     xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	
+	<wb1d2d:fe1d2dComplexElement>
+	</wb1d2d:fe1d2dComplexElement>
+	
+	<wb1d2d:fe1d2dElement>
+	
+	</wb1d2d:fe1d2dElement>
+	 
+	<wb1d2d:fe1d2dEdge>
+		<wb1d2d:FE1D2DEdge gml:id="e1">
+			<wb1d2d:fe1d2dDirectedNode orientation="-">
+				<wb1d2d:FE1D2DNode xlink:href="#n1"/>
+			</wb1d2d:fe1d2dDirectedNode>
+			<wb1d2d:fe1d2dDirectedNode orientation="+">
+				<wb1d2d:FE1D2DNode xlink:href="#n2"/>
+			</wb1d2d:fe1d2dDirectedNode>
+		</wb1d2d:FE1D2DEdge>
+		
+	</wb1d2d:fe1d2dEdge>
+	
+	<wb1d2d:fe1d2dNode>		
+		<wb1d2d:FE1D2DNode gml:id="n1">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>0 0</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n2">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>1 1</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n3">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>2 1</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n4">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>2 2</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n5">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>7 5</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n6">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>3 3</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n7">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>6 3</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+		
+		<wb1d2d:FE1D2DNode gml:id="n8">
+			<gml:pointProperty>
+				<gml:Point>
+					<gml:pos>7 3</gml:pos>
+				</gml:Point>
+			</gml:pointProperty>
+			<wb1d2d:container> 
+			</wb1d2d:container>
+		</wb1d2d:FE1D2DNode>
+				
+	</wb1d2d:fe1d2dNode>
+	 
+</wb1d2d:FE1D2DDiscretisationModel>		
+

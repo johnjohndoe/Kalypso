@@ -20,10 +20,10 @@
 		schemaLocation="simulation_model.xsd"
 	/ -->
 	<!-- **************************INCLUDES********************************** -->
-	<xs:include schemaLocation="simulation_model.xsd"/>
-	<xs:include schemaLocation="simulation_model_flow_resistance.xsd"/>
+	<!--xs:include schemaLocation="simulation_model.xsd"/ -->
+	<!--xs:include schemaLocation="simulation_model_flow_resistance.xsd"/>
 	<xs:include schemaLocation="simulation_model_flow_relationship.xsd"/>
-	<xs:include schemaLocation="simulation_model_terrain.xsd"/>
+	<xs:include schemaLocation="simulation_model_terrain.xsd"/-->
 	<xs:include schemaLocation="simulation_model_discretisation_1d2d.xsd"/>
 	
 	<!-- Static model Model modelling -->
