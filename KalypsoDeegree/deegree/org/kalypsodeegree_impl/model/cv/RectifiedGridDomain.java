@@ -39,7 +39,9 @@ public class RectifiedGridDomain
    * @param gridRange
    */
   public RectifiedGridDomain( final GM_Point origin, final double[] offset, final GridRange gridRange )
+//  public RectifiedGridDomain( final Object parent, final IFeatureType ft, final String id, final Object[] propValues, final GM_Point origin, final double[] offset, final GridRange gridRange )
   {
+    //super(parent, ft, id, propValues);
     m_origin = origin;
     m_offset = offset;
     m_gridRange = gridRange;

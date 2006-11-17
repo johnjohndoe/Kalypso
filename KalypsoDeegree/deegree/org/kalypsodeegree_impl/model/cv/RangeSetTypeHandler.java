@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
 
@@ -27,9 +28,9 @@ import org.w3c.dom.Node;
  */
 public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-  public static final String NSRGC = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
+  public static final String NSRGC = "http://www.tuhh.de/floodrisk/rasterData";
 
-  public static final QName TYPENAME = new QName( NSRGC, "RangeSetType" );
+  public static final QName TYPENAME = new QName( NSRGC, "rangeSetFilePath" );
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -58,16 +59,16 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
     RangeSet rangeSet = (RangeSet) object;
     Document ownerDocument = node.getOwnerDocument();
 
-    Element e_File = ownerDocument.createElementNS( NSRGC, "rgc:File" );
-    Element e_FileName = ownerDocument.createElementNS( NSRGC, "rgc:fileName" );
+    //Element e_File = ownerDocument.createElementNS( NSRGC, "rgc:File" );
+    Element e_FileName = ownerDocument.createElementNS( NSRGC, "risk_rd:rangeSetFilePath" );
     File rangeSetDataFile = new File( FileUtilities.nameWithoutExtension( context.getFile() ) + ".dat" );
     if( rangeSet.getRangeSetDataFile() == null )
     {
-      String fileName = rangeSetDataFile.getName();
+      String fileName = rangeSetDataFile.getAbsolutePath();
       rangeSet.setRangeSetDataFile( fileName );
     }
     e_FileName.appendChild( ownerDocument.createTextNode( rangeSet.getRangeSetDataFile() ) );
-    e_File.appendChild( e_FileName );
+    //e_File.appendChild( e_FileName );
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
@@ -78,7 +79,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
       System.out.println( e );
     }
 
-    node.appendChild( e_File );
+    node.appendChild( e_FileName );  //node.appendChild( e_File );
   }
 
   /**
@@ -116,15 +117,16 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
     }
     // read rangeSetData
     Vector<Vector<Double>> rangeSetData = null;
+    RangeSet rangeSet = null;
     try
     {
       rangeSetData = getRangeSetData( rangeSetDataReader );
+      rangeSet = new RangeSet( rangeSetData, fileName );
     }
     catch( Exception e )
     {
       System.out.println( e );
     }
-    RangeSet rangeSet = new RangeSet( rangeSetData, fileName );
     return rangeSet;
   }
 
