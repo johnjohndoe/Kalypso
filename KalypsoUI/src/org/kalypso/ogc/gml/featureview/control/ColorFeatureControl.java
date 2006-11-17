@@ -105,6 +105,7 @@ public class ColorFeatureControl extends AbstractFeatureControl
         Color color = new Color( null, rgb );
         m_label.setBackground( color );
         m_label.setVisible( true );
+        color.dispose();
       }
       else
         m_label.setVisible( false );
