@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -49,11 +51,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * This class controls the GeometryLabel and its behavior.
+ * This class controls the ColorLabel and its behavior.
  * 
  * @author Holger Albert
  */
-public class GeometryFeatureControl extends AbstractFeatureControl
+public class ColorFeatureControl extends AbstractFeatureControl
 {
   /**
    * This variable stores the label itself.
@@ -68,7 +70,7 @@ public class GeometryFeatureControl extends AbstractFeatureControl
    * @param ftp
    *          The GML schema that represents a feature property.
    */
-  public GeometryFeatureControl( final Feature feature, final IPropertyType ftp )
+  public ColorFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
   }
@@ -98,9 +100,14 @@ public class GeometryFeatureControl extends AbstractFeatureControl
       final IPropertyType ftp = getFeatureTypeProperty();
 
       if( feature.getProperty( ftp ) != null )
-        m_label.setText( "Um die Geometrie zu ersetzen, \nklicken Sie auf 'Zeichnen'." );
+      {
+        RGB rgb = (RGB) feature.getProperty( ftp );
+        Color color = new Color( null, rgb );
+        m_label.setBackground( color );
+        m_label.setVisible( true );
+      }
       else
-        m_label.setText( "Klicken Sie auf 'Zeichnen', \num die Massnahme zu zeichnen." );
+        m_label.setVisible( false );
     }
   }
 
