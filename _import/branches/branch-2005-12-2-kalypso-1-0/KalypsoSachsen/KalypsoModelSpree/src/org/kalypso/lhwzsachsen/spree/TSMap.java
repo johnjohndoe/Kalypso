@@ -64,14 +64,14 @@ public class TSMap
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
 
-    final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, getTypeForName( name ) );
+    final IAxis valueAxis = ObservationUtilities.findAxisByTypeNoEx( axisList, getTypeForName( name ) );
 
     final ITuppleModel model = obs.getValues( null );
 
     for( int j = 0; j < model.getCount(); j++ )
     {
       final Date date = (Date)model.getElement( j, dateAxis );
-      final Number val = (Number)model.getElement( j, valueAxis );
+      final Number val = valueAxis == null ? null : (Number)model.getElement( j, valueAxis );
       final Double value = val == null ? null : new Double( val.doubleValue() );
 
       putValue( name, date, value );

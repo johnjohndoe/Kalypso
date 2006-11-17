@@ -30,8 +30,10 @@ import org.kalypso.lhwzsachsen.spree.WasyCalcJob.WQInfo;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
@@ -111,7 +113,7 @@ public class WasyInputWorker
 
       props.put( WasyCalcJob.DATA_GML, workspace );
 
-      final String tsFilename = writeNonTs( props, logwriter, workspace );
+      final String tsFilename = writeNonTs( props, logwriter, workspace, wasyJob.isSpreeFormat() );
 
       final Date startDate = (Date)props.get( WasyCalcJob.DATA_STARTSIM_DATE );
       final Calendar calendar = Calendar.getInstance();
@@ -413,8 +415,8 @@ public class WasyInputWorker
       logwriter.println( "Kein Anfangsstauvolumen angegeben für: " + fid );
   }
 
-  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace )
-      throws IOException, FileNotFoundException, CalcJobServiceException
+  private static String writeNonTs( final Properties props, final PrintWriter logwriter, final GMLWorkspace workspace,
+      final boolean writeVHS ) throws IOException, FileNotFoundException, CalcJobServiceException
   {
     // REMARK: die Reihenfolge der Zeilen im DBF ist wichtig!
     // Das GML muss in der richtigen Reihenfolge sein.
@@ -424,9 +426,12 @@ public class WasyInputWorker
     final String napFilename = (String)props.get( WasyCalcJob.DATA_NAPFILENAME );
     final String tsFilename = (String)props.get( WasyCalcJob.DATA_TSFILENAME );
 
-    logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
-    StreamUtilities.streamCopy( WasyInputWorker.class.getResourceAsStream( "resources/" + WasyCalcJob.VHS_FILE ),
-        new FileOutputStream( vhsFile ) );
+    if( writeVHS )
+    {
+      logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
+      StreamUtilities.streamCopy( WasyInputWorker.class.getResourceAsStream( "resources/" + WasyCalcJob.VHS_FILE ),
+          new FileOutputStream( vhsFile ) );
+    }
 
     logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
     findAndWriteLayer( workspace, WasyCalcJob.FLP_NAME, WasyCalcJob.FLP_MAP, WasyCalcJob.FLP_GEOM, flpFilename );
@@ -461,7 +466,8 @@ public class WasyInputWorker
       fds[2] = new FieldDescriptor( "VORFEUCHTE", "N", (byte)8, (byte)2 );
       fds[3] = new FieldDescriptor( "MAX", "N", (byte)8, (byte)2 );
 
-      final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP850" );
+      final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP1252" );
+//      final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP850" );
       Charset.availableCharsets();
 
       final Feature[] features = workspace.getFeatures( featureType );
@@ -470,10 +476,10 @@ public class WasyInputWorker
         final ArrayList record = new ArrayList( 4 );
 
         final Feature feature = features[i];
-        
+
         final String name = (String)feature.getProperty( "Name" );
         final String nameOut = name.length() > 15 ? name.substring( 0, 14 ) : name;
-        
+
         record.add( nameOut );
         record.add( feature.getProperty( "BodenfeuchteMin" ) );
         record.add( feature.getProperty( "Bodenfeuchte" ) );
@@ -496,8 +502,8 @@ public class WasyInputWorker
 
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap, final TSDesc[] TS_DESCRIPTOR, final boolean isSpreeFormat )
-      throws CalcJobServiceException
+  public static void createTimeseriesFile( final String tsFilename, final TSMap valuesMap,
+      final TSDesc[] TS_DESCRIPTOR, final boolean isSpreeFormat ) throws CalcJobServiceException
   {
     try
     {
@@ -661,10 +667,18 @@ public class WasyInputWorker
           {
             final String qName = "Q_" + tsDesc.id.substring( 2 );
 
-            final WQTimeserieProxy filter = new WQTimeserieProxy( TimeserieConstants.TYPE_WATERLEVEL,
-                TimeserieConstants.TYPE_RUNOFF, obs );
+            final IAxis runoffAxis = ObservationUtilities.findAxisByTypeNoEx( obs.getAxisList(),
+                TimeserieConstants.TYPE_RUNOFF );
+            /* Falls bereits eine Q-Achse da ist direkt nehmen, ansonsten versuchen umzurechnen */
+            if( runoffAxis == null )
+            {
+              final WQTimeserieProxy filter = new WQTimeserieProxy( TimeserieConstants.TYPE_WATERLEVEL,
+                  TimeserieConstants.TYPE_RUNOFF, obs );
 
-            tsmap.addObservation( filter, qName );
+              tsmap.addObservation( filter, qName );
+            }
+            else
+              tsmap.addObservation( obs, qName );
           }
           catch( final Exception e )
           {

@@ -165,14 +165,14 @@ public abstract class WasyCalcJob implements ICalcJob
     final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
 
     outputdir.mkdirs();
-    final File logfile = new File( outputdir, "spree.log" );
+    final File logfile = new File( outputdir, "wasy.log" );
 
     PrintWriter pw = null;
 
     try
     {
       pw = new PrintWriter( new FileWriter( logfile ) );
-      pw.println( "Spree - Modell Berechnung wird gestartet" );
+      pw.println( "Modell Berechnung wird gestartet" );
       pw.println();
 
       if( monitor.isCanceled() )
@@ -198,10 +198,13 @@ public abstract class WasyCalcJob implements ICalcJob
       final File vhsFile = (File)props.get( DATA_VHSFILE );
       final File flpFile = (File)props.get( DATA_FLPFILE );
       final File tsFile = (File)props.get( DATA_TSFILE );
+
       FileUtils.copyFileToDirectory( napFile, nativeindir );
-      FileUtils.copyFileToDirectory( vhsFile, nativeindir );
+      if( isSpreeFormat() )
+        FileUtils.copyFileToDirectory( vhsFile, nativeindir );
       FileUtils.copyFileToDirectory( flpFile, nativeindir );
       FileUtils.copyFileToDirectory( tsFile, nativeindir );
+
       resultEater.addResult( "NATIVE_IN_DIR", nativeindir );
 
       monitor.setProgress( 33 );
@@ -213,7 +216,10 @@ public abstract class WasyCalcJob implements ICalcJob
       prepareExe( exedir, pw );
       startCalculation( exedir, props, pw, monitor );
       FileUtils.copyFileToDirectory( napFile, nativeoutdir );
-      FileUtils.copyFileToDirectory( vhsFile, nativeoutdir );
+
+      if( isSpreeFormat() )
+        FileUtils.copyFileToDirectory( vhsFile, nativeoutdir );
+
       FileUtils.copyFileToDirectory( flpFile, nativeoutdir );
       FileUtils.copyFileToDirectory( tsFile, nativeoutdir );
       resultEater.addResult( "NATIVE_OUT_DIR", nativeoutdir );
@@ -389,9 +395,9 @@ public abstract class WasyCalcJob implements ICalcJob
       logwriter.println();
 
       if( processOut.endsWith( "Berechnung erfolgreich beendet\r\n" ) )
-        logwriter.println( "Rechnung mit spree.exe erfolgreich beendet." );
+        logwriter.println( "Rechnung erfolgreich beendet." );
       else
-        logwriter.println( "Rechnung mit spree.exe nicht erfolgreich beendet." );
+        logwriter.println( "Rechnung nicht erfolgreich beendet." );
     }
   }
 
@@ -607,7 +613,9 @@ public abstract class WasyCalcJob implements ICalcJob
 
   /**
    * Schreibt eine Vorhersagezeitreihe und ihre umhüllenden
-   * @param accuracy In Prozent per 60h
+   * 
+   * @param accuracy
+   *          In Prozent per 60h
    */
   private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy,
       final boolean writeUmhuellende ) throws Exception
@@ -637,14 +645,14 @@ public abstract class WasyCalcJob implements ICalcJob
     final Calendar calEnd = Calendar.getInstance();
     calEnd.setTime( endPrediction );
 
-//    final long dayOfMillis = 1000 * 60 * 60 * 24;
+    //    final long dayOfMillis = 1000 * 60 * 60 * 24;
     final long millisOf60hours = 1000 * 60 * 60 * 60;
 
     final double endAccuracy = accuracy
         * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
 
     final double endFactor = 1 + endAccuracy / 100;
-    
+
     final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
     TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 1, 1 / endFactor, "*",

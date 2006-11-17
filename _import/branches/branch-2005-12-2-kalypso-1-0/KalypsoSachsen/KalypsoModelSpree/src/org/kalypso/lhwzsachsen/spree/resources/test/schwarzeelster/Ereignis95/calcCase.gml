@@ -78,7 +78,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHOEN_oben.zml"/>
           </Wasserstand_vorhersage_oben>
           <BodenfeuchteMin>0.0</BodenfeuchteMin>
-          <Bodenfeuchte>47.29</Bodenfeuchte>
+          <Bodenfeuchte>29.35</Bodenfeuchte>
           <BodenfeuchteMax>300.0</BodenfeuchteMax>
           <Niederschlag_rechnung>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/PA_SCHOEN.zml"/>
