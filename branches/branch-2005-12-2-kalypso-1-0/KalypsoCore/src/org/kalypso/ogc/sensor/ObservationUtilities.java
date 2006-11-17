@@ -154,13 +154,31 @@ public class ObservationUtilities
    */
   public static IAxis findAxisByType( final IAxis[] axes, final String axisType ) throws NoSuchElementException
   {
+    final IAxis axis = findAxisByTypeNoEx( axes, axisType );
+    if( axis == null )
+      throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
+
+    return axis;
+  }
+
+  /**
+   * Finds the axis of the given observation that has the given type.
+   * 
+   * @param axes
+   *          the list of axes to scan
+   * @param axisType
+   *          the type of the axis which is searched
+   * @return the first axis found, null if no axis of this type was found
+   */
+  public static IAxis findAxisByTypeNoEx( final IAxis[] axes, final String axisType ) throws NoSuchElementException
+  {
     for( int i = 0; i < axes.length; i++ )
     {
       if( axes[i].getType().equalsIgnoreCase( axisType ) )
         return axes[i];
     }
 
-    throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
+    return null;
   }
 
   /**
