@@ -83,6 +83,9 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.floodrisk.tools.Number;
+import org.kalypso.gis.doubleraster.DoubleRaster;
+import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
+import org.kalypso.gis.doubleraster.walker.MinMaxRasterWalker;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -125,7 +128,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -577,7 +579,7 @@ public class CreateFloodRiskProjectJob extends Job
       int numOfCategories = 5;
       
       // TODO Dejan: srediti createRasterStyle
-      //createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
+      createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
       m_layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
       grid = null;
       monitor.worked( workedPart );
@@ -601,13 +603,18 @@ public class CreateFloodRiskProjectJob extends Job
    *          number of intervals
    * @throws Exception
    */
-  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color, int numOfCategories ) throws Exception
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage2 grid, Color color, int numOfCategories ) throws Exception
   {
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, WizardMessages.getString("CreateFloodRiskProjectJob.NoData") ); //$NON-NLS-1$
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
-    double min = grid.getRangeSet().getMinValue();
-    double max = grid.getRangeSet().getMaxValue();
+    
+    final DoubleRaster dr = new RectifiedGridCoverageDoubleRaster(grid.getFeature());
+    final MinMaxRasterWalker walker = new MinMaxRasterWalker();
+    dr.walk(walker, null);
+    double min = walker.getMin();
+    double max = walker.getMax();
+    
     double intervalStep = (max - min) / numOfCategories;
     for( int i = 0; i < numOfCategories; i++ )
     {
