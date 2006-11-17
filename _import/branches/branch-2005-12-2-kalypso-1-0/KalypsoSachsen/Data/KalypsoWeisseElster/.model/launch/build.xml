@@ -386,7 +386,11 @@
 
      	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
      	<!-- TODO: Filter für Umhüllende konfigurieren -->
+    	
+    	<!-- Die normale Umhüllende soll nicht mehr abgelegt werden
      	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurMLink}" remoteobs="${pegelRemoteSpurMLink}" runasync="false"/>
+     	-->
+    	
      	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false"/>
      	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false"/>
      </target>
