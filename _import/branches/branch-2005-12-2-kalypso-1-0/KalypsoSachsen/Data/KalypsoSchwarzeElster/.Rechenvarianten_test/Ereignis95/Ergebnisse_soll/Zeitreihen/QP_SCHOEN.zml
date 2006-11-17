@@ -2,9 +2,9 @@
 <observation editable="false" xmlns="zml.kalypso.org">
     <name>QP_SCHOEN</name>
     <metadataList>
-        <metadata name="Name" value="unbekannt"/>
-        <metadata name="Vorhersage" value="16.05.1995 13:00:00;27.05.1995 02:00:00"/>
+        <metadata name="Name" value="Schönau"/>
         <metadata name="Entstehung" value="Request-Mechanismus"/>
+        <metadata name="Vorhersage" value="16.05.1995 13:00:00;27.05.1995 02:00:00"/>
         <metadata name="WQ-Parameter">
             <data>&lt;![CDATA[&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;wechmann xmlns="wechmann.kalypso.org"&gt;
