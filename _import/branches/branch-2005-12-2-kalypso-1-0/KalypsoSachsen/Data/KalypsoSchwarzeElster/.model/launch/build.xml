@@ -208,8 +208,12 @@
 		<echo message="" />
 
     	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
+    	
+    	<!-- Die normale Umhüllende soll nicht mehr abgelegt werden
     	<echo message="Ablage der Rechenergebnisse"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
+    	-->
+    	
     	<echo message="Ablage der oberen Umhüllenden"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false"/>
     	<echo message="Ablage der unteren Umhüllenden"/>
