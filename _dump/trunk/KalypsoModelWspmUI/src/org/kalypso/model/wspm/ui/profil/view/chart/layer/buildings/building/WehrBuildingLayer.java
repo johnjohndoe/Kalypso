@@ -41,12 +41,14 @@
 package org.kalypso.model.wspm.ui.profil.view.chart.layer.buildings.building;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -139,5 +141,26 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer#isPointVisible(org.kalypso.model.wspm.core.profil.IProfilPoint)
+   */
+  @Override
+  protected boolean isPointVisible( IProfilPoint point )
+  {
+    final IProfil profil = getProfil();
+    final LinkedList points = profil.getPoints();
+    final int i = points.indexOf( point );
+    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
+    if (i<points.indexOf( deviders[0].getPoint()))
+    {
+      return false;
+    }
+    if (i>points.indexOf( deviders[deviders.length -1].getPoint()))
+    {
+      return false;
+    }
+    return true;
   }
 }

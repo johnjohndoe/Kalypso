@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
@@ -76,7 +77,7 @@ public class BewuchsRule extends AbstractValidatorRule
       return;
     final IProfilDevider[] devider = profil.getDevider( IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
     final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
-    final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length-1].getPoint() : null;
+    final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length - 1].getPoint() : null;
     if( (leftP == null) || (rightP == null) )
       return;
     final int leftIndex = points.indexOf( leftP );
@@ -97,14 +98,14 @@ public class BewuchsRule extends AbstractValidatorRule
           final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
           final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
           if( ax + ay + dp != 0 )
-            collector.createProfilMarker( false, "unnötige Bewuchsparameter", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
           i++;
         }
         final int lastIndex = (leftIndex > 0) ? leftIndex - 1 : leftIndex;
         if( points.get( lastIndex ).getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0) } );
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
         if( rightP.getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution(devider.length -1) } );
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
       }
     }
     catch( Exception e )
@@ -125,10 +126,26 @@ public class BewuchsRule extends AbstractValidatorRule
       final double ax = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
       final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
       final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
-      if( ax + ay + dp != 0 )
+      if( ax + ay + dp != 0.0 )
       {
-        if( ax * ay * dp == 0 )
-          collector.createProfilMarker( true, "Unvollständige Bewuchsparameter", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+        if( ax * ay * dp == 0.0 )
+        {
+          final StringBuffer stringBuffer = new StringBuffer("Bewuchsparameter(");
+          if (ax==0.0)
+          {
+            stringBuffer.append( "aX, " );
+          }
+          if (ay==0.0)
+          {
+            stringBuffer.append( "aY, " );
+          }
+          if (dp==0.0)
+          {
+            stringBuffer.append( "dP" );
+          }
+          stringBuffer.append( ") fehlt");
+          collector.createProfilMarker( true, stringBuffer.toString(), "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+        }
         else
           hasValues = true;
       }

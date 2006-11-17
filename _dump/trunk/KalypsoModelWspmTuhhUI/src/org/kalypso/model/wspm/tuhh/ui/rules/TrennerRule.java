@@ -96,11 +96,11 @@ public class TrennerRule extends AbstractValidatorRule
       final DEVIDER_TYP deviderTyp = toValidate[0].getTyp();
       if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, DEVIDER_TYP.DURCHSTROEMTE ) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, DEVIDER_TYP.DURCHSTROEMTE ) } );
       }
     }
     catch( ProfilDataException e )

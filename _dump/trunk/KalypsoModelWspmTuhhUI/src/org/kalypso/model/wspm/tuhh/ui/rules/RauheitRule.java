@@ -76,7 +76,7 @@ public class RauheitRule extends AbstractValidatorRule
         final double rh = point.getValueFor( POINT_PROPERTY.RAUHEIT );
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, POINT_PROPERTY.RAUHEIT.toString(), pluginId, null );
           break;
         }
         i++;

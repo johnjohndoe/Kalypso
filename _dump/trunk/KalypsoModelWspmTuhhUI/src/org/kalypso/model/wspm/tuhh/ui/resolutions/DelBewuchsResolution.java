@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -48,33 +49,18 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 
 /**
  * @author kimwerner
  */
 
-public class MoveDeviderResolution extends AbstractProfilMarkerResolution
+public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 {
-  final private int m_deviderIndex;
 
-  final private DEVIDER_TYP m_deviderTyp;
-
-  final private DEVIDER_TYP m_destination;
-
-  /**
-   * verschieben der Trennfläche auf die Trenner "Durchströmter Bereich"
-   * 
-   * @param deviderTyp,deviderIndex
-   *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
-   */
-  public MoveDeviderResolution( final int deviderIndex, final DEVIDER_TYP deviderTyp, DEVIDER_TYP destination )
+  public DelBewuchsResolution( )
   {
-    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
-    m_deviderIndex = deviderIndex;
-    m_deviderTyp = deviderTyp;
-    m_destination = destination;
+    super( "Bewuchsparameter im Flußschlauch entfernen", null, null );
   }
 
   /**
@@ -84,33 +70,30 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( IProfil profil )
   {
-    final IProfilDevider[] deviders1 = profil.getDevider( m_deviderTyp );
-    final IProfilDevider devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
-    if( devider1 == null )
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
+    if( deviders == null )
+    {
       return null;
-    IProfilPoint point = null;
-    if( m_destination == null )
-    {
-      LinkedList<IProfilPoint> points = profil.getPoints();
-      if( !points.isEmpty() )
-      {
-        point = m_deviderIndex > 0 ? points.getLast() : points.getFirst();
-      }
     }
-    else
+    final int l = points.indexOf( deviders[0].getPoint() );
+    final int r = points.indexOf( deviders[deviders.length - 1].getPoint() );
+    final List<IProfilPoint> fluss = points.subList( l, r );
+    if( fluss.isEmpty() )
     {
-      final IProfilDevider[] deviders2 = profil.getDevider( m_destination );
-      if( deviders2 != null )
-      {
-        final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
-        final IProfilDevider devider2 = deviders2[deviderIndex2];
-        if( devider2 != null )
-        {
-          point = devider2.getPoint();
-        }
-      }
+      return null;
     }
-    return new IProfilChange[] { new DeviderMove( devider1, point ), new ActiveObjectEdit( profil, point, POINT_PROPERTY.BREITE ) };
+    int index = 0;
+    final IProfilChange[] changes = new IProfilChange[fluss.size() * 3];
+    for( IProfilPoint point : fluss )
+    {
+      final int i = index * 3;
+      changes[i] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AX, 0.0 );
+      changes[i + 1] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AY, 0.0 );
+      changes[i + 2] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_DP, 0.0 );
+      index++;
+    }
+    return changes;
   }
 
 }

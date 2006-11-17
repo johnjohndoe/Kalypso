@@ -156,6 +156,10 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     {
       return null;
     }
+    if (params[0]*params[1]*params[2]==0.0)
+    {
+      return null;
+    }
     final IProfilChange[] changes = new IProfilChange[3];
     changes[0] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AX, params[0] );
     changes[1] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AY, params[1] );

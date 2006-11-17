@@ -288,15 +288,19 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         {
           final IProfilPoint point = ProfilUtil.findPoint (getProfil(), points[i].getX(), points[i].getY(), property );
           final int index = getProfil().getPoints().indexOf( point );
-          return new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { POINT_PROPERTY.BREITE.toString(), points[i].getX(), property.toString(),
-              points[i].getY() } ) );
+          return isPointVisible( point )?  new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { POINT_PROPERTY.BREITE.toString(), points[i].getX(), property.toString(),
+              points[i].getY() } ) ): null;
         }
       }
     }
 
     return null;
   }
-
+protected boolean isPointVisible(@SuppressWarnings("unused")
+final IProfilPoint point)
+{
+  return true;
+}
   /**
    * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(org.eclipse.swt.graphics.Point)
    */

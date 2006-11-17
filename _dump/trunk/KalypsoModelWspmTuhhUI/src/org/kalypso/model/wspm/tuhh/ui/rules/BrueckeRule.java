@@ -46,6 +46,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
@@ -57,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
@@ -90,9 +92,13 @@ public class BrueckeRule extends AbstractValidatorRule
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
-    if( (devider[0].getPoint() != points.getFirst()) || (devider[devider.length -1].getPoint() != points.getLast()) )
+    if( devider[0].getPoint() != points.getFirst()  )
     {
-      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, null );
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, DEVIDER_TYP.DURCHSTROEMTE, null ) }  );
+    }
+    if  (devider[devider.length -1].getPoint() != points.getLast())
+    {
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( devider.length -1, DEVIDER_TYP.DURCHSTROEMTE, null ) }  );
     }
   }
 

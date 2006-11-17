@@ -94,7 +94,7 @@ public class ProfilUtil
     return pointMap;
   }
 /**
- * @return  a subList include both Deviderpoints, maybee null
+ * @return  a subList include both Deviderpoints, maybe null
  */
   
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final DEVIDER_TYP deviderTyp )
