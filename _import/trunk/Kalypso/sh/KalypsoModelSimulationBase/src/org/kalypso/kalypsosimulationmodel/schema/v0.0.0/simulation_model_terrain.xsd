@@ -15,22 +15,23 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
-	<!-- remote from ogc -->
-	<!-- xs:import 	
-		namespace="http://www.opengis.net/gml" 
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
-
-	<!-- local modified for successful binding -->
+	
+	
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
-		
-		
-			<!--*********************************************************************** 
-		Definition terrain Model 
-		********************************************************************-->
-<!-- xs:element name="terrainModel" type="xs:string"/ -->
+	<!--xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="../3.1.1/base/gml.xsd"
+		/-->
+	
+	<!-- =================================================================
+		terrainModel
+	================================================================== -->
+	<xs:element 
+		name="terrainModel" 
+		type="simBase:TerrainModelPropertyType"/>
 
 	<xs:complexType 
 		name="TerrainModelPropertyType">
@@ -47,6 +48,9 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
+	<!-- =================================================================
+	 Terrain Model
+	================================================================== -->
 	<xs:element 
 		name="TerrainModel" 
 		type="simBase:TerrainModelType">
@@ -68,16 +72,20 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				name="terrainElevation"
-				type="simBase:TerrainElevationModelPropertyType"
+				ref="simBase:terrainElevationModel"
 				minOccurs="1" maxOccurs="1"/>
 			<xs:element 
-				name="rougthnessLayerPolygons"
-				type="simBase:RougthnessLayerPolygonCollectionType"
+				ref="simBase:rougthnessLayerPolynomCollection"
 				minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		terrainElevationModel	
+	================================================================== -->
+	<xs:element 
+		name="terrainElevationModel"
+		type="simBase:TerrainElevationModelPropertyType"/>
 	<xs:complexType 
 		name="TerrainElevationModelPropertyType">
 		<xs:annotation>
@@ -90,6 +98,10 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
+	
+	<!-- =================================================================
+		Terrain elevation Model
+	================================================================== -->
 	<xs:element 
 		name="TerrainElevationModel"
 		type="simBase:TerrainElevationModelType"
@@ -108,15 +120,24 @@
 				base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element 
-						name="digitalElevationModel"
-						type="simBase:DigitalElevationModelPropertyType"/>
-					<xs:element ref="simBase:triangulatedIrregularNetwork"/>
+						ref="simBase:digitalElevationModel"
+						minOccurs="0" maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:triangulatedIrregularNetwork"
+						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
-		
+	<!-- =================================================================
+		DigitalElevationModelPropertyType
+	================================================================== -->	
+	<xs:element 
+		name="digitalElevationModel"
+		type="simBase:DigitalElevationModelPropertyType">
+	
+	</xs:element>
 	<xs:complexType name="DigitalElevationModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -128,12 +149,15 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
+	
+	<!--==================================================================
+		Digital elevationModelType can be put in the controlPoint of TIN 
+	===================================================================-->
 	<xs:element 
 		name="DigitalElevationModel" 
 		type="simBase:DigitalElevationModelType" 
 		substitutionGroup="gml:posList"/>
 		
-	<!-- can be put in the controlPoint of TIN -->
 	<xs:complexType name="DigitalElevationModelType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
@@ -144,7 +168,10 @@
 			<xs:extension base="gml:DirectPositionListType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- +++++++++ -->
+	
+	<!-- ================================================================
+			triangulatedIrregularNetwork
+	================================================================= -->
 	<xs:element 
 		name="triangulatedIrregularNetwork" 
 		type="simBase:TriangulatedIrregularNetworkPropertyType"/>
@@ -154,19 +181,46 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
+	
+	<!-- =================================================================
+		TriangulatedIrregularNetwork
+	================================================================== -->
 	<xs:element 
 		name="TriangulatedIrregularNetwork" 
 		type="simBase:TriangulatedIrregularNetworkType" 
 		substitutionGroup="gml:Surface"/>
-	<!-- check surface subs -->
+
 	<xs:complexType 
 		name="TriangulatedIrregularNetworkType">
 		<xs:complexContent>
 			<xs:extension base="gml:TinType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- check this about best practice -->
+	
+	<!-- =================================================================
+	rougthnessLayerPolynomCollection property
+	================================================================== -->
+	<xs:element 
+		name="rougthnessLayerPolynomCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element 
+					ref="simBase:RougthnessLayerPolygonCollection"
+					 minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		</xs:complexType>
+	</xs:element>
 			
+	<!-- =================================================================
+		RougthnessLayerPolygomCollection
+	================================================================== -->
+	<xs:element 
+		name="RougthnessLayerPolygonCollection"
+		type="simBase:RougthnessLayerPolygonCollectionType"
+		substitutionGroup="gml:FeatureCollection">
+	
+	</xs:element>
 	<xs:complexType 
 		name="RougthnessLayerPolygonCollectionType">
 		<xs:complexContent>
@@ -180,13 +234,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		rougthnessLayerPolygonMembers
+	================================================================== -->
 	<xs:element
 		name="rougthnessLayerPolygonMembers"
 		type="simBase:RougthnessLayerPolygonArrayPropertyType"/>
-	<xs:element 
-		name="rougthnessLayerMember"
-		type="simBase:RougthnessLayerPolygonPropertyType"/>
-		
+	
 	<xs:complexType name="RougthnessLayerPolygonArrayPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeatureArrayPropertyType">
@@ -199,17 +253,32 @@
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	
+	<!-- =================================================================
+		Rougthness layer polynom member or property 
+	===================================================================-->
+	<xs:element 
+		name="rougthnessLayerMember"
+		type="simBase:RougthnessLayerPolygonPropertyType"/>
+		
 	<xs:complexType 
 		name="RougthnessLayerPolygonPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
-				<xs:sequence minOccurs="0">
-					<xs:element ref="simBase:RougthnessPolygon"/>
+				<xs:sequence>
+					<xs:element 
+						ref="simBase:RougthnessPolygon"
+						 minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<!-- ================================================================
+		rougthnessPolynom
+	================================================================= -->
 	<xs:element 
 		name="RougthnessPolygon"
 		type="simBase:RougthnessPolygonType"
@@ -229,7 +298,7 @@
 					<xs:element ref="gml:polygonProperty"/>
 					<xs:element 
 						name="rougthnessID"
-						type="xs:string"
+						type="xs:anyURI"
 						minOccurs="1"	
 						maxOccurs="1"/>
 				</xs:sequence>

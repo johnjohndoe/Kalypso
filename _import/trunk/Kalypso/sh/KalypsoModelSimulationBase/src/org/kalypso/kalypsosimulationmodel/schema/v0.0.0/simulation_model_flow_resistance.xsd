@@ -16,52 +16,74 @@
 
 
 <xs:schema 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
-	<!-- remote from ogc -->
-	<!-- xs:import 	
-		namespace="http://www.opengis.net/gml" 
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
-
-	<!-- local modified for successful binding -->
+	
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
+	<!-- xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="../gml3.1.1/base/gml.xsd"
+		/-->
+	
 	<!--***********************************************************************
 		Definition flowResistance Model 
 		********************************************************************-->
-		<xs:element 
+		<!--xs:element 
 			name="flowResistanceModel" 
-			type="wb:FlowResistanceModel"/>
+			type="simBase:FlowResistanceModel"/>
 		
 		<xs:complexType name="FlowResistanceModel">
 			<xs:complexContent>
 				<xs:extension base="gml:AbstractGMLType">
 					<xs:sequence>
 						<xs:element
-							ref="wb:RougthnessCoverage"
+							ref="simBase:RougthnessCoverage"
 							minOccurs="0" maxOccurs="1"/>
 						<xs:element 
-							ref="wb:EddyViskosityCoverage"
+							ref="simBase:EddyViskosityCoverage"
 							minOccurs="0" maxOccurs="1"/>
 						<xs:element
-							ref="wb:MarshFactorCoverage"/>
+							ref="simBase:MarshFactorCoverage"/>
 					</xs:sequence>
 
 				</xs:extension>
 			</xs:complexContent>
+		</xs:complexType-->
+	
+	<!-- ================================================================
+		rougthness coverage property 
+	================================================================= -->
+	<xs:element 
+		name="rougthnessCoverage"
+		substitutionGroup="gml:featureMember">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="gml:FeaturePropertyType">
+					<xs:sequence>
+						<xs:element 
+							ref="simBase:RougthnessCoverage"
+							minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
+				</xs:restriction>
+			</xs:complexContent>
 		</xs:complexType>
+	</xs:element>
 		
-	<!-- ==========================Rougthness Coverage================== -->
+	<!-- ================================================================
+		Rougthness Coverage
+	================================================================= -->
 		<xs:element 
 			name="RougthnessCoverage"
-			type="wb:RougthnessCoverageType">
+			type="simBase:RougthnessCoverageType">
 		</xs:element>
 		<xs:complexType 
 			name="RougthnessCoverageType">
@@ -70,32 +92,76 @@
 					base="gml:MultiPointCoverageType">
 					<xs:sequence>
 						<xs:element ref="gml:multiPointDomain"/>
-						<xs:element ref="wb:rougthnessRangeSet"/>
+						<xs:element ref="simBase:rougthnessRangeSet"/>
 						<xs:element ref="gml:coverageFunction" minOccurs="0"/>
 					</xs:sequence>
 				</xs:restriction>
 			</xs:complexContent>		
 		</xs:complexType>
-		<xs:element 
-			name="rougthnessRangeSet"
-			substitutionGroup="gml:rangeSet">
-			<xs:complexType>
-				<xs:complexContent>
-					<xs:restriction 
-						base="gml:RangeSetType">
-						<xs:choice>
-							<xs:element 
-								ref="wb:RougthnessValueArray" 
-								maxOccurs="unbounded"/>
-						</xs:choice>
-					</xs:restriction>
-				</xs:complexContent>
-			</xs:complexType>		
-		</xs:element>
+	
+	<!-- =================================================================
+		rougthnessRangeSet
+	================================================================== -->	
+	<xs:element 
+		name="rougthnessRangeSet"
+		substitutionGroup="gml:rangeSet">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction 
+					base="gml:RangeSetType">
+					<xs:choice>
+						<xs:element 
+							ref="simBase:RougthnessValueArray" 
+							maxOccurs="unbounded"/>
+					</xs:choice>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>		
+	</xs:element>
+		
+	<!-- =================================================================
+		RougthnessValueArray
+	================================================================== -->
 	<xs:element 
 		name="RougthnessValueArray"
-		substitutionGroup="gml:ValueArray">
+		type="simBase:RougthnessValueArrayType"
+		substitutionGroup="gml:ValueArray"
+		>
 	</xs:element>
+	
+	<xs:complexType 
+		name="RougthnessValueArrayType">
+		<xs:annotation>
+			<xs:documentation>
+				Aggregate value built from other Values using the Composite pattern. 
+				It contains zero or an arbitrary number of valueComponent elements, 
+				and zero or one valueComponents elements.  
+				It may be used for strongly coupled aggregates (vectors, tensors) or 
+				for arbitrary collections of values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:ValueArrayType">
+				<xs:sequence>
+					<xs:element
+						ref="simBase:rougthnessValue"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<!-- xs:element 
+						ref="gml:valueComponent" 
+						minOccurs="0" maxOccurs="unbounded"/-->
+					<!--xs:element ref="gml:valueComponents" minOccurs="0"/-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element 
+		name="rougthnessValue"
+		type="simBase:RougthnessValuePropertyType"
+		substitutionGroup="gml:valueComponent">
+	
+	</xs:element>
+	
 	<xs:complexType 
 		name="RougthnessValuePropertyType">
 		<xs:complexContent>
@@ -103,7 +169,7 @@
 				base="gml:ValuePropertyType">
 				<xs:sequence>
 					<xs:element 
-						ref="wb:_Rougthness"
+						ref="simBase:_Rougthness"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>
@@ -111,10 +177,12 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
 	
+	================================================================== -->
 	<xs:element 
 		name="_Rougthness"
-		type="wb:AbstractRougthnessType"
+		type="simBase:AbstractRougthnessType"
 		substitutionGroup="gml:_Object"
 		abstract="true">
 		<xs:annotation>
@@ -139,10 +207,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		RMA10SRougthness
+	================================================================== -->
 	<xs:element 
 		name="RMA10SRougthness"
-		type="wb:RMA10SRougthnessType"
-		substitutionGroup="wb:_Rougthness">
+		type="simBase:RMA10SRougthnessType"
+		substitutionGroup="simBase:_Rougthness">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define RMAS10S style vertical distribution 
@@ -150,24 +221,45 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	
+		
 	<xs:complexType 
 		name="RMA10SRougthnessType">
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractRougthnessType">
+				base="simBase:AbstractRougthnessType">
 				<xs:sequence>
 					<!--TO DO -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-		
-	<!-- ==========================Eddy Viscosity Coverage================== -->
+	<!-- =================================================================
+		eddy viscosity coverage
+	================================================================== -->	
+	<xs:element 
+		name="eddyViscosityCoverage"
+		substitutionGroup="gml:featureMember">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="gml:FeaturePropertyType">
+					<xs:sequence>
+						<xs:element 
+							ref="simBase:EddyViskosityCoverage"
+							minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<!-- =================================================================
+		Eddy Viscosity Coverage
+	================================================================== -->
 		<xs:element 
 			name="EddyViskosityCoverage"
-			type="wb:EddyViskosityCoverageType">
+			type="simBase:EddyViskosityCoverageType">
 		</xs:element>
 		<xs:complexType 
 			name="EddyViskosityCoverageType">
@@ -176,12 +268,16 @@
 					base="gml:MultiCurveCoverageType">
 					<xs:sequence>
 						<xs:element ref="gml:multiPointDomain"/>
-						<xs:element ref="wb:eddyViscosityRangeSet"/>
+						<xs:element ref="simBase:eddyViscosityRangeSet"/>
 						<xs:element ref="gml:coverageFunction" minOccurs="0"/>
 					</xs:sequence>
 				</xs:restriction>
 			</xs:complexContent>		
 		</xs:complexType>
+		
+		<!-- =============================================================
+			eddyViscosityRangeSet
+		============================================================== -->
 		<xs:element 
 			name="eddyViscosityRangeSet"
 			substitutionGroup="gml:rangeSet">
@@ -191,16 +287,56 @@
 						base="gml:RangeSetType">
 						<xs:choice>
 							<xs:element 
-								ref="wb:EddyViscosityValueArray" 
+								ref="simBase:EddyViscosityValueArray" 
 								maxOccurs="unbounded"/>
 						</xs:choice>
 					</xs:restriction>
 				</xs:complexContent>
 			</xs:complexType>		
 		</xs:element>
+		
+	<!-- =================================================================
+		EddyViscosityValueArray
+	================================================================== -->
 	<xs:element 
 		name="EddyViscosityValueArray"
+		type="simBase:EddyViscosityValueArrayType"
 		substitutionGroup="gml:ValueArray">
+	</xs:element>
+	
+	<xs:complexType 
+		name="EddyViscosityValueArrayType">
+		<xs:annotation>
+			<xs:documentation>
+				Aggregate value built from other Values using the Composite pattern. 
+				It contains zero or an arbitrary number of valueComponent elements, 
+				and zero or one valueComponents elements.  
+				It may be used for strongly coupled aggregates (vectors, tensors) or 
+				for arbitrary collections of values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:ValueArrayType">
+				<xs:sequence>
+					<xs:element
+						ref="simBase:eddyViscosityValue"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<!-- xs:element 
+						ref="gml:valueComponent" 
+						minOccurs="0" maxOccurs="unbounded"/-->
+					<!--xs:element ref="gml:valueComponents" minOccurs="0"/-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- =================================================================
+		eddyViscosityValue
+	================================================================== -->
+	<xs:element 
+		name="eddyViscosityValue"
+		type="simBase:EddyViscosityValuePropertyType"
+		substitutionGroup="gml:valueComponent">
 	</xs:element>
 	<xs:complexType 
 		name="EddyViscosityValuePropertyType">
@@ -208,17 +344,19 @@
 			<xs:restriction 
 				base="gml:ValuePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="wb:_EddyViscosity"/>
+					<xs:element ref="simBase:_EddyViscosity"/>
 				</xs:sequence>
 				<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
-	
+	<!-- =================================================================
+		_EddyViscosity substitution head
+	================================================================== -->
 	<xs:element 
 		name="_EddyViscosity"
-		type="wb:AbstractEddyViscosityType"
+		type="simBase:AbstractEddyViscosityType"
 		substitutionGroup="gml:_Object"
 		abstract="true">
 		<xs:annotation>
@@ -243,10 +381,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		RMA10SEddyViscosity
+	================================================================== -->
 	<xs:element 
 		name="RMA10SEddyViscosity"
-		type="wb:RMA10SEddyViscosityType"
-		substitutionGroup="wb:_EddyViscosity">
+		type="simBase:RMA10SEddyViscosityType"
+		substitutionGroup="simBase:_EddyViscosity">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define RMAS10S style vertical distribution 
@@ -254,13 +395,12 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
-	
+		
 	<xs:complexType 
 		name="RMA10SEddyViscosityType">
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractEddyViscosityType">
+				base="simBase:AbstractEddyViscosityType">
 				<xs:sequence>
 					<xs:element 
 						name="yEddy"
@@ -295,10 +435,32 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- ==========================Marh Parameter Coverage================== -->
+	<!-- =================================================================
+		marsh factor coverage property
+	================================================================== -->
+	<xs:element 
+		name="marshFactorCoverage"
+		substitutionGroup="gml:featureMember">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="gml:FeaturePropertyType">
+					<xs:sequence>
+						<xs:element 
+							ref="simBase:MarshFactorCoverage"
+							minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- =================================================================
+			Marh Factor Coverage
+	================================================================== -->
 		<xs:element 
 			name="MarshFactorCoverage"
-			type="wb:MarshFactorCoverageType">
+			type="simBase:MarshFactorCoverageType">
 		</xs:element>
 		<xs:complexType 
 			name="MarshFactorCoverageType">
@@ -307,7 +469,7 @@
 					base="gml:MultiCurveCoverageType">
 					<xs:sequence>
 						<xs:element ref="gml:multiPointDomain"/>
-						<xs:element ref="wb:marshFactorRangeSet"/>
+						<xs:element ref="simBase:marshFactorRangeSet"/>
 						<xs:element ref="gml:coverageFunction" minOccurs="0"/>
 					</xs:sequence>
 				</xs:restriction>
@@ -322,7 +484,7 @@
 						base="gml:RangeSetType">
 						<xs:choice>
 							<xs:element 
-								ref="wb:MarshFactorValueArray" 
+								ref="simBase:MarshFactorValueArray" 
 								maxOccurs="unbounded"/>
 						</xs:choice>
 					</xs:restriction>
@@ -331,15 +493,44 @@
 		</xs:element>
 	<xs:element 
 		name="MarshFactorValueArray"
+		type="simBase:MarshFactorValueArrayType"
 		substitutionGroup="gml:ValueArray">
 	</xs:element>
+	
+	<xs:complexType 
+		name="MarshFactorValueArrayType">
+		<xs:annotation>
+			<xs:documentation>
+				Aggregate value built from other Values using the Composite pattern. It contains zero or an arbitrary number of valueComponent elements, and zero or one valueComponents elements.  It may be used for strongly coupled aggregates (vectors, tensors) or for arbitrary collections of values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:ValueArrayType">
+				<xs:sequence>
+					<xs:element
+						ref="simBase:marshFactorValue"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<!-- xs:element 
+						ref="gml:valueComponent" 
+						minOccurs="0" maxOccurs="unbounded"/-->
+					<!--xs:element ref="gml:valueComponents" minOccurs="0"/-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element
+		name="marshFactorValue"
+		type="simBase:MarshFactorValuePropertyType"
+		substitutionGroup="gml:valueComponent"/>
+		
 	<xs:complexType 
 		name="MarshFactorValuePropertyType">
 		<xs:complexContent>
 			<xs:restriction 
 				base="gml:ValuePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="wb:_MarshFactor"/>
+					<xs:element ref="simBase:_MarshFactor"/>
 				</xs:sequence>
 				<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>
 			</xs:restriction>
@@ -347,14 +538,17 @@
 	</xs:complexType>
 	
 	
+	<!-- =================================================================
+		_MarshFactor
+	================================================================== -->
 	<xs:element 
 		name="_MarshFactor"
-		type="wb:AbstractMarshFactorType"
+		type="simBase:AbstractMarshFactorType"
 		substitutionGroup="gml:_Object"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-				Substitution head for all eddy viskosity
+				Substitution head for all marsh factors
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -374,10 +568,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		RMA10SMarshFactor
+	================================================================== -->
 	<xs:element 
 		name="RMA10SMarshFactor"
-		type="wb:RMA10SMarshFactorType"
-		substitutionGroup="wb:_MarshFactor">
+		type="simBase:RMA10SMarshFactorType"
+		substitutionGroup="simBase:_MarshFactor">
 		<xs:annotation>
 			<xs:documentation>
 				Element to define RMAS10S style vertical distribution 
@@ -391,7 +588,7 @@
 		name="RMA10SMarshFactorType">
 		<xs:complexContent>
 			<xs:extension 
-				base="wb:AbstractMarshFactorType">
+				base="simBase:AbstractMarshFactorType">
 				<xs:sequence>
 					<xs:element 
 						name="bottomElevationShift"
@@ -438,7 +635,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- =============================Rougthness correction factor===================== -->
+	<!-- =================================================================
+			Rougthness correction factor
+	================================================================== -->
 	<xs:complexType name="RougthnessCorrectionFactorCollectionType">
 		<xs:annotation>
 			<xs:documentation>
@@ -449,18 +648,16 @@
 			<xs:restriction 
 				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="wb:rougthnessCorrectionFactor"/>
-					<xs:element ref="wb:rougthnessCorrectionFactors"/>
+					<xs:element ref="simBase:rougthnessCorrectionFactor"/>
+					<xs:element ref="simBase:rougthnessCorrectionFactors"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:element 
-		name="rougthnessCorrectionFactor"
-		type="wb:RougthnessCorrectionFactorPropertyType"
-		substitutionGroup="gml:featureMember">
-	</xs:element>
+	<!-- =================================================================
+		rougthnessCorrectionFactors
+	================================================================== -->
 	<xs:element 
 			name="rougthnessCorrectionFactors">
 			<xs:complexType>
@@ -469,29 +666,38 @@
 							base="gml:FeatureArrayPropertyType">
 						<xs:sequence>
 							<xs:element 
-								ref="wb:RougthnessCorrectionFactor"
+								ref="simBase:RougthnessCorrectionFactor"
 								minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:restriction>
 				</xs:complexContent>
 			</xs:complexType>
 	</xs:element>
-	<xs:complexType 
-		name="RougthnessCorrectionFactorPropertyType">
-		<xs:complexContent>
-			<xs:restriction base="gml:FeaturePropertyType">
-				<xs:sequence>
-					<xs:element 
-						ref="wb:RougthnessCorrectionFactor"
-						minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
+	
+	<!-- =================================================================
+		rougthnessCorrectionFactor
+	================================================================== -->
+	<xs:element 
+		name="rougthnessCorrectionFactor"
+		substitutionGroup="gml:featureMember">	
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="gml:FeaturePropertyType">
+					<xs:sequence>
+						<xs:element 
+							ref="simBase:RougthnessCorrectionFactor"
+							minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:attributeGroup 
+						ref=" gml:AssociationAttributeGroup "/>			
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
 	<xs:element 
 		name="RougthnessCorrectionFactor"
-		type="wb:RougthnessCorrectionFactorType">
+		type="simBase:RougthnessCorrectionFactorType">
 		<xs:annotation>
 			<xs:documentation>
 				The rougthness correction factor element maps a correction 
@@ -531,7 +737,7 @@
 	</xs:complexType>
 	
 	<!-- ====================================================================
-					Eddy viskosity correction factor
+					EddyViscosityCorrectionFactorCollectionType
 		================================================================= -->
 	<xs:complexType name="EddyViscosityCorrectionFactorCollectionType">
 		<xs:annotation>
@@ -543,13 +749,16 @@
 			<xs:restriction 
 				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="wb:eddyViscosityCorrectionFactor"/>
-					<xs:element ref="wb:eddyViscosityCorrectionFactors"/>
+					<xs:element ref="simBase:eddyViscosityCorrectionFactor"/>
+					<xs:element ref="simBase:eddyViscosityCorrectionFactors"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- ================================================================
+		eddyViscosityCorrectionFactor
+	================================================================= -->
 	<xs:element 
 		name="eddyViscosityCorrectionFactor"
 		substitutionGroup="gml:featureMember">
@@ -558,7 +767,7 @@
 				<xs:restriction base="gml:FeaturePropertyType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb:EddyViscosityCorrectionFactor"
+							ref="simBase:EddyViscosityCorrectionFactor"
 							minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 					<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
@@ -567,6 +776,9 @@
 		</xs:complexType>
 	</xs:element>
 	
+	<!-- =================================================================
+		eddyViscosityCorrectionFactors
+	================================================================== -->
 	<xs:element 
 		name="eddyViscosityCorrectionFactors"
 		substitutionGroup="gml:featureMembers">
@@ -576,7 +788,7 @@
 							base="gml:FeatureArrayPropertyType">
 						<xs:sequence>
 							<xs:element 
-								ref="wb:EddyViscosityCorrectionFactor"
+								ref="simBase:EddyViscosityCorrectionFactor"
 								minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:restriction>
@@ -585,9 +797,12 @@
 	</xs:element>
 	
 	
+	<!-- =================================================================
+		EddyViscosityCorrectionFactor
+	================================================================== -->
 	<xs:element 
 		name="EddyViscosityCorrectionFactor"
-		type="wb:EddyViscosityCorrectionFactorType">
+		type="simBase:EddyViscosityCorrectionFactorType">
 		<xs:annotation>
 			<xs:documentation>
 				The eddy viscosity correction factor map a correction 
@@ -595,6 +810,7 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	
 	<xs:complexType 
 		name="EddyViscosityCorrectionFactorType">
 		<xs:complexContent>
@@ -627,7 +843,7 @@
 	</xs:complexType>	
 	
 	<!-- ====================================================================
-					Marsh correction factor
+					MarshParamCorrectionFactorCollectionType
 		================================================================= -->
 	<xs:complexType name="MarshParamCorrectionFactorCollectionType">
 		<xs:annotation>
@@ -639,13 +855,16 @@
 			<xs:restriction 
 				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="wb:marshParamCorrectionFactor"/>
-					<xs:element ref="wb:marshParamCorrectionFactors"/>
+					<xs:element ref="simBase:marshParamCorrectionFactor"/>
+					<xs:element ref="simBase:marshParamCorrectionFactors"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		marshParamCorrectionFactor
+	================================================================== -->
 	<xs:element 
 		name="marshParamCorrectionFactor"
 		substitutionGroup="gml:featureMember">
@@ -654,15 +873,19 @@
 				<xs:restriction base="gml:FeaturePropertyType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb:MarshParamCorrectionFactor"
+							ref="simBase:MarshParamCorrectionFactor"
 							minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
-					<xs:attributeGroup ref=" gml:AssociationAttributeGroup "/>			
+					<xs:attributeGroup 
+							ref=" gml:AssociationAttributeGroup "/>			
 				</xs:restriction>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
 	
+	<!-- =================================================================
+		marshParamCorrectionFactors
+	================================================================== -->
 	<xs:element 
 		name="marshParamCorrectionFactors"
 		substitutionGroup="gml:featureMembers">
@@ -672,7 +895,7 @@
 							base="gml:FeatureArrayPropertyType">
 						<xs:sequence>
 							<xs:element 
-								ref="wb:MarshParamCorrectionFactor"
+								ref="simBase:MarshParamCorrectionFactor"
 								minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:restriction>
@@ -680,10 +903,12 @@
 			</xs:complexType>
 	</xs:element>
 	
-	
+	<!-- =================================================================
+		MarshParamCorrectionFactor, type
+	================================================================== -->
 	<xs:element 
 		name="MarshParamCorrectionFactor"
-		type="wb:MarshParamCorrectionFactorType">
+		type="simBase:MarshParamCorrectionFactorType">
 		<xs:annotation>
 			<xs:documentation>
 				The eddy viscosity correction factor map a correction 

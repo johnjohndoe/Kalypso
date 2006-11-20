@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--  
-	Provides Generic math types and elements
+	Provides Generic math types and elements:
+	==Polynomes
 		
 	@author Patrice Congo
 -->
@@ -20,40 +21,32 @@
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
+	<!--xs:import
+		namespace="http://www.opengis.net/gml"
+		schemaLocation="../gml3.1.1/base/gml.xsd"
+		/-->
+	
+	<!-- =================================================================
+		polynom property 
+	================================================================== -->
+	<xs:element 
+		name="polynom"
+		type="simBase:Polynom1DPropertyType"/>
 		
-	<!--xs:element 
-		name="WlDisRel"
-		type="wb:WlDisRelType"
-		substitutionGroup="wb:_FlowRelationship">
-		<xs:annotation>
-			<xs:documentation>
-				Element to define RMAS10S style vertical distribution 
-				of eddy viscosity
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	
-	
 	<xs:complexType 
-		name="WlDisRelType">
-		<xs:complexContent>
-			<xs:extension 
-				base="simBase:2DPolynom">
-				<xs:sequence>
-					<xs:element name="waterLevel">
-						<xs:simpleType>
-							<xs:list itemType="xs:double"/>
-						</xs:simpleType>
-					</xs:element>
-					<xs:element name="discharge">
-						<xs:simpleType>
-							<xs:list itemType="xs:double"/>
-						</xs:simpleType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType -->
+		name="PolynomPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:_Polynom"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
 	<!-- ======================================================================
 			_Polynom element
 	======================================================================= -->
@@ -66,6 +59,7 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	
 	<!-- ======================================================================
 			AbstractPolynomType
 	======================================================================= -->
@@ -83,6 +77,27 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+
+	<!-- ====================================================================
+		polynom1D property
+	====================================================================-->	
+	<xs:element 
+		name="polynom1D"
+		type="simBase:Polynom1DPropertyType"/>
+		
+	<xs:complexType name="Polynom1DPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:Polynom1D"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
 	
 	<!-- ======================================================================
 			Polynom1D element
@@ -127,6 +142,27 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		polynom2D property 
+	================================================================== -->
+	<xs:element 
+		name="polynom2D"
+		type="simBase:Polynom1DPropertyType"/>
+		
+	<xs:complexType 
+		name="Polynom2DPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:Polynom2D"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
 	<!-- ======================================================================
 			Polynom2D element
 	======================================================================= -->
@@ -164,7 +200,9 @@
 						name="orderY"
 						type="xs:positiveInteger"
 						minOccurs="1" maxOccurs="1"/>
-						
+					<xs:element 
+						name="data"
+						type="gml:DataBlockType"/>	
 					<xs:element
 						name="coeficients"
 						minOccurs="1" maxOccurs="1">

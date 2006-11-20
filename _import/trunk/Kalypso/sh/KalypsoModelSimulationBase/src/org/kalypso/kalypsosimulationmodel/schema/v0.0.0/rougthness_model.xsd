@@ -14,15 +14,10 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
-	<!-- remote from ogc -->
-	<!-- xs:import 	
-		namespace="http://www.opengis.net/gml" 
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
-
-	<!-- local modified for successful binding -->
+	
 	<xs:import
 		namespace="http://www.opengis.net/gml"
-		schemaLocation="file:///D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
 		
 		<xs:element 
@@ -32,7 +27,7 @@
 		<xs:sequence minOccurs="0">
 			<xs:element ref="wb:RougthnessModel"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/> 
 	</xs:complexType>	
 	<xs:element 
 		name="RougthnessModel"

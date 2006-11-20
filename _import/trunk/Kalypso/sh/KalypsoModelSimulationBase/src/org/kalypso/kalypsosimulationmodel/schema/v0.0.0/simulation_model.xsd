@@ -43,39 +43,12 @@
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 	
-	<!-- remote from ogc -->
-	<!-- xs:import 	
-		namespace="http://www.opengis.net/gml" 
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
-
-	<!-- local modified for successful binding -->
-	<!-- xs:import
-		namespace="http://www.opengis.net/gml"
-		schemaLocation="file:///D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/ -->
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
-	<!-- xs:import
-		namespace="http://www.opengis.net/gml"
-		schemaLocation="file:///G:/tuhh_workspace/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/ -->
-		
-			<!-- xs:import 
-			namespace="http://www.opengis.net/gml" 
-			schemaLocation="D:/congo/eclipse_base/kalypso_workspace/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/ 
-			-->
-			
-	<!-- xs:include schemaLocation="rougthness_model.xsd"/ -->
-	<!--  xs:include schemaLocation="river_area_model.xsd"/ -->
-	<!-- xs:include schemaLocation="simulation_control_model.xsd"/-->
 	
 	
-	<!-- xs:import
-		namespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d"
-		schemaLocation="./rougthness_model.xsd"
-		/-->
 	<!-- ==============================================================
 						global element declarations
 		============================================================== -->
@@ -137,6 +110,7 @@
 		type="simBase:AbstractModelType"
 		substitutionGroup="gml:_Feature">
 	</xs:element>
+	
 	<xs:complexType 
 		name="AbstractModelType"
 		abstract="true">
@@ -154,9 +128,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- Modell property class 
-		a class groups modell properties related to the same modelling issue.
-	-->
+	<!--==================================================================
+		additionalModelProperty 
+	===================================================================-->
 	<xs:element 
 			name="additionalModelProperty"
 			type="simBase:AdditionalModelPropertyAssociationType"
@@ -173,17 +147,6 @@
 		</xs:annotation>
 	</xs:element>
 	
-	<!--xs:element 
-		name="additionalModelProperty"
-		type="simBase:AdditionalModelPropertyAssociationType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				Represents the substitution head for Additional 
-				model properties
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element-->
 	<xs:complexType 
 		name="AdditionalModelPropertyAssociationType"
 		abstract="true">
@@ -203,11 +166,14 @@
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>	
+	
+	<!-- =================================================================
+		AdditionalModelProperty
+	================================================================== -->
 	<xs:element 
 		name="AdditionalModelProperty"
 		type="simBase:AdditionalModelPropertyType"
-		substitutionGroup="gml:_GML">
-	
+		substitutionGroup="gml:_GML">	
 	</xs:element>
 	<xs:complexType 
 		name="AdditionalModelPropertyType"
@@ -231,8 +197,7 @@
 		===================================================================-->
 	<xs:element 
 		name="staticModel"
-		type="simBase:StaticModelPropertyType"
-		abstract="true">
+		type="simBase:StaticModelPropertyType">
 		<xs:annotation>
 			<xs:documentation 
 				xml:lang="en">
@@ -243,26 +208,24 @@
 		</xs:annotation>
 	</xs:element>
 	
-	<!-- =====================================================================
-			StaticModelPropertyType
-		================================================================== -->
 	<xs:complexType 
-		name="StaticModelPropertyType"
-		abstract="true">
+		name="StaticModelPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete staticModel property type.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:StaticModel"/>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:StaticModel" 
+				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>	
 	
 	<!-- =====================================================================
 			StaticModel element
-		================================================================== -->
+	================================================================== -->
 	<xs:element 
 		name="StaticModel"
 		type="simBase:AbstractStaticModelType"
@@ -307,6 +270,10 @@
 			==Provide an element of that type, with ist substitution group 
 				set tp operationalModel
 		********************************************************************-->
+	
+	<!-- =====================================================================
+		operationalModel Property Type
+		================================================================== -->	
 	<xs:element 
 		name="operationalModel"
 		type="simBase:OperationalModelPropertyType">
@@ -320,12 +287,9 @@
 		</xs:annotation>		
 	</xs:element>
 	
-	<!-- =====================================================================
-		OperationalPropertyType
-		================================================================== -->	
 	<xs:complexType 
 		name="OperationalModelPropertyType"
-		abstract="true">
+		>
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The root type of all concrete operational model property type.
@@ -335,7 +299,11 @@
 			<xs:element ref="simBase:OperationalModel"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
+	</xs:complexType>
+	
+	<!-- =================================================================
+	OperationalModel
+	================================================================== -->	
 	<xs:element 
 		name="OperationalModel"
 		type="simBase:AbstractOperationalModelType"
@@ -366,8 +334,8 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-<!--==========================================================================
-	Control Model modelling 
+	<!--=====================================================================
+		Control Model property type  
 	=======================================================================-->
 	<xs:element 
 		name="controlModel"
@@ -391,11 +359,17 @@
 				The root type of all concrete control model property type.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:ControlModel"/>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:ControlModel"
+				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>	
+	
+	<!-- ======================================================================
+		Control Model 
+	========================================================================-->
 	<xs:element 
 		name="ControlModel"
 		type="simBase:AbstractControlModelType"
@@ -443,6 +417,7 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	
 	<xs:complexType 
 		name="ResultModelPropertyType"
 		abstract="true">
@@ -452,14 +427,20 @@
 				The root type of all concrete result model property type.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:ResultModel"/>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:ResultModel"
+				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>	
+	
+	<!-- =================================================================
+		ResultModel
+	================================================================== -->
 	<xs:element 
 		name="ResultModel"
-		type="simBase:AbstractControlModelType"
+		type="simBase:AbstractResultModelType"
 		substitutionGroup="simBase:_Model"
 		>
 		<xs:annotation>
@@ -489,7 +470,7 @@
 	</xs:complexType>
 	
 	<!-- **********************************************************************
-		Evaluation modelling 
+		Evaluation Model property 
 		********************************************************************-->
 	<xs:element 
 		name="evaluationModel"
@@ -515,6 +496,10 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>	
+	
+	<!-- =================================================================
+		Evaluation Model
+	================================================================== -->
 	<xs:element 
 		name="EvaluationModel"
 		type="simBase:AbstractEvaluationModelType"
@@ -540,13 +525,12 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-<!-- =========================================================================
+	<!-- ====================================================================
 		overridingModel property element
 	====================================================================== -->
 	<xs:element 
 		name="overridingModel"
-		type="simBase:OverridingModelPropertyType"
-		block="substitution">
+		type="simBase:OverridingModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				Use to override the behavior of a model
@@ -565,10 +549,14 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
+	<!-- =================================================================
+		OverridingModel 
+	================================================================== -->
 	<xs:element 
 		name="OverridingModel"
 		abstract="true"
-		type="simBase:AbstractOverridingModelType">
+		type="simBase:AbstractOverridingModelType"
+		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for overriding models
@@ -591,10 +579,9 @@
 				base="simBase:AbstractModelType"/>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	
 </xs:schema>
-
-
-
 
 
 
