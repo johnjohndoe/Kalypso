@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import org.kalypsodeegree_impl.model.resources.Utilities;
@@ -88,17 +89,17 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
   /**
    * The horizontal datum.
    */
-  private final HorizontalDatum m_datum;
+  private final HorizontalDatum datum;
 
   /**
    * Details of 0th ordinates.
    */
-  private final AxisInfo m_axis0;
+  private final AxisInfo axis0;
 
   /**
    * Details of 1th ordinates.
    */
-  private final AxisInfo m_axis1;
+  private final AxisInfo axis1;
 
   /**
    * Construct a coordinate system.
@@ -116,9 +117,9 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
       final AxisInfo axis1 )
   {
     super( name );
-    m_datum = datum;
-    m_axis0 = axis0;
-    m_axis1 = axis1;
+    this.datum = datum;
+    this.axis0 = axis0;
+    this.axis1 = axis1;
     ensureNonNull( "datum", datum );
     ensureNonNull( "axis0", axis0 );
     ensureNonNull( "axis1", axis1 );
@@ -141,9 +142,9 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
       final AxisInfo axis1 )
   {
     super( properties );
-    this.m_datum = datum;
-    this.m_axis0 = axis0;
-    this.m_axis1 = axis1;
+    this.datum = datum;
+    this.axis0 = axis0;
+    this.axis1 = axis1;
     // Accept null values
   }
 
@@ -152,7 +153,6 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_HorizontalCoordinateSystem#getDimension()
    */
-  @Override
   public final int getDimension()
   {
     return 2;
@@ -161,7 +161,6 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
   /**
    * Override {@link CoordinateSystem#getDatum()}.
    */
-  @Override
   final Datum getDatum()
   {
     return getHorizontalDatum();
@@ -174,7 +173,7 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    */
   public HorizontalDatum getHorizontalDatum()
   {
-    return m_datum;
+    return datum;
   }
 
   /**
@@ -185,15 +184,14 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_HorizontalCoordinateSystem#getAxis(int)
    */
-  @Override
   public AxisInfo getAxis( final int dimension )
   {
     switch( dimension )
     {
     case 0:
-      return m_axis0;
+      return axis0;
     case 1:
-      return m_axis1;
+      return axis1;
     default:
       throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
           dimension ) ) );
@@ -211,7 +209,6 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
-  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -219,27 +216,27 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final HorizontalCoordinateSystem that = (HorizontalCoordinateSystem)cs;
-      return Utilities.equals( this.m_datum, that.m_datum ) && Utilities.equals( this.m_axis0, that.m_axis0 )
-          && Utilities.equals( this.m_axis1, that.m_axis1 );
+      return Utilities.equals( this.datum, that.datum ) && Utilities.equals( this.axis0, that.axis0 )
+          && Utilities.equals( this.axis1, that.axis1 );
     }
     return false;
   }
 
-  @Override /**
+  /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( m_datum );
+    buffer.append( datum );
     buffer.append( ", " );
-    buffer.append( m_axis0 );
+    buffer.append( axis0 );
     buffer.append( ", " );
-    buffer.append( m_axis1 );
+    buffer.append( axis1 );
     return "HORZ_CS";
   }
 
-  @Override /**
+  /**
    * Returns an OpenGIS interface for this horizontal coordinate system. The returned object is suitable for RMI use.
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
@@ -274,9 +271,9 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
     /**
      * Returns the HorizontalDatum.
      */
-    public CS_HorizontalDatum getHorizontalDatum()
+    public CS_HorizontalDatum getHorizontalDatum() throws RemoteException
     {
-      return m_adapters.export( HorizontalCoordinateSystem.this.getHorizontalDatum() );
+      return adapters.export( HorizontalCoordinateSystem.this.getHorizontalDatum() );
     }
   }
 }

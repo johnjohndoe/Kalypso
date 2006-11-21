@@ -118,7 +118,7 @@ public class CoordinateTransformationFactory
   /**
    * The underlying math transform factory.
    */
-  private final MathTransformFactory m_factory;
+  private final MathTransformFactory factory;
 
   /**
    * Construct a coordinate transformation factory.
@@ -128,7 +128,7 @@ public class CoordinateTransformationFactory
    */
   public CoordinateTransformationFactory( final MathTransformFactory factory )
   {
-    m_factory = factory;
+    this.factory = factory;
   }
 
   /**
@@ -149,7 +149,7 @@ public class CoordinateTransformationFactory
    */
   public final MathTransformFactory getMathTransformFactory()
   {
-    return m_factory;
+    return factory;
   }
 
   /**
@@ -319,9 +319,9 @@ public class CoordinateTransformationFactory
        * build a matrix transform that will select only the corresponding ordinates from input arrays, and pass them to
        * the transform.
        */
-      final MathTransform step1 = m_factory.createSubMathTransform( lower, upper, m_factory
+      final MathTransform step1 = factory.createSubMathTransform( lower, upper, factory
           .createIdentityTransform( dimSource ) );
-      final MathTransform transform = m_factory.createConcatenatedTransform( step1, step2.getMathTransform() );
+      final MathTransform transform = factory.createConcatenatedTransform( step1, step2.getMathTransform() );
       return createFromMathTransform( sourceCS, targetCS, step2.getTransformType(), transform );
     }
     throw new CannotCreateTransformException( sourceCS, targetCS );
@@ -358,7 +358,7 @@ public class CoordinateTransformationFactory
         final double translation = matrix.getElement( 0, translationColumn );
         matrix.setElement( 0, translationColumn, translation + epochShift );
       }
-      final MathTransform transform = m_factory.createAffineTransform( matrix );
+      final MathTransform transform = factory.createAffineTransform( matrix );
       return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
     }
     throw new CannotCreateTransformException( sourceCS, targetCS );
@@ -383,7 +383,7 @@ public class CoordinateTransformationFactory
     if( Utilities.equals( sourceCS.getVerticalDatum(), targetCS.getVerticalDatum() ) )
     {
       final Matrix matrix = swapAndScaleAxis( sourceCS, targetCS );
-      final MathTransform transform = m_factory.createAffineTransform( matrix );
+      final MathTransform transform = factory.createAffineTransform( matrix );
       return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
     }
     throw new CannotCreateTransformException( sourceCS, targetCS );
@@ -438,7 +438,7 @@ public class CoordinateTransformationFactory
      */
     final Matrix matrix = swapAndScaleGeoAxis( sourceCS, targetCS );
     // TODO: We should ensure that longitude is in range [-180..+180°].
-    final MathTransform transform = m_factory.createAffineTransform( matrix );
+    final MathTransform transform = factory.createAffineTransform( matrix );
     return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
   }
 
@@ -475,7 +475,7 @@ public class CoordinateTransformationFactory
       // have just been checked above. Prime meridien is not checked (TODO:
       // should we do???)
       final Matrix matrix = swapAndScaleAxis( sourceCS, targetCS );
-      final MathTransform transform = m_factory.createAffineTransform( matrix );
+      final MathTransform transform = factory.createAffineTransform( matrix );
       return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
     }
     final GeographicCoordinateSystem sourceGeo = sourceCS.getGeographicCoordinateSystem();
@@ -508,7 +508,7 @@ public class CoordinateTransformationFactory
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert normalize(stepProjCS) == stepProjCS; // assert
      * normalize(stepGeoCS, projection) == stepGeoCS; // assert projection.equals(targetCS.getProjection());
      *///----- END OF JDK 1.4 DEPENDENCIES ---
-    final MathTransform mapProjection = m_factory.createParameterizedTransform( projection );
+    final MathTransform mapProjection = factory.createParameterizedTransform( projection );
     final CoordinateTransformation step1 = createTransformationStep( sourceCS, stepGeoCS );
     final CoordinateTransformation step2 = createFromMathTransform( stepGeoCS, stepProjCS, TransformType.CONVERSION,
         mapProjection );
@@ -571,7 +571,7 @@ public class CoordinateTransformationFactory
       if( Utilities.equals( sourceCS.getPrimeMeridian(), targetCS.getPrimeMeridian() ) )
       {
         final Matrix matrix = swapAndScaleAxis( sourceCS, targetCS );
-        final MathTransform transform = m_factory.createAffineTransform( matrix );
+        final MathTransform transform = factory.createAffineTransform( matrix );
         return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
       }
       // If prime meridians are not the same, performs the full transformation.
@@ -599,7 +599,7 @@ public class CoordinateTransformationFactory
         step4.mul( step3 ); // step4 = step4*step3
         step4.mul( step2 ); // step4 = step4*step3*step2
         step4.mul( step1 ); // step4 = step4*step3*step2*step1
-        final MathTransform transform = m_factory.createAffineTransform( step4 );
+        final MathTransform transform = factory.createAffineTransform( step4 );
         return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, transform );
       }
       catch( SingularMatrixException exception )
@@ -633,11 +633,11 @@ public class CoordinateTransformationFactory
     {
       throw new CannotCreateTransformException( "Rotation of prime meridian not yet implemented" );
     }
-    final MathTransform step1 = m_factory.createAffineTransform( swapAndScaleGeoAxis( sourceCS,
+    final MathTransform step1 = factory.createAffineTransform( swapAndScaleGeoAxis( sourceCS,
         GeographicCoordinateSystem.WGS84 ) );
     final MathTransform step2 = getGeocentricTransform( "Ellipsoid_To_Geocentric", 2, sourceCS.getHorizontalDatum()
         .getEllipsoid() );
-    return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, m_factory.createConcatenatedTransform(
+    return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, factory.createConcatenatedTransform(
         step1, step2 ) );
   }
 
@@ -730,14 +730,14 @@ public class CoordinateTransformationFactory
     if( tailSourceCS.equivalents( tailTargetCS ) )
     {
       final CoordinateTransformation tr = createFromCoordinateSystems( headSourceCS, headTargetCS );
-      final MathTransform transform = m_factory.createPassThroughTransform( 0, tr.getMathTransform(), tailSourceCS
+      final MathTransform transform = factory.createPassThroughTransform( 0, tr.getMathTransform(), tailSourceCS
           .getDimension() );
       return createFromMathTransform( sourceCS, targetCS, tr.getTransformType(), transform );
     }
     if( headSourceCS.equivalents( headTargetCS ) )
     {
       final CoordinateTransformation tr = createFromCoordinateSystems( tailSourceCS, tailTargetCS );
-      final MathTransform transform = m_factory.createPassThroughTransform( headSourceCS.getDimension(), tr
+      final MathTransform transform = factory.createPassThroughTransform( headSourceCS.getDimension(), tr
           .getMathTransform(), 0 );
       return createFromMathTransform( sourceCS, targetCS, tr.getTransformType(), transform );
     }
@@ -788,7 +788,7 @@ public class CoordinateTransformationFactory
       final Ellipsoid ellipsoid )
   {
     final Unit unit = ellipsoid.getAxisUnit();
-    ParameterList param = m_factory.getMathTransformProvider( classification ).getParameterList();
+    ParameterList param = factory.getMathTransformProvider( classification ).getParameterList();
     param = param.setParameter( "semi_major", Unit.METRE.convert( ellipsoid.getSemiMajorAxis(), unit ) );
     param = param.setParameter( "semi_minor", Unit.METRE.convert( ellipsoid.getSemiMinorAxis(), unit ) );
     try
@@ -806,7 +806,7 @@ public class CoordinateTransformationFactory
         throw exception;
       }
     }
-    return m_factory.createParameterizedTransform( classification, param );
+    return factory.createParameterizedTransform( classification, param );
   }
 
   /**
@@ -830,7 +830,7 @@ public class CoordinateTransformationFactory
       // Current message is for debugging purpose only.
       throw new IllegalArgumentException( String.valueOf( step1 ) );
     }
-    final MathTransform step = m_factory.createConcatenatedTransform( step1.getMathTransform(), step2.getMathTransform() );
+    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(), step2.getMathTransform() );
     final TransformType type = step1.getTransformType().concatenate( step2.getTransformType() );
     return createFromMathTransform( step1.getSourceCS(), step2.getTargetCS(), type, step );
   }
@@ -865,7 +865,7 @@ public class CoordinateTransformationFactory
       // Current message is for debugging purpose only.
       throw new IllegalArgumentException( String.valueOf( step3 ) );
     }
-    final MathTransform step = m_factory.createConcatenatedTransform( step1.getMathTransform(), m_factory
+    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(), factory
         .createConcatenatedTransform( step2.getMathTransform(), step3.getMathTransform() ) );
     final TransformType type = step1.getTransformType().concatenate(
         step2.getTransformType().concatenate( step3.getTransformType() ) );
@@ -970,7 +970,7 @@ public class CoordinateTransformationFactory
     {
       // Find longitude ordinate, and apply a rotation if prime meridian are
       // different.
-      final AxisOrientation orientation = targetCS.getAxis( i ).m_orientation;
+      final AxisOrientation orientation = targetCS.getAxis( i ).orientation;
       if( AxisOrientation.EAST.equals( orientation.absolute() ) )
       {
         final Unit unit = targetCS.getUnits( i );
@@ -998,7 +998,7 @@ public class CoordinateTransformationFactory
     {
       axis = new AxisOrientation[cs.getDimension()];
       for( int i = 0; i < axis.length; i++ )
-        axis[i] = cs.getAxis( i ).m_orientation;
+        axis[i] = cs.getAxis( i ).orientation;
     }
     else
     {
@@ -1087,8 +1087,8 @@ public class CoordinateTransformationFactory
   private static boolean hasStandardAxis( final HorizontalCoordinateSystem cs, final Unit unit )
   {
     return cs.getDimension() == 2 /* Just a paranoiac check */&& unit.equals( cs.getUnits( 0 ) )
-        && unit.equals( cs.getUnits( 1 ) ) && AxisOrientation.EAST.equals( cs.getAxis( 0 ).m_orientation )
-        && AxisOrientation.NORTH.equals( cs.getAxis( 1 ).m_orientation );
+        && unit.equals( cs.getUnits( 1 ) ) && AxisOrientation.EAST.equals( cs.getAxis( 0 ).orientation )
+        && AxisOrientation.NORTH.equals( cs.getAxis( 1 ).orientation );
   }
 
   /**
@@ -1121,14 +1121,14 @@ public class CoordinateTransformationFactory
     /**
      * The originating adapter.
      */
-    protected final Adapters m_adapters;
+    protected final Adapters adapters;
 
     /**
      * Construct a remote object.
      */
     protected Export( final Object adapters )
     {
-      m_adapters = (Adapters)adapters;
+      this.adapters = (Adapters)adapters;
     }
 
     /**
@@ -1146,8 +1146,8 @@ public class CoordinateTransformationFactory
     {
       try
       {
-        return m_adapters.export( CoordinateTransformationFactory.this.createFromCoordinateSystems( m_adapters.CS
-            .wrap( sourceCS ), m_adapters.CS.wrap( targetCS ) ) );
+        return adapters.export( CoordinateTransformationFactory.this.createFromCoordinateSystems( adapters.CS
+            .wrap( sourceCS ), adapters.CS.wrap( targetCS ) ) );
       }
       catch( CannotCreateTransformException exception )
       {

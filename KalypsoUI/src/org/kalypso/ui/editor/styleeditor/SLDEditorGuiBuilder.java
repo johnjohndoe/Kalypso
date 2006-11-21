@@ -44,8 +44,6 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,9 +56,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
@@ -75,6 +70,8 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
@@ -84,10 +81,11 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class SLDEditorGuiBuilder
 {
-  private IFeatureType featureType = null;
+  private FeatureType featureType = null;
 
   private Composite parent = null;
 
@@ -117,7 +115,7 @@ public class SLDEditorGuiBuilder
     if( scrollComposite != null )
       scrollComposite.dispose();
 
-    // get IFeatureType from layer
+    // get FeatureType from layer
     if( theme != null )
       featureType = theme.getFeatureType();
 
@@ -153,162 +151,163 @@ public class SLDEditorGuiBuilder
 
     // check whether there are featureTypes that have numeric properties to be
     // used by a pattern-filter
-    final ArrayList<IPropertyType> numericFeatureTypePropertylist = new ArrayList<IPropertyType>();
-    final IPropertyType[] ftp = getFeatureType().getProperties();
+    final ArrayList numericFeatureTypePropertylist = new ArrayList();
+    FeatureTypeProperty[] ftp = getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
-      final IPropertyType propertyType = ftp[i];
-      if( propertyType instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
-        final Class valueClass = vpt.getValueClass();
-        if( valueClass == Double.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == BigInteger.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Byte.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == BigDecimal.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Float.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Integer.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Long.class )
-          numericFeatureTypePropertylist.add( propertyType );
-        else if( valueClass == Short.class )
-          numericFeatureTypePropertylist.add( propertyType );
-      }
+      if( ftp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
     }
-    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
+    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE,
+        rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite, rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite, rulePatternCollection,
+        userStyle, theme, numericFeatureTypePropertylist );
 
     controlRulePanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        int action = ((ControlRulePanel) event.getSource()).getAction();
+        int action = ( (ControlRulePanel)event.getSource() ).getAction();
         switch( action )
         {
-          case ControlRulePanel.ADD_RULE:
+        case ControlRulePanel.ADD_RULE:
+        {
+          Symbolizer symbolizers[] = null;
+          Rule rule = StyleFactory.createRule( symbolizers );
+          addRule( rule, userStyle );
+          setFocusedRuleItem( getRulePatternCollection().size() );
+          buildSWTGui( userStyle, theme );
+          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          break;
+        }
+        case ControlRulePanel.REM_RULE:
+        {
+          int index2 = ruleTabItemBuilder.getSelectedRule();
+          if( index2 > -1 && index2 < getRulePatternCollection().size() )
           {
-            Symbolizer symbolizers[] = null;
-            Rule rule = StyleFactory.createRule( symbolizers );
-            addRule( rule, userStyle );
-            setFocusedRuleItem( getRulePatternCollection().size() );
+            Object ruleObject = getRulePatternCollection().getFilteredRuleCollection().get( index2 );
+            if( ruleObject instanceof Rule )
+            {
+              removeRule( (Rule)ruleObject, userStyle );
+            }
+            else if( ruleObject instanceof RuleCollection )
+            {
+              RuleCollection ruleCollection = (RuleCollection)ruleObject;
+              for( int i = 0; i < ruleCollection.size(); i++ )
+                removeRule( ruleCollection.get( i ), userStyle );
+            }
+
+            if( index2 >= 0 )
+              setFocusedRuleItem( --index2 );
             buildSWTGui( userStyle, theme );
             userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-            break;
           }
-          case ControlRulePanel.REM_RULE:
+          break;
+        }
+        case ControlRulePanel.BAK_RULE:
+        {
+          int index3 = ruleTabItemBuilder.getSelectedRule();
+          if( index3 > 0 )
           {
-            int index2 = ruleTabItemBuilder.getSelectedRule();
-            if( index2 > -1 && index2 < getRulePatternCollection().size() )
+            ArrayList newOrdered = new ArrayList();
+            for( int i = 0; i < getRulePatternCollection().size(); i++ )
             {
-              Object ruleObject = getRulePatternCollection().getFilteredRuleCollection().get( index2 );
-              if( ruleObject instanceof Rule )
-              {
-                removeRule( (Rule) ruleObject, userStyle );
-              }
-              else if( ruleObject instanceof RuleCollection )
-              {
-                RuleCollection ruleCollection = (RuleCollection) ruleObject;
-                for( int i = 0; i < ruleCollection.size(); i++ )
-                  removeRule( ruleCollection.get( i ), userStyle );
-              }
-
-              if( index2 >= 0 )
-                setFocusedRuleItem( --index2 );
-              buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+              if( i == index3 )
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+              else if( i == ( index3 - 1 ) )
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+              else
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
             }
-            break;
+            setRules( newOrdered, userStyle );
+            setFocusedRuleItem( index3 - 1 );
+            buildSWTGui( userStyle, theme );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
           }
-          case ControlRulePanel.BAK_RULE:
+          break;
+        }
+        case ControlRulePanel.FOR_RULE:
+        {
+          int index4 = ruleTabItemBuilder.getSelectedRule();
+          if( index4 == ( getRulePatternCollection().size() - 1 ) || index4 < 0 )
           {
-            int index3 = ruleTabItemBuilder.getSelectedRule();
-            if( index3 > 0 )
-            {
-              final ArrayList<Object> newOrdered = new ArrayList<Object>();
-              for( int i = 0; i < getRulePatternCollection().size(); i++ )
-              {
-                if( i == index3 )
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
-                else if( i == (index3 - 1) )
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
-                else
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
-              }
-              setRules( newOrdered, userStyle );
-              setFocusedRuleItem( index3 - 1 );
-              buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-            }
-            break;
+            // nothing
           }
-          case ControlRulePanel.FOR_RULE:
+          else
           {
-            int index4 = ruleTabItemBuilder.getSelectedRule();
-            if( index4 == (getRulePatternCollection().size() - 1) || index4 < 0 )
+            ArrayList newOrdered = new ArrayList();
+            for( int i = 0; i < getRulePatternCollection().size(); i++ )
             {
-              // nothing
+              if( i == index4 )
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+              else if( i == ( index4 + 1 ) )
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+              else
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
             }
-            else
-            {
-              final ArrayList<Object> newOrdered = new ArrayList<Object>();
-              for( int i = 0; i < getRulePatternCollection().size(); i++ )
-              {
-                if( i == index4 )
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
-                else if( i == (index4 + 1) )
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
-                else
-                  newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
-              }
-              setRules( newOrdered, userStyle );
-              setFocusedRuleItem( index4 + 1 );
-              buildSWTGui( userStyle, theme );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-            }
-            break;
+            setRules( newOrdered, userStyle );
+            setFocusedRuleItem( index4 + 1 );
+            buildSWTGui( userStyle, theme );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
           }
-          case ControlRulePanel.ADD_PATTERN_RULE:
+          break;
+        }
+        case ControlRulePanel.ADD_PATTERN_RULE:
+        {
+          // create a pattern-filter for this style
+          if( numericFeatureTypePropertylist.size() > 0 )
           {
-            // create a pattern-filter for this style
-            if( numericFeatureTypePropertylist.size() > 0 )
+            ArrayList ruleList = new ArrayList();
+            // set by default first featuretypeproperty
+            FeatureTypeProperty prop = (FeatureTypeProperty)numericFeatureTypePropertylist.get( 0 );
+            BoundaryExpression upperBoundary = null;
+            BoundaryExpression lowerBoundary = null;
+            PropertyName propertyName = new PropertyName( prop.getName() );
+            PropertyIsBetweenOperation operation = null;
+
+            List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(),
+                null );
+            //              geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames(
+            // getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
+
+            if( geometryObjects.size() > 0 )
             {
-              final ArrayList<Rule> ruleList = new ArrayList<Rule>();
-              // set by default first featuretypeproperty
-              IPropertyType prop = numericFeatureTypePropertylist.get( 0 );
-              BoundaryExpression upperBoundary = null;
-              BoundaryExpression lowerBoundary = null;
-              PropertyName propertyName = new PropertyName( prop.getName() );
-              PropertyIsBetweenOperation operation = null;
+              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String)geometryObjects.get( 0 ), "Point",
+                  getFeatureType() );
+              String patternName = "-name-" + new Date().getTime();
+              lowerBoundary = new BoundaryExpression( "0" );
+              upperBoundary = new BoundaryExpression( "1" );
+              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
 
-              List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(), null );
-              // geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames(
-              // getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
-
-              if( geometryObjects.size() > 0 )
-              {
-                Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String) geometryObjects.get( 0 ), "Point", getFeatureType() );
-                String patternName = "-name-" + new Date().getTime();
-                lowerBoundary = new BoundaryExpression( "0" );
-                upperBoundary = new BoundaryExpression( "1" );
-                operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-
-                ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
-                userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
-              }
-              setFocusedRuleItem( getRulePatternCollection().size() );
-              userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
-              buildSWTGui( userStyle, theme );
+              ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter(
+                  operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
+              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract",
+                  null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo
+                      .getMaxScaleDenominator() ) );
             }
-            break;
+            setFocusedRuleItem( getRulePatternCollection().size() );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            buildSWTGui( userStyle, theme );
           }
-          default:
-            break;
+          break;
+        }
+        default:
+          break;
         }
       }
     } );
@@ -335,7 +334,7 @@ public class SLDEditorGuiBuilder
 
       public void mouseUp( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
     } );
 
@@ -360,22 +359,21 @@ public class SLDEditorGuiBuilder
   void setRules( ArrayList ruleObjects, UserStyle style )
   {
     FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    final ArrayList<Rule> ruleInstances = new ArrayList<Rule>();
+    ArrayList ruleInstances = new ArrayList();
     for( int i = 0; i < ruleObjects.size(); i++ )
     {
-      final Object object = ruleObjects.get( i );
-      if( object instanceof Rule )
-        ruleInstances.add( (Rule) object );
-      else if( object instanceof RuleCollection )
+      if( ruleObjects.get( i ) instanceof Rule )
+        ruleInstances.add( ruleObjects.get( i ) );
+      else if( ruleObjects.get( i ) instanceof RuleCollection )
       {
-        RuleCollection ruleCollection = (RuleCollection) object;
+        RuleCollection ruleCollection = (RuleCollection)ruleObjects.get( i );
         for( int j = 0; j < ruleCollection.size(); j++ )
           ruleInstances.add( ruleCollection.get( j ) );
       }
     }
     Rule[] ruleArray = new Rule[ruleInstances.size()];
     for( int c = 0; c < ruleInstances.size(); c++ )
-      ruleArray[c] = ruleInstances.get( c );
+      ruleArray[c] = (Rule)ruleInstances.get( c );
     fts[0].setRules( ruleArray );
   }
 
@@ -385,7 +383,7 @@ public class SLDEditorGuiBuilder
     fts[0].addRule( rule );
   }
 
-  public int getFocusedRuleItem( )
+  public int getFocusedRuleItem()
   {
     return focusedRuleItem;
   }
@@ -395,7 +393,7 @@ public class SLDEditorGuiBuilder
     this.focusedRuleItem = m_focusedRuleItem;
   }
 
-  public RuleFilterCollection getRulePatternCollection( )
+  public RuleFilterCollection getRulePatternCollection()
   {
     return rulePatternCollection;
   }
@@ -405,12 +403,12 @@ public class SLDEditorGuiBuilder
     this.rulePatternCollection = m_rulePatternCollection;
   }
 
-  public IFeatureType getFeatureType( )
+  public FeatureType getFeatureType()
   {
     return featureType;
   }
 
-  public void setFeatureType( IFeatureType m_featureType )
+  public void setFeatureType( FeatureType m_featureType )
   {
     this.featureType = m_featureType;
   }

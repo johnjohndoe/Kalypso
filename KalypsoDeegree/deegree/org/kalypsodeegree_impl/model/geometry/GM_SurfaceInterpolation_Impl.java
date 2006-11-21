@@ -78,7 +78,7 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3728721225837686088L;
 
-  private int m_surfaceInterpolation = NONE;
+  private int surfaceInterpolation = NONE;
 
   /**
    * Creates a new GM_SurfaceInterpolation_Impl object.
@@ -103,13 +103,12 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
 
   public int getValue()
   {
-    return m_surfaceInterpolation;
+    return surfaceInterpolation;
   }
 
   /**
    * returns a deep copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_SurfaceInterpolation si = null;
@@ -129,10 +128,9 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
   /**
    * checks if this surface is completly equal to the submitted geometry.
    */
-  @Override
   public boolean equals( Object other )
   {
     return ( other instanceof GM_SurfaceInterpolation_Impl )
-        && ( ( (GM_SurfaceInterpolation)other ).getValue() == m_surfaceInterpolation );
+        && ( ( (GM_SurfaceInterpolation)other ).getValue() == surfaceInterpolation );
   }
 }

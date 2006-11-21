@@ -57,24 +57,24 @@ import org.kalypso.repository.RepositoryException;
  */
 public class DefaultRepositoryContainer implements IRepositoryContainer
 {
-  private final List<IRepository> m_reps = new Vector<IRepository>();
+  private final List m_reps = new Vector();
 
-  private final List<IRepositoryContainerListener> m_listeners = new Vector<IRepositoryContainerListener>();
+  private final List m_listeners = new Vector();
 
-  public DefaultRepositoryContainer( )
+  public DefaultRepositoryContainer()
   {
     this( new IRepository[0] );
   }
 
-  public DefaultRepositoryContainer( final IRepository[] repositories )
+  public DefaultRepositoryContainer( IRepository[] repositories )
   {
     m_reps.addAll( Arrays.asList( repositories ) );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     for( final Iterator it = m_reps.iterator(); it.hasNext(); )
-      ((IRepository) it.next()).dispose();
+      ( (IRepository)it.next() ).dispose();
 
     m_reps.clear();
     m_listeners.clear();
@@ -87,11 +87,11 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     fireRepositoryChanged();
   }
 
-  private void fireRepositoryChanged( )
+  private void fireRepositoryChanged()
   {
     for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
-      IRepositoryContainerListener element = (IRepositoryContainerListener) iter.next();
+      IRepositoryContainerListener element = (IRepositoryContainerListener)iter.next();
 
       element.onRepositoryContainerChanged();
     }
@@ -106,7 +106,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     fireRepositoryChanged();
   }
 
-  public int getRepositoriesCount( )
+  public int getRepositoriesCount()
   {
     return m_reps.size();
   }
@@ -114,7 +114,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#addRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
-  public void addRepositoryContainerListener( final IRepositoryContainerListener l )
+  public void addRepositoryContainerListener( IRepositoryContainerListener l )
   {
     m_listeners.add( l );
   }
@@ -130,7 +130,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#getRepositories()
    */
-  public List getRepositories( )
+  public List getRepositories()
   {
     return m_reps;
   }
@@ -142,7 +142,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   {
     for( final Iterator it = m_reps.iterator(); it.hasNext(); )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository)it.next();
 
       if( rep.getIdentifier().equals( id ) )
         return rep;

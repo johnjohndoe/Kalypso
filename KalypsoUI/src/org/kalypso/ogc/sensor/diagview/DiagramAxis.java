@@ -88,9 +88,9 @@ public class DiagramAxis
     // for Object types it's not a problem since value is null)
     // So as soon as solution is found, maybe replace the code
     // here that currently simply checks for == 0
-    this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection().value(), axis.getPosition().value(),
-        axis.isInverted(), axis.getLowerMargin() == null ? null : new Double( axis.getLowerMargin() ), axis
-            .getUpperMargin() == null ? null : new Double( axis.getUpperMargin() ) );
+    this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(),
+        axis.isInverted(), axis.getLowerMargin() == 0 ? null : new Double( axis.getLowerMargin() ), axis
+            .getUpperMargin() == 0 ? null : new Double( axis.getUpperMargin() ) );
   }
 
   public DiagramAxis( final String id, final String dataType, final String label, final String unit,
@@ -152,7 +152,6 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString()
   {
     return toFullString();
@@ -161,7 +160,6 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( final Object obj )
   {
     if( !( obj instanceof DiagramAxis ) )
@@ -175,8 +173,7 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  @Override
-  public int hashCode( )
+  public int hashCode()
   {
     return m_id.hashCode();
   }

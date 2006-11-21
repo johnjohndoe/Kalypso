@@ -65,7 +65,7 @@ public class KalypsoInterpolationPlugin extends Plugin
     super();
     plugin = this;
 	try {
-		resourceBundle = ResourceBundle.getBundle("org.kalypso.interpolation.KalypsoInterpolationPlugin.Resources");
+		resourceBundle = ResourceBundle.getBundle("org.kaylpso.ui.KaylpsoAddLayerPluginPluginResources");
 	} catch (MissingResourceException x) {
 		resourceBundle = null;
 	}

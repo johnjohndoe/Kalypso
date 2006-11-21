@@ -135,11 +135,11 @@ public class ResourceBundle extends java.util.ResourceBundle
   /**
    * Returns the name of the logger to use. Default implementation returns the package name.
    */
-  protected String getLoggerName( )
+  protected String getLoggerName()
   {
     final String name = getClass().getName();
     final int index = name.lastIndexOf( '.' );
-    return (index >= 0) ? name.substring( 0, index ) : "org.kalypsodeegree_impl.model";
+    return ( index >= 0 ) ? name.substring( 0, index ) : "org.kalypsodeegree_impl.model";
   }
 
   /**
@@ -217,7 +217,7 @@ public class ResourceBundle extends java.util.ResourceBundle
      * Logger.getLogger(getLoggerName()); // record = new LogRecord(Level.FINE, "Loaded resources for {0}."); //
      * record.setSourceClassName (getClass().getName()); // record.setSourceMethodName((key!=null) ? "getObject" :
      * "getKeys");
-     */// ----- END OF JDK 1.4 DEPENDENCIES ---
+     *///----- END OF JDK 1.4 DEPENDENCIES ---
     try
     {
       final InputStream in = getClass().getClassLoader().getResourceAsStream( filename );
@@ -233,7 +233,7 @@ public class ResourceBundle extends java.util.ResourceBundle
       // FIXME Das ganze resultiert in einem OutOfMemoryError in der übernächsten zeile
       final DataInputStream input = new DataInputStream( new BufferedInputStream( in ) );
 
-      // values = new String[input.readInt()];
+      //      values = new String[input.readInt()];
       // hackfix: the resources files i have seen do not have more than 8 lines, so restrict to 100 might be a good
       // hackfix for the moment and I do not want to spend time on this, better upgrade to the original deegree2.jar
       // soon (doemming)
@@ -254,18 +254,19 @@ public class ResourceBundle extends java.util.ResourceBundle
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- String language = getLocale().getDisplayName(Locale.UK); if
        * (language==null || language.length()==0) { language=" <default>"; } record.setParameters(new
        * String[]{language}); logger.log(record);
-       */// ----- END OF JDK 1.4 DEPENDENCIES ---
+       *///----- END OF JDK 1.4 DEPENDENCIES ---
     }
     catch( IOException exception )
     {
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- record.setLevel (Level.WARNING);
        * record.setMessage(exception.getLocalizedMessage()); record.setThrown (exception); logger.log(record);
-       */// ----- END OF JDK 1.4 DEPENDENCIES ---
-      final MissingResourceException error = new MissingResourceException( exception.getLocalizedMessage(), getClass().getName(), key );
+       *///----- END OF JDK 1.4 DEPENDENCIES ---
+      final MissingResourceException error = new MissingResourceException( exception.getLocalizedMessage(), getClass()
+          .getName(), key );
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- error.initCause(exception);
-       */// ----- END OF JDK 1.4 DEPENDENCIES ---
+       *///----- END OF JDK 1.4 DEPENDENCIES ---
       throw error;
     }
   }
@@ -273,14 +274,14 @@ public class ResourceBundle extends java.util.ResourceBundle
   /**
    * Returns an enumeration of the keys.
    */
-  public final synchronized Enumeration getKeys( )
+  public final synchronized Enumeration getKeys()
   {
     ensureLoaded( null );
     return new Enumeration()
     {
       private int i = 0;
 
-      public boolean hasMoreElements( )
+      public boolean hasMoreElements()
       {
         while( true )
         {
@@ -292,7 +293,7 @@ public class ResourceBundle extends java.util.ResourceBundle
         }
       }
 
-      public Object nextElement( )
+      public Object nextElement()
       {
         while( true )
         {
@@ -328,15 +329,19 @@ public class ResourceBundle extends java.util.ResourceBundle
     {
       return null;
     }
-    return (keyID >= 0 && keyID < values.length) ? values[keyID] : null;
+    return ( keyID >= 0 && keyID < values.length ) ? values[keyID] : null;
   }
 
   /**
    * Make sure that the <code>text</code> string is no longer than <code>maxLength</code> characters. If
    * <code>text</code> is not longer, it is returned unchanged (except for trailing blancks, which are removed). If
    * <code>text</code> is longer, it will be cut somewhere in the middle. This method try to cut between two words and
-   * replace the missing words with "(...)". For example, the following string: <blockquote>"This sentence given as an
-   * example is way too long to be included in a message." </blockquote> May be "summarized" by something like this:
+   * replace the missing words with "(...)". For example, the following string:
+   * 
+   * <blockquote>"This sentence given as an example is way too long to be included in a message." </blockquote>
+   * 
+   * May be "summarized" by something like this:
+   * 
    * <blockquote>"This sentence given (...) included in a message." </blockquote>
    * 
    * @param text
@@ -355,7 +360,7 @@ public class ResourceBundle extends java.util.ResourceBundle
      * Compute maximum length for one half of the string. Take in account the space needed for inserting the " (...) "
      * string.
      */
-    maxLength = (maxLength - 7) >> 1;
+    maxLength = ( maxLength - 7 ) >> 1;
     if( maxLength <= 0 )
       return text;
     /*
@@ -366,7 +371,7 @@ public class ResourceBundle extends java.util.ResourceBundle
      */
     int break1 = maxLength;
     int break2 = length - maxLength;
-    for( final int lower = (maxLength >> 1); break1 >= lower; break1-- )
+    for( final int lower = ( maxLength >> 1 ); break1 >= lower; break1-- )
     {
       if( !Character.isUnicodeIdentifierPart( text.charAt( break1 ) ) )
       {
@@ -377,7 +382,7 @@ public class ResourceBundle extends java.util.ResourceBundle
         break;
       }
     }
-    for( final int upper = length - (maxLength >> 1); break2 < upper; break2++ )
+    for( final int upper = length - ( maxLength >> 1 ); break2 < upper; break2++ )
     {
       if( !Character.isUnicodeIdentifierPart( text.charAt( break2 ) ) )
       {
@@ -388,7 +393,7 @@ public class ResourceBundle extends java.util.ResourceBundle
         break;
       }
     }
-    return (text.substring( 0, break1 + 1 ) + " (...) " + text.substring( break2 )).trim();
+    return ( text.substring( 0, break1 + 1 ) + " (...) " + text.substring( break2 ) ).trim();
   }
 
   /**
@@ -406,11 +411,12 @@ public class ResourceBundle extends java.util.ResourceBundle
     Object[] array;
     if( arguments instanceof Object[] )
     {
-      array = (Object[]) arguments;
+      array = (Object[])arguments;
     }
     else
     {
-      array = new Object[] { arguments };
+      array = new Object[]
+      { arguments };
     }
     for( int i = 0; i < array.length; i++ )
     {
@@ -479,15 +485,19 @@ public class ResourceBundle extends java.util.ResourceBundle
 
   /**
    * Gets a string for the given key and format it with the specified argument. The message if formatted using
-   * {@link MessageFormat}. Calling his method is approximatively equivalent to calling: <blockquote>
+   * {@link MessageFormat}. Calling his method is approximatively equivalent to calling:
+   * 
+   * <blockquote>
    * 
    * <pre>
-   * String pattern = getString( key );
-   * Format f = new MessageFormat( pattern );
-   * return f.format( arg0 );
+   *     String pattern = getString(key);
+   *     Format f = new MessageFormat(pattern);
+   *     return f.format(arg0);
    * </pre>
    * 
-   * </blockquote> If <code>arg0</code> is not already an array, it will be wrapped into an array of length 1. Using
+   * </blockquote>
+   * 
+   * If <code>arg0</code> is not already an array, it will be wrapped into an array of length 1. Using
    * {@link MessageFormat}, all occurence of "{0}", "{1}", "{2}" in the resource string will be replaced by
    * <code>arg0[0]</code>,<code>arg0[1]</code>,<code>arg0[2]</code>, etc.
    * 
@@ -498,55 +508,46 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @return The string for the given key.
    * @throws MissingResourceException
    *           If no object for the given key can be found.
+   * 
    * @see MessageFormat
    */
   public final synchronized String getString( final int keyID, final Object arg0 ) throws MissingResourceException
   {
-    // TODO FIXME
-    // We often get here a MissingResource Exception which even seems to sometimes lead to the shutdown of the VM
-    // this has something todo with the TODO-FIXME above
-    try
+    final Object object = getObject( String.valueOf( keyID ) );
+    final Object[] arguments = toArray( arg0 );
+    if( format == null )
     {
-      final Object object = getObject( String.valueOf( keyID ) );
-      final Object[] arguments = toArray( arg0 );
-      if( format == null )
+      /*
+       * Construct a new {@link MessageFormat}for formatting the arguments. There is two possible {@link Locale}we
+       * could use: default locale or resource bundle locale. If the default locale use the same language than this
+       * <code> ResourceBundle </code> locale, then we will use the default locale. This allow formatting dates and
+       * numbers with user conventions (e.g. French Canada) even if the <code> ResourceBundle </code> locale is
+       * different (e.g. standard French). However, if languages don't match, then we will use <code> ResourceBundle
+       * </code> locale for better coherence.
+       */
+      Locale locale = Locale.getDefault();
+      final Locale resourceLocale = getLocale();
+      if( !locale.getLanguage().equalsIgnoreCase( resourceLocale.getLanguage() ) )
       {
-        /*
-         * Construct a new {@link MessageFormat}for formatting the arguments. There is two possible {@link Locale}we
-         * could use: default locale or resource bundle locale. If the default locale use the same language than this
-         * <code> ResourceBundle </code> locale, then we will use the default locale. This allow formatting dates and
-         * numbers with user conventions (e.g. French Canada) even if the <code> ResourceBundle </code> locale is
-         * different (e.g. standard French). However, if languages don't match, then we will use <code> ResourceBundle
-         * </code> locale for better coherence.
-         */
-        Locale locale = Locale.getDefault();
-        final Locale resourceLocale = getLocale();
-        if( !locale.getLanguage().equalsIgnoreCase( resourceLocale.getLanguage() ) )
-        {
-          locale = resourceLocale;
-        }
-        // ------ BEGIN JDK 1.4 DEPENDENCIES ----
-        // format = new MessageFormat(object.toString(), locale);
-        /*----- END OF JDK 1.4 DEPENDENCIES ----
-         format = new MessageFormat(object.toString());
-         format.setLocale(locale);
-         ------- END OF JDK 1.3 FALLBACK --------*/
+        locale = resourceLocale;
       }
-      else if( keyID != lastKey )
-      {
-        /*
-         * Method {@link MessageFormat#applyPattern}is costly! We will avoid calling it again if {@link #format}already
-         * has the right pattern.
-         */
-        format.applyPattern( object.toString() );
-        lastKey = keyID;
-      }
-      return format.format( arguments );
+      //------ BEGIN JDK 1.4 DEPENDENCIES ----
+      //            format = new MessageFormat(object.toString(), locale);
+      /*----- END OF JDK 1.4 DEPENDENCIES ----
+       format = new MessageFormat(object.toString());
+       format.setLocale(locale);
+       ------- END OF JDK 1.3 FALLBACK --------*/
     }
-    catch( MissingResourceException mre )
+    else if( keyID != lastKey )
     {
-      return "" + keyID;
+      /*
+       * Method {@link MessageFormat#applyPattern}is costly! We will avoid calling it again if {@link #format}already
+       * has the right pattern.
+       */
+      format.applyPattern( object.toString() );
+      lastKey = keyID;
     }
+    return format.format( arguments );
   }
 
   /**
@@ -563,9 +564,13 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1 )
+      throws MissingResourceException
   {
-    return getString( keyID, new Object[] { arg0, arg1 } );
+    return getString( keyID, new Object[]
+    {
+        arg0,
+        arg1 } );
   }
 
   /**
@@ -584,9 +589,14 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2 )
+      throws MissingResourceException
   {
-    return getString( keyID, new Object[] { arg0, arg1, arg2 } );
+    return getString( keyID, new Object[]
+    {
+        arg0,
+        arg1,
+        arg2 } );
   }
 
   /**
@@ -607,9 +617,15 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2, final Object arg3 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2,
+      final Object arg3 ) throws MissingResourceException
   {
-    return getString( keyID, new Object[] { arg0, arg1, arg2, arg3 } );
+    return getString( keyID, new Object[]
+    {
+        arg0,
+        arg1,
+        arg2,
+        arg3 } );
   }
 
   /**
@@ -632,9 +648,16 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2, final Object arg3, final Object arg4 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2,
+      final Object arg3, final Object arg4 ) throws MissingResourceException
   {
-    return getString( keyID, new Object[] { arg0, arg1, arg2, arg3, arg4 } );
+    return getString( keyID, new Object[]
+    {
+        arg0,
+        arg1,
+        arg2,
+        arg3,
+        arg4 } );
   }
 
   /**
@@ -649,7 +672,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   /*
    * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key) //
    * {return getLogRecord(level, key, null);}
-   */// ----- END OF JDK 1.4 DEPENDENCIES ---
+   *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
    * 
@@ -666,7 +689,7 @@ public class ResourceBundle extends java.util.ResourceBundle
    * Object arg0) // { // final LogRecord record = new LogRecord(level, String.valueOf(key)); //
    * record.setResourceBundle(this); // if (arg0!=null) // { // record.setParameters(toArray(arg0)); // } // return
    * record; // }
-   */// ----- END OF JDK 1.4 DEPENDENCIES ---
+   *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
    * 
@@ -683,7 +706,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   /*
    * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key, final
    * Object arg0, final Object arg1) // {return getLogRecord(level, key, new Object[]{arg0, arg1});}
-   */// ----- END OF JDK 1.4 DEPENDENCIES ---
+   *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
    * 
@@ -703,11 +726,11 @@ public class ResourceBundle extends java.util.ResourceBundle
    * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key, final
    * Object arg0, final Object arg1, final Object arg2) // {return getLogRecord(level, key, new Object[]{arg0, arg1,
    * arg2});}
-   */// ----- END OF JDK 1.4 DEPENDENCIES ---
+   *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Returns a string representation of this object. This method is for debugging purpose only.
    */
-  public synchronized String toString( )
+  public synchronized String toString()
   {
     final StringBuffer buffer = new StringBuffer( Utilities.getShortClassName( this ) );
     buffer.append( '[' );

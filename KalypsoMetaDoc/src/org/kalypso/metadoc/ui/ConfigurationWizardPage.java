@@ -95,13 +95,11 @@ public class ConfigurationWizardPage extends WizardPage
       final Text text = new Text( composite, SWT.LEAD );
       text.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
       text.setText( m_config.getString( key, "" ) );
-      
-      final Configuration config = m_config;
       text.addModifyListener( new ModifyListener()
       {
         public void modifyText( ModifyEvent e )
         {
-          config.setProperty( key, text.getText() );
+          m_config.setProperty( key, text.getText() );
         }
       } );
     }

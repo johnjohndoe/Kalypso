@@ -47,17 +47,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 
 /**
  * @author belger
@@ -69,18 +66,13 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    final WidgetActionPart part = getPart();
-    if( part == null )
-      return;
-
-    // WARNING: Because of the following cast, we can only use
-    // this delegate with the GisTableEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor == null )
       return;
 
     final Shell shell = editor.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+    if( !MessageDialog.openConfirm( shell, "Themen speichern",
+        "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
       return;
 
     final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
@@ -88,14 +80,11 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
-      final LayerTableViewer layerTable = editor.getLayerTable();
-
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
-        @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
-          layerTable.saveData( monitor );
+          editor.getLayerTable().saveData( monitor );
         }
       };
 
@@ -107,7 +96,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       {
         e.printStackTrace();
 
-        final CoreException ce = (CoreException) e.getTargetException();
+        final CoreException ce = (CoreException)e.getTargetException();
         ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
       }
       catch( final InterruptedException e )
@@ -115,21 +104,13 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
       }
     }
-    refreshAction( action, getSelection() );
+    refreshAction( null );
   }
 
-  @Override
-  protected void refreshAction( final IAction action, final ISelection selection )
+  protected void refreshAction( IAction action )
   {
     boolean enabled = false;
-
-    final WidgetActionPart part = getPart();
-    if( part == null )
-      return;
-
-    // WARNING: Because of the following cast, we can only use
-    // this delegate with the GisTableEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor != null )
     {
       final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
@@ -141,6 +122,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       }
     }
 
-    action.setEnabled( enabled );
+    if( getAction() != null )
+      getAction().setEnabled( enabled );
   }
 }

@@ -42,16 +42,19 @@
 package org.kalypso.ant;
 
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor;
+import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.Mapping;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -67,7 +70,7 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
   private String m_zmlLink;
   
   /** List of mapoings to perform */
-  private List<MapZmlMeta2FeatureVisitor.Mapping> m_mappings = new ArrayList<MapZmlMeta2FeatureVisitor.Mapping>( 5 );
+  private List m_mappings = new ArrayList( 5 );
 
   public MapZmlMeta2FeatureTask(  )
   {
@@ -88,17 +91,15 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
-      final IProgressMonitor monitor )
+      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    return new MapZmlMeta2FeatureVisitor( context, resolver, m_zmlLink, m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
+    return new MapZmlMeta2FeatureVisitor( context, resolver, m_zmlLink, (Mapping[])m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
   }
 
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
-  @Override
   protected void validateInput()
   {
   // nothing to validate

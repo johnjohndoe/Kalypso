@@ -98,7 +98,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     super( crs );
     position = new GM_Position_Impl();
-    m_empty = true;
+    empty = true;
     centroid = this;
   }
 
@@ -116,7 +116,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     super( crs );
     position = new GM_Position_Impl( x, y );
-    m_empty = false;
+    empty = false;
     centroid = this;
   }
 
@@ -136,7 +136,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     super( crs );
     position = new GM_Position_Impl( x, y, z );
-    m_empty = false;
+    empty = false;
     centroid = this;
   }
 
@@ -150,7 +150,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     super( gmo.getCoordinateSystem() );
     position = new GM_Position_Impl( gmo.getAsArray() );
-    m_empty = false;
+    empty = false;
     centroid = this;
   }
 
@@ -166,14 +166,13 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     super( crs );
     position = gmo;
-    m_empty = false;
+    empty = false;
     centroid = this;
   }
 
   /**
    * checks if this point is completly equal to the submitted geometry
    */
-  @Override
   public boolean equals( Object other )
   {
     if( super.equals( other ) && ( other instanceof GM_Point ) )
@@ -213,7 +212,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * returns a shallow copy of the geometry.
    */
-  @Override
   public Object clone()
   {
     return new GM_Point_Impl( this );
@@ -255,7 +253,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
-  @Override
   public void translate( double[] d )
   {
     setValid( false );
@@ -275,7 +272,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * </p>
    * dummy implementation
    */
-  @Override
   public boolean intersects( GM_Object gmo )
   {
     boolean inter = false;
@@ -331,7 +327,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * <p>
    * </p>
    */
-  @Override
   public boolean contains( GM_Object gmo )
   {
     throw new NoSuchMethodError( "the contains operation for points " + "isn't supported at the moment." );
@@ -340,13 +335,11 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * recalculates internal parameters
    */
-  @Override
   protected void calculateParam()
   {
     setValid( true );
   }
 
-  @Override
   public String toString()
   {
     String ret = "GM_Point: ";

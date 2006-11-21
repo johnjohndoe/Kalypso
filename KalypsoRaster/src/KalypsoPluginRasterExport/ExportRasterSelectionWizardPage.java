@@ -70,7 +70,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 
 /**
  * ExportRasterSelectionWizardPage, Selection: source(*.gml) and target(*.asc) file
@@ -81,7 +80,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
-  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
+  final List m_selectionListener = new ArrayList();
 
   private Composite m_topLevel = null;
 
@@ -91,7 +90,10 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
   Combo m_formatCombo;
 
-  String[] formats = { "Ascii", "Other" };
+  String[] formats =
+  {
+      "Ascii",
+      "Other" };
 
   String m_format = formats[0];
 
@@ -150,7 +152,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     gridLayout.numColumns = 3;
     group.setLayout( gridLayout );
 
-    // line 1
+    //  line 1
     Label label = new Label( group, SWT.NONE );
     label.setText( "von " );
 
@@ -171,16 +173,16 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
         selectedProject = ProjectUtilities.getSelectedProjects()[0];
-        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } );
+        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+        { "gml" } );
         dialog.open();
         Object[] result = dialog.getResult();
         if( result != null )
         {
-          Path resultPath = (Path) result[0];
+          Path resultPath = (Path)result[0];
           m_textFileSource.setText( resultPath.toString() );
           m_sourcePath = resultPath;
         }
@@ -191,7 +193,8 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
   KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource", fileResourceExtensions, selectedProject, new ResourceSelectionValidator() );
+    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource", fileResourceExtensions,
+        selectedProject );
   }
 
   public void createControlTarget( Composite parent )
@@ -233,12 +236,12 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
         if( m_format.equals( formats[0] ) )
         {
-          String targetFileName = chooseFile( m_targetFile, new String[] { "*.asc" } );
+          String targetFileName = chooseFile( m_targetFile, new String[]
+          { "*.asc" } );
           if( targetFileName != null )
           {
             if( targetFileName.indexOf( "." ) == -1 )
@@ -302,7 +305,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * validates the page
    */
-  void validate( )
+  void validate()
   {
     setErrorMessage( null );
     setMessage( null );
@@ -336,19 +339,19 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   }
 
   /**
+   * 
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
-  @Override
-  public boolean canFlipToNextPage( )
+  public boolean canFlipToNextPage()
   {
     return false;
   }
 
   /**
+   * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
     if( m_topLevel != null && !m_topLevel.isDisposed() )
@@ -363,7 +366,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
    */
   public void focusGained( FocusEvent e )
   {
-    // nothing
+  // nothing
   }
 
   /**
@@ -393,7 +396,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
     return new RasterExportSelection( m_sourcePath, selectedProject, m_targetFile, m_format );
   }
@@ -413,7 +416,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   {
     if( selection instanceof RasterExportSelection )
     {
-      RasterExportSelection s = ((RasterExportSelection) selection);
+      RasterExportSelection s = ( (RasterExportSelection)selection );
       m_sourcePath = s.getPathSource();
       m_targetFile = s.getFileTarget();
       selectedProject = s.getProject();

@@ -1,3 +1,8 @@
+package org.kalypso.ogc.gml.map.widgets.editrelation;
+
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,18 +43,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.editrelation;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.ITreeVisitor;
-
-/**
- * @author doemming
- */
 public class SetCheckedTreeVisitor implements ITreeVisitor
 {
   private final boolean m_checked;
 
+  /*
+   * 
+   * @author doemming
+   */
   public SetCheckedTreeVisitor( boolean checked )
   {
     m_checked = checked;

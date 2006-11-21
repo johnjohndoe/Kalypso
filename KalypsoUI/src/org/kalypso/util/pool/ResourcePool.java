@@ -40,30 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
  * @author dömming,belger
@@ -75,27 +70,30 @@ public class ResourcePool
   private final ILoaderFactory m_factory;
 
   /** type -> loader */
-  private final Map<String, ILoader> m_loaderCache = new HashMap<String, ILoader>();
+  private final Map m_loaderCache = new HashMap();
 
   /** key -> KeyInfo */
-  private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
+  private final Map m_keyInfos = new TreeMap( KeyComparator.getInstance() );
 
   /**
    * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
    */
-  private final ISchedulingRule m_mutex = new MutexRule();
+  private final ISchedulingRule m_mutex = new MutexSchedulingRule();
 
   public ResourcePool( final ILoaderFactory factory )
   {
     m_factory = factory;
   }
 
-  public void dispose( )
+  public void dispose()
   {
     synchronized( m_keyInfos )
     {
-      for( final Entry<IPoolableObjectType, KeyInfo> entry : m_keyInfos.entrySet() )
-        entry.getValue().dispose();
+      for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)iter.next();
+        ( (KeyInfo)entry.getValue() ).dispose();
+      }
       m_keyInfos.clear();
     }
     m_loaderCache.clear();
@@ -105,15 +103,15 @@ public class ResourcePool
    * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das Objekt für den key vorhanden, wird der
    * Listener sofort informiert
    */
-  public KeyInfo addPoolListener( final IPoolListener l, final IPoolableObjectType key )
+  public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
     // never register a disposed listener to the pool !
     if( l.isDisposed() )
-      return null;
+      return;
 
     synchronized( m_keyInfos )
     {
-      KeyInfo info = m_keyInfos.get( key );
+      KeyInfo info = (KeyInfo)m_keyInfos.get( key );
       if( info == null )
       {
         try
@@ -124,8 +122,6 @@ public class ResourcePool
         }
         catch( final Exception e )
         {
-          e.printStackTrace();
-          e.getMessage();
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
           m_logger.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
@@ -133,8 +129,6 @@ public class ResourcePool
       }
 
       info.addListener( l );
-
-      return info;
     }
   }
 
@@ -142,44 +136,17 @@ public class ResourcePool
   {
     synchronized( m_keyInfos )
     {
-      final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
-
       for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
-        final Map.Entry entry = (Entry) iter.next();
+        final Map.Entry entry = (Entry)iter.next();
 
-        final IPoolableObjectType key = (IPoolableObjectType) entry.getKey();
-        final KeyInfo info = (KeyInfo) entry.getValue();
+        final IPoolableObjectType key = (IPoolableObjectType)entry.getKey();
+        final KeyInfo info = (KeyInfo)entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
           m_logger.info( "Releasing key (no more listeners): " + key );
-
+          info.dispose();
           iter.remove();
-
-          infosToDispose.add( info );
-        }
-      }
-
-      final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
-
-      for( final KeyInfo info : infosToDispose )
-      {
-        final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
-        final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
-
-        if( !info.isDirty() )
-          info.dispose();
-        else if( askForSave )
-        {
-          final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", info );
-          job.setUser( true );
-          job.setRule( mutex );
-          job.schedule();
-        }
-        else
-        {
-          System.out.println( "Should save pool object: " + info.getObject() );
-          info.dispose();
         }
       }
     }
@@ -187,7 +154,7 @@ public class ResourcePool
 
   private ILoader getLoader( final String type ) throws FactoryException
   {
-    ILoader loader = m_loaderCache.get( type );
+    ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
     {
       loader = m_factory.getLoaderInstance( type );
@@ -204,37 +171,19 @@ public class ResourcePool
       if( object == null )
         return;
 
-      final Collection<KeyInfo> values = m_keyInfos.values();
-      for( final KeyInfo info : values )
+      final Collection values = m_keyInfos.values();
+      for( final Iterator iter = values.iterator(); iter.hasNext(); )
       {
+        final KeyInfo info = (KeyInfo)iter.next();
         if( info.getObject() == object )
           info.saveObject( monitor );
       }
     }
   }
 
-  /** Get the key info which is responsible for a given object. */
-  public KeyInfo getInfo( final Object object )
+  public KeyInfo[] getInfos()
   {
-    synchronized( m_keyInfos )
-    {
-      if( object == null )
-        return null;
-
-      final Collection<KeyInfo> values = m_keyInfos.values();
-      for( final KeyInfo info : values )
-      {
-        if( info.getObject() == object )
-          return info;
-      }
-
-      return null;
-    }
-  }
-
-  public KeyInfo[] getInfos( )
-  {
-    return m_keyInfos.values().toArray( new KeyInfo[0] );
+    return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
   }
 
   /**
@@ -247,7 +196,7 @@ public class ResourcePool
    */
   public Object getObject( final PoolableObjectType key ) throws CoreException
   {
-    final KeyInfo info = m_keyInfos.get( key );
+    final KeyInfo info = (KeyInfo)m_keyInfos.get( key );
     if( info != null )
     {
       try
@@ -291,10 +240,5 @@ public class ResourcePool
       if( info2 != null )
         info2.dispose();
     }
-  }
-
-  public KeyInfo getInfoForKey( final IPoolableObjectType poolKey )
-  {
-    return m_keyInfos.get( poolKey );
   }
 }

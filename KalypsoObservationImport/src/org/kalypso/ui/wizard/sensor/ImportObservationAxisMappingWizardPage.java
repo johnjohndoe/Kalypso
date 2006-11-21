@@ -125,7 +125,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
-  @Override
   public boolean canFlipToNextPage()
   {
     return isPageComplete();

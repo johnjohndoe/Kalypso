@@ -42,16 +42,13 @@ package org.kalypso.ogc.gml.loader;
 
 import java.io.BufferedReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -59,15 +56,21 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
  * @author schlienger
+ *  
  */
 public class SldLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver = new UrlResolver();
+  private final UrlResolver m_urlResolver;
+
+  public SldLoader()
+  {
+    m_urlResolver = new UrlResolver();
+  }
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "OGC SLD";
   }
@@ -76,8 +79,8 @@ public class SldLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
+      throws LoaderException
   {
     Reader reader = null;
     try
@@ -89,16 +92,7 @@ public class SldLoader extends AbstractLoader
       // create reader via resolver in order to use the right encoding
       reader = m_urlResolver.createReader( url );
       final BufferedReader br = new BufferedReader( reader );
-      final IUrlResolver2 resolver = new IUrlResolver2()
-      {
-
-        public URL resolveURL( final String href ) throws MalformedURLException
-        {
-          return UrlResolverSingleton.resolveUrl( context, href );
-        }
-
-      };
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD(resolver, br );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( br );
 
       reader.close();
 
@@ -119,7 +113,6 @@ public class SldLoader extends AbstractLoader
     }
   }
 
-  @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
     System.out.print( "SLD-Loader Save method" );

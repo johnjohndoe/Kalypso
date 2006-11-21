@@ -28,7 +28,7 @@ public final class CV_ColorInterpretation implements Serializable
   /**
    * The enum value.
    */
-  public final int m_value;
+  public final int value;
 
   /**
    * Band is not associated with a color model component.
@@ -105,27 +105,25 @@ public final class CV_ColorInterpretation implements Serializable
    */
   public CV_ColorInterpretation( final int value )
   {
-    m_value = value;
+    this.value = value;
   }
 
   /**
    * Returns the enum value.
    */
-  @Override
   public int hashCode()
   {
-    return m_value;
+    return value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (CV_ColorInterpretation)object ).m_value == m_value;
+      return ( (CV_ColorInterpretation)object ).value == value;
     }
 
     return false;
@@ -135,12 +133,11 @@ public final class CV_ColorInterpretation implements Serializable
    * Returns a string representation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CV_ColorInterpretation" );
     buffer.append( '[' );
-    buffer.append( m_value );
+    buffer.append( value );
     buffer.append( ']' );
     return buffer.toString();
   }

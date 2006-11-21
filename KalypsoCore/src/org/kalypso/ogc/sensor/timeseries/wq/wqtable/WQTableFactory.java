@@ -1,16 +1,14 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -20,7 +18,6 @@ import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.commons.serializer.ISerializer;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 
@@ -29,18 +26,16 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class WQTableFactory implements ISerializer<WQTableSet>
+public class WQTableFactory implements ISerializer
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+  private static ObjectFactory m_objectFactory = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  private WQTableFactory( )
+  private WQTableFactory()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
-  public static WQTableFactory getInstance( )
+  public static WQTableFactory getInstance()
   {
     return new WQTableFactory();
   }
@@ -52,9 +47,8 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   {
     try
     {
-      final Unmarshaller unm = JC.createUnmarshaller();
-      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unm.unmarshal( ins );
-      final RatingTableList xmlTableList = element.getValue();
+      final Unmarshaller unm = m_objectFactory.createUnmarshaller();
+      final RatingTableList xmlTableList = (RatingTableList)unm.unmarshal( ins );
 
       return xmlTableList;
     }
@@ -74,16 +68,21 @@ public class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final RatingTableList xmlTableList = parseSimple( ins );
-      final List<RatingTable> xmlTables = xmlTableList.getTable();
+      final List xmlTables = xmlTableList.getTable();
       final WQTable[] tables = new WQTable[xmlTables.size()];
       int iTable = 0;
-      for( final RatingTable ratingTable : xmlTables )
+      for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
       {
-        final Date validity = ratingTable.getValidity().getTime();
-        final Integer offset = ratingTable.getOffset();
+        final RatingTable xmlTable = (RatingTable)it.next();
 
-        final String[] strX = ratingTable.getX().split( "," );
-        final String[] strY = ratingTable.getY().split( "," );
+        final Date validity = xmlTable.getValidity().getTime();
+        final int offset = xmlTable.getOffset();
+
+        final String xses = xmlTable.getX().trim();
+        final String yses = xmlTable.getY().trim();
+
+        final String[] strX = xses.length() == 0 ? new String[0] : xses.split( "," );
+        final String[] strY = yses.length() == 0 ? new String[0] : yses.split( "," );
 
         if( strX.length != strY.length )
           throw new WQException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
@@ -96,7 +95,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
           Q[i] = Double.parseDouble( strY[i] );
         }
 
-        tables[iTable++] = new WQTable( validity, offset == null ? 0 : offset, W, Q );
+        tables[iTable++] = new WQTable( validity, offset, W, Q );
       }
 
       return new WQTableSet( tables, xmlTableList.getFromType(), xmlTableList.getToType() );
@@ -116,16 +115,14 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   {
     try
     {
-      
-      final RatingTableList xmlTables = OF.createRatingTableList();
-      
+      final RatingTableList xmlTables = m_objectFactory.createTables();
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
       final WQTable[] tables = wqset.getTables();
       for( int i = 0; i < tables.length; i++ )
       {
-        final RatingTable xmlTable = OF.createRatingTable();
+        final RatingTable xmlTable = m_objectFactory.createRatingTable();
         final Calendar cal = Calendar.getInstance();
         cal.setTime( tables[i].getValidity() );
         xmlTable.setValidity( cal );
@@ -141,12 +138,11 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         xmlTables.getTable().add( xmlTable );
       }
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+      final Marshaller marshaller = m_objectFactory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+
       final StringWriter writer = new StringWriter();
-      final JAXBElement<RatingTableList> ratingTable = OF.createTables(xmlTables);
-      marshaller.marshal(ratingTable, writer );
+      marshaller.marshal( xmlTables, writer );
 
       return writer.toString();
     }
@@ -161,7 +157,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
    * 
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
    */
-  public WQTableSet read( final InputStream ins ) throws InvocationTargetException
+  public Object read( final InputStream ins ) throws InvocationTargetException
   {
     try
     {
@@ -177,14 +173,14 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   /**
    * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
    */
-  public void write( final WQTableSet object, final OutputStream os ) throws InvocationTargetException, IOException
+  public void write( final Object object, final OutputStream os ) throws InvocationTargetException
   {
     try
     {
-      final String xml = createXMLString( object );
+      final String xml = createXMLString( (WQTableSet)object );
       os.write( xml.getBytes() );
     }
-    catch( WQException e )
+    catch( final Exception e ) // WQException, IOException
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );

@@ -40,41 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.schema.virtual;
 
-import javax.xml.namespace.QName;
+import java.util.HashMap;
 
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.virtual.AbstractVirtualPropertyType;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
  * VirtualRasterFeatureTypeProperty
  * <p>
- * Diese VirtualProperty sollte unter KalypsoDeegree liegen, sie benötigt aber das lokal eingestellte Koordinatensystem
- * und wurde deshalb in KalypsoUI abgelegt
- * <p>
- * Bessere Lösung für das Raster wäre die Property RectifiedGridDomain des Rasters als GeometryProperty zu definieren,
- * dies ist momentan nicht möglich bzw. mit großen Veränderungen verbunden
- * <p>
+ * 
  * created by
  * 
  * @author Nadja Peiler (27.05.2005)
+ * 
+ * Diese VirtualProperty sollte unter KalypsoDeegree liegen, sie benötigt aber das lokal eingestellte Koordinatensystem
+ * und wurde deshalb in KalypsoUI abgelegt Bessere Lösung für das Raster wäre die Property RectifiedGridDomain des
+ * Rasters als GeometryProperty zu definieren, dies ist momentan nicht möglich bzw. mit großen Veränderungen verbunden
+ *  
  */
 
 /**
- * @author Nadja Peiler
+ * 
+ * @author Nadja
  */
-public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyType
+public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
   private GM_Object m_value;
 
-  public VirtualRasterFeatureTypeProperty( IPropertyType ftp )
+  public VirtualRasterFeatureTypeProperty( FeatureTypeProperty ftp )
   {
-    super( new QName( "virtual", "RasterBoundary_" + ftp.getQName().getLocalPart() ), 0, 1, GeometryUtilities.getPolygonClass() );
+    super( "RasterBoundary_" + ftp.getName(), "virtual", new HashMap() );
   }
 
   /**
@@ -85,7 +88,7 @@ public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyTyp
   {
     if( m_value != null )
       return m_value;
-    final RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
     if( rgDomain == null )
       return null;
     try
@@ -98,5 +101,27 @@ public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyTyp
       e.printStackTrace();
       return null;
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
+   */
+  public String getType()
+  {
+    return GeometryUtilities.getPolygonClass().getName();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
+   */
+  public boolean isNullable()
+  {
+    return false;
+  }
+
+  public void setVirtualValue( Object value )
+  {
+    if( value instanceof GM_Object )
+      m_value = (GM_Object)value;
   }
 }

@@ -32,8 +32,8 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
-import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -43,11 +43,11 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
  */
 public class CreateOGCLogicalANDOpsActionDelegate extends AbstractCreateOperationActionDelegate
 {
+  private IStructuredSelection m_selection;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
@@ -57,20 +57,20 @@ public class CreateOGCLogicalANDOpsActionDelegate extends AbstractCreateOperatio
         Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          ComplexFilter filter = (ComplexFilter) firstElement;
-          filter.setOperation( new LogicalOperation( OperationDefines.AND, new ArrayList<Operation>() ) );
+          ComplexFilter filter = (ComplexFilter)firstElement;
+          filter.setOperation( new LogicalOperation( OperationDefines.AND, new ArrayList() ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          LogicalOperation operation = (LogicalOperation) firstElement;
-          // add new Logical Operation
-          ArrayList<Operation> arguments = operation.getArguments();
+          LogicalOperation operation = (LogicalOperation)firstElement;
+          //add new Logical Operation
+          ArrayList arguments = operation.getArguments();
           if( arguments == null )
-            arguments = new ArrayList<Operation>();
-          arguments.add( new LogicalOperation( OperationDefines.AND, new ArrayList<Operation>() ) );
+            arguments = new ArrayList();
+          arguments.add( new LogicalOperation( OperationDefines.AND, new ArrayList() ) );
         }
       }
-      ((TreeSelection) m_selection).structureChanged();
+      ( (TreeSelection)m_selection ).structureChanged();
     }
   }
 

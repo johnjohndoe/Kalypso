@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.visitors;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -64,14 +64,14 @@ public class FindPropertyByNameVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final IFeatureType featureType = f.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
+    final FeatureType featureType = f.getFeatureType();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      final IPropertyType property = properties[i];
-      final String name = property.getQName().getLocalPart();
+      final FeatureTypeProperty property = properties[i];
+      final String name = property.getName();
       if( m_propertyname.equals( name ) )
-        m_result = f.getProperty(property);
+        m_result = f.getProperty( name );
     }
 
     return true;

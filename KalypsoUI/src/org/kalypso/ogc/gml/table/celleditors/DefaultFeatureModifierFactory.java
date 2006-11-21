@@ -40,16 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Belger
@@ -57,30 +58,39 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.IPropertyType, java.lang.String,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+      final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( vpt.isGeometry() || vpt.isList() )
-        return new ButtonModifier( vpt, fcl );
+    final String type = ftp.getType();
 
-      final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
-      if( typeHandler != null )
-        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );
-      return new StringModifier( vpt );
-    }
+    if( "java.lang.String".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Integer".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Long".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Float".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Double".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Date".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.String".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Boolean".equals( type ) )
+      return new BooleanModifier( ftp );
+    if( FeatureHelper.isGeometryType( type ) )
+      return new ButtonModifier( workspace, ftp, selectionManager, fcl );
+    if( "FeatureAssociationType".equals( type ) )
+      return new ButtonModifier( workspace, ftp, selectionManager, fcl );
 
-    if( ftp instanceof IRelationType )
-    {
-      IRelationType rpt = (IRelationType) ftp;
-      return new ButtonModifier( rpt, fcl );
-    }
-    throw new UnsupportedOperationException();
+    final IGuiTypeHandler typeHandler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( type );
+    if( typeHandler != null )
+      return typeHandler.createFeatureModifier( workspace, ftp, selectionManager, fcl );
+
+    return new StringModifier( ftp );
   }
 }

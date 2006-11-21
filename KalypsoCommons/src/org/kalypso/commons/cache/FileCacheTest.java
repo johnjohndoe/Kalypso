@@ -3,7 +3,6 @@ package org.kalypso.commons.cache;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -23,12 +22,12 @@ import org.kalypso.commons.serializer.ISerializer;
  */
 public class FileCacheTest extends TestCase
 {
-  public void testGetObject( ) throws InvocationTargetException
+  public void testGetObject()
   {
     final StringKeyFactory fact = new StringKeyFactory();
-    final Comparator<String> kc = new StringComparator();
-    final ISerializer<String> ser = new StringSerializer();
-    final FileCache<String, String> cache = new FileCache<String, String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    final Comparator kc = new StringComparator();
+    final ISerializer ser = new StringSerializer();
+    final FileCache cache = new FileCache( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
 
     cache.addObject( "A", "A" );
     cache.addObject( "B", "B" );
@@ -50,30 +49,33 @@ public class FileCacheTest extends TestCase
     assertTrue( cache.getObject( "B" ) == null );
   }
 
-  protected static class StringComparator implements Comparator<String>
+  private static class StringComparator implements Comparator
   {
-    public int compare( String s1, String s2 )
+    public int compare( Object o1, Object o2 )
     {
+      final String s1 = (String)o1;
+      final String s2 = (String)o2;
+
       return s1.compareTo( s2 );
     }
   }
 
-  protected static class StringKeyFactory implements IKeyFactory<String>
+  private static class StringKeyFactory implements IKeyFactory
   {
-    public String createKey( final String string )
+    public Object createKey( String string )
     {
       return string;
     }
 
-    public String toString( final String key )
+    public String toString( Object key )
     {
-      return key;
+      return (String)key;
     }
   }
 
-  protected static class StringSerializer implements ISerializer<String>
+  private static class StringSerializer implements ISerializer
   {
-    public String read( final InputStream ins ) throws IOException
+    public Object read( InputStream ins ) throws InvocationTargetException
     {
       BufferedReader r = null;
       try
@@ -82,19 +84,29 @@ public class FileCacheTest extends TestCase
 
         return r.readLine();
       }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        throw new InvocationTargetException( e );
+      }
       finally
       {
         IOUtils.closeQuietly( r );
       }
     }
 
-    public void write( final String object, final OutputStream os ) throws IOException
+    public void write( Object object, OutputStream os ) throws InvocationTargetException
     {
       BufferedWriter w = null;
       try
       {
         w = new BufferedWriter( new OutputStreamWriter( os ) );
         w.write( object.toString() );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        throw new InvocationTargetException( e );
       }
       finally
       {

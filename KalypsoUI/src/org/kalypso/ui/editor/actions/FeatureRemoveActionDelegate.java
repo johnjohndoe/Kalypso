@@ -45,6 +45,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * FeatureRemoveActionDelegate
+ * <p>
+ * 
+ * created by
  * 
  * @author doemming (24.05.2005)
  */

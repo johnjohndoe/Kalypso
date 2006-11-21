@@ -35,7 +35,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     super( "wizardPage" );
     setTitle( "GisMapView Editor File" );
     setDescription( "This wizard creates a new file with *.gmt extension that can be opened by a GisMapView editor." );
-    this.setImageDescriptor( ImageProvider.IMAGE_ICON_GMT );
+    this.setImageDescriptor(ImageProvider.IMAGE_ICON_GMT);
     m_selection = selection;
   }
 
@@ -64,7 +64,6 @@ public class CreateGisMapViewWizardPage extends WizardPage
     button.setText( "Browse..." );
     button.addSelectionListener( new SelectionAdapter()
     {
-      @Override
       public void widgetSelected( SelectionEvent e )
       {
         handleBrowse();
@@ -92,11 +91,12 @@ public class CreateGisMapViewWizardPage extends WizardPage
    * Tests if the current workbench selection is a suitable container to use.
    */
 
-  private void initialize( )
+  private void initialize()
   {
-    if( m_selection != null && m_selection.isEmpty() == false && m_selection instanceof IStructuredSelection )
+    if( m_selection != null && m_selection.isEmpty() == false
+        && m_selection instanceof IStructuredSelection )
     {
-      IStructuredSelection ssel = (IStructuredSelection) m_selection;
+      IStructuredSelection ssel = (IStructuredSelection)m_selection;
       if( ssel.size() > 1 )
         return;
       Object obj = ssel.getFirstElement();
@@ -104,9 +104,9 @@ public class CreateGisMapViewWizardPage extends WizardPage
       {
         IContainer container;
         if( obj instanceof IContainer )
-          container = (IContainer) obj;
+          container = (IContainer)obj;
         else
-          container = ((IResource) obj).getParent();
+          container = ( (IResource)obj ).getParent();
         containerText.setText( container.getFullPath().toString() );
       }
     }
@@ -114,18 +114,20 @@ public class CreateGisMapViewWizardPage extends WizardPage
   }
 
   /**
-   * Uses the standard container selection dialog to choose the new value for the container field.
+   * Uses the standard container selection dialog to choose the new value for
+   * the container field.
    */
 
-  void handleBrowse( )
+  void handleBrowse()
   {
-    ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "Select new file container" );
+    ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin
+        .getWorkspace().getRoot(), false, "Select new file container" );
     if( dialog.open() == Window.OK )
     {
       Object[] result = dialog.getResult();
       if( result.length == 1 )
       {
-        containerText.setText( ((Path) result[0]).toOSString() );
+        containerText.setText( ( (Path)result[0] ).toOSString() );
       }
     }
   }
@@ -134,7 +136,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
    * Ensures that both text fields are set.
    */
 
-  void dialogChanged( )
+  void dialogChanged()
   {
     String container = getContainerName();
     String fileName = getFileName();
@@ -168,12 +170,12 @@ public class CreateGisMapViewWizardPage extends WizardPage
     setPageComplete( message == null );
   }
 
-  public String getContainerName( )
+  public String getContainerName()
   {
     return containerText.getText();
   }
 
-  public String getFileName( )
+  public String getFileName()
   {
     return fileText.getText();
   }

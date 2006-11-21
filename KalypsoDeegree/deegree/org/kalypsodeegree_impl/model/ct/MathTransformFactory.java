@@ -64,6 +64,7 @@ package org.kalypsodeegree_impl.model.ct;
 import java.awt.geom.AffineTransform;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteObject;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import javax.media.jai.ParameterList;
@@ -128,14 +129,14 @@ public class MathTransformFactory
   /**
    * List of registered math transforms.
    */
-  private final MathTransformProvider[] m_providers;
+  private final MathTransformProvider[] providers;
 
   /**
    * Construct a factory using the specified providers.
    */
   public MathTransformFactory( final MathTransformProvider[] providers )
   {
-    m_providers = providers.clone();
+    this.providers = (MathTransformProvider[])providers.clone();
   }
 
   /**
@@ -157,9 +158,9 @@ public class MathTransformFactory
           new GeocentricTransform.Provider( false ), // Geographic to Geocentric
           new GeocentricTransform.Provider( true ) // Geocentric to Geographic
           } );
-      for( int i = DEFAULT.m_providers.length; --i >= 0; )
+      for( int i = DEFAULT.providers.length; --i >= 0; )
       {
-        final MathTransformProvider provider = DEFAULT.m_providers[i];
+        final MathTransformProvider provider = DEFAULT.providers[i];
         if( provider instanceof MapProjection.Provider )
         {
           // Register only projections.
@@ -515,11 +516,11 @@ public class MathTransformFactory
    */
   public String[] getAvailableTransforms()
   {
-    final String[] names = new String[m_providers.length + 1];
+    final String[] names = new String[providers.length + 1];
     int i;
     for( i = 0; i < names.length; i++ )
     {
-      names[i] = m_providers[i].getClassName();
+      names[i] = providers[i].getClassName();
     }
     // Special case for "Affine", since the ParameterListDescriptor
     // depends of the matrix size.
@@ -544,9 +545,9 @@ public class MathTransformFactory
   public MathTransformProvider getMathTransformProvider( String classification ) throws NoSuchElementException
   {
     classification = classification.trim();
-    for( int i = 0; i < m_providers.length; i++ )
-      if( classification.equalsIgnoreCase( m_providers[i].getClassName().trim() ) )
-        return m_providers[i];
+    for( int i = 0; i < providers.length; i++ )
+      if( classification.equalsIgnoreCase( providers[i].getClassName().trim() ) )
+        return providers[i];
     throw new NoSuchElementException( Resources.format( ResourceKeys.ERROR_NO_TRANSFORM_FOR_CLASSIFICATION_$1,
         classification ) );
   }
@@ -624,22 +625,22 @@ public class MathTransformFactory
     /**
      * The originating adapter.
      */
-    protected final Adapters m_adapters;
+    protected final Adapters adapters;
 
     /**
      * Construct a remote object.
      */
     protected Export( final Object adapters )
     {
-      m_adapters = (Adapters)adapters;
+      this.adapters = (Adapters)adapters;
     }
 
     /**
      * Creates an affine transform from a matrix.
      */
-    public CT_MathTransform createAffineTransform( final PT_Matrix matrix )
+    public CT_MathTransform createAffineTransform( final PT_Matrix matrix ) throws RemoteException
     {
-      return m_adapters.export( MathTransformFactory.this.createAffineTransform( m_adapters.PT.wrap( matrix ) ) );
+      return adapters.export( MathTransformFactory.this.createAffineTransform( adapters.PT.wrap( matrix ) ) );
     }
 
     /**
@@ -648,8 +649,8 @@ public class MathTransformFactory
     public CT_MathTransform createConcatenatedTransform( final CT_MathTransform transform1,
         final CT_MathTransform transform2 ) throws RemoteException
     {
-      return m_adapters.export( MathTransformFactory.this.createConcatenatedTransform( m_adapters.wrap( transform1 ),
-          m_adapters.wrap( transform2 ) ) );
+      return adapters.export( MathTransformFactory.this.createConcatenatedTransform( adapters.wrap( transform1 ),
+          adapters.wrap( transform2 ) ) );
     }
 
     /**
@@ -658,7 +659,7 @@ public class MathTransformFactory
     public CT_MathTransform createPassThroughTransform( final int firstAffectedOrdinate,
         final CT_MathTransform subTransform ) throws RemoteException
     {
-      return m_adapters.export( MathTransformFactory.this.createPassThroughTransform( firstAffectedOrdinate, m_adapters
+      return adapters.export( MathTransformFactory.this.createPassThroughTransform( firstAffectedOrdinate, adapters
           .wrap( subTransform ), 0 ) );
     }
 
@@ -666,15 +667,16 @@ public class MathTransformFactory
      * Creates a transform from a classification name and parameters.
      */
     public CT_MathTransform createParameterizedTransform( final String classification, final CT_Parameter[] parameters )
+        throws RemoteException
     {
-      return m_adapters.export( MathTransformFactory.this.createParameterizedTransform( classification, m_adapters
+      return adapters.export( MathTransformFactory.this.createParameterizedTransform( classification, adapters
           .wrap( parameters ) ) );
     }
 
     /**
      * Creates a math transform from a Well-Known Text string.
      */
-    public CT_MathTransform createFromWKT( final String wellKnownText )
+    public CT_MathTransform createFromWKT( final String wellKnownText ) throws RemoteException
     {
       throw new UnsupportedOperationException( "WKT parsing not yet implemented" );
     }
@@ -682,7 +684,7 @@ public class MathTransformFactory
     /**
      * Creates a math transform from XML.
      */
-    public CT_MathTransform createFromXML( final String xml )
+    public CT_MathTransform createFromXML( final String xml ) throws RemoteException
     {
       throw new UnsupportedOperationException( "XML parsing not yet implemented" );
     }
@@ -690,7 +692,7 @@ public class MathTransformFactory
     /**
      * Tests whether parameter is angular.
      */
-    public boolean isParameterAngular( final String parameterName )
+    public boolean isParameterAngular( final String parameterName ) throws RemoteException
     {
       throw new UnsupportedOperationException( "Not yet implemented" );
     }
@@ -698,7 +700,7 @@ public class MathTransformFactory
     /**
      * Tests whether parameter is linear.
      */
-    public boolean isParameterLinear( final String parameterName )
+    public boolean isParameterLinear( final String parameterName ) throws RemoteException
     {
       throw new UnsupportedOperationException( "Not yet implemented" );
     }

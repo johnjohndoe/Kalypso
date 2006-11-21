@@ -105,6 +105,10 @@ public class ZMLDiffComparator implements IDiffComparator
       logger.log( IDiffComparator.DIFF_CONTENT, "Anzahl der Werte : " + max1 + " : " + max2 );
       return true;
     }
+    
+    if( max1 == 0 )
+      return false;
+    
     final double v1 = ( (Double)values1.getElement( 0, valueAxis1 ) ).doubleValue();
     final double v2 = ( (Double)values2.getElement( 0, valueAxis2 ) ).doubleValue();
     double maxValue1 = v1;

@@ -45,10 +45,12 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -57,17 +59,20 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 {
   private Feature m_feature;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  private Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
+  private Collection m_changelisteners = new ArrayList();
 
-  public AbstractFeatureControl( final IPropertyType ftp )
+  private GMLWorkspace m_workspace;
+
+  public AbstractFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
-    this( null, ftp );
+    this( workspace, null, ftp );
   }
 
-  public AbstractFeatureControl( final Feature feature, final IPropertyType ftp )
+  public AbstractFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
+    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
@@ -80,6 +85,11 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.clear();
   }
 
+  public final GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
@@ -88,12 +98,13 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return m_feature;
   }
 
-  public void setFeature( final Feature feature )
+  public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
+    m_workspace = workspace;
     m_feature = feature;
   }
 
-  public IPropertyType getFeatureTypeProperty()
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
@@ -119,7 +130,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     if( change == null )
       return;
 
-    final IFeatureChangeListener[] listeners = m_changelisteners
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
         .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
@@ -134,9 +145,10 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     }
   }
 
-  protected final void fireOpenFeatureRequested( final Feature feature, final IPropertyType ftp )
+  protected final void fireOpenFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
   {
-    final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
+        .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final IFeatureChangeListener listener = listeners[i];

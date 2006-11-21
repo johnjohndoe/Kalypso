@@ -102,7 +102,6 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   /**
    * returns a shallow copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_CurveSegment cs = null;
@@ -130,7 +129,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   /**
    * returns a reference to itself
    */
-  public GM_LineString getAsLineString()
+  public GM_LineString getAsLineString() throws GM_Exception
   {
     return this;
   }
@@ -197,7 +196,6 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    */
-  @Override
   public boolean contains( GM_Object gmo )
   {
     return false;

@@ -35,7 +35,7 @@ public class GmlSourceHandler implements ISourceHandler
     try
     {
       final URL gmlURL = m_resolver.resolveURL( m_context, m_href );
-      return GmlSerializer.createGMLWorkspace( gmlURL, null );
+      return GmlSerializer.createGMLWorkspace( gmlURL );
     }
     catch( final Exception e )
     {

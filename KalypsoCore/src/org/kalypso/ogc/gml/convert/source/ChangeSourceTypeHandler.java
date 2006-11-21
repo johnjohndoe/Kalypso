@@ -45,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -52,8 +53,8 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gml.util.ChangeSourceType;
-import org.kalypso.gml.util.ChangeSourceType.Visitor;
-import org.kalypso.gml.util.ChangeSourceType.Visitor.Argument;
+import org.kalypso.gml.util.ChangeSourceType.VisitorType;
+import org.kalypso.gml.util.ChangeSourceType.VisitorType.ArgumentType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -90,7 +91,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   {
     try
     {
-      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource().getValue(),
+      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource(),
           m_externData );
       applyVisitors( inputGML, m_type.getVisitor() );
       m_disposer.dispose();
@@ -107,7 +108,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   {
     for( final Iterator iter = propertyList.iterator(); iter.hasNext(); )
     {
-      final ChangeSourceType.Visitor visitorType = (Visitor)iter.next();
+      final ChangeSourceType.VisitorType visitorType = (VisitorType)iter.next();
       final String featurePath = visitorType.getFeaturePath();
       final Properties arguments = createArguments( visitorType.getArgument() );
 
@@ -156,7 +157,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
     for( final Iterator iter = argumentList.iterator(); iter.hasNext(); )
     {
-      final ChangeSourceType.Visitor.Argument aType = (Argument)iter.next();
+      final ChangeSourceType.VisitorType.ArgumentType aType = (ArgumentType)iter.next();
       map.setProperty( aType.getName(), aType.getValue() );
     }
 

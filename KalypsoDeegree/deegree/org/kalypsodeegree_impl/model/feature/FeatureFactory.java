@@ -60,36 +60,38 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.Mapper;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypsodeegree.gml.GMLFeature;
+import org.kalypsodeegree.gml.GMLProperty;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * This factory offers methods for creating Features, FeatureCollection and all direct related classes/interfaces that
  * are part of the org.kalypsodeegree.model.feature package.
+ * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -99,229 +101,363 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class FeatureFactory
 {
+  private static final String DEFAULTNAMESPACE = "www.generic";
+
   /**
-   * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
+   * creates an instance of a FeatureTypeProperty from its name and the data type it describes
+   * 
+   * @param name
+   *          name of the feature type property
+   * @param type
+   *          type represented by the feature type property
+   * @param nullable
+   *          true if the feature type property is allowed to be <CODE>null</CODE>
+   * @return instance of a <CODE>FeatureTypeProperty</CODE>
+   */
+  public static FeatureTypeProperty createFeatureTypeProperty( String name, String type, boolean nullable )
+  {
+    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable, null );
+    // return new FeatureTypeProperty_Impl( name, type, nullable );
+  }
+
+  public static FeatureTypeProperty createFeatureTypeProperty( String name, String namespace, String type,
+      boolean nullable, Map annotationMap )
+  {
+    return new FeatureTypeProperty_Impl( name, namespace, type, nullable, annotationMap );
+  }
+
+  /**
+   * creates an instance of a FeatureType from an array of FeatureTypeProperties, its parents and childs and its name.
+   * 
+   * @param name
+   *          name of the <CODE>FeatureType</CODE>
+   * @param properties
+   *          properties containing the <CODE>FeatureType</CODE> s content
+   * @return instance of a <CODE>FeatureType</CODE>
+   * @deprecated
+   *  
+   */
+  public static FeatureType createFeatureType( String name, FeatureTypeProperty[] properties )
+  {
+    final int[] defaultOccurs = new int[properties.length];
+    for( int i = 0; i < defaultOccurs.length; i++ )
+      defaultOccurs[i] = 1;
+    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs, null, new HashMap() );
+  }
+
+  public static FeatureType createFeatureType( String name, String namespace, FeatureTypeProperty[] properties,
+      int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
+  {
+    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs, substitutionGroup, annotationMap );
+  }
+
+  /**
+   * creates an instance of a FeatureProperty from its name and the data (value) it contains
+   * 
+   * @param name
+   *          name of the <CODE>FeatureProperty</CODE>
+   * @return an instance of a <CODE>FeatureProperty</CODE>
+   * @param value
+   *          value of the <CODE>FeatureProperty</CODE>
+   */
+  public static FeatureProperty createFeatureProperty( String name, Object value )
+  {
+    return new FeatureProperty_Impl( name, value );
+  }
+
+  /**
+   * creates an instance of a Feature from its FeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
-   * IFeatureType.
+   * FeatureType.
    * 
    * @param id
    *          unique id of the <CODE>Feature</CODE>
    * @param featureType
-   *          <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
+   *          <CODE>FeatureType</CODE> of the <CODE>Feature</CODE>
    * @param properties
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final Object[] properties )
+  public static Feature createFeature( String id, FeatureType featureType, Object[] properties )
   {
-    return new Feature_Impl( parent, featureType, id, properties );
+    return new Feature_Impl( featureType, id, properties );
   }
 
   /**
-   * Same as {@link #createFeature(Feature, String, IFeatureType, boolean, false)}.
-   */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
-  {
-    return createFeature( parent, id, featureType, initializeWithDefaults, 0 );
-  }
-
-  /**
-   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
    * 
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
-   *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
+   *          set <code>false</code> to not generate default properties ( e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
+  public static Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )
   {
+    return new Feature_Impl( featureType, id, initializeWithDefaults );
+  }
+
+  /**
+   * 
+   * @deprecated use constructor
+   *             <code>Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )</code>
+   *             instead
+   */
+  public static Feature createFeature( final String id, final FeatureType featureType )
+  {
+    return new Feature_Impl( featureType, id );
+  }
+
+  /**
+   * creates an instance of a Feature from its FeatureType and an array of Objects that represents it properties. It is
+   * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
+   * FeatureType.
+   * 
+   * @param id
+   *          unique id of the <CODE>Feature</CODE>
+   * @param featureType
+   *          <CODE>FeatureType</CODE> of the <CODE>Feature</CODE>
+   * @param properties
+   *          properties (content) of the <CODE>Feature</CODE>
+   * @return instance of a <CODE>Feature</CODE>
+   */
+  public static Feature createFeature( final String id, final FeatureType featureType,
+      final FeatureProperty[] properties )
+  {
+    final Feature result = createFeature( id, featureType, false );
+    for( int i = 0; i < properties.length; i++ )
+    {
+      if( featureType.getProperty( properties[i].getName() ) != null )
+        result.setProperty( properties[i] );
+    }
+    return result;
+  }
+
+  public static Feature createFeature( final GMLFeature gmlFeature, final FeatureType featureTypes[],
+      final URL context, final IUrlResolver urlResolver ) throws Exception
+  {
+    Debug.debugMethodBegin();
+
+    final String featureName = gmlFeature.getLocalName();
+    final String featureNamespace = gmlFeature.getNamespaceURI();
+
+    FeatureType featureType = null;
+    for( int ft_i = 0; ft_i < featureTypes.length; ft_i++ )
+    {
+      final String name = featureTypes[ft_i].getName();
+      final String namespace = featureTypes[ft_i].getNamespace();
+
+      if( featureName.equals( name ) && featureNamespace.equals( namespace ) )
+      {
+        featureType = featureTypes[ft_i];
+        break;
+      }
+    }
+
     if( featureType == null )
-      throw new IllegalArgumentException( "must provide a featuretype" );
+      throw new Exception( "Could not find named feature " + featureNamespace + ":" + featureName + " in schema" );
 
-    final IPropertyType[] ftp = featureType.getProperties();
+    final GMLProperty[] gmlProps = gmlFeature.getProperties();
 
-    final Feature feature = new Feature_Impl( parent, featureType, id, new Object[ftp.length] );
+    final String id = gmlFeature.getId();
+    final Feature feature = new Feature_Impl( featureType, id, false );
 
-    // TODO: shouldn't we move this to the Feature_Impl constructor?
-    for( final IPropertyType pt : ftp )
+    // every gmlProp should fit to a featurePropertyType
+    for( int p = 0; p < gmlProps.length; p++ )
     {
-      if( pt.isList() )
-      {
-        if( pt instanceof IRelationType )
-          feature.setProperty( pt, FeatureFactory.createFeatureList( feature, (IRelationType) pt ) );
-        else
-          feature.setProperty( pt, new ArrayList() );
-      }
+      // TODO: compare properties by namespace
+      GMLProperty gmlProp = gmlProps[p];
+      final String propName = gmlProp.getName();
+      int propertyPosition = featureType.getPropertyPosition( propName );
+
+      FeatureTypeProperty ftp = featureType.getProperty( propName );
+      if( ftp == null ) // ignore to support upgrading to new schema (doemming)
+        continue;
+      // 
+      // throw new Exception( "property '" + propName + "' not defined in
+      // schema" );
+      //
+      Object o = wrap( ftp, gmlProp, context, urlResolver );
+
+      int maxOccurs = featureType.getMaxOccurs( propertyPosition );
+      if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+        ( (List)feature.getProperty( propertyPosition ) ).add( o );
       else
-      {
-        // leave it null
-      }
+        feature.setProperty( createFeatureProperty( propName, o ) );
     }
 
-    if( initializeWithDefaults )
-    {
-      final Map<IPropertyType, Object> properties = FeatureFactory.createDefaultFeatureProperty( feature, depth );
-      FeatureHelper.setProperties( feature, properties );
-    }
+    Debug.debugMethodEnd();
+    return feature;
+  }
 
+  /** Creates default feature, used by LegendView */
+  public static Feature createDefaultFeature( final String id, final FeatureType ft, final boolean createGeometry )
+  {
+    final FeatureTypeProperty[] propTypes = ft.getProperties();
+    final FeatureProperty[] props = createDefaultFeatureProperty( propTypes, createGeometry );
+    final Feature feature = FeatureFactory.createFeature( id, ft, props );
     return feature;
   }
 
   /** Creates default FeatureProperties, used by LegendView */
-  public static Map<IPropertyType, Object> createDefaultFeatureProperty( final Feature feature, final int depth )
+  public static FeatureProperty[] createDefaultFeatureProperty( final FeatureTypeProperty[] propTypes,
+      final boolean createGeometry )
   {
-    final IPropertyType[] propTypes = feature.getFeatureType().getProperties();
-
-    final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>( propTypes.length );
-    for( final IPropertyType ftp : propTypes )
+    // TODO handle occurency here and generate empty List or FeatureList as
+    // default
+    final List results = new ArrayList();
+    for( int i = 0; i < propTypes.length; i++ )
     {
-      final Object value = createDefaultFeatureProperty( feature, ftp, depth );
-      if( value != null )
-        results.put( ftp, value );
+      final FeatureTypeProperty ftp = propTypes[i];
+
+      final String type = ftp.getType();
+      final Object value = Mapper.defaultValueforJavaType( type, createGeometry );
+      if( !( ftp instanceof FeatureAssociationTypeProperty ) )
+        results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
     }
-    return results;
+    return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
   }
 
-  private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final int depth )
+  private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty, URL context, IUrlResolver urlResolver )
+      throws Exception
   {
-    final int minOccurs = ftp.getMinOccurs();
-    // maybe also look at 'nillable'?
-    final boolean isOptional = minOccurs == 0;
+    if( ftp instanceof FeatureAssociationTypeProperty )
+      return wrapXLink( ftp, gmlProperty, context, urlResolver );
+    return wrapNOXLink( ftp, gmlProperty, context, urlResolver );
+  }
 
-    if( ftp instanceof IValuePropertyType )
+  private static Object wrapXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty, URL context,
+      IUrlResolver urlResolver )
+  {
+    final Object value = gmlProperty.getPropertyValue();
+    Object result = null;
+    if( ftp instanceof FeatureAssociationTypeProperty )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-
-      // get default value from schema if possible
-      final String defaultValue = vpt.getDefault();
-
-      // Only fill non optional values with default value set
-      if( isOptional || defaultValue == null )
-        return null;
-
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
-      if( typeHandler != null && defaultValue != null )
+      if( value != null && value instanceof GMLFeature )
       {
+        FeatureAssociationTypeProperty featureAssociationTypeProperty = (FeatureAssociationTypeProperty)ftp;
+        FeatureType[] linkFTs = featureAssociationTypeProperty.getAssociationFeatureTypes();
+
         try
         {
-          return typeHandler.parseType( defaultValue );
+          result = createFeature( (GMLFeature)value, linkFTs, context, urlResolver );
         }
-        catch( final ParseException e )
+        catch( final Exception e )
         {
+          // TODO: was soll denn das?
+          // dadurch bekommt keiner mit, wenn was im GML nicht stimmt!!!
           e.printStackTrace();
-          return null;
         }
       }
-
-      return Mapper.defaultValueforJavaType( vpt );
+      else
+      {
+        String string = (String)gmlProperty.getAttributeValue( "http://www.w3.org/1999/xlink", "href" );
+        // remove leading "#"
+        if( string.startsWith( "#" ) )
+          result = string.substring( 1 );
+        else
+          result = string;
+      }
     }
-    else if( ftp instanceof IRelationType )
-    {
-      final IRelationType rt = (IRelationType) ftp;
-      if( ftp.isList() )
-        return FeatureFactory.createFeatureList( feature, rt );
-
-      if( depth == 0 || minOccurs == 0 || !rt.isInlineAble() || rt.isLinkAble() )
-        return null;
-
-      // we have a single, non-optional, inlinable, not-linkable feature here: create inner feature
-      final GMLWorkspace workspace = feature.getWorkspace();
-      if( workspace == null )
-        return null;
-
-      final int subDepth = depth == -1 ? -1 : depth - 1;
-      return workspace.createFeature( feature, rt.getTargetFeatureType(), subDepth );
-    }
-
-    return null;
+    return result;
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )
+  private static Object wrapNOXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty, URL context,
+      IUrlResolver urlResolver ) throws Exception
+  {
+
+    final String type = ftp.getType();
+    if( type == null )
+      System.out.println( "no Type" );
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton
+        .getTypeRegistry().getTypeHandlerForClassName( type );
+    //  TODO give context not null
+    if( typeHandler != null )
+      return typeHandler.unmarshall( gmlProperty.getElement(), context, urlResolver );
+    //FeatureAssociationType
+    final Object o = gmlProperty.getPropertyValue();
+    if( o == null )
+    {
+      if( ftp.isNullable() )
+        return null;
+      throw new Exception( "Property " + ftp.getName() + " is not nullable, but value is" );
+    }
+
+    //		System.out.println("Object"+o.getClass().toString());
+    if( o instanceof String )
+      return Mapper.mapXMLValueToJava( (String)o, type );
+
+    throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
+  }
+
+  public static FeatureList createFeatureList( final Feature parentFeature, final FeatureTypeProperty parentFTP,
+      final List list )
   {
     final SplitSort result = new SplitSort( parentFeature, parentFTP );
     result.addAll( list );
     return result;
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final Feature[] features )
+  public static FeatureList createFeatureList( final Feature parentFeature, final FeatureTypeProperty parentFTP,
+      final Feature[] features )
   {
     return createFeatureList( parentFeature, parentFTP, Arrays.asList( features ) );
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP )
+  public static FeatureList createFeatureList( final Feature parentFeature, final FeatureTypeProperty parentFTP )
   {
     return new SplitSort( parentFeature, parentFTP );
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env )
+  public static FeatureList createFeatureList( final Feature parentFeature, final FeatureTypeProperty parentFTP,
+      final GM_Envelope env )
   {
     return new SplitSort( parentFeature, parentFTP, env );
   }
 
-  public static IPropertyType[] createVirtualFeatureTypeProperties( IFeatureType realFeatureType )
+  public static FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType realFeatureType )
   {
-    final List<IPropertyType> result = new ArrayList<IPropertyType>();
+    final List result = new ArrayList();
     final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
-    final IPropertyType[] properties = realFeatureType.getProperties();
+    final FeatureTypeProperty[] properties = realFeatureType.getProperties();
 
     for( int i = 0; i < properties.length; i++ )
     {
-      final IPropertyType ftp = properties[i];
-      final IPropertyType[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
+      FeatureTypeProperty ftp = properties[i];
+      FeatureTypeProperty[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
       for( int j = 0; j < newFtp.length; j++ )
         result.add( newFtp[j] );
     }
 
-    final IPropertyType[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
+    final FeatureTypeProperty[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
     for( int i = 0; i < vftp.length; i++ )
       result.add( vftp[i] );
 
-    return result.toArray( new IPropertyType[result.size()] );
+    return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
   }
 
-  public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory )
+  public static GMLWorkspace createGMLWorkspace( GMLSchema schema, Feature rootFeature, URL context )
   {
-    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, schemaLocation, factory );
+    FeatureType[] featureTypes = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
+    final URL url = schema.getUrl();
+    final String href = url == null ? null : url.toExternalForm();
+    return new GMLWorkspace_Impl( featureTypes, rootFeature, context, href, schema
+        .getTargetNS(), schema.getNamespaceMap() );
   }
 
-  /**
-   * create a new GMLWorkspace with a root feature for the given feature type
-   * 
-   * @deprecated Use {@link #createGMLWorkspace(QName, URL, IFeatureProviderFactory)} instead, always provide a context.
-   */
-  @Deprecated
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  public static void accept( final IFeaturePropertyVisitor visitor, int position, final FeatureTypeProperty ftp,
+      final Object property )
   {
-    return createGMLWorkspace( rootFeatureQName, null, factory );
+    if( ftp instanceof FeatureAssociationTypeProperty )
+    {
+      if( property instanceof Feature )
+        visitor.visit( position, ftp.getName(), (Feature)property );
+      else if( property instanceof String )
+        visitor.visit( position, ftp.getName(), (String)property );
+      else if( property instanceof List )
+        visitor.visit( position, ftp.getName(), (List)property );
+
+      // Andreas: we dont know anything about associations with null-data; how to solve this?
+    }
+    else
+      visitor.visit( position, ftp.getName(), property );
   }
 
-  /**
-   * create a new GMLWorkspace with a root feature for the given feature type
-   */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
-  {
-    return createGMLWorkspace( rootFeatureQName, null, context, factory );
-  }
-
-  /**
-   * create a new GMLWorkspace with a root feature for the given feature type
-   */
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
-  {
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
-    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
-    return createGMLWorkspace( rootFeatureType, context, factory );
-  }
-
-  /**
-   * create a new GMLWorkspace with a root feature for the given feature type
-   */
-  public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType, final URL context, final IFeatureProviderFactory factory )
-  {
-    final IGMLSchema schema = rootFeatureType.getGMLSchema();
-    final String schemaLocation = null;
-    final Feature rootFeature = FeatureFactory.createFeature( null, "root", rootFeatureType, true );
-    return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory );
-  }
 }

@@ -1,6 +1,5 @@
 package org.kalypso.commons.serializer;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * 
  * @author schlienger
  */
-public interface ISerializer<V>
+public interface ISerializer
 {
   /**
    * Reads an object from the input stream
@@ -20,7 +19,7 @@ public interface ISerializer<V>
    *          InputStream to read from
    * @return new instance of object read from stream
    */
-  public V read( final InputStream ins ) throws InvocationTargetException, IOException;
+  public Object read( final InputStream ins ) throws InvocationTargetException;
 
   /**
    * Writes the given object to the output stream
@@ -30,5 +29,5 @@ public interface ISerializer<V>
    * @param os
    *          OutputStream to write to
    */
-  public void write( final V object, final OutputStream os ) throws InvocationTargetException, IOException;
+  public void write( final Object object, final OutputStream os ) throws InvocationTargetException;
 }

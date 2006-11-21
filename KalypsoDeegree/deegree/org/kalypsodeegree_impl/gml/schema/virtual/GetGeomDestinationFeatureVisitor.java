@@ -43,37 +43,40 @@ package org.kalypsodeegree_impl.gml.schema.virtual;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
+ * 
  * @author doemming
  */
 public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 {
+
   private final GMLWorkspace m_workspace;
 
-  private final IRelationType m_prelationPT;
+  private final String m_initialPropName;
 
   private final int m_maxLevel;
 
-  private final List<GM_Object> m_result;
+  private final List m_result;
 
-  public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, IRelationType initialPropName, int maxLevel )
+  public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, String initialPropName, int maxLevel )
   {
     m_workspace = workspace;
-    m_prelationPT = initialPropName;
+    m_initialPropName = initialPropName;
     m_maxLevel = maxLevel;
-    m_result = new ArrayList<GM_Object>();
+    m_result = new ArrayList();
   }
 
-  public GM_Object[] getGeometryDestinations( )
+  public GM_Object[] getGeometryDestinations()
   {
-    return m_result.toArray( new GM_Object[m_result.size()] );
+    return (GM_Object[])m_result.toArray( new GM_Object[m_result.size()] );
   }
 
   /**
@@ -81,33 +84,38 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
    */
   public boolean visit( Feature f )
   {
-    visit( f, m_prelationPT, 0 );
+    visit( f, m_initialPropName, 0 );
     return false;
   }
 
   private void visit( Feature feature, int level )
   {
     level++;
-    IPropertyType[] properties = feature.getFeatureType().getProperties();
+    FeatureTypeProperty[] properties = feature.getFeatureType().getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      if( properties[i] instanceof IRelationType )
-        visit( feature, (IRelationType) properties[i], level );
+      if( properties[i] instanceof FeatureAssociationTypeProperty )
+        visit( feature, properties[i].getName(), level );
     }
   }
 
-  private void visit( Feature feature, IRelationType linkProp, int level )
+  private void visit( Feature feature, String linkProp, int level )
   {
+
     // get childs
     final Feature[] destFEs;
 
-    if( linkProp.isList())
+    int maxOccurs = feature.getFeatureType().getMaxOccurs( linkProp );
+    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
       destFEs = m_workspace.resolveLinks( feature, linkProp );
+    }
     else
     {
       Feature destFE = m_workspace.resolveLink( feature, linkProp );
       if( destFE != null )
-        destFEs = new Feature[] { destFE };
+        destFEs = new Feature[]
+        { destFE };
       else
         destFEs = new Feature[0];
     }

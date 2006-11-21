@@ -111,7 +111,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     final IAxis[] axisList = getAxisList();
     m_dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
     m_statusAxis = KalypsoStatusUtils.findStatusAxes( axisList );
-    final List<IAxis> valueAxis = new ArrayList<IAxis>();
+    final List valueAxis = new ArrayList();
     for( int i = 0; i < axisList.length; i++ )
     {
       IAxis axis = axisList[i];
@@ -126,7 +126,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       if( isValueAxis )
         valueAxis.add( axis );
     }
-    m_valueAxis = valueAxis.toArray( new IAxis[valueAxis.size()] );
+    m_valueAxis = (IAxis[])valueAxis.toArray( new IAxis[valueAxis.size()] );
     IAxisRange range = null;
     try
     {
@@ -191,8 +191,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     Calendar targetCal_last = (Calendar)iterator.next(); // TODO hasnext ?
     int targetRow = 0;
     Intervall targetIntervall = null;
-    // initialize source
-    Calendar srcCal_last = targetCal_last;
+
     int srcRow = 0;
     Intervall srcIntervall = null;
 
@@ -202,8 +201,18 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     int srcMaxRows = m_srcModel.getCount();
     if( srcMaxRows != 0 ) // not empty
       firstSrcCal = getDefaultCalendar( (Date)m_srcModel.getElement( 0, m_dateAxis ) );
-    else // if empty, we pretend that it begins at requested range
+    else
+      // if empty, we pretend that it begins at requested range
       firstSrcCal = m_from;
+
+    // initialize source
+    Calendar srcCal_last = targetCal_last;
+    
+    // BUGFIX: handle case when source start before from
+    // Before this fix, this lead to a endless loop
+    if( firstSrcCal.before( srcCal_last ) )
+      srcCal_last = firstSrcCal;
+
     // fill initial row
     //        final Intervall initialIntervall = new Intervall( m_from, m_from, defaultStatus, defaultValues );
     //        updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
@@ -244,8 +253,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
           srcValues[i] = (Double)srcValuesObjects[i];
         srcIntervall = null;
 
-
-        if(! srcCal_last.after( srcCal ) )
+        if( !srcCal_last.after( srcCal ) )
         {
           // we need next source intervall
 
@@ -365,14 +373,12 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return m_intervallModel.getCount();
   }
 
-  @Override
   public int hashCode()
   {
     return m_intervallModel.hashCode();
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_intervallModel.toString();
   }

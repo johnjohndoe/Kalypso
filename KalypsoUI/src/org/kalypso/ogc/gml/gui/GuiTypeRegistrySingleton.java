@@ -1,7 +1,7 @@
 package org.kalypso.ogc.gml.gui;
 
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.TypeRegistry_impl;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistry_impl;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
@@ -10,17 +10,17 @@ import org.kalypso.gmlschema.types.TypeRegistry_impl;
  */
 public class GuiTypeRegistrySingleton
 {
-  private static ITypeRegistry<IGuiTypeHandler> m_typeRegistry = null;
+  private static ITypeRegistry m_typeRegistry = null;
 
   private GuiTypeRegistrySingleton()
   {
   // wird nicht instantiiert
   }
 
-  public static ITypeRegistry<IGuiTypeHandler> getTypeRegistry()
+  public static ITypeRegistry getTypeRegistry()
   {
     if( m_typeRegistry == null )
-      m_typeRegistry = new TypeRegistry_impl<IGuiTypeHandler>();
+      m_typeRegistry = new TypeRegistry_impl();
 
     return m_typeRegistry;
   }

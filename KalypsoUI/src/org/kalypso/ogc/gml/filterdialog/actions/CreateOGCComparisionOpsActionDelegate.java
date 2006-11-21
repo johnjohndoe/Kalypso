@@ -33,7 +33,6 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
-import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -44,10 +43,10 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
  */
 public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperationActionDelegate
 {
+
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
@@ -57,18 +56,18 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
         Object firstElement = m_selection.getFirstElement();
         PropertyIsCOMPOperation compOps = new PropertyIsCOMPOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
-          ((ComplexFilter) firstElement).setOperation( compOps );
+          ( (ComplexFilter)firstElement ).setOperation( compOps );
         if( firstElement instanceof LogicalOperation )
         {
-          final LogicalOperation logicalOps = (LogicalOperation) firstElement;
-          ArrayList<Operation> arguments = logicalOps.getArguments();
+          LogicalOperation logicalOps = (LogicalOperation)firstElement;
+          ArrayList arguments = logicalOps.getArguments();
           if( arguments == null )
-            arguments = new ArrayList<Operation>();
+            arguments = new ArrayList();
           arguments.add( compOps );
           logicalOps.setArguments( arguments );
 
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ( (TreeSelection)m_selection ).structureChanged();
       }
     }
   }

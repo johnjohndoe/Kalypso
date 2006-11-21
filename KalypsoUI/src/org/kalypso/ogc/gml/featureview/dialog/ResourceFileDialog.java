@@ -39,11 +39,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -51,36 +49,40 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ResourceFileDialog implements IFeatureDialog
 {
+
+  private GMLWorkspace m_workspace;
+
   private Feature m_feature;
 
-  private IPropertyType m_ftp;
+  private FeatureTypeProperty m_ftp;
 
   private FeatureChange m_change;
 
-  public ResourceFileDialog( final Feature feature, final IPropertyType ftp )
+  public ResourceFileDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
+    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
 
   public int open( Shell shell )
   {
-    final GMLWorkspace workspace = m_feature.getWorkspace();
-    final IFile gmlFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
+    IFile gmlFile = ResourceUtilities.findFileFromURL( m_workspace.getContext() );
     IWorkspaceRoot workspaceRoot = gmlFile.getWorkspace().getRoot();
     IResource resultFile = null;
     resultFile = getResourceFile();
     if( resultFile == null )
       resultFile = workspaceRoot;
-    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null,
+        workspaceRoot );
     final int open;
     selectionDialog.open();
     Object[] result = selectionDialog.getResult();
     if( result != null )
     {
-      Path resultPath = (Path) result[0];
+      Path resultPath = (Path)result[0];
 
-      m_change = new FeatureChange( m_feature, m_ftp, ResourceUtilities.findFileFromPath( resultPath ) );
+      m_change = new FeatureChange( m_feature, m_ftp.getName(), ResourceUtilities.findFileFromPath( resultPath ) );
       open = Window.OK;
     }
     else
@@ -90,26 +92,23 @@ public class ResourceFileDialog implements IFeatureDialog
     return open;
   }
 
-  private IFile getResourceFile( )
+  private IFile getResourceFile()
   {
     if( m_change != null )
-      return (IFile) m_change.getNewValue();
+      return (IFile)m_change.getNewValue();
 
-    return (IFile) m_feature.getProperty( m_ftp );
+    return (IFile)m_feature.getProperty( m_ftp.getName() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
-    String label = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$
+    String label = "Choose...";
     if( getResourceFile() != null )
       label = getResourceFile().toString();
     return label;

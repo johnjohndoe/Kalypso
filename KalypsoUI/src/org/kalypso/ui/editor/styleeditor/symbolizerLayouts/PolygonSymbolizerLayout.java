@@ -84,8 +84,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     super( m_composite, m_symbolizer, m_userStyle );
   }
 
-  @Override
-  public void draw( ) throws FilterEvaluationException
+  public void draw() throws FilterEvaluationException
   {
     PolygonSymbolizer polygonSymbolizer = (PolygonSymbolizer)symbolizer;
 

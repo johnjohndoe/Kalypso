@@ -45,7 +45,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.TreeSet;
 
 import javax.swing.JLabel;
@@ -53,6 +52,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
@@ -62,36 +62,38 @@ import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
 public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
   /** maps dates to markers */
-  private final Set<ILabelMarker> m_markers = new TreeSet<ILabelMarker>();
+  private final Set m_markers = new TreeSet();
 
-  // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle
-  // Systemzeit
-  // im TableView angezeit!!!
-  private final static DateFormat df = DateFormat.getDateTimeInstance();
+  private final DateFormat m_df;
+
+  public DateTableCellRenderer()
+  {
+    m_df = TimeserieUtils.getDateFormat();
+  }
 
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
    *      boolean, boolean, int, int)
    */
-  @Override
-  public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column )
+  public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+      int row, int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
-    // TRICKY: sometimes it comes here but value is not a date. This must be
+    // WORKAROUND: sometimes it comes here but value is not a date. This must be
     // a threading problem. The workaround is to return null. I'm not sure
     // if that'll always work correctly though.
-    if( !(value instanceof Date) )
+    if( !( value instanceof Date ) )
       return null;
 
-    label.setText( df.format( value ) );
+    label.setText( m_df.format( value ) );
 
     if( !isSelected )
     {
       // maybe mark this item
       for( final Iterator it = m_markers.iterator(); it.hasNext(); )
       {
-        final ILabelMarker marker = (ILabelMarker) it.next();
+        final ILabelMarker marker = (ILabelMarker)it.next();
         if( marker.validates( value ) )
           marker.apply( label );
         else
@@ -124,17 +126,8 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   /**
    * Clears all markers
    */
-  public void clearMarkers( )
+  public void clearMarkers()
   {
     m_markers.clear();
-  }
-
-  /**
-   * Set the timezone for the rendering component. This is the timezone into which the dates should be displayed in the
-   * table. It allows you to override the default behaviour which is uses the locale setting.
-   */
-  public void setTimeZone( final TimeZone tz )
-  {
-    df.setTimeZone( tz );
   }
 }

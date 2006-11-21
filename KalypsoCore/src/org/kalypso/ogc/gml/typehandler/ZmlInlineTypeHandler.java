@@ -35,66 +35,56 @@ import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
-import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
+import org.kalypso.zml.ObservationType;
 import org.kalypsodeegree.xml.XMLTools;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 /**
  * @author kuepfer
  */
-public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
+public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 {
-  // public static final class CLASS_ZmlInlineIdealKcWtLaiType=new
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
-  public final QName m_typeName;
+  public final String m_typeName;
 
   protected final String[] m_axisTypes;
 
-  private final Class m_className;
+  private final String m_className;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, final Class clazz )
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, String classNameSuffix )
   {
     m_axisTypes = axisTypes;
-    m_typeName = new QName( NAMESPACE, name );
-    m_className = clazz;
+    m_typeName = NAMESPACE + ":" + name;
+    m_className = IObservation.class.getName() + "." + classNameSuffix;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
-  @Override
   public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
     final StringWriter sw = new StringWriter();
+
     try
     {
-      final Observation xml = ZmlFactory.createXML( (IObservation) object, null, null );
+      final ObservationType xml = ZmlFactory.createXML( (IObservation)object, null, null );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
+      XMLUtilities.setTextNode( node.getOwnerDocument(), node, sw.toString() );
       sw.close();
-      final String toString = sw.toString();
-      final Document ownerDocument = node.getOwnerDocument();
-      // Text text = ownerDocument.createTextNode( toString );
-      // node.appendChild( text );
-      final CDATASection section = ownerDocument.createCDATASection( toString );
-      node.appendChild( section );
-      // XMLUtilities.setTextNode( node.getOwnerDocument(), node, toString );
     }
     catch( final Exception e )
     {
@@ -104,14 +94,15 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
     {
       IOUtils.closeQuietly( sw );
     }
+
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
-  @Override
-  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
+      throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
     if( zmlStr == null || zmlStr.length() < 1 )
@@ -131,13 +122,14 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
     {
       IOUtils.closeQuietly( reader );
     }
+
     return obs;
   }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
-  public String getShortname( )
+  public String getShortname()
   {
     return "ZmlInline";
   }
@@ -145,7 +137,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
-  public Class getValueClass( )
+  public String getClassName()
   {
     return m_className;
   }
@@ -153,7 +145,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
    */
-  public QName getTypeName( )
+  public String getTypeName()
   {
     return m_typeName;
   }
@@ -161,7 +153,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   /**
    * @return axistypes as String[]
    */
-  public String[] getAxisTypes( )
+  public String[] getAxisTypes()
   {
     return m_axisTypes;
   }
@@ -169,13 +161,13 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone, final String gmlVersion )
+  public Object cloneObject( Object objectToClone )
   {
     final StringWriter sw = new StringWriter();
     IObservation clone = null;
     try
     {
-      final Observation xml = ZmlFactory.createXML( (IObservation) objectToClone, null, null );
+      final ObservationType xml = ZmlFactory.createXML( (IObservation)objectToClone, null, null );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
       final StringReader reader = new StringReader( sw.toString().trim() );
@@ -202,34 +194,6 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
-  }
-
-  public interface TA extends IObservation
-  {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM };
-  }
-
-  public interface WtKcLai extends IObservation
-  {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_LAI, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_KC };
-  }
-
-  public interface WVQ extends IObservation
-  {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
-  }
-
-  public interface TN extends IObservation
-  {
-    final public static String[] axis = new String[] { TimeserieConstants.TYPE_MIN, TimeserieConstants.TYPE_RAINFALL };
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
-  public boolean isGeometry( )
-  {
-    return false;
   }
 
 }

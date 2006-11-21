@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
 
@@ -77,7 +77,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
 
     try
     {
-      final Obsdiagview xml = DiagViewUtils.buildDiagramTemplateXML( diag );
+      final ObsdiagviewType xml = DiagViewUtils.buildDiagramTemplateXML( diag );
 
       final IEditorInput input = editor.getEditorInput();
       final IFolder dest;

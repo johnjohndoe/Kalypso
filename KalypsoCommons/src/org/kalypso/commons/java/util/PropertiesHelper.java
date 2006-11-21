@@ -43,8 +43,8 @@ package org.kalypso.commons.java.util;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Map.Entry;
+
 
 /**
  * @author bce
@@ -53,9 +53,9 @@ public class PropertiesHelper
 {
   private static final char ENTRY_SEPARATOR = '=';
 
-  private PropertiesHelper( )
+  private PropertiesHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
   public static Properties parseFromString( final String source, final char separator )
@@ -82,7 +82,7 @@ public class PropertiesHelper
     final StringBuffer sb = new StringBuffer();
     for( final Iterator pIt = source.entrySet().iterator(); pIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) pIt.next();
+      final Map.Entry entry = (Entry)pIt.next();
 
       sb.append( "" + entry.getKey() + ENTRY_SEPARATOR + entry.getValue() + separator );
     }
@@ -99,7 +99,7 @@ public class PropertiesHelper
 
     for( Iterator sourceIt = sourceProps.entrySet().iterator(); sourceIt.hasNext(); )
     {
-      final Map.Entry sourceEntry = (Entry) sourceIt.next();
+      final Map.Entry sourceEntry = (Entry)sourceIt.next();
       final String sourceKey = sourceEntry.getKey().toString();
       final String sourceValue = sourceEntry.getValue().toString();
 
@@ -108,25 +108,5 @@ public class PropertiesHelper
     }
 
     return newProps;
-  }
-
-  public static String writePropertiesToString( final Properties properties, final char separator )
-  {
-    String result = "" + separator;
-    final Set<Object> keySet = properties.keySet();
-    int size = keySet.size();
-    for( Object key : keySet )
-    {
-      Object value = properties.get( key );
-      if( value != null )
-      {
-        if( size > 1 )
-          result = key.toString() + ENTRY_SEPARATOR + value.toString() + separator;
-        else
-          result = key.toString() + ENTRY_SEPARATOR + value.toString();
-      }
-      size--;
-    }
-    return result;
   }
 }

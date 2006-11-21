@@ -50,8 +50,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
@@ -74,6 +72,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
@@ -92,7 +92,7 @@ public class RulePatternTabItem
 
   private KalypsoUserStyle userStyle = null;
 
-  private IFeatureType featureType = null;
+  private FeatureType featureType = null;
 
   private int focusedRuleItem = -1;
 
@@ -102,7 +102,7 @@ public class RulePatternTabItem
 
   private String[] numericFeatureTypePropertylist = null;
 
-  public RulePatternTabItem( TabFolder m_ruleTabFolder, KalypsoUserStyle m_userStyle, IFeatureType m_featureType,
+  public RulePatternTabItem( TabFolder m_ruleTabFolder, KalypsoUserStyle m_userStyle, FeatureType m_featureType,
       RuleFilterCollection m_rulePatternCollection, ArrayList m_numericFeatureTypePropertylist )
   {
     this.ruleTabFolder = m_ruleTabFolder;
@@ -384,7 +384,7 @@ public class RulePatternTabItem
           // first create new rules
           BoundaryExpression upperBoundary = null;
           BoundaryExpression lowerBoundary = null;
-          final ArrayList<Rule> ruleList = new ArrayList<Rule>();
+          ArrayList ruleList = new ArrayList();
           PropertyName propertyName = new PropertyName( addFilterPropertyPanel.getSelection() );
           PropertyIsBetweenOperation operation = null;
 
@@ -450,8 +450,8 @@ public class RulePatternTabItem
           // add new ones
           for( int j = 0; j < ruleList.size(); j++ )
           {
-            getRulePatternCollection().addRule( ruleList.get( j ) );
-            getUserStyle().getFeatureTypeStyles()[0].addRule( ruleList.get( j ) );
+            getRulePatternCollection().addRule( (Rule)ruleList.get( j ) );
+            getUserStyle().getFeatureTypeStyles()[0].addRule( (Rule)ruleList.get( j ) );
           }
           // update
           drawSymbolizerTabItems( tmpRule, symbolizerTabFolder, ruleCollection );
@@ -652,12 +652,12 @@ public class RulePatternTabItem
     this.rulePatternCollection = m_rulePatternCollection;
   }
 
-  public IFeatureType getFeatureType()
+  public FeatureType getFeatureType()
   {
     return featureType;
   }
 
-  public void setFeatureType( IFeatureType m_featureType )
+  public void setFeatureType( FeatureType m_featureType )
   {
     this.featureType = m_featureType;
   }
@@ -671,7 +671,7 @@ public class RulePatternTabItem
   {
     String[] tmpList = new String[m_numericFeatureTypePropertylist.size()];
     for( int i = 0; i < m_numericFeatureTypePropertylist.size(); i++ )
-      tmpList[i] = ( (IPropertyType)m_numericFeatureTypePropertylist.get( i ) ).getName();
+      tmpList[i] = ( (FeatureTypeProperty)m_numericFeatureTypePropertylist.get( i ) ).getName();
     this.numericFeatureTypePropertylist = tmpList;
   }
 

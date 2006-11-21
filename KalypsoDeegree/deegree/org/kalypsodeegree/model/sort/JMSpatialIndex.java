@@ -7,35 +7,24 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-public interface JMSpatialIndex<T>
+public interface JMSpatialIndex
 {
-  public boolean add( final T object );
+  public boolean add( Object object );
 
-  public List<T> query( final GM_Envelope env, final List<T> result );
+  public List query( GM_Envelope env, List result );
 
-  public List<T> query( final GM_Position env, final List<T> result );
+  public List query( GM_Position env, List result );
 
-  /** TODO: remove this, the list interface is enough to get all objects */
-  public List<T> queryAll( final List<T> result );
+  public List queryAll( List result );
 
-  public boolean remove( final Object object );
+  public boolean remove( Object object );
 
-  /** Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made. */
-  public void invalidate( );
+  public void resort();
 
-  /**
-   * Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made.
-   * 
-   * @param o
-   *          Only this object is invalid. Implementors may use this information to improve the resort performance.
-   */
-  public void invalidate( final Object o );
-
-  /** Paints the quad-tree as rectangles */
-  public void paint( final Graphics g, final GeoTransform geoTransform );
+  public void paint( Graphics g, GeoTransform geoTransform );
 
   /** TODO: Was bedeutet das??? */
-  public int rsize( );
+  public int rsize();
 
-  public GM_Envelope getBoundingBox( );
+  public GM_Envelope getBoundingBox();
 }

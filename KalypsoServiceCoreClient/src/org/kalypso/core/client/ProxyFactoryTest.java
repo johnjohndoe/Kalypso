@@ -57,8 +57,7 @@ public class ProxyFactoryTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  @Override
-  protected void setUp( ) throws Exception
+  protected void setUp() throws Exception
   {
     super.setUp();
 
@@ -67,15 +66,11 @@ public class ProxyFactoryTest extends TestCase
     m_conf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
   }
 
-  // TODO: This test depends on external services, so it is commented out and always fails
-  // If this test is not intended for automatic testing, please write a main() method instead
-  public void testGetProxy( ) throws ServiceException
+  public void testGetProxy() throws ServiceException
   {
-    fail( "This test depends on external services, so it fails!" );
-
     ProxyFactory pf = new ProxyFactory( m_conf );
 
     final Stub proxy = pf.getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
-    assertNotNull( proxy );
+    assertNotNull( proxy  );
   }
 }

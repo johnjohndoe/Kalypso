@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -31,13 +30,13 @@ public class GridFactory
 {
   private static GridFactory myInstance = new GridFactory();
 
-  private final Map<String, Grid> gridTable;
+  private final HashMap gridTable;
 
   private static final String GRID_NAMESPACE = "http://www.tu-harburg.de/Grid";
 
   private GridFactory()
   {
-    gridTable = new HashMap<String, Grid>();
+    gridTable = new HashMap();
   }
 
   public static GridFactory getInstance()
@@ -48,9 +47,9 @@ public class GridFactory
   public IGrid createGrid( GM_Position llc, CS_CoordinateSystem crs, int r, int c, double cellsize,
       GM_Surface borderline ) throws Exception
   {
-    final String key = getKey();
+    String key = getKey();
     gridTable.put( key, new Grid( key, null, llc, crs, r, c, cellsize, null, borderline ) );
-    return gridTable.get( key );
+    return (Grid)gridTable.get( key );
   }//getMesh
 
   public IGrid createGrid( GM_Envelope wishbox, CS_CoordinateSystem crs, double cellsize, Mesh mesh ) throws Exception
@@ -73,7 +72,7 @@ public class GridFactory
       grid = (Grid)getGrid( wishbox, meshEnv, crs, cellsize, borderline );
     }
     gridTable.put( key, grid );
-    return gridTable.get( key );
+    return (Grid)gridTable.get( key );
   }//getMesh
 
   public Set keySet()
@@ -184,7 +183,7 @@ public class GridFactory
     Iterator it = gridTable.keySet().iterator();
     while( it.hasNext() )
     {
-      Grid grid = gridTable.get( it.next() );
+      Grid grid = (Grid)gridTable.get( it.next() );
       grid.clean();
       grid = null;
     }

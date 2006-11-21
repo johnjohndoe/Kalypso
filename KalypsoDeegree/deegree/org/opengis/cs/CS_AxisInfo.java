@@ -60,7 +60,6 @@ public class CS_AxisInfo implements Cloneable, Serializable
    * Returns a hash value for this AxisInfo. This value need not remain consistent between different implementations of
    * the same class.
    */
-  @Override
   public int hashCode()
   {
     int code = 0;
@@ -74,7 +73,6 @@ public class CS_AxisInfo implements Cloneable, Serializable
   /**
    * Returns a copy of this AxisInfo.
    */
-  @Override
   public Object clone()
   {
     try
@@ -94,7 +92,6 @@ public class CS_AxisInfo implements Cloneable, Serializable
   /**
    * Compares the specified object with this parameter for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -111,7 +108,6 @@ public class CS_AxisInfo implements Cloneable, Serializable
    * Returns a string représentation of this parameter. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "CS_AxisInfo" );

@@ -51,7 +51,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
@@ -86,7 +85,6 @@ public class MultiExporter extends AbstractExporter
   /**
    * @see org.kalypso.metadoc.impl.AbstractExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
-  @Override
   public void init( final ISupplier supplier ) throws CoreException
   {
     super.init( supplier );
@@ -94,7 +92,7 @@ public class MultiExporter extends AbstractExporter
     // read and create sub-exporters
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
 
-    final Collection<IStatus> stati = new ArrayList<IStatus>();
+    final Collection stati = new ArrayList();
     final ISupplierCreator creator = new ISupplierCreator()
     {
       public ISupplier createSupplier( final Arguments args ) throws InvocationTargetException
@@ -103,10 +101,10 @@ public class MultiExporter extends AbstractExporter
       }
     };
 
-    final Collection<IExporter> exporterList = createExporterFromArguments( stati, arguments, "exporter", creator );
+    final Collection exporterList = createExporterFromArguments( stati, arguments, "exporter", creator );
     if( exporterList.isEmpty() )
       throw new CoreException( StatusUtilities.createErrorStatus( "Leerer Multi-Exporter nicht möglich." ) );
-    m_exporters = exporterList.toArray( new IExporter[exporterList.size()] );
+    m_exporters = (IExporter[])exporterList.toArray( new IExporter[exporterList.size()] );
 
     final IExporter firstExporter = m_exporters[0];
     for( int i = 1; i < m_exporters.length; i++ )
@@ -125,7 +123,7 @@ public class MultiExporter extends AbstractExporter
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final Collection<IExportableObject> allObjects = new ArrayList<IExportableObject>();
+    final Collection allObjects = new ArrayList();
 
     final Object[] choosenExporters = m_page.getChoosen();
 
@@ -136,7 +134,7 @@ public class MultiExporter extends AbstractExporter
       allObjects.addAll( Arrays.asList( objects ) );
     }
 
-    return allObjects.toArray( new IExportableObject[allObjects.size()] );
+    return (IExportableObject[])allObjects.toArray( new IExportableObject[allObjects.size()] );
   }
 
   /**
@@ -170,7 +168,6 @@ public class MultiExporter extends AbstractExporter
    * 
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
-  @Override
   public ImageDescriptor getImageDescriptor()
   {
     return m_exporters[0].getImageDescriptor();
@@ -179,10 +176,10 @@ public class MultiExporter extends AbstractExporter
   /**
    * Creates exporters from a argument list of exporters.
    */
-  public static Collection<IExporter> createExporterFromArguments( final Collection<IStatus> stati, final Arguments arguments,
+  public static Collection createExporterFromArguments( final Collection stati, final Arguments arguments,
       final String exporterKey, final ISupplierCreator supplierCreator )
   {
-    final Collection<IExporter> exporters = new ArrayList<IExporter>();
+    final Collection exporters = new ArrayList();
 
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {

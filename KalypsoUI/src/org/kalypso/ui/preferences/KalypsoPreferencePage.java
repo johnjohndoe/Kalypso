@@ -40,15 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
-import java.util.Arrays;
-import java.util.TimeZone;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -59,9 +56,10 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
  * plug-in class. That way, preferences can be accessed directly via the preference store.
  */
+
 public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-  public KalypsoPreferencePage( )
+  public KalypsoPreferencePage()
   {
     super( GRID );
     setPreferenceStore( KalypsoGisPlugin.getDefault().getPreferenceStore() );
@@ -72,32 +70,44 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
    * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to manipulate various
    * types of preferences. Each field editor knows how to save and restore itself.
    */
-  @Override
-  public void createFieldEditors( )
+  public void createFieldEditors()
   {
-    final StringFieldEditor sfeSrv = new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare KALYPSO-&Server:", getFieldEditorParent() );
-    addField( sfeSrv );
-    sfeSrv.getLabelControl( getFieldEditorParent() ).setToolTipText( "Entweder nur ein Server oder eine Komma-getrennte Liste von Server (Beispiel: http://SERVER_NAME:8080/webdav/kalypso-client.ini)" );
+    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
+        "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
+    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:",
+        getFieldEditorParent() ) );
 
     // set echo char because it is a password field
-    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
+    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS,
+        "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
-    final StringFieldEditor sfeCrs = new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() );
-    addField( sfeCrs );
-    sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
+    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:",
+        getFieldEditorParent() ) );
+    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1, new String[][]
+    {
+        {
+            "&Deutsch",
+            "de" },
+        {
+            "&English",
 
-    // fetch list of timezone names and sort it
-    final String[] ids = TimeZone.getAvailableIDs();
-    Arrays.sort( ids );
+            "en" } }, getFieldEditorParent() ) );
 
-    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, "Zeitzone für die Darstellung:", "Gilt für Diagramme und Tabellen, aus der Liste selektieren oder z.B. 'GMT+1' für Winterzeit Deutschland, oder leer lassen", getFieldEditorParent(), false, ids );
-    addField( timeZoneFieldEditor );
+    //
+    //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
+    // multiple-choice preference", 1,
+    //        new String[][]
+    //        {
+    //        { "&Choice 1", "choice1" },
+    //        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
   }
 
   /**
@@ -105,14 +115,13 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
    */
   public void init( IWorkbench workbench )
   {
-    // empty
+  // empty
   }
 
   /**
    * @see org.eclipse.jface.preference.IPreferencePage#performOk()
    */
-  @Override
-  public boolean performOk( )
+  public boolean performOk()
   {
     final boolean result = super.performOk();
 

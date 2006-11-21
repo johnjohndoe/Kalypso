@@ -72,7 +72,7 @@ public class DateParser extends AbstractParser
    *          siehe Spezifikation in SimpleDateFormat
    * @see SimpleDateFormat
    */
-  public DateParser( String format )
+  public DateParser( final String format )
   {
     m_format = format;
 
@@ -117,7 +117,6 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
-  @Override
   public String toStringInternal( Object obj )
   {
     return m_df.format( obj );

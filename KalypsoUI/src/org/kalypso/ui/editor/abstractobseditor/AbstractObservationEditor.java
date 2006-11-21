@@ -54,13 +54,11 @@ import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.template.IObsViewEventListener;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
-import org.kalypso.template.obsdiagview.Obsdiagview;
-import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -68,7 +66,7 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  * 
  * @author schlienger
  */
-public abstract class AbstractObservationEditor extends AbstractEditorPart implements IObsViewEventListener
+public abstract class AbstractObservationEditor extends AbstractEditorPart
 {
   private final ObsView m_view;
 
@@ -77,20 +75,15 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   public AbstractObservationEditor( final ObsView view )
   {
     m_view = view;
-    m_view.addObsViewEventListener( this );
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     if( m_view != null )
-    {
-      m_view.removeObsViewListener( this );
       m_view.dispose();
-    }
 
     if( m_outline != null )
       m_outline.dispose();
@@ -101,7 +94,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   /**
    * @return template
    */
-  public ObsView getView( )
+  public ObsView getView()
   {
     return m_view;
   }
@@ -109,7 +102,6 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( Class adapter )
   {
     if( adapter == IContentOutlinePage.class )
@@ -134,7 +126,6 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
    * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {
     monitor.beginTask( "Vorlage laden", IProgressMonitor.UNKNOWN );
@@ -149,27 +140,25 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
 
       if( storage instanceof TemplateStorage )
       {
-        final TemplateStorage ts = (TemplateStorage) storage;
+        final TemplateStorage ts = (TemplateStorage)storage;
 
         loadObservation( ts.getContext(), ts.getHref() );
       }
       else
       {
-        final boolean sync = true;
-        
         if( view instanceof DiagView )
         {
-          final Obsdiagview baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
+          final ObsdiagviewType baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = DiagViewUtils.applyXMLTemplate( (DiagView) getView(), baseTemplate, new URL( strUrl ), sync, null );
+          status = DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else if( view instanceof TableView )
         {
-          final Obstableview baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
+          final ObstableviewType baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = TableViewUtils.applyXMLTemplate( (TableView) getView(), baseTemplate, new URL( strUrl ), sync, null );
+          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else
           throw new IllegalArgumentException( "Kann Vorlage nicht öffnen, Typ wird nicht unterstützt." );
@@ -187,39 +176,13 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
     }
 
     if( status != null && !status.isOK() )
-    {
-      final IStatus finalStatus = status;
-
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", finalStatus );
-        }
-      } );
-    }
+      ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", status );
   }
 
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null ) );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
-   */
-  public void onObsViewChanged( final ObsViewEvent evt )
-  {
-    if( evt.getType() != ObsViewEvent.TYPE_ITEM_DATA_CHANGED )
-      fireDirty();
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
-   */
-  public void onPrintObsView( final ObsViewEvent evt )
-  {
-    // empty
+      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME,
+          new ObsView.ItemData( true, null, null ) );
   }
 }

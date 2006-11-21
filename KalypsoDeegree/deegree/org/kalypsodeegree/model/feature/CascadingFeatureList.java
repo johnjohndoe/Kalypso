@@ -1,3 +1,17 @@
+package org.kalypsodeegree.model.feature;
+
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,48 +52,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature;
-
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * this featurelist cascades serveral lists, so it is possible to merge other lists without resorting or copying
  * listcontents <br>
  * this featurelist is <b>readonly </b>
- * 
- * @author doemming
  */
 public class CascadingFeatureList implements FeatureList
 {
+
   private final FeatureList[] m_lists;
 
-  public CascadingFeatureList( final FeatureList[] lists )
+  /*
+   * 
+   * @author doemming
+   */
+  public CascadingFeatureList( FeatureList[] lists )
   {
     m_lists = lists;
+
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
-  public Feature[] toFeatures( )
+  public Feature[] toFeatures()
   {
     List result = new ArrayList();
     for( int i = 0; i < m_lists.length; i++ )
     {
       result.addAll( Arrays.asList( m_lists[i].toFeatures() ) );
     }
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
   /**
@@ -87,17 +91,17 @@ public class CascadingFeatureList implements FeatureList
    */
   public void accept( FeatureVisitor visitor )
   {
-    // TODO
-    // for( int i = 0; i < m_lists.length; i++ )
-    // {
-    // m_lists[i];
-    // }
+  //  TODO
+  //    for( int i = 0; i < m_lists.length; i++ )
+  //    {
+  //       m_lists[i];
+  //    }
   }
 
   /**
    * @see java.util.Collection#size()
    */
-  public int size( )
+  public int size()
   {
     int result = 0;
     for( int i = 0; i < m_lists.length; i++ )
@@ -108,7 +112,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see java.util.Collection#clear()
    */
-  public void clear( )
+  public void clear()
   {
     throw new UnsupportedOperationException();
   }
@@ -116,7 +120,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see java.util.Collection#isEmpty()
    */
-  public boolean isEmpty( )
+  public boolean isEmpty()
   {
     return size() == 0;
   }
@@ -124,7 +128,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see java.util.Collection#toArray()
    */
-  public Object[] toArray( )
+  public Object[] toArray()
   {
     return toFeatures();
   }
@@ -245,7 +249,7 @@ public class CascadingFeatureList implements FeatureList
    */
   public boolean containsAll( final Collection c )
   {
-    Collection left = c;// new ArrayList();
+    Collection left = c;//new ArrayList();
     for( int i = 0; i < m_lists.length; i++ )
     {
       final Collection stillLeft = new ArrayList();
@@ -281,7 +285,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see java.util.Collection#iterator()
    */
-  public Iterator iterator( )
+  public Iterator iterator()
   {
     throw new UnsupportedOperationException();
   }
@@ -298,7 +302,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see java.util.List#listIterator()
    */
-  public ListIterator listIterator( )
+  public ListIterator listIterator()
   {
     throw new UnsupportedOperationException();
   }
@@ -384,6 +388,14 @@ public class CascadingFeatureList implements FeatureList
   }
 
   /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#resort()
+   */
+  public void resort()
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
@@ -398,7 +410,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#rsize()
    */
-  public int rsize( )
+  public int rsize()
   {
     int result = 0;
     for( int i = 0; i < m_lists.length; i++ )
@@ -413,7 +425,7 @@ public class CascadingFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox()
   {
     GM_Envelope result = null;
     for( int i = 0; i < m_lists.length; i++ )
@@ -431,7 +443,7 @@ public class CascadingFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
    * @return null, as this are mixed lists
    */
-  public Feature getParentFeature( )
+  public Feature getParentFeature()
   {
     return null;
   }
@@ -440,26 +452,8 @@ public class CascadingFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    * @return null, as this are mixed lists
    */
-  public IRelationType getParentFeatureTypeProperty( )
+  public FeatureTypeProperty getParentFeatureTypeProperty()
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
-   */
-  public void invalidate( )
-  {
-    for( final FeatureList list : m_lists )
-      list.invalidate();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
-   */
-  public void invalidate( final Object o )
-  {
-    for( final FeatureList list : m_lists )
-      list.invalidate( o );
   }
 }

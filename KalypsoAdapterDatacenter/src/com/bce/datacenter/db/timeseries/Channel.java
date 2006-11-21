@@ -26,7 +26,7 @@ public class Channel extends DataObject
 
   private int m_unitRef;
 
-  private List<String> m_tables = null;
+  private List m_tables = null;
 
   private String m_strUnit = null;
 
@@ -113,7 +113,7 @@ public class Channel extends DataObject
           + m_ID;
       ResultSet rs = m_con.createStatement().executeQuery( sql );
 
-      m_tables = new Vector<String>();
+      m_tables = new Vector();
 
       while( rs.next() )
         m_tables.add( rs.getString( 1 ) );
@@ -174,7 +174,6 @@ public class Channel extends DataObject
   /**
    * read from db to init members
    */
-  @Override
   protected void dbRead( )
   {
     try

@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.kalypso.services.calculation.local"
+   name="KalypsoLocalCalculation Plug-in"
+   version="1.0.0"
+   provider-name="kalypso.org"
+   class="org.kalypso.services.calculation.local.KalypsoLocalCalculationPlugin">
 
-     <extension-point id="calcJob" name="calcJob" schema="schema/org.kalypso.services.calculation.local.calcJob.exsd"/>
+   <runtime>
+      <library name="kalypsoCalculationLocal.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.ui" export="true"/>
+      <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.contribs.java"/>
+   </requires>
+   <extension-point id="calcJob" name="calcJob" schema="schema/org.kalypso.services.calculation.local.calcJob.exsd"/>
    <extension
          point="org.kalypso.ui.calculationService">
       <factory class="org.kalypso.services.calculation.local.PluggableCalculationServiceFactory"/>

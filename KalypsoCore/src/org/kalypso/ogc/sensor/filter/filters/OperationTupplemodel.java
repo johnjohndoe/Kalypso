@@ -74,14 +74,12 @@ public class OperationTupplemodel extends AbstractTuppleModel
     return m_baseModel.getCount();
   }
 
-  @Override
   public int hashCode()
   {
     return m_baseModel.hashCode();
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_baseModel.toString();
   }

@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
@@ -84,7 +83,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marshallable
 {
-  private ArrayList m_layers = null;
+  private ArrayList layers = null;
 
   private String version = null;
 
@@ -103,7 +102,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   StyledLayerDescriptor_Impl( String name, String title, String version, String abstract_, Layer[] layers )
   {
-    this.m_layers = new ArrayList( layers.length );
+    this.layers = new ArrayList( layers.length );
     setLayers( layers );
     setVersion( version );
     setAbstract( abstract_ );
@@ -116,17 +115,18 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   StyledLayerDescriptor_Impl( Layer[] layers, String version )
   {
-    this.m_layers = new ArrayList( layers.length );
+    this.layers = new ArrayList( layers.length );
     setLayers( layers );
     setVersion( version );
   }
 
   /**
+   * 
    * @return the Layers as Array
    */
-  public Layer[] getLayers( )
+  public Layer[] getLayers()
   {
-    return (Layer[]) m_layers.toArray( new Layer[m_layers.size()] );
+    return (Layer[])layers.toArray( new Layer[layers.size()] );
   }
 
   /**
@@ -137,13 +137,13 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void setLayers( Layer[] layers )
   {
-    this.m_layers.clear();
+    this.layers.clear();
 
     if( layers != null )
     {
       for( int i = 0; i < layers.length; i++ )
       {
-        this.m_layers.add( layers[i] );
+        this.layers.add( layers[i] );
       }
     }
   }
@@ -156,7 +156,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void addLayer( Layer layer )
   {
-    m_layers.add( m_layers );
+    layers.add( layers );
   }
 
   /**
@@ -167,9 +167,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void removeLayer( Layer layer )
   {
-    if( m_layers.indexOf( layer ) != -1 )
+    if( layers.indexOf( layer ) != -1 )
     {
-      m_layers.remove( m_layers.indexOf( layer ) );
+      layers.remove( layers.indexOf( layer ) );
     }
   }
 
@@ -181,17 +181,17 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the UserLayers as Array
    */
-  public UserLayer[] getUserLayers( )
+  public UserLayer[] getUserLayers()
   {
-    ArrayList list = new ArrayList( m_layers.size() );
-    for( int i = 0; i < m_layers.size(); i++ )
+    ArrayList list = new ArrayList( layers.size() );
+    for( int i = 0; i < layers.size(); i++ )
     {
-      if( m_layers.get( i ) instanceof UserLayer )
+      if( layers.get( i ) instanceof UserLayer )
       {
-        list.add( m_layers.get( i ) );
+        list.add( layers.get( i ) );
       }
     }
-    return (UserLayer[]) list.toArray( new UserLayer[list.size()] );
+    return (UserLayer[])list.toArray( new UserLayer[list.size()] );
   }
 
   /**
@@ -200,15 +200,17 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the NamedLayers as Array
    */
-  public NamedLayer[] getNamedLayers( )
+  public NamedLayer[] getNamedLayers()
   {
-    List<NamedLayer> list = new ArrayList<NamedLayer>();
-    for( int i = 0; i < m_layers.size(); i++ )
+    ArrayList list = new ArrayList( layers.size() );
+    for( int i = 0; i < layers.size(); i++ )
     {
-      if( m_layers.get( i ) instanceof NamedLayer )
-        list.add( (NamedLayer) m_layers.get( i ) );
+      if( layers.get( i ) instanceof NamedLayer )
+      {
+        list.add( layers.get( i ) );
+      }
     }
-    return list.toArray( new NamedLayer[list.size()] );
+    return (NamedLayer[])list.toArray( new NamedLayer[list.size()] );
   }
 
   /**
@@ -219,7 +221,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the version of the SLD as String
    */
-  public String getVersion( )
+  public String getVersion()
   {
     return version;
   }
@@ -238,7 +240,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * @return Returns the abstract_.
    */
-  public String getAbstract( )
+  public String getAbstract()
   {
     return abstract_;
   }
@@ -255,7 +257,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * @return Returns the name.
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -272,7 +274,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * @return Returns the title.
    */
-  public String getTitle( )
+  public String getTitle()
   {
     return title;
   }
@@ -291,7 +293,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return xml representation of the Font
    */
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
@@ -303,9 +305,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
     sb.append( "xmlns:xlink='http://www.w3.org/1999/xlink' " );
     sb.append( "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>" );
 
-    for( int i = 0; i < m_layers.size(); i++ )
+    for( int i = 0; i < layers.size(); i++ )
     {
-      sb.append( ((Marshallable) m_layers.get( i )).exportAsXML() );
+      sb.append( ( (Marshallable)layers.get( i ) ).exportAsXML() );
     }
 
     sb.append( "</StyledLayerDescriptor>" );
@@ -327,7 +329,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
       {
         final Style style = styles[n];
         if( style instanceof UserStyle && name.equals( style.getName() ) )
-          return (UserStyle) style;
+          return (UserStyle)style;
       }
     }
 
@@ -339,7 +341,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
       {
         final Style style = styles[n];
         if( style instanceof UserStyle && name.equals( style.getName() ) )
-          return (UserStyle) style;
+          return (UserStyle)style;
       }
     }
 

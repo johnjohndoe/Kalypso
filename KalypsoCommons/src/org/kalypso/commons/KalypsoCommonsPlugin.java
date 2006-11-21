@@ -1,15 +1,13 @@
 package org.kalypso.commons;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoCommonsPlugin extends AbstractUIPlugin
+public class KalypsoCommonsPlugin extends Plugin
 {
   //The shared instance.
   private static KalypsoCommonsPlugin plugin;
@@ -42,7 +40,6 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
   /**
    * This method is called upon plug-in activation
    */
-  @Override
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
@@ -51,7 +48,6 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
   /**
    * This method is called when the plug-in is stopped
    */
-  @Override
   public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );

@@ -9,27 +9,28 @@
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
 	<property name="project-name" value="KalypsoDeegree" />
 
-	<!--path id="compile.classpath">
+	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
         <fileset dir="${jwsdp}/jaxb/lib" includes="*.jar" />
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/EclipseRCPContributions/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar"/>
-	</path-->
+	</path>
 
-	<!--target name="binding">
-		<ant antfile="${project}/etc/schemas/build.xml" inheritall="false" target="deploy" dir="${project}/etc/schemas" />
-	</target-->
+	<target name="binding">
+<!--		<ant antfile="${project}/etc/schemas/build.xml" inheritall="true" target="deploy" dir="${project}/etc/schemas" />
+	-->	<ant antfile="${project}/etc/schemas/build.xml" inheritall="false" target="deploy" dir="${project}/etc/schemas" />
+	</target>
 
 	<!-- overriden because of dependency to binding and for copying non-java files -->
-	<!--target name="compile" depends="prepare,binding">
+	<target name="compile" depends="prepare,binding">
 		<antcall target="commonbuild.compile" />
 
 		<copy todir="${project.bin}">
 			<fileset dir="${project.src}" excludes="**/*.java" />
 		</copy>
-	</target-->
+	</target>
 
 </project>
 

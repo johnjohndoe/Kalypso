@@ -62,7 +62,7 @@ import org.kalypso.ogc.sensor.SensorException;
 public abstract class AbstractTuppleModel implements ITuppleModel
 {
   /** maps an axis to its position in this tupple model */
-  private final Map<IAxis, Integer> m_axes2pos = new HashMap<IAxis, Integer>();
+  private final Map m_axes2pos = new HashMap();
 
   private final IAxis[] m_axes;
 
@@ -77,7 +77,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_axes;
   }
@@ -90,7 +90,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
     if( !m_axes2pos.containsKey( axis ) )
       throw new SensorException( "Model does not contain axis: " + axis );
 
-    return m_axes2pos.get( axis ).intValue();
+    return ( (Integer)m_axes2pos.get( axis ) ).intValue();
   }
 
   /**
@@ -104,7 +104,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   /**
    * Clears the maps
    */
-  protected void clearAxesPositions( )
+  protected void clearAxesPositions()
   {
     m_axes2pos.clear();
   }
@@ -132,13 +132,13 @@ public abstract class AbstractTuppleModel implements ITuppleModel
         final DoubleComparator dc = new DoubleComparator( 0.000001 );
         for( int i = 0; i < getCount(); i++ )
         {
-          final Number value = (Number) getElement( i, axis );
+          final Object value = getElement( i, axis );
 
           if( dc.compare( value, lower ) < 0 )
-            lower = value;
+            lower = (Number)value;
 
           if( dc.compare( value, upper ) > 0 )
-            upper = value;
+            upper = (Number)value;
         }
 
         return new DefaultAxisRange( lower, upper );

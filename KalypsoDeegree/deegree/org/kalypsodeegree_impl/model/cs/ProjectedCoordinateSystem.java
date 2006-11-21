@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.media.jai.ParameterList;
@@ -99,17 +100,17 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   /**
    * The angular unit.
    */
-  private final Unit m_unit;
+  private final Unit unit;
 
   /**
    * Geographic coordinate system to base projection on.
    */
-  private final GeographicCoordinateSystem m_gcs;
+  private final GeographicCoordinateSystem gcs;
 
   /**
    * projection Projection from geographic to projected coordinate system.
    */
-  private final Projection m_projection;
+  private final Projection projection;
 
   /**
    * Creates a projected coordinate system using the specified geographic system. Projected coordinates will be in
@@ -190,9 +191,9 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
       parameters.setParameter( "semi_minor", semiMinor );
       projection = new Projection( projection.getName( null ), projection.getClassName(), parameters );
     }
-    m_gcs = gcs;
-    m_projection = projection;
-    m_unit = unit;
+    this.gcs = gcs;
+    this.projection = projection;
+    this.unit = unit;
   }
 
   /**
@@ -215,9 +216,9 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
       final Unit unit, final AxisInfo axis0, final AxisInfo axis1 )
   {
     super( properties, gcs.getHorizontalDatum(), axis0, axis1 );
-    this.m_gcs = gcs;
-    this.m_projection = projection;
-    this.m_unit = unit;
+    this.gcs = gcs;
+    this.projection = projection;
+    this.unit = unit;
     // Accept null values.
   }
 
@@ -228,7 +229,7 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    */
   public GeographicCoordinateSystem getGeographicCoordinateSystem()
   {
-    return m_gcs;
+    return gcs;
   }
 
   /**
@@ -238,7 +239,7 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    */
   public Projection getProjection()
   {
-    return m_projection;
+    return projection;
   }
 
   /**
@@ -250,11 +251,10 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    * @see org.opengis.cs.CS_ProjectedCoordinateSystem#getUnits(int)
    * @see org.opengis.cs.CS_ProjectedCoordinateSystem#getLinearUnit()
    */
-  @Override
   public Unit getUnits( final int dimension )
   {
     if( dimension >= 0 && dimension < getDimension() )
-      return m_unit;
+      return unit;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -270,7 +270,6 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
-  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -278,23 +277,23 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
     if( super.equivalents( cs ) )
     {
       final ProjectedCoordinateSystem that = (ProjectedCoordinateSystem)cs;
-      return Utilities.equals( this.m_gcs, that.m_gcs ) && Utilities.equals( this.m_projection, that.m_projection )
-          && Utilities.equals( this.m_unit, that.m_unit );
+      return Utilities.equals( this.gcs, that.gcs ) && Utilities.equals( this.projection, that.projection )
+          && Utilities.equals( this.unit, that.unit );
     }
     return false;
   }
 
-  @Override /**
+  /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( m_gcs );
+    buffer.append( gcs );
     buffer.append( ", " );
-    buffer.append( m_projection );
+    buffer.append( projection );
     buffer.append( ", " );
-    addUnit( buffer, m_unit );
+    addUnit( buffer, unit );
     buffer.append( ", " );
     buffer.append( getAxis( 0 ) );
     buffer.append( ", " );
@@ -307,7 +306,6 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
-  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -338,25 +336,25 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
     /**
      * Returns the GeographicCoordinateSystem.
      */
-    public CS_GeographicCoordinateSystem getGeographicCoordinateSystem()
+    public CS_GeographicCoordinateSystem getGeographicCoordinateSystem() throws RemoteException
     {
-      return m_adapters.export( ProjectedCoordinateSystem.this.getGeographicCoordinateSystem() );
+      return adapters.export( ProjectedCoordinateSystem.this.getGeographicCoordinateSystem() );
     }
 
     /**
      * Returns the LinearUnits.
      */
-    public CS_LinearUnit getLinearUnit()
+    public CS_LinearUnit getLinearUnit() throws RemoteException
     {
-      return (CS_LinearUnit)m_adapters.export( ProjectedCoordinateSystem.this.getUnits() );
+      return (CS_LinearUnit)adapters.export( ProjectedCoordinateSystem.this.getUnits() );
     }
 
     /**
      * Gets the projection.
      */
-    public CS_Projection getProjection()
+    public CS_Projection getProjection() throws RemoteException
     {
-      return m_adapters.export( ProjectedCoordinateSystem.this.getProjection() );
+      return adapters.export( ProjectedCoordinateSystem.this.getProjection() );
     }
   }
 }

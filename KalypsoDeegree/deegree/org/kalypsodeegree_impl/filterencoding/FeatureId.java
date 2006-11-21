@@ -75,12 +75,12 @@ public class FeatureId
 {
 
   /** The FeatureId's value. */
-  private String m_value;
+  private String value;
 
   /** Constructs a new FeatureId. */
   public FeatureId( String value )
   {
-    m_value = value;
+    this.value = value;
   }
 
   /**
@@ -109,9 +109,9 @@ public class FeatureId
    * Returns the feature id. A feature id is built from it's feature type name and it's id separated by a ".". e.g.
    * Road.A565
    */
-  public String getValue( )
+  public String getValue()
   {
-    return m_value;
+    return value;
   }
 
   /**
@@ -119,14 +119,14 @@ public class FeatureId
    */
   public void setValue( String value )
   {
-    this.m_value = value;
+    this.value = value;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer();
-    sb.append( "<ogc:FeatureId fid=\"" ).append( m_value ).append( "\"/>" );
+    sb.append( "<ogc:FeatureId fid=\"" ).append( value ).append( "\"/>" );
     return sb;
   }
 }

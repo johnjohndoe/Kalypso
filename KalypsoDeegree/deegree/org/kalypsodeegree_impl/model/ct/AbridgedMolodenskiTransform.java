@@ -193,7 +193,6 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  @Override
   public void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff, int numPts )
   {
     // TODO: Copy the implementation from 'transform(double[]...)'.
@@ -234,7 +233,6 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Returns a hash value for this transform.
    */
-  @Override
   public final int hashCode()
   {
     final long code = Double.doubleToLongBits( dx )
@@ -247,7 +245,6 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Compares the specified object with this math transform for equality.
    */
-  @Override
   public final boolean equals( final Object object )
   {
     if( object == this )
@@ -269,7 +266,6 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Returns the WKT for this math transform.
    */
-  @Override
   public final String toString()
   {
     final StringBuffer buffer = paramMT( "Abridged_Molodenski" );
@@ -314,7 +310,6 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
      *          The parameter values in standard units.
      * @return A {@link MathTransform}object of this classification.
      */
-    @Override
     public MathTransform create( final ParameterList parameters )
     {
       return null;

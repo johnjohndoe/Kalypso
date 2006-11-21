@@ -43,7 +43,9 @@ package org.kalypso.ogc.sensor.timeseries;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,13 +53,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -79,13 +84,32 @@ public class TimeserieUtils
 {
   private static Properties m_config;
 
-  private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
+  private static HashMap m_formatMap = new HashMap();
 
   private static NumberFormat m_defaultFormat = null;
 
-  private TimeserieUtils( )
+  /**
+   * Used by the ObservationTable and the observationDiagram
+   */
+  private static DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+
+  static
   {
-    // no instanciation
+    final TimeZone timeZone;
+    // if the platform is runnning, use its time zone
+    if( Platform.isRunning() )
+    {
+      // Set the time zone according to the global settings
+      timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+      DF.setTimeZone( timeZone );
+    }
+    else
+      timeZone = TimeZone.getTimeZone( "UTC" );
+  }
+
+  private TimeserieUtils()
+  {
+  // no instanciation
   }
 
   /**
@@ -104,7 +128,7 @@ public class TimeserieUtils
 
     final MetadataList mdl = obs.getMetadataList();
 
-    final ArrayList<String> mds = new ArrayList<String>();
+    final ArrayList mds = new ArrayList();
 
     final Iterator it = mdl.keySet().iterator();
     while( it.hasNext() )
@@ -115,7 +139,7 @@ public class TimeserieUtils
         mds.add( md );
     }
 
-    return mds.toArray( new String[mds.size()] );
+    return (String[])mds.toArray( new String[mds.size()] );
   }
 
   /**
@@ -147,7 +171,7 @@ public class TimeserieUtils
    * 
    * @return config of the timeseries package
    */
-  private static Properties getProperties( )
+  private static Properties getProperties()
   {
     if( m_config == null )
     {
@@ -179,7 +203,8 @@ public class TimeserieUtils
   {
     if( from != null && to != null )
     {
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE,
+          TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) );
     }
   }
 
@@ -236,6 +261,7 @@ public class TimeserieUtils
 
   /**
    * Returns a user-friendly name for the given type.
+   * 
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
    * 
@@ -250,6 +276,7 @@ public class TimeserieUtils
 
   /**
    * Returns a color for the given type.
+   * 
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
    * 
@@ -344,7 +371,7 @@ public class TimeserieUtils
    */
   public static NumberFormat getNumberFormat( final String format )
   {
-    final NumberFormat nf = m_formatMap.get( format );
+    final NumberFormat nf = (NumberFormat)m_formatMap.get( format );
     if( nf != null )
       return nf;
 
@@ -368,7 +395,7 @@ public class TimeserieUtils
     return getDefaultFormat();
   }
 
-  private static NumberFormat getDefaultFormat( )
+  private static NumberFormat getDefaultFormat()
   {
     if( m_defaultFormat == null )
     {
@@ -377,6 +404,16 @@ public class TimeserieUtils
     }
 
     return m_defaultFormat;
+  }
+
+  /**
+   * It is currently fix and is: "dd.MM.yy HH:mm"
+   * 
+   * @return the date format to use when displaying dates for observations/timeseries
+   */
+  public static DateFormat getDateFormat()
+  {
+    return DF;
   }
 
   public static Class getDataClass( final String type )
@@ -393,22 +430,34 @@ public class TimeserieUtils
 
   public static IAxis[] createDefaultAxes( final String[] axisTypes, boolean firstWithKey )
   {
-    final List<IAxis> axisList = new ArrayList<IAxis>();
+    final List axisList = new ArrayList();
     if( axisTypes != null && axisTypes.length > 0 )
     {
       axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
         axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[i], false ) );
     }
-    return axisList.toArray( new IAxis[axisList.size()] );
+    return (IAxis[])axisList.toArray( new IAxis[axisList.size()] );
   }
 
   /**
-   * Returns the default format string for the given type
+   * @return the default format string for the given type
    */
   public static String getDefaultFormatString( final String type )
   {
     return getProperties().getProperty( "FORMAT_" + type );
+  }
+
+  /**
+   * @return the default top margin defined for the given type or null if none
+   */
+  public static Double getTopMargin( final String type )
+  {
+    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
+    if( margin == null )
+      return null;
+
+    return Double.valueOf( margin );
   }
 
   /**
@@ -421,7 +470,8 @@ public class TimeserieUtils
    *          amount of rows of the TuppleModel that is randomly created
    * @throws SensorException
    */
-  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
+  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows,
+      final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
     axes[0] = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
@@ -440,7 +490,7 @@ public class TimeserieUtils
       for( int j = 1; j < tupple.length; j++ )
       {
         if( allowNegativeValues )
-          tupple[j] = new Double( Math.random() * 100 * (Math.random() > .5 ? 1 : -1) );
+          tupple[j] = new Double( Math.random() * 100 * ( Math.random() > .5 ? 1 : -1 ) );
         else
           tupple[j] = new Double( Math.random() * 100 );
       }
@@ -473,7 +523,8 @@ public class TimeserieUtils
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
-  public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
+  public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel,
+      final Date date ) throws SensorException, WQException
   {
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return alarmLevel;

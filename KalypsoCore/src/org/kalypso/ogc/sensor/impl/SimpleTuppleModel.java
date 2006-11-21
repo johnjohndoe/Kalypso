@@ -68,9 +68,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * Constructor with axes, empty data
    */
-  public SimpleTuppleModel( final List<IAxis> axes )
+  public SimpleTuppleModel( final List axes )
   {
-    this( axes.toArray( new IAxis[axes.size()] ) );
+    this( (IAxis[])axes.toArray( new IAxis[axes.size()] ) );
   }
 
   /**
@@ -169,7 +169,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      final Date d = (Date) copyTupples.getElement( ix, dateAxis );
+      final Date d = (Date)copyTupples.getElement( ix, dateAxis );
 
       if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
       {
@@ -191,7 +191,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( )
+  public int getCount()
   {
     return m_tupples.getRowCount();
   }
@@ -238,7 +238,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     final Object value = m_tupples.getValueAt( index, getPositionFor( axis ) );
-
+    
     return value;
   }
 
@@ -249,7 +249,8 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     // for debug purposes! once problem with "null" is solved remove?
     if( element == null )
-      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning( "Setting a null element at index= " + index + " for axis " + axis );
+      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning(
+          "Setting a null element at index= " + index + " for axis " + axis );
 
     m_tupples.setValueAt( element, index, getPositionFor( axis ) );
   }

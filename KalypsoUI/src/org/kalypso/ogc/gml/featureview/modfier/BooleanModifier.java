@@ -45,12 +45,10 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -61,14 +59,14 @@ public class BooleanModifier implements IFeatureModifier
 
   private Image m_uncheckedImage = null;
 
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public BooleanModifier( final IValuePropertyType ftp )
+  public BooleanModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
 
-    if( !(java.lang.Boolean.class==ftp.getValueClass() )) 
-      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$
+    if( !"java.lang.Boolean".equals( ftp.getType() ) )
+      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" );
   }
 
   /**
@@ -76,7 +74,7 @@ public class BooleanModifier implements IFeatureModifier
    */
   public Object getValue( final Feature f )
   {
-    final Object property = f.getProperty( m_ftp);
+    final Object property = f.getProperty( m_ftp.getName() );
     if( property == null )
       return Boolean.FALSE;
 
@@ -108,13 +106,13 @@ public class BooleanModifier implements IFeatureModifier
     if( value instanceof Boolean )
       return null;
 
-    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool"); //$NON-NLS-1$
+    return "Only Boolean values accepted";
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty()
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
@@ -124,7 +122,8 @@ public class BooleanModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    return ""; //$NON-NLS-1$
+    final Boolean b = (Boolean)getValue( f );
+    return String.valueOf( b );
   }
 
   /**
@@ -168,5 +167,15 @@ public class BooleanModifier implements IFeatureModifier
   public boolean equals( final Object newData, final Object oldData )
   {
     return newData.equals( oldData );
+  }
+
+  /**
+   * For boolean properties there's no need to display the label since the image is enough
+   * 
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return false;
   }
 }

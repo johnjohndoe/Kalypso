@@ -65,11 +65,9 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     m_name = axis.getName();
     m_isKey = axis.isKey();
     m_isPersistable = axis.isPersistable();
-
-    // TODO Andreas: warum nimmst du nicht auch die Einheit?
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -79,22 +77,22 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     m_name = name;
   }
 
-  public boolean isKey( )
+  public boolean isKey()
   {
     return m_isKey;
   }
 
-  public boolean isPersistable( )
+  public boolean isPersistable()
   {
     return m_isPersistable;
   }
 
-  public Class< ? > getDataClass( )
+  public Class getDataClass()
   {
     return TimeserieUtils.getDataClass( m_type );
   }
 
-  public String getType( )
+  public String getType()
   {
     return m_type;
   }
@@ -104,10 +102,8 @@ public class SimpleAxis extends AbstractAxis implements IAxis
     m_type = type;
   }
 
-  public String getUnit( )
+  public String getUnit()
   {
-    // TODO Kannst das nicht Seiteneffekte haben? Ich bin der Meinung diese Klasse sollte sein eigenes Member für die
-    // Einheit haben.
     return TimeserieUtils.getUnit( m_type );
   }
 }

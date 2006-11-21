@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Graphics;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.contribs.java.awt.IHighlightColors;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -80,8 +80,7 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
    * 
    * @param g
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final boolean select );
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean select );
 
   public IKalypsoTheme getTheme( int pos );
 
@@ -104,7 +103,6 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public GM_Envelope getFullExtentBoundingBox();
 
   public IProject getProject();
-
-  public IKalypsoFeatureTheme getScrabLayer();
-
+  
+  public IHighlightColors getHighlightColors();
 }

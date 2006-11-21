@@ -47,14 +47,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
@@ -71,87 +69,77 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
    */
   public void run( final IAction action )
   {
-    final WidgetActionPart part = getPart();
-    if( part == null )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    if( editor == null )
       return;
 
-    final Shell shell = part.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+    final Shell shell = editor.getSite().getShell();
+    if( !MessageDialog.openConfirm( shell, "Themen speichern",
+        "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
       return;
 
-    final MapPanel mapPanel = part.getMapPanel();
-    if( mapPanel != null )
+    final IMapModell mapModell = editor.getMapPanel().getMapModell();
+    if( mapModell != null )
     {
-      final IMapModell mapModell = mapPanel.getMapModell();
-      if( mapModell != null )
+      final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+      if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
+
+        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+
+        final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
         {
-          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-
-          final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-
-          final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+          protected void execute( final IProgressMonitor monitor ) throws CoreException
           {
-            @Override
-            protected void execute( final IProgressMonitor monitor ) throws CoreException
-            {
-              final GisMapEditor editor = (GisMapEditor) part.getPart();
-              if( editor != null )
-                editor.saveTheme( theme, monitor );
-            }
-          };
-
-          try
-          {
-            progressService.busyCursorWhile( op );
+            editor.saveTheme( theme, monitor );
           }
-          catch( final InvocationTargetException e )
-          {
-            e.printStackTrace();
+        };
 
-            final CoreException ce = (CoreException) e.getTargetException();
-            ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
-          }
-          catch( final InterruptedException e )
-          {
-            e.printStackTrace();
-          }
-
+        try
+        {
+          progressService.busyCursorWhile( op );
         }
+        catch( final InvocationTargetException e )
+        {
+          e.printStackTrace();
+
+          final CoreException ce = (CoreException)e.getTargetException();
+          ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
+        }
+        catch( final InterruptedException e )
+        {
+          e.printStackTrace();
+        }
+
       }
     }
 
-    refreshAction( action, getSelection() );
+    refreshAction( null );
   }
 
-  @Override
-  protected void refreshAction( IAction action, final ISelection selection )
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 
-    final WidgetActionPart part = getPart();
-    if( part != null )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    if( editor != null )
     {
-      final GisMapEditor editor = (GisMapEditor) part.getPart();
-      if( editor != null )
+      final IMapModell mapModell = editor.getMapPanel().getMapModell();
+      if( mapModell != null )
       {
-        final IMapModell mapModell = editor.getMapPanel().getMapModell();
-        if( mapModell != null )
+        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+        if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
         {
-          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-          if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
-          {
-            final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-            final CommandableWorkspace workspace = theme.getWorkspace();
-            if( workspace != null )
-              bEnabled = workspace.isDirty();
-          }
+          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
+          final CommandableWorkspace workspace = theme.getWorkspace();
+          if( workspace != null )
+            bEnabled = workspace.isDirty();
         }
       }
     }
 
-    action.setEnabled( bEnabled );
+    if( getAction() != null )
+      getAction().setEnabled( bEnabled );
   }
 }

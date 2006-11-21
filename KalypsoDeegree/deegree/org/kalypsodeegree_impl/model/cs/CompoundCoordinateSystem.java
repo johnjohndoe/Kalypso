@@ -340,7 +340,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
      */
     public CS_CoordinateSystem getHeadCS()
     {
-      return m_adapters.export( CompoundCoordinateSystem.this.getHeadCS() );
+      return adapters.export( CompoundCoordinateSystem.this.getHeadCS() );
     }
 
     /**
@@ -348,7 +348,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
      */
     public CS_CoordinateSystem getTailCS()
     {
-      return m_adapters.export( CompoundCoordinateSystem.this.getTailCS() );
+      return adapters.export( CompoundCoordinateSystem.this.getTailCS() );
     }
   }
 }

@@ -29,166 +29,93 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.contribs.java.lang.DisposeHelper;
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
 public class GMLEditorLabelProvider2 extends LabelProvider
 {
-  private Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    super.dispose();
-
-    new DisposeHelper( m_images.values() ).dispose();
-    m_images.clear();
-  }
-
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
-    final ImageDescriptor descriptor = getDescriptor( element );
-
-    if( descriptor == null )
-      return null;
-    
-    if( m_images.containsKey( descriptor ) )
-      return m_images.get( descriptor );
-
-    final Image createImage = descriptor.createImage();
-    m_images.put( descriptor, createImage );
-
-    return createImage;
-  }
-
-  private ImageDescriptor getDescriptor( final Object element )
-  {
-    final QName qname = getQName( element );
-    if( qname != null )
-    {
-      final ImageDescriptor catalogImage = FeatureTypeImageCatalog.getImage( null, qname );
-      if( catalogImage != null )
-        return catalogImage;
-    }
-
+    ImageDescriptor descriptor = null;
     if( element instanceof Feature )
-      return ImageProvider.IMAGE_FEATURE;
-    
-    if( element instanceof FeatureAssociationTypeElement )
-      return ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
-    
-    if( element instanceof LinkedFeatureElement2 )
-      return ImageProvider.IMAGE_FEATURE_LINKED;
-    
-    if( element instanceof IValuePropertyType )
+      descriptor = ImageProvider.IMAGE_FEATURE;
+    else if( element instanceof FeatureAssociationTypeElement )
+      descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
+    else if( element instanceof LinkedFeatureElement2 )
+      descriptor = ImageProvider.IMAGE_FEATURE_LINKED;
+    else if( element instanceof FeatureTypeProperty )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
-      if( GeometryUtilities.isPointGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_POINT;
-      if( GeometryUtilities.isMultiPointGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
-      if( GeometryUtilities.isLineStringGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_LINE;
-      if( GeometryUtilities.isMultiLineStringGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
-      if( GeometryUtilities.isPolygonGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_POLYGON;
-      if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
-        return ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
+      if( GeometryUtilities.isPointGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_POINT;
+      if( GeometryUtilities.isMultiPointGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
+      if( GeometryUtilities.isLineStringGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_LINE;
+      if( GeometryUtilities.isMultiLineStringGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
+      if( GeometryUtilities.isPolygonGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
+      if( GeometryUtilities.isMultiPolygonGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
     }
-    
-    if( GeometryUtilities.getPolygonClass().isAssignableFrom( element.getClass() ) )
-      return ImageProvider.IMAGE_GEOM_PROP_POLYGON;
-
-    return null;
+    else
+      return null;
+    return descriptor.createImage();
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
+    final String lang = KalypsoGisPlugin.getDefault().getLang();
     if( element instanceof GMLWorkspace )
       return "GML";
-
     if( element instanceof Feature )
-      return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
-
+    {
+      final Feature feature = (Feature)element;
+      final Annotation annotation = feature.getFeatureType().getAnnotation( lang );
+      return annotation.getLabel() + " #" + feature.getId();
+    }
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
-      if( annotation != null )
-        return annotation.getLabel();
-      return "<-> ";
+      final Annotation annotation = ( (FeatureAssociationTypeElement)element ).getAssociationTypeProperty()
+          .getAnnotation( lang );
+      return annotation.getLabel();
     }
-
     if( element instanceof LinkedFeatureElement2 )
     {
-      final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
+      final Feature decoratedFeature = ( (LinkedFeatureElement2)element ).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
     }
-
-    if( element instanceof IValuePropertyType )
+    if( element instanceof FeatureTypeProperty )
     {
-      IValuePropertyType vpt = (IValuePropertyType) element;
-      return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
+      FeatureTypeProperty ftp = (FeatureTypeProperty)element;
+      return GeometryUtilities.getClass( ftp ).getName().replaceAll( ".+\\.", "" );
+
     }
-
-    if( element instanceof GM_Object )
-      return element.getClass().getName().replaceAll( ".+\\.", "" );
-
-    if( element == null )
-      return "null";
-
-    return element.toString();
-  }
-
-  private QName getQName( final Object element )
-  {
-    if( element instanceof Feature )
-    {
-      final IFeatureType featureType = ((Feature) element).getFeatureType();
-      return featureType.getQName();
-    }
-    else if( element instanceof FeatureAssociationTypeElement )
-    {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
-      return fate.getAssociationTypeProperty().getQName();
-    }
-    else if( element instanceof LinkedFeatureElement2 )
-    {
-      return null;
-    }
-
-    return null;
+    return "unknown";
   }
 }

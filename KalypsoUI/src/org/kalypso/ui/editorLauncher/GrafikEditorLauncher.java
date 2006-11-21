@@ -41,6 +41,7 @@
 
 package org.kalypso.ui.editorLauncher;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IContainer;
@@ -58,6 +59,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -78,8 +80,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
-      @Override
-      protected void execute( IProgressMonitor monitor )
+      protected void execute( IProgressMonitor monitor ) throws InvocationTargetException
       {
         IStatus status = Status.OK_STATUS;
 
@@ -108,7 +109,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
           monitor.done();
 
           if( !status.isOK() )
-            ErrorDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Grafik öffnen",
+            ErrorDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Grafik öffnen",
                 "Siehe Details", status );
         }
       }
@@ -120,7 +121,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
           "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
     }
   }

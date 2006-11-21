@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -23,7 +24,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
+import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 
 /**
@@ -75,7 +76,6 @@ final class RememberForSync
     return m_modificationStamp == m_datFile.getModificationStamp();
   }
 
-  @Override
   public String toString()
   {
     return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-" + m_zmlFile.getName() + " Axis:" + m_numberAxis;
@@ -115,7 +115,7 @@ final class RememberForSync
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      final List axisList = java.util.Arrays.asList( axes );
+      final List axisList = Arrays.copyAsList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
 
@@ -156,11 +156,10 @@ final class RememberForSync
       }
 
       obs.setValues( values );
-      final Observation xml = ZmlFactory.createXML( obs, null );
+      final ObservationType xml = ZmlFactory.createXML( obs, null );
 
       SetContentHelper helper = new SetContentHelper()
       {
-        @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           ZmlFactory.getMarshaller().marshal( xml, writer );

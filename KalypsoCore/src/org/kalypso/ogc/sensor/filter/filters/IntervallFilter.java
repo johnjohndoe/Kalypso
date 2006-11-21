@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
@@ -48,6 +49,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
@@ -93,35 +95,52 @@ public class IntervallFilter extends AbstractObservationFilter
     m_startCalendarValue = filter.getStartCalendarvalue();
   }
 
-  @Override
   public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs, context );
   }
 
-  @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final Date from;
     final Date to;
+    final IRequest bufferedRequest;
     if( request != null && request.getDateRange() != null )
     {
       from = request.getDateRange().getFrom();
       to = request.getDateRange().getTo();
+      
+      // BUGIFX: fixes the problem with the first value:
+      // the first value was always ignored, because the intervall
+      // filter cannot handle the first value of the source observation
+      // FIX: we just make the request a big bigger in order to get a new first value
+      final int bufferField = Calendar.DAY_OF_MONTH;
+      final int bufferAmount = 2;
+
+      final Calendar bufferedFrom = Calendar.getInstance(  );
+      bufferedFrom.setTime( from );
+      bufferedFrom.add( bufferField, -bufferAmount );
+
+      final Calendar bufferedTo = Calendar.getInstance(  );
+      bufferedTo.setTime( to );
+      bufferedTo.add( bufferField, bufferAmount );
+      
+      bufferedRequest = new ObservationRequest( bufferedFrom.getTime(), bufferedTo.getTime() );
     }
     else
     {
       from = null;
       to = null;
+      
+      bufferedRequest = null;
     }
 
+    final ITuppleModel values = m_baseobservation.getValues( bufferedRequest );
     return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
-        m_baseobservation.getValues( request ), from, to, m_defaultValue, m_defaultStatus );
-
+        values, from, to, m_defaultValue, m_defaultStatus );
   }
 
-  @Override
   public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );

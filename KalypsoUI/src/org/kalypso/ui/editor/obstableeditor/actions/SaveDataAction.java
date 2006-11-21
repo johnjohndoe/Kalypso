@@ -79,41 +79,40 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
-    final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
+    final TableView tableView = (TableView)( (ObservationTableEditor)getEditor() ).getView();
 
     final Map map = TableViewUtils.buildObservationColumnsMap( Arrays.asList( tableView.getItems() ) );
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Entry) it.next();
-      final IObservation obs = (IObservation) entry.getKey();
-      final List cols = (List) entry.getValue();
+      final Map.Entry entry = (Entry)it.next();
+      final IObservation obs = (IObservation)entry.getKey();
+      final List cols = (List)entry.getValue();
 
       boolean obsSaved = false;
 
       for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn) itCols.next();
+        final TableViewColumn col = (TableViewColumn)itCols.next();
 
         if( col.isDirty() && !obsSaved )
         {
           atLeastOneDirty = true;
 
-          final String msg = "Sie haben Änderungen in " + obs.getName() + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+          final String msg = "Sie haben Änderungen in " + obs.getName() + " vorgenommen. Wollen \n"
+              + "Sie die Änderungen übernehmen?";
 
           final boolean bConfirm = MessageDialog.openQuestion( getShell(), "Änderungen speichern", msg );
 
           if( !bConfirm )
             break;
 
-          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
           final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {
-            @Override
-            public IStatus run( final IProgressMonitor monitor )
+            protected IStatus run( IProgressMonitor monitor )
             {
               try
               {
+                final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
                 pool.saveObject( obs, monitor );
               }
               catch( final Exception e )

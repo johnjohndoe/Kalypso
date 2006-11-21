@@ -42,6 +42,7 @@
 package org.kalypso.metadoc.impl;
 
 import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.contribs.java.lang.ISupplier;
@@ -58,7 +59,6 @@ public class EmptyExporter extends AbstractExporter
   /**
    * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
-  @Override
   public void init( final ISupplier supploer )
   {
   // nothing to do
@@ -67,7 +67,7 @@ public class EmptyExporter extends AbstractExporter
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration )
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     return new IExportableObject[] {};
   }
@@ -77,6 +77,7 @@ public class EmptyExporter extends AbstractExporter
    *      ImageDescriptor)
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+      throws CoreException
   {
     return new IWizardPage[] {};
   }

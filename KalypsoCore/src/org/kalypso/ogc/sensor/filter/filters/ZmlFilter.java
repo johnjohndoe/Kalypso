@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -71,7 +71,6 @@ public final class ZmlFilter extends AbstractObservationFilter
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
-  @Override
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     super.initFilter( conf, obs, context );
@@ -97,7 +96,7 @@ public final class ZmlFilter extends AbstractObservationFilter
 
         while( it.hasNext() )
         {
-          final IRepository rep = (IRepository) it.next();
+          final IRepository rep = (IRepository)it.next();
 
           try
           {
@@ -105,7 +104,7 @@ public final class ZmlFilter extends AbstractObservationFilter
 
             if( item != null )
             {
-              m_obs = (IObservation) item.getAdapter( IObservation.class );
+              m_obs = (IObservation)item.getAdapter( IObservation.class );
 
               return;
             }

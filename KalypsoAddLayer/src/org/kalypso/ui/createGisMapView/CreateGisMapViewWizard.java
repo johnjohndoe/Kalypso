@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -31,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -43,7 +41,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
 
   private ISelection m_selection;
 
-  public CreateGisMapViewWizard( )
+  public CreateGisMapViewWizard()
   {
     super();
     setNeedsProgressMonitor( true );
@@ -52,15 +50,14 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
   /**
    * Adding the page to the wizard.
    */
-  @Override
-  public void addPages( )
+
+  public void addPages()
   {
     page = new CreateGisMapViewWizardPage( m_selection );
     addPage( page );
   }
 
-  @Override
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     final String containerName = page.getContainerName();
     final String fileName = page.getFileName();
@@ -99,16 +96,17 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     return true;
   }
 
-  void doFinish( String containerName, String fileName, IProgressMonitor monitor ) throws CoreException
+  void doFinish( String containerName, String fileName, IProgressMonitor monitor )
+      throws CoreException
   {
     monitor.beginTask( "Creating " + fileName, 2 );
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IResource resource = root.findMember( new Path( containerName ) );
-    if( !resource.exists() || !(resource instanceof IContainer) )
+    if( !resource.exists() || !( resource instanceof IContainer ) )
     {
       throwCoreException( "Container \"" + containerName + "\" does not exist." );
     }
-    IContainer container = (IContainer) resource;
+    IContainer container = (IContainer)resource;
     final IFile file = container.getFile( new Path( fileName ) );
     try
     {
@@ -131,9 +129,10 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     monitor.setTaskName( "Opening file for editing..." );
     getShell().getDisplay().asyncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
-        IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+            .getActivePage();
         try
         {
           IDE.openEditor( workbenchPage, file, true );
@@ -147,13 +146,13 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     monitor.worked( 1 );
   }
 
-  private InputStream openContentStream( ) throws JAXBException, IOException
+  private InputStream openContentStream() throws JAXBException, IOException
   {
     // Create GisMapView
-    final Gismapview gismapview = GisTemplateHelper.emptyGisView();
-
-    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+    
+    Gismapview gismapview = GisTemplateHelper.emptyGisView();
+    ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
+    Marshaller marshaller = mapTemplateOF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     StringWriter stringWriter = new StringWriter();
     marshaller.marshal( gismapview, stringWriter );
@@ -164,7 +163,8 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
 
   private void throwCoreException( String message ) throws CoreException
   {
-    IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message, null );
+    IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message,
+        null );
     throw new CoreException( status );
   }
 

@@ -145,7 +145,6 @@ public class DiagViewCurve extends ObsViewItem
       this.color = TimeserieUtils.getColorForAlarmLevel( lbl );
     }
 
-    @Override
     public String toString()
     {
       return label;
@@ -155,7 +154,6 @@ public class DiagViewCurve extends ObsViewItem
   /**
    * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
    */
-  @Override
   public boolean shouldBeHidden( final List hiddenTypes )
   {
     for( int i = 0; i < m_mappings.length; i++ )

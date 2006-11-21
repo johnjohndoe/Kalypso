@@ -60,8 +60,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -72,6 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * River) will be two different features with distinct identities. Real world identification systems, such as title
  * numbers, while possibly forming a sound basis for an implementation of a feature identity mechanism, are not of
  * themselves such a mechanism.
+ * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -82,45 +81,54 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface DeegreeFeature
 {
+
   /**
    * returns the id of the Feature. the id has to be a name space that must be unique for each feature. use the adress
    * of the datasource in addition to a number for example .
    */
-  String getId( );
+  String getId();
 
   /**
-   * returns the IFeatureType of this Feature
+   * returns the FeatureType of this Feature
    */
-  IFeatureType getFeatureType( );
+  FeatureType getFeatureType();
 
   /**
-   * @deprecated 
-   * 
    * returns the properties of the feature as array of Objects
    */
-  Object[] getProperties( );
+  Object[] getProperties();
 
   /**
-   * returns the property of the feature that matches the submitted propertytype
+   * returns the property of the feature that matches the submitted name
    */
-  Object getProperty( IPropertyType propertyType );
+  Object getProperty( String name );
+
+  /**
+   * returns the property of the feature that matches the submitted index
+   */
+  Object getProperty( int index );
 
   /**
    * returns all geometry properties of the feature. If no geometry could be found an <tt>GM_Object[]</tt> with zero
    * length will be returned.
    */
-  GM_Object[] getGeometryProperties( );
+  GM_Object[] getGeometryProperties();
 
   /**
    * Returns the default geometry of the <tt>Feature</tt>.
    * 
    * @return default geometry or null, if the <tt>Feature</tt> has none
    */
-  GM_Object getDefaultGeometryProperty( );
+  GM_Object getDefaultGeometryProperty();
+
+  /**
+   * sets the value for the submitted property. if no property with the submitted exists the property will be added
+   */
+  void setProperty( FeatureProperty property );
 
   /**
    * returns the envelope / boundingbox of the feature
    */
-  GM_Envelope getEnvelope( );
+  GM_Envelope getEnvelope();
 
 }

@@ -6,7 +6,9 @@
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       image="kalypso32.gif"
+      primary="true"
       application="org.kalypso.ui.application">
+
    <install-handler/>
 
    <description>
@@ -14,11 +16,11 @@
    </description>
 
    <copyright url="copyright.html">
-      Copyright 2004 - 2006 kalypso.org
+      
    </copyright>
 
    <license url="licence.html">
-      LGPL
+      
    </license>
 
    <requires>
@@ -158,7 +160,7 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.services.metadoc.client"
+         id="org.kalypso.servies.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>

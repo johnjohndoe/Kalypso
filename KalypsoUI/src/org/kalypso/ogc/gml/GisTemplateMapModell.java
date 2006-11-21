@@ -44,20 +44,26 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.contribs.java.awt.IHighlightColors;
+import org.kalypso.contribs.java.awt.DefaultHighlightColors;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.GismapviewType;
+import org.kalypso.template.gismapview.HighlightColorType;
 import org.kalypso.template.gismapview.ObjectFactory;
-import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.ExtentType;
-import org.kalypso.template.types.LayerType;
-import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.awt.Color;
+import org.kalypso.utilbinding.AwtBindingUtilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -65,6 +71,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * 
  * @author Belger
  */
 public class GisTemplateMapModell implements IMapModell
@@ -80,24 +87,24 @@ public class GisTemplateMapModell implements IMapModell
   {
     m_context = context;
     m_selectionManager = selectionManager;
-    m_modell = new MapModell( crs, project );
+
+    final DefaultHighlightColors bean = highlightColorsFromTemplate( gisview );
+
+    m_modell = new MapModell( crs, project, bean );
+
     // layer 1 is legend
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
-    // layer 2 is scrablayer
-    final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-    //    m_modell.addModellListener( m_scrabLayer );
-    addTheme( scrabLayer );
 
-    final Layers layerListType = gisview.getLayers();
-    final List<StyledLayerType> layerList = layerListType.getLayer();
+    final LayersType layerListType = gisview.getLayers();
+    final List layerList = layerListType.getLayer();
 
-    final LayerType activeLayer = (LayerType)layerListType.getActive();
+    final Layer activeLayer = (Layer)layerListType.getActive();
 
     for( int i = 0; i < layerList.size(); i++ )
     {
-      final StyledLayerType layerType = layerList.get( i );
+      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
 
       final IKalypsoTheme theme = loadTheme( layerType, context );
       if( theme != null )
@@ -112,7 +119,36 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme( final StyledLayerType layer )
+  private static DefaultHighlightColors highlightColorsFromTemplate( final Gismapview gisview )
+  {
+    final DefaultHighlightColors bean = new DefaultHighlightColors();
+    final HighlightColorType highlightColors = gisview.getHighlightColors();
+    if( highlightColors != null )
+    {
+      final Color fillColor = highlightColors.getFillColor();
+      if( fillColor != null )
+        bean.setFillColor( AwtBindingUtilities.xmlColor2javaColor( fillColor ) );
+
+      final Color textColor = highlightColors.getTextColor();
+      if( textColor != null )
+        bean.setTextColor( AwtBindingUtilities.xmlColor2javaColor( textColor ) );
+
+      final Color lineColor = highlightColors.getLineColor();
+      if( lineColor != null )
+        bean.setLineColor( AwtBindingUtilities.xmlColor2javaColor( lineColor ) );
+
+      final Color borderColor = highlightColors.getBorderColor();
+      if( borderColor != null )
+        bean.setBorderColor( AwtBindingUtilities.xmlColor2javaColor( borderColor ) );
+
+      final Color backgroundColor = highlightColors.getBackgroundColor();
+      if( backgroundColor != null )
+        bean.setBackgroundColor( AwtBindingUtilities.xmlColor2javaColor( backgroundColor ) );
+    }
+    return bean;
+  }
+
+  public IKalypsoTheme addTheme( org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -129,35 +165,34 @@ public class GisTemplateMapModell implements IMapModell
       m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context )
+  private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
   {
-    if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
+    if( "wms".equals( layerType.getLinktype() ) )
     {
       String layerName = layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs, this );
+      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs );
     }
-    if( layerType.getLinktype().equals( "tif" ) || layerType.getLinktype().equals( "jpg" ) //$NON-NLS-1$ //$NON-NLS-2$
-        || layerType.getLinktype().equals( "png" ) || layerType.getLinktype().equals( "gif" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( layerType.getLinktype().equals( "tif" ) || layerType.getLinktype().equals( "jpg" )
+        || layerType.getLinktype().equals( "png" ) || layerType.getLinktype().equals( "gif" ) )
     {
       String source = layerType.getHref();
       String layerName = layerType.getName();
       return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem(), this );
+          .getCoordinatesSystem() );
     }
-    return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
+    return new GisTemplateFeatureTheme( layerType, context, m_selectionManager );
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName )
+  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName ) throws JAXBException
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
-    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory(); 
     //
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
-    final Layers layersType = maptemplateFactory.createGismapviewLayers();
+    final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
     if( bbox != null )
     {
       final ExtentType extentType = extentFac.createExtentType();
@@ -170,7 +205,33 @@ public class GisTemplateMapModell implements IMapModell
       gismapview.setExtent( extentType );
     }
 
-    final List<StyledLayerType> layerList = layersType.getLayer();
+    // we know it is a DefaultHighlightColors because we made it.
+    final DefaultHighlightColors colors = (DefaultHighlightColors)m_modell.getHighlightColors();
+    
+    // only set highlight colors, if we are different from default values
+    final java.awt.Color fillColor = colors.getUndefaultFillColor();
+    final java.awt.Color textColor = colors.getUndefaultTextColor();
+    final java.awt.Color lineColor = colors.getUndefaultLineColor();
+    final java.awt.Color borderColor = colors.getUndefaultBorderColor();
+    final java.awt.Color backgroundColor = colors.getUndefaultBackgroundColor();
+    if( fillColor != null || textColor != null || lineColor != null || borderColor != null || backgroundColor != null )
+    {
+      final HighlightColorType colorType = maptemplateFactory.createHighlightColorType();
+      if( fillColor != null )
+        colorType.setFillColor( AwtBindingUtilities.javaColor2xmlColor( fillColor ) );
+      if( textColor != null )
+        colorType.setTextColor( AwtBindingUtilities.javaColor2xmlColor( textColor ) );
+      if( lineColor != null )
+        colorType.setLineColor( AwtBindingUtilities.javaColor2xmlColor( lineColor ) );
+      if( borderColor != null )
+        colorType.setBorderColor( AwtBindingUtilities.javaColor2xmlColor( borderColor ) );
+      if( backgroundColor != null )
+        colorType.setBackgroundColor( AwtBindingUtilities.javaColor2xmlColor( backgroundColor ) );
+
+      gismapview.setHighlightColors( colorType );
+    }
+
+    final List layerList = layersType.getLayer();
 
     gismapview.setLayers( layersType );
 
@@ -179,14 +240,14 @@ public class GisTemplateMapModell implements IMapModell
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
-      final StyledLayerType layer = templateFactory.createStyledLayerType();
+      final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
       if( layer == null ) // e.g. legend
         continue;
 
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
-        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
+        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell
             .isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
 
@@ -194,17 +255,16 @@ public class GisTemplateMapModell implements IMapModell
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
         String name = kalypsoTheme.getName();
-        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
+        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ),
             (KalypsoWMSTheme)kalypsoTheme );
         layerList.add( layer );
       }
       else if( kalypsoTheme instanceof KalypsoPictureTheme )
       {
-        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
+        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
-      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme )
-          && !( kalypsoTheme instanceof ScrabLayerFeatureTheme ) )
+      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme ) )
         layersType.setActive( layer );
     }
 
@@ -315,7 +375,7 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.removeModellListener( listener );
   }
 
-  public void removeTheme( final IKalypsoTheme theme )
+  public void removeTheme( IKalypsoTheme theme )
   {
     m_modell.removeTheme( theme );
     theme.dispose();
@@ -341,7 +401,7 @@ public class GisTemplateMapModell implements IMapModell
     //    else if (theme instanceof KalypsoPictureTheme )
     //      ((KalypsoPictureTheme)theme).saveTheme(monitor);
     else
-      throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
   }
 
   /**
@@ -371,11 +431,10 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getHighlightColors()
    */
-  public IKalypsoFeatureTheme getScrabLayer()
+  public IHighlightColors getHighlightColors()
   {
-    return m_modell.getScrabLayer();
+    return m_modell.getHighlightColors();
   }
-
 }

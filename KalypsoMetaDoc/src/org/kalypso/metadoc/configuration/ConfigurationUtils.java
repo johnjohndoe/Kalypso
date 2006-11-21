@@ -72,16 +72,12 @@ public final class ConfigurationUtils
    * Return a new java.util.Map having a configuration. If the given configuration is already a MapConfiguration, then
    * its Map is returned.
    */
-  @SuppressWarnings("unchecked")
-  public static Map<Object,Object> createMap( final Configuration conf )
+  public static Map createMap( final Configuration conf )
   {
-    final Map<Object,Object> map = new HashMap<Object,Object>();
-    
     if( conf instanceof MapConfiguration )
-    {
-      map.putAll( ( (MapConfiguration)conf ).getMap() );
-      return map;
-    }
+      return ( (MapConfiguration)conf ).getMap();
+
+    final Map map = new HashMap();
 
     for( final Iterator it = conf.getKeys(); it.hasNext(); )
     {

@@ -42,9 +42,6 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
-import javax.swing.BorderFactory;
-import javax.swing.JScrollPane;
-
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -55,7 +52,6 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -79,7 +75,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     m_table = new ObservationTable( m_tableView, false, false );
@@ -90,9 +85,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     vFrame.setVisible( true );
     m_table.setVisible( true );
 
-    final JScrollPane pane = new JScrollPane( m_table );
-    pane.setBorder( BorderFactory.createEmptyBorder() );
-    vFrame.add( pane );
+    vFrame.add( m_table );
 
     getSite().getPage().addPartListener( this );
   }
@@ -100,7 +93,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
@@ -116,8 +108,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
   // noch nix
   }

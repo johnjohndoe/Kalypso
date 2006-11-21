@@ -100,7 +100,6 @@ public class AxisRangeDialog extends ResizableDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( Composite parent )
   {
     getShell().setText( "neue Zeitreihe" );

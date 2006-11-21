@@ -41,13 +41,12 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.util.command.CommandJob;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -68,58 +67,50 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
    */
   public void run( final IAction action )
   {
-    final WidgetActionPart part = getPart();
-    if( part == null )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    if( editor == null )
       return;
 
-    final MapPanel mapPanel = part.getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    final IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = editor.getMapPanel().getMapModell();
     if( mapModell != null )
     {
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
 
         final CommandableWorkspace workspace = theme.getWorkspace();
 
-        if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
+        if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
           new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
       }
     }
 
-    refreshAction( action, getSelection() );
+    refreshAction( null );
   }
 
-  @Override
-  protected void refreshAction( final IAction action, final ISelection selection )
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 
-    final WidgetActionPart part = getPart();
-    if( part != null )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    if( editor != null )
     {
-      final MapPanel mapPanel = part.getMapPanel();
-      if( mapPanel != null )
+      final IMapModell mapModell = editor.getMapPanel().getMapModell();
+      if( mapModell != null )
       {
-        final IMapModell mapModell = mapPanel.getMapModell();
-        if( mapModell != null )
+        final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+        if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
         {
-          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-          if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
-          {
-            final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-            final CommandableWorkspace workspace = theme.getWorkspace();
-            if( workspace != null )
-              bEnabled = m_undo ? workspace.canUndo() : workspace.canRedo();
-          }
+          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
+          final CommandableWorkspace workspace = theme.getWorkspace();
+          if( workspace != null )
+            bEnabled = m_undo ? workspace.canUndo() : workspace.canRedo();
         }
       }
     }
 
-    action.setEnabled( bEnabled );
+    if( getAction() != null )
+      getAction().setEnabled( bEnabled );
   }
 }

@@ -49,7 +49,6 @@ public class PT_Envelope implements Cloneable, Serializable
    * Returns a hash value for this envelope. This value need not remain consistent between different implementations of
    * the same class.
    */
-  @Override
   public int hashCode()
   {
     int code = 7896312;
@@ -63,7 +62,6 @@ public class PT_Envelope implements Cloneable, Serializable
   /**
    * Compares the specified object with this envelope for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -78,7 +76,6 @@ public class PT_Envelope implements Cloneable, Serializable
   /**
    * Returns a deep copy of this envelope.
    */
-  @Override
   public Object clone()
   {
     try
@@ -101,7 +98,6 @@ public class PT_Envelope implements Cloneable, Serializable
    * Returns a string representation of this envelope. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "PT_Envelope" );

@@ -48,15 +48,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.NullOutputStream;
-import org.apache.tools.zip.ZipFile;
 import org.kalypso.commons.java.io.FileUtilities;
 
 /**
@@ -64,92 +62,9 @@ import org.kalypso.commons.java.io.FileUtilities;
  */
 public class ZipUtilities
 {
-  private ZipUtilities( )
+  private ZipUtilities()
   {
-    // wird nicht instantiiert
-  }
-
-  /**
-   * Unzips a stream into a directory using the apache zip classes.
-   * 
-   * @param zipStream
-   *          Is closed after this operation.
-   */
-  public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
-  {
-    final File file = File.createTempFile( "unzipTmpFile", ".zip" );
-    file.deleteOnExit();
-
-    OutputStream os = null;
-    try
-    {
-      os = new BufferedOutputStream( new FileOutputStream( file ) );
-      IOUtils.copy( zipStream, os );
-      os.close();
-
-      unzipApache( file, targetDir, overwriteExisting, encoding );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zipStream );
-      IOUtils.closeQuietly( os );
-
-      file.delete();
-    }
-
-  }
-
-  /** Unzips a zip archive into a directory using the apache zip classes. */
-  public static void unzipApache( final File zip, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
-  {
-    ZipFile file = null;
-    try
-    {
-      file = new ZipFile( zip, encoding );
-
-      final Enumeration entries = file.getEntries();
-      while( entries.hasMoreElements() )
-      {
-        final org.apache.tools.zip.ZipEntry entry = (org.apache.tools.zip.ZipEntry) entries.nextElement();
-        if( entry == null )
-          break;
-
-        final File newfile = new File( targetDir, entry.getName() );
-        if( entry.isDirectory() )
-          newfile.mkdirs();
-        else
-        {
-          if( !newfile.getParentFile().exists() )
-            newfile.getParentFile().mkdirs();
-
-          OutputStream os = null;
-          InputStream zis = null;
-          try
-          {
-            if( !overwriteExisting && newfile.exists() )
-              os = new NullOutputStream();
-            else
-              os = new BufferedOutputStream( new FileOutputStream( newfile ) );
-
-            zis = file.getInputStream( entry );
-            IOUtils.copy( zis, os );
-          }
-          finally
-          {
-            IOUtils.closeQuietly( os );
-            IOUtils.closeQuietly( zis );
-          }
-        }
-      }
-
-      file.close();
-    }
-    finally
-    {
-      if( file != null )
-        file.close();
-    }
-
+  // wird nicht instantiiert
   }
 
   public static void unzip( final File zip, final File targetdir ) throws ZipException, IOException
@@ -167,17 +82,6 @@ public class ZipUtilities
   }
 
   public static void unzip( final InputStream inputStream, final File targetdir ) throws IOException
-  {
-    unzip( inputStream, targetdir, true );
-  }
-
-  /**
-   * unzips a zip-stream into a target dir.
-   * 
-   * @param overwriteExisting
-   *          if false, existing files will not be overwritten. Folders are always created.
-   */
-  public static void unzip( final InputStream inputStream, final File targetdir, final boolean overwriteExisting ) throws IOException
   {
     final ZipInputStream zis = new ZipInputStream( inputStream );
     while( true )
@@ -197,12 +101,8 @@ public class ZipUtilities
         OutputStream os = null;
         try
         {
-          if( !overwriteExisting && newfile.exists() )
-            os = new NullOutputStream();
-          else
-            os = new BufferedOutputStream( new FileOutputStream( newfile ) );
-
-          IOUtils.copy( zis, os );
+          os = new BufferedOutputStream( new FileOutputStream( newfile ) );
+          CopyUtils.copy( zis, os );
         }
         finally
         {
@@ -224,32 +124,14 @@ public class ZipUtilities
    *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
    *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
+   *  
    */
   public static void zip( final File zipfile, final File[] files, final File basedir ) throws IOException
-  {
-    final FileOutputStream os = new FileOutputStream( zipfile );
-
-    zip( os, files, basedir );
-  }
-
-  /**
-   * Puts given files into a zip archive stream.
-   * 
-   * @param out
-   *          Target output stream. will be created rep. overwritten.
-   * @param files
-   *          The files to zip
-   * @param basedir
-   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
-   *          this dir). If null, alle ZipEntries are create with full path.
-   * @throws IOException
-   */
-  public static void zip( final OutputStream out, final File[] files, final File basedir ) throws IOException
   {
     ZipOutputStream zos = null;
     try
     {
-      zos = new ZipOutputStream( new BufferedOutputStream( out ) );
+      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
 
       for( int i = 0; i < files.length; i++ )
       {
@@ -266,6 +148,7 @@ public class ZipUtilities
   }
 
   /**
+   * 
    * @param zipfile
    *          file to write
    * @param dir
@@ -274,26 +157,11 @@ public class ZipUtilities
    */
   public static void zip( final File zipfile, final File dir ) throws IOException
   {
-    final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
-    zip( zos, dir );
-  }
-
-  /**
-   * Zip a dir into a zip-stream. the streamgets closed by this operation.
-   */
-  public static void zip( final ZipOutputStream zos, final File dir ) throws IOException
-  {
-    ZipFileVisitor visitor = new ZipFileVisitor( zos );
-    try
-    {
-      visitor.setBasePattern( dir.getAbsolutePath() );
-      visitor.setBaseReplace( "" );
-      FileUtilities.accept( dir, visitor, true );
-    }
-    finally
-    {
-      visitor.close();
-    }
+    ZipFileVisitor visitor = new ZipFileVisitor( zipfile );
+    visitor.setBasePattern( dir.getAbsolutePath() );
+    visitor.setBaseReplace( "" );
+    FileUtilities.accept( dir, visitor, true );
+    visitor.close();
   }
 
   /**
@@ -302,7 +170,8 @@ public class ZipUtilities
    * @param pathname
    *          The name of the zip entry (relative Path into zip archive).
    */
-  public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname ) throws IOException
+  public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname )
+      throws IOException
   {
     final ZipEntry newEntry = new ZipEntry( pathname );
     zos.putNextEntry( newEntry );
@@ -313,7 +182,7 @@ public class ZipUtilities
     {
       contentStream = new BufferedInputStream( new FileInputStream( file ) );
 
-      IOUtils.copy( contentStream, zos );
+      CopyUtils.copy( contentStream, zos );
     }
     finally
     {

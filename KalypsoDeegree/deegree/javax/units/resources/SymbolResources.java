@@ -65,7 +65,6 @@ public class SymbolResources extends java.util.ResourceBundle
   /**
    * Renvoie un énumérateur qui balayera toutes les clés que possède cette liste de ressources.
    */
-  @Override
   public final Enumeration getKeys()
   {
     return new Enumeration()

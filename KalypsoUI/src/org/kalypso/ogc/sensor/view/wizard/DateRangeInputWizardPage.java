@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -75,8 +76,8 @@ public class DateRangeInputWizardPage extends WizardPage
   {
     try
     {
-      final DateRangeInputControlStuct struct = DateRangeInputControlStuct.create( m_settings, DateFormat
-          .getDateTimeInstance() );
+      final DateFormat dateFormat = TimeserieUtils.getDateFormat();
+      final DateRangeInputControlStuct struct = DateRangeInputControlStuct.create( m_settings, dateFormat );
       m_control = new DateRangeInputControl( parent, SWT.NONE, struct );
 
       setControl( m_control );
@@ -107,8 +108,7 @@ public class DateRangeInputWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
    */
-  @Override
-  public IWizardPage getNextPage( )
+  public IWizardPage getNextPage()
   {
     // go to next page only when input is valid
     final String err = m_control.validateInput();

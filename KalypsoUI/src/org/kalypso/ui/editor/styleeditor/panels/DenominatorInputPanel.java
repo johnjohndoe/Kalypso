@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
@@ -63,6 +63,7 @@ import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class DenominatorInputPanel
 {
@@ -99,7 +100,7 @@ public class DenominatorInputPanel
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init( )
+  private void init()
   {
     setText( new Text( composite, SWT.BORDER ) );
     text.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
@@ -130,7 +131,8 @@ public class DenominatorInputPanel
           setDenominator( Double.parseDouble( getText().getText() ) );
           if( getDenominator() < 0 )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_POSITIVE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_POSITIVE );
             errorDialog.showError();
           }
           else
@@ -138,7 +140,8 @@ public class DenominatorInputPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getText().setText( "" + getDenominator() );
         }
@@ -151,7 +154,7 @@ public class DenominatorInputPanel
 
       public void mouseUp( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
     } );
@@ -170,11 +173,11 @@ public class DenominatorInputPanel
     {
       public void mouseDoubleClick( MouseEvent e )
       {
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
         IEditorPart editor = window.getActivePage().getActiveEditor();
         if( editor instanceof GisMapEditor )
         {
-          GisMapEditor gisMapEditor = (GisMapEditor) editor;
+          GisMapEditor gisMapEditor = (GisMapEditor)editor;
           setDenominator( gisMapEditor.getMapPanel().getCurrentScale() );
         }
         getText().setText( "" + getDenominator() );
@@ -188,7 +191,7 @@ public class DenominatorInputPanel
 
       public void mouseUp( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
     } );
@@ -203,13 +206,13 @@ public class DenominatorInputPanel
     urlLabel.setText( label );
   }
 
-  public double getDenominator( )
+  public double getDenominator()
   {
     return denominator;
   }
 
   // sets the inputField to a default state
-  public void reset( )
+  public void reset()
   {
     text.setText( "" );
   }
@@ -221,7 +224,7 @@ public class DenominatorInputPanel
       text.setText( "" + denominator );
   }
 
-  protected void fire( )
+  protected void fire()
   {
     Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -229,12 +232,12 @@ public class DenominatorInputPanel
       if( listeners[i] == PanelListener.class )
       {
         PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public Composite getComposite( )
+  public Composite getComposite()
   {
     return composite;
   }
@@ -244,7 +247,7 @@ public class DenominatorInputPanel
     this.composite = m_composite;
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
     return label;
   }
@@ -254,7 +257,7 @@ public class DenominatorInputPanel
     this.label = m_label;
   }
 
-  public Text getText( )
+  public Text getText()
   {
     return text;
   }

@@ -64,7 +64,7 @@ public class DataHoleFilter extends AbstractObservationFilter
 
   private final Double m_replace;
 
-  private final Map<IAxis, IAxis> m_map = new HashMap<IAxis, IAxis>();
+  private final Map m_map = new HashMap();
 
   public DataHoleFilter( final double value, final int status, final Double replace )
   {
@@ -76,7 +76,6 @@ public class DataHoleFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  @Override
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
@@ -113,7 +112,7 @@ public class DataHoleFilter extends AbstractObservationFilter
   private IAxis getStatusAxisFor( final IAxis axis, final IAxis[] axes )
   {
     if( m_map.containsKey( axis ) )
-      return m_map.get( axis );
+      return (IAxis)m_map.get( axis );
 
     final String label = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
     final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( axes, label );

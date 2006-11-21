@@ -86,21 +86,21 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
 
-  protected CS_CoordinateSystem m_crs = null;
+  protected CS_CoordinateSystem crs = null;
 
-  protected GM_Envelope m_envelope = null;
+  protected GM_Envelope envelope = null;
 
-  protected GM_Point m_centroid = null;
+  protected GM_Point centroid = null;
 
-  protected GM_SurfaceInterpolation m_interpolation = null;
+  protected GM_SurfaceInterpolation interpolation = null;
 
-  protected GM_Position[] m_exteriorRing = null;
+  protected GM_Position[] exteriorRing = null;
 
-  protected GM_Position[][] m_interiorRings = null;
+  protected GM_Position[][] interiorRings = null;
 
   protected double area = 0;
 
-  protected boolean m_valid = false;
+  protected boolean valid = false;
 
   /**
    * Creates a new GM_SurfacePatch_Impl object.
@@ -115,7 +115,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   protected GM_SurfacePatch_Impl( GM_SurfaceInterpolation interpolation, GM_Position[] exteriorRing,
       GM_Position[][] interiorRings, CS_CoordinateSystem crs ) throws GM_Exception
   {
-    m_crs = crs;
+    this.crs = crs;
 
     if( ( exteriorRing == null ) || ( exteriorRing.length < 3 ) )
     {
@@ -142,9 +142,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
       }
     }
 
-    this.m_interpolation = interpolation;
-    this.m_exteriorRing = exteriorRing;
-    this.m_interiorRings = interiorRings;
+    this.interpolation = interpolation;
+    this.exteriorRing = exteriorRing;
+    this.interiorRings = interiorRings;
 
     setValid( false );
   }
@@ -154,7 +154,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   protected void setValid( boolean valid )
   {
-    m_valid = valid;
+    this.valid = valid;
   }
 
   /**
@@ -162,7 +162,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   protected boolean isValid()
   {
-    return m_valid;
+    return valid;
   }
 
   /**
@@ -170,12 +170,12 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   private void calculateEnvelope()
   {
-    double[] min = m_exteriorRing[0].getAsArray().clone();
-    double[] max = min.clone();
+    double[] min = (double[])exteriorRing[0].getAsArray().clone();
+    double[] max = (double[])min.clone();
 
-    for( int i = 1; i < m_exteriorRing.length; i++ )
+    for( int i = 1; i < exteriorRing.length; i++ )
     {
-      double[] pos = m_exteriorRing[i].getAsArray();
+      double[] pos = exteriorRing[i].getAsArray();
 
       for( int j = 0; j < pos.length; j++ )
       {
@@ -190,7 +190,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
       }
     }
 
-    m_envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
   }
 
   /**
@@ -200,7 +200,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   public GM_SurfaceInterpolation getInterpolation()
   {
-    return m_interpolation;
+    return interpolation;
   }
 
   /**
@@ -212,7 +212,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     {
       calculateParam();
     }
-    return m_envelope;
+    return envelope;
   }
 
   /**
@@ -220,7 +220,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   public GM_Position[] getExteriorRing()
   {
-    return m_exteriorRing;
+    return exteriorRing;
   }
 
   /**
@@ -228,7 +228,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   public GM_Position[][] getInteriorRings()
   {
-    return m_interiorRings;
+    return interiorRings;
   }
 
   /**
@@ -244,10 +244,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   public CS_CoordinateSystem getCoordinateSystem()
   {
-    return m_crs;
+    return crs;
   }
 
-  @Override
   public boolean equals( Object other )
   {
     if( ( other == null ) || !( other instanceof GM_SurfacePatch_Impl ) )
@@ -272,34 +271,34 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     }
 
     // Assuming envelope cannot be null (always calculated)
-    if( !m_envelope.equals( ( (GM_SurfacePatch)other ).getEnvelope() ) )
+    if( !envelope.equals( ( (GM_SurfacePatch)other ).getEnvelope() ) )
     {
       return false;
     }
 
     // Assuming exteriorRing cannot be null (checked by Constructor)
-    if( !Arrays.equals( m_exteriorRing, ( (GM_SurfacePatch)other ).getExteriorRing() ) )
+    if( !Arrays.equals( exteriorRing, ( (GM_SurfacePatch)other ).getExteriorRing() ) )
     {
       return false;
     }
 
     // Assuming either can have interiorRings set to null (not checked
     //by Constructor)
-    if( m_interiorRings != null )
+    if( interiorRings != null )
     {
       if( ( (GM_SurfacePatch)other ).getInteriorRings() == null )
       {
         return false;
       }
 
-      if( m_interiorRings.length != ( (GM_SurfacePatch)other ).getInteriorRings().length )
+      if( interiorRings.length != ( (GM_SurfacePatch)other ).getInteriorRings().length )
       {
         return false;
       }
 
-      for( int i = 0; i < m_interiorRings.length; i++ )
+      for( int i = 0; i < interiorRings.length; i++ )
       {
-        if( !Arrays.equals( m_interiorRings[i], ( (GM_SurfacePatch)other ).getInteriorRings()[i] ) )
+        if( !Arrays.equals( interiorRings[i], ( (GM_SurfacePatch)other ).getInteriorRings()[i] ) )
         {
           return false;
         }
@@ -326,7 +325,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     {
       calculateParam();
     }
-    return m_centroid;
+    return centroid;
   }
 
   /**
@@ -348,8 +347,8 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    */
   private void calculateCentroidArea()
   {
-    GM_Position centroid_ = calculateCentroid( m_exteriorRing );
-    double varea = calculateArea( m_exteriorRing );
+    GM_Position centroid_ = calculateCentroid( exteriorRing );
+    double varea = calculateArea( exteriorRing );
 
     double x = centroid_.getX();
     double y = centroid_.getY();
@@ -357,12 +356,12 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     x *= varea;
     y *= varea;
 
-    if( m_interiorRings != null )
+    if( interiorRings != null )
     {
-      for( int i = 0; i < m_interiorRings.length; i++ )
+      for( int i = 0; i < interiorRings.length; i++ )
       {
-        double dum = -1 * calculateArea( m_interiorRings[i] );
-        GM_Position temp = calculateCentroid( m_interiorRings[i] );
+        double dum = -1 * calculateArea( interiorRings[i] );
+        GM_Position temp = calculateCentroid( interiorRings[i] );
         x += ( temp.getX() * dum );
         y += ( temp.getY() * dum );
         varea += dum;
@@ -370,7 +369,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     }
 
     area = varea;
-    m_centroid = new GM_Point_Impl( x / varea, y / varea, m_crs );
+    centroid = new GM_Point_Impl( x / varea, y / varea, crs );
   }
 
   /**
@@ -463,25 +462,19 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     return new GM_Position_Impl( x, y );
   }
 
-  @Override
   public String toString()
   {
     String ret = "GM_SurfacePatch: ";
-    ret = "interpolation = " + m_interpolation + "\n";
+    ret = "interpolation = " + interpolation + "\n";
     ret += "exteriorRing = \n";
 
-    for( int i = 0; i < m_exteriorRing.length; i++ )
+    for( int i = 0; i < exteriorRing.length; i++ )
     {
-      ret += ( m_exteriorRing + "\n" );
+      ret += ( exteriorRing + "\n" );
     }
 
-    ret += ( "interiorRings = " + m_interiorRings + "\n" );
-    ret += ( "envelope = " + m_envelope + "\n" );
+    ret += ( "interiorRings = " + interiorRings + "\n" );
+    ret += ( "envelope = " + envelope + "\n" );
     return ret;
-  }
-  
-  public void invalidate()
-  {
-    m_valid = false;
   }
 }

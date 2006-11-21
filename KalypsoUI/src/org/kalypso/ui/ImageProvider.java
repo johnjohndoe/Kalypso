@@ -42,39 +42,12 @@ package org.kalypso.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
 
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.
  */
 public class ImageProvider
 {
-  public static enum DESCRIPTORS implements ImageKey
-  {
-    FEATURE("icons/feature/gis_feature.gif"),
-    
-    WAIT_LOADING_OBJ( "icons/full/obj16/wait_loading.gif" ),
-    FAILED_LOADING_OBJ( "icons/full/obj16/failed_loading.gif" ),
-    
-    FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" );
-
-    private final String m_imagePath;
-
-    private DESCRIPTORS( final String imagePath )
-    {
-      m_imagePath = imagePath;
-    }
-
-    /**
-     * @see org.kalypso.informdss.KalypsoInformDSSImages.ImageKey#getImagePath()
-     */
-    public String getImagePath( )
-    {
-      return m_imagePath;
-    }
-  }
-  
-  
   public static final ImageDescriptor id( final String pluginID, final String location )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
@@ -84,16 +57,14 @@ public class ImageProvider
   {
     return id( "org.kalypso.ui", location );
   }
-  
-  // DEPRECATED: The image constants below are deprecated
-  // Use the DESCRIPTOR enum above instead
-  
+
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = id( "icons/full/elcl16/remove.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
+  public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_TOGGLESELECT = id( "icons/full/elcl16/kde_14_polyline.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
@@ -137,12 +108,10 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
   public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = id("icons/filterdialog/filter_ps.gif");
-  public static final ImageDescriptor IMAGE_FILTERDIALOG_ERROR = id("icons/filterdialog/error_obj.gif");
-  public static final ImageDescriptor IMAGE_FILTERDIALOG_WARNING = id("icons/filterdialog/warning_obj.gif");
   
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
-  public static final ImageDescriptor IMAGE_FEATURE_NEW = id( "icons/feature/gis_feature_neu.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_RELATION_AGGREGATION = id( "icons/feature/feature_link_aggregation.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = id( "icons/feature/feature_link_composition.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_POINT = id( "icons/feature/geom_point.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOINT = id( "icons/feature/geom_multipoint.gif" );
@@ -151,7 +120,4 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_GEOM_PROP_POLYGON = id( "icons/feature/geom_polygon.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOLYGON = id( "icons/feature/geom_multipolygon.gif" );
   
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_OK = id( "icons/validation/validation_inputok.gif" );
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_WARNING = id( "icons/validation/validation_warning.gif" );
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_NOTOK = id( "icons/validation/validation_error.gif" );
 }

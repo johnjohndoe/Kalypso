@@ -73,7 +73,7 @@ public class ProxyFactory
   protected final static Class[] NO_TYPES = new Class[0];
 
   /** contains the proxies that were already created */
-  private final Map<String, Stub> m_proxies;
+  private final Map m_proxies;
 
   /** used for instanciating the proxy implementations provided through extensions */
   private final ServiceProxies m_proxyImpls;
@@ -98,7 +98,7 @@ public class ProxyFactory
   public ProxyFactory( final Properties conf )
   {
     m_conf = conf;
-    m_proxies = new HashMap<String, Stub>();
+    m_proxies = new HashMap();
     m_proxyImpls = new ServiceProxies();
   }
 
@@ -110,22 +110,24 @@ public class ProxyFactory
    * @param intfName
    *          Name of the interface that the service implements
    * @return stub
+   * 
    * @throws ServiceException
    *           if stub or server unavailable
    */
   public Stub getAnyProxy( final String serviceName, final String intfName ) throws ServiceException
   {
-    final List<Throwable> list = new ArrayList<Throwable>();
+    final List list = new ArrayList();
 
     for( final Iterator itServer = getServers( serviceName ).iterator(); itServer.hasNext(); )
     {
-      final String serverUrl = (String) itServer.next();
+      final String serverUrl = (String)itServer.next();
       final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName, list );
       if( proxy != null )
         return proxy;
     }
 
-    final Exception e = (Exception) (list.size() > 0 ? list.get( list.size() - 1 ) : new IllegalStateException( "Keine Server-URL gefunden. Siehe Kalypso-Konfiguration." ));
+    final Exception e = (Exception)( list.size() > 0 ? list.get( list.size() - 1 ) : new IllegalStateException(
+        "Keine Server-URL gefunden. Siehe Kalypso-Konfiguration." ) );
     throw new ServiceException( "Dienst <" + serviceName + "> steht nicht zur Verfügung. Grund: " + e.getLocalizedMessage(), e );
   }
 
@@ -137,23 +139,24 @@ public class ProxyFactory
    * @param intfName
    *          Name of the interface that the service implements
    * @return stub
+   * 
    * @throws ServiceException
    *           if stub or server unavailable
    */
   public Stub[] getAllProxies( final String serviceName, final String intfName ) throws ServiceException
   {
-    final Collection<Stub> stubs = getAllProxiesAsMap( serviceName, intfName ).values();
-    return stubs.toArray( new Stub[stubs.size()] );
+    final Collection stubs = getAllProxiesAsMap( serviceName, intfName ).values();
+    return (Stub[])stubs.toArray( new Stub[stubs.size()] );
   }
 
   /** Create a map key -> proxy-stub. The key is unique per proxy, but cannot be assumed to be anythin g meaningfull */
-  public Map<String, Stub> getAllProxiesAsMap( final String serviceName, final String intfName ) throws ServiceException
+  public Map getAllProxiesAsMap( final String serviceName, final String intfName ) throws ServiceException
   {
     final List servers = getServers( serviceName );
-    final Map<String, Stub> stubs = new HashMap<String, Stub>();
+    final Map stubs = new HashMap();
     for( final Iterator itServer = servers.iterator(); itServer.hasNext(); )
     {
-      final String serverUrl = (String) itServer.next();
+      final String serverUrl = (String)itServer.next();
       final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName, null );
       if( proxy != null )
       {
@@ -183,7 +186,8 @@ public class ProxyFactory
      */
     final String strServers = m_conf.getProperty( serviceName + "_URL" );
     if( strServers == null )
-      throw new ServiceException( "Keine Serverkonfiguration gefunden. Stellen Sie sicher dass die Einstellungen\n" + " richtig sind, und dass mindestens ein Server zur Verfügung steht." );
+      throw new ServiceException( "Keine Serverkonfiguration gefunden. Stellen Sie sicher dass die Einstellungen\n"
+          + " richtig sind, und dass mindestens ein Server zur Verfügung steht." );
 
     final List servers = Arrays.asList( strServers.split( "," ) );
     if( servers.size() == 0 )
@@ -196,9 +200,11 @@ public class ProxyFactory
    * 
    * @param exceptions
    *          if not null, the exceptions that might occur during the execution of this method are stored in the list
+   * 
    * @return null, if proxy is not available
    */
-  private Stub getCheckedProxy( final String serverUrl, final String serviceName, final String intfName, final List<Throwable> exceptions )
+  private Stub getCheckedProxy( final String serverUrl, final String serviceName, final String intfName,
+      final List exceptions )
   {
     try
     {
@@ -212,33 +218,34 @@ public class ProxyFactory
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-
+      
       if( exceptions != null )
         exceptions.add( e.getTargetException() );
     }
     catch( final Exception e ) // generic Exception is caught here for simplicity
     {
       e.printStackTrace();
-
+      
       if( exceptions != null )
         exceptions.add( e );
     }
-
+    
     return null;
   }
 
   /** Creates the proxy for the given endpoint. Will be cached. */
-  private Stub getProxy( final String serverUrl, final String serviceName, final String intfName ) throws ServiceException
+  private Stub getProxy( final String serverUrl, final String serviceName, final String intfName )
+      throws ServiceException
   {
     String strEndPoint = serverUrl;
-
+    
     if( !serverUrl.endsWith( "/" ) )
-      strEndPoint += "/";
+        strEndPoint += "/";
 
     strEndPoint += serviceName + "/" + intfName;
-
+    
     if( m_proxies.containsKey( strEndPoint ) )
-      return m_proxies.get( strEndPoint );
+      return (Stub)m_proxies.get( strEndPoint );
 
     // TRICKY: we set the classloader because of a problem using jaxrpc at
     // runtime under Eclipse. It seems that the system class loader is explicitely
@@ -253,7 +260,7 @@ public class ProxyFactory
 
       final Method method = proxyImpl.getClass().getMethod( "get" + intfName + "Port", NO_TYPES );
 
-      final Stub proxy = (Stub) method.invoke( proxyImpl, NO_ARGS );
+      final Stub proxy = (Stub)method.invoke( proxyImpl, NO_ARGS );
 
       // configure proxy with first server from configuration
       proxy._setProperty( javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY, strEndPoint );

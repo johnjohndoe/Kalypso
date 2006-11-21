@@ -38,9 +38,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureSelectionManager extends IFeatureSelection
 {
-  /** Completely resets the current selection. */
-  public void setSelection( final EasyFeatureWrapper[] selectedFeatures );
-  
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd );
   
   public void clear();
@@ -54,5 +51,5 @@ public interface IFeatureSelectionManager extends IFeatureSelection
    * 
    * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
    */
-  public List<Feature> toList();
+  public List toList();
 }

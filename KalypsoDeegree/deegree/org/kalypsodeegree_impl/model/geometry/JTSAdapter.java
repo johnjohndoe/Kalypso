@@ -101,7 +101,8 @@ public class JTSAdapter
   private static PrecisionModel pm = new PrecisionModel();
 
   // factory for creating JTS-Geometries
-  private static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm, 0 );
+  private static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory(
+      pm, 0 );
 
   /**
    * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.
@@ -130,31 +131,31 @@ public class JTSAdapter
     Geometry geometry = null;
     if( gmObject instanceof GM_Point )
     {
-      geometry = export( (GM_Point) gmObject );
+      geometry = export( (GM_Point)gmObject );
     }
     else if( gmObject instanceof GM_MultiPoint )
     {
-      geometry = export( (GM_MultiPoint) gmObject );
+      geometry = export( (GM_MultiPoint)gmObject );
     }
     else if( gmObject instanceof GM_Curve )
     {
-      geometry = export( (GM_Curve) gmObject );
+      geometry = export( (GM_Curve)gmObject );
     }
     else if( gmObject instanceof GM_MultiCurve )
     {
-      geometry = export( (GM_MultiCurve) gmObject );
+      geometry = export( (GM_MultiCurve)gmObject );
     }
     else if( gmObject instanceof GM_Surface )
     {
-      geometry = export( (GM_Surface) gmObject );
+      geometry = export( (GM_Surface)gmObject );
     }
     else if( gmObject instanceof GM_MultiSurface )
     {
-      geometry = export( (GM_MultiSurface) gmObject );
+      geometry = export( (GM_MultiSurface)gmObject );
     }
     else if( gmObject instanceof GM_MultiPrimitive )
     {
-      geometry = export( (GM_MultiPrimitive) gmObject );
+      geometry = export( (GM_MultiPrimitive)gmObject );
     }
     else
     {
@@ -190,31 +191,31 @@ public class JTSAdapter
     GM_Object gmObject = null;
     if( geometry instanceof Point )
     {
-      gmObject = wrap( (Point) geometry );
+      gmObject = wrap( (Point)geometry );
     }
     else if( geometry instanceof MultiPoint )
     {
-      gmObject = wrap( (MultiPoint) geometry );
+      gmObject = wrap( (MultiPoint)geometry );
     }
     else if( geometry instanceof LineString )
     {
-      gmObject = wrap( (LineString) geometry );
+      gmObject = wrap( (LineString)geometry );
     }
     else if( geometry instanceof MultiLineString )
     {
-      gmObject = wrap( (MultiLineString) geometry );
+      gmObject = wrap( (MultiLineString)geometry );
     }
     else if( geometry instanceof Polygon )
     {
-      gmObject = wrap( (Polygon) geometry );
+      gmObject = wrap( (Polygon)geometry );
     }
     else if( geometry instanceof MultiPolygon )
     {
-      gmObject = wrap( (MultiPolygon) geometry );
+      gmObject = wrap( (MultiPolygon)geometry );
     }
     else if( geometry instanceof GeometryCollection )
     {
-      gmObject = wrap( (GeometryCollection) geometry );
+      gmObject = wrap( (GeometryCollection)geometry );
     }
     else
     {
@@ -233,22 +234,8 @@ public class JTSAdapter
    */
   private static Point export( GM_Point gmPoint )
   {
-    final Coordinate coord = export( gmPoint.getPosition() );
+    Coordinate coord = new Coordinate( gmPoint.getX(), gmPoint.getY() );
     return jtsFactory.createPoint( coord );
-  }
-
-  /**
-   * Converts a {@link GM_Position} to as {@link Coordinate}.
-   * <p>
-   * Distinguished between positions with 2 or 3 coordinates.
-   * </p>
-   */
-  public static Coordinate export( final GM_Position pos )
-  {
-    final double[] asArray = pos.getAsArray();
-    if( asArray.length > 2 )
-      return new Coordinate( asArray[0], asArray[1], asArray[2] );
-    return new Coordinate( asArray[0], asArray[1] );
   }
 
   /**
@@ -281,12 +268,13 @@ public class JTSAdapter
    */
   private static LineString export( GM_Curve curve ) throws GM_Exception
   {
-    final GM_LineString lineString = curve.getAsLineString();
-    final Coordinate[] coords = new Coordinate[lineString.getNumberOfPoints()];
+
+    GM_LineString lineString = curve.getAsLineString();
+    Coordinate[] coords = new Coordinate[lineString.getNumberOfPoints()];
     for( int i = 0; i < coords.length; i++ )
     {
-      final GM_Position position = lineString.getPositionAt( i );
-      coords[i] = export( position );
+      GM_Position position = lineString.getPositionAt( i );
+      coords[i] = new Coordinate( position.getX(), position.getY() );
     }
     return jtsFactory.createLineString( coords );
   }
@@ -322,9 +310,11 @@ public class JTSAdapter
    */
   private static LinearRing export( GM_Position[] positions )
   {
-    final Coordinate[] coords = new Coordinate[positions.length];
+    Coordinate[] coords = new Coordinate[positions.length];
     for( int i = 0; i < positions.length; i++ )
-      coords[i] = export( positions[i] );
+    {
+      coords[i] = new Coordinate( positions[i].getX(), positions[i].getY() );
+    }
     return jtsFactory.createLinearRing( coords );
   }
 
@@ -416,14 +406,12 @@ public class JTSAdapter
    *          a <tt>Point</tt> object
    * @return the corresponding <tt>GM_Point</tt>
    */
-private static GM_Point wrap( Point point )
+  private static GM_Point wrap( Point point )
   {
-    final Coordinate coord = point.getCoordinate();
-    if( Double.isNaN( coord.z ) )
-        return new GM_Point_Impl( coord.x, coord.y, null );
-    
-    return new GM_Point_Impl( coord.x, coord.y, coord.z, null );
+    Coordinate coord = point.getCoordinate();
+    return new GM_Point_Impl( coord.x, coord.y, null );
   }
+
   /**
    * Converts a <tt>MultiPoint</tt> to a <tt>GM_MultiPoint</tt>.
    * <p>
@@ -437,7 +425,7 @@ private static GM_Point wrap( Point point )
     GM_Point[] gmPoints = new GM_Point[multi.getNumGeometries()];
     for( int i = 0; i < gmPoints.length; i++ )
     {
-      gmPoints[i] = wrap( (Point) multi.getGeometryN( i ) );
+      gmPoints[i] = wrap( (Point)multi.getGeometryN( i ) );
     }
     return new GM_MultiPoint_Impl( gmPoints, null );
   }
@@ -476,12 +464,13 @@ private static GM_Point wrap( Point point )
     GM_Curve[] curves = new GM_Curve[multi.getNumGeometries()];
     for( int i = 0; i < curves.length; i++ )
     {
-      curves[i] = wrap( (LineString) multi.getGeometryN( i ) );
+      curves[i] = wrap( (LineString)multi.getGeometryN( i ) );
     }
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
   /**
+   * 
    * Converts a <tt>Polygon</tt> to a <tt>GM_Surface</tt>.
    * <p>
    * 
@@ -520,7 +509,7 @@ private static GM_Point wrap( Point point )
     GM_Surface[] surfaces = new GM_Surface[multiPolygon.getNumGeometries()];
     for( int i = 0; i < surfaces.length; i++ )
     {
-      surfaces[i] = wrap( (Polygon) multiPolygon.getGeometryN( i ) );
+      surfaces[i] = wrap( (Polygon)multiPolygon.getGeometryN( i ) );
     }
     return new GM_MultiSurface_Impl( surfaces );
   }

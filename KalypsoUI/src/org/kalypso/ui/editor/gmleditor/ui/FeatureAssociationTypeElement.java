@@ -29,59 +29,40 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.eclipse.core.runtime.PlatformObject;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public class FeatureAssociationTypeElement extends PlatformObject
+public class FeatureAssociationTypeElement
 {
-  private final IRelationType m_featureAssociattionTypeProp;
+
+  private final FeatureAssociationTypeProperty m_featureAssociattionTypeProp;
 
   private final Feature m_parent;
 
-  public FeatureAssociationTypeElement( final Feature parent, final IRelationType property )
+  /**
+   *  
+   */
+
+  public FeatureAssociationTypeElement( final Feature parent, final FeatureAssociationTypeProperty property )
   {
     m_parent = parent;
     m_featureAssociattionTypeProp = property;
   }
 
-  public Feature getParentFeature( )
+  public Feature getParentFeature()
   {
     return m_parent;
+
   }
 
-  public IRelationType getAssociationTypeProperty( )
+  public FeatureAssociationTypeProperty getAssociationTypeProperty()
   {
     return m_featureAssociattionTypeProp;
-  }
-
-  /**
-   * Implemented in order to make to TreeViewer work.
-   * <p>
-   * While refreshing the tree we may have different instances of this class reflecting the same node of the tree, if
-   * they are not equal, strange things happen.
-   * </p>
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( Object obj )
-  {
-    return EqualsBuilder.reflectionEquals( this, obj );
-  }
-
-  /**
-   * @see #equals(Object)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

@@ -7,6 +7,7 @@ package org.kalypso.interpolation.grid;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -17,7 +18,7 @@ import java.util.Vector;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.deegree_impl.services.NotSupportedFormatException;
+import org.kalypso.interpolation.mesh.Point;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -433,7 +434,7 @@ public class Grid implements IGrid
    */
   private Vector getNeighborCellsOnGrid( GM_Position p )
   {
-    final Vector<GM_Position> res = new Vector<GM_Position>();
+    Vector res = new Vector();
     int row = getRowIndex( p );
     int col = getColIndex( p );
     if( row == -1 || col == -1 )
@@ -600,10 +601,10 @@ public class Grid implements IGrid
    * @return Vector with x,y coordinates (GM_Position) of the cells in the envelope
    * @throws GM_Exception
    */
-  public Vector<GM_Position> getCellsFromGrid( GM_Envelope envelope, CS_CoordinateSystem cs ) throws GM_Exception
+  public Vector getCellsFromGrid( GM_Envelope envelope, CS_CoordinateSystem cs ) throws GM_Exception
   {
     GM_Object intersection = getExtend().intersection( GeometryFactory.createGM_Surface( envelope, cs ) );
-    final Vector<GM_Position> cells = new Vector<GM_Position>();
+    Vector cells = new Vector();
     int[][] range = getRowColIndexFromEnv( ( (GM_Surface)intersection ).getEnvelope() );
 
     for( int r = range[1][1]; r < range[0][1]; r++ )
@@ -656,8 +657,8 @@ public class Grid implements IGrid
    */
   public GM_Position[] getGridCells() throws GM_Exception
   {
-    final List<GM_Position> list = getCellsFromGrid( m_env.getEnvelope(), m_env.getCoordinateSystem() );
-    return list.toArray( new GM_Position[list.size()] );
+    List list = getCellsFromGrid( m_env.getEnvelope(), m_env.getCoordinateSystem() );
+    return (GM_Position[])list.toArray( new GM_Position[list.size()] );
   }
 
   /**
@@ -777,9 +778,9 @@ public class Grid implements IGrid
       if( type.matches( ".+\\.(a|A)(s|S)(c|C)$" ) )
         exportESRIasc( file );
       else
-        throw new NotSupportedFormatException( "The choosen raster data type is not supported" );
+        throw new UnsupportedOperationException( "The choosen raster data type is not supported" );
     }
-    catch( NotSupportedFormatException e )
+    catch( UnsupportedOperationException e )
     {
       e.printStackTrace();
     }

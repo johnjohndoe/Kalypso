@@ -30,28 +30,18 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -59,87 +49,69 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLEditorContentProvider2 implements ITreeContentProvider
 {
+  private CommandableWorkspace m_workspace;
+
+  /**
+   * remebers the child-parent relationship. This is nedded, because if we provide no parent,
+   * setExpandedElements doesn't work, which
+   * will lead to an unusable gui.
+   */
+  private Map m_parentHash = new HashMap();
+
   private TreeViewer m_viewer;
 
-  private GMLWorkspace m_workspace;
-
   /**
-   * The x-path to the currently (not visible) root element. Its children are the root elements of the tree.
-   * <p>
-   * If null, the root-feature is the root element of the tree.
-   */
-  private GMLXPath m_rootPath = new GMLXPath( "" );
-
-  /**
-   * Gets the children and updates the parent-hash.
-   * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
   {
-    if( m_workspace == null )
-      return new Object[] {};
-      
-    
-    // Test first if we should show children
-    final QName qname;
-    if( parentElement instanceof Feature )
-      qname = ((Feature) parentElement).getFeatureType().getQName();
-    else if( parentElement instanceof FeatureAssociationTypeElement )
-      qname = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty().getQName();
-    else
-      qname = null;
+    final Object[] children = getChildrenInternal( parentElement );
+    if( children == null )
+      return null;
 
-    if( qname != null )
-    {
-      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
-      final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
-      final boolean showChildren = Boolean.parseBoolean( showChildrenString );
-      if( !showChildren )
-        return new Object[] {};
-    }
+    for( int i = 0; i < children.length; i++ )
+      m_parentHash.put( children[i], parentElement );
 
-    return getChildrenInternal( parentElement );
+    return children;
   }
 
   private Object[] getChildrenInternal( final Object parentElement )
   {
+    final List result = new ArrayList();
     if( parentElement instanceof GMLWorkspace )
-      return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
-
-    final List<Object> result = new ArrayList<Object>();
+    {
+      return new Object[]
+      { ( (GMLWorkspace)parentElement ).getRootFeature() };
+    }
     if( parentElement instanceof Feature )
     {
-      final Feature parentFE = (Feature) parentElement;
-      final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
+      final FeatureTypeProperty[] properties = ( (Feature)parentElement ).getFeatureType().getProperties();
 
       for( int i = 0; i < properties.length; i++ )
       {
-        final IPropertyType property = properties[i];
-        if( property instanceof IRelationType )
-          result.add( new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property ) );
+        final FeatureTypeProperty property = properties[i];
+        if( property instanceof FeatureAssociationTypeProperty )
+          result.add( new FeatureAssociationTypeElement( (Feature)parentElement,
+              (FeatureAssociationTypeProperty)property ) );
 
         if( GeometryUtilities.isGeometry( property ) )
-        {
-          final Object value = parentFE.getProperty( property );
-          if( value != null )
-            result.add( value );
-        }
+          result.add( property );
       }
+      
       return result.toArray();
     }
-
     if( parentElement instanceof FeatureAssociationTypeElement )
     {
-      final Feature parentFeature = ((FeatureAssociationTypeElement) parentElement).getParentFeature();
-      final IRelationType ftp = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty();
-      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
+      final Feature parentFeature = ( (FeatureAssociationTypeElement)parentElement ).getParentFeature();
+      final FeatureAssociationTypeProperty ftp = ( (FeatureAssociationTypeElement)parentElement )
+          .getAssociationTypeProperty();
+      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp.getName() );
       for( int i = 0; i < features.length; i++ )
       {
         final Feature feature = features[i];
         if( feature != null )
         {
-          if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
+          if( m_workspace.isAggrigatedLink( parentFeature, ftp.getName(), i ) )
             result.add( new LinkedFeatureElement2( feature ) );
           else
             result.add( feature );
@@ -147,7 +119,6 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       }
       return result.toArray();
     }
-
     // this should never happen
     return result.toArray();
   }
@@ -157,129 +128,38 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object getParent( final Object element )
   {
-    /* search is orderd from fast to slow */
-
-    /* If its an association we know the parent */
-    if( element instanceof FeatureAssociationTypeElement )
-    {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
-      return fate.getParentFeature();
-    }
-
-    /* Is it one of the root elements? */
-    final Object[] elements = getElements( m_workspace );
-    for( final Object object : elements )
-    {
-      if( object == element )
-        return null;
-    }
-    
-    // TODO: there are also GeometryProperty-Elements
-
-    if( element instanceof Feature )
-    {
-      final Feature feature = (Feature) element;
-      final Feature parent = feature.getParent();
-      if( parent != null )
-      {
-        final Object[] parentChildren = getChildren( parent );
-        for( final Object object : parentChildren )
-        {
-          if( object instanceof FeatureAssociationTypeElement )
-          {
-            final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-            final IRelationType associationTypeProperty = fate.getAssociationTypeProperty();
-            final Object property = parent.getProperty( associationTypeProperty );
-            if( property == feature )
-              return fate;
-            else if( property instanceof List )
-            {
-              if( ((List) property).contains( feature ) )
-                return fate;
-            }
-          }
-        }
-      }
-    }
-
-    /* May happen if we have gone-into the tree. */
-    return null;
+    final Object object = m_parentHash.get( element );
+    return object;
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( final Object element )
+  public boolean hasChildren( Object element )
   {
     if( element == null )
       return false;
-
-    final int childCount = getChildren( element ).length;
-    return childCount > 0;
+    return getChildren( element ).length > 0;
   }
 
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( final Object inputElement )
+  public Object[] getElements( Object inputElement )
   {
-    if( m_workspace == null )
-      return new Object[] {};
-
-    final Object[] rootFeatureObjects = new Object[] { m_workspace.getRootFeature() };
-
-    try
-    {
-      final Object object = findObjectForPath();
-      if( object == m_workspace )
-        return rootFeatureObjects;
-
-      return getChildren( object );
-    }
-    catch( final GMLXPathException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
-
-      return rootFeatureObjects;
-    }
-  }
-
-  private Object findObjectForPath( ) throws GMLXPathException
-  {
-    if( m_rootPath.getSegmentSize() == 0 )
-      return m_workspace;
-
-    final GMLXPath parentPath = m_rootPath.getParentPath();
-    final Object parent = GMLXPathUtilities.query( parentPath, m_workspace );
-    if( parent instanceof Feature )
-    {
-      final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
-      final QName childName = QName.valueOf( segment.toString() );
-      final Object[] children = getChildren( parent );
-      for( int i = 0; i < children.length; i++ )
-      {
-        final Object object = children[i];
-        if( object instanceof FeatureAssociationTypeElement )
-        {
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-          final QName name = fate.getAssociationTypeProperty().getQName();
-          if( name.equals( childName ) )
-            return object;
-        }
-      }
-    }
-
-    return GMLXPathUtilities.query( m_rootPath, m_workspace );
+    if( inputElement instanceof GMLWorkspace )
+      return new Object[]
+      { ( (GMLWorkspace)inputElement ).getRootFeature() };
+    return new Object[0];
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
+    m_parentHash.clear();
     m_viewer = null;
-    m_workspace = null;
   }
 
   /**
@@ -288,137 +168,48 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (TreeViewer) viewer;
-
+    m_viewer = (TreeViewer)viewer;
+    
     if( oldInput != newInput )
     {
+      m_parentHash.clear();
+
       if( oldInput != null )
         m_workspace = null;
 
-      if( newInput instanceof GMLWorkspace )
-        m_workspace = (GMLWorkspace) newInput;
+      if( newInput instanceof CommandableWorkspace )
+        m_workspace = (CommandableWorkspace)newInput;
       else
         m_workspace = null;
-
-      m_rootPath = new GMLXPath( "" );
     }
   }
 
-  public IRelationType getParentFeatureProperty( final Feature feature )
+  public Feature getParentFeature( final Feature feature )
   {
-    // TODO: do not just use the getParent method because root element dont have a parent
-    // use a internalParent method instead
-    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement) getParent( feature );
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
     if( parent == null )
       return null;
-
-    return parent.getAssociationTypeProperty();
+    
+    return parent.getParentFeature();
   }
 
-  /** Expand the element and all of its parents */
+  public String getParentFeatureProperty( final Feature feature )
+  {
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
+    if( parent == null )
+      return null;
+    
+    return parent.getAssociationTypeProperty().getName();
+  }
+
   public void expandElement( final Object element )
   {
     if( element == null )
       return;
-
+    
     expandElement( getParent( element ) );
 
     m_viewer.setExpandedState( element, true );
   }
 
-  public void goInto( final Object object )
-  {
-    m_viewer.getSelection();
-    final Object[] expandedElements = m_viewer.getExpandedElements();
-
-    // prepare for exception
-    m_rootPath = new GMLXPath( "" );
-
-    try
-    {
-      if( object instanceof Feature )
-      {
-        final Feature feature = (Feature) object;
-        m_rootPath = new GMLXPath( feature );
-      }
-      else if( object instanceof FeatureAssociationTypeElement )
-      {
-        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-        final Feature parentFeature = fate.getParentFeature();
-        final GMLXPath path = new GMLXPath( parentFeature );
-        m_rootPath = new GMLXPath( path, fate.getAssociationTypeProperty().getQName().toString() );
-      }
-    }
-    catch( final GMLXPathException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
-    }
-    finally
-    {
-      m_viewer.refresh();
-      m_viewer.setExpandedElements( expandedElements );
-    }
-  }
-
-  public void goUp( )
-  {
-    final Object[] expandedElements = m_viewer.getExpandedElements();
-
-    try
-    {
-      final Object object = findObjectForPath();
-
-      final Object parent = getParent( object );
-      if( parent != null )
-      {
-        goInto( parent );
-        return; // do not refresh, we already did so
-      }
-    }
-    catch( final GMLXPathException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
-    }
-
-    m_rootPath = new GMLXPath( "" );
-
-    m_viewer.setExpandedElements( expandedElements );
-    m_viewer.refresh();
-  }
-
-  public boolean canGoUp( )
-  {
-    return m_rootPath.getSegmentSize() > 0;
-  }
-
-  public GMLXPath getRootPath( )
-  {
-    return m_rootPath;
-  }
-
-  /**
-   * Sets the root path and refreshes the tree.
-   * <p>
-   * Tries to keep the current expansion state.
-   * </p>
-   */
-  public void setRootPath( final GMLXPath rootPath )
-  {
-    final Object[] expandedElements = m_viewer == null ? null : m_viewer.getExpandedElements();
-
-    try
-    {
-      m_rootPath = rootPath;
-    }
-    finally
-    {
-      if( m_viewer != null )
-      {
-        m_viewer.setExpandedElements( expandedElements );
-        m_viewer.refresh();
-      }
-    }
-  }
 }

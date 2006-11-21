@@ -11,9 +11,16 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 /**
  * @author belger
@@ -22,7 +29,17 @@ public class GmlConvertFactoryTest extends TestCase
 {
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
-  public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
+  public GmlConvertFactoryTest() throws TypeRegistryException, JAXBException
+  {
+    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
+    registry.registerTypeHandler( new ObservationLinkHandler() );
+    registry.registerTypeHandler( new DiagramTypeHandler() );
+    registry.registerTypeHandler( new RangeSetTypeHandler() );
+    registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+  }
+
+  public void testConvertXml() throws IOException, JAXBException, GmlConvertException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );
 

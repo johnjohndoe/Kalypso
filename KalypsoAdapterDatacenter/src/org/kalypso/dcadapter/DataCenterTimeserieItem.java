@@ -17,6 +17,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.timeseries.Timeserie;
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
@@ -54,7 +55,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString( )
   {
     return getName();
@@ -71,7 +71,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent() throws RepositoryException
   {
     return m_parent;
   }
@@ -79,7 +79,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren( ) throws RepositoryException
   {
     return false;
   }
@@ -87,7 +87,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     return IRepositoryItem.EMPTY_ARRAY;
   }

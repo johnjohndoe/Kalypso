@@ -74,8 +74,9 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
  * dans lequel le cylindre a subit une rotation de 90°. Au lieu d'être tangeant à l'équateur (ou à une autre latitude
  * standard), le cylindre de la projection tranverse est tangeant à un méridien central. Les déformation deviennent de
  * plus en plus importantes à mesure que l'on s'éloigne du méridien central. Cette projection est appropriée pour les
- * régions qui s'étendent d'avantage dans le sens nord-sud que dans le sens est-ouest. Référence: John P. Snyder (Map
- * Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
+ * régions qui s'étendent d'avantage dans le sens nord-sud que dans le sens est-ouest.
+ * 
+ * Référence: John P. Snyder (Map Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
  * 
  * @version 1.0
  * @author André Gosselin
@@ -86,7 +87,8 @@ final class TransverseMercatorProjection extends CylindricalProjection
   /*
    * Constants used to calculate {@link #en0},{@link #en1},{@link #en2},{@link #en3},{@link #en4}.
    */
-  private static final double C00 = 1.0, C02 = 0.25, C04 = 0.046875, C06 = 0.01953125, C08 = 0.01068115234375, C22 = 0.75, C44 = 0.46875, C46 = 0.01302083333333333333, C48 = 0.00712076822916666666,
+  private static final double C00 = 1.0, C02 = 0.25, C04 = 0.046875, C06 = 0.01953125, C08 = 0.01068115234375,
+      C22 = 0.75, C44 = 0.46875, C46 = 0.01302083333333333333, C48 = 0.00712076822916666666,
       C66 = 0.36458333333333333333, C68 = 0.00569661458333333333, C88 = 0.3076171875;
 
   /*
@@ -138,14 +140,15 @@ final class TransverseMercatorProjection extends CylindricalProjection
   private int hemisphere = 1;
 
   /**
-   * Construct a new map projection from the suplied parameters.
+   * Construct a new map projection from the suplied parameters. 
    * 
    * @param parameters
    *          The parameter values in standard units.
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  protected TransverseMercatorProjection( final Projection parameters ) throws MissingParameterException
+  protected TransverseMercatorProjection( final Projection parameters )
+      throws MissingParameterException
   {
     super( parameters );
 
@@ -157,7 +160,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
       params.add( param[i] );
     }
 
-    hemisphere = (int) parameters.getValue( "hemisphere", 1 );
+    hemisphere = (int)parameters.getValue( "hemisphere", 1 );
 
     scale_factor = 1.0;
 
@@ -169,11 +172,11 @@ final class TransverseMercatorProjection extends CylindricalProjection
     ak0 = a * scale_factor;
 
     double t;
-    esp = ((a * a) / (b * b)) - 1.0;
-    en0 = C00 - (es * (C02 + es * (C04 + es * (C06 + es * C08))));
-    en1 = es * (C22 - es * (C04 + es * (C06 + es * C08)));
-    en2 = (t = es * es) * (C44 - es * (C46 + es * C48));
-    en3 = (t *= es) * (C66 - es * C68);
+    esp = ( ( a * a ) / ( b * b ) ) - 1.0;
+    en0 = C00 - ( es * ( C02 + es * ( C04 + es * ( C06 + es * C08 ) ) ) );
+    en1 = es * ( C22 - es * ( C04 + es * ( C06 + es * C08 ) ) );
+    en2 = ( t = es * es ) * ( C44 - es * ( C46 + es * C48 ) );
+    en3 = ( t *= es ) * ( C66 - es * C68 );
     en4 = t * es * C88;
   }
 
@@ -183,7 +186,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
   public String getName( final Locale locale )
   {
     return "TransverseMercatorProjection";
-  } // Resources.getResources(locale).getString(key);
+  } //Resources.getResources(locale).getString(key);
 
   /**
    * Calcule la distance méridionale sur un ellipsoïde à la latitude <code>phi</code>.
@@ -192,19 +195,19 @@ final class TransverseMercatorProjection extends CylindricalProjection
   {
     cphi *= sphi;
     sphi *= sphi;
-    return (en0 * phi) - (cphi * (en1 + sphi * (en2 + sphi * (en3 + sphi * en4))));
+    return ( en0 * phi ) - ( cphi * ( en1 + sphi * ( en2 + sphi * ( en3 + sphi * en4 ) ) ) );
   }
 
   /**
    * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  @Override
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
 
-    if( Math.abs( y ) > (Math.PI / 2.0 - EPS) )
+    if( Math.abs( y ) > ( Math.PI / 2.0 - EPS ) )
     {
-      throw new TransformException( "Fehler bei Coordinatentranformation" );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1, new Latitude( Math
+          .toDegrees( y ) ) ) );
     }
 
     x -= centralMeridian;
@@ -224,12 +227,12 @@ final class TransverseMercatorProjection extends CylindricalProjection
         throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
 
-      double yy = (cosphi * Math.cos( x )) / Math.sqrt( 1.0 - (localB * localB) );
-      x = (0.5 * ak0 * Math.log( (1.0 + localB) / (1.0 - localB) )) + false_easting;/* 8-1 */
+      double yy = ( cosphi * Math.cos( x ) ) / Math.sqrt( 1.0 - ( localB * localB ) );
+      x = ( 0.5 * ak0 * Math.log( ( 1.0 + localB ) / ( 1.0 - localB ) ) ) + false_easting;/* 8-1 */
 
-      if( (localB = Math.abs( yy )) >= 1.0 )
+      if( ( localB = Math.abs( yy ) ) >= 1.0 )
       {
-        if( (localB - 1.0) > EPS10 )
+        if( ( localB - 1.0 ) > EPS10 )
         {
           throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
         }
@@ -251,21 +254,34 @@ final class TransverseMercatorProjection extends CylindricalProjection
     {
 
       // Ellipsoidal model.
-      double t = (Math.abs( cosphi ) > EPS10) ? (sinphi / cosphi) : 0;
+      double t = ( Math.abs( cosphi ) > EPS10 ) ? ( sinphi / cosphi ) : 0;
       t *= t;
 
       double al = cosphi * x;
       double als = al * al;
-      al /= Math.sqrt( 1.0 - (es * sinphi * sinphi) );
+      al /= Math.sqrt( 1.0 - ( es * sinphi * sinphi ) );
 
       double n = esp * cosphi * cosphi;
 
       /* NOTE: meridinal distance at central latitude is always 0 */
-      y = (ak0 * (mlfn( y, sinphi, cosphi ) + sinphi * al * x * FC2
-          * (1.0 + FC4 * als * (5.0 - t + (n * (9.0 + 4.0 * n)) + FC6 * als * (61.0 + (t * (t - 58.0)) + (n * (270.0 - 330.0 * t)) + FC8 * als * (1385.0 + t * (t * (543.0 - t) - 3111.0)))))));
+      y = ( ak0 * ( mlfn( y, sinphi, cosphi ) + sinphi
+          * al
+          * x
+          * FC2
+          * ( 1.0 + FC4
+              * als
+              * ( 5.0 - t + ( n * ( 9.0 + 4.0 * n ) ) + FC6
+                  * als
+                  * ( 61.0 + ( t * ( t - 58.0 ) ) + ( n * ( 270.0 - 330.0 * t ) ) + FC8 * als
+                      * ( 1385.0 + t * ( t * ( 543.0 - t ) - 3111.0 ) ) ) ) ) ) );
       y += false_northing;
 
-      x = (ak0 * al * (FC1 + FC3 * als * (1.0 - t + n + FC5 * als * (5.0 + (t * (t - 18.0)) + (n * (14.0 - 58.0 * t)) + FC7 * als * (61.0 + t * (t * (179.0 - t) - 479.0))))));
+      x = ( ak0 * al * ( FC1 + FC3
+          * als
+          * ( 1.0 - t + n + FC5
+              * als
+              * ( 5.0 + ( t * ( t - 18.0 ) ) + ( n * ( 14.0 - 58.0 * t ) ) + FC7 * als
+                  * ( 61.0 + t * ( t * ( 179.0 - t ) - 479.0 ) ) ) ) ) );
       x += false_easting;
     }
 
@@ -274,7 +290,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    return new Point2D.Double( x, y );
+      return new Point2D.Double( x, y );
   }
 
   /**
@@ -285,18 +301,19 @@ final class TransverseMercatorProjection extends CylindricalProjection
     x -= false_easting;
     y -= false_northing;
     y *= hemisphere;
-    x = x - ((int) (x / 1000000) * 1000000.0);
+    x = x - ( (int)( x / 1000000 ) * 1000000.0 );
 
     if( isSpherical )
     {
       // Spherical model.
       double t = Math.exp( x / ak0 );
-      double d = 0.5 * (t - 1 / t);
+      double d = 0.5 * ( t - 1 / t );
       t = Math.cos( y / ak0 );
 
-      double phi = Math.asin( Math.sqrt( (1.0 - t * t) / (1.0 + d * d) ) );
-      y = (y < 0.0) ? (-phi) : phi;
-      x = (Math.abs( d ) > EPS10 || Math.abs( t ) > EPS10) ? (Math.atan2( d, t ) + centralMeridian) : centralMeridian;
+      double phi = Math.asin( Math.sqrt( ( 1.0 - t * t ) / ( 1.0 + d * d ) ) );
+      y = ( y < 0.0 ) ? ( -phi ) : phi;
+      x = ( Math.abs( d ) > EPS10 || Math.abs( t ) > EPS10 ) ? ( Math.atan2( d, t ) + centralMeridian )
+          : centralMeridian;
     }
     else
     {
@@ -307,14 +324,14 @@ final class TransverseMercatorProjection extends CylindricalProjection
 
       for( int i = 20; true; ) // rarely goes over 5 iterations
       {
-        if( (--i) < 0 )
+        if( ( --i ) < 0 )
         {
           throw new TransformException( Resources.format( ResourceKeys.ERROR_NO_CONVERGENCE ) );
         }
 
         final double s = Math.sin( phi );
-        double t = 1.0 - (es * (s * s));
-        t = (mlfn( phi, s, Math.cos( phi ) ) - y_ak0) / (k * t * Math.sqrt( t ));
+        double t = 1.0 - ( es * ( s * s ) );
+        t = ( mlfn( phi, s, Math.cos( phi ) ) - y_ak0 ) / ( k * t * Math.sqrt( t ) );
         phi -= t;
 
         if( Math.abs( t ) < EPS11 )
@@ -323,30 +340,37 @@ final class TransverseMercatorProjection extends CylindricalProjection
         }
       }
 
-      if( Math.abs( phi ) >= (Math.PI / 2.0) )
+      if( Math.abs( phi ) >= ( Math.PI / 2.0 ) )
       {
-        y = (y < 0.0) ? (-(Math.PI / 2.0)) : (Math.PI / 2.0);
+        y = ( y < 0.0 ) ? ( -( Math.PI / 2.0 ) ) : ( Math.PI / 2.0 );
         x = centralMeridian;
       }
       else
       {
         double sinphi = Math.sin( phi );
         double cosphi = Math.cos( phi );
-        double t = (Math.abs( cosphi ) > EPS10) ? (sinphi / cosphi) : 0.0;
+        double t = ( Math.abs( cosphi ) > EPS10 ) ? ( sinphi / cosphi ) : 0.0;
         double n = esp * cosphi * cosphi;
-        double con = 1.0 - (es * sinphi * sinphi);
-        double d = (x * Math.sqrt( con )) / ak0;
+        double con = 1.0 - ( es * sinphi * sinphi );
+        double d = ( x * Math.sqrt( con ) ) / ak0;
         con *= t;
         t *= t;
 
         double ds = d * d;
         y = phi
-            - ((con * ds / (1.0 - es)) * FC2 * (1.0 - ds
+            - ( ( con * ds / ( 1.0 - es ) ) * FC2 * ( 1.0 - ds
                 * FC4
-                * (5.0 + (t * (3.0 - 9.0 * n)) + (n * (1.0 - 4 * n)) - ds * FC6
-                    * (61.0 + (t * (90.0 - (252.0 * n) + 45.0 * t)) + (46.0 * n) - ds * FC8 * (1385.0 + t * (3633.0 + t * (4095.0 + 1574.0 * t))))))) + centralLatitude;
+                * ( 5.0 + ( t * ( 3.0 - 9.0 * n ) ) + ( n * ( 1.0 - 4 * n ) ) - ds
+                    * FC6
+                    * ( 61.0 + ( t * ( 90.0 - ( 252.0 * n ) + 45.0 * t ) ) + ( 46.0 * n ) - ds * FC8
+                        * ( 1385.0 + t * ( 3633.0 + t * ( 4095.0 + 1574.0 * t ) ) ) ) ) ) ) + centralLatitude;
 
-        x = ((d * (FC1 - ds * FC3 * (1.0 + (2.0 * t) + n - ds * FC5 * (5.0 + (t * (28.0 + (24 * t) + 8.0 * n)) + (6.0 * n) - ds * FC7 * (61.0 + t * (662.0 + t * (1320.0 + 720.0 * t))))))) / cosphi)
+        x = ( ( d * ( FC1 - ds
+            * FC3
+            * ( 1.0 + ( 2.0 * t ) + n - ds
+                * FC5
+                * ( 5.0 + ( t * ( 28.0 + ( 24 * t ) + 8.0 * n ) ) + ( 6.0 * n ) - ds * FC7
+                    * ( 61.0 + t * ( 662.0 + t * ( 1320.0 + 720.0 * t ) ) ) ) ) ) ) / cosphi )
             + centralMeridian;
       }
     }
@@ -356,16 +380,16 @@ final class TransverseMercatorProjection extends CylindricalProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    return new Point2D.Double( x, y );
+      return new Point2D.Double( x, y );
   }
 
   /**
    * Returns a hash value for this projection.
    */
-  public int hashCode( )
+  public int hashCode()
   {
     final long code = Double.doubleToLongBits( false_easting );
-    return ((int) code ^ (int) (code >>> 32)) + (37 * super.hashCode());
+    return ( (int)code ^ (int)( code >>> 32 ) ) + ( 37 * super.hashCode() );
   }
 
   /**
@@ -380,8 +404,9 @@ final class TransverseMercatorProjection extends CylindricalProjection
 
     if( super.equals( object ) )
     {
-      final TransverseMercatorProjection that = (TransverseMercatorProjection) object;
-      return (Double.doubleToLongBits( this.false_easting ) == Double.doubleToLongBits( that.false_easting )) && (Double.doubleToLongBits( this.ak0 ) == Double.doubleToLongBits( that.ak0 ));
+      final TransverseMercatorProjection that = (TransverseMercatorProjection)object;
+      return ( Double.doubleToLongBits( this.false_easting ) == Double.doubleToLongBits( that.false_easting ) )
+          && ( Double.doubleToLongBits( this.ak0 ) == Double.doubleToLongBits( that.ak0 ) );
     }
 
     return false;
@@ -412,7 +437,8 @@ final class TransverseMercatorProjection extends CylindricalProjection
      */
     public Provider( final boolean modified )
     {
-      super( modified ? "Modified_Transverse_Mercator" : "Transverse_Mercator", modified ? ResourceKeys.MTM_PROJECTION : ResourceKeys.UTM_PROJECTION );
+      super( modified ? "Modified_Transverse_Mercator" : "Transverse_Mercator", modified ? ResourceKeys.MTM_PROJECTION
+          : ResourceKeys.UTM_PROJECTION );
     }
 
     /**

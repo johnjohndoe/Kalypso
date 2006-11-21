@@ -43,15 +43,14 @@ package org.kalypso.services.user.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.jws.WebService;
-
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.IUserService;
@@ -67,7 +66,6 @@ import org.kalypso.services.user.UserRightsException;
  * 
  * @author belger
  */
-@WebService
 public class KalypsoUserService implements IUserService
 {
   private IUserRightsProvider m_rightsProvider = null;
@@ -92,7 +90,7 @@ public class KalypsoUserService implements IUserService
 
   private ScenarioBean[] m_scenarios;
 
-  public KalypsoUserService() throws UserRightsException
+  public KalypsoUserService() throws RemoteException
   {
     m_logger.info( "Initialisiere UserService" );
 
@@ -104,7 +102,7 @@ public class KalypsoUserService implements IUserService
    * 
    * @throws RemoteException
    */
-  private final void init() throws UserRightsException
+  private final void init() throws RemoteException
   {
     InputStream stream = null;
     try
@@ -174,7 +172,7 @@ public class KalypsoUserService implements IUserService
     {
       m_logger.throwing( "KalypsoUserService", "init", e );
 
-      throw new UserRightsException( "Fehler bei der Initialisierung", e );
+      throw new RemoteException( "Fehler bei der Initialisierung", e );
     }
     finally
     {
@@ -185,49 +183,57 @@ public class KalypsoUserService implements IUserService
   /**
    * @see java.lang.Object#finalize()
    */
-  @Override
   protected void finalize() throws Throwable
   {
     if( m_rightsProvider != null )
       m_rightsProvider.dispose();
   }
 
-  public String[] getRights( final String username ) throws UserRightsException
+  /**
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String)
+   */
+  public String[] getRights( final String username, final String currentScenarioId ) throws RemoteException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username );
+      return m_rightsProvider.getRights( username, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
       m_logger.info( e.getLocalizedMessage() );
 
-      throw e;
+      throw new RemoteException( "Exception in getRights()", e );
     }
   }
 
+  /**
+   * @see org.kalypso.services.IKalypsoService#getServiceVersion()
+   */
   public int getServiceVersion()
   {
     return 0;
   }
 
-  public String[] getRightsWithAuth( String username, String password ) throws UserRightsException
+  /**
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String, java.lang.String)
+   */
+  public String[] getRights( final String username, final String password, final String currentScenarioId ) throws RemoteException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username, password );
+      return m_rightsProvider.getRights( username, password, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
       m_logger.info( e.getLocalizedMessage() );
 
-      throw e; //new RemoteException( "Exception in getRights()", e );
+      throw new RemoteException( "Exception in getRights()", e );
     }
 
   }

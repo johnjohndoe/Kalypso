@@ -56,40 +56,40 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
  */
 public class WQRelationFactory
 {
-  private WQRelationFactory( )
+  private WQRelationFactory()
   {
-    // empty
+  // empty
   }
 
   public static TableModel createTableModel( final WQTable table )
   {
     // build spline
     final WQPair[] pairs = table.getPairs();
-    final double[] Q = new double[pairs.length];
-    final double[] W = new double[pairs.length];
-
+    final double[] Q = new double[ pairs.length ];
+    final double[] W = new double[ pairs.length ];
+    
     for( int i = 0; i < pairs.length; i++ )
     {
       W[i] = pairs[i].getW();
       Q[i] = pairs[i].getQ();
     }
-
+    
     final Spline spline = new Spline( W, Q );
-
+    
     // sort W
-    final double[] sortedW = W.clone();
+    final double[] sortedW = (double[])W.clone();
     Arrays.sort( sortedW );
-
+    
     // compute Q
-    final List<Double> resQ = new ArrayList<Double>();
-
+    final List resQ = new ArrayList();
+    
     for( double w = sortedW[0]; w <= sortedW[sortedW.length - 1]; w++ )
     {
       final double q = spline.eval( w );
-
+      
       resQ.add( new Double( q ) );
     }
-
-    return new WQTableModel( new Double( sortedW[0] ), resQ.toArray( new Double[resQ.size()] ) );
+    
+    return new WQTableModel( new Double(sortedW[0]), (Double[])resQ.toArray( new Double[resQ.size()] ) );
   }
 }

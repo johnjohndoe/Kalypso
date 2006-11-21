@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  *
  * @author bce
  */
-@SuppressWarnings("restriction")
 public class LayerTypeUtilities
 {
   public static void initLayerType( final LayerType layer, final IFile file ) throws CoreException

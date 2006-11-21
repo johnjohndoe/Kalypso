@@ -44,11 +44,11 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
  */
 public class BinarySpatialData extends AbstractSpatialData
 {
+
   /**
    * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
    */
-  @Override
-  public boolean verify()
+  public boolean verify() throws FilterDialogException
   {
     Object type = getGeomType();
 

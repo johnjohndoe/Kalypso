@@ -65,20 +65,20 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public class DefaultCalcResultEater implements ICalcResultPacker
 {
-  private final Vector<File> m_files = new Vector<File>();
+  private final Vector m_files = new Vector();
 
   private final ModelspecData m_modelspec;
 
   /** Should be synchronized */
-  private final Vector<CalcResult> m_results = new Vector<CalcResult>();
+  private final Vector m_results = new Vector();
 
-  private final Map<String, CalcJobClientBean> m_clientOutputMap;
+  private final Map m_clientOutputMap;
 
   public DefaultCalcResultEater( final ModelspecData modelspec, final CalcJobClientBean[] clientOutput )
   {
     m_modelspec = modelspec;
 
-    m_clientOutputMap = new HashMap<String, CalcJobClientBean>( clientOutput.length );
+    m_clientOutputMap = new HashMap( clientOutput.length );
     for( int i = 0; i < clientOutput.length; i++ )
     {
       final CalcJobClientBean bean = clientOutput[i];
@@ -100,7 +100,7 @@ public class DefaultCalcResultEater implements ICalcResultPacker
     if( !m_modelspec.hasOutput( id ) )
       throw new CalcJobServiceException( "Vom Server unerwartete Ausgabe mit ID: " + id, null );
 
-    final CalcJobClientBean clientBean = m_clientOutputMap.get( id );
+    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap.get( id );
     if( clientBean == null )
       throw new CalcJobServiceException( "Vom Client unerwartete Ausgabe mit ID: " + id, null );
 
@@ -115,7 +115,7 @@ public class DefaultCalcResultEater implements ICalcResultPacker
     final String[] results = new String[m_results.size()];
     for( int i = 0; i < results.length; i++ )
     {
-      final CalcResult result = m_results.get( i );
+      final CalcResult result = (CalcResult)m_results.get( i );
       results[i] = result.getID();
     }
 
@@ -179,7 +179,7 @@ public class DefaultCalcResultEater implements ICalcResultPacker
     for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
     {
       final File file = (File)iter.next();
-      FileUtilities.deleteRecursive( file );
+      org.kalypso.contribs.java.io.FileUtilities.deleteRecursive( file );
     }
   }
 }

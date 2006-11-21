@@ -1,3 +1,20 @@
+package org.kalypsodeegree_impl.tools;
+
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,90 +55,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.tools;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.vividsolutions.jts.geom.Coordinate;
-
-/**
- * @author doemming
- */
 public class GeometryUtilities
 {
-  public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
 
-  public static final QName QN_POLYGON_PROPERTY = new QName( NS.GML3, "PolygonPropertyType" );
-
-  public static final QName QN_POINT = new QName( NS.GML3, "Point" );
-
-  public static final QName QN_POINT_PROPERTY = new QName( NS.GML3, "PointPropertyType" );
-
-  public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
-
-  public static final QName QN_LINE_STRING_PROPERTY = new QName( NS.GML3, "LineStringPropertyType" );
-
-  public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
-
-  public static final QName QN_MULTI_POINT_PROPERTY = new QName( NS.GML3, "MultiPointPropertyType" );
-
-  public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
-
-  public static final QName QN_MULTI_LINE_STRING_PROPERTY = new QName( NS.GML3, "MultiLineStringPropertyType" );
-
-  public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
-
-  public static final QName QN_MULTI_POLYGON_PROPERTY = new QName( NS.GML3, "MultiPolygonPropertyType" );
-
-  public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
-
-  public static final QName QN_LOCATION_PROPERTY = new QName( NS.GML3, "LocationPropertyType" );
-
-  public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
-
-  public static final QName QN_DIRECTION_PROPERTY = new QName( NS.GML3, "DirectionPropertyType" );
-
-  public GeometryUtilities( )
+  /*
+   * 
+   * @author doemming
+   */
+  public GeometryUtilities()
   {
     super();
   }
 
   public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP ) throws GM_Exception
   {
-    final GM_Position[] pos = new GM_Position[] { srcP.getPosition(), targetP.getPosition() };
+    final GM_Position[] pos = new GM_Position[]
+    {
+        srcP.getPosition(),
+        targetP.getPosition() };
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
-  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP, double weightLength, double weightWidth ) throws GM_Exception
+  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP, double weightLength, double weightWidth )
+      throws GM_Exception
   {
     double dx = targetP.getX() - srcP.getX();
     double dy = targetP.getY() - srcP.getY();
 
     final GM_Position p1 = srcP.getPosition();
     final GM_Position p4 = targetP.getPosition();
-    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
-    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
-    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
+    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength
+        * dy );
+    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth
+        * dx );
+    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth
+        * dx );
 
-    final GM_Position[] pos = new GM_Position[] { p1, p2, p3, p4, p5, p2 };
+    final GM_Position[] pos = new GM_Position[]
+    {
+        p1,
+        p2,
+        p3,
+        p4,
+        p5,
+        p2 };
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
@@ -129,7 +107,8 @@ public class GeometryUtilities
    * creates a new GM_Position that is on the straight line defined with the positions and has a special distance from
    * basePoint in the direction towards the directionPoint
    */
-  public static GM_Position createGM_PositionAt( GM_Position basePoint, GM_Position directionPoint, double distanceFromBasePoint )
+  public static GM_Position createGM_PositionAt( GM_Position basePoint, GM_Position directionPoint,
+      double distanceFromBasePoint )
   {
     final double[] p1 = basePoint.getAsArray();
     double distance = basePoint.getDistance( directionPoint );
@@ -138,9 +117,9 @@ public class GeometryUtilities
     final double[] p2 = directionPoint.getAsArray();
     final double factor = distanceFromBasePoint / distance;
     double newPos[] = new double[p1.length];
-    // for( int i = 0; i < newPos.length; i++ )
+    //    for( int i = 0; i < newPos.length; i++ )
     for( int i = 0; i < 2; i++ )
-      newPos[i] = p1[i] + (p2[i] - p1[i]) * factor;
+      newPos[i] = p1[i] + ( p2[i] - p1[i] ) * factor;
     return GeometryFactory.createGM_Position( newPos );
   }
 
@@ -153,12 +132,13 @@ public class GeometryUtilities
     // check between
     if( c < -0.01d || c > 1.01d )
       return null;
-    return GeometryFactory.createGM_Position( p1.getX() + c * dx, p1.getY() + c * (p2.getY() - p1.getY()), iso );
+    return GeometryFactory.createGM_Position( p1.getX() + c * dx, p1.getY() + c * ( p2.getY() - p1.getY() ), iso );
   }
 
   public static GM_Position createGM_PositionAtCenter( GM_Position p1, GM_Position p2 )
   {
-    return GeometryFactory.createGM_Position( (p1.getX() + p2.getX()) / 2d, (p1.getY() + p2.getY()) / 2d, (p1.getZ() + p2.getZ()) / 2d );
+    return GeometryFactory.createGM_Position( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2.getY() ) / 2d, ( p1
+        .getZ() + p2.getZ() ) / 2d );
   }
 
   /**
@@ -166,7 +146,8 @@ public class GeometryUtilities
    */
   public static GM_Point createGM_PositionAtCenter( GM_Point p1, GM_Point p2 )
   {
-    return GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2d, (p1.getY() + p2.getY()) / 2d, p1.getCoordinateSystem() );
+    return GeometryFactory.createGM_Point( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2.getY() ) / 2d, p1
+        .getCoordinateSystem() );
   }
 
   public static double calcAngleToSurface( GM_Surface surface, GM_Point point )
@@ -210,40 +191,43 @@ public class GeometryUtilities
     if( surface.contains( pointGuess ) )
       return pointGuess;
     // 
-    // pointGuess1
-    // |
-    // |radius1
-    // |
-    // --p1--- at border
-    // ----------
-    // ------------
-    // ------------
-    // --result----
-    // -----------
-    // ----------
-    // -----------
-    // -surface---
-    // --p2------- at border
-    // |
-    // |
-    // |
-    // |
-    // |radius2
-    // |
-    // |
-    // |
-    // |
-    // pointGuess2
+    //  pointGuess1
+    //     |
+    //     |radius1
+    //     |
+    //   --p1--- at border
+    //   ----------
+    //   ------------
+    //   ------------
+    //   --result----
+    //   -----------
+    //   ----------
+    //   -----------
+    //   -surface---
+    //   --p2------- at border
+    //     |
+    //     |
+    //     |
+    //     |
+    //     |radius2
+    //     |
+    //     |
+    //     |
+    //     |
+    //  pointGuess2
     //    
     // 1. find point at surface on one side
     double angle1 = calcAngleToSurface( surface, pointGuess );
     final double r1 = surface.distance( pointGuess );
     final GM_Point p1 = createPointFrom( pointGuess, angle1, r1 );
-    final GM_Point p2 = calcFarestPointOnSurfaceInDirection( surface, p1, angle1, Math.sqrt( Math.pow( surface.getEnvelope().getHeight(), 2 ) * Math.pow( surface.getEnvelope().getWidth(), 2 ) ), 8 );
+    final GM_Point p2 = calcFarestPointOnSurfaceInDirection( surface, p1, angle1, Math.sqrt( Math.pow( surface
+        .getEnvelope().getHeight(), 2 )
+        * Math.pow( surface.getEnvelope().getWidth(), 2 ) ), 8 );
     return guessPointOnSurface( surface, createGM_PositionAtCenter( p1, p2 ), tries );
   }
 
-  private static GM_Point calcFarestPointOnSurfaceInDirection( GM_Surface surface, GM_Point pOnSurface, double angle, double max, int tries )
+  private static GM_Point calcFarestPointOnSurfaceInDirection( GM_Surface surface, GM_Point pOnSurface, double angle,
+      double max, int tries )
   {
     final GM_Point point = createPointFrom( pOnSurface, angle, max );
     if( surface.contains( point ) )
@@ -255,69 +239,69 @@ public class GeometryUtilities
     return calcFarestPointOnSurfaceInDirection( surface, pOnSurface, angle, max - distance, tries );
   }
 
-  // public static GM_Point guessPointOnSurface( final GM_Surface surface, //
+  //  public static GM_Point guessPointOnSurface( final GM_Surface surface, //
   // // // GM_Point firstGuessPoint, int tries )
-  // {
-  // if( surface == null )
-  // return null;
-  // if( firstGuessPoint == null )
-  // firstGuessPoint = surface.getCentroid();
-  // if( tries <= 0 )
-  // return firstGuessPoint;
-  // tries--;
-  // //
-  // // guessPoint
-  // // |
-  // // |radius
-  // // |
-  // // --p1-- at border
-  // // --|-----
-  // // --p3----- middle of p1 and p2
-  // // --|------
-  // // --p2---- guesspoint mirror at p2
-  // // --------
-  // // ---------
-  // // -surface-
-  // // ---------
-  // //
-  // // 1. find direction to surface
-  // double n = 8; // number of directions to test
-  // final double r = surface.distance( firstGuessPoint );
-  // double min = r;
-  // double resultAngle = 0;
-  // for( double angle = 0; angle < 2d * Math.PI; angle += Math.PI / n )
-  // {
-  // GM_Point p = createPointFrom( firstGuessPoint, angle, r / 2 );
-  // double distance = surface.distance( p );
-  // if( distance < min )
-  // {
-  // min = distance;
-  // resultAngle = angle;
-  // }
-  // }
-  // // calc point at border
-  // final GM_Point p1 = createPointFrom( firstGuessPoint, resultAngle, r );
-  // // mirror at p1
-  // final GM_Point p2 = createPointFrom( firstGuessPoint, resultAngle, 2 * r );
-  // // center of p1 and p2
-  // final GM_Point p3 = createGM_PositionAtCenter( p1, p2 );
+  //  {
+  //    if( surface == null )
+  //      return null;
+  //    if( firstGuessPoint == null )
+  //      firstGuessPoint = surface.getCentroid();
+  //    if( tries <= 0 )
+  //      return firstGuessPoint;
+  //    tries--;
+  //    //
+  //    // guessPoint
+  //    // |
+  //    // |radius
+  //    // |
+  //    // --p1-- at border
+  //    // --|-----
+  //    // --p3----- middle of p1 and p2
+  //    // --|------
+  //    // --p2---- guesspoint mirror at p2
+  //    // --------
+  //    // ---------
+  //    // -surface-
+  //    // ---------
+  //    //
+  //    // 1. find direction to surface
+  //    double n = 8; // number of directions to test
+  //    final double r = surface.distance( firstGuessPoint );
+  //    double min = r;
+  //    double resultAngle = 0;
+  //    for( double angle = 0; angle < 2d * Math.PI; angle += Math.PI / n )
+  //    {
+  //      GM_Point p = createPointFrom( firstGuessPoint, angle, r / 2 );
+  //      double distance = surface.distance( p );
+  //      if( distance < min )
+  //      {
+  //        min = distance;
+  //        resultAngle = angle;
+  //      }
+  //    }
+  //    // calc point at border
+  //    final GM_Point p1 = createPointFrom( firstGuessPoint, resultAngle, r );
+  //    // mirror at p1
+  //    final GM_Point p2 = createPointFrom( firstGuessPoint, resultAngle, 2 * r );
+  //    // center of p1 and p2
+  //    final GM_Point p3 = createGM_PositionAtCenter( p1, p2 );
   //    
   //    
-  // if(!surface.contains( p2 ) )
-  // {
-  // if( surface.contains( p3 ) )
-  // return p3;
-  // return p2;
-  // }
-  // return guessPointOnSurface( surface, p3, tries );
-  // // if( surface.contains( p2 ) )
-  // // {
-  // // if( surface.contains( p3 ) )
-  // // return p3;
-  // // return p2;
-  // // }
-  // // return guessPointOnSurface( surface, p3, tries );
-  // }
+  //    if(!surface.contains( p2 ) )
+  //    {
+  //      if( surface.contains( p3 ) )
+  //        return p3;
+  //      return p2;
+  //    }
+  //    return guessPointOnSurface( surface, p3, tries );
+  //// if( surface.contains( p2 ) )
+  //// {
+  //// if( surface.contains( p3 ) )
+  //// return p3;
+  //// return p2;
+  //// }
+  //// return guessPointOnSurface( surface, p3, tries );
+  //  }
 
   private static GM_Point createPointFrom( GM_Point centroid, double angle, double radius )
   {
@@ -329,11 +313,11 @@ public class GeometryUtilities
   public static double calcArea( GM_Object geom )
   {
     if( geom instanceof GM_Surface )
-      return ((GM_Surface) geom).getArea();
+      return ( (GM_Surface)geom ).getArea();
     else if( geom instanceof GM_MultiSurface )
     {
       double area = 0;
-      GM_Surface[] allSurfaces = ((GM_MultiSurface) geom).getAllSurfaces();
+      GM_Surface[] allSurfaces = ( (GM_MultiSurface)geom ).getAllSurfaces();
       for( int j = 0; j < allSurfaces.length; j++ )
         area += calcArea( allSurfaces[j] );
       return area;
@@ -341,7 +325,7 @@ public class GeometryUtilities
     else if( geom instanceof GM_MultiPrimitive )
     {
       double area = 0;
-      GM_Primitive[] allPrimitives = ((GM_MultiPrimitive) geom).getAllPrimitives();
+      GM_Primitive[] allPrimitives = ( (GM_MultiPrimitive)geom ).getAllPrimitives();
       for( int i = 0; i < allPrimitives.length; i++ )
         area += calcArea( allPrimitives[i] );
       return area;
@@ -352,12 +336,12 @@ public class GeometryUtilities
   public static boolean isInside( GM_Object a, GM_Object b )
   {
     if( a instanceof GM_Surface && b instanceof GM_Surface )
-      return a.contains( guessPointOnSurface( (GM_Surface) b, b.getCentroid(), 3 ) );
-    // return a.contains(b);
+      return a.contains( guessPointOnSurface( (GM_Surface)b, b.getCentroid(), 3 ) );
+    //      return a.contains(b);
     if( a instanceof GM_MultiSurface )
-      return isInside( ((GM_MultiSurface) a).getAllSurfaces()[0], b );
+      return isInside( ( (GM_MultiSurface)a ).getAllSurfaces()[0], b );
     if( b instanceof GM_MultiSurface )
-      return isInside( a, ((GM_MultiSurface) b).getAllSurfaces()[0] );
+      return isInside( a, ( (GM_MultiSurface)b ).getAllSurfaces()[0] );
     return false;
   }
 
@@ -379,331 +363,164 @@ public class GeometryUtilities
   }
 
   /**
+   * 
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isPointGeometry( final IValuePropertyType ftp )
+  public static boolean isPointGeometry( final FeatureTypeProperty ftp )
   {
     // remember to use the same classes as used by the marshalling type handlers !!
-    return ftp.getValueClass().equals( getPointClass() );
+    return ftp.getType().equals( getPointClass().getName() );
 
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isPointGeometry( final Object o )
-  {
-    return o.getClass().equals( getPointClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isMultiPointGeometry( final IValuePropertyType ftp )
+  public static boolean isMultiPointGeometry( FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getMultiPointClass() );
+    return ftp.getType().equals( getMultiPointClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isMultiPointGeometry( final Object o )
-  {
-    return o.getClass().equals( getMultiPointClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isLineStringGeometry( final IValuePropertyType ftp )
+  public static boolean isLineStringGeometry( FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getLineStringClass() );
+    return ftp.getType().equals( getLineStringClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-
-  public static boolean isLineStringGeometry( final Object o )
-  {
-    return o.getClass().equals( getLineStringClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isMultiLineStringGeometry( final IValuePropertyType ftp )
+  public static boolean isMultiLineStringGeometry( final FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getMultiLineStringClass() );
+    return ftp.getType().equals( getMultiLineStringClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isMultiLineStringGeometry( final Object o )
-  {
-    return o.getClass().equals( getMultiLineStringClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isPolygonGeometry( IValuePropertyType ftp )
+  public static boolean isPolygonGeometry( FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getPolygonClass() );
+    return ftp.getType().equals( getPolygonClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isPolygonGeometry( final Object o )
-  {
-    Class< ? extends Object> class1 = o.getClass();
-    return getPolygonClass().isAssignableFrom( class1 );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isMultiPolygonGeometry( final IValuePropertyType ftp )
+  public static boolean isMultiPolygonGeometry( final FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getMultiPolygonClass() );
+    return ftp.getType().equals( getMultiPolygonClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isMultiPolygonGeometry( final Object o )
-  {
-    return o.getClass().equals( getMultiPolygonClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isUndefinedGeometry( final IValuePropertyType ftp )
+  public static boolean isUndefinedGeometry( FeatureTypeProperty ftp )
   {
-    return ftp.getValueClass().equals( getUndefinedGeometryClass() );
+    return ftp.getType().equals( getUndefinedGeometryClass().getName() );
   }
 
   /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isUndefinedGeometry( final Object o )
-  {
-    return o.getClass().equals( getUndefinedGeometryClass() );
-  }
-
-  /**
+   * 
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
-  public static boolean isAnyMultiGeometry( IPropertyType ftp )
+  public static boolean isAnyMultiGeometry( FeatureTypeProperty ftp )
   {
     ftp.getClass(); // no yellow things
     return false; // not supported TODO support it
   }
 
-  public static boolean isEnvelopeGeometry( final IValuePropertyType ftp )
+  public static boolean isEnvelopeGeometry( final FeatureTypeProperty ftp )
   {
-    return getEnvelopeClass().equals( ftp.getValueClass() );
+    return ftp.getType().endsWith( "Envelope" ); // TODO use class.netName()
   }
 
-  /**
-   * @param o
-   * @return <code>true</code> if object type equals this type of geometry
-   */
-  public static boolean isEnvelopeGeometry( final Object o )
+  public static boolean isGeometry( final FeatureTypeProperty ftp )
   {
-    return getEnvelopeClass().equals( o.getClass() );
-  }
-
-  public static Class< ? extends Object> getEnvelopeClass( )
-  {
-    return GM_Envelope.class;
-  }
-
-  public static boolean isGeometry( final IPropertyType pt )
-  {
-    if( !(pt instanceof IValuePropertyType) )
-      return false;
-    final IValuePropertyType gpt = (IValuePropertyType) pt;
-    if( isPointGeometry( gpt ) )
+    if( isPointGeometry( ftp ) )
       return true;
-    if( isMultiPointGeometry( gpt ) )
+    if( isMultiPointGeometry( ftp ) )
       return true;
-    if( isLineStringGeometry( gpt ) )
+    if( isLineStringGeometry( ftp ) )
       return true;
-    if( isMultiLineStringGeometry( gpt ) )
+    if( isMultiLineStringGeometry( ftp ) )
       return true;
-    if( isPolygonGeometry( gpt ) )
+    if( isPolygonGeometry( ftp ) )
       return true;
-    if( isMultiPolygonGeometry( gpt ) )
+    if( isMultiPolygonGeometry( ftp ) )
       return true;
-    if( isAnyMultiGeometry( gpt ) )
+    if( isAnyMultiGeometry( ftp ) )
       return true;
-    // if( isEnvelopeGeometry( ftp ) )
-    // return true;
+    //    if( isEnvelopeGeometry( ftp ) )
+    //      return true;
     return false;
   }
+  
+  public static Class getClass( FeatureTypeProperty ftp )
+  {
+    if( isPointGeometry( ftp ) )
+      return getPointClass();
+    if( isMultiPointGeometry( ftp ) )
+      return getMultiPointClass();
+    if( isLineStringGeometry( ftp ) )
+      return getLineStringClass();
+    if( isMultiLineStringGeometry( ftp ) )
+      return getMultiLineStringClass();
+    if( isPolygonGeometry( ftp ) )
+      return getPolygonClass();
+    if( isMultiPolygonGeometry( ftp ) )
+      return getMultiPolygonClass();
+    if( isAnyMultiGeometry( ftp ) )
+      return null;
+    return null;
+  }
 
-  // public static Class getClass( IPropertyType ftp )
-  // {
-  // if( isPointGeometry( ftp ) )
-  // return getPointClass();
-  // if( isMultiPointGeometry( ftp ) )
-  // return getMultiPointClass();
-  // if( isLineStringGeometry( ftp ) )
-  // return getLineStringClass();
-  // if( isMultiLineStringGeometry( ftp ) )
-  // return getMultiLineStringClass();
-  // if( isPolygonGeometry( ftp ) )
-  // return getPolygonClass();
-  // if( isMultiPolygonGeometry( ftp ) )
-  // return getMultiPolygonClass();
-  // if( isAnyMultiGeometry( ftp ) )
-  // return null;
-  // return null;
-  // }
-
-  public static Class< ? extends Object> getPointClass( )
+  public static Class getPointClass()
   {
     return GM_Point.class;
   }
 
-  public static Class< ? extends Object> getMultiPointClass( )
+  public static Class getMultiPointClass()
   {
     return GM_MultiPoint.class;
   }
 
-  public static Class< ? extends Object> getLineStringClass( )
+  public static Class getLineStringClass()
   {
     return GM_Curve.class;
   }
 
-  public static Class< ? extends Object> getMultiLineStringClass( )
+  public static Class getMultiLineStringClass()
   {
     return GM_MultiCurve.class;
   }
 
-  public static Class< ? extends Object> getPolygonClass( )
+  public static Class getPolygonClass()
   {
     return GM_Surface.class;
   }
 
-  public static Class< ? extends Object> getMultiPolygonClass( )
+  public static Class getMultiPolygonClass()
   {
     return GM_MultiSurface.class;
   }
 
-  public static Class< ? extends Object> getUndefinedGeometryClass( )
+  public static Class getUndefinedGeometryClass()
   {
     return GM_Object.class;
   }
-
-  public static boolean isGeometry( Object o )
-  {
-    Class< ? extends Object> class1 = o.getClass();
-    if( getUndefinedGeometryClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getPointClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getMultiPointClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getLineStringClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getMultiLineStringClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getPolygonClass().isAssignableFrom( class1 ) )
-      return true;
-    else if( getMultiPolygonClass().isAssignableFrom( class1 ) )
-      return true;
-    return false;
-  }
-
-  /**
-   * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
-   * polygon is wrapped to a multi polygon.
-   * 
-   * @param geomToCheck
-   *          geometry object to check
-   * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
-   *         itself
-   * @exception a
-   *              GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
-   */
-  public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
-  {
-    Class< ? extends GM_Object> class1 = geomToCheck.getClass();
-    if( geomToCheck == null )
-      return null;
-    else if( getMultiPolygonClass().isAssignableFrom( class1 ) )
-      return (GM_MultiSurface) geomToCheck;
-    else if( getPolygonClass().isAssignableFrom( class1 ) )
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface) geomToCheck }, ((GM_Surface) geomToCheck).getCoordinateSystem() );
-    else
-      throw new GM_Exception( "This geometry can not be a MultiPolygon..." );
-  }
-
-  /**
-   * @param ring
-   *          array of ordered coordinates, last must equal first one
-   * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
-   */
-  public static double calcSignedAreaOfRing( final Coordinate[] ring )
-  {
-    if( ring.length < 4 ) // 3 points and 4. is repetition of first point
-      throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
-    final Coordinate a = ring[0]; // base
-    double area = 0;
-    for( int i = 1; i < ring.length - 2; i++ )
-    {
-      final Coordinate b = ring[i];
-      final Coordinate c = ring[i + 1];
-      area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
-
-          - ((a.x - b.x) * (b.y - a.y)//
-              + (b.x - c.x) * (b.y - c.y)//
-          + (a.x - c.x) * (c.y - a.y)//
-          ) / 2d;
-    }
-    return area;
-  }
-
-  /**
-   * Finds the first geometry property of the given feature type.
-   * 
-   * @param aPreferedGeometryClass
-   *          If non null, the first property of this type is returned.
-   */
-  public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class aPreferedGeometryClass )
-  {
-    final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
-
-    IValuePropertyType geometryProperty = null;
-    for( int i = 0; i < allGeomteryProperties.length; i++ )
-    {
-      final IValuePropertyType property = allGeomteryProperties[i];
-      if( aPreferedGeometryClass == null || property.getValueClass() == aPreferedGeometryClass )
-      {
-        geometryProperty = property;
-        break;
-      }
-    }
-    return geometryProperty;
-  }
-
 }

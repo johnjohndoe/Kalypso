@@ -41,7 +41,6 @@
 package org.kalypso.auth.ui;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
@@ -68,53 +67,33 @@ import org.kalypso.commons.java.util.StringUtilities;
  */
 public class KalypsoLoginDialog extends TitleAreaDialog
 {
-  private static final String STR_SCENARIO_TOOLTIP = "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle" + " wie Katastrophentest unterstützt";
-
+  private static final String STR_SCENARIO_TOOLTIP = "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle"
+      + " wie Katastrophentest unterstützt";
   private final boolean m_userNameChangeable;
-
   private String m_userName;
 
   private final boolean m_passwordEnabled;
-
   private String m_passerword;
 
   private final boolean m_useScenarios;
-
   private IScenario m_selectedScenario;
-
   private IScenario[] m_scenarios;
 
   private final String m_message;
-
-  private final String m_title;
-
-  private final ImageDescriptor m_titleImageDescriptor;
-  
+  private final static String m_title = "Kalypso - Login";
   private Image m_image;
 
   private ListViewer m_sceViewer;
-
   private Text m_txtPass;
-
   private Text m_txtName;
-
   private ISelectionChangedListener m_listener;
 
-  public KalypsoLoginDialog( final Shell shell, final String msg, final boolean isUserNameChangeable, final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario, final IScenario[] scenarios )
-  {
-    this( shell, null, msg, isUserNameChangeable, defaultUserName, isPasswordEnabled, isAskForScenario, scenarios );
-  }
-
-  public KalypsoLoginDialog( final Shell shell, final String title, final String msg, final boolean isUserNameChangeable, final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario, final IScenario[] scenarios )
-  {
-    this( shell, title, msg, isUserNameChangeable, defaultUserName, isPasswordEnabled, isAskForScenario, scenarios, ImageProvider.IMAGE_LOGIN );
-  }
-  
-  public KalypsoLoginDialog( final Shell shell, final String title, final String msg, final boolean isUserNameChangeable, final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario, final IScenario[] scenarios, final ImageDescriptor titleImage )
+  public KalypsoLoginDialog( final Shell shell, final String msg, final boolean isUserNameChangeable,
+      final String defaultUserName, final boolean isPasswordEnabled, final boolean isAskForScenario,
+      final IScenario[] scenarios )
   {
     super( shell );
 
-    m_title = title == null ? "Kalypso - Login" : title;
     m_message = msg;
 
     m_userNameChangeable = isUserNameChangeable;
@@ -123,15 +102,12 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     m_useScenarios = isAskForScenario;
     m_scenarios = scenarios;
 
-    m_titleImageDescriptor = titleImage;
-
     setShellStyle( SWT.SYSTEM_MODAL | SWT.ON_TOP );
   }
 
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
@@ -202,8 +178,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
       }
     }
 
-    m_image = m_titleImageDescriptor.createImage();
-
+    m_image = ImageProvider.IMAGE_LOGIN.createImage();
     setTitleImage( m_image );
     setTitle( m_title );
     setMessage( m_message );
@@ -212,11 +187,11 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
     return composite;
   }
-  
+
   /**
    * Helper that sets the focus according to dialog settings
    */
-  private void setMyFocus( )
+  private void setMyFocus()
   {
     if( m_userNameChangeable )
       m_txtName.setFocus();
@@ -229,8 +204,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  @Override
-  protected void okPressed( )
+  protected void okPressed()
   {
     m_userName = m_txtName == null ? null : m_txtName.getText();
     m_passerword = m_txtPass == null ? null : m_txtPass.getText();
@@ -238,40 +212,36 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  @Override
-  public boolean close( )
+  public boolean close()
   {
     if( m_listener != null && m_sceViewer != null )
       m_sceViewer.removeSelectionChangedListener( m_listener );
 
     if( m_image != null )
-    {
       m_image.dispose();
-      m_image = null;
-    }
 
     return super.close();
   }
 
-  public IScenario getSelectedScenario( )
+  public IScenario getSelectedScenario()
   {
     return m_selectedScenario;
   }
 
-  public String getUserName( )
+  public String getUserName()
   {
     return m_userName;
   }
 
-  public String getPassword( )
+  public String getPassword()
   {
     return m_passerword;
   }
 
   protected void handleScenarioSelected( final Text txtDesc, final SelectionChangedEvent event )
   {
-    final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-    m_selectedScenario = (IScenario) sel.getFirstElement();
+    final IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+    m_selectedScenario = (IScenario)sel.getFirstElement();
     String desc = m_selectedScenario.getDescription();
 
     if( desc == null )

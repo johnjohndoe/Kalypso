@@ -40,88 +40,245 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.test;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.zml.filters.IntervallFilterType;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.filters.IntervallFilter;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.ZmlFilterType;
+import org.kalypso.zml.filters.ZmlFilter;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class IntervallFilterTest extends TestCase
 {
-  public void testIntervallFilter( ) throws Exception
-  {
-    final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+  private static final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
+  private ObjectFactory m_fac = new ObjectFactory();
+
+  public void testIntervallFilter()
+  {
     Writer writer = null;
     try
     {
       final URL resource = getClass().getResource( "Niederschlag.zml" );
 
-      final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-      final SimpleLinkType xlink = linkFac.createSimpleLinkType();
-      final String href = resource.toExternalForm();
-      xlink.setHref( href );
-      xlink.setType( "simple" );
-
       final ObjectFactory fac = new ObjectFactory();
-      // TODO: probably the second filter factory will be forgotten everywhere
-      // so move instantiation into central helper class and use it everywhere
 
-      final JAXBContext jc = FilterFactory.JC_FILTER;
+      final ZmlFilter zmlFilter = zmlFilterFromUrl( resource );
 
-      final ZmlFilterType zmlFilter = fac.createZmlFilterType();
-      zmlFilter.setZml( xlink );
-
-      final IntervallFilterType intervallFilter = fac.createIntervallFilterType();
+      final IntervallFilter intervallFilter = fac.createIntervallFilter();
       intervallFilter.setAmount( 10 );
       intervallFilter.setCalendarField( "MINUTE" );
       intervallFilter.setMode( "sum" );
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
-      intervallFilter.setFilter( fac.createZmlFilter( zmlFilter ) );
+      intervallFilter.setFilter( zmlFilter );
       writer = new StringWriter();
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc, true );
-      marshaller.marshal( fac.createIntervallFilter( intervallFilter ), writer );
+      final Marshaller marshaller = fac.createMarshaller();
+      marshaller.marshal( intervallFilter, writer );
       writer.close();
+
       final String string = XMLUtilities.removeXMLHeader( writer.toString() );
       final String filterInline = XMLUtilities.prepareInLine( string );
-      
-      // REMARK: this is all crap! Many of the used characters in the filter are not allowed in
-      // URLs. So any URL parser may change them or do something strange.
-      
-      // The concrete problem here is, that the double '//' are removed by the URL-parser
-      // So later, the filter will not be parsed correctly.
-      // I have no idea how to fix this at the moment, so the test is commented out
-      final URL zmlURL = new URL( resource, href + "?" + filterInline );
-//      final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
-//
-//      // ZML geht von
-//      // "2005-02-16T16:50:00"
-//      // bis
-//      // "2005-02-23T17:00:00"
-//      final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
-//      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T18:36:00" );
-//      // final Date from = XML_DATETIME_FORMAT.parse( "2005-02-23T16:00:00" );
-//      // final Date to = XML_DATETIME_FORMAT.parse( "2005-02-23T18:00:00" );
-//      String dump = ObservationUtilities.dump( observation.getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
-//      System.out.println( dump );
+      final URL zmlURL = new URL( resource.toExternalForm() + "?" + filterInline );
+
+      /* final IObservation obs = */ZmlFactory.parseXML( resource, "Tageswerte" );
+      /* final IObservation observation = */ZmlFactory.parseXML( zmlURL, "id" );
+
+      //      System.out.println( ObservationUtilities.dump( obs.getValues( null ), "," ) );
+      //      System.out.println();
+
+      //      final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
+      //      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T18:36:00" );
+      //      String dump = ObservationUtilities.dump( observation
+      //          .getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
+      //      System.out.println( dump );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
     }
     finally
     {
       IOUtils.closeQuietly( writer );
     }
   }
+
+  private ZmlFilter zmlFilterFromUrl( final URL resource ) throws JAXBException
+  {
+    final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
+    final SimpleLinkType xlink = linkFac.createSimpleLinkType();
+    final String href = resource.toExternalForm();
+    xlink.setHref( href );
+
+    final ZmlFilter zmlFilter = m_fac.createZmlFilter();
+    zmlFilter.setZml( xlink );
+
+    return zmlFilter;
+  }
+
+  public void testTageswert() throws SensorException, JAXBException, IOException, ParseException
+  {
+    final URL tagesWertZmlURL = getClass().getResource( "resources/tageswerte_barby.zml" );
+
+    final ZmlFilter zmlFilter = zmlFilterFromUrl( tagesWertZmlURL );
+
+    final IntervallFilter intervallFilter = m_fac.createIntervallFilter();
+    intervallFilter.setAmount( 1 );
+    intervallFilter.setCalendarField( "HOUR_OF_DAY" );
+    intervallFilter.setMode( "sum" );
+    intervallFilter.setDefaultStatus( 2 );
+    intervallFilter.setDefaultValue( 0.0 );
+    intervallFilter.setFilter( zmlFilter );
+
+    final StringWriter writer = new StringWriter();
+    final Marshaller marshaller = m_fac.createMarshaller();
+    marshaller.marshal( intervallFilter, writer );
+    writer.close();
+
+    final String string = XMLUtilities.removeXMLHeader( writer.toString() );
+    final String filterInline = XMLUtilities.prepareInLine( string );
+    final URL zmlURL = new URL( tagesWertZmlURL.toExternalForm() + "?" + filterInline );
+    final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
+
+    // Dump source Observation
+    //  final IObservation obs = ZmlFactory.parseXML( tagesWertZmlURL, "Tageswerte" );
+    //  System.out.println( obs.getName() );
+    //    System.out.println( ObservationUtilities.dump( obs.getValues( null ), "," ) );
+    //    System.out.println();
+
+    final Date from = XML_DATETIME_FORMAT.parse( "2006-07-20T17:00:00+02:00" );
+    final Date to = XML_DATETIME_FORMAT.parse( "2006-07-25T17:00:00+02:00" );
+
+    final ITuppleModel obsValues = observation.getValues( new ObservationRequest( new DateRange( from, to ) ) );
+    //    System.out.println( ObservationUtilities.dump( obsValues, "," ) );
+
+    final IAxis valueAxis = ObservationUtilities.findAxisByClass( obsValues.getAxisList(), Double.class );
+    assertNotNull( "There must be a value axis", valueAxis );
+
+    final Double firstValue = (Double)obsValues.getElement( 0, valueAxis );
+    assertNotNull( "The first element must be non null", firstValue );
+
+    // test for the bug
+    // BUGFIX:
+    // Bug description: the intervall filter cut the first value, when its interval
+    // started before the first wanted value. -> Tageswertproblem
+    assertTrue( "The first value must be greater than 0.0", firstValue.doubleValue() > 0.1 );
+  }
+
+  public void testLeer() throws SensorException, JAXBException, IOException, ParseException
+  {
+    final URL zmlURL = getClass().getResource( "resources/leer.zml" );
+
+    final ZmlFilter zmlFilter = zmlFilterFromUrl( zmlURL );
+
+    final IntervallFilter intervallFilter = m_fac.createIntervallFilter();
+    intervallFilter.setAmount( 1 );
+    intervallFilter.setCalendarField( "HOUR_OF_DAY" );
+    intervallFilter.setMode( "sum" );
+    intervallFilter.setDefaultStatus( 2 );
+    intervallFilter.setDefaultValue( 0.0 );
+    intervallFilter.setFilter( zmlFilter );
+
+    final Date from = XML_DATETIME_FORMAT.parse( "2006-07-20T17:00:00+02:00" );
+    final Date to = XML_DATETIME_FORMAT.parse( "2006-07-25T17:00:00+02:00" );
+
+    final ITuppleModel obsValues = readIntervallfilteredObservation( zmlURL, intervallFilter, from, to );
+
+    // Dump source Observation
+    //    final IObservation obs = ZmlFactory.parseXML( zmlUrl, "Tageswerte" );
+    //    System.out.println( obs.getName() );
+    //    System.out.println( ObservationUtilities.dump( obs.getValues( null ), "," ) );
+    //    System.out.println();
+
+    // Dump Result
+    //    System.out.println( ObservationUtilities.dump( obsValues, "," ) );
+
+    final IAxis valueAxis = ObservationUtilities.findAxisByClass( obsValues.getAxisList(), Double.class );
+    assertNotNull( "There must be a value axis", valueAxis );
+
+    final Double firstValue = (Double)obsValues.getElement( 0, valueAxis );
+    assertNotNull( "The first element must be non null", firstValue );
+  }
+
+  /**
+   * @param intervallFilter
+   * @param to
+   * @param from
+   * @return
+   * @throws JAXBException
+   * @throws IOException
+   * @throws MalformedURLException
+   * @throws SensorException
+   */
+  private ITuppleModel readIntervallfilteredObservation( final URL zmlURL, final IntervallFilter intervallFilter,
+      final Date from, final Date to ) throws JAXBException, IOException, MalformedURLException, SensorException
+  {
+    final StringWriter writer = new StringWriter();
+    final Marshaller marshaller = m_fac.createMarshaller();
+    marshaller.marshal( intervallFilter, writer );
+    writer.close();
+
+    final String string = XMLUtilities.removeXMLHeader( writer.toString() );
+    final String filterInline = XMLUtilities.prepareInLine( string );
+    final URL filterZmlURL = new URL( zmlURL.toExternalForm() + "?" + filterInline );
+    final IObservation observation = ZmlFactory.parseXML( filterZmlURL, "id" );
+
+    final ITuppleModel obsValues = observation.getValues( new ObservationRequest( new DateRange( from, to ) ) );
+    return obsValues;
+  }
+
+  // does not work 
+//  public void testAtgeswertMissingFirstValue() throws ParseException, MalformedURLException, JAXBException, IOException, SensorException
+//  {
+//    final URL zmlURL = getClass().getResource( "resources/tageswerte_altmoerbitz.zml" );
+//
+//    final ZmlFilter zmlFilter = zmlFilterFromUrl( zmlURL );
+//
+//    final IntervallFilter intervallFilter = m_fac.createIntervallFilter();
+//    intervallFilter.setAmount( 1 );
+//    intervallFilter.setCalendarField( "HOUR_OF_DAY" );
+//    intervallFilter.setMode( "sum" );
+//    intervallFilter.setDefaultStatus( 2 );
+//    intervallFilter.setDefaultValue( 0.0 );
+//    intervallFilter.setFilter( zmlFilter );
+//
+//    final IntervallFilter intervallFilter2 = m_fac.createIntervallFilter();
+//    intervallFilter2.setAmount( 1 );
+//    intervallFilter2.setCalendarField( "HOUR_OF_DAY" );
+//    intervallFilter2.setMode( "sum" );
+//    intervallFilter2.setDefaultStatus( 2 );
+//    intervallFilter2.setDefaultValue( 0.0 );
+//    intervallFilter2.setFilter( intervallFilter );
+//    
+//    final Date from = XML_DATETIME_FORMAT.parse( "2006-01-21T23:00:00" );
+//    final Date to = XML_DATETIME_FORMAT.parse( "2006-01-24T00:00:00" );
+//
+//    final ITuppleModel obsValues = readIntervallfilteredObservation( zmlURL, intervallFilter2, from, to );
+//
+//    // Dump Result
+//    System.out.println( ObservationUtilities.dump( obsValues, "," ) );
+//    
+//  }
+
 }

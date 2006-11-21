@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * Simple Date Range
@@ -60,7 +61,7 @@ public class DateRange implements Comparable
   /**
    * Simple constructor. Uses current date as from and to.
    */
-  public DateRange( )
+  public DateRange()
   {
     this( null, null );
   }
@@ -94,12 +95,12 @@ public class DateRange implements Comparable
       m_to = to;
   }
 
-  public Date getFrom( )
+  public Date getFrom()
   {
     return m_from;
   }
 
-  public Date getTo( )
+  public Date getTo()
   {
     return m_to;
   }
@@ -122,10 +123,9 @@ public class DateRange implements Comparable
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
-  public String toString( )
+  public String toString()
   {
-    DateFormat df = DateFormat.getDateTimeInstance();
+    final DateFormat df = TimeserieUtils.getDateFormat();
     return df.format( m_from ) + " - " + df.format( m_to );
   }
 
@@ -133,8 +133,10 @@ public class DateRange implements Comparable
    * Creates a <code>DateRangeArgument</code> containing the range:
    * 
    * <pre>
-   *   [now - pastDays, now]
-   * </pre>. If pastDays == 0, then the range is null.
+   *  [now - pastDays, now]
+   * </pre>.
+   * 
+   * If pastDays == 0, then the range is null.
    * 
    * @return new argument or null if pastDays is 0
    */
@@ -162,10 +164,10 @@ public class DateRange implements Comparable
     if( other == null )
       return 1;
 
-    if( !(other instanceof DateRange) )
+    if( !( other instanceof DateRange ) )
       throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
 
-    final DateRange dra = (DateRange) other;
+    final DateRange dra = (DateRange)other;
 
     int cmp = this.m_from.compareTo( dra.m_from );
     if( cmp != 0 )
@@ -178,7 +180,6 @@ public class DateRange implements Comparable
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( Object obj )
   {
     return compareTo( obj ) == 0;
@@ -187,10 +188,8 @@ public class DateRange implements Comparable
   /**
    * @see java.lang.Object#hashCode()
    */
-  @Override
-  public int hashCode( )
+  public int hashCode()
   {
-    final HashCodeBuilder hcb = new HashCodeBuilder();
-    return hcb.append( m_from ).append( m_to ).toHashCode();
+    return new HashCodeBuilder().append( m_from ).append( m_to ).toHashCode();
   }
 }

@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.feature;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,14 +52,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeaturePage extends WizardPage
 {
-  private final Collection<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final Collection m_changes = new ArrayList();
 
   private FeatureComposite m_featureComposite;
 
@@ -75,15 +75,18 @@ public class FeaturePage extends WizardPage
 
   private Feature m_feature;
 
+  private final GMLWorkspace m_workspace;
+
   private final IFeatureSelectionManager m_selectionManager;
 
   public FeaturePage( final String pagename, final String title, final ImageDescriptor image,
-      final boolean overrideCanFlipToNextPage, final Feature feature,
+      final boolean overrideCanFlipToNextPage, final GMLWorkspace workspace, final Feature feature,
       final IFeatureSelectionManager selectionManager )
   {
     super( pagename, title, image );
 
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
+    m_workspace = workspace;
     m_feature = feature;
     m_selectionManager = selectionManager;
   }
@@ -98,10 +101,8 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    final CachedFeatureviewFactory factory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    
-    m_featureComposite = new FeatureComposite( null, m_selectionManager, factory );
-    m_featureComposite.setFeature( m_feature );
+    m_featureComposite = new FeatureComposite( m_workspace, null, m_selectionManager, new URL[] {} );
+    m_featureComposite.setFeature( m_workspace, m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       public void featureChanged( final FeatureChange change )
@@ -109,7 +110,7 @@ public class FeaturePage extends WizardPage
         applyFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
       // TODO: open modal dialog?
       }
@@ -132,7 +133,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  @Override
   public void dispose()
   {
     if( m_featureComposite != null )
@@ -142,7 +142,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
-  @Override
   public boolean isPageComplete()
   {
     return m_featureComposite.isValid();
@@ -151,7 +150,6 @@ public class FeaturePage extends WizardPage
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
-  @Override
   public boolean canFlipToNextPage()
   {
     if( m_overrideCanFlipToNextPage )
@@ -160,8 +158,8 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public Collection<FeatureChange> getChanges()
+  public Collection getChanges()
   {
-    return new ArrayList<FeatureChange>( m_changes );
+    return new ArrayList( m_changes );
   }
 }

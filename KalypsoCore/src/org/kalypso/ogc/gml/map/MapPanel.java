@@ -42,19 +42,16 @@ package org.kalypso.ogc.gml.map;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -62,7 +59,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -85,7 +81,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -94,10 +89,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author vdoemming
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider, ISelectionProvider
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
+    ISelectionProvider
 {
-  public List<PointOfinterest> m_pointofInterests = new ArrayList<PointOfinterest>();
-
   public static final int MODE_SELECT = 0;
 
   public static final int MODE_TOGGLE = 1;
@@ -106,7 +100,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
+  private final List m_selectionListeners = new ArrayList( 5 );
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
@@ -126,26 +120,15 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public final static String WIDGET_PAN = "PAN";
 
-  public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE_WITH_GEOMETRY";
+  public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE";
 
   public final static String WIDGET_SELECT = "SELECT";
-
-  public final static String WIDGET_EDIT_GEOMETRY = "EDIT_GEOMETRY";
 
   public final static String WIDGET_UNSELECT = "UNSELECT";
 
   public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
 
-  // public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
-  public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY";
-
-  public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT";
-
-  public final static String WIDGET_EDIT_FEATURE_GEOMETRY = "WIDGET_EDIT_FEATURE_GEOMETRY";
-
-  public final static String WIDGET_CREATE_FEATURE_WITH_LINESTRING = "CREATE_FEATURE_WITH_LINESTRING";
-
-  public final static String WIDGET_CREATE_FEATURE_WITH_POLYGON = "CREATE_FEATURE_WITH_POLYGON";
+  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
 
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 
@@ -171,11 +154,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
-  private ArrayList<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
-
-  private String m_message = "";
-
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs,
+      final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
@@ -185,28 +165,19 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
-    addKeyListener( m_widgetManager );
     addComponentListener( this );
     setVisible( true );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
-    removeKeyListener( m_widgetManager );
-    removeComponentListener( this );
 
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
-    setMapModell( null );
 
-    m_modellEventProvider.dispose();
-    m_widgetManager.dispose();
-
-    // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
-    // TODO: where is this ma panel still referenced from?
-    m_selectionListeners.clear();
-    m_mapImage = null;
+    if( m_model != null )
+      m_model.removeModellListener( this );
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -217,7 +188,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     repaint();
   }
 
-  public void clearOffset( ) // used by pan method
+  public void clearOffset() // used by pan method
   {
     xOffset = 0;
     yOffset = 0;
@@ -238,11 +209,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    * 
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
-  @Override
   public synchronized void paint( final Graphics g )
   {
     paintMap( g );
-
     paintWidget( g );
   }
 
@@ -253,15 +222,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( model == null || model.getThemeSize() == 0 ) // no maps ...
     {
-      String welcomeText = "Kartenvorlage wird geladen ...";
-
-      if( model != null && model.getThemeSize() == 0 )
-        welcomeText = "Keine Themen vorhanden";
-
       g.setColor( Color.white );
       g.fillRect( 0, 0, getWidth(), getHeight() );
       g.setColor( Color.black );
-      g.drawString( welcomeText, getWidth() / 2 - (g.getFontMetrics().stringWidth( welcomeText ) / 2), getHeight() / 2 );
+      g.drawString( "Kalypso", getWidth() / 2, getHeight() / 2 );
       return;
     }
 
@@ -287,16 +251,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         // remark: even calling a repaint in a SwingWorker did not help
 
         // we are optimistic and set valid map true, so while creating new image, other methods can invalidate the map
-        // this fixes the error that sometimes a layer is not visible when a mapview opens
+        // this fixes the error that sometimes a layer is not visible when are mapview opens
         setValidMap( true );
 
-        final GeoTransform projection = getProjection();
-        final GM_Envelope boundingBox = getBoundingBox();
-        m_mapImage = MapModellHelper.createImageFromModell( projection, boundingBox, clipBounds, getWidth(), getHeight(), model );
+        m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
+            getHeight(), model );
         if( m_mapImage == null )
           setValidMap( false );
-        else
-          paintPointOfInterests( m_mapImage.getGraphics() );
       }
     }
 
@@ -321,7 +282,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     g.setPaintMode();
   }
 
-  @Override
   public void update( Graphics g )
   {
     paint( g );
@@ -329,10 +289,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private void paintWidget( Graphics g )
   {
-    // final Color color = Color.red;
-    final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
-    g.setColor( color );
-
+    g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
     m_widgetManager.paintWidget( g );
   }
@@ -342,7 +299,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     validMap = status;
   }
 
-  private boolean hasValidMap( )
+  private boolean hasValidMap()
   {
     return validMap;
   }
@@ -355,7 +312,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapModell getMapModell( )
+  public IMapModell getMapModell()
   {
     return m_model;
   }
@@ -385,13 +342,16 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireModellEvent( modellEvent );
   }
 
-  public GM_Envelope getPanToLocationBoundingBox( double gisMX, double gisMY )
+  public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
   {
     final double ratio = m_height / m_width;
 
     final GeoTransform transform = getProjection();
 
-    double gisDX = (transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ));
+    double gisMX = transform.getSourceX( mx );
+    double gisMY = transform.getSourceY( my );
+
+    double gisDX = ( transform.getSourceX( m_width / 2 ) - transform.getSourceX( 0 ) );
     double gisDY = gisDX * ratio;
     double gisX1 = gisMX - gisDX;
     double gisX2 = gisMX + gisDX;
@@ -401,31 +361,22 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
-  {
-    final GeoTransform transform = getProjection();
-
-    double gisMX = transform.getSourceX( mx );
-    double gisMY = transform.getSourceY( my );
-    return getPanToLocationBoundingBox( gisMX, gisMY );
-  }
-
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
    * 
    * @return scale of the map
    */
-  public double getCurrentScale( )
+  public double getCurrentScale()
   {
     return MapModellHelper.calcScale( m_model, getBoundingBox(), getWidth(), getHeight() );
   }
 
-  public GeoTransform getProjection( )
+  public GeoTransform getProjection()
   {
     return m_projection;
   }
 
-  public synchronized GM_Envelope getBoundingBox( )
+  public synchronized GM_Envelope getBoundingBox()
   {
     return m_boundingBox;
   }
@@ -437,14 +388,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( m_boundingBox == null )
       return;
-
-    final StringBuffer dump = new StringBuffer();
-    dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-    dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-    dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-    dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-    dump.append( "\n" );
-    System.out.println( dump.toString() );
 
     m_projection.setSourceRect( m_boundingBox );
 
@@ -478,33 +421,33 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     double maxX = env.getMax().getX();
     double maxY = env.getMax().getY();
 
-    double dx = (maxX - minX) / 2d;
-    double dy = (maxY - minY) / 2d;
+    double dx = ( maxX - minX ) / 2d;
+    double dy = ( maxY - minY ) / 2d;
 
     if( dx * ratio > dy )
       dy = dx * ratio;
     else
       dx = dy / ratio;
 
-    double mx = (maxX + minX) / 2d;
-    double my = (maxY + minY) / 2d;
+    double mx = ( maxX + minX ) / 2d;
+    double my = ( maxY + minY ) / 2d;
 
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
-  private double getRatio( )
+  private double getRatio()
   {
-    return ((double) getHeight()) / ((double) getWidth());
+    return ( (double)getHeight() ) / ( (double)getWidth() );
   }
 
-  public GM_Envelope getZoomOutBoundingBox( )
+  public GM_Envelope getZoomOutBoundingBox()
   {
     GeoTransform transform = getProjection();
     double ratio = getRatio();
     double gisMX = transform.getSourceX( getWidth() / 2d );
     double gisMY = transform.getSourceY( getHeight() / 2d );
 
-    double gisDX = 2 * (gisMX - transform.getSourceX( 0 ));
+    double gisDX = 2 * ( gisMX - transform.getSourceX( 0 ) );
     double gisDY = gisDX * ratio;
     double gisX1 = gisMX - gisDX;
     double gisX2 = gisMX + gisDX;
@@ -514,7 +457,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public WidgetManager getWidgetManager( )
+  public WidgetManager getWidgetManager()
   {
     return m_widgetManager;
   }
@@ -524,7 +467,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentHidden( ComponentEvent e )
   {
-    //  
+  //  
   }
 
   /**
@@ -532,7 +475,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentMoved( ComponentEvent e )
   {
-    //  
+  //  
   }
 
   /**
@@ -591,17 +534,18 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return StructuredSelection.EMPTY;
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
+    if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
       return StructuredSelection.EMPTY;
 
-    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme) activeTheme, m_selectionManager, null, null );
+    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme,
+        m_selectionManager, null, null );
   }
 
   protected void globalSelectionChanged( final IFeatureSelection selection )
@@ -619,15 +563,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireSelectionChanged();
   }
 
-  /**
-   * @deprecated
-   */
-  public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode, final boolean useOnlyFirstChoosen )
+  public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode,
+      final boolean useOnlyFirstChoosen )
   {
     final GeoTransform transform = getProjection();
 
     final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
+    if( activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
       return;
 
     if( startPoint != null )
@@ -646,13 +588,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
-        final Feature fe = (Feature) selector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
+            .getFeatureListVisible( null ), false );
 
-        final List<Feature> listFe = new ArrayList<Feature>();
+        final List listFe = new ArrayList();
         if( fe != null )
           listFe.add( fe );
 
-        changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, m_selectionManager, selectionMode );
+        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
       }
       else
       // dragged
@@ -673,48 +616,46 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List<Object> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), withinStatus );
+          final List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
+              .getFeatureListVisible( null ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
             // delete all but first if we shall only the first selected
-            final Feature object = (Feature) features.get( 0 );
+            final Object object = features.get( 0 );
             features.clear();
             features.add( object );
           }
 
-          changeSelection( features, (IKalypsoFeatureTheme) activeTheme, m_selectionManager, selectionMode );
+          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
         }
       }
     }
   }
 
-  /**
-   * @deprecated Does not belong into the MapPanel. Use {@link IFeatureSelectionChanger} instead.
-   */
-  private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
+  private void changeSelection( final List features, final IKalypsoFeatureTheme theme,
+      final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
-    // nothing was choosen by the user, clear selection
+    // nothing was choosen by the user, dont do anything
+    // TODO: maybe clear selection?
     if( features.isEmpty() )
     {
-      selectionManager2.clear();
-      // TODO: this should do the widget-manager?
+      // TODO: this should to the widget-manager?
+      repaint();
+      return;
     }
 
     // remove all selected features from this theme
     // TODO: maybe only visible??
     final FeatureList featureList = theme.getFeatureList();
-    if( featureList == null )
-      return;
-
     final Feature parentFeature = featureList.getParentFeature();
-    final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
+    final String parentProperty = featureList.getParentFeatureTypeProperty().getName();
 
     // add all selectied features
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {
-      final Feature f = (Feature) features.get( i );
+      final Feature f = (Feature)features.get( i );
       selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
     }
 
@@ -723,35 +664,32 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     switch( selectionMode )
     {
-      case MODE_TOGGLE: // dreht die selection der auswahl um
-        // BUG: past nicht mehr zur beschreibung!
-        toRemove = new Feature[0];
-        toAdd = selectedWrapped;
-        break;
+    case MODE_TOGGLE: // dreht die selection der auswahl um
+      // BUG: past nicht mehr zur beschreibung!
+      toRemove = new Feature[0];
+      toAdd = selectedWrapped;
+      break;
 
-      case MODE_SELECT: // selectert genau das, was ausgewählt wurde
-        // toRemove = featureList.toFeatures();
-        final EasyFeatureWrapper[] allFeatures = selectionManager2.getAllFeatures();
-        toRemove = new Feature[allFeatures.length];
-        for( int i = 0; i < allFeatures.length; i++ )
-          toRemove[i] = allFeatures[i].getFeature();
-        toAdd = selectedWrapped;
-        break;
+    case MODE_SELECT: // selectert genau das, was ausgewählt wurde
+      toRemove = featureList.toFeatures();
+      toAdd = selectedWrapped;
+      break;
 
-      case MODE_UNSELECT: // löscht alles augewählte aus der selection
-        toRemove = featureList.toFeatures();
-        toAdd = new EasyFeatureWrapper[0];
+    case MODE_UNSELECT: // löscht alles augewählte aus der selection
+      toRemove = featureList.toFeatures();
+      toAdd = new EasyFeatureWrapper[0];
 
-      default:
-        throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
+    default:
+      throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );
   }
 
-  private final void fireSelectionChanged( )
+  private final void fireSelectionChanged()
   {
-    final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
+    final ISelectionChangedListener[] listenersArray = (ISelectionChangedListener[])m_selectionListeners
+        .toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
     for( int i = 0; i < listenersArray.length; i++ )
@@ -759,140 +697,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
-        public void run( )
+        public void run()
         {
           l.selectionChanged( e );
         }
-
-        /**
-         * Overwritten because opening the message dialog here results in a NPE
-         * 
-         * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
-         */
-        @Override
-        public void handleException( final Throwable t )
-        {
-          t.printStackTrace();
-        }
       };
 
-      SafeRunnable.run( safeRunnable );
+      Platform.run( safeRunnable );
     }
   }
 
-  public void addPointOfInterest( final PointOfinterest pointOfInterest )
-  {
-    m_pointofInterests.add( pointOfInterest );
-    setValidAll( false );
-    repaint();
-    final long duration = pointOfInterest.getDuration();
-    final Thread thread = new Thread()
-    {
-      /**
-       * @see java.lang.Thread#run()
-       */
-      @Override
-      public void run( )
-      {
-        try
-        {
-          sleep( duration );
-        }
-        catch( InterruptedException e )
-        {
-          // nothing
-        }
-        removePointOfInterest( pointOfInterest );
-      }
-    };
-    thread.start();
-  }
-
-  public void removePointOfInterest( PointOfinterest pointOfInterest )
-  {
-    m_pointofInterests.remove( pointOfInterest );
-    setValidAll( false );
-    repaint();
-  }
-
-  private void paintPointOfInterests( Graphics g )
-  {
-    Graphics2D g2d = (Graphics2D) g;
-    final Color color = Color.red;
-    final Color innerColor = new Color( Color.yellow.getRed(), Color.yellow.getGreen(), Color.yellow.getBlue(), 150 );
-
-    final List<PointOfinterest> toRemove = new ArrayList<PointOfinterest>();
-    final GeoTransform projection = getProjection();
-    for( PointOfinterest poi : m_pointofInterests )
-    {
-      final GM_Point geometry = poi.getGeometry();
-      final GM_Position screenPoint = projection.getDestPoint( geometry.getPosition() );
-      int r = 10;
-      int x = (int) screenPoint.getX();
-      int y = (int) screenPoint.getY();
-      String title = poi.getTitle();
-      g2d.drawString( title, x + 2 * r, y + 2 * r );
-      Font font = g2d.getFont();
-      FontRenderContext frc = g2d.getFontRenderContext();
-      Rectangle2D bounds = font.getStringBounds( title, frc );
-      int bw = (int) bounds.getWidth();
-      int bh = (int) bounds.getHeight();
-      // inner
-      g2d.setColor( innerColor );
-      g2d.fillOval( x - r, y - r, r * 2, r * 2 );
-      g2d.setColor( Color.YELLOW );
-
-      g2d.fillRect( x + 2 * r, y + 2 * r - bh, bw, bh + 3 );
-
-      // outer
-      g2d.setColor( color );
-      g2d.drawOval( x - r, y - r, r * 2, r * 2 );
-      g2d.drawString( title, x + 2 * r, y + 2 * r );
-    }
-    for( PointOfinterest ofinterest : toRemove )
-    {
-      m_pointofInterests.remove( ofinterest );
-    }
-  }
-
-  public IFeatureSelectionManager getSelectionManager( )
-  {
-    return m_selectionManager;
-  }
-
-  /**
-   * Add a listener in the mapPanel that will be notified in specific changes. <br/> At the moment there is only the
-   * message changed event.
-   */
-  public void addMapPanelListener( final IMapPanelListener l )
-  {
-    m_mapPanelListeners.add( l );
-  }
-
-  /**
-   * Removes this listener from the mapPanel.
-   */
-  public void removeMapPanelListener( final IMapPanelListener l )
-  {
-    m_mapPanelListeners.remove( l );
-  }
-
-  /**
-   * Must be invoked, if the message of the mapPanel has changed.
-   */
-  private void fireMessageChanged( )
-  {
-    for( IMapPanelListener l : m_mapPanelListeners )
-      l.onMessageChanged( m_message );
-  }
-
-  /**
-   * Sets the message of this mapPanel. Some widgets update it, so that the MapView could update the status-bar text.
-   */
-  public void setMessage( String message )
-  {
-    m_message = message;
-
-    fireMessageChanged();
-  }
 }

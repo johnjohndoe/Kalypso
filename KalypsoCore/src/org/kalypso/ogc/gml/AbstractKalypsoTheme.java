@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.eclipse.core.runtime.PlatformObject;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -57,38 +55,26 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author Belger
  */
-public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
+public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 {
   private String m_name;
 
   private String m_type = "unknown type";
 
-  private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
+  private ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
-  private final IMapModell m_mapModel;
-
-  public AbstractKalypsoTheme( final String name, final IMapModell mapModel )
+  public AbstractKalypsoTheme( final String name )
   {
     m_name = name;
-    m_mapModel = mapModel;
   }
 
-  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
+  public AbstractKalypsoTheme( final String name, final String type )
   {
     m_name = name;
     m_type = type;
-    m_mapModel = mapModel;
-  }
-  
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
-   */
-  public void dispose( )
-  {
-    m_eventProvider.dispose();
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -125,27 +111,18 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_eventProvider.removeModellListener( listener );
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     return m_name;
   }
 
-  public String getType( )
+  public String getType()
   {
-    return m_type;
+    return "[" + m_type + "] ";
   }
 
   public void setType( String type )
   {
     m_type = type;
-  }
-  
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
-   */
-  public IMapModell getMapModell( )
-  {
-    return m_mapModel;
   }
 }

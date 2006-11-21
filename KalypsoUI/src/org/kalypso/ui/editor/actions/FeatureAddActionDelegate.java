@@ -37,28 +37,29 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * FeatureAddActionDelegate
+ * FeatureRemoveActionDelegate
+ * <p>
+ * 
+ * created by
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewActionDelegate
+public class FeatureAddActionDelegate implements IActionDelegate
 {
+
   private IFeatureSelection m_selection = null;
 
   /**
@@ -76,12 +77,15 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
       final Feature parentFeature = m_selection.getParentFeature( firstFeature );
 
       // TODO change featurelist and remove cast
-      // TODO ask for IFeatureType (substitutiongroup)
+      // TODO ask for FeatureType (substitutiongroup)
 
-      final IRelationType ftp = m_selection.getParentFeatureProperty( firstFeature );
+      final String parentFeatureProperty = m_selection.getParentFeatureProperty( firstFeature );
+      final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)parentFeature.getFeatureType()
+          .getProperty( parentFeatureProperty );
 
       int pos = 0; // TODO get pos from somewhere
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getTargetFeatureType(),parentFeature, ftp, pos, null, null, 0 );
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
+          parentFeature, ftp.getName(), pos, m_selection.getSelectionManager() );
       try
       {
         workspace.postCommand( command );
@@ -111,10 +115,10 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
 
     if( !selection.isEmpty() && selection instanceof IFeatureSelection )
     {
-      m_selection = (IFeatureSelection) selection;
+      m_selection = (IFeatureSelection)selection;
 
       final Feature selectedFeature = FeatureSelectionHelper.getFirstFeature( m_selection );
-      // it is always a Feature (objectcontribution)
+      //it is always a Feature (objectcontribution)
       final Feature parentFeature = m_selection.getParentFeature( selectedFeature );
       if( selectedFeature != null && parentFeature != null )
         action.setEnabled( checkMaxOccurs( parentFeature, selectedFeature ) );
@@ -125,27 +129,27 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
   {
     int maxOccurs = -1;
     int size = -1;
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
-    final int[] pos = FeatureHelper.getPositionOfAllAssociations( feature );
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    int[] pos = FeatureHelper.getPositionOfAllAssociations( feature );
     if( pos.length > 0 )
     {
       for( int i = 0; i < pos.length; i++ )
       {
-        Object property = feature.getProperty( properties[i] );
-        IRelationType ftp = (IRelationType) properties[pos[i]];
-        maxOccurs = ftp.getMaxOccurs();
+        Object property = feature.getProperty( pos[i] );
+        FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)properties[pos[i]];
+        maxOccurs = featureType.getMaxOccurs( ftp.getName() );
         if( property instanceof Feature )
         {
-          Feature f = (Feature) property;
+          Feature f = (Feature)property;
           if( f.equals( featureToCheckOccurence ) )
             return false;
 
         }
         if( property instanceof List )
         {
-          size = ((List) property).size();
-          if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+          size = ( (List)property ).size();
+          if( maxOccurs == FeatureType.UNBOUND_OCCURENCY )
             return true;
           else if( maxOccurs < size )
             return false;
@@ -157,17 +161,4 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
     return true;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
-   */
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
-  {
-  }
-
-  /**
-   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-   */
-  public void init( IViewPart view )
-  {
-  }
 }

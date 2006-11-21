@@ -1,48 +1,31 @@
 package org.kalypsodeegree.model.feature;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IAdaptable;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-
 /**
- * A GML Feature represents a general object.
- * <p>
- * A Feature is adaptable, thus allowing Adapter Factories and/or Subclasses to provide another "view" over a feature
- * object. For instance, an observation-feature can be directly represented as an observation.
+ * @author doemming
  * 
- * @author doemming this class extends the deegree feature interface and implements methods to handle properties that
- *         have maxOccurs > 1
+ * this class extends the deegree feature interface and implements methods to handle properties that have maxOccurs > 1
  */
-public interface Feature extends DeegreeFeature, IAdaptable
+public interface Feature extends DeegreeFeature
 {
-  public GMLWorkspace getWorkspace( );
+  public void addProperty( FeatureProperty prop );
 
-  public Feature getParent( );
+//  public boolean isSelected( int selectID );
+//
+//  public boolean toggle( int selectID );
+//
+//  public boolean unselect( int selectID );
+//
+//  public boolean select( int selectID );
 
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
+//  /** Gibt die gesamte Selektion zurück */
+//  public int getSelection();
+//
+//  /** setzt die Selektion komplett */
+//  public void setSelection( final int selection );
 
-  public void setProperty( final IPropertyType propertyType, final Object value );
+  public Object getVirtuelProperty( final String propertyName, final GMLWorkspace workspace );
 
-  public void setProperty( final QName propQName, final Object value );
-
-  /**
-   * @deprecated use getPropery(PropertyType)
-   */
-  @Deprecated
-  public Object getProperty( final String propLocalName );
-
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  public void setProperty( final String propLocalName, final Object value );
-
-  public Object getProperty( final QName propQName );
-
-  /**
-   * intended to be called from GMLWorkspace when root feature is set.
-   */
-  public void setWorkspace( final GMLWorkspace workspace );
+  public void setProperty( final String propertyName,final Object value);
+  /** Uses the visitor on each property of this feature. */
+  public void accept( final IFeaturePropertyVisitor visitor );
 }

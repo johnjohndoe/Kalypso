@@ -30,8 +30,6 @@
 package org.kalypso.ogc.gml.selection;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -46,32 +44,28 @@ public interface IFeatureSelection extends IStructuredSelection
   public CommandableWorkspace getWorkspace( final Feature feature );
 
   /**
-   * TODO: remove this method from the interface, it is not needed anymore
-   * 
    * @param feature
    *          Must be an element of this selection
    */
   public Feature getParentFeature( final Feature feature );
 
   /**
-   * Returns the property of the parent feature of the given feature, for which the given feature is the value (maybe inside a list).
-   * 
    * @param feature
    *          Must be an element of this selection
    */
-  public IRelationType getParentFeatureProperty( final Feature feature );
+  public String getParentFeatureProperty( final Feature feature );
 
   /** Extracs all features of this selection together with each parent and workspace. */
-  public EasyFeatureWrapper[] getAllFeatures( );
+  public EasyFeatureWrapper[] getAllFeatures();
 
-  public IFeatureSelectionManager getSelectionManager( );
-
+  public IFeatureSelectionManager getSelectionManager();
+  
   /** In addition to the normal selection, one feature may have the focus. */
-  public Feature getFocusedFeature( );
+  public Feature getFocusedFeature();
 
   /**
    * This is the focused property of the focused feature. This is for example used in the table, where each cell
    * represents a property of one feature.
    */
-  public IPropertyType getFocusedProperty( );
+  public String getFocusedProperty();
 }

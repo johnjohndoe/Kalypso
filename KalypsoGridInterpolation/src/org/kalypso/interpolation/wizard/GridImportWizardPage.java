@@ -30,7 +30,6 @@
 package org.kalypso.interpolation.wizard;
 
 import java.io.File;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -50,13 +49,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.kalypso.interpolation.mesh.Mesh;
-import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -67,24 +63,14 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GridImportWizardPage extends WizardPage implements ModifyListener, SelectionListener, KeyListener
 {
   private Composite m_topComposite;
-
   private Text m_sourceFileText;
-
   private Group m_group;
-
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
-
   private Button m_browseButton;
-
   private Combo m_checkCRS;
-
   private Mesh m_mesh;
-
   private double m_size;
-
   private IPath m_path;
-
-  private FilterRootElement m_root;
 
   public GridImportWizardPage( String pageName )
   {
@@ -111,7 +97,6 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
     m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     // build wizard page
     createGroup( m_topComposite );
-
     setControl( m_topComposite );
   }
 
@@ -124,7 +109,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
     topGroupData.horizontalAlignment = GridData.FILL;
     m_group.setLayout( topGroupLayout );
     m_group.setLayoutData( topGroupData );
-    m_group.setText( "Filter-Datei" );
+    m_group.setText( "Shape-Datei" );
     Label sourceFileLabel = new Label( m_group, SWT.NONE );
     sourceFileLabel.setText( "Quelle : " );
 
@@ -164,6 +149,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
     m_checkCRS.addKeyListener( this );
+
     m_group.pack();
 
   }
@@ -187,25 +173,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
    */
   public void widgetSelected( SelectionEvent e )
   {
-    Widget widget = e.widget;
-    if( widget instanceof Button )
-    {
-      FileDialog dialog = new FileDialog( getShell() );
-      String open = dialog.open();
-      FilterRootElement root = null;
-      try
-      {
-        if( open != null )
-        {
-          FileReader reader = new FileReader( open );
-          //         m_root = FilterReader.collectFiltersFromSLD( reader );
-        }
-      }
-      catch( Exception e1 )
-      {
-        e1.printStackTrace();
-      }
-    }
+  // TODO Auto-generated method stub
   }
 
   /**

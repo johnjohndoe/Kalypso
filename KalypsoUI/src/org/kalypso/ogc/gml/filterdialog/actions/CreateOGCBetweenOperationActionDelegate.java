@@ -33,41 +33,41 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
-import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 
 /**
+ * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
  */
 public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOperationActionDelegate
 {
+
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  @Override
   public void run( IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
       if( m_selection instanceof TreeSelection )
       {
-        final Object firstElement = m_selection.getFirstElement();
-        final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
+        Object firstElement = m_selection.getFirstElement();
+        PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
         if( firstElement instanceof ComplexFilter )
-          ((ComplexFilter) firstElement).setOperation( operation );
+          ( (ComplexFilter)firstElement ).setOperation( operation );
         else if( firstElement instanceof LogicalOperation )
         {
-          ArrayList<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
+          ArrayList arguments = ( (LogicalOperation)firstElement ).getArguments();
           if( arguments == null )
-            arguments = new ArrayList<Operation>();
+            arguments = new ArrayList();
           arguments.add( operation );
-          ((LogicalOperation) firstElement).setArguments( arguments );
+          ( (LogicalOperation)firstElement ).setArguments( arguments );
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ( (TreeSelection)m_selection ).structureChanged();
       }
     }
 

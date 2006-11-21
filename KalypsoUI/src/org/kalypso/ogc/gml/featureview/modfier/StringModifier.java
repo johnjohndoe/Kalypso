@@ -40,60 +40,79 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author belger
  */
 public class StringModifier implements IFeatureModifier
 {
-  private final IValuePropertyType m_ftp;
+  private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+
+  private final NumberFormat NUMBER_FORMAT;
+
+  private final FeatureTypeProperty m_ftp;
 
   private final IGuiTypeHandler m_guiTypeHandler;
 
-  public StringModifier( final IValuePropertyType ftp )
-  {
-    m_ftp = ftp;
+  private final IMarshallingTypeHandler m_marshallingTypeHandler;
 
-    // we need both registered type handler types
-    final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
+  public StringModifier( final FeatureTypeProperty ftp )
+  {
+    // Set the time zone according to the global settings
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    DATE_FORMATTER.setTimeZone( timeZone );
+
+    NUMBER_FORMAT = getNumberFormat( ftp );
+    m_ftp = ftp;
+    //    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    //    d.setDecimalFormatSymbols( dfs );
+    // wen need both registered type handler types
+    final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    m_guiTypeHandler = (IGuiTypeHandler)guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
+
+    final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp
+        .getType() );
   }
 
-  public NumberFormat getNumberFormat( final IPropertyType ftp )
+  public NumberFormat getNumberFormat( FeatureTypeProperty ftp )
   {
-    // HACK: TODO: either put this into the IGuiTypeHandler or
-    // maybe even in the appinfo of the schema
-    final String namespace = ftp.getQName().getNamespaceURI();
-    final String name = ftp.getQName().getLocalPart();
-    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" ); //$NON-NLS-1$
-    // ##0.000E0
+    // HACK
+    final String namespace = ftp.getNamespace();
+    final String name = ftp.getName();
+    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" );
+    //    ##0.000E0
     final NumberFormat normalFormat = NumberFormat.getInstance();
-
-    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL //$NON-NLS-1$
+    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL
     {
-      if( "flaech".equals( name ) ) //$NON-NLS-1$
+      if( "flaech".equals( name ) )
         return expFormat;
     }
-    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope //$NON-NLS-1$
+    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope
     {
-      if( "m_perkm".equals( name ) || "area".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( "m_perkm".equals( name ) )
         return expFormat;
     }
     return normalFormat;
@@ -102,9 +121,9 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   /**
@@ -115,50 +134,34 @@ public class StringModifier implements IFeatureModifier
     if( m_ftp == null )
       return null;
 
-    final Object data = f.getProperty( m_ftp );
+    final Object data = f.getProperty( m_ftp.getName() );
 
     return toText( data );
   }
 
-  /**
-   * @param data
-   *          real property value
-   */
   private String toText( final Object data )
   {
-    final Object value;
-
-    // REMARK: In order to also allow (basic) editing of lists we consider the edited
-    // element to be the element with index = 0. Problem: all other elements of the list
-    // get deleted when edited. This is ok for example for the gml:name property, where
-    // we normally only want to edit the first entry.
-    if( data instanceof List )
-    {
-      final List list = (List) data;
-      if( list.isEmpty() )
-        return ""; //$NON-NLS-1$
-
-      value = list.get( 0 );
-    }
-    else
-      value = data;
-
     if( m_guiTypeHandler != null )
-      return m_guiTypeHandler.getText( value );
+      return m_guiTypeHandler.getText( data );
 
-    return value == null ? "" : value.toString(); //$NON-NLS-1$
+    if( data instanceof Date )
+      return DATE_FORMATTER.format( data );
+    else if( data instanceof Number )
+      return NUMBER_FORMAT.format( data );
+
+    return data == null ? "" : data.toString();
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.Object)
    */
-  public Object parseInput( final Feature f, final Object editedStringValue )
+  public Object parseInput( final Feature f, final Object value )
   {
     Object result = null;
-    final String text = editedStringValue == null ? "" : editedStringValue.toString(); //$NON-NLS-1$
-    // if( text.length() == 0 )
-    // return null;
+    final String text = value == null ? "" : value.toString();
+    if( text.length() == 0 )
+      return null;
 
     try
     {
@@ -177,24 +180,24 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
+    final String typeName = m_ftp.getType();
     if( m_guiTypeHandler != null )
-    {
-      final Object value = text.length() == 0 ? null : m_guiTypeHandler.fromText( text );
-
-      // REMARK: In order to also allow (basic) editing of lists we consider the edited
-      // element to be the element with index = 0. Problem: all other elements of the list
-      // get deleted when edited. This is ok for example for the gml:name property, where
-      // we normally only want to edit the first entry.
-      // For other list-properties, where this behaviour is not intended, this string-modifier should not be used.
-      if( m_ftp.isList() )
-      {
-        final List<Object> list = new ArrayList<Object>( 1 );
-        list.add( value );
-        return list;
-      }
-
-      return value;
-    }
+      return m_marshallingTypeHandler.parseType( text );
+    else if( typeName.equals( "java.lang.String" ) )
+      return text;
+    else if( typeName.equals( "java.lang.Boolean" ) )
+      return new Boolean( text );
+    else if( typeName.equals( "java.util.Date" ) )
+      return DATE_FORMATTER.parse( text );
+    else if( typeName.equals( "java.lang.Double" ) )
+      // allways use NumberUtils to parse double, so to allow input of '.' or ','
+      return new Double( NumberUtils.parseDouble( text ) );
+    else if( typeName.equals( "java.lang.Integer" ) )
+      return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
+    else if( typeName.equals( "java.lang.Float" ) )
+      return new Float( NumberUtils.parseDouble( text ) );
+    else if( typeName.equals( "java.lang.Long" ) )
+      return new Long( NUMBER_FORMAT.parse( text ).longValue() );
 
     return null;
   }
@@ -210,13 +213,13 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
    */
-  public String isValid( final Object editedStringValue )
+  public String isValid( final Object value )
   {
     try
     {
-      if( editedStringValue == null )
+      if( value == null )
         return null;
-      final String text = editedStringValue.toString();
+      final String text = value.toString();
       if( text.length() == 0 )
         return null;
       parseData( text );
@@ -231,7 +234,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty( )
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
@@ -242,7 +245,7 @@ public class StringModifier implements IFeatureModifier
   public String getLabel( final Feature f )
   {
     final Object value = getValue( f );
-    return value == null ? "" : value.toString(); //$NON-NLS-1$
+    return value == null ? "" : value.toString();
   }
 
   /**
@@ -264,5 +267,13 @@ public class StringModifier implements IFeatureModifier
   public boolean equals( final Object newData, final Object oldData )
   {
     return toText( newData ).equals( toText( oldData ) );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return true;
   }
 }

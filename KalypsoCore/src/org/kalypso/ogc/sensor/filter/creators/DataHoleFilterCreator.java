@@ -65,15 +65,13 @@ public class DataHoleFilterCreator implements IFilterCreator
 
     final DataholeFilterType ft = (DataholeFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
 
     Double replaceWith = null;
     if( ft.isReplace() )
       replaceWith = new Double( ft.getReplaceWith() );
 
-    final Double value = ft.getValue();
-    final Integer status = ft.getStatus();
-    final DataHoleFilter filter = new DataHoleFilter( value.doubleValue(), status.intValue(), replaceWith );
+    final DataHoleFilter filter = new DataHoleFilter( ft.getValue(), ft.getStatus(), replaceWith );
 
     filter.initFilter( null, filteredObs, context );
 

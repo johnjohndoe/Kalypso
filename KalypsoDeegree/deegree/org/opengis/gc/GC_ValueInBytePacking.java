@@ -28,7 +28,7 @@ public final class GC_ValueInBytePacking implements Serializable
   /**
    * The enum value.
    */
-  public final int m_value;
+  public final int value;
 
   /** Low bit firts (little endian order). */
   public static final int GC_LoBitFirst = 0;
@@ -41,27 +41,25 @@ public final class GC_ValueInBytePacking implements Serializable
    */
   public GC_ValueInBytePacking( final int value )
   {
-    m_value = value;
+    this.value = value;
   }
 
   /**
    * Returns the enum value.
    */
-  @Override
   public int hashCode()
   {
-    return m_value;
+    return value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (GC_ValueInBytePacking)object ).m_value == m_value;
+      return ( (GC_ValueInBytePacking)object ).value == value;
     }
 
     return false;
@@ -71,12 +69,11 @@ public final class GC_ValueInBytePacking implements Serializable
    * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "GC_ValueInBytePacking" );
     buffer.append( '[' );
-    buffer.append( m_value );
+    buffer.append( value );
     buffer.append( ']' );
     return buffer.toString();
   }

@@ -61,7 +61,6 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
    */
-  @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
     super.setActiveEditor( targetEditor );
@@ -81,7 +80,6 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
    */
-  @Override
   public void init( final IActionBars bars )
   {
     super.init( bars );

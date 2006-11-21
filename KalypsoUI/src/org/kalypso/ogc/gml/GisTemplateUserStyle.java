@@ -44,7 +44,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.loader.IPooledObject;
-import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -64,16 +64,19 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  */
 public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject
 {
+
   private final PoolableObjectType m_styleKey;
 
-  // private UserStyle m_userStyle = dummyStyle;
+  //  private UserStyle m_userStyle = dummyStyle;
+
   private boolean m_loaded = false;
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName )
   {
     super( createDummyStyle(), styleName );
     m_styleKey = poolableStyleKey;
-    // m_styleName = styleName;
+    //    m_styleName = styleName;
+
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.addPoolListener( this, m_styleKey );
   }
@@ -81,9 +84,9 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   /**
    * @return a empty style
    */
-  private static UserStyle createDummyStyle( )
+  private static UserStyle createDummyStyle()
   {
-    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] );
   }
 
   public GisTemplateUserStyle( final UserStyle style, final String name )
@@ -102,7 +105,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     {
       try
       {
-        final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
+        final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
         m_userStyle = sld.findUserStyle( m_styleName );
       }
       catch( Exception e )
@@ -127,8 +130,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     }
   }
 
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -139,7 +141,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   /**
    * @see org.kalypso.loader.IPooledObject#isLoaded()
    */
-  public boolean isLoaded( )
+  public boolean isLoaded()
   {
     return m_loaded;
   }
@@ -147,28 +149,15 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   /**
    * @param styleType
    */
-  public void fillStyleType( final List<Style> stylesList, final Style styleType )
+  public void fillStyleType( final List stylesList, final StyleType styleType )
   {
     if( m_styleKey == null )
       return;
-    styleType.setActuate( "onRequest" ); //$NON-NLS-1$
+    styleType.setActuate( "onRequest" );
     styleType.setHref( m_styleKey.getLocation() );
     styleType.setLinktype( m_styleKey.getType() );
     styleType.setStyle( m_styleName );
-    styleType.setType( "simple" ); //$NON-NLS-1$
+    styleType.setType( "simple" );
     stylesList.add( styleType );
-  }
-
-  public PoolableObjectType getPoolKey( )
-  {
-    return m_styleKey;
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-   */
-  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
-  {
-    // TODO change label according to dirty
   }
 }

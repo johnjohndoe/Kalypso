@@ -47,9 +47,8 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -59,22 +58,22 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class TextLabelComboPanel extends ComboPanel
 {
 
-  public TextLabelComboPanel( Composite parent, String label, IFeatureType featureType, String value )
+  public TextLabelComboPanel( Composite parent, String label, FeatureType featureType, String value )
   {
     super( parent, label );
     // read possible items to get the label text from
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
-    final IPropertyType[] ftp = featureType.getProperties();
+    ArrayList labelStringItems = new ArrayList();
+    final FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( ! GeometryUtilities.isGeometry(ftp[i]) )
         labelStringItems.add( ftp[i].getName() );
-    final IPropertyType[] vftp = VirtualPropertyUtilities.getVirtualProperties(featureType);
+    final FeatureTypeProperty[] vftp = featureType.getVirtuelFeatureTypeProperty();
     for( int i = 0; i < vftp.length; i++ )
       if(! GeometryUtilities.isGeometry(vftp[i]) )
         labelStringItems.add( vftp[i].getName() );
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = labelStringItems.get( j );
+      items[j] = (String)labelStringItems.get( j );
     init();
     comboBox.setText( "..." );
     if( value != null )
@@ -99,19 +98,21 @@ public class TextLabelComboPanel extends ComboPanel
     comboBox.setText( "..." );
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  @Override
   public int getSelection()
   {
     return selection_index;
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
   public void setSelection( int index )
   {
     selection_index = index;

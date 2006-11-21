@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataholeFilter xmlns="filters.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:vc="valuecomp.filters.zml.kalypso.org" value="100.0" status="2">
+<dataholeFilter xmlns="filters.zml.kalypso.org" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:vc="valuecomp.filters.zml.kalypso.org" type="Q">
 	<zmlFilter>
-		<zml xlink:href="QV_LOHSA.zml"/>
+		<zml 
+			xlink:href="QV_LOHSA.zml"/>
 	</zmlFilter>
 </dataholeFilter>

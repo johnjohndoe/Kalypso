@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -28,11 +28,11 @@ public class CloneFeatureVisitor implements FeatureVisitor
 
   private final Feature m_targetFeature;
 
-  private final IPropertyType[] m_ftp;
+  private final FeatureTypeProperty[] m_ftp;
 
   private final Map m_linkInfoHash = new HashMap();
 
-  public CloneFeatureVisitor( final GMLWorkspace workspace, final Feature targetFeature, final IPropertyType[] ftp )
+  public CloneFeatureVisitor( final GMLWorkspace workspace, final Feature targetFeature, final FeatureTypeProperty[] ftp )
   {
     m_workspace = workspace;
     m_targetFeature = targetFeature;
@@ -48,7 +48,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
     if( parentFEClone == null )
       parentFEClone = m_targetFeature;
 
-    IPropertyType[] propertiesToCopy = parentFEOriginal.getFeatureType().getProperties();
+    FeatureTypeProperty[] propertiesToCopy = parentFEOriginal.getFeatureType().getProperties();
 
     if( parentFEClone == m_targetFeature )
       propertiesToCopy = m_ftp;
@@ -56,16 +56,16 @@ public class CloneFeatureVisitor implements FeatureVisitor
     for( int i = 0; i < propertiesToCopy.length; i++ )
     {
 
-      final IPropertyType property = propertiesToCopy[i];
-      if( property instanceof IRelationType )
+      final FeatureTypeProperty property = propertiesToCopy[i];
+      if( property instanceof FeatureAssociationTypeProperty )
       {
-        IRelationType linkPT = (IRelationType) property;
-        final Feature[] childFEsOriginal = m_workspace.resolveLinks( parentFEOriginal, linkPT, GMLWorkspace.RESOLVE_ALL );
+        final Feature[] childFEsOriginal = m_workspace.resolveLinks( parentFEOriginal, property.getName(),
+            GMLWorkspace.RESOLVE_ALL );
         for( int j = 0; j < childFEsOriginal.length; j++ )
         {
           final Feature childFEOriginal = childFEsOriginal[j];
           // clone child features
-          if( m_workspace.isAggregatedLink( parentFEOriginal, linkPT, j ) )
+          if( m_workspace.isAggrigatedLink( parentFEOriginal, property.getName(), j ) )
           { // aggregation
             try
             {
@@ -75,11 +75,11 @@ public class CloneFeatureVisitor implements FeatureVisitor
 
               final Feature childFEClone = getFeatureClone( childFEOriginal );
               if( childFEClone != null ) // a
-                m_workspace.addFeatureAsAggregation( parentFEClone, linkPT, j, childFEClone.getId() );
+                m_workspace.addFeatureAsAggregation( parentFEClone, property.getName(), j, childFEClone.getId() );
               else
               {// b or c
-                m_workspace.addFeatureAsAggregation( parentFEClone, linkPT, j, childFEOriginal.getId() );
-                addLinkInfo( new AdaptLinkInfo( parentFEOriginal, linkPT, j, childFEOriginal ) );
+                m_workspace.addFeatureAsAggregation( parentFEClone, property.getName(), j, childFEOriginal.getId() );
+                addLinkInfo( new AdaptLinkInfo( parentFEOriginal, property.getName(), j, childFEOriginal ) );
               }
             }
             catch( Exception e ) // do nothing, assume that original features is valid
@@ -90,10 +90,10 @@ public class CloneFeatureVisitor implements FeatureVisitor
           else
           // composition
           {
-            final Feature childFEClone = m_workspace.createFeature( parentFEClone, childFEOriginal.getFeatureType() );
+            final Feature childFEClone = m_workspace.createFeature( childFEOriginal.getFeatureType() );
             try
             {
-              m_workspace.addFeatureAsComposition( parentFEClone, linkPT, j, childFEClone );
+              m_workspace.addFeatureAsComposition( parentFEClone, property.getName(), j, childFEClone );
               addToIdMap( childFEOriginal.getId(), childFEClone.getId() );
               final AdaptLinkInfo[] linkInfo = getLinkInfo( childFEOriginal );
               for( int k = 0; k < linkInfo.length; k++ )
@@ -126,18 +126,20 @@ public class CloneFeatureVisitor implements FeatureVisitor
   }
 
   /**
+   * 
    * @param targetFEOriginal
    * @return linkInfo or null if no linkinfo present
    */
   private AdaptLinkInfo[] getLinkInfo( final Feature targetFEOriginal )
   {
-    final List list = (List) m_linkInfoHash.get( targetFEOriginal );
+    final List list = (List)m_linkInfoHash.get( targetFEOriginal );
     if( list == null )
       return new AdaptLinkInfo[0];
-    return (AdaptLinkInfo[]) list.toArray( new AdaptLinkInfo[list.size()] );
+    return (AdaptLinkInfo[])list.toArray( new AdaptLinkInfo[list.size()] );
   }
 
   /**
+   * 
    * @param linkInfo
    */
   private void addLinkInfo( final AdaptLinkInfo linkInfo )
@@ -146,7 +148,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
     if( !m_linkInfoHash.containsKey( key ) )
       m_linkInfoHash.put( key, new ArrayList() );
 
-    final List list = (List) m_linkInfoHash.get( key );
+    final List list = (List)m_linkInfoHash.get( key );
     list.add( linkInfo );
   }
 
@@ -161,13 +163,14 @@ public class CloneFeatureVisitor implements FeatureVisitor
     final String parentID = parentFEOriginal.getId();
     if( m_idMap.containsKey( parentID ) )
     {
-      final String cloneID = (String) m_idMap.get( parentID );
+      final String cloneID = (String)m_idMap.get( parentID );
       return m_workspace.getFeature( cloneID );
     }
     return null;
   }
 
   /**
+   * 
    * mapping from original feature to cloned feature in this copy procedure
    * 
    * @param fidOriginal
@@ -182,36 +185,39 @@ public class CloneFeatureVisitor implements FeatureVisitor
   {
     private final Feature m_parentFEOriginal;
 
+    private final String m_linkName;
+
     private final int m_pos;
 
     private final Feature m_targetFEOriginal;
 
-    private final IRelationType m_linkPT;
-
-    public AdaptLinkInfo( final Feature parentFEOriginal, IRelationType linkPT, final int pos, final Feature targetFEOriginal )
+    public AdaptLinkInfo( final Feature parentFEOriginal, final String linkName, final int pos,
+        final Feature targetFEOriginal )
     {
       m_parentFEOriginal = parentFEOriginal;
-      m_linkPT = linkPT;
+      m_linkName = linkName;
       m_pos = pos;
       m_targetFEOriginal = targetFEOriginal;
     }
 
     /**
+     * 
      * @return target feature
      */
-    public Feature getTargetFeature( )
+    public Feature getTargetFeature()
     {
       return m_targetFEOriginal;
     }
 
     /**
      * @throws Exception
+     *  
      */
-    public void adaptToClones( ) throws Exception
+    public void adaptToClones() throws Exception
     {
       final Feature srcFEClone = getFeatureClone( m_parentFEOriginal );
       final Feature targetFEClone = getFeatureClone( m_targetFEOriginal );
-      m_workspace.setFeatureAsAggregation( srcFEClone, m_linkPT, m_pos, targetFEClone.getId() );
+      m_workspace.setFeatureAsAggregation( srcFEClone, m_linkName, m_pos, targetFEClone.getId() );
     }
   }
 }

@@ -61,7 +61,6 @@
 
 package org.kalypsodeegree.filterencoding;
 
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -98,6 +97,4 @@ public interface Operation
 
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML();
-  
-  public void accept( FilterVisitor fv, Operation operation, int depth );
 }

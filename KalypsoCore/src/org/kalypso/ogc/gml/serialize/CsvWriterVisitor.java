@@ -2,12 +2,13 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+
+import com.braju.format.Format;
 
 public final class CsvWriterVisitor implements FeatureVisitor
 {
@@ -51,7 +52,7 @@ public final class CsvWriterVisitor implements FeatureVisitor
   private String propertyToString( final Object property )
   {
     if( property instanceof Double )
-      return String.format( Locale.US, "%f", property );
+      return Format.sprintf( "%f", new Object[] { property } );
       
     return property.toString();
   }

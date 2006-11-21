@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import org.kalypsodeegree.gml.GMLGeometry;
 
 /**
  * The Geometry element is optional and if it is absent then the default geometry property of the feature type that is
@@ -90,20 +91,20 @@ public interface Geometry
    */
   void setPropertyName( String propertyName );
 
-//  /**
-//   * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
-//   * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
-//   * directly. (This is not part of the SLD XML-schema)
-//   * 
-//   * @return the GMLGeometry
-//   */
-//  GMLGeometry getGeometryAsGML();
+  /**
+   * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
+   * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
+   * directly. (This is not part of the SLD XML-schema)
+   * 
+   * @return the GMLGeometry
+   */
+  GMLGeometry getGeometryAsGML();
 
-//  /**
-//   * sets the <GMLGeometry>
-//   * 
-//   * @param geometry
-//   *          the GMLGeometry
-//   */
-//  void setGeometryAsGML( GMLGeometry geometry );
+  /**
+   * sets the <GMLGeometry>
+   * 
+   * @param geometry
+   *          the GMLGeometry
+   */
+  void setGeometryAsGML( GMLGeometry geometry );
 }

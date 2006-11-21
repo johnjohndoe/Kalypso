@@ -15,8 +15,10 @@ import java.rmi.RemoteException;
 /**
  * A base interface for metadata applicable to coordinate system objects. The metadata items 'Abbreviation', 'Alias',
  * 'Authority', 'AuthorityCode', 'Name' and 'Remarks' were specified in the Simple Features interfaces, so they have
- * been kept here. This specification does not dictate what the contents of these items should be. However, the
- * following guidelines are suggested:
+ * been kept here.
+ * 
+ * This specification does not dictate what the contents of these items should be. However, the following guidelines are
+ * suggested:
  * <ul>
  * <li>When {@link CS_CoordinateSystemAuthorityFactory}is used to create an object, the 'Authority' and
  * 'AuthorityCode' values should be set to the authority name of the factory object, and the authority code supplied by
@@ -38,7 +40,7 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getName( ) throws RemoteException;
+  String getName() throws RemoteException;
 
   /**
    * Gets the authority name. An Authority is an organization that maintains definitions of Authority Codes. For example
@@ -49,18 +51,20 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getAuthority( ) throws RemoteException;
+  String getAuthority() throws RemoteException;
 
   /**
    * Gets the authority-specific identification code. The AuthorityCode is a compact string defined by an Authority to
    * reference a particular spatial reference object. For example, the European Survey Group (EPSG) authority uses 32
    * bit integers to reference coordinate systems, so all their code strings will consist of a few digits. The EPSG code
-   * for WGS84 Lat/Lon is '4326'. An empty string is used for no code.
+   * for WGS84 Lat/Lon is '4326'.
+   * 
+   * An empty string is used for no code.
    * 
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getAuthorityCode( ) throws RemoteException;
+  String getAuthorityCode() throws RemoteException;
 
   /**
    * Gets the alias.
@@ -68,12 +72,15 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getAlias( ) throws RemoteException;
+  String getAlias() throws RemoteException;
 
   /**
    * Gets the abbreviation.
+   * 
+   * @throws RemoteException
+   *           if a remote method call failed.
    */
-  String getAbbreviation( );
+  String getAbbreviation() throws RemoteException;
 
   /**
    * Gets the provider-supplied remarks.
@@ -81,7 +88,7 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getRemarks( ) throws RemoteException;
+  String getRemarks() throws RemoteException;
 
   /**
    * Gets a Well-Known text representation of this object.
@@ -89,7 +96,7 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getWKT( ) throws RemoteException;
+  String getWKT() throws RemoteException;
 
   /**
    * Gets an XML representation of this object.
@@ -97,5 +104,5 @@ public interface CS_Info extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  String getXML( ) throws RemoteException;
+  String getXML() throws RemoteException;
 }

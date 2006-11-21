@@ -22,9 +22,9 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class ElementTable extends HashMap<String, Element>
+public class ElementTable extends HashMap
 {
-  private String m_name = null;
+  private String name = null;
 
   /*
    * TODO ?? how to implement the geo-search private SplitSort geoList = null;
@@ -35,7 +35,7 @@ public class ElementTable extends HashMap<String, Element>
 
   public ElementTable( String name )
   {
-    this.m_name = name;
+    this.name = name;
   }
 
   public void addElement( Element e )
@@ -45,7 +45,7 @@ public class ElementTable extends HashMap<String, Element>
 
   public String getTableName()
   {
-    return m_name;
+    return name;
   }
 
   public int removeElement( Element e )
@@ -62,7 +62,7 @@ public class ElementTable extends HashMap<String, Element>
 
   public Element getElement( String id )
   {
-    return get( id );
+    return (Element)get( id );
   }
 
   public ElementTable getSpatialSelection( GM_Envelope env )
@@ -72,7 +72,7 @@ public class ElementTable extends HashMap<String, Element>
     Iterator itKeys = this.keySet().iterator();
     while( itKeys.hasNext() )
     {
-      Element e = get( itKeys.next() );
+      Element e = (Element)get( itKeys.next() );
       Feature efeature = e.getFeature();
       sortedList.add( efeature );
     }//while
@@ -108,7 +108,7 @@ public class ElementTable extends HashMap<String, Element>
     int counter = 0;
     for( Iterator iter = set.iterator(); iter.hasNext(); )
     {
-      Element e = get( iter.next() );
+      Element e = (Element)get( iter.next() );
       if( counter == 0 )
         mergedEnv = e.getBBox();
       else

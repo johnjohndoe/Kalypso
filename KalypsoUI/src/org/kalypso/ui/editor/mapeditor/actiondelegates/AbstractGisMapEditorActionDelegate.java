@@ -41,12 +41,10 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author doemming
@@ -59,78 +57,57 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   {
     m_widget = widget;
   }
-
+  
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IEditorPart)
    */
-  @Override
-  protected void setActivePart( final IAction action, final IWorkbenchPart part )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    super.setActivePart( action, part );
-
-    if( action != null && action.getStyle() == IAction.AS_RADIO_BUTTON )
+    super.setActiveEditor( action, targetEditor );
+    if( action.getStyle() == IAction.AS_RADIO_BUTTON )
     {
-      final WidgetActionPart widgetPart = getPart();
-      if( widgetPart != null && action != null )
+      final GisMapEditor editor = (GisMapEditor)targetEditor;
+      if( editor != null && action != null )
       {
         if( action.isChecked() )
         {
           // da der event evt vom AWT-Thread kommt
-          final IWorkbenchPartSite site = widgetPart.getSite();
-          if( site != null )
+          getEditor().getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
           {
-            site.getShell().getDisplay().asyncExec( new Runnable()
+            public void run()
             {
-              public void run( )
-              {
-                final IWidget widget = getWidget();
-                final MapPanel mapPanel = widgetPart.getMapPanel();
-                if( mapPanel != null )
-                  mapPanel.getWidgetManager().setActualWidget( widget );
-              }
-            } );
-          }
+              editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
+            }
+          } );
         }
       }
     }
   }
 
-  protected final IWidget getWidget( )
+  protected final IWidget getWidget()
   {
     return m_widget;
   }
-
+  
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public final void run( final IAction action )
   {
     // activate my widget
-    final WidgetActionPart part = getPart();
-    if( part == null )
-      return;
-
-    final MapPanel mapPanel = part.getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    mapPanel.getWidgetManager().setActualWidget( getWidget() );
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
   }
 
+  
   /**
    * The default implementation does nothing
    * 
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
-  @Override
-  protected void refreshAction( final IAction action, final ISelection selection )
+  protected void refreshAction( final IAction action )
   {
-    final WidgetActionPart part = getPart();
-    final MapPanel mapPanel = part == null ? null :part.getMapPanel();
-
-    final boolean isEnabled = getWidget().canBeActivated( selection, mapPanel );
-    if( action != null )
-      action.setEnabled( isEnabled );
+    // does nothing
   }
 }

@@ -26,11 +26,6 @@
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/JWSDPInstallation/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoGMLSchema/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceUser/etc/ant/project-build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceObs/etc/ant/project-build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/project-build.xml" target="clean" inheritAll="false" />
 	</target>
 	
 	<target name="build-core">
@@ -46,11 +41,6 @@
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/JWSDPInstallation/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoGMLSchema/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceUser/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceObs/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
 	</target>
 	
 	<target name="test">
@@ -66,10 +56,6 @@
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="test" inheritAll="false" />
-		<ant antfile="${workspace}/JWSDPInstallation/etc/ant/build.xml" target="test" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoGMLSchema/etc/ant/build.xml" target="test" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceObs/etc/ant/project-build.xml" target="test" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/project-build.xml" target="test" inheritAll="false" />
 	</target>
 
 	<target name="javadoc">
@@ -85,10 +71,6 @@
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="javadoc" inheritAll="false" />
-		<ant antfile="${workspace}/JWSDPInstallation/etc/ant/build.xml" target="javadoc" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoGMLSchema/etc/ant/build.xml" target="javadoc" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceObs/etc/ant/project-build.xml" target="javadoc" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/project-build.xml" target="javadoc" inheritAll="false" />
 	</target>
 
 </project>

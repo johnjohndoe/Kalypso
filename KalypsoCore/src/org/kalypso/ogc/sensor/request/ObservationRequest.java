@@ -45,7 +45,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.zml.request.Request;
+import org.kalypso.zml.request.RequestType;
 
 /**
  * Contains the request information for an observation.
@@ -128,7 +128,6 @@ public class ObservationRequest implements IRequest
   /**
    * @see org.kalypso.ogc.sensor.request.IRequest#toString()
    */
-  @Override
   public String toString()
   {
     final StringBuffer bf = new StringBuffer();
@@ -148,7 +147,7 @@ public class ObservationRequest implements IRequest
     return bf.toString();
   }
 
-  public static ObservationRequest createWith( final Request requestType )
+  public static ObservationRequest createWith( final RequestType requestType )
   {
     if( requestType == null )
       return new ObservationRequest();

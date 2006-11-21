@@ -52,17 +52,17 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 import org.kalypso.zml.filters.AbstractFilterType;
-import org.kalypso.zml.filters.NOperationFilterType;
+import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.OperationFilterType;
-import org.kalypso.zml.filters.ZmlFilterType;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypso.zml.repository.virtual.ItemType;
-import org.kalypso.zml.repository.virtual.LevelType;
-import org.kalypso.zml.repository.virtual.VirtualRepositoryType;
+import org.kalypso.zml.filters.OperationFilter;
+import org.kalypso.zml.filters.ZmlFilter;
+import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.repository.virtual.Item;
+import org.kalypso.zml.repository.virtual.Level;
+import org.kalypso.zml.repository.virtual.VirtualRepository;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -82,9 +82,10 @@ public class KrigingReader
   private final Pattern BLOCK = Pattern.compile( ".*BLOCK:.+?(" + doublePattern + ").+?(" + doublePattern + ").+" );
 
   // example: 4485832.000 5603328.000 0.420 4234
-  private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?(" + doublePattern + ") +(.+?) *" );
+  private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?("
+      + doublePattern + ") +(.+?) *" );
 
-  private final List<KrigingElement> m_krigingElements;
+  private final List m_krigingElements;
 
   private int m_min = 9999999;
 
@@ -94,7 +95,8 @@ public class KrigingReader
 
   private final CS_CoordinateSystem m_crs;
 
-  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider, CS_CoordinateSystem crs ) throws IOException
+  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider,
+      CS_CoordinateSystem crs ) throws IOException
   {
     m_logger = logger;
     m_srcObservationProvider = srcObservationProvider;
@@ -106,10 +108,11 @@ public class KrigingReader
   public AbstractFilterType createFilter( final Feature feature, final String geoPropName )
   {
     m_logger.info( "creatFilter for " + feature.getId() );
-    final GM_Object geom = (GM_Object) feature.getProperty( geoPropName );
+    final GM_Object geom = (GM_Object)feature.getProperty( geoPropName );
     final List elements = getKrigingElementsFor( geom );
     if( elements.isEmpty() )
-      throw new InvalidParameterException( "Raster ist zu grob, Keine zuordnung fuer " + feature.getId() + " gefunden.\n" );
+      throw new InvalidParameterException( "Raster ist zu grob, Keine zuordnung fuer " + feature.getId()
+          + " gefunden.\n" );
     return createFilter( elements );
   }
 
@@ -119,12 +122,12 @@ public class KrigingReader
       m_min = krigingElements.size();
     m_logger.info( krigingElements.size() + " rasterpoints are withing geometry. (min is" + m_min + ")" );
     // calculate dependency
-    final HashMap<String, KrigingRelation> map = new HashMap<String, KrigingRelation>();
+    final HashMap map = new HashMap();
     final double n = krigingElements.size();
     // loop elements
     for( Iterator iter = krigingElements.iterator(); iter.hasNext(); )
     {
-      KrigingElement ke = (KrigingElement) iter.next();
+      KrigingElement ke = (KrigingElement)iter.next();
       KrigingRelation[] relations = ke.getRelations();
       // loop relations
       for( int i = 0; i < relations.length; i++ )
@@ -136,60 +139,71 @@ public class KrigingReader
           map.put( id, new KrigingRelation( factor, id ) );
         else
         {
-          KrigingRelation rel = map.get( id );
+          KrigingRelation rel = (KrigingRelation)map.get( id );
           rel.setFactor( rel.getFactor() + factor );
         }
       }
     }
 
     final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-    final NOperationFilterType nOperationFilter = filterFac.createNOperationFilterType();
-    nOperationFilter.setOperator( "+" );
-    final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
-    for( Iterator iter = map.values().iterator(); iter.hasNext(); )
+    // build filter
+    try
     {
-      final OperationFilterType filter = filterFac.createOperationFilterType();
-      filterList.add( filterFac.createFilter( filter ) );
-      final KrigingRelation rel = (KrigingRelation) iter.next();
-      filter.setOperator( "*" );
-      filter.setOperand( Double.toString( rel.getFactor() ) );
-      final ZmlFilterType zmlLink = filterFac.createZmlFilterType();
-      final SimpleLinkType type = linkFac.createSimpleLinkType();
-      final TimeseriesLinkType srcObservaion = m_srcObservationProvider.getObservaionForId( rel.getId() );
-      type.setHref( srcObservaion.getHref() );
-      // type.setHref( DWD_PSI_Mapper.mapDWDtoPSI( rel.getId() ) );
-      zmlLink.setZml( type );
-      filter.setFilter( filterFac.createFilter( zmlLink ) );
-      m_logger.info( rel.getId() + " " + rel.getFactor() );
-    }
+      final NOperationFilter nOperationFilter = filterFac.createNOperationFilter();
+      nOperationFilter.setOperator( "+" );
+      final List filterList = nOperationFilter.getFilter();
+      for( Iterator iter = map.values().iterator(); iter.hasNext(); )
+      {
+        final OperationFilter filter = filterFac.createOperationFilter();
+        filterList.add( filter );
+        final KrigingRelation rel = (KrigingRelation)iter.next();
+        filter.setOperator( "*" );
+        filter.setOperand( Double.toString( rel.getFactor() ) );
+        final ZmlFilter zmlLink = filterFac.createZmlFilter();
+        final SimpleLinkType type = linkFac.createSimpleLinkType();
+        final TimeseriesLink srcObservaion = m_srcObservationProvider.getObservaionForId( rel.getId() );
+        type.setHref( srcObservaion.getHref() );
+        //        type.setHref( DWD_PSI_Mapper.mapDWDtoPSI( rel.getId() ) );
+        zmlLink.setZml( type );
+        filter.setFilter( zmlLink );
+        m_logger.info( rel.getId() + " " + rel.getFactor() );
+      }
 
-    return nOperationFilter;
+      
+      
+      return nOperationFilter;
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
   }
 
-  private List<KrigingElement> getKrigingElementsFor( final GM_Object geom )
+  private List getKrigingElementsFor( GM_Object geom )
   {
-    final List<KrigingElement> result = new ArrayList<KrigingElement>();
-    for( final Iterator iter = m_krigingElements.iterator(); iter.hasNext(); )
+    List result = new ArrayList();
+    for( Iterator iter = m_krigingElements.iterator(); iter.hasNext(); )
     {
-      final KrigingElement ke = (KrigingElement) iter.next();
+      KrigingElement ke = (KrigingElement)iter.next();
       if( geom.contains( ke.getCenterPoint() ) )
         result.add( ke );
     }
     return result;
   }
 
-  public List<KrigingElement> parse( Reader reader )
+  public List parse( Reader reader )
   {
-    final List<KrigingElement> result = new ArrayList<KrigingElement>();
+    final List result = new ArrayList();
     try
     {
-      // // TODO check coordinates system
-      // final CS_CoordinateSystem srs =
+      //      // TODO check coordinates system
+      //      final CS_CoordinateSystem srs =
       // ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
       final LineNumberReader lineReader = new LineNumberReader( reader );
       String line = null;
       KrigingElement e = null;
-      while( (line = lineReader.readLine()) != null )
+      while( ( line = lineReader.readLine() ) != null )
       {
         Matcher m1 = BLOCK.matcher( line );
         Matcher m2 = RELATION.matcher( line );
@@ -221,10 +235,10 @@ public class KrigingReader
     return result;
   }
 
-  public VirtualRepositoryType createRepositoryConf( Feature[] features, String geoPropName )
+  public VirtualRepository createRepositoryConf( Feature[] features, String geoPropName ) throws JAXBException
   {
-    final VirtualRepositoryType repository = vRepFac.createVirtualRepositoryType();
-    final LevelType level = vRepFac.createLevelType();
+    final VirtualRepository repository = vRepFac.createVirtualRepository();
+    final Level level = vRepFac.createLevel();
     level.setId( "Messung" );
     level.setName( "WeisseElster - Gebietsniederschlaege" );
     repository.getLevel().add( level );
@@ -232,10 +246,10 @@ public class KrigingReader
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
-      final ItemType item = vRepFac.createItemType();
+      final Item item = vRepFac.createItem();
       item.setId( feature.getId() );
       item.setName( "Niederschlag - " + feature.getId() );
-      item.setFilter( filterFac.createFilter( createFilter( feature, geoPropName ) ) );
+      item.setFilter( createFilter( feature, geoPropName ) );
       level.getItem().add( item );
     }
     return repository;

@@ -54,8 +54,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -67,18 +67,11 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
  */
 public class FileUtilities
 {
-  /** regex defining which are the invalid characters for a file name */
-  public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>|]";
-
-  /**
-   * THE system tmp dir "java.io.tmpdir"
-   */
-  public static final File TMP_DIR = new File( System.getProperty( "java.io.tmpdir" ) );
-
   /**
    * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
    * 
    * @param charMode
+   * 
    * @param prefix
    *          prefix of new file name
    * @param suffix
@@ -87,50 +80,16 @@ public class FileUtilities
    *          data is read from this url
    * @param useCache
    *          if true tries to use an existing file with these prefix/suffix
-   * @return newly created file
-   * @throws IOException
-   *           there are problems!
-   */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, final URL url, boolean useCache ) throws IOException
-  {
-    InputStream is = null;
-    try
-    {
-      is = url.openStream();
-      final File result = makeFileFromStream( charMode, prefix, suffix, is, useCache );
-      is.close();
-      return result;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  /**
-   * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
    * 
-   * @param charMode
-   * @param url
-   *          data is read from this url
-   * @param the
-   *          content of the url is written into this file
+   * @return newly created file
+   * 
    * @throws IOException
    *           there are problems!
    */
-  public static void makeFileFromUrl( final URL url, final File file, final boolean charMode ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, URL url,
+      boolean useCache ) throws IOException
   {
-    InputStream is = null;
-    try
-    {
-      is = url.openStream();
-      makeFileFromStream( charMode, file, is );
-      is.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
+    return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
   }
 
   /**
@@ -138,6 +97,7 @@ public class FileUtilities
    * into the file. The file will be deleted after the VM shuts down
    * 
    * @param charMode
+   * 
    * @param prefix
    *          prefix of file name
    * @param suffix
@@ -146,11 +106,14 @@ public class FileUtilities
    *          the input stream, that is the source
    * @param useCache
    *          if true tries to use an existing file with these prefix/suffix
+   * 
    * @return the newly created file or null if an exception was thrown.
+   * 
    * @throws IOException
    *           problems reading from stream or writing to temp. file
    */
-  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins, boolean useCache ) throws IOException
+  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins,
+      boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -162,7 +125,7 @@ public class FileUtilities
       catch( final FileNotFoundException ignored )
       {
         // ignored
-        // ignored.printStackTrace();
+        //ignored.printStackTrace();
       }
     }
 
@@ -184,7 +147,8 @@ public class FileUtilities
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins )
+      throws IOException
   {
     if( charMode )
     {
@@ -212,9 +176,12 @@ public class FileUtilities
    * @param suffix
    *          name of the file should end with this suffix
    * @param path
+   * 
    * @return the (first) File found
+   * 
    * @throws FileNotFoundException
    *           when file was not found or path does not denote a directory
+   * 
    * @see PrefixSuffixFilter
    */
   public static File fileExistsInDir( String prefix, String suffix, String path ) throws FileNotFoundException
@@ -231,59 +198,8 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in " + path );
-  }
-
-  /**
-   * Rekursives l?schen von Dateien und Verzeichnissen
-   * 
-   * @param file
-   *          Falls das Argument eine Datei ist, wird diese gel?scht. Ist es ein Verzeichnis, werden alle dieses mitsamt
-   *          aller darin liegenden Verzeichnisse und Dateien gel?scht.
-   */
-  public static void deleteRecursive( final File file )
-  {
-    if( file == null )
-      return;
-
-    if( file.isDirectory() )
-    {
-      final File[] files = file.listFiles();
-      for( int i = 0; i < files.length; i++ )
-        deleteRecursive( files[i] );
-    }
-
-    file.delete();
-  }
-
-  /**
-   * Creates a temp directory in java.io.tmpdir.
-   * 
-   * @param prefix
-   * @return temporary directory
-   * @see FileUtilities#createNewTempDir( String, File )
-   */
-  public static File createNewTempDir( final String prefix )
-  {
-    return createNewTempDir( prefix, TMP_DIR );
-  }
-
-  /**
-   * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code> for naming the new
-   * temp dir. This method can hang a little while in the case the directory it tries to create already exist.
-   * 
-   * @param prefix
-   * @param parentDir
-   * @return temporary directory
-   */
-  public static File createNewTempDir( final String prefix, final File parentDir )
-  {
-    while( true )
-    {
-      final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
-      if( newDir.mkdir() )
-        return newDir;
-    }
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in "
+        + path );
   }
 
   /**
@@ -291,6 +207,7 @@ public class FileUtilities
    * 
    * @param basedir
    * @param absoluteFile
+   * 
    * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir
    *         von <code>absoluteFile</code> ist
    */
@@ -326,8 +243,8 @@ public class FileUtilities
     if( !absolute.startsWith( base ) )
     {
       if( base.lastIndexOf( "/" ) > -1 )
-        base = base.substring( 0, base.lastIndexOf( "/" ) );
-      // base=base.replaceAll(File.separator+".+$","");
+        base = base.substring( 0, base.lastIndexOf( "/" ) + 1 );
+      //      base=base.replaceAll(File.separator+".+$","");
       String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
         return null;
@@ -336,82 +253,14 @@ public class FileUtilities
         return null;
       String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
+      String x = back.replaceAll( "([a-zA-Z0-9]|\\.)+", ".." );
       if( x.length() > 0 )
-        return x + "/" + difference;
+        return x + File.separator + difference;
       return difference;
     }
     final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
 
     return rel;
-  }
-
-  /**
-   * Returns true if childCandidate is stored under the path of parent, either directly or in a sub directory.
-   * 
-   * @param parent
-   * @param childCandidate
-   * @return true if childCandidate is a child of the given parent.
-   */
-  public static boolean isChildOf( final File parent, final File childCandidate )
-  {
-    File f = childCandidate;
-
-    while( f != null )
-    {
-      if( f.equals( parent ) )
-        return true;
-
-      f = f.getParentFile();
-    }
-
-    return false;
-  }
-
-  /**
-   * @param name
-   *          name of path of the file
-   * @return characters after last "." of given file name
-   */
-  public static String getSuffix( final String name )
-  {
-    final String[] strings = name.split( "\\." );
-    if( strings.length != 0 )
-      return strings[strings.length - 1];
-    return null;
-  }
-
-  /**
-   * @param file
-   * @return characters after last "." of given file name
-   */
-  public static String getSuffix( final File file )
-  {
-    return getSuffix( file.getAbsolutePath() );
-  }
-
-  /**
-   * Returns only the name part of the given file name removing the extension part.
-   * <p>
-   * Example:
-   * 
-   * <pre>
-   *    
-   *     test.foo -- test
-   *     robert.tt -- robert
-   *     
-   * </pre>
-   * 
-   * @param fileName
-   * @return fileName without the last '.???' extension part (NOTE: the extension part is not limited to 3 chars)
-   */
-  public static String nameWithoutExtension( final String fileName )
-  {
-    final int lastIndexOf = fileName.lastIndexOf( '.' );
-    if( lastIndexOf == -1 )
-      return fileName;
-
-    return fileName.substring( 0, lastIndexOf );
   }
 
   /**
@@ -439,7 +288,7 @@ public class FileUtilities
     {
       final File file = files[i];
 
-      if( file.isFile() || (file.isDirectory() && recurse) )
+      if( file.isFile() || ( file.isDirectory() && recurse ) )
         accept( file, visitor, recurse );
     }
   }
@@ -487,54 +336,5 @@ public class FileUtilities
         e.printStackTrace();
       }
     }
-  }
-
-  /**
-   * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
-   * 
-   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
-   *         replaced by the given replacement-string
-   */
-  public static String validateName( final String fileName, final String replacement )
-  {
-    return fileName.replaceAll( INVALID_CHARACTERS, replacement );
-  }
-
-  /**
-   * Gets the name part of a path-like-string.
-   * <p>
-   * That is, everything after the last '/' or '\'.
-   * </p>
-   * <p>
-   * E.g. <code>C:/mydirectory/file.txt</code> gets <code>file.txt</code>
-   * </p>.
-   */
-  public static String nameFromPath( final String path )
-  {
-    final int lastIndexOfSlash = path.lastIndexOf( '/' );
-    final int lastIndexOfBackslash = path.lastIndexOf( '/' );
-    final int lastIndexOf = Math.max( lastIndexOfSlash, lastIndexOfBackslash );
-
-    if( lastIndexOf == -1 )
-      return path;
-
-    if( lastIndexOf + 1 == path.length() - 1 )
-      return "";
-
-    return path.substring( lastIndexOf + 1 );
-  }
-
-  /**
-   * Sets a certain suffix to the given file name. If the file name already has a suffix (that is a non-empty string
-   * after the last '.') it will be replaced.
-   * @param suffix The suffix without the point '.'
-   */
-  public static String setSuffix( final String fileName, final String suffix )
-  {
-    final int index = fileName.indexOf( '.' );
-    if( index == -1 )
-      return fileName + '.' + suffix;
-    
-    return fileName.substring( 0, index ) + suffix;
   }
 }

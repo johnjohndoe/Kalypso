@@ -72,13 +72,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -116,7 +113,9 @@ public class XMLTools
   public static StringBuffer validateCDATA( String cdata )
   {
     StringBuffer sb = null;
-    if( cdata != null && (cdata.length() > 1000 || cdata.indexOf( '<' ) >= 0 || cdata.indexOf( '>' ) >= 0 || cdata.indexOf( '&' ) >= 0 || cdata.indexOf( '"' ) >= 0 || cdata.indexOf( "'" ) >= 0) )
+    if( cdata != null
+        && ( cdata.length() > 1000 || cdata.indexOf( '<' ) >= 0 || cdata.indexOf( '>' ) >= 0
+            || cdata.indexOf( '&' ) >= 0 || cdata.indexOf( '"' ) >= 0 || cdata.indexOf( "'" ) >= 0 ) )
     {
       sb = new StringBuffer( cdata.length() + 15 );
       sb.append( "<![CDATA[" ).append( cdata ).append( "]]>" );
@@ -142,7 +141,9 @@ public class XMLTools
    *          namespace of the child element
    * @param node
    *          current element
+   * 
    * @return the element or null, if it is missing
+   * 
    * @throws XMLParsingException
    *           specified child element is missing and required is true
    */
@@ -152,15 +153,15 @@ public class XMLTools
     Element element = null;
     Element return_ = null;
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
           String s = element.getNamespaceURI();
-          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
+          if( ( s == null && namespace == null ) || ( namespace != null && namespace.equals( s ) ) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -174,7 +175,8 @@ public class XMLTools
 
     if( return_ == null )
     {
-      throw new XMLParsingException( "Required child-element '" + name + "' of element '" + node.getNodeName() + "' is missing!" );
+      throw new XMLParsingException( "Required child-element '" + name + "' of element '" + node.getNodeName()
+          + "' is missing!" );
     }
 
     return return_;
@@ -191,6 +193,7 @@ public class XMLTools
    *          namespace of the child element
    * @param node
    *          current element
+   * 
    * @return the element or null, if it is missing
    */
   public static Element getChildByName( String name, String namespace, Node node )
@@ -200,17 +203,17 @@ public class XMLTools
     Element element = null;
     Element return_ = null;
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           String s = element.getNamespaceURI();
 
-          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
+          if( ( s == null && namespace == null ) || ( namespace != null && namespace.equals( s ) ) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -235,6 +238,7 @@ public class XMLTools
    *          namespace of the child elements
    * @param node
    *          current element
+   * 
    * @return the list of matching child elements
    */
   public static ElementList getChildElementsByName( String name, String namespace, Node node )
@@ -244,17 +248,17 @@ public class XMLTools
     Element element = null;
     ElementList elementList = new ElementList();
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           String s = element.getNamespaceURI();
 
-          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
+          if( ( s == null && namespace == null ) || ( namespace != null && namespace.equals( s ) ) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -274,18 +278,18 @@ public class XMLTools
    * 
    * @param node
    *          current element
+   * 
    * @return the textual contents of the element or null, if it is missing
    */
   public static String getStringValue( Node node )
   {
-    if( node.getNodeType() == Node.TEXT_NODE )
-      return node.getNodeValue();
-    final NodeList children = node.getChildNodes();
-    final StringBuffer sb = new StringBuffer( children.getLength() * 500 );
+    NodeList children = node.getChildNodes();
+    StringBuffer sb = new StringBuffer( children.getLength() * 500 );
 
     for( int i = 0; i < children.getLength(); i++ )
     {
-      if( children.item( i ).getNodeType() == Node.TEXT_NODE || children.item( i ).getNodeType() == Node.CDATA_SECTION_NODE )
+      if( children.item( i ).getNodeType() == Node.TEXT_NODE
+          || children.item( i ).getNodeType() == Node.CDATA_SECTION_NODE )
       {
         sb.append( children.item( i ).getNodeValue() );
       }
@@ -306,6 +310,7 @@ public class XMLTools
    *          current element
    * @param defaultValue
    *          default value if element is missing
+   * 
    * @return the textual contents of the element or the given default value, if missing
    */
   public static String getStringValue( String name, String namespace, Node node, String defaultValue )
@@ -327,44 +332,6 @@ public class XMLTools
   }
 
   /**
-   * @param name
-   * @param namespace
-   * @param node
-   */
-  public static QName getQNameValue( String name, String namespace, Node node )
-  {
-    final Element element = getChildByName( name, namespace, node );
-    if( element == null )
-      return null;
-    final String value = getValue( element );
-    // hack to build a qName from string presentation (QName.toString())
-    // this is needed as the XML-SchemaType is still xs:string and not xs:QName
-    // according to Markus U. Müller (OGC SLD-Editor) this will change in the next version in SLD Standard
-    int pos = value.indexOf( '}' );
-    if( value.startsWith( "{" ) && pos > 0 )
-    {
-      final String namespaceURI = value.substring( 1, pos );
-      final String localName = value.substring( pos + 1 );
-      return new QName( namespaceURI, localName );
-    }
-    if( value == null || value.equals( "" ) )
-      return null;
-    final int split = value.lastIndexOf( ":" );
-    if( split < 1 )
-    {
-      final String namespaceURI = element.getNamespaceURI();
-      final String localName = value;
-      return new QName( namespaceURI, localName );
-    }
-    final String prefix = value.substring( 0, split - 1 );
-    final String localPart = value.substring( split + 1 );
-    final String namespaceURI = XMLUtilities.getNameSpaceForPrefix( element, prefix );
-    if( namespaceURI != null && namespaceURI.length() > 0 )
-      return new QName( namespaceURI, localPart, prefix );
-    return null;
-  }
-
-  /**
    * Returns the text contained in the specified child element of the given element.
    * <p>
    * 
@@ -374,6 +341,7 @@ public class XMLTools
    *          namespace of the child element
    * @param node
    *          current element
+   * 
    * @return the textual contents of the element or null, if it is missing
    */
   public static String getRequiredStringValue( String name, String namespace, Node node ) throws XMLParsingException
@@ -395,6 +363,7 @@ public class XMLTools
    *          current element
    * @param defaultValue
    *          value to be used if the specified element is missing or it's value is not numerical
+   * 
    * @return the textual contents of the element as a double-value
    */
   public static double getDoubleValue( String name, String namespace, Node node, double defaultValue )
@@ -429,6 +398,7 @@ public class XMLTools
    * @param node
    *          current element
    * @return the textual contents of the element as a double-value
+   * 
    * @throws XMLParsingException
    *           specified child element is missing or the contained text does not denote a double value
    */
@@ -443,7 +413,8 @@ public class XMLTools
     }
     catch( NumberFormatException e )
     {
-      throw new XMLParsingException( "Value ('" + textValue + "') of element '" + name + "' does not denote a valid double value." );
+      throw new XMLParsingException( "Value ('" + textValue + "') of element '" + name
+          + "' does not denote a valid double value." );
     }
     return value;
   }
@@ -465,7 +436,7 @@ public class XMLTools
 
     if( atts != null )
     {
-      Attr attribute = (Attr) atts.getNamedItem( name );
+      Attr attribute = (Attr)atts.getNamedItem( name );
 
       if( attribute != null )
       {
@@ -484,6 +455,7 @@ public class XMLTools
    * @param node
    *          current element
    * @return the textual contents of the attribute
+   * 
    * @throws XMLParsingException
    *           if specified attribute is missing
    */
@@ -494,7 +466,7 @@ public class XMLTools
 
     if( atts != null )
     {
-      Attr attribute = (Attr) atts.getNamedItem( name );
+      Attr attribute = (Attr)atts.getNamedItem( name );
 
       if( attribute != null )
       {
@@ -503,7 +475,8 @@ public class XMLTools
     }
     if( value == null )
     {
-      throw new XMLParsingException( "Required attribute '" + name + "' of element '" + node.getNodeName() + "' is missing." );
+      throw new XMLParsingException( "Required attribute '" + name + "' of element '" + node.getNodeName()
+          + "' is missing." );
     }
     return value;
   }
@@ -520,6 +493,7 @@ public class XMLTools
    * @param node
    *          current element
    * @return the textual contents of the attribute
+   * 
    * @throws XMLParsingException
    *           if specified attribute is missing
    */
@@ -531,7 +505,7 @@ public class XMLTools
 
     if( atts != null )
     {
-      Attr attribute = (Attr) atts.getNamedItemNS( namespace, name );
+      Attr attribute = (Attr)atts.getNamedItemNS( namespace, name );
 
       if( attribute != null )
       {
@@ -539,22 +513,22 @@ public class XMLTools
       }
     }
 
-    // for (int i = 0; i < atts.getLength (); i++) {
-    // Node n = atts.item (i);
-    // System.out.println ("Nodename: " + toLocalName (n.getNodeName ()));
-    // System.out.println ("NamespaceURI: " + n.getNamespaceURI ());
-    // if (n.getNamespaceURI ().equals (namespace) && toLocalName
-    // (n.getNodeName
+    //        for (int i = 0; i < atts.getLength (); i++) {
+    //            Node n = atts.item (i);
+    //            System.out.println ("Nodename: " + toLocalName (n.getNodeName ()));
+    //            System.out.println ("NamespaceURI: " + n.getNamespaceURI ());
+    //            if (n.getNamespaceURI ().equals (namespace) && toLocalName (n.getNodeName
     // ()).equals (name)) {
-    // System.out.println ("Me is here!");
-    // value = ((Attr) n).getValue ();
-    // break;
-    // }
-    // }
+    //                System.out.println ("Me is here!");
+    //                value = ((Attr) n).getValue ();
+    //                break;
+    //            }
+    //        }
 
     if( value == null )
     {
-      throw new XMLParsingException( "Required attribute '" + namespace + ":" + name + "' of element '" + node.getNodeName() + "' is missing." );
+      throw new XMLParsingException( "Required attribute '" + namespace + ":" + name + "' of element '"
+          + node.getNodeName() + "' is missing." );
     }
     return value;
   }
@@ -562,7 +536,7 @@ public class XMLTools
   /**
    * creates a new and empty dom document
    */
-  public static Document create( )
+  public static Document create()
   {
     javax.xml.parsers.DocumentBuilder builder = null;
 
@@ -595,7 +569,7 @@ public class XMLTools
       return null;
     }
 
-    Attr a = (Attr) atts.getNamedItem( attrName );
+    Attr a = (Attr)atts.getNamedItem( attrName );
 
     if( a != null )
     {
@@ -618,7 +592,7 @@ public class XMLTools
       return null;
     }
 
-    Attr a = (Attr) atts.getNamedItemNS( namespace, attrName );
+    Attr a = (Attr)atts.getNamedItemNS( namespace, attrName );
 
     if( a != null )
     {
@@ -631,11 +605,15 @@ public class XMLTools
   /**
    * Parses a XML document and returns a DOM object.
    * 
+   * 
    * @param fileName
    *          the filename of the XML file to be parsed
+   * 
    * @return a DOM object
+   * 
    * @throws IOException
    * @throws SAXException
+   *  
    */
   public static Document parse( String fileName ) throws IOException, SAXException
   {
@@ -646,6 +624,7 @@ public class XMLTools
   }
 
   /**
+   * 
    * @param resource
    * @return dom from url
    * @throws IOException
@@ -669,11 +648,15 @@ public class XMLTools
   /**
    * Parses a XML document and returns a DOM object.
    * 
+   * 
    * @param reader
    *          accessing the resource to parse
+   * 
    * @return a DOM object
+   * 
    * @throws IOException
    * @throws SAXException
+   *  
    */
   public static Document parse( Reader reader ) throws IOException, SAXException
   {
@@ -703,7 +686,7 @@ public class XMLTools
    */
   public static Node copyNode( Node source, Node dest )
   {
-    // Debug.debugMethodBegin( "XMLTools", "copyNode" );
+    //Debug.debugMethodBegin( "XMLTools", "copyNode" );
     if( source.getNodeType() == Node.TEXT_NODE )
     {
       Text tn = dest.getOwnerDocument().createTextNode( source.getNodeValue() );
@@ -716,7 +699,7 @@ public class XMLTools
     {
       for( int i = 0; i < attr.getLength(); i++ )
       {
-        ((Element) dest).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
+        ( (Element)dest ).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
       }
     }
 
@@ -724,9 +707,10 @@ public class XMLTools
 
     for( int i = 0; i < list.getLength(); i++ )
     {
-      if( !(list.item( i ) instanceof Text) )
+      if( !( list.item( i ) instanceof Text ) )
       {
-        Element en = dest.getOwnerDocument().createElementNS( list.item( i ).getNamespaceURI(), list.item( i ).getNodeName() );
+        Element en = dest.getOwnerDocument().createElementNS( list.item( i ).getNamespaceURI(),
+            list.item( i ).getNodeName() );
 
         if( list.item( i ).getNodeValue() != null )
         {
@@ -736,7 +720,7 @@ public class XMLTools
         Node n = copyNode( list.item( i ), en );
         dest.appendChild( n );
       }
-      else if( (list.item( i ) instanceof CDATASection) )
+      else if( ( list.item( i ) instanceof CDATASection ) )
       {
         CDATASection cd = dest.getOwnerDocument().createCDATASection( list.item( i ).getNodeValue() );
         dest.appendChild( cd );
@@ -748,7 +732,7 @@ public class XMLTools
       }
     }
 
-    // Debug.debugMethodEnd();
+    //Debug.debugMethodEnd();
     return dest;
   }
 
@@ -763,7 +747,7 @@ public class XMLTools
 
     if( dest instanceof Document )
     {
-      dDoc = (Document) dest;
+      dDoc = (Document)dest;
     }
     else
     {
@@ -794,13 +778,13 @@ public class XMLTools
     NodeList nl = node.getChildNodes();
     Element element = null;
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           break;
         }
@@ -818,7 +802,7 @@ public class XMLTools
 
     NodeList nl = node.getChildNodes();
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -837,18 +821,18 @@ public class XMLTools
    */
   public static Element getNamedChild( Node node, String name )
   {
-    // Debug.debugMethodBegin( "XMLTools", "getNamedChild" );
+    //	Debug.debugMethodBegin( "XMLTools", "getNamedChild" );
     NodeList nl = node.getChildNodes();
     Element element = null;
     Element return_ = null;
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           if( element.getNodeName().equals( name ) )
           {
@@ -860,7 +844,7 @@ public class XMLTools
       }
     }
 
-    // Debug.debugMethodEnd();
+    //	Debug.debugMethodEnd();
     return return_;
   }
 
@@ -869,22 +853,22 @@ public class XMLTools
    */
   public static Element getNamedChild( Node node, String namespace, String name )
   {
-    // Debug.debugMethodBegin( "XMLTools", "getNamedChild" );
+    //	Debug.debugMethodBegin( "XMLTools", "getNamedChild" );
     NodeList nl = node.getChildNodes();
     Element element = null;
     Element return_ = null;
 
-    if( (nl != null) && (nl.getLength() > 0) )
+    if( ( nl != null ) && ( nl.getLength() > 0 ) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           String s = element.getNamespaceURI();
 
-          if( (namespace == null && s == null) || namespace.equals( s ) )
+          if( ( namespace == null && s == null ) || namespace.equals( s ) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -897,7 +881,7 @@ public class XMLTools
       }
     }
 
-    // Debug.debugMethodEnd();
+    //	Debug.debugMethodEnd();
     return return_;
   }
 
@@ -908,11 +892,11 @@ public class XMLTools
    */
   public static Document mergeSchemas( Document[] schemas ) throws Exception
   {
-    final StringBuffer content = new StringBuffer();
-    final ArrayList<String> attributes = new ArrayList<String>();
-    final ArrayList<String> imports = new ArrayList<String>();
-    final HashMap<String, Object> nodes = new HashMap<String, Object>();
 
+    StringBuffer content = new StringBuffer();
+    ArrayList attributes = new ArrayList();
+    ArrayList imports = new ArrayList();
+    HashMap nodes = new HashMap();
     String schemaNS = null;
 
     // merge schemas into one schema
@@ -924,8 +908,8 @@ public class XMLTools
       // add attributes to the root element
       for( int j = 0; j < nnm.getLength(); j++ )
       {
-        final Attr attr = (Attr) nnm.item( j );
-        final String a = attr.getName() + "=\"" + attr.getValue() + "\" ";
+        Attr attr = (Attr)nnm.item( j );
+        String a = attr.getName() + "=\"" + attr.getValue() + "\" ";
 
         if( !attributes.contains( a ) && !attr.getName().equals( "targetNamespace" ) )
         {
@@ -1000,7 +984,7 @@ public class XMLTools
   }
 
   /**
-   * Returns the concatenated Strings of all direct children that are TEXT_NODEs.
+   * Returns the concatenated Strings of all children that are TEXT_NODEs.
    */
   public static String getValue( Node node )
   {
@@ -1009,7 +993,8 @@ public class XMLTools
 
     for( int i = 0; i < children.getLength(); i++ )
     {
-      if( children.item( i ).getNodeType() == Node.TEXT_NODE || children.item( i ).getNodeType() == Node.CDATA_SECTION_NODE )
+      if( children.item( i ).getNodeType() == Node.TEXT_NODE
+          || children.item( i ).getNodeType() == Node.CDATA_SECTION_NODE )
       {
         sb.append( children.item( i ).getNodeValue() );
       }
@@ -1029,7 +1014,9 @@ public class XMLTools
     for( int i = 0; i < children.getLength(); i++ )
     {
       if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
-        list.addElement( (Element) children.item( i ) );
+      {
+        list.elements.add( children.item( i ) );
+      }
     }
 
     return list;
@@ -1042,68 +1029,68 @@ public class XMLTools
   {
     switch( node.getNodeType() )
     {
-      case Node.DOCUMENT_NODE:
+    case Node.DOCUMENT_NODE:
+    {
+      sb.append( "<?xml version=\"1.0\"?>\n" );
+
+      Document doc = (Document)node;
+      appendNode( doc.getDocumentElement(), "", sb );
+
+      break;
+    }
+
+    case Node.ELEMENT_NODE:
+    {
+      String name = node.getNodeName();
+      sb.append( indent + "<" + name );
+
+      NamedNodeMap attributes = node.getAttributes();
+
+      for( int i = 0; i < attributes.getLength(); i++ )
       {
-        sb.append( "<?xml version=\"1.0\"?>\n" );
-
-        Document doc = (Document) node;
-        appendNode( doc.getDocumentElement(), "", sb );
-
-        break;
+        Node current = attributes.item( i );
+        sb.append( " " + current.getNodeName() + "=\"" + current.getNodeValue() + "\"" );
       }
 
-      case Node.ELEMENT_NODE:
+      sb.append( ">" );
+
+      // Kinder durchgehen
+      NodeList children = node.getChildNodes();
+
+      if( children != null )
       {
-        String name = node.getNodeName();
-        sb.append( indent + "<" + name );
-
-        NamedNodeMap attributes = node.getAttributes();
-
-        for( int i = 0; i < attributes.getLength(); i++ )
+        for( int i = 0; i < children.getLength(); i++ )
         {
-          Node current = attributes.item( i );
-          sb.append( " " + current.getNodeName() + "=\"" + current.getNodeValue() + "\"" );
+          appendNode( children.item( i ), indent, sb );
         }
-
-        sb.append( ">" );
-
-        // Kinder durchgehen
-        NodeList children = node.getChildNodes();
-
-        if( children != null )
-        {
-          for( int i = 0; i < children.getLength(); i++ )
-          {
-            appendNode( children.item( i ), indent, sb );
-          }
-        }
-
-        sb.append( indent + "</" + name + ">" );
-
-        break;
       }
 
-      case Node.TEXT_NODE:
-      case Node.CDATA_SECTION_NODE:
+      sb.append( indent + "</" + name + ">" );
+
+      break;
+    }
+
+    case Node.TEXT_NODE:
+    case Node.CDATA_SECTION_NODE:
+    {
+      String trimmed = node.getNodeValue().trim();
+
+      if( !trimmed.equals( "" ) )
       {
-        String trimmed = node.getNodeValue().trim();
-
-        if( !trimmed.equals( "" ) )
-        {
-          sb.append( indent + trimmed );
-        }
-
-        break;
+        sb.append( indent + trimmed );
       }
 
-      case Node.PROCESSING_INSTRUCTION_NODE:
-        break;
+      break;
+    }
 
-      case Node.ENTITY_REFERENCE_NODE:
-        break;
+    case Node.PROCESSING_INSTRUCTION_NODE:
+      break;
 
-      case Node.DOCUMENT_TYPE_NODE:
-        break;
+    case Node.ENTITY_REFERENCE_NODE:
+      break;
+
+    case Node.DOCUMENT_TYPE_NODE:
+      break;
     }
   }
 

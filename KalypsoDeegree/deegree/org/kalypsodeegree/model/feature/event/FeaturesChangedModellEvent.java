@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.List;
+
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -49,18 +50,18 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
 {
-  private final Feature[] m_features;
+  private final List m_features;
 
   private final GMLWorkspace m_workspace;
 
-  public FeaturesChangedModellEvent( final GMLWorkspace workspace, final Feature[] features )
+  public FeaturesChangedModellEvent( GMLWorkspace workspace, List features )
   {
     super( workspace, FEATURE_CHANGE );
     m_workspace = workspace;
     m_features = features;
   }
 
-  public Feature[] getFeatures()
+  public List getFeatures()
   {
     return m_features;
   }

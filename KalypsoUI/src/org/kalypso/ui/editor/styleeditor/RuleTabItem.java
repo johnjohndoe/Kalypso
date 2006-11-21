@@ -44,7 +44,6 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -53,10 +52,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
+import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog;
+import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogEvent;
+import org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialogListener;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
@@ -64,13 +64,14 @@ import org.kalypso.ui.editor.styleeditor.panels.LegendLabel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class RuleTabItem
 {
@@ -84,9 +85,9 @@ public class RuleTabItem
 
   private KalypsoUserStyle m_userStyle;
 
-  final IFeatureType m_featureType;
+  private final FeatureType m_featureType;
 
-  public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, IFeatureType featureType )
+  public RuleTabItem( TabFolder ruleTabFolder, KalypsoUserStyle userStyle, FeatureType featureType )
   {
     m_ruleTabFolder = ruleTabFolder;
     m_userStyle = userStyle;
@@ -111,22 +112,24 @@ public class RuleTabItem
       ruleName = rule.getName();
     else
     {
-      ruleName = MessageBundle.STYLE_EDITOR_RULE + (++counter);
+      ruleName = MessageBundle.STYLE_EDITOR_RULE + ( ++counter );
       rule.setTitle( ruleName );
     }
     tabItem.setText( ruleName );
 
     final TabFolder symbolizerTabFolder;
 
-    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle() );
+    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rule
+        .getTitle() );
     titleInputPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        String title = ((TextInputPanel) event.getSource()).getLabelText();
+        String title = ( (TextInputPanel)event.getSource() ).getLabelText();
         if( title == null || title.trim().length() == 0 )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
           titleInputPanel.setInputText( rule.getTitle() );
         }
@@ -140,17 +143,19 @@ public class RuleTabItem
       }
     } );
 
-    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator() );
+    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite,
+        MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator() );
     minDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double min = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        double min = ( (DenominatorInputPanel)event.getSource() ).getDenominator();
         double max = rule.getMaxScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
           minDenominatorPanel.setDenominator( rule.getMinScaleDenominator() );
         }
@@ -179,23 +184,25 @@ public class RuleTabItem
       else
         rule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
-    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator() );
+    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite,
+        MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator() );
     maxDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
-        double max = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        double max = ( (DenominatorInputPanel)event.getSource() ).getDenominator();
         double min = rule.getMinScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
           maxDenominatorPanel.setDenominator( rule.getMaxScaleDenominator() );
         }
         else
         {
-          // add a minimum to max in order to be a little bit larger than the
+          //add a minimum to max in order to be a little bit larger than the
           // current scale and
           // to keep the current view -> otherwise the rule would automatically
           // exculde this configuration
@@ -212,7 +219,8 @@ public class RuleTabItem
       }
     } );
 
-    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
+    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER,
+        m_featureType );
 
     final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule.getSymbolizers().length );
 
@@ -224,7 +232,7 @@ public class RuleTabItem
     {
       public void valueChanged( PanelEvent event )
       {
-        int action = ((EditSymbolizerPanel) event.getSource()).getAction();
+        int action = ( (EditSymbolizerPanel)event.getSource() ).getAction();
 
         if( action == EditSymbolizerPanel.REM_SYMB )
         {
@@ -244,7 +252,7 @@ public class RuleTabItem
         else if( action == EditSymbolizerPanel.FOR_SYMB )
         {
           int index = symbolizerTabFolder.getSelectionIndex();
-          if( index == (rule.getSymbolizers().length - 1) || index < 0 )
+          if( index == ( rule.getSymbolizers().length - 1 ) || index < 0 )
           {
             // nothing
           }
@@ -255,7 +263,7 @@ public class RuleTabItem
             {
               if( counter4 == index )
                 newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 + 1];
-              else if( counter4 == (index + 1) )
+              else if( counter4 == ( index + 1 ) )
                 newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 - 1];
               else
                 newOrderedObjects[counter4] = rule.getSymbolizers()[counter4];
@@ -279,7 +287,7 @@ public class RuleTabItem
             {
               if( counter5 == index )
                 newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 - 1];
-              else if( counter5 == (index - 1) )
+              else if( counter5 == ( index - 1 ) )
                 newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 + 1];
               else
                 newOrderedObjects[counter5] = rule.getSymbolizers()[counter5];
@@ -300,7 +308,7 @@ public class RuleTabItem
     {
       public void valueChanged( PanelEvent event )
       {
-        Symbolizer symbolizer = ((AddSymbolizerPanel) event.getSource()).getSelection();
+        Symbolizer symbolizer = ( (AddSymbolizerPanel)event.getSource() ).getSelection();
         if( symbolizer != null )
         {
           rule.addSymbolizer( symbolizer );
@@ -319,34 +327,19 @@ public class RuleTabItem
     buttonComposite.setLayout( new GridLayout( 1, true ) );
     Button button = new Button( buttonComposite, SWT.NULL );
     button.setText( MessageBundle.STYLE_EDITOR_EDIT_FILTER );
+    final FilterDialog filterDialog = new FilterDialog( composite.getShell(), m_featureType, rule );
+    filterDialog.addFilterDialogListener( new FilterDialogListener()
+    {
+      public void filterUpdated( FilterDialogEvent event )
+      {
+        getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+      }
+    } );
     button.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        Filter oldFilter = rule.getFilter();
-        Filter clone = null;
-        if( oldFilter != null )
-          try
-          {
-            clone = oldFilter.clone();
-          }
-          catch( CloneNotSupportedException ex )
-          {
-            ex.printStackTrace();
-          }
-        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, null, false );
-        int open = dialog.open();
-        if( open == Window.OK )
-        {
-          Filter filter = dialog.getFilter();
-          rule.setFilter( filter );
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
-        }
-        if( open == Window.CANCEL )
-        {
-          rule.setFilter( clone );
-          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
-        }
+        filterDialog.open();
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
@@ -394,12 +387,12 @@ public class RuleTabItem
     }
   }
 
-  public KalypsoUserStyle getUserStyle( )
+  public KalypsoUserStyle getUserStyle()
   {
     return m_userStyle;
   }
 
-  public TabFolder getRuleTabFolder( )
+  public TabFolder getRuleTabFolder()
   {
     return m_ruleTabFolder;
   }

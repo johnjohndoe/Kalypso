@@ -41,21 +41,17 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public class AddFeatureCommand implements ICommand
 {
@@ -63,37 +59,31 @@ public class AddFeatureCommand implements ICommand
 
   private final int m_pos;
 
-  private final IRelationType m_propName;
+  private final String m_propName;
 
-  private final IFeatureType m_type;
+  private final FeatureType m_type;
 
-  private Feature m_newFeature = null;
+  private Feature newFeature = null;
 
   private final CommandableWorkspace m_workspace;
 
-  /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_props;
-
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final int m_depth;
-
-  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
+  public AddFeatureCommand( final CommandableWorkspace workspace, final FeatureType type, final Feature parentFeature, final String propertyName,
+      final int pos, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_props = properties;
     m_type = type;
     m_selectionManager = selectionManager;
-    m_depth = depth;
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
@@ -101,81 +91,68 @@ public class AddFeatureCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    m_newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
-
-    if( m_props != null )
-      setProperties();
-
+    newFeature = m_workspace.createFeature( m_type );
     addFeature();
-  }
-
-  private void setProperties( )
-  {
-    IPropertyType[] properties = m_newFeature.getFeatureType().getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      IPropertyType ftp = properties[i];
-      Object property = m_props.get( ftp );
-      /** Skip all FeatureAssociationProperties, there is a special method to handel these props */
-      if( ftp instanceof IRelationType )
-        continue;
-      if( property != null )
-        m_newFeature.setProperty( ftp, property );
-    }
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
-    if( m_newFeature == null )
+    if( newFeature == null )
       return;
-
     addFeature();
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    if( m_newFeature == null )
+    if( newFeature == null )
       return;
 
-    if( m_propName.isList() )
-    {
-      final List list = (List) m_parentFeature.getProperty( m_propName );
-      list.remove( m_newFeature );
-    }
-    else
-      m_parentFeature.setProperty( m_propName, null );
+    Object prop = m_parentFeature.getProperty( m_propName );
+    Object properties[] = m_parentFeature.getProperties();
+    int propIndex = 0;
+    for( ; propIndex < properties.length; propIndex++ )
+      if( properties[propIndex] == prop )
+        break;
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+    if( maxOccurs == 1 )
+    {
+      properties[propIndex] = null;
+    }
+    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
+      List list = (List)prop;
+      list.remove( newFeature );
+    }
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "Feature hinzufügen";
   }
 
-  private void addFeature( ) throws Exception
+  private void addFeature() throws Exception
   {
-    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
+    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    
     if( m_selectionManager != null )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
+      m_selectionManager.changeSelection( new Feature[0], new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
+    
   }
-  
-  public Feature getNewFeature( )
-  {
-    return m_newFeature;
-  }
-  
 }

@@ -70,8 +70,7 @@ public class ExportAction extends Action
     m_target = target;
   }
 
-  @Override
-  public void run( )
+  public void run()
   {
     final IExportableObjectFactory factory = (IExportableObjectFactory)m_part
         .getAdapter( IExportableObjectFactory.class );
@@ -83,7 +82,7 @@ public class ExportAction extends Action
     try
     {
       // TODO: define a default image for the export wizard (maybe target should yield one)
-      final Wizard wizard = new ExportWizard( m_target, factory, shell, null );
+      final Wizard wizard = new ExportWizard( m_target, factory, shell, null, "Exportdialog" );
       final WizardDialog dlg = new WizardDialog( shell, wizard );
       dlg.open();
     }

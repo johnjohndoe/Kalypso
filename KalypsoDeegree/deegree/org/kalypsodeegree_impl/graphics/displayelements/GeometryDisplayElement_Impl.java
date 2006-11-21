@@ -81,15 +81,15 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 465725117946501686L;
 
-  private GM_Object m_geometry = null;
+  protected GM_Object geometry = null;
 
-  private Symbolizer m_symbolizer = null;
+  protected Symbolizer symbolizer = null;
 
-  private Symbolizer m_highlightSymbolizer = null;
+  protected Symbolizer highlightSymbolizer = null;
 
-  private Symbolizer m_selectedSymbolizer = null;
+  protected Symbolizer selectedSymbolizer = null;
 
-  // private Object placement = null;
+  protected Object placement = null;
 
   /**
    * Creates a new GeometryDisplayElement_Impl object.
@@ -128,7 +128,8 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * @param selectedSymbolizer
    * @param highlightSymbolizer
    */
-  GeometryDisplayElement_Impl( Feature feature, GM_Object geometry, Symbolizer symbolizer, Symbolizer highlightSymbolizer, Symbolizer selectedSymbolizer )
+  GeometryDisplayElement_Impl( Feature feature, GM_Object geometry, Symbolizer symbolizer,
+      Symbolizer highlightSymbolizer, Symbolizer selectedSymbolizer )
   {
     super( feature );
     setGeometry( geometry );
@@ -147,6 +148,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setPlacement( Object o )
   {
+    placement = o;
   }
 
   /**
@@ -154,15 +156,15 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setGeometry( GM_Object geometry )
   {
-    this.m_geometry = geometry;
+    this.geometry = geometry;
   }
 
   /**
    * returns the geometry that determines the position the DisplayElement will be rendered to
    */
-  public GM_Object getGeometry( )
+  public GM_Object getGeometry()
   {
-    return m_geometry;
+    return geometry;
   }
 
   /**
@@ -170,15 +172,15 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setSymbolizer( Symbolizer symbolizer )
   {
-    this.m_symbolizer = symbolizer;
+    this.symbolizer = symbolizer;
   }
 
   /**
    * Returns the symbolizer that determines how the geometry will be rendered.
    */
-  public Symbolizer getSymbolizer( )
+  public Symbolizer getSymbolizer()
   {
-    return m_symbolizer;
+    return symbolizer;
   }
 
   /**
@@ -189,15 +191,15 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setHighlightSymbolizer( Symbolizer rule )
   {
-    this.m_highlightSymbolizer = rule;
+    this.highlightSymbolizer = rule;
   }
 
   /**
    * returns the symbolizer that determines how the geometry will be rendered if it's highlighted
    */
-  public Symbolizer getHighlightSymbolizer( )
+  public Symbolizer getHighlightSymbolizer()
   {
-    return m_highlightSymbolizer;
+    return highlightSymbolizer;
   }
 
   /**
@@ -208,24 +210,23 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    */
   public void setSelectedSymbolizer( Symbolizer rule )
   {
-    m_selectedSymbolizer = rule;
+    selectedSymbolizer = rule;
   }
 
   /**
    * returns the symbolizer that determines how the geometry will be rendered if it's selected
    */
-  public Symbolizer getSelectedSymbolizer( )
+  public Symbolizer getSelectedSymbolizer()
   {
-    return m_selectedSymbolizer;
+    return selectedSymbolizer;
   }
 
   /**
    * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
-  @Override
   public boolean doesScaleConstraintApply( double scale )
   {
-    return m_symbolizer.getMinScaleDenominator() <= scale && m_symbolizer.getMaxScaleDenominator() > scale;
+    return symbolizer.getMinScaleDenominator() <= scale && symbolizer.getMaxScaleDenominator() > scale;
   }
 
 }

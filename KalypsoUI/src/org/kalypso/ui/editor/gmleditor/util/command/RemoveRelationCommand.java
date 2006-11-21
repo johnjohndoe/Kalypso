@@ -41,7 +41,6 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -65,13 +64,13 @@ public class RemoveRelationCommand implements ICommand
 
   private final Feature m_destFE;
 
-  private final IRelationType m_linkPropName;
+  private final String m_linkPropName;
 
   private final boolean m_isComposition;
 
   private final int m_pos;
 
-  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType linkPropName, Feature destFE )
+  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkPropName, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -99,8 +98,7 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
-    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
@@ -121,8 +119,7 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
     else
       m_workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
-    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 

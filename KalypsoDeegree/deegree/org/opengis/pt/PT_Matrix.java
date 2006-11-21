@@ -44,7 +44,6 @@ public class PT_Matrix implements Cloneable, Serializable
    * Returns a hash value for this coordinate. This value need not remain consistent between different implementations
    * of the same class.
    */
-  @Override
   public int hashCode()
   {
     long code = 7983264;
@@ -66,7 +65,6 @@ public class PT_Matrix implements Cloneable, Serializable
   /**
    * Compares the specified object with this matrix for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
@@ -110,7 +108,6 @@ public class PT_Matrix implements Cloneable, Serializable
   /**
    * Returns a deep copy of this matrix.
    */
-  @Override
   public Object clone()
   {
     try
@@ -118,11 +115,11 @@ public class PT_Matrix implements Cloneable, Serializable
       final PT_Matrix copy = (PT_Matrix)super.clone();
       if( copy.elt != null )
       {
-        copy.elt = copy.elt.clone();
+        copy.elt = (double[][])copy.elt.clone();
         for( int i = copy.elt.length; --i >= 0; )
         {
           if( copy.elt[i] != null )
-            copy.elt[i] = copy.elt[i].clone();
+            copy.elt[i] = (double[])copy.elt[i].clone();
         }
       }
       return copy;
@@ -138,7 +135,6 @@ public class PT_Matrix implements Cloneable, Serializable
    * Returns a string representation of this matrix. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "PT_Matrix" );

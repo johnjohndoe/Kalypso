@@ -363,7 +363,7 @@ public class Timeserie extends Persistent
       final Statement st = m_con.createStatement();
       final ResultSet set = st.executeQuery( createQuery( from, to ) );
 
-      final Vector<TimeserieTupple> list = new Vector<TimeserieTupple>();
+      final Vector list = new Vector();
 
       // TODO Performanz verbessern!!!
       while( set.next() )
@@ -380,7 +380,7 @@ public class Timeserie extends Persistent
 
       m_con.commit();
 
-      return list.toArray( new TimeserieTupple[list.size()] );
+      return (TimeserieTupple[])list.toArray( new TimeserieTupple[list.size()] );
     }
     catch( SQLException e )
     {
@@ -401,7 +401,6 @@ public class Timeserie extends Persistent
     throw new UnsupportedOperationException( "setValues() tupples= " + tupples );
   }
 
-  @Override
   public String toString()
   {
     return m_name + " (" + m_dataTableName + ")";
@@ -410,7 +409,6 @@ public class Timeserie extends Persistent
   /**
    * @see com.bce.datacenter.db.persistent.Persistent#dbRead()
    */
-  @Override
   protected void dbRead()
   {
     try
@@ -457,7 +455,7 @@ public class Timeserie extends Persistent
    */
   protected static List dbReadAll( final Connection con, int channelRef )
   {
-    Vector<Timeserie> v = new Vector<Timeserie>();
+    Vector v = new Vector();
 
     try
     {
@@ -498,7 +496,6 @@ public class Timeserie extends Persistent
     return v;
   }
 
-  @Override
   public boolean equals( Object object )
   {
     if( object == null )

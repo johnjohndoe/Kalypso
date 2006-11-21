@@ -149,7 +149,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     // extracting surface patches from the boundary
     super( boundary.getCoordinateSystem(), orientation );
 
-    m_boundary = boundary;
+    this.boundary = boundary;
   }
 
   /**
@@ -168,7 +168,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   {
     try
     {
-      GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
+      GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), crs );
       GM_Position[][] inn_ = m_patch.getInteriorRings();
       GM_Ring[] inn = null;
 
@@ -178,11 +178,11 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
         for( int i = 0; i < inn_.length; i++ )
         {
-          inn[i] = new GM_Ring_Impl( inn_[i], getCoordinateSystem() );
+          inn[i] = new GM_Ring_Impl( inn_[i], crs );
         }
       }
 
-      m_boundary = new GM_SurfaceBoundary_Impl( ext, inn );
+      boundary = new GM_SurfaceBoundary_Impl( ext, inn );
     }
     catch( Exception e )
     {
@@ -193,7 +193,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * calculates area, centroid and the envelope of the surface
    */
-  @Override
   protected void calculateParam()
   {
     calculateCentroidArea();
@@ -243,7 +242,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateParam();
     }
-    return (GM_SurfaceBoundary)m_boundary;
+    return (GM_SurfaceBoundary)boundary;
   }
 
   /**
@@ -322,7 +321,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * @param other
    *          object to compare to
    */
-  @Override
   public boolean equals( Object other )
   {
     if( !super.equals( other ) )
@@ -382,7 +380,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * returns a shallow copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_Surface s = null;
@@ -402,7 +399,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * translate each point of the surface with the values of the submitted double array.
    */
-  @Override
   public void translate( double[] d )
   {
     GM_Position[] ext = m_patch.getExteriorRing();
@@ -435,14 +431,13 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * @param gmo the <tt>GM_Object</tt> to test for intersection
    * @return true if the <tt>GM_Object</tt> intersects with this
    */
-  @Override
   public boolean intersects( GM_Object gmo )
   {
     if( !isValid() )
     {
       calculateParam();
     }
-    return m_patch.contains( gmo ) || m_boundary.intersects( gmo );
+    return m_patch.contains( gmo ) || boundary.intersects( gmo );
   }
 
   /**
@@ -451,7 +446,6 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * <p>
    * </p>
    */
-  @Override
   public boolean contains( GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
@@ -462,21 +456,19 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * <p>
    * </p>
    */
-  @Override
   public boolean contains( GM_Object gmo )
   {
     if( !isValid() )
     {
       calculateParam();
     }
-    return m_boundary.contains( gmo );
+    return boundary.contains( gmo );
   }
 
   /**
    * 
    *  
    */
-  @Override
   public String toString()
   {
     String ret = getClass().getName() + ":\n";
@@ -491,16 +483,5 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     }
     ret += ( "patch = " + m_patch + "\n" );
     return ret;
-  }
-  
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
-   */
-  @Override
-  public void invalidate( )
-  {
-    m_patch.invalidate();
-    
-    super.invalidate();
   }
 }

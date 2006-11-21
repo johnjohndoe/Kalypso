@@ -1,6 +1,5 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,14 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -73,7 +71,7 @@ public class DefaultStyleFactory
 
   private final String DEFAULT_STYLE_DRECTORY;
 
-  private HashMap<Integer, String> m_defalultStyles = new HashMap<Integer, String>();
+  private HashMap m_defalultStyles = new HashMap();
 
   private static final Logger LOGGER = Logger.getLogger( DefaultStyleFactory.class.getName() );
 
@@ -96,10 +94,10 @@ public class DefaultStyleFactory
     throw new IOException( "The name for the default style directory is not a valid path." );
   }
 
-  private String getStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
+  private String getStyle( final FeatureType featureType, final String styleName ) throws Exception 
   {
     final StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
-    return ((StyledLayerDescriptor_Impl) sld).exportAsXML();
+    return ( (StyledLayerDescriptor_Impl)sld ).exportAsXML();
   }
 
   /**
@@ -109,23 +107,22 @@ public class DefaultStyleFactory
    * @param featureType
    *          the featureType for which a default style needs to be genearted
    * @return returns the location (absolute path to local file system ) where the style is saved in a file
-   * @deprecated use createUserStyle( IFeatureType featureType, String styleName )
+   * @throws Exception
+   *  
    */
-  public URL getDefaultStyle( IFeatureType featureType, String styleName ) throws StyleNotDefinedException
+  public URL getDefaultStyle( FeatureType featureType, String styleName ) throws Exception 
   {
-    // called from import-raster-source-wizard
     String myStyleName = styleName;
     if( myStyleName == null )
     {
-      // myStyleName = featureType.getName();
-      myStyleName = featureType.getQName().getLocalPart();
+      myStyleName = featureType.getName();
     }
     try
     {
-      // check if style already exists
+      //check if style already exists
       if( m_defalultStyles.containsKey( generateKey( featureType ) ) )
-        return new URL( m_defalultStyles.get( generateKey( featureType ) ) );
-      // write style to default style location
+        return new URL( (String)m_defalultStyles.get( generateKey( featureType ) ) );
+      //write style to default style location
       File tempFile = null;
       tempFile = new File( DEFAULT_STYLE_DRECTORY, myStyleName + ".sld.default" );
       FileWriter writer = new FileWriter( tempFile );
@@ -141,91 +138,109 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
+  private StyledLayerDescriptor createDefaultStyle( final FeatureType featureType, final String styleName ) throws Exception
+      
   {
     final UserStyle userStyle = createUserStyle( featureType, styleName );
 
-    final Style[] styles = new Style[] { userStyle };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    final Style[] styles = new Style[]
+    { userStyle };
+    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     return SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
   }
 
-  /** Create a default user style for a given type name. */
-  public UserStyle createUserStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
+  /** Create a default user style for a given type name. 
+   * @throws Exception*/
+  public UserStyle createUserStyle( final FeatureType featureType, final String styleName ) throws Exception
+      
   {
-    final ArrayList<Symbolizer> symbolizer = new ArrayList<Symbolizer>();
+    final ArrayList symbolizer = new ArrayList();
     if( featureType.getName().equals( "RectifiedGridCoverage" ) )
       symbolizer.add( createRasterSymbolizer() );
 
-    final IPropertyType[] properties = featureType.getProperties();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      final IPropertyType pt = properties[i];
-      if( pt instanceof IValuePropertyType && GeometryUtilities.isUndefinedGeometry( (IValuePropertyType) pt ) )
+      final FeatureTypeProperty property = properties[i];
+      if( GeometryUtilities.isUndefinedGeometry( property ) )
       {
         symbolizer.add( StyleFactory.createPointSymbolizer() );
         symbolizer.add( StyleFactory.createLineSymbolizer() );
-        // symbolizer.add( StyleFactory.createPolygonSymbolizer() );
-        symbolizer.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), pt.getQName().getLocalPart() ) );
+        symbolizer.add( StyleFactory.createPolygonSymbolizer() );
       }
-      else if( GeometryUtilities.isGeometry( pt ) )
+      else if( GeometryUtilities.isGeometry( property ) )
       {
-        symbolizer.add( createGeometrySymbolizer( (IValuePropertyType) pt ) );
+        symbolizer.add( createGeometrySymbolizer( property ) );
       }
     }
 
-    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer.toArray( new Symbolizer[symbolizer.size()] ) );
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, (Symbolizer[])symbolizer
+        .toArray( new Symbolizer[symbolizer.size()] ) );
 
-    final UserStyle userStyle = (UserStyle_Impl) StyleFactory.createStyle( styleName, styleName, "empty Abstract", featureTypeStyle );
+    final UserStyle userStyle = (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "empty Abstract",
+        featureTypeStyle );
     return userStyle;
   }
 
   public static StyledLayerDescriptor createDefaultStyle( String styleName, Symbolizer[] symbolizer )
   {
-    // called from flood-riek-job
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
 
     StyledLayerDescriptor sld = null;
 
-    final Style[] styles = new Style[] { (UserStyle_Impl) StyleFactory.createStyle( styleName, styleName, "no Abstract", featureTypeStyle ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    final Style[] styles = new Style[]
+    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract", featureTypeStyle ) };
+    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;
   }
 
-  private Symbolizer createGeometrySymbolizer( IValuePropertyType ftp ) throws StyleNotDefinedException
-  {
+  //  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
+  //  {
+  //    String type = property.getType();
+  //    if( type.equals( String.class.getName() ) )
+  //    {
+  //      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(), StyleFactory
+  //          .createLabelPlacement( StyleFactory.createPointPlacement() ) );
+  //    }
+  //    throw new StyleNotDefinedException( "Error while creating TextSymbolizer from string type. Property name: "
+  //        + property.getName() );
+  //  }
 
-    if( GeometryUtilities.isPointGeometry( ftp ) || GeometryUtilities.isMultiPointGeometry( ftp ) )
+  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty ftp ) throws Exception 
+  {
+    if( GeometryUtilities.isPointGeometry( ftp ) )
       return StyleFactory.createPointSymbolizer();
-    else if( GeometryUtilities.isLineStringGeometry( ftp ) || GeometryUtilities.isMultiLineStringGeometry( ftp ) )
+    else if( GeometryUtilities.isLineStringGeometry( ftp ) )
       return StyleFactory.createLineSymbolizer();
     else if( GeometryUtilities.isPolygonGeometry( ftp ) )
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), ftp.getQName().getLocalPart() );
-    else if( GeometryUtilities.isMultiPolygonGeometry( ftp ) )
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), ftp.getQName().getLocalPart() );
+      return StyleFactory.createPolygonSymbolizer();
     else
-      throw new StyleNotDefinedException( "This geometry type: " + ftp.getQName() + " has no default style available" );
+      throw new Exception( "This geometry type: " + ftp.getType() + " has no default style available" );
   }
 
-  private Symbolizer createRasterSymbolizer( )
+  private Symbolizer createRasterSymbolizer()
   {
     return StyleFactory.createRasterSymbolizer();
   }
 
-  private Integer generateKey( IFeatureType ft )
+  private Integer generateKey( FeatureType ft )
   {
 
-    String key = ft.getQName().getNamespaceURI() + " " + ft.getQName().getLocalPart();
+    String key = ft.getNamespace() + " " + ft.getName();
     return new Integer( key.hashCode() );
   }
 
   /**
+   * 
    * This Method clears the default style directory
+   *  
    */
 
-  public void clear( )
+  public void clear()
   {
     File dir = new File( DEFAULT_STYLE_DRECTORY );
     if( dir.exists() )

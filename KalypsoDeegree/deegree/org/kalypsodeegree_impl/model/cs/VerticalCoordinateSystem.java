@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.units.Unit;
@@ -98,17 +99,17 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   /**
    * The vertical datum.
    */
-  private final VerticalDatum m_datum;
+  private final VerticalDatum datum;
 
   /**
    * Units used along the vertical axis.
    */
-  private final Unit m_unit;
+  private final Unit unit;
 
   /**
    * Axis details for vertical dimension within coordinate system.
    */
-  private final AxisInfo m_axis;
+  private final AxisInfo axis;
 
   /**
    * Creates a vertical coordinate system from a datum. Units will be metres and values will be increasing upward.
@@ -139,9 +140,9 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   public VerticalCoordinateSystem( final String name, final VerticalDatum datum, final Unit unit, final AxisInfo axis )
   {
     super( name );
-    m_datum = datum;
-    m_unit = unit;
-    m_axis = axis;
+    this.datum = datum;
+    this.unit = unit;
+    this.axis = axis;
     ensureNonNull( "datum", datum );
     ensureNonNull( "unit", unit );
     ensureNonNull( "axis", axis );
@@ -164,9 +165,9 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   VerticalCoordinateSystem( final Map properties, final VerticalDatum datum, final Unit unit, final AxisInfo axis )
   {
     super( properties );
-    this.m_datum = datum;
-    this.m_unit = unit;
-    this.m_axis = axis;
+    this.datum = datum;
+    this.unit = unit;
+    this.axis = axis;
     // Accept null values.
   }
 
@@ -175,7 +176,6 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_VerticalCoordinateSystem#getDimension()
    */
-  @Override
   public final int getDimension()
   {
     return 1;
@@ -184,7 +184,6 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   /**
    * Override {@link CoordinateSystem#getDatum()}.
    */
-  @Override
   final Datum getDatum()
   {
     return getVerticalDatum();
@@ -197,7 +196,7 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    */
   public VerticalDatum getVerticalDatum()
   {
-    return m_datum;
+    return datum;
   }
 
   /**
@@ -209,12 +208,11 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    * 
    * @see org.opengis.cs.CS_VerticalCoordinateSystem#getAxis(int)
    */
-  @Override
   public AxisInfo getAxis( final int dimension )
   {
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
-      return m_axis;
+      return axis;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -229,12 +227,11 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    * @see org.opengis.cs.CS_VerticalCoordinateSystem#getUnits(int)
    * @see org.opengis.cs.CS_VerticalCoordinateSystem#getVerticalUnit()
    */
-  @Override
   public Unit getUnits( final int dimension )
   {
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
-      return m_unit;
+      return unit;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -250,7 +247,6 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
-  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -258,23 +254,23 @@ public class VerticalCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final VerticalCoordinateSystem that = (VerticalCoordinateSystem)cs;
-      return Utilities.equals( this.m_datum, that.m_datum ) && Utilities.equals( this.m_unit, that.m_unit )
-          && Utilities.equals( this.m_axis, that.m_axis );
+      return Utilities.equals( this.datum, that.datum ) && Utilities.equals( this.unit, that.unit )
+          && Utilities.equals( this.axis, that.axis );
     }
     return false;
   }
 
-  @Override /**
+  /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( m_datum );
+    buffer.append( datum );
     buffer.append( ", " );
-    addUnit( buffer, m_unit );
+    addUnit( buffer, unit );
     buffer.append( ", " );
-    buffer.append( m_axis );
+    buffer.append( axis );
     return "VERT_CS";
   }
 
@@ -283,7 +279,6 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
-  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -314,17 +309,17 @@ public class VerticalCoordinateSystem extends CoordinateSystem
     /**
      * Gets the vertical datum, which indicates the measurement method.
      */
-    public CS_VerticalDatum getVerticalDatum()
+    public CS_VerticalDatum getVerticalDatum() throws RemoteException
     {
-      return m_adapters.export( VerticalCoordinateSystem.this.getVerticalDatum() );
+      return adapters.export( VerticalCoordinateSystem.this.getVerticalDatum() );
     }
 
     /**
      * Gets the units used along the vertical axis.
      */
-    public CS_LinearUnit getVerticalUnit()
+    public CS_LinearUnit getVerticalUnit() throws RemoteException
     {
-      return (CS_LinearUnit)m_adapters.export( VerticalCoordinateSystem.this.getUnits() );
+      return (CS_LinearUnit)adapters.export( VerticalCoordinateSystem.this.getUnits() );
     }
   }
 }

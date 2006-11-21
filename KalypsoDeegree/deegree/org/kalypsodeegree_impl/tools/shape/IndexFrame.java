@@ -76,7 +76,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       this.frame = frame;
     }
 
-    public void run( )
+    public void run()
     {
       Container container = getContentPane();
       container.removeAll();
@@ -112,8 +112,9 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           if( checkboxes[i].isSelected() && !hasIndex[i] )
           {
-            index[i] = DBaseIndex.createIndex( fileName + "$" + properties[i], properties[i], lengths[i], uniqueBoxes[i].isSelected(), (dataTypes[i].equalsIgnoreCase( "N" )
-                || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i].equalsIgnoreCase( "F" )) );
+            index[i] = DBaseIndex.createIndex( fileName + "$" + properties[i], properties[i], lengths[i],
+                uniqueBoxes[i].isSelected(), ( dataTypes[i].equalsIgnoreCase( "N" )
+                    || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i].equalsIgnoreCase( "F" ) ) );
             indexes = true;
           }
           else
@@ -124,7 +125,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           for( int i = 1; i < features + 1; i++ )
           {
-            Feature feature = shapeFile.getFeatureByRecNo( null, i );
+            Feature feature = shapeFile.getFeatureByRecNo( i );
 
             if( geometry )
             {
@@ -134,24 +135,25 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
                 System.out.println( "no geometries at recno" + i );
               }
               GM_Envelope envelope = null;
-              // TODO: deal with more than one geometry; handle geometry=null
+              //TODO: deal with more than one geometry; handle geometry=null
               // (allowed in shapefile)
               envelope = feature.getGeometryProperties()[0].getEnvelope();
               if( envelope == null )
               { // assume a Point-geometry
-                // System.out.println("geo-class: " +
+                //System.out.println("geo-class: " +
                 // geometries[0].getClass().getName());
-                GM_Point pnt = (GM_Point) geometries[0];
+                GM_Point pnt = (GM_Point)geometries[0];
                 envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(), pnt.getY() );
               }
-              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin().getAsArray() ), new HyperPoint( envelope.getMax().getAsArray() ) );
+              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin().getAsArray() ),
+                  new HyperPoint( envelope.getMax().getAsArray() ) );
               rtree.insert( new Integer( i ), box );
             }
 
             for( int j = 0; j < index.length; j++ )
             {
               if( index[j] != null )
-                index[j].addKey( (Comparable) feature.getProperty( properties[j] ), i );
+                index[j].addKey( (Comparable)feature.getProperty( properties[j] ), i );
             }
 
             progressBar.setValue( i );
@@ -220,7 +222,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       }
     }
 
-    public void stopIndexing( )
+    public void stopIndexing()
     {
       synchronized( this )
       {
@@ -263,7 +265,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       checkboxes[i] = new JCheckBox( properties[i] );
       checkboxes[i].setSelected( hasIndex[i] );
       panel.add( checkboxes[i] );
-      uniqueBoxes[i] = (JCheckBox) panel.add( new JCheckBox( "" ) );
+      uniqueBoxes[i] = (JCheckBox)panel.add( new JCheckBox( "" ) );
       if( hasIndex[i] )
       {
         uniqueBoxes[i].setSelected( shapeFile.isUnique( properties[i] ) );
@@ -319,7 +321,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
 
   public void stateChanged( ChangeEvent e )
   {
-    JCheckBox checkbox = (JCheckBox) e.getSource();
+    JCheckBox checkbox = (JCheckBox)e.getSource();
 
     for( int i = 0; i < checkboxes.length; i++ )
     {

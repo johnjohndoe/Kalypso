@@ -25,14 +25,14 @@ public class DataCenterTuppleModel implements ITuppleModel
 
   private final IAxis[] m_axes;
 
-  private final Map<IAxis, Integer> m_axesPos;
+  private final Map m_axesPos;
   
   public DataCenterTuppleModel( final TimeserieTupple[] tupples, IAxis[] axes )
   {
     m_tupples = tupples;
     m_axes = axes;
 
-    m_axesPos = new HashMap<IAxis, Integer>( axes.length );
+    m_axesPos = new HashMap( axes.length );
     for( int i = 0; i < axes.length; i++ )
       m_axesPos.put( axes[i], new Integer( i ) );
   }
@@ -48,7 +48,7 @@ public class DataCenterTuppleModel implements ITuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( )
+  public int getCount( ) throws SensorException
   {
     return m_tupples.length;
   }
@@ -113,9 +113,9 @@ public class DataCenterTuppleModel implements ITuppleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( Object element, IAxis axis )
+  public int indexOf( Object element, IAxis axis ) throws SensorException
   {
-    if( m_axesPos.get( axis ).intValue() == 0 )
+    if( ((Integer) m_axesPos.get( axis )).intValue() == 0 )
     {
       for( int i = 0; i < m_tupples.length; i++ )
         if( m_tupples[i].getDate().equals( element ) )
@@ -153,7 +153,7 @@ public class DataCenterTuppleModel implements ITuppleModel
   public int getPositionFor( IAxis axis ) throws SensorException
   {
     if( m_axesPos.containsKey( axis ) )
-      return m_axesPos.get( axis ).intValue();
+      return ((Integer) m_axesPos.get( axis )).intValue();
 
     throw new SensorException( "The axis " + axis
         + " is not part of this model" );

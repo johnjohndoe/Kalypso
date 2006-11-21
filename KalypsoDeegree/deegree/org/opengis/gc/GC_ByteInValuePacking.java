@@ -28,7 +28,7 @@ public final class GC_ByteInValuePacking implements Serializable
   /**
    * The enum value.
    */
-  public final int m_value;
+  public final int value;
 
   /**
    * Big Endian.
@@ -45,27 +45,25 @@ public final class GC_ByteInValuePacking implements Serializable
    */
   public GC_ByteInValuePacking( final int value )
   {
-    m_value = value;
+    this.value = value;
   }
 
   /**
    * Returns the enum value.
    */
-  @Override
   public int hashCode()
   {
-    return m_value;
+    return value;
   }
 
   /**
    * Compares the specified object with this enum for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( object != null && getClass().equals( object.getClass() ) )
     {
-      return ( (GC_ByteInValuePacking)object ).m_value == m_value;
+      return ( (GC_ByteInValuePacking)object ).value == value;
     }
 
     return false;
@@ -75,12 +73,11 @@ public final class GC_ByteInValuePacking implements Serializable
    * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
    * provided for debugging purposes only.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer( "GC_ByteInValuePacking" );
     buffer.append( '[' );
-    buffer.append( m_value );
+    buffer.append( value );
     buffer.append( ']' );
     return buffer.toString();
   }

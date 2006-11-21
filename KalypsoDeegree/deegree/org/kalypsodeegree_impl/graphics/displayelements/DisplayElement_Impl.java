@@ -78,23 +78,30 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 abstract class DisplayElement_Impl implements DisplayElement, Serializable
 {
+
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1226236249388451855L;
 
-  private final Feature m_feature;
+  protected Feature feature = null;
 
-  private boolean m_highlighted = false;
+  private boolean highlighted = false;
 
-  private boolean m_selected = false;
+  private boolean selected = false;
+
+  /**
+   * Creates a new DisplayElement_Impl object.
+   */
+  DisplayElement_Impl()
+  {}
 
   /**
    * Creates a new DisplayElement_Impl object.
    * 
    * @param feature
    */
-  DisplayElement_Impl( final Feature feature )
+  DisplayElement_Impl( Feature feature )
   {
-    m_feature = feature;
+    this.feature = feature;
   }
 
   /**
@@ -102,7 +109,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public Feature getFeature()
   {
-    return m_feature;
+    return feature;
   }
 
   /**
@@ -110,7 +117,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public String getAssociateFeatureId()
   {
-    return m_feature.getId();
+    return feature.getId();
   }
 
   /**
@@ -123,7 +130,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public void setSelected( boolean selected )
   {
-    m_selected = selected;
+    this.selected = selected;
   }
 
   /**
@@ -131,7 +138,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public boolean isSelected()
   {
-    return m_selected;
+    return selected;
   }
 
   /**
@@ -139,7 +146,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public void setHighlighted( boolean highlighted )
   {
-    m_highlighted = highlighted;
+    this.highlighted = highlighted;
   }
 
   /**
@@ -147,7 +154,7 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
    */
   public boolean isHighlighted()
   {
-    return m_highlighted;
+    return highlighted;
   }
 
   /**

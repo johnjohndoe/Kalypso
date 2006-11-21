@@ -32,13 +32,14 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -59,19 +60,19 @@ public class RelationCircleFinder
     m_testFeature = testFeature;
   }
 
-  public List[] findCircle( )
+  public List[] findCircle()
   {
-    return findCircle( m_testFeature, new ArrayList<Feature>() );
+    return findCircle( m_testFeature, new ArrayList() );
   }
 
-  private List<Feature>[] findCircle( final Feature feature, final List<Feature> list )
+  private List[] findCircle( final Feature feature, final List list )
   {
-    final List<List<Feature>> result = new ArrayList<List<Feature>>();
+    final List result = new ArrayList();
     list.add( feature );
     final Feature[] linkedFeatures = getLinkedFeatures( feature );
     for( int i = 0; i < linkedFeatures.length; i++ )
     {
-      final List<Feature> newList = new ArrayList<Feature>( list );
+      final List newList = new ArrayList( list );
       final Feature linkFeature = linkedFeatures[i];
       if( linkFeature == m_testFeature )
         result.add( newList );
@@ -82,41 +83,36 @@ public class RelationCircleFinder
       }
       else
       {
-        final List<Feature>[] lists = findCircle( linkFeature, newList );
-        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                            // java.util.Arrays: check if this is ok
+        final List[] lists = findCircle( linkFeature, newList );
+        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
       }
     }
-    return result.toArray( new List[result.size()] );
+    return (List[])result.toArray( new List[result.size()] );
   }
 
   private Feature[] getLinkedFeatures( Feature feature )
   {
-    final List result = new ArrayList();
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
+    List result = new ArrayList();
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      IPropertyType property = properties[i];
-      if( property instanceof IRelationType )
+      FeatureTypeProperty property = properties[i];
+      if( property instanceof FeatureAssociationTypeProperty )
       {
-        final IRelationType linkPT = (IRelationType) property;
-        if( property.isList() )
+        if( featureType.getMaxOccurs( property.getName() ) == 1 )
         {
-          // TODO: is this really intended? The list is added, not its content!
-          final Feature[] links = m_workspace.resolveLinks( feature, linkPT );
-          // This can't work, should lead to an exception if converted to array below
-          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                          // java.util.Arrays: check if this is ok
-        }
-        else
-        {
-          final Feature link = m_workspace.resolveLink( feature, linkPT );
+          Feature link = m_workspace.resolveLink( feature, property.getName() );
           if( link != null )
             result.add( link );
         }
+        else
+        {
+          Feature[] links = m_workspace.resolveLinks( feature, property.getName() );
+          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
+        }
       }
     }
-    return (Feature[]) result.toArray( new Feature[result.size()] );
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 }

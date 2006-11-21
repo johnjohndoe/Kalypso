@@ -11,7 +11,7 @@ package org.kalypso.commons.cache;
  * 
  * @author schlienger
  */
-public interface IKeyFactory<K>
+public interface IKeyFactory
 {
   /**
    * Creates a new key using the given string
@@ -19,12 +19,12 @@ public interface IKeyFactory<K>
    * @param string
    *          some string representation of the key
    */
-  public K createKey( final String string );
+  public Object createKey( final String string );
 
   /**
    * Return a string representation of the given key
    * 
    * @return string representation of the key
    */
-  public String toString( final K key );
+  public String toString( final Object key );
 }

@@ -40,27 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.schemata;
 
-import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
- * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.<br>
- * this catalog resolves some schemas that a related to kalypso, but not to ogc<br>
- * TODO rename in URLCatalogKalypso
+ * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.
  * 
  * @author gernot
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
-  @Override
-  protected void fillCatalog( final Class myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  /**
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   */
+  protected void fillCatalog( final Class myClass, final Map catalog )
   {
-    // schemas related close to ogc have been moved to URLCatalogOGC
     catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
+    catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
+    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
-    catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
+    catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd"));
+
+		// again two temporary schemas that do not belong here
+		// I will remove it as soon as this is an extension point
+		// do not remove, ask me (Andreas)
+//    catalog.put( "http://www.tuhh.de/opengis_river", getClass().getResource( "ofp/river.xsd"));
+//    catalog.put( "http://www.tuhh.de/opengis_landuse", getClass().getResource( "ofp/landuse.xsd"));
   }
 }

@@ -49,44 +49,50 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 public class ColorMapEntryList
 {
-  private Set<IColorMapEntryViewer> changeListeners = new HashSet<IColorMapEntryViewer>();
+  private Set changeListeners = new HashSet();
 
-  private final Vector<ColorMapEntry> m_colorMapEntryList = new Vector<ColorMapEntry>();
+  private Vector m_colorMapEntryList = null;
 
-  public Vector getColorMapEntries( )
+  public ColorMapEntryList()
+  {
+    super();
+    m_colorMapEntryList = new Vector();
+  }
+
+  public Vector getColorMapEntries()
   {
     return m_colorMapEntryList;
   }
 
-  public void addColorMapEntry( final ColorMapEntry colorMapEntry )
+  public void addColorMapEntry( ColorMapEntry colorMapEntry )
   {
     m_colorMapEntryList.add( m_colorMapEntryList.size(), colorMapEntry );
     Iterator iterator = changeListeners.iterator();
     while( iterator.hasNext() )
-      ((IColorMapEntryViewer) iterator.next()).addColorMapEntry( colorMapEntry );
+      ( (IColorMapEntryViewer)iterator.next() ).addColorMapEntry( colorMapEntry );
   }
 
-  public void removeColorMapEntry( final ColorMapEntry colorMapEntry )
+  public void removeColorMapEntry( ColorMapEntry colorMapEntry )
   {
     m_colorMapEntryList.remove( colorMapEntry );
     Iterator iterator = changeListeners.iterator();
     while( iterator.hasNext() )
-      ((IColorMapEntryViewer) iterator.next()).removeColorMapEntry( colorMapEntry );
+      ( (IColorMapEntryViewer)iterator.next() ).removeColorMapEntry( colorMapEntry );
   }
 
-  public void colorMapEntryChanged( final ColorMapEntry colorMapEntry )
+  public void colorMapEntryChanged( ColorMapEntry colorMapEntry )
   {
     Iterator iterator = changeListeners.iterator();
     while( iterator.hasNext() )
-      ((IColorMapEntryViewer) iterator.next()).updateColorMapEntry( colorMapEntry );
+      ( (IColorMapEntryViewer)iterator.next() ).updateColorMapEntry( colorMapEntry );
   }
 
-  public void removeChangeListener( final IColorMapEntryViewer viewer )
+  public void removeChangeListener( IColorMapEntryViewer viewer )
   {
     changeListeners.remove( viewer );
   }
 
-  public void addChangeListener( final IColorMapEntryViewer viewer )
+  public void addChangeListener( IColorMapEntryViewer viewer )
   {
     changeListeners.add( viewer );
   }

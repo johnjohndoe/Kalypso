@@ -69,9 +69,9 @@ public class TranProLinFilterCreator implements IFilterCreator
     if( axisTypes == null || axisTypes.length() == 0 || axisTypes.indexOf( '*' ) > -1 )
       axisTypes=null;
     final TranProLinFilter filter = new TranProLinFilter( ft.getDateBegin().getTime(), ft.getDateEnd().getTime(), ft
-        .getOperator(), ft.getOperandBegin().doubleValue(), ft.getOperandEnd().doubleValue(), ft.getStatusToMerge(),axisTypes );
+        .getOperator(), ft.getOperandBegin(), ft.getOperandEnd(), ft.getStatusToMerge(),axisTypes );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

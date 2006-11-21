@@ -62,4 +62,5 @@ public interface ICalcServiceConstants
   public final String RESULT_DIR_NAME = "Ergebnisse";
 
   public final String CALC_DIR_NAME = "calc";
+
 }

@@ -71,8 +71,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     return m_baseModels[0].getCount();
   }
 
-  @Override
-  public int hashCode( )
+  public int hashCode()
   {
     return m_baseModels[0].hashCode();
   }

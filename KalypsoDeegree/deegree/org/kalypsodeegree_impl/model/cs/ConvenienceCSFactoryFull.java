@@ -73,13 +73,14 @@ public class ConvenienceCSFactoryFull
 {
 
   // keys are names (i.e. "EPSG:4326"), values are CoordinateSystems
-  private Hashtable<String, CoordinateSystem> systems = new Hashtable<String, CoordinateSystem>( 250 );
+  private Hashtable systems = new Hashtable( 250 );
 
   /**
    * Constructs a new ConvenienceCSFactory.
    */
   public ConvenienceCSFactoryFull()
   {
+
     ConvenienceCSFactory fac = ConvenienceCSFactory.getInstance();
 
     // 1. add the following geographic CS:
@@ -496,18 +497,12 @@ public class ConvenienceCSFactoryFull
   public String[] getKnownCS()
   {
     String[] array = new String[systems.size()];
-    return systems.keySet().toArray( array );
-  }
-  
-  public CoordinateSystem[] getKnownCoordinateSystems()
-  {
-    final CoordinateSystem[] array = new CoordinateSystem[systems.size()];
-    return systems.values().toArray( array );
+    return (String[])systems.keySet().toArray( array );
   }
 
   public CoordinateSystem getCSByName( String name )
   {
-    return systems.get( name );
+    return (CoordinateSystem)systems.get( name );
   }
 
   public boolean isKnownCS( String csName )

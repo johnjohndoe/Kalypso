@@ -137,11 +137,8 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     return m_disposed;
   }
 
-  @Override
   public void dispose()
   {
     m_disposed = true;
-    
-    super.dispose();
   }
 }

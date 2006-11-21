@@ -76,6 +76,7 @@ package org.kalypsodeegree.model.geometry;
 
 public interface GM_Point extends GM_Primitive
 {
+
   /**
    * returns the x-value of the point
    */

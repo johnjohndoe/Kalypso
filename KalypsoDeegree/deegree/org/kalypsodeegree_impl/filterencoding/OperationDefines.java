@@ -73,10 +73,10 @@ public class OperationDefines
 {
 
   // used to associate names with the OperationInfos
-  private static Map<String, OperationInfo> names = null;
+  private static Map names = null;
 
   // used to associate ids (Integers) with the OperationInfos
-  private static Map<Integer, OperationInfo> ids = null;
+  private static Map ids = null;
 
   // different types of operations
   public static final int TYPE_SPATIAL = 0;
@@ -108,7 +108,7 @@ public class OperationDefines
 
   public static final int BBOX = 9;
 
-  // calvin added on 10/21/2003
+  //calvin added on 10/21/2003
   public static final int DWITHIN = 10;
 
   // comparison operations
@@ -150,10 +150,10 @@ public class OperationDefines
    */
   public static int getTypeByName( String name )
   {
-    OperationInfo operationInfo = names.get( name.toLowerCase() );
+    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.m_type;
+    return operationInfo.type;
   }
 
   /**
@@ -163,10 +163,10 @@ public class OperationDefines
    */
   public static int getIdByName( String name )
   {
-    OperationInfo operationInfo = names.get( name.toLowerCase() );
+    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
     if( operationInfo == null )
       return UNKNOWN;
-    return operationInfo.m_id;
+    return operationInfo.id;
   }
 
   /**
@@ -176,10 +176,10 @@ public class OperationDefines
    */
   public static int getTypeById( int id )
   {
-    OperationInfo operationInfo = ids.get( new Integer( id ) );
+    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.m_type;
+    return operationInfo.type;
   }
 
   /**
@@ -190,10 +190,10 @@ public class OperationDefines
   public static String getNameById( int id )
   {
 
-    OperationInfo operationInfo = ids.get( new Integer( id ) );
+    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
     if( operationInfo == null )
       return null;
-    return operationInfo.m_name;
+    return operationInfo.name;
   }
 
   private static void addOperationInfo( int id, String name, int type )
@@ -205,10 +205,10 @@ public class OperationDefines
     ids.put( new Integer( id ), operationInfo );
   }
 
-  private static void buildHashMaps( )
+  private static void buildHashMaps()
   {
-    names = new HashMap<String, OperationInfo>( 25 );
-    ids = new HashMap<Integer, OperationInfo>( 25 );
+    names = new HashMap( 25 );
+    ids = new HashMap( 25 );
 
     addOperationInfo( BBOX, "BBOX", TYPE_SPATIAL );
     addOperationInfo( EQUALS, "Equals", TYPE_SPATIAL );
@@ -235,21 +235,20 @@ public class OperationDefines
     addOperationInfo( OR, "Or", TYPE_LOGICAL );
     addOperationInfo( NOT, "Not", TYPE_LOGICAL );
   }
-  
 }
 
 class OperationInfo
 {
-  int m_id;
+  int id;
 
-  int m_type;
+  int type;
 
-  String m_name;
+  String name;
 
   OperationInfo( int id, int type, String name )
   {
-    m_id = id;
-    m_type = type;
-    m_name = name;
+    this.id = id;
+    this.type = type;
+    this.name = name;
   }
 }

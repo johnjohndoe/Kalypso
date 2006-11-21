@@ -3,9 +3,10 @@ package org.kalypso.ogc.gml.convert.target;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gml.util.GmlTargetType;
+import org.kalypso.gml.util.Gmltarget;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -15,13 +16,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class GmlTargetHandler implements ITargetHandler
 {
-  private final GmlTargetType m_target;
+  private final Gmltarget m_target;
 
   private final IUrlResolver m_resolver;
 
   private final URL m_context;
 
-  public GmlTargetHandler( final IUrlResolver resolver, final URL context, final GmlTargetType target )
+  public GmlTargetHandler( final IUrlResolver resolver, final URL context, final Gmltarget target )
   {
     m_resolver = resolver;
     m_context = context;

@@ -1,12 +1,12 @@
 # mapping between binding types and filter creators
 
-ValueFilterType=org.kalypso.ogc.sensor.filter.creators.ValueFilterCreator
-NOperationFilterType=org.kalypso.ogc.sensor.filter.creators.NOperationFilterCreator
-OperationFilterType=org.kalypso.ogc.sensor.filter.creators.OperationFilterCreator
-ZmlFilterType=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator
-IntervallFilterType=org.kalypso.ogc.sensor.filter.creators.IntervallFilterCreator
-DataholeFilterType=org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator
+ValueFilterImpl=org.kalypso.ogc.sensor.filter.creators.ValueFilterCreator
+NOperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.NOperationFilterCreator
+OperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.OperationFilterCreator
+ZmlFilterImpl=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator
+IntervallFilterImpl=org.kalypso.ogc.sensor.filter.creators.IntervallFilterCreator
+DataholeFilterImpl=org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator
 
-ForecastFilterType=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator
-InterpolationFilterType=org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator
-TranProLinFilterType=org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterCreator
+ForecastFilterImpl=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator
+InterpolationFilterImpl=org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator
+TranProLinFilterImpl=org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterCreator

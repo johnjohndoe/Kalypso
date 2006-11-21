@@ -62,9 +62,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.util.ArrayList;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -95,8 +92,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -118,87 +113,97 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle[] styles, final GMLWorkspace workspace )
+  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles, GMLWorkspace workspace )
   {
-    final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>( styles.length );
+    Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
 
-    try
+    ArrayList list = new ArrayList( 20 );
+
+    if( o instanceof Feature )
     {
-      final QName featureTypeQName = feature.getFeatureType().getQName();
+      Feature feature = (Feature)o;
 
-      for( final UserStyle userStyle : styles )
+      try
       {
-        if( userStyle == null )
-        {
-          // create display element from default style
-          final DisplayElement de = buildDisplayElement( feature );
-          if( de != null )
-            list.add( de );
-        }
-        else
-        {
-          final FeatureTypeStyle[] fts = userStyle.getFeatureTypeStyles();
+        String featureTypeName = feature.getFeatureType().getName();
 
-          for( int k = 0; k < fts.length; k++ )
+        for( int i = 0; i < styles.length; i++ )
+        {
+
+          if( styles[i] == null )
           {
-            final QName styleFTQName = fts[k].getFeatureTypeName();
-            if( styleFTQName == null //
-                || featureTypeQName.equals( styleFTQName ) //
-                || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
+            // create display element from default style
+            DisplayElement de = buildDisplayElement( feature );
+            if( de != null )
             {
-              final Rule[] rules = fts[k].getRules();
+              list.add( de );
+            }
+          }
+          else
+          {
+            FeatureTypeStyle[] fts = styles[i].getFeatureTypeStyles();
 
-              for( int n = 0; n < rules.length; n++ )
+            for( int k = 0; k < fts.length; k++ )
+            {
+              if( fts[k].getFeatureTypeName() == null || featureTypeName.equals( fts[k].getFeatureTypeName() ) )
               {
+                Rule[] rules = fts[k].getRules();
 
-                // does the filter rule apply?
-                Filter filter = rules[n].getFilter();
-
-                if( filter != null )
+                for( int n = 0; n < rules.length; n++ )
                 {
-                  try
+
+                  // does the filter rule apply?
+                  Filter filter = rules[n].getFilter();
+
+                  if( filter != null )
                   {
-                    if( !filter.evaluate( feature ) )
+                    try
+                    {
+                      if( !filter.evaluate( feature ) )
+                      {
+                        continue;
+                      }
+                    }
+                    catch( FilterEvaluationException e )
+                    {
+                      System.out.println( "Error evaluating filter: " + e );
+
                       continue;
+                    }
                   }
-                  catch( FilterEvaluationException e )
+
+                  // Filter expression is true for this
+                  // feature, so a
+                  // corresponding DisplayElement has to be
+                  // added to the
+                  // list
+                  Symbolizer[] symbolizers = rules[n].getSymbolizers();
+
+                  for( int u = 0; u < symbolizers.length; u++ )
                   {
-                    System.out.println( "Error evaluating filter: " + e );
+                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u],
+                        workspace );
 
-                    continue;
+                    if( displayElement != null )
+                    {
+                      list.add( displayElement );
+                    }
                   }
-                }
-
-                // Filter expression is true for this
-                // feature, so a
-                // corresponding DisplayElement has to be
-                // added to the
-                // list
-                Symbolizer[] symbolizers = rules[n].getSymbolizers();
-
-                for( int u = 0; u < symbolizers.length; u++ )
-                {
-                  final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u], workspace );
-                  if( displayElement != null )
-                    list.add( displayElement );
                 }
               }
             }
           }
         }
       }
-    }
-    catch( final IncompatibleGeometryTypeException e )
-    {
-      System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
-      e.printStackTrace();
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
+      catch( IncompatibleGeometryTypeException e )
+      {
+        System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
+        e.printStackTrace();
+      }
     }
 
-    return list.toArray( new DisplayElement[list.size()] );
+    DisplayElement[] de = new DisplayElement[list.size()];
+    return (DisplayElement[])list.toArray( de );
   }
 
   /**
@@ -214,61 +219,64 @@ public class DisplayElementFactory
    *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Feature feature, Symbolizer symbolizer, GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer, GMLWorkspace workspace )
+      throws IncompatibleGeometryTypeException
   {
     DisplayElement displayElement = null;
 
-    // determine the geometry property to be used
-    GM_Object geoProperty = null;
-    Geometry geometry = symbolizer.getGeometry();
-
-    if( geometry != null )
+    if( o instanceof Feature )
     {
-      // check if virtual property
-      // if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
-      final IFeatureType featureType = feature.getFeatureType();
-      final String propertyName = geometry.getPropertyName();
-      final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, propertyName );
-      if( vpt != null )
-        geoProperty = (GM_Object) vpt.getVirtuelValue( feature, workspace );
-      else if( featureType.getProperty( propertyName ) != null )
-        geoProperty = (GM_Object) feature.getProperty( propertyName );
+      Feature feature = (Feature)o;
+
+      // determine the geometry property to be used
+      GM_Object geoProperty = null;
+      Geometry geometry = symbolizer.getGeometry();
+
+      if( geometry != null )
+      {
+        // check if virtual property
+        if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
+          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(), workspace );
+        else
+          geoProperty = (GM_Object)feature.getProperty( geometry.getPropertyName() );
+      }
       else
+      {
+        geoProperty = feature.getDefaultGeometryProperty();
+      }
+
+      // if the geometry property is null, do not build a DisplayElement
+
+      if( geoProperty == null && !( symbolizer instanceof RasterSymbolizer ) )
+      {
         return null;
-    }
-    else
-    {
-      geoProperty = feature.getDefaultGeometryProperty();
-    }
+      }
 
-    // if the geometry property is null, do not build a DisplayElement
-    if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
-      return null;
-
-    // PointSymbolizer
-    if( symbolizer instanceof PointSymbolizer )
-    {
-      displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer) symbolizer );
-    } // LineSymbolizer
-    else if( symbolizer instanceof LineSymbolizer )
-    {
-      displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer) symbolizer );
-    } // PolygonSymbolizer
-    else if( symbolizer instanceof PolygonSymbolizer )
-    {
-      displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof TextSymbolizer )
-    {
-      displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer) symbolizer );
-    } // RasterSymbolizer
-    else if( symbolizer instanceof RasterSymbolizer )
-    {
-      displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
-    }
-    else
-    {
-      System.out.println( "symbolizer...?" );
+      // PointSymbolizer
+      if( symbolizer instanceof PointSymbolizer )
+      {
+        displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer)symbolizer );
+      } // LineSymbolizer
+      else if( symbolizer instanceof LineSymbolizer )
+      {
+        displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer)symbolizer );
+      } // PolygonSymbolizer
+      else if( symbolizer instanceof PolygonSymbolizer )
+      {
+        displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer)symbolizer );
+      }
+      else if( symbolizer instanceof TextSymbolizer )
+      {
+        displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer)symbolizer );
+      } // RasterSymbolizer
+      else if( symbolizer instanceof RasterSymbolizer )
+      {
+        displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer)symbolizer );
+      }
+      else
+      {
+        System.out.println( "symbolizer...?" );
+      }
     }
 
     return displayElement;
@@ -292,13 +300,13 @@ public class DisplayElementFactory
 
     if( o instanceof GC_GridCoverage )
     {
-      // RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
-      // displayElement = buildRasterDisplayElement( (GC_GridCoverage)o,
+      //      RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
+      //      displayElement = buildRasterDisplayElement( (GC_GridCoverage)o,
       // symbolizer );
     }
     else
     {
-      Feature feature = (Feature) o;
+      Feature feature = (Feature)o;
       // determine the geometry property to be used
       GM_Object geoProperty = feature.getDefaultGeometryProperty();
 
@@ -353,15 +361,15 @@ public class DisplayElementFactory
 
     if( geom instanceof GM_Point )
     {
-      displayElement = new PointDisplayElement_Impl( feature, (GM_Point) geom, sym );
+      displayElement = new PointDisplayElement_Impl( feature, (GM_Point)geom, sym );
     }
     else if( geom instanceof GM_MultiPoint )
     {
-      displayElement = new PointDisplayElement_Impl( feature, (GM_MultiPoint) geom, sym );
+      displayElement = new PointDisplayElement_Impl( feature, (GM_MultiPoint)geom, sym );
     }
     else if( geom instanceof GM_MultiPrimitive )
     {
-      GM_Primitive[] primitives = ((GM_MultiPrimitive) geom).getAllPrimitives();
+      GM_Primitive[] primitives = ( (GM_MultiPrimitive)geom ).getAllPrimitives();
       GM_Point[] centroids = new GM_Point[primitives.length];
 
       for( int i = 0; i < primitives.length; i++ )
@@ -383,7 +391,7 @@ public class DisplayElementFactory
     if( geom == null )
       return null;
     if( geom instanceof GM_Point )
-      return (GM_Point) geom;
+      return (GM_Point)geom;
     return geom.getCentroid();
   }
 
@@ -399,22 +407,24 @@ public class DisplayElementFactory
    *         a <tt>GM_Curve</tt> or a <tt>GM_MultiCurve</tt>
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature, GM_Object geom, LineSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature, GM_Object geom,
+      LineSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     LineStringDisplayElement displayElement = null;
     if( geom == null )
       return null;
     if( geom instanceof GM_Curve )
     {
-      displayElement = new LineStringDisplayElement_Impl( feature, (GM_Curve) geom, sym );
+      displayElement = new LineStringDisplayElement_Impl( feature, (GM_Curve)geom, sym );
     }
     else if( geom instanceof GM_MultiCurve )
     {
-      displayElement = new LineStringDisplayElement_Impl( feature, (GM_MultiCurve) geom, sym );
+      displayElement = new LineStringDisplayElement_Impl( feature, (GM_MultiCurve)geom, sym );
     }
     else
     {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + geom.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + geom.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -432,21 +442,23 @@ public class DisplayElementFactory
    *         a <tt>GM_Surface</tt> or a <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature, GM_Object gmObject, PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature, GM_Object gmObject,
+      PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     PolygonDisplayElement displayElement = null;
 
     if( gmObject instanceof GM_Surface )
     {
-      displayElement = new PolygonDisplayElement_Impl( feature, (GM_Surface) gmObject, sym );
+      displayElement = new PolygonDisplayElement_Impl( feature, (GM_Surface)gmObject, sym );
     }
     else if( gmObject instanceof GM_MultiSurface )
     {
-      displayElement = new PolygonDisplayElement_Impl( feature, (GM_MultiSurface) gmObject, sym );
+      displayElement = new PolygonDisplayElement_Impl( feature, (GM_MultiSurface)gmObject, sym );
     }
     else
     {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -467,18 +479,21 @@ public class DisplayElementFactory
    *           <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static LabelDisplayElement buildLabelDisplayElement( Feature feature, GM_Object gmObject, TextSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LabelDisplayElement buildLabelDisplayElement( Feature feature, GM_Object gmObject, TextSymbolizer sym )
+      throws IncompatibleGeometryTypeException
   {
 
     LabelDisplayElement displayElement = null;
 
-    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve || gmObject instanceof GM_MultiCurve )
+    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface
+        || gmObject instanceof GM_Curve || gmObject instanceof GM_MultiCurve )
     {
       displayElement = new LabelDisplayElement_Impl( feature, gmObject, sym );
     }
     else
     {
-      throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -492,6 +507,7 @@ public class DisplayElementFactory
    *          grid coverage as feature
    * @param sym
    *          raster symbolizer
+   * 
    * @return RasterDisplayElement
    */
   public static RasterDisplayElement buildRasterDisplayElement( Feature feature, RasterSymbolizer sym )

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Elend HWR.N.M.P.TSum.0700</name>
+    <metadataList>
+        <metadata name="Beschreibung" value="Niederschlag - N - &lt;kein Eintrag:stationparameter_longname&gt; - HWR Kalte Bode (N)"/>
+        <metadata name="Kennziffer" value="44403"/>
+        <metadata name="OCS-ID" value="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.44403"/>
+        <metadata name="Name" value="Elend HWR.N.M.P.TSum.0700"/>
+        <metadata name="Zeitzone" value="GMT"/>
+        <metadata name="Koordinatensystem" value="EPSG:31468"/>
+        <metadata name="Hochwert" value="5736406"/>
+        <metadata name="Gewässer" value="---"/>
+        <metadata name="Rechtswert" value="4412522"/>
+        <metadata name="Entstehung" value="Wiski"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";"/>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">
+        <valueArray separator=";"/>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Niederschlag" type="kalypso-status" unit="">
+        <valueArray separator=";"/>
+    </axis>
+</observation>
+

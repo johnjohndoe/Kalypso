@@ -91,7 +91,6 @@ public final class CommandJob extends Job
     schedule();
   }
 
-  @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
     final String description = getCommandDescription( myCommandManager, myCommand, m_type );
@@ -152,8 +151,7 @@ public final class CommandJob extends Job
     /**
      * @see java.lang.Object#toString()
      */
-    @Override
-    public String toString( )
+    public String toString()
     {
       return m_name;
     }

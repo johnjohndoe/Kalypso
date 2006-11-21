@@ -198,7 +198,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   public GM_Surface[] getAllSurfaces()
   {
-    return m_aggregate.toArray( new GM_Surface[getSize()] );
+    return (GM_Surface[])m_aggregate.toArray( new GM_Surface[getSize()] );
   }
 
   /**
@@ -208,11 +208,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   {
     GM_Envelope bb = getSurfaceAt( 0 ).getEnvelope();
 
-    double[] min = bb.getMin().getAsArray().clone();
-    double[] max = bb.getMax().getAsArray().clone();
+    double[] min = (double[])bb.getMin().getAsArray().clone();
+    double[] max = (double[])bb.getMax().getAsArray().clone();
 
-    final int size = getSize();
-	for( int i = 1; i < size; i++ )
+    for( int i = 1; i < getSize(); i++ )
     {
       double[] pos1 = getSurfaceAt( i ).getEnvelope().getMin().getAsArray();
       double[] pos2 = getSurfaceAt( i ).getEnvelope().getMax().getAsArray();
@@ -283,7 +282,6 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * calculates the centroid, area and envelope of the aggregation
    */
-  @Override
   protected void calculateParam()
   {
     calculateEnvelope();
@@ -306,7 +304,6 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * returns a shallow copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_MultiSurface ms = null;
@@ -335,7 +332,6 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
    * 3-dimensional.
    */
-  @Override
   public int getDimension()
   {
     return 2;
@@ -345,7 +341,6 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
    * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
-  @Override
   public int getCoordinateDimension()
   {
     GM_SurfacePatch sp = null;

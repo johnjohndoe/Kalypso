@@ -92,7 +92,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    * list of registries where we are registered as listeners <br>
    * used for clean dispose
    */
-  private final List<Object> m_registries = new ArrayList<Object>();
+  private final List m_registries = new ArrayList();
 
   /**
    * sets force mode for update of inner control
@@ -135,7 +135,6 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
-  @Override
   public void setFocus()
   {
   // nothing
@@ -168,7 +167,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void windowOpened( final IWorkbenchWindow window )
+  public void windowOpened( IWorkbenchWindow window )
   {
     window.addPageListener( this );
     m_registries.add( window );
@@ -264,7 +263,6 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( Composite parent )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
@@ -291,7 +289,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_group.setText( "Optionen" );
     m_group.setLayoutData( datag );
     m_topLevel.layout();
-//    m_topLevel.pack();
+    m_topLevel.pack();
 
     // update content
     m_modeForce = true;
@@ -339,7 +337,6 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose()
   {
     // dispose inner controls

@@ -45,7 +45,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.configuration.Configuration;
@@ -75,15 +75,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -95,13 +92,15 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * <p>
  * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.
  * </p>
+ * 
  * <p>
  * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
@@ -110,17 +109,19 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  */
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IExportableObjectFactory
 {
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
+
+  private final Marshaller m_marshaller;
 
   private LayerTableViewer m_layerTable = null;
 
   final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange change )
-    {
-    }
 
-    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+    public void featureChanged( final FeatureChange change )
+    {}
+
+    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
     {
       // feature view öffnen
       final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -140,11 +141,26 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     }
   };
 
+  public GisTableEditor()
+  {
+    try
+    {
+      m_marshaller = m_gistableviewFactory.createMarshaller();
+      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    }
+    catch( final JAXBException e )
+    {
+      // sollte nie passieren
+      e.printStackTrace();
+
+      throw new RuntimeException( e );
+    }
+  }
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     getSite().setSelectionProvider( this );
     m_layerTable.dispose();
@@ -155,7 +171,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * File must exist!
    */
-  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
     if( m_layerTable == null )
@@ -173,9 +188,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
       bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
-      final Marshaller marshaller =JaxbUtilities.createMarshaller( JC);
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( tableTemplate, osw );
+      m_marshaller.marshal( tableTemplate, osw );
       bos.close();
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -186,6 +199,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     catch( final Exception e )
     {
       e.printStackTrace();
+
+      // TODO error handling
     }
     finally
     {
@@ -198,14 +213,14 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault().getSelectionManager(), m_fcl );
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault()
+        .getSelectionManager(), m_fcl );
 
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
@@ -215,7 +230,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       {
         manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( new Separator() );
-        // mgr.add(selectAllAction);
+        //    mgr.add(selectAllAction);
         appendSpaltenActions( manager );
       }
     } );
@@ -227,10 +242,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     load();
   }
 
-  @Override
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
-    if( !(input instanceof IFileEditorInput) )
+    if( !( input instanceof IFileEditorInput ) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
 
     if( m_layerTable == null )
@@ -238,15 +252,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     monitor.beginTask( "Vorlage laden", 1000 );
 
-    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
+    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ( (IFileEditorInput)input ).getFile() );
 
-    final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
+    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
 
     final LayerTableViewer viewer = m_layerTable;
     getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
         viewer.applyTableTemplate( tableTemplate, context );
       }
@@ -255,7 +269,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     monitor.worked( 1000 );
   }
 
-  public LayerTableViewer getLayerTable( )
+  public LayerTableViewer getLayerTable()
   {
     return m_layerTable;
   }
@@ -271,7 +285,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
     return m_layerTable.getSelection();
   }
@@ -295,26 +309,25 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IKalypsoFeatureTheme theme = m_layerTable.getTheme();
-    if( theme == null )
+    if( theme == null || theme.getFeatureType() == null )
       return;
 
-    final IPropertyType[] ftps = theme.getFeatureType().getProperties();
+    final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
+    // TODO: use platform mechanism instead:
+    //    Platform.getNL();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
 
     for( int i = 0; i < ftps.length; i++ )
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), AnnotationUtilities.getAnnotation(ftps[i]) ) );
+      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), ftps[i].getAnnotation( lang ) ) );
   }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
-    
-    if( adapter == ModellEventProvider.class )
-      return m_layerTable;
 
     return super.getAdapter( adapter );
   }
@@ -326,7 +339,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     final ExportableLayerTable exp = new ExportableLayerTable( m_layerTable );
 
-    return new IExportableObject[] { exp };
+    return new IExportableObject[]
+    { exp };
   }
 
   /**
@@ -335,8 +349,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
-    final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+    final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen",
+        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
 
-    return new IWizardPage[] { page };
+    return new IWizardPage[]
+    { page };
   }
 }

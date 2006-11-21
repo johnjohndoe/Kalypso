@@ -60,15 +60,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -80,25 +75,12 @@ import org.w3c.dom.Element;
 public class PropertyName extends Expression_Impl
 {
   /** The PropertyName's value (as an XPATH expression). */
-  private QName m_value;
+  private String m_value;
 
-  /**
-   * Constructs a new PropertyName.
-   */
+  /** Constructs a new PropertyName. */
   public PropertyName( String value )
   {
-    m_id = ExpressionDefines.PROPERTYNAME;
-    if( value.startsWith( "/" ) )
-      value = value.substring( 1 );
-    final int i = value.indexOf( ":" );
-    if( i > 0 )
-      value = value.substring( i + 1 );
-    setValue( new QName( value ) );
-  }
-
-  public PropertyName( QName value )
-  {
-    m_id = ExpressionDefines.PROPERTYNAME;
+    id = ExpressionDefines.PROPERTYNAME;
     setValue( value );
   }
 
@@ -115,31 +97,22 @@ public class PropertyName extends Expression_Impl
     {
       throw new FilterConstructionException( "Name of element does not equal 'PropertyName'!" );
     }
-    // XMLTools.getQNameValue("name", "namespace",element);
+
     return new PropertyName( XMLTools.getValue( element ) );
   }
 
   /**
    * Returns the last two parts of the XPATH-Expression in the format TABLENAME.VALUE.
    */
-  public String getSQLFieldQualifier( )
+  public String getSQLFieldQualifier()
   {
-    // return m_value;
-    throw new UnsupportedOperationException();
+    return m_value;
   }
 
   /**
    * Returns the PropertyName's value.
    */
-  public String getValue( )
-  {
-    return m_value.getLocalPart();
-  }
-
-  /**
-   * Returns the PropertyName's value.
-   */
-  public QName getQValue( )
+  public String getValue()
   {
     return m_value;
   }
@@ -147,18 +120,21 @@ public class PropertyName extends Expression_Impl
   /**
    * @see org.kalypsodeegree_impl.filterencoding.PropertyName#getValue()
    */
-  public void setValue( QName value )
+  public void setValue( String value )
   {
-    m_value = value;
+    this.m_value = value;
 
+    if( value.startsWith( "/" ) )
+    {
+      this.m_value = value.substring( 1 );
+    }
   }
 
   /** Produces an indented XML representation of this object. */
-  @Override
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 200 );
-    sb.append( "<ogc:PropertyName>" ).append( m_value.getLocalPart() ).append( "</ogc:PropertyName>" );
+    sb.append( "<ogc:PropertyName>" ).append( m_value ).append( "</ogc:PropertyName>" );
     return sb;
   }
 
@@ -176,15 +152,15 @@ public class PropertyName extends Expression_Impl
    */
   public Object evaluate( Feature feature )
   {
-    // IPropertyType[] ftp = feature.getFeatureType().getProperties();
-    final Object object = getProperty( feature, m_value.getLocalPart() );
+    //        FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
+    final Object object = getProperty( feature, m_value );
 
-    // if (feature.getFeatureType ().getProperty (value) == null) {
-    // throw new FilterEvaluationException (
-    // "IFeatureType '" + feature.getFeatureType ().getName () +
-    // "' has no property with name '" + value + "'!");
-    // }
-    // Object object = feature.getProperty (value);
+    //        if (feature.getFeatureType ().getProperty (value) == null) {
+    //            throw new FilterEvaluationException (
+    //                "FeatureType '" + feature.getFeatureType ().getName () +
+    //                "' has no property with name '" + value + "'!");
+    //        }
+    //        Object object = feature.getProperty (value);
     if( object == null )
       return null;
 
@@ -192,7 +168,8 @@ public class PropertyName extends Expression_Impl
     {
       return object;
     }
-    return FilterElementLabelProvider.toString( object );
+
+    return object.toString();
   }
 
   /**
@@ -202,6 +179,7 @@ public class PropertyName extends Expression_Impl
    *          a Feature
    * @param value
    *          a String
+   * 
    * @return an Object
    */
   private Object getProperty( Feature feature, String value )
@@ -210,13 +188,12 @@ public class PropertyName extends Expression_Impl
     {
       return feature.getProperty( value );
     }
-    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( feature.getFeatureType(), value );
-    if( vpt != null )
+    if( feature.getFeatureType().getVirtuelFeatureTypeProperty( value ) != null )
     {
-      return vpt.getVirtuelValue( feature, null );
+      return feature.getVirtuelProperty( value, null );
     }
     return null;
-    // throw new FilterEvaluationException( "IFeatureType '" + feature.getFeatureType().getName()
-    // + "' has no property with name '" + value + "'!" );
+    //    throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
+    //        + "' has no property with name '" + value + "'!" );
   }
 }

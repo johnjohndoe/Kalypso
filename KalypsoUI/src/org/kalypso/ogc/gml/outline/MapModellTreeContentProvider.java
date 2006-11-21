@@ -70,7 +70,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( parentElement instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) parentElement;
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)parentElement;
       final UserStyle[] styles = theme.getStyles();
       if( styles != null )
       {
@@ -82,14 +82,13 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
     }
     else if( parentElement instanceof ThemeStyleTreeObject )
     {
-      final ThemeStyleTreeObject obj = (ThemeStyleTreeObject) parentElement;
+      final ThemeStyleTreeObject obj = (ThemeStyleTreeObject)parentElement;
 
       final IKalypsoTheme theme = obj.getTheme();
-      if( !(theme instanceof IKalypsoFeatureTheme) )
+      if( !( theme instanceof IKalypsoFeatureTheme ) )
         return null;
 
       final KalypsoUserStyle userStyle = obj.getStyle();
-      
       final Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
 
       // need to parse all rules as some might belong to a filter-rule-pattern
@@ -101,7 +100,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
       ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
       final RuleTreeObject[] result = new RuleTreeObject[filteredRules.size()];
       for( int i = 0; i < result.length; i++ )
-        result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme) theme );
+        result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme)theme );
       return result;
     }
     return null;
@@ -122,12 +121,12 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( element instanceof ThemeStyleTreeObject )
     {
-      ThemeStyleTreeObject obj = (ThemeStyleTreeObject) element;
+      ThemeStyleTreeObject obj = (ThemeStyleTreeObject)element;
       UserStyle userStyle = obj.getStyle();
       if( userStyle.getFeatureTypeStyles()[0].getRules().length > 0 )
         return true;
     }
-    return (element instanceof IKalypsoTheme);
+    return ( element instanceof IKalypsoTheme );
   }
 
   /**
@@ -135,18 +134,18 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public Object[] getElements( final Object inputElement )
   {
-    final IMapModell mm = (IMapModell) inputElement;
+    final IMapModell mm = (IMapModell)inputElement;
     return mm == null ? null : mm.getAllThemes();
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_viewer != null )
     {
-      final IMapModell input = (IMapModell) m_viewer.getInput();
+      final IMapModell input = (IMapModell)m_viewer.getInput();
       if( input != null )
         input.removeModellListener( this );
     }
@@ -159,12 +158,12 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput != null )
-      ((IMapModell) oldInput).removeModellListener( this );
+      ( (IMapModell)oldInput ).removeModellListener( this );
 
     m_viewer = viewer;
 
     if( newInput != null )
-      ((IMapModell) newInput).addModellListener( this );
+      ( (IMapModell)newInput ).addModellListener( this );
   }
 
   /**
@@ -177,7 +176,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
       m_viewer.getControl().getDisplay().asyncExec( new Runnable()
       {
 
-        public void run( )
+        public void run()
         {
           if( !m_viewer.getControl().isDisposed() )
             m_viewer.refresh();

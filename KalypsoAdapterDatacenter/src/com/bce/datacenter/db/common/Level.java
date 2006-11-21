@@ -26,7 +26,7 @@ public class Level extends Persistent implements TreeNode
   private Level m_parent = null;
 
   /** array of child levels, used as simple caching solution */
-  private List<Level> m_children = null;
+  private List m_children = null;
 
   /** array of containers, used as simple caching solution */
   private List m_objects = null;
@@ -130,7 +130,7 @@ public class Level extends Persistent implements TreeNode
    */
   public TreeNode getChildAt( int childIndex )
   {
-    return getChildLevels().get( childIndex );
+    return (Level)getChildLevels().get( childIndex );
   }
 
   /**
@@ -141,14 +141,14 @@ public class Level extends Persistent implements TreeNode
     return getChildLevels().size();
   }
 
-  public List<Level> getChildLevels()
+  public List getChildLevels()
   {
     if( m_children != null )
       return m_children;
 
     try
     {
-      m_children = new Vector<Level>();
+      m_children = new Vector();
 
       PreparedStatement stmt = m_con
           .prepareStatement( "SELECT * FROM DC_TREELEVEL WHERE PARENTLEVEL = ? ORDER BY LEVELNAME ASC" );
@@ -263,7 +263,6 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString()
   {
     return m_name;
@@ -272,7 +271,6 @@ public class Level extends Persistent implements TreeNode
   /**
    * read from db and init members
    */
-  @Override
   protected void dbRead()
   {
     try

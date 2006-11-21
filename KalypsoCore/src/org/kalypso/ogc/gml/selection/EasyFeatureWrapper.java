@@ -41,27 +41,21 @@
 
 package org.kalypso.ogc.gml.selection;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO: Remove this class. However this is still not easy because the parentFeatureProperty is still not
- * known via the api and the workspace of a feature is not a Commandableworkspace
- * 
  * @author belger
  */
 public final class EasyFeatureWrapper
 {
   private final CommandableWorkspace m_workspace;
-
   private final Feature m_feature;
-
   private final Feature m_parentFeature;
+  private final String m_parentFeatureProperty;
 
-  private final IRelationType m_parentFeatureProperty;
-
-  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature, final IRelationType parentFeatureProperty )
+  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature,
+      final String parentFeatureProperty )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -69,22 +63,22 @@ public final class EasyFeatureWrapper
     m_parentFeatureProperty = parentFeatureProperty;
   }
 
-  public Feature getFeature( )
+  public Feature getFeature()
   {
     return m_feature;
   }
 
-  public Feature getParentFeature( )
+  public Feature getParentFeature()
   {
     return m_parentFeature;
   }
 
-  public IRelationType getParentFeatureProperty( )
+  public String getParentFeatureProperty()
   {
     return m_parentFeatureProperty;
   }
 
-  public CommandableWorkspace getWorkspace( )
+  public CommandableWorkspace getWorkspace()
   {
     return m_workspace;
   }

@@ -64,7 +64,6 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -79,18 +78,18 @@ import org.w3c.dom.Element;
 public class PropertyIsBetweenOperation extends ComparisonOperation
 {
 
-  private PropertyName m_propertyName;
+  private PropertyName propertyName;
 
-  private Expression m_lowerBoundary;
+  private Expression lowerBoundary;
 
-  private Expression m_upperBoundary;
+  private Expression upperBoundary;
 
   public PropertyIsBetweenOperation( PropertyName propertyName, Expression lowerBoundary, Expression upperBoundary )
   {
     super( OperationDefines.PROPERTYISBETWEEN );
-    m_propertyName = propertyName;
-    m_lowerBoundary = lowerBoundary;
-    m_upperBoundary = upperBoundary;
+    this.propertyName = propertyName;
+    this.lowerBoundary = lowerBoundary;
+    this.upperBoundary = upperBoundary;
   }
 
   /**
@@ -111,7 +110,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     if( children.getLength() != 3 )
       throw new FilterConstructionException( "'PropertyIsBetween' requires exactly 3 elements!" );
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
+    PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( children.item( 0 ) );
     Expression lowerBoundary = buildLowerBoundaryFromDOM( children.item( 1 ) );
     Expression upperBoundary = buildUpperBoundaryFromDOM( children.item( 2 ) );
 
@@ -170,53 +169,53 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   /**
    * returns the name of the property that shall be compared to the boundaries
    */
-  public PropertyName getPropertyName( )
+  public PropertyName getPropertyName()
   {
-    return m_propertyName;
+    return propertyName;
   }
 
   public void setPropertyName( PropertyName propName )
   {
-    m_propertyName = propName;
+    propertyName = propName;
   }
 
   /**
    * returns the lower boundary of the operation as an <tt>Expression</tt>
    */
-  public Expression getLowerBoundary( )
+  public Expression getLowerBoundary()
   {
-    return m_lowerBoundary;
+    return lowerBoundary;
   }
 
   public void setLowerBoundary( Expression lowerBounds )
   {
-    m_lowerBoundary = lowerBounds;
+    lowerBoundary = lowerBounds;
   }
 
   /**
    * returns the upper boundary of the operation as an <tt>Expression</tt>
    */
-  public Expression getUpperBoundary( )
+  public Expression getUpperBoundary()
   {
-    return m_upperBoundary;
+    return upperBoundary;
   }
 
   public void setUpperBoundary( Expression upperBounds )
   {
-    m_upperBoundary = upperBounds;
+    upperBoundary = upperBounds;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
-    sb.append( m_propertyName.toXML() );
+    sb.append( propertyName.toXML() );
     sb.append( "<ogc:LowerBoundary>" );
-    sb.append( m_lowerBoundary.toXML() );
+    sb.append( lowerBoundary.toXML() );
     sb.append( "</ogc:LowerBoundary>" );
     sb.append( "<ogc:UpperBoundary>" );
-    sb.append( m_upperBoundary.toXML() );
+    sb.append( upperBoundary.toXML() );
     sb.append( "</ogc:UpperBoundary>" );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
@@ -235,26 +234,18 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
 
-    Object lowerValue = m_lowerBoundary.evaluate( feature );
-    Object upperValue = m_upperBoundary.evaluate( feature );
-    Object thisValue = m_propertyName.evaluate( feature );
+    Object lowerValue = lowerBoundary.evaluate( feature );
+    Object upperValue = upperBoundary.evaluate( feature );
+    Object thisValue = propertyName.evaluate( feature );
 
-    if( !(lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number) )
-      throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical " + "expressions!" );
+    if( !( lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number ) )
+      throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical "
+          + "expressions!" );
 
-    double d1 = ((Number) lowerValue).doubleValue();
-    double d2 = ((Number) upperValue).doubleValue();
-    double d3 = ((Number) thisValue).doubleValue();
+    double d1 = ( (Number)lowerValue ).doubleValue();
+    double d2 = ( (Number)upperValue ).doubleValue();
+    double d3 = ( (Number)thisValue ).doubleValue();
     return d1 <= d3 && d3 <= d2;
 
-  }
-
-  /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
-   *      org.kalypsodeegree.filterencoding.Operation, int)
-   */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
-  {
-    fv.visit( this );
   }
 }

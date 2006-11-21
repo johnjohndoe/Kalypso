@@ -61,23 +61,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class FileUtilities
 {
-  private FileUtilities( )
+  private FileUtilities()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
    * Sets the contents of the dest file using the source file.
    */
-  public static void copyFile( final String sourceCharset, final File source, final IFile dest, final IProgressMonitor monitor ) throws CoreException
+  public static void copyFile( final String sourceCharset, final File source, final IFile dest,
+      final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper helper = new SetContentHelper()
     {
-      @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );
-        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ), sourceCharset ) );
+        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ),
+            sourceCharset ) );
 
         try
         {
@@ -99,36 +100,20 @@ public class FileUtilities
 
     helper.setFileContents( dest, false, false, monitor );
   }
-
-  /**
-   * Returns the content of the given file as string object. The charset of the file object is used.
-   * <p>
-   * Alle exceptions are caught, if any is thrown, null is returned.
-   * </p>
-   * 
-   * @return null, if any error occurs.
-   */
-  public static String toStringQuietly( final IFile file )
+  
+  public static String toString( final IFile file ) throws IOException, CoreException
   {
-    InputStream contents = null;
+    InputStream is = null;
     try
     {
-      contents = file.getContents();
-      final String content = IOUtils.toString( contents, file.getCharset() );
-      contents.close();
+      is = file.getContents();
+      final String content = IOUtils.toString( is, file.getCharset() );
+      is.close();
       return content;
-    }
-    catch( final CoreException e )
-    {
-      return null;
-    }
-    catch( final IOException e )
-    {
-      return null;
     }
     finally
     {
-      IOUtils.closeQuietly( contents );
+      IOUtils.closeQuietly( is );
     }
   }
 }

@@ -52,12 +52,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
@@ -91,43 +89,35 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
-  private final List<ObsViewItem> m_items = new ArrayList<ObsViewItem>();
+  private final List m_items = new ArrayList();
 
-  private final List<IObsViewEventListener> m_listeners = new ArrayList<IObsViewEventListener>();
+  private final List m_listeners = new ArrayList();
 
-  private final Set<String> m_enabledFeatures = new HashSet<String>();
+  private final Set m_enabledFeatures = new HashSet();
 
-  /**
-   * If set, each add of an observation of one of these types is ignored (no items are added for this observation in
-   * this view)
-   */
+  /** If set, each add of an observation of one of these types is ignored (no items are added for this observation in this view) */
   private String[] m_ignoreTypes = new String[] {};
 
   /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
   private List m_hiddenTypes = new ArrayList();
 
   /**
-   * By default the timezone is the default one. It can be overriden by the value of the template.
-   */
-  private TimeZone m_timezone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
-
-  /**
    * Default constructor: enables all the features
    */
-  public ObsView( )
+  public ObsView()
   {
     m_enabledFeatures.add( TimeserieConstants.FEATURE_ALARMLEVEL );
     m_enabledFeatures.add( TimeserieConstants.FEATURE_FORECAST );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     removeAllItems();
   }
 
   /**
-   * This method must be called before items are added. If items were already present in this view, it has no impact on
-   * them.
+   * This method must be called before items are added. If items were already 
+   * present in this view, it has no impact on them.
    * 
    * @param ignoreTypes
    *          if null a default empty array is used
@@ -140,7 +130,7 @@ public abstract class ObsView implements IObsViewEventProvider
       m_ignoreTypes = ignoreTypes;
   }
 
-  public String[] getIgnoreTypes( )
+  public String[] getIgnoreTypes()
   {
     return m_ignoreTypes;
   }
@@ -150,24 +140,57 @@ public abstract class ObsView implements IObsViewEventProvider
    * 
    * @see java.lang.Object#toString()
    */
-  @Override
-  public abstract String toString( );
-
+  public abstract String toString();
+  
   /**
    * Print the document
    */
-  public void print( )
+  public void print()
   {
     firePrintObsView( null );
   }
 
-  public void removeAllItems( )
+  //  public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
+  //  {
+  //    for( int i = 0; i < maxLoops; i++ )
+  //    {
+  //      if( !isLoading() )
+  //        return true;
+  //
+  //      try
+  //      {
+  //        Thread.sleep( sleepTime );
+  //      }
+  //      catch( InterruptedException e )
+  //      {
+  //        e.printStackTrace();
+  //      }
+  //    }
+  //
+  //    return false;
+  //  }
+  //
+  //  private boolean isLoading()
+  //  {
+  //    synchronized( m_items )
+  //    {
+  //      for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
+  //      {
+  //        if( ( (ObsViewItem)iter.next() ).isLoading() )
+  //          return true;
+  //      }
+  //
+  //      return false;
+  //    }
+  //  }
+
+  public void removeAllItems()
   {
     synchronized( m_items )
     {
       for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
       {
-        final ObsViewItem element = (ObsViewItem) iter.next();
+        final ObsViewItem element = (ObsViewItem)iter.next();
         element.dispose();
       }
       m_items.clear();
@@ -197,11 +220,11 @@ public abstract class ObsView implements IObsViewEventProvider
     fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_ITEM_REMOVE ) );
   }
 
-  public ObsViewItem[] getItems( )
+  public ObsViewItem[] getItems()
   {
     synchronized( m_items )
     {
-      return m_items.toArray( new ObsViewItem[m_items.size()] );
+      return (ObsViewItem[])m_items.toArray( new ObsViewItem[m_items.size()] );
     }
   }
 
@@ -227,7 +250,7 @@ public abstract class ObsView implements IObsViewEventProvider
       m_listeners.add( l );
     }
   }
-
+  
   public void removeObsViewListener( final IObsViewEventListener l )
   {
     synchronized( m_listeners )
@@ -242,24 +265,25 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       final Object[] listeners = m_listeners.toArray();
       for( int i = 0; i < listeners.length; i++ )
-        ((IObsViewEventListener) listeners[i]).onObsViewChanged( evt );
+        ( (IObsViewEventListener)listeners[i] ).onObsViewChanged( evt );
     }
   }
-
+  
   protected void firePrintObsView( final ObsViewEvent evt )
   {
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
       for( int i = 0; i < listeners.length; i++ )
-        ((IObsViewEventListener) listeners[i]).onPrintObsView( evt );
+        ( (IObsViewEventListener)listeners[i] ).onPrintObsView( evt );
     }
   }
 
   /**
    * Load an observation asynchronuously.
    */
-  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions, final String tokenizedName, final ItemData data )
+  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
+      final String tokenizedName, final ItemData data )
   {
     return loadObservation( context, href, ignoreExceptions, tokenizedName, data, false );
   }
@@ -267,19 +291,20 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * Loads an observation, if synchro is true, the load is performed synchronuously.
    */
-  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions, final String tokenizedName, final ItemData data, final boolean synchron )
+  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
+      final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
-    final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[] { this, data, tokenizedName }, synchron )
+    final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
+    { this, data, tokenizedName }, synchron )
     {
-      @Override
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
         final IObsProvider provider = new PooledObsProvider( key, null );
         try
         {
-          ((ObsView) m_data[0]).addObservation( provider, (String) m_data[2], (ObsView.ItemData) m_data[1] );
+          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[2], (ObsView.ItemData)m_data[1] );
         }
         finally
         {
@@ -297,17 +322,17 @@ public abstract class ObsView implements IObsViewEventProvider
    */
   protected abstract void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data );
 
-  public static Map<IObservation, ArrayList<ObsViewItem>> mapItems( final ObsViewItem[] items )
+  public static Map mapItems( final ObsViewItem[] items )
   {
     // obs -> columns
-    final Map<IObservation, ArrayList<ObsViewItem>> obsmap = new HashMap<IObservation, ArrayList<ObsViewItem>>();
+    final Map obsmap = new HashMap();
     for( int i = 0; i < items.length; i++ )
     {
       final IObservation observation = items[i].getObservation();
       if( !obsmap.containsKey( observation ) )
-        obsmap.put( observation, new ArrayList<ObsViewItem>() );
+        obsmap.put( observation, new ArrayList() );
 
-      ((List<ObsViewItem>) obsmap.get( observation )).add( items[i] );
+      ( (List)obsmap.get( observation ) ).add( items[i] );
     }
 
     return obsmap;
@@ -337,23 +362,23 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * @return the list of enabled features
    */
-  public String[] getEnabledFeatures( )
+  public String[] getEnabledFeatures()
   {
-    return m_enabledFeatures.toArray( new String[m_enabledFeatures.size()] );
+    return (String[])m_enabledFeatures.toArray( new String[m_enabledFeatures.size()] );
   }
 
   /**
    * Clears all enabled features
    */
-  public void clearFeatures( )
+  public void clearFeatures()
   {
     m_enabledFeatures.clear();
   }
 
-  public List<String> getIgnoreTypesAsList( )
+  public List getIgnoreTypesAsList()
   {
     final String[] ignoreTypes = getIgnoreTypes();
-    final List<String> ignoreTypeList = ignoreTypes == null ? new ArrayList<String>() : Arrays.asList( ignoreTypes );
+    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
     return Collections.unmodifiableList( ignoreTypeList );
   }
 
@@ -361,8 +386,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * Hide items which are displaying an observation which axis is of the given type. This method is the pendant to
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
    * 
-   * @param types
-   *          list of types that should be hidden
+   * @param types list of types that should be hidden
    */
   public void hideTypes( final List types )
   {
@@ -375,24 +399,12 @@ public abstract class ObsView implements IObsViewEventProvider
     for( int i = 0; i < items.length; i++ )
       items[i].setShown( !items[i].shouldBeHidden( m_hiddenTypes ) );
   }
-
+  
   /**
-   * @return the list of hidden types
+   * @return the list of hidden types 
    */
-  public List getHiddenTypes( )
+  public List getHiddenTypes()
   {
     return m_hiddenTypes;
-  }
-
-  public void setTimezone( final TimeZone timezone )
-  {
-    m_timezone = timezone;
-
-    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
-  }
-
-  public TimeZone getTimezone( )
-  {
-    return m_timezone;
   }
 }

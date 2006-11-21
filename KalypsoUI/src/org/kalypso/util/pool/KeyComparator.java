@@ -44,29 +44,32 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Comparator;
 
-import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.commons.java.net.UrlResolver;
 
-public final class KeyComparator implements Comparator<IPoolableObjectType>
+public final class KeyComparator implements Comparator
 {
   private final static KeyComparator m_instance = new KeyComparator();
 
-  public final static KeyComparator getInstance( )
+  public final static KeyComparator getInstance()
   {
     return m_instance;
   }
 
   private final UrlResolver m_urlResolver = new UrlResolver();
 
-  private KeyComparator( )
+  private KeyComparator()
   {
-    // ist a singleton
+  // ist a singleton
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final IPoolableObjectType k1, final IPoolableObjectType k2 )
+  public int compare( final Object o1, final Object o2 )
   {
+    final IPoolableObjectType k1 = (IPoolableObjectType)o1;
+    final IPoolableObjectType k2 = (IPoolableObjectType)o2;
+
     final int typeCompare = k1.getType().compareToIgnoreCase( k2.getType() );
     if( typeCompare != 0 )
       return typeCompare;

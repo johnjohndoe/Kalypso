@@ -42,14 +42,11 @@
 package org.kalypso.featureview.views.actions;
 
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -72,11 +69,9 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.FeaturetemplateType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -87,12 +82,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 {
-  protected static final ObjectFactory templateOF = new ObjectFactory();
-
-  protected static final JAXBContext templateJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   private static final String STR_ALS_VORLAGE_SPEICHERN = "Als Vorlage speichern";
-
   private IViewPart m_view;
 
   /**
@@ -108,7 +98,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
    */
   public void run( final IAction action )
   {
-    final FeatureView view = (FeatureView) m_view;
+    final FeatureView view = (FeatureView)m_view;
     final Shell shell = view.getSite().getShell();
 
     final GMLWorkspace gmlWorkspace = view.getCurrentworkspace();
@@ -116,11 +106,11 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     if( gmlWorkspace == null || feature == null )
     {
-      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, "Die aktuelle Ansicht enthält kein Feature und kann deshalb nicht als Vorlage gespeichert werden." );
+      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN,
+          "Die aktuelle Ansicht enthält kein Feature und kann deshalb nicht als Vorlage gespeichert werden." );
       return;
     }
 
-    
     final SaveAsDialog dialog = new SaveAsDialog( shell );
     dialog.setBlockOnOpen( true );
     dialog.setTitle( STR_ALS_VORLAGE_SPEICHERN );
@@ -145,30 +135,31 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     final Job job = new Job( "Vorlage wird gespeichert" )
     {
-      @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        // feature-template intern construieren
+        final ObjectFactory templateFactory = new ObjectFactory();
         try
         {
-          final Layer layer = templateOF.createFeaturetemplateLayer();
+          final LayerType layer = templateFactory.createFeaturetemplateTypeLayerType();
           layer.setFeaturePath( gmlWorkspace.getFeaturepathForFeature( feature ).toString() );
           layer.setHref( gmlWorkspace.getContext().toExternalForm() );
           layer.setLinktype( "gml" );
           layer.setId( "layer_1" );
 
-          final Featuretemplate template = templateOF.createFeaturetemplate();
+          final FeaturetemplateType template = templateFactory.createFeaturetemplate();
           template.setLayer( layer );
 
-          final List<FeatureviewType> viewList = template.getView();
-          viewList.addAll( Arrays.asList( view.getCurrentViewTemplates() ) );
+          final List viewList = template.getView();
 
-          final Map<String, String> prefixes = new HashMap<String, String>( 1 );
-          prefixes.put( "featureview.template.kalypso.org", "gft" );
-          
-          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );
+          viewList.add( view.getCurrentViewTemplates() );
+
+          final Marshaller marshaller = templateFactory.createMarshaller();
+          marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+          final Validator validator = templateFactory.createValidator();
+          validator.validate( template );
           final SetContentHelper helper = new SetContentHelper()
           {
-            @Override
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
               marshaller.marshal( template, writer );
@@ -179,7 +170,9 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final JAXBException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
+          e.printStackTrace();
+
+          StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
         }
         catch( final CoreException e )
         {
@@ -200,6 +193,6 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // nichts tun
+  // nichts tun
   }
 }

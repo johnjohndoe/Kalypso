@@ -1,7 +1,7 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -46,11 +46,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 
 public interface VirtualFeatureTypePropertyHandler
 {
-  public boolean isDekoratorOf( IFeatureType ft );
+  public boolean isDekoratorOf( FeatureType ft );
 
-  public boolean isDekoratorOf( IPropertyType ftp );
+  public boolean isDekoratorOf( FeatureTypeProperty ftp );
 
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft );
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft );
 
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp );
+  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp );
 }

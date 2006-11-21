@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoUserService" default="fake" basedir=".">
+
+	<property name="project" value="${workspace}/KalypsoServiceUser" />
+	<property name="project-name" value="KalypsoServiceUser" />
+    <property file="service.properties" />
+
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml"/>
+
+	<path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar"/>
+
+	    <fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
+		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+		    
+	    <fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		
+	    <fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
+	</path>
+	
+	<!-- Fake target just to allow a default target since ant requires it. Using
+         of the parent build target does not work...
+	-->
+	<target name="fake"/>
+</project>

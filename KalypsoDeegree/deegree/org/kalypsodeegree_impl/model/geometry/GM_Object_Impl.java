@@ -89,17 +89,17 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
 
   protected static double mute = 0.000000001;
 
-  private CS_CoordinateSystem m_crs = null;
+  protected CS_CoordinateSystem crs = null;
 
-  protected GM_Boundary m_boundary = null;
+  protected GM_Boundary boundary = null;
 
   protected GM_Envelope envelope = null;
 
   protected GM_Point centroid = null;
 
-  protected boolean m_empty = true;
+  protected boolean empty = true;
 
-  protected boolean m_valid = false;
+  protected boolean valid = false;
 
   /**
    * constructor that sets the spatial reference system
@@ -115,9 +115,9 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   /**
    * returns the spatial reference system of a geometry
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public CS_CoordinateSystem getCoordinateSystem()
   {
-    return m_crs;
+    return crs;
   }
 
   /**
@@ -128,15 +128,14 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public void setCoordinateSystem( CS_CoordinateSystem crs )
   {
-    this.m_crs = crs;
+    this.crs = crs;
   }
 
   /**
    * returns a shallow copy of the geometry. this isn't realized at this level so a CloneNotSupportedException will be
    * thrown.
    */
-  @Override
-  public Object clone( ) throws CloneNotSupportedException
+  public Object clone() throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
@@ -144,9 +143,9 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   /**
    * returns true if no geometry values resp. points stored within the geometry.
    */
-  public boolean isEmpty( )
+  public boolean isEmpty()
   {
-    return m_empty;
+    return empty;
   }
 
   /**
@@ -154,19 +153,19 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   public void setEmpty( boolean empty )
   {
-    m_empty = empty;
+    this.empty = empty;
   }
 
   /**
    * returns the boundary of the surface as general boundary
    */
-  public GM_Boundary getBoundary( )
+  public GM_Boundary getBoundary()
   {
     if( !isValid() )
     {
       calculateParam();
     }
-    return m_boundary;
+    return boundary;
   }
 
   /**
@@ -219,7 +218,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    * <p>
    * </p>
    */
-  public GM_Point getCentroid( )
+  public GM_Point getCentroid()
   {
     if( !isValid() )
     {
@@ -231,7 +230,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   /**
    * returns the bounding box / envelope of a geometry
    */
-  public GM_Envelope getEnvelope( )
+  public GM_Envelope getEnvelope()
   {
     if( !isValid() )
     {
@@ -248,7 +247,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    * 
    * @throws GM_Exception
    */
-  public GM_Object getConvexHull( ) throws GM_Exception
+  public GM_Object getConvexHull() throws GM_Exception
   {
     if( !isValid() )
     {
@@ -258,7 +257,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     final Geometry geometry = JTSAdapter.export( this );
     final Geometry convexHull = geometry.convexHull();
     final GM_Object result = JTSAdapter.wrap( convexHull );
-    ((GM_Object_Impl) result).setCoordinateSystem( getCoordinateSystem() );
+    ( (GM_Object_Impl)result ).setCoordinateSystem( getCoordinateSystem() );
     return result;
   }
 
@@ -365,7 +364,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
       if( !jtsUnion.isEmpty() )
       {
         union = JTSAdapter.wrap( jtsUnion );
-        ((GM_Object_Impl) union).setCoordinateSystem( getCoordinateSystem() );
+        ( (GM_Object_Impl)union ).setCoordinateSystem( getCoordinateSystem() );
       }
     }
     catch( GM_Exception e )
@@ -399,19 +398,13 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
       if( !jtsIntersection.isEmpty() )
       {
         intersection = JTSAdapter.wrap( jtsIntersection );
-        ((GM_Object_Impl) intersection).setCoordinateSystem( getCoordinateSystem() );
+        ( (GM_Object_Impl)intersection ).setCoordinateSystem( getCoordinateSystem() );
       }
     }
     catch( GM_Exception e )
     {
       System.out.println( e );
     }
-    /* May be the case if there are two identical points in one object, return null in this case */
-    catch( IllegalArgumentException e )
-    {
-      System.out.println( e );
-    }
-    
     return intersection;
   }
 
@@ -437,7 +430,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
       if( !jtsDifference.isEmpty() )
       {
         difference = JTSAdapter.wrap( jtsDifference );
-        ((GM_Object_Impl) difference).setCoordinateSystem( getCoordinateSystem() );
+        ( (GM_Object_Impl)difference ).setCoordinateSystem( getCoordinateSystem() );
       }
     }
     catch( GM_Exception e )
@@ -455,24 +448,23 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
    */
-  public@Override
-   boolean equals( Object that )
+  public boolean equals( Object that )
   {
-    if( (that == null) || !(that instanceof GM_Object_Impl) )
+    if( ( that == null ) || !( that instanceof GM_Object_Impl ) )
     {
       return false;
     }
 
-    if( m_crs != null )
+    if( crs != null )
     {
-      if( !m_crs.equals( ((GM_Object) that).getCoordinateSystem() ) )
+      if( !crs.equals( ( (GM_Object)that ).getCoordinateSystem() ) )
       {
         return false;
       }
     }
     else
     {
-      if( ((GM_Object) that).getCoordinateSystem() != null )
+      if( ( (GM_Object)that ).getCoordinateSystem() != null )
       {
         return false;
       }
@@ -482,7 +474,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
     {
       // let JTS do the hard work
       Geometry jtsThis = JTSAdapter.export( this );
-      Geometry jtsThat = JTSAdapter.export( (GM_Object) that );
+      Geometry jtsThat = JTSAdapter.export( (GM_Object)that );
       return jtsThis.equals( jtsThat );
     }
     catch( GM_Exception e )
@@ -519,37 +511,28 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   protected void setValid( boolean valid )
   {
-    m_valid = valid;
+    this.valid = valid;
   }
 
   /**
    * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
    */
-  protected boolean isValid( )
+  protected boolean isValid()
   {
-    return m_valid;
+    return valid;
   }
 
   /**
    * recalculates internal parameters
    */
-  protected abstract void calculateParam( );
+  protected abstract void calculateParam();
 
-  @Override
-  public String toString( )
+  public String toString()
   {
     String ret = null;
-    ret = "CoordinateSystem = " + m_crs + "\n";
-    ret += ("empty = " + m_empty + "\n");
-    ret += ("mute = " + mute + "\n");
+    ret = "CoordinateSystem = " + crs + "\n";
+    ret += ( "empty = " + empty + "\n" );
+    ret += ( "mute = " + mute + "\n" );
     return ret;
-  }
-  
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#invalidate()
-   */
-  public void invalidate( )
-  {
-    m_valid = false;
   }
 }

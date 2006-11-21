@@ -41,16 +41,16 @@
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  public WMSGetfeatureInfoWidgetDelegate( )
+  public WMSGetfeatureInfoWidgetDelegate()
   {
     super( new WMSGetFeatureInfoWidget( "WMS-Abfrage", "Informationen vom WMS abholen" ) );
   }
@@ -58,24 +58,19 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionD
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
-  @Override
-  protected void refreshAction( final IAction action, final ISelection selection )
+  protected void refreshAction( IAction action )
   {
+    super.refreshAction( action );
+    if( action == null )
+      return;
     action.setEnabled( false );
-
-    final WidgetActionPart part = getPart();
-    if( part != null )
+    IEditorPart editor = getEditor();
+    if( editor != null && editor instanceof GisMapEditor )
     {
-      final MapPanel mapPanel = part.getMapPanel();
-      if( mapPanel != null )
-      {
-        final IMapModell mapModell = mapPanel.getMapModell();
-        if( mapModell != null )
-        {
-          final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-          action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
-        }
-      }
+      final GisMapEditor mapEditor = (GisMapEditor)editor;
+      IMapModell mapModell = mapEditor.getMapPanel().getMapModell();
+      IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+      action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
     }
   }
 

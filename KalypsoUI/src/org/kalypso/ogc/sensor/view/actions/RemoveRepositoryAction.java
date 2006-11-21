@@ -71,8 +71,7 @@ public class RemoveRepositoryAction extends AbstractObservationChooserAction imp
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )

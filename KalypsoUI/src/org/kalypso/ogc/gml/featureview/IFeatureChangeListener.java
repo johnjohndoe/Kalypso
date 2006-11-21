@@ -40,9 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -51,5 +50,5 @@ public interface IFeatureChangeListener
 {
   public void featureChanged( final FeatureChange change );
   
-  public void openFeatureRequested( final Feature feature, final IPropertyType m_ftp );
+  public void openFeatureRequested( final Feature feature, final FeatureTypeProperty m_ftp );
 }

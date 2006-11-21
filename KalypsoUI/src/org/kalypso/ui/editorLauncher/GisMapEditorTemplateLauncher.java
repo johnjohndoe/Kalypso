@@ -43,9 +43,9 @@ package org.kalypso.ui.editorLauncher;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -57,13 +57,12 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.GismapviewType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.LayerTypeUtilities;
 import org.kalypso.template.types.ObjectFactory;
-import org.kalypso.template.types.StyledLayerType;
 
 /**
  * Launcher, um ein GML im Baum (GmlEditor) anzusehen.
@@ -75,15 +74,15 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
-  public String getFilename( )
+  public String getFilename()
   {
-    return "<Standard Kartenansicht>.gmt";
+    return "<Standard Kartenansicht>.gmv";
   }
 
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
-  public IEditorDescriptor getEditor( )
+  public IEditorDescriptor getEditor()
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -96,20 +95,18 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   public IEditorInput createInput( final IFile file ) throws CoreException
   {
     final org.kalypso.template.gismapview.ObjectFactory gisMapFactory = new org.kalypso.template.gismapview.ObjectFactory();
-    final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gismapview.ObjectFactory.class );
-
     try
     {
       if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) )
-        throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
-
-      final StyledLayerType layer = new ObjectFactory().createStyledLayerType();
+          throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
+      
+      final GismapviewType.LayersType.Layer layer = gisMapFactory.createGismapviewTypeLayersTypeLayer();
       LayerTypeUtilities.initLayerType( layer, file );
       layer.setVisible( true );
       layer.setName( file.getName() );
       layer.setFeaturePath( "featureMember" );
 
-      final Layers layers = gisMapFactory.createGismapviewLayers();
+      final LayersType layers = gisMapFactory.createGismapviewTypeLayersType();
       layers.getLayer().add( layer );
       layers.setActive( layer );
 
@@ -123,7 +120,10 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       gismapview.setLayers( layers );
       gismapview.setExtent( extent );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
+      final Validator validator = gisMapFactory.createValidator();
+      validator.validate( gismapview );
+
+      final Marshaller marshaller = gisMapFactory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
@@ -133,8 +133,9 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file.getFullPath() ) );
-
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file
+          .getFullPath() ) );
+      
       return input;
     }
     catch( final JAXBException e )

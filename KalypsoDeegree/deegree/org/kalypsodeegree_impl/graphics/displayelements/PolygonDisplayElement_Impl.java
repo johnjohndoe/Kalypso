@@ -75,12 +75,10 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -94,7 +92,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements PolygonDisplayElement, Serializable
+public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements PolygonDisplayElement,
+    Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2980154437699081214L;
@@ -154,23 +153,21 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   /**
    * renders the DisplayElement to the submitted graphic context
    */
-  @Override
   public void paint( Graphics g, GeoTransform projection )
   {
     try
     {
-      GM_Object geometry = getGeometry();
       if( geometry == null )
         return;
       Area area = null;
       if( geometry instanceof GM_Surface )
       {
-        area = calcTargetCoordinates( projection, (GM_Surface) geometry );
+        area = calcTargetCoordinates( projection, (GM_Surface)geometry );
         drawPolygon( g, area );
       }
       else
       {
-        GM_MultiSurface msurface = (GM_MultiSurface) geometry;
+        GM_MultiSurface msurface = (GM_MultiSurface)geometry;
         for( int i = 0; i < msurface.getSize(); i++ )
         {
           area = calcTargetCoordinates( projection, msurface.getSurfaceAt( i ) );
@@ -190,7 +187,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
   private double distance( double x1, double y1, double x2, double y2 )
   {
-    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
+    return Math.sqrt( ( x2 - x1 ) * ( x2 - x1 ) + ( y2 - y1 ) * ( y2 - y1 ) );
   }
 
   /**
@@ -198,71 +195,95 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    */
   private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface ) throws Exception
   {
-    final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
-    final Stroke stroke = sym.getStroke();
+    Area areaouter = null;
+
+    PolygonSymbolizer sym = (PolygonSymbolizer)symbolizer;
+    org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     float width = 1;
     if( stroke != null )
     {
-      width = (float) stroke.getWidth( getFeature() );
+      width = (float)stroke.getWidth( feature );
     }
 
     try
     {
-      final GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
-      final GM_Position[] ex = patch.getExteriorRing();
-      final GM_Position[][] inner = patch.getInteriorRings();
+      GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
+      GM_Position[] ex = patch.getExteriorRing();
+      GM_Position[][] inner = patch.getInteriorRings();
 
-      final Area areaouter = areaFromRing( projection, width, ex );
-      if( inner != null )
+      int[] x = new int[ex.length];
+      int[] y = new int[ex.length];
+
+      int k = 0;
+      for( int i = 0; i < ex.length; i++ )
       {
-        for( GM_Position[] innerRing : inner )
+        GM_Position position = projection.getDestPoint( ex[i] );
+        int xx = (int)( position.getX() + 0.5 );
+        int yy = (int)( position.getY() + 0.5 );
+
+        if( k > 0 && k < ex.length - 1 )
         {
-          if( innerRing != null )
-            areaouter.subtract( areaFromRing( projection, width, innerRing ) );
+          if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
+          {
+            //if ( xx != x[k-1] || yy != y[k-1] ) {
+            x[k] = xx;
+            y[k] = yy;
+            k++;
+          }
         }
-      }
-
-      return areaouter;
-    }
-    catch( Exception e )
-    {
-      Debug.debugException( e, "" );
-    }
-
-    return null;
-  }
-
-  private Area areaFromRing( GeoTransform projection, float width, final GM_Position[] ex )
-  {
-    final int[] x = new int[ex.length];
-    final int[] y = new int[ex.length];
-
-    int k = 0;
-    for( int i = 0; i < ex.length; i++ )
-    {
-      GM_Position position = projection.getDestPoint( ex[i] );
-      int xx = (int) (position.getX() + 0.5);
-      int yy = (int) (position.getY() + 0.5);
-
-      if( k > 0 && k < ex.length - 1 )
-      {
-        if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
+        else
         {
           x[k] = xx;
           y[k] = yy;
           k++;
         }
       }
-      else
+
+      areaouter = new Area( new Polygon( x, y, k - 1 ) );
+      if( inner != null )
       {
-        x[k] = xx;
-        y[k] = yy;
-        k++;
+        for( int i = 0; i < inner.length; i++ )
+        {
+          if( inner[i] != null )
+          {
+            k = 0;
+            x = new int[inner[i].length];
+            y = new int[inner[i].length];
+            for( int j = 0; j < inner[i].length; j++ )
+            {
+              GM_Position position = projection.getDestPoint( inner[i][j] );
+              int xx = (int)( position.getX() + 0.5 );
+              int yy = (int)( position.getY() + 0.5 );
+              if( k > 0 && k < inner[i].length - 1 )
+              {
+                if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
+                {
+                  //if ( xx != x[k-1] || yy != y[k-1] ) {
+                  x[k] = xx;
+                  y[k] = yy;
+                  k++;
+                }
+              }
+              else
+              {
+                x[k] = xx;
+                y[k] = yy;
+                k++;
+              }
+            }
+            Area areainner = new Area( new Polygon( x, y, k - 1 ) );
+            areaouter.subtract( areainner );
+          }
+        }
       }
+
+    }
+    catch( Exception e )
+    {
+      Debug.debugException( e, "" );
     }
 
-    final Polygon polygon = new Polygon( x, y, k - 1 );
-    return new Area( polygon );
+    return areaouter;
   }
 
   /**
@@ -270,13 +291,12 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    */
   private void drawPolygon( Graphics g, Area area ) throws FilterEvaluationException
   {
-    Graphics2D g2 = (Graphics2D) g;
+    Graphics2D g2 = (Graphics2D)g;
 
-    PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
+    PolygonSymbolizer sym = (PolygonSymbolizer)symbolizer;
     org.kalypsodeegree.graphics.sld.Fill fill = sym.getFill();
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
 
-    final Feature feature = getFeature();
     // only draw filled polygon, if Fill-Element is given
     if( fill != null )
     {
@@ -287,7 +307,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       if( opacity > 0.01 )
       {
         Color color = fill.getFill( feature );
-        int alpha = (int) Math.round( opacity * 255 );
+        int alpha = (int)Math.round( opacity * 255 );
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
@@ -325,7 +345,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       if( opacity > 0.01 )
       {
         Color color = stroke.getStroke( feature );
-        int alpha = (int) Math.round( opacity * 255 );
+        int alpha = (int)Math.round( opacity * 255 );
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
@@ -337,15 +357,16 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
         // use a simple Stroke if dash == null or dash length < 2
         BasicStroke bs2 = null;
-        float w = (float) stroke.getWidth( feature );
+        float w = (float)stroke.getWidth( feature );
 
-        if( (dash == null) || (dash.length < 2) )
+        if( ( dash == null ) || ( dash.length < 2 ) )
         {
           bs2 = new BasicStroke( w );
         }
         else
         {
-          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
+          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke
+              .getDashOffset( feature ) );
         }
 
         g2.setStroke( bs2 );

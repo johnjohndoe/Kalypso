@@ -40,13 +40,9 @@
  ------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import java.text.ParseException;
-
-import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -54,6 +50,9 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
@@ -62,15 +61,10 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
-  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp );
+  public IFeatureDialog createFeatureDialog( final GMLWorkspace workspace, final Feature feature,
+      final FeatureTypeProperty ftp );
 
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
+  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
 
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
-
-  /**
-   * Inverse operation to {@link ILabelProvider#getText(java.lang.Object)}. Must return an object of the type for which
-   * this handler is registered for.
-   */
-  public Object fromText( final String text ) throws ParseException;
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
 }

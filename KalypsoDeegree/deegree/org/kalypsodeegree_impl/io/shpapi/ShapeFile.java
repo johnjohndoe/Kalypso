@@ -61,17 +61,15 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -86,6 +84,7 @@ import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
 import org.kalypsodeegree_impl.io.rtree.HyperPoint;
 import org.kalypsodeegree_impl.io.rtree.RTree;
 import org.kalypsodeegree_impl.io.rtree.RTreeException;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -95,6 +94,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed
  * by the EXSE-Working group of of the geogr. institute of the university of Bonn
  * (http://www.giub.uni-bonn.de/exse/results/welcome.html).
+ * 
+ * 
  * <p>
  * ------------------------------------------------------------------------
  * </p>
@@ -105,23 +106,23 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class ShapeFile
 {
-  private DBaseFile m_dbf = null;
+  private DBaseFile dbf = null;
 
   private SHP2WKS shpwks = new SHP2WKS();
 
-  /**
+  /*
    * contains the dBase indexes
    */
-  private Hashtable<String, DBaseIndex> dBaseIndexes = new Hashtable<String, DBaseIndex>();
+  private Hashtable dBaseIndexes = new Hashtable();
 
-  /**
+  /*
    * aggregated Instance-variables
    */
   private MainFile shp = null;
 
   private RTree rti = null;
 
-  private String m_url = null;
+  private String url = null;
 
   /*
    * indicates if a dBase-file is associated to the shape-file
@@ -139,7 +140,7 @@ public class ShapeFile
    */
   public ShapeFile( String url ) throws IOException
   {
-    m_url = url;
+    this.url = url;
 
     /*
      * initialize the MainFile
@@ -151,7 +152,7 @@ public class ShapeFile
      */
     try
     {
-      m_dbf = new DBaseFile( url, shp.getFileShapeType() );
+      dbf = new DBaseFile( url, shp.getFileShapeType() );
     }
     catch( final IOException e )
     {
@@ -203,26 +204,27 @@ public class ShapeFile
    */
   public ShapeFile( String url, String rwflag ) throws IOException
   {
-    m_url = url;
+    this.url = url;
 
     shp = new MainFile( url, rwflag );
 
-    // TODO: initialize dbf, rti
+    //TODO: initialize dbf, rti
     hasDBaseFile = false;
     hasRTreeIndex = false;
+
   }
 
   /**
    *  
    */
-  public void close( )
+  public void close()
   {
 
     shp.close();
 
-    if( m_dbf != null )
+    if( dbf != null )
     {
-      m_dbf.close();
+      dbf.close();
     }
 
     if( rti != null )
@@ -239,7 +241,7 @@ public class ShapeFile
 
     for( Enumeration e = dBaseIndexes.elements(); e.hasMoreElements(); )
     {
-      DBaseIndex index = (DBaseIndex) e.nextElement();
+      DBaseIndex index = (DBaseIndex)e.nextElement();
 
       try
       {
@@ -258,14 +260,14 @@ public class ShapeFile
    */
   public boolean hasDBaseIndex( String column )
   {
-    final DBaseIndex index = dBaseIndexes.get( column );
+    DBaseIndex index = (DBaseIndex)dBaseIndexes.get( column );
     return index != null;
   }
 
   /**
    * returns true if a dBase-file is associated to the shape-file <BR>
    */
-  public boolean hasDBaseFile( )
+  public boolean hasDBaseFile()
   {
     return this.hasDBaseFile;
   }
@@ -273,7 +275,7 @@ public class ShapeFile
   /**
    * returns true if an R-tree index is associated to the shape-file <BR>
    */
-  public boolean hasRTreeIndex( )
+  public boolean hasRTreeIndex()
   {
     return this.hasRTreeIndex;
   }
@@ -281,7 +283,7 @@ public class ShapeFile
   /**
    * returns the number of records within a shape-file <BR>
    */
-  public int getRecordNum( )
+  public int getRecordNum()
   {
     return shp.getRecordNum();
   }
@@ -290,7 +292,7 @@ public class ShapeFile
    * returns the minimum bounding rectangle of all geometries <BR>
    * within the shape-file
    */
-  public GM_Envelope getFileMBR( )
+  public GM_Envelope getFileMBR()
   {
     double xmin = shp.getFileMBR().west;
     double xmax = shp.getFileMBR().east;
@@ -317,9 +319,9 @@ public class ShapeFile
   /**
    * Same as {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
    */
-  public Feature getFeatureByRecNo( Feature parent, int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
   {
-    return getFeatureByRecNo( parent, RecNo, false );
+    return getFeatureByRecNo( RecNo, false );
   }
 
   /**
@@ -329,17 +331,20 @@ public class ShapeFile
    * @param allowNull
    *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
-  public Feature getFeatureByRecNo( Feature parent, int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException,
+      DBaseException
   {
     if( !hasDBaseFile )
     {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    final Feature feature = m_dbf.getFRow( parent, RecNo, allowNull );
-    final GM_Object geo = getGM_ObjectByRecNo( RecNo );
-    final IPropertyType pt = feature.getFeatureType().getProperty( "GEOM" );
-    feature.setProperty( pt, geo );
+    Feature feature = dbf.getFRow( RecNo, allowNull );
+    GM_Object geo = getGM_ObjectByRecNo( RecNo );
+
+    FeatureProperty fp = FeatureFactory.createFeatureProperty( "GEOM", geo );
+
+    feature.setProperty( fp );
 
     return feature;
   }
@@ -355,13 +360,13 @@ public class ShapeFile
 
     if( shpType == ShapeConst.SHAPE_TYPE_POINT )
     {
-      SHPPoint shppoint = (SHPPoint) shp.getByRecNo( RecNo );
+      SHPPoint shppoint = (SHPPoint)shp.getByRecNo( RecNo );
 
       geom = shpwks.transformPoint( null, shppoint );
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT )
     {
-      SHPMultiPoint shpmultipoint = (SHPMultiPoint) shp.getByRecNo( RecNo );
+      SHPMultiPoint shpmultipoint = (SHPMultiPoint)shp.getByRecNo( RecNo );
 
       GM_Point[] points = shpwks.transformMultiPoint( null, shpmultipoint );
 
@@ -377,17 +382,17 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
     {
-      SHPPolyLine shppolyline = (SHPPolyLine) shp.getByRecNo( RecNo );
+      SHPPolyLine shppolyline = (SHPPolyLine)shp.getByRecNo( RecNo );
 
       GM_Curve[] curves = shpwks.transformPolyLine( null, shppolyline );
 
-      if( (curves != null) && (curves.length > 1) )
+      if( ( curves != null ) && ( curves.length > 1 ) )
       {
         // create multi curve
         GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
         geom = mc;
       }
-      else if( (curves != null) && (curves.length == 1) )
+      else if( ( curves != null ) && ( curves.length == 1 ) )
       {
         // single curve
         geom = curves[0];
@@ -399,17 +404,17 @@ public class ShapeFile
     }
     else if( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
     {
-      SHPPolygon shppoly = (SHPPolygon) shp.getByRecNo( RecNo );
+      SHPPolygon shppoly = (SHPPolygon)shp.getByRecNo( RecNo );
 
       GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
 
-      if( (polygons != null) && (polygons.length > 1) )
+      if( ( polygons != null ) && ( polygons.length > 1 ) )
       {
         // create multi surface
-        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
+        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons );
         geom = ms;
       }
-      else if( (polygons != null) && (polygons.length == 1) )
+      else if( ( polygons != null ) && ( polygons.length == 1 ) )
       {
         geom = polygons[0];
       }
@@ -437,7 +442,7 @@ public class ShapeFile
    */
   public int[] getGeoNumbersByAttribute( String column, Comparable value ) throws IOException, DBaseIndexException
   {
-    DBaseIndex index = dBaseIndexes.get( column );
+    DBaseIndex index = (DBaseIndex)dBaseIndexes.get( column );
 
     if( index == null )
     {
@@ -457,7 +462,7 @@ public class ShapeFile
     SHPPoint geom = null;
     int[] num = null;
     int numRecs = getRecordNum();
-    final ArrayList<Integer> numbers = new ArrayList<Integer>();
+    ArrayList numbers = new ArrayList();
 
     GM_Envelope mbr = getFileMBR();
 
@@ -471,12 +476,13 @@ public class ShapeFile
       try
       {
         // translate envelope (deegree) to bounding box (rtree)
-        HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r.getMax().getAsArray() ) );
+        HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r
+            .getMax().getAsArray() ) );
         Object[] iNumbers = rti.intersects( box );
         num = new int[iNumbers.length];
 
         for( int i = 0; i < iNumbers.length; i++ )
-          num[i] = ((Integer) iNumbers[i]).intValue();
+          num[i] = ( (Integer)iNumbers[i] ).intValue();
 
         return num;
       }
@@ -496,7 +502,7 @@ public class ShapeFile
       }
       else if( getShapeTypeByRecNo( i + 1 ) == ShapeConst.SHAPE_TYPE_POINT )
       {
-        geom = (SHPPoint) shp.getByRecNo( i + 1 );
+        geom = (SHPPoint)shp.getByRecNo( i + 1 );
 
         // is the Point within the seach rectangle?
         GM_Position pos = GeometryFactory.createGM_Position( geom.x, geom.y );
@@ -531,7 +537,9 @@ public class ShapeFile
 
       // put all numbers within numbers to an array
       for( int i = 0; i < numbers.size(); i++ )
-        num[i] = numbers.get( i ).intValue();
+      {
+        num[i] = ( (Integer)numbers.get( i ) ).intValue();
+      }
     }
 
     return num;
@@ -542,10 +550,12 @@ public class ShapeFile
    */
   public boolean isUnique( String property )
   {
-    final DBaseIndex index = dBaseIndexes.get( property );
+    DBaseIndex index = (DBaseIndex)dBaseIndexes.get( property );
 
     if( index == null )
+    {
       return false;
+    }
 
     return index.isUnique();
   }
@@ -554,42 +564,42 @@ public class ShapeFile
    * returns the properties (column headers) of the dBase-file <BR>
    * associated to the shape-file <BR>
    */
-  public String[] getProperties( ) throws HasNoDBaseFileException, DBaseException
+  public String[] getProperties() throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return m_dbf.getProperties();
+    return dbf.getProperties();
   }
 
   /**
    * returns the datatype of each column of the database file <BR>
    * associated to the shape-file <BR>
    */
-  public String[] getDataTypes( ) throws HasNoDBaseFileException, DBaseException
+  public String[] getDataTypes() throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return m_dbf.getDataTypes();
+    return dbf.getDataTypes();
   }
 
   /**
    * @throws HasNoDBaseFileException
    * @throws DBaseException
    */
-  public int[] getDataLengths( ) throws HasNoDBaseFileException, DBaseException
+  public int[] getDataLengths() throws HasNoDBaseFileException, DBaseException
   {
     String[] properties = getProperties();
     int[] retval = new int[properties.length];
 
     for( int i = 0; i < properties.length; i++ )
     {
-      retval[i] = m_dbf.getDataLength( properties[i] );
+      retval[i] = dbf.getDataLength( properties[i] );
     }
 
     return retval;
@@ -606,7 +616,7 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return m_dbf.getDataTypes( fields );
+    return dbf.getDataTypes( fields );
   }
 
   /**
@@ -620,14 +630,14 @@ public class ShapeFile
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    return m_dbf.getRow( rowNo );
+    return dbf.getRow( rowNo );
   }
 
   private int getGeometryType( final Feature feature )
   {
     GM_Object[] g = feature.getGeometryProperties();
 
-    if( (g == null) || (g.length == 0) )
+    if( ( g == null ) || ( g.length == 0 ) )
     {
       return -1;
     }
@@ -672,79 +682,79 @@ public class ShapeFile
 
   /**
    */
-  private void initDBaseFile( final IFeatureType featT ) throws DBaseException
+  private void initDBaseFile( final Feature[] features ) throws DBaseException
   {
     // count regular fields
-    IPropertyType[] ftp = featT.getProperties();
+    FeatureType featT = features[0].getFeatureType();
+    FeatureTypeProperty[] ftp = featT.getProperties();
 
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
-    final List<FieldDescriptor> fieldList = new ArrayList<FieldDescriptor>();
+    final List fieldList = new ArrayList();
     for( int i = 0; i < ftp.length; i++ )
     {
-      final String ftpName = ftp[i].getQName().getLocalPart();
-      int pos = ftpName.lastIndexOf( '.' );
+      int pos = ftp[i].getName().lastIndexOf( '.' );
       if( pos < 0 )
+      {
         pos = -1;
-      final String s = ftpName.substring( pos + 1 );
-      if( !(ftp[i] instanceof IValuePropertyType) )
-      {// TODO: this ssems to be a bug;
       }
-      IValuePropertyType vpt = (IValuePropertyType) ftp[i];
-      Class clazz = vpt.getValueClass();
-      if( clazz == Integer.class )
+      String s = ftp[i].getName().substring( pos + 1 );
+      if( ftp[i].getType().endsWith( "Integer" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 20, (byte) 0 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)20, (byte)0 ) );
       }
-      else if( clazz == Byte.class )
+      else if( ftp[i].getType().endsWith( "Byte" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 4, (byte) 0 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)4, (byte)0 ) );
       }
-      else if( clazz == Character.class )
+      else if( ftp[i].getType().endsWith( "Character" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "C", (byte) 1, (byte) 0 ) );
+        fieldList.add( new FieldDescriptor( s, "C", (byte)1, (byte)0 ) );
       }
-      else if( clazz == Float.class )
+      else if( ftp[i].getType().endsWith( "Float" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
-      else if( clazz == Double.class || clazz == Number.class )
+      else if( ftp[i].getType().endsWith( "Double" ) || ftp[i].getType().endsWith( "Number" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
-      else if( clazz == BigDecimal.class )
+      else if( ftp[i].getType().endsWith( "BigDecimal" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
-      else if( clazz == String.class )
+      else if( ftp[i].getType().equals( "java.lang.String" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "C", (byte) 127, (byte) 0 ) );
+        fieldList.add( new FieldDescriptor( s, "C", (byte)127, (byte)0 ) );
       }
-      else if( clazz == Date.class )
+      else if( ftp[i].getType().endsWith( "Date" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "D", (byte) 12, (byte) 0 ) );
+        fieldList.add( new FieldDescriptor( s, "D", (byte)12, (byte)0 ) );
       }
-      else if( clazz == Long.class )
+      else if( ftp[i].getType().endsWith( "Long" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
+      }
+      else if( ftp[i].getType().endsWith( "Boolean" ) )
+      {
+        fieldList.add( new FieldDescriptor( s, "L", (byte)1, (byte)0 ) );
       }
       else
       {
-        // System.out.println("no db-type:" + ftp[i].getType());
+        //      System.out.println("no db-type:" + ftp[i].getType());
       }
     }
 
     // allocate memory for fielddescriptors
-    final FieldDescriptor[] fieldDesc = fieldList.toArray( new FieldDescriptor[fieldList.size()] );
-    m_dbf = new DBaseFile( m_url, fieldDesc );
+    final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
+    dbf = new DBaseFile( url, fieldDesc );
   }
 
   public void writeShape( final Feature[] features ) throws Exception
   {
     Debug.debugMethodBegin( this, "writeShape" );
 
-    if( features.length ==  0 )
-      throw new Exception( "Can't write an empty shape." );
+    // TODO: check length 0
 
     int nbyte = 0;
     int geotype = -1;
@@ -755,44 +765,46 @@ public class ShapeFile
     SHPEnvelope mbr = null;
     // mbr of the whole shape file
     SHPEnvelope shpmbr = new SHPEnvelope();
-    // FeatureProperty[] pairs = null;
+    //    FeatureProperty[] pairs = null;
 
     // Set the Offset to the end of the fileHeader
     int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
 
-    final IFeatureType featureType = features[0].getFeatureType();
     // initialize the dbasefile associated with the shapefile
-    initDBaseFile( featureType );
+    initDBaseFile( features );
 
     // loop throug the Geometries of the feature collection anf write them
     // to a bytearray
-    final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
       Feature feature = features[i];
-      // pairs = getFeatureProperties( features[i] );
+      //      pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
-      final ArrayList<Object> vec = new ArrayList<Object>();
+      ArrayList vec = new ArrayList();
+      FeatureTypeProperty[] ftp = features[0].getFeatureType().getProperties();
       for( int j = 0; j < ftp.length; j++ )
       {
-        final Object value = feature.getProperty( ftp[j] );
-        if( !(ftp[j] instanceof IValuePropertyType) )
-          continue;
-        final IValuePropertyType ivp = (IValuePropertyType) ftp[j];
-        final Class clazz = ivp.getValueClass();
-        if( clazz == Integer.class || clazz == Byte.class || clazz == Character.class || clazz == Float.class || clazz == Double.class || clazz == Number.class || clazz == Date.class
-            || clazz == Long.class || clazz == String.class )
+        Object value = feature.getProperty( ftp[j].getName() );
+        if( ( ftp[j].getType().endsWith( "Integer" ) ) || ( ftp[j].getType().endsWith( "Byte" ) )
+            || ( ftp[j].getType().endsWith( "Character" ) ) || ( ftp[j].getType().endsWith( "Float" ) )
+            || ( ftp[j].getType().endsWith( "Double" ) ) || ( ftp[j].getType().endsWith( "Number" ) )
+            || ( ftp[j].getType().equals( "java.lang.String" ) )
+            || ( ftp[j].getType().endsWith( "Date" ) || ( ftp[j].getType().endsWith( "Long" ) ) ) )
+        {
           vec.add( value );
-        else if( clazz == BigDecimal.class )
-          vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+        }
+        else if( ftp[j].getType().endsWith( "BigDecimal" ) )
+        {
+          vec.add( new Double( ( (java.math.BigDecimal)value ).doubleValue() ) );
+        }
       }
 
       // write the ArrayList (properties) to the dbase file
       try
       {
-        m_dbf.setRecord( vec );
+        dbf.setRecord( vec );
       }
       catch( DBaseException db )
       {
@@ -808,25 +820,25 @@ public class ShapeFile
         continue;
       }
 
-      if( (typ_ == 0) || (typ_ == 3) )
+      if( ( typ_ == 0 ) || ( typ_ == 3 ) )
       {
-        if( (geotype != 0) && (geotype != 3) )
+        if( ( geotype != 0 ) && ( geotype != 3 ) )
         {
           throw new Exception( "not a homogen featurecollectiom" );
         }
       }
 
-      if( (typ_ == 1) || (typ_ == 4) )
+      if( ( typ_ == 1 ) || ( typ_ == 4 ) )
       {
-        if( (geotype != 1) && (geotype != 4) )
+        if( ( geotype != 1 ) && ( geotype != 4 ) )
         {
           throw new Exception( "not a homogen featurecollectiom" );
         }
       }
 
-      if( (typ_ == 2) || (typ_ == 5) )
+      if( ( typ_ == 2 ) || ( typ_ == 5 ) )
       {
-        if( (geotype != 2) && (geotype != 5) )
+        if( ( geotype != 2 ) && ( geotype != 5 ) )
         {
           throw new Exception( "not a homogen featurecollectiom" );
         }
@@ -836,7 +848,7 @@ public class ShapeFile
       if( geotype == 0 )
       {
         // Geometrie Type = Point
-        GM_Point wks = (GM_Point) getFeatureAsGeometry( features[i] );
+        GM_Point wks = (GM_Point)getFeatureAsGeometry( features[i] );
         SHPPoint shppoint = new SHPPoint( wks.getPosition() );
         nbyte = shppoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -854,7 +866,7 @@ public class ShapeFile
       {
         // Geometrie Type = LineString
         GM_Curve[] wks = new GM_Curve[1];
-        wks[0] = (GM_Curve) getFeatureAsGeometry( features[i] );
+        wks[0] = (GM_Curve)getFeatureAsGeometry( features[i] );
 
         SHPPolyLine shppolyline = new SHPPolyLine( wks );
         nbyte = shppolyline.size();
@@ -873,7 +885,7 @@ public class ShapeFile
       {
         // Geometrie Type = Polygon
         GM_Surface[] wks = new GM_Surface[1];
-        wks[0] = (GM_Surface) getFeatureAsGeometry( features[i] );
+        wks[0] = (GM_Surface)getFeatureAsGeometry( features[i] );
 
         SHPPolygon shppolygon = new SHPPolygon( wks );
         nbyte = shppolygon.size();
@@ -891,7 +903,7 @@ public class ShapeFile
       else if( geotype == 3 )
       {
         // Geometrie Type = MultiPoint
-        GM_MultiPoint wks = (GM_MultiPoint) getFeatureAsGeometry( features[i] );
+        GM_MultiPoint wks = (GM_MultiPoint)getFeatureAsGeometry( features[i] );
         SHPMultiPoint shpmultipoint = new SHPMultiPoint( wks );
         nbyte = shpmultipoint.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -902,7 +914,7 @@ public class ShapeFile
       else if( geotype == 4 )
       {
         // Geometrie Type = MultiLineString
-        GM_MultiCurve wks = (GM_MultiCurve) getFeatureAsGeometry( features[i] );
+        GM_MultiCurve wks = (GM_MultiCurve)getFeatureAsGeometry( features[i] );
         SHPPolyLine shppolyline = new SHPPolyLine( wks.getAllCurves() );
         nbyte = shppolyline.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -919,7 +931,7 @@ public class ShapeFile
       else if( geotype == 5 )
       {
         // Geometrie Type = MultiPolygon
-        GM_MultiSurface wks = (GM_MultiSurface) getFeatureAsGeometry( features[i] );
+        GM_MultiSurface wks = (GM_MultiSurface)getFeatureAsGeometry( features[i] );
         SHPPolygon shppolygon = new SHPPolygon( wks.getAllSurfaces() );
         nbyte = shppolygon.size();
         bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
@@ -941,7 +953,7 @@ public class ShapeFile
       ByteUtils.writeBEInt( bytearray, 0, i );
       ByteUtils.writeBEInt( bytearray, 4, nbyte / 2 );
 
-      // write record (bytearray) including recordheader to the shape file
+      //write record (bytearray) including recordheader to the shape file
       shp.write( bytearray, record, mbr );
 
       // actualise shape file minimum boundary rectangle
@@ -966,22 +978,17 @@ public class ShapeFile
       }
 
       // icrement offset for pointing at the end of the file
-      offset += (nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH);
+      offset += ( nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
 
       bytearray = null;
     }
 
-    m_dbf.writeAllToFile();
+    dbf.writeAllToFile();
 
     // Header schreiben
     shp.writeHeader( offset, shptype, shpmbr );
 
     Debug.debugMethodEnd();
 
-  }
-
-  public IFeatureType getFeatureType( )
-  {
-    return m_dbf.getFeatureType();
   }
 }

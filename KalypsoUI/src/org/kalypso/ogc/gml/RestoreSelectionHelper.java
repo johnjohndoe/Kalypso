@@ -104,8 +104,10 @@ public class RestoreSelectionHelper
       return;
 
     final CommandableWorkspace workspace = getWorkspace( m_key );
+    if( workspace == null ) // REMARK: kommisch dass der Workspace hier null ist nach der Rechnung...
+      return;
 
-    final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( m_oldSelectionState.length );
+    final List easyFeatures = new ArrayList( m_oldSelectionState.length );
     for( int i = 0; i < m_oldSelectionState.length; i++ )
     {
       final String fid = m_oldSelectionState[i];
@@ -116,7 +118,7 @@ public class RestoreSelectionHelper
           easyFeatures.add( new EasyFeatureWrapper( workspace, feature, null, null ) );
       }
     }
-    final EasyFeatureWrapper[] easyArray = easyFeatures
+    final EasyFeatureWrapper[] easyArray = (EasyFeatureWrapper[])easyFeatures
         .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
     final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures( m_selectionManager );

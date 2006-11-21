@@ -86,22 +86,22 @@ public class TemporalCoordinateSystem extends CoordinateSystem
   /**
    * The temporal datum.
    */
-  private final TemporalDatum m_datum;
+  private final TemporalDatum datum;
 
   /**
    * Axis details for time dimension within coordinate system.
    */
-  private final AxisInfo m_axis;
+  private final AxisInfo axis;
 
   /**
    * Units used along the time axis.
    */
-  private final Unit m_unit;
+  private final Unit unit;
 
   /**
    * The epoch, in milliseconds since January 1, 1970, 00:00:00 UTC.
    */
-  private final long m_epoch;
+  private final long epoch;
 
   /**
    * Creates a temporal coordinate system. Datum is UTC, units are days and values are increasing toward future.
@@ -138,10 +138,10 @@ public class TemporalCoordinateSystem extends CoordinateSystem
     ensureNonNull( "unit", unit );
     ensureNonNull( "epoch", epoch );
     ensureNonNull( "axis", axis );
-    m_datum = datum;
-    m_unit = unit;
-    m_epoch = epoch.getTime();
-    m_axis = axis;
+    this.datum = datum;
+    this.unit = unit;
+    this.epoch = epoch.getTime();
+    this.axis = axis;
     ensureTimeUnit( unit );
     checkAxis( datum.getDatumType() );
   }
@@ -164,17 +164,16 @@ public class TemporalCoordinateSystem extends CoordinateSystem
       final AxisInfo axis )
   {
     super( properties );
-    this.m_datum = datum;
-    this.m_unit = unit;
-    this.m_epoch = epoch.getTime();
-    this.m_axis = axis;
+    this.datum = datum;
+    this.unit = unit;
+    this.epoch = epoch.getTime();
+    this.axis = axis;
     // Accept null values.
   }
 
   /**
    * Returns the dimension of this coordinate system, which is 1.
    */
-  @Override
   public final int getDimension()
   {
     return 1;
@@ -183,7 +182,6 @@ public class TemporalCoordinateSystem extends CoordinateSystem
   /**
    * Override {@link CoordinateSystem#getDatum()}.
    */
-  @Override
   final Datum getDatum()
   {
     return getTemporalDatum();
@@ -194,7 +192,7 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    */
   public TemporalDatum getTemporalDatum()
   {
-    return m_datum;
+    return datum;
   }
 
   /**
@@ -202,7 +200,7 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    */
   public Date getEpoch()
   {
-    return new Date( m_epoch );
+    return new Date( epoch );
   }
 
   /**
@@ -212,12 +210,11 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    * @param dimension
    *          Zero based index of axis.
    */
-  @Override
   public AxisInfo getAxis( final int dimension )
   {
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
-      return m_axis;
+      return axis;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -229,12 +226,11 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    * @param dimension
    *          Must be 0.
    */
-  @Override
   public Unit getUnits( final int dimension )
   {
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
-      return m_unit;
+      return unit;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -250,7 +246,6 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    *          The coordinate system (may be <code>null</code>).
    * @return <code>true</code> if both coordinate systems are equivalent.
    */
-  @Override
   public boolean equivalents( final CoordinateSystem cs )
   {
     if( cs == this )
@@ -258,23 +253,23 @@ public class TemporalCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final TemporalCoordinateSystem that = (TemporalCoordinateSystem)cs;
-      return Utilities.equals( this.m_datum, that.m_datum ) && Utilities.equals( this.m_unit, that.m_unit )
-          && Utilities.equals( this.m_axis, that.m_axis );
+      return Utilities.equals( this.datum, that.datum ) && Utilities.equals( this.unit, that.unit )
+          && Utilities.equals( this.axis, that.axis );
     }
     return false;
   }
 
-  @Override /**
+  /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
   {
     buffer.append( ", " );
-    buffer.append( m_datum );
+    buffer.append( datum );
     buffer.append( ", " );
-    addUnit( buffer, m_unit );
+    addUnit( buffer, unit );
     buffer.append( ", " );
-    buffer.append( m_axis );
+    buffer.append( axis );
     return "TEMPORAL_CS";
   }
 }

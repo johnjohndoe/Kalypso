@@ -100,7 +100,6 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * @exception GM_Exception
    *              will be thrown if the submitted isn't the same type as the recieving one.
    */
-  @Override
   public void merge( GM_Aggregate aggregate ) throws GM_Exception
   {
     if( !( aggregate instanceof GM_MultiPrimitive ) )
@@ -126,10 +125,9 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   {
     GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
 
-    return m_aggregate.toArray( gmos );
+    return (GM_Primitive[])m_aggregate.toArray( gmos );
   }
 
-  @Override
   protected void calculateParam()
   {}
 

@@ -3,9 +3,9 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -24,7 +24,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   private final Properties m_propertyMap;
 
-  private final IFeatureType m_featureType;
+  private final FeatureType m_featureType;
 
   private final String m_fromID;
 
@@ -49,7 +49,8 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    *          <li>count</li>
    *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid )
+  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final FeatureType featureType,
+      final String fromID, final String toID, final String handleExisting, final String fid )
   {
     m_list = list;
     m_featureType = featureType;
@@ -75,18 +76,19 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
   {
     final Object fromID = f.getProperty( m_fromID );
 
-    final Feature existingFeature = (Feature) m_idHash.get( fromID );
+    final Feature existingFeature = (Feature)m_idHash.get( fromID );
     final String fid = createID( existingFeature, fromID );
 
     final Feature newFeature;
     if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
-      newFeature = FeatureFactory.createFeature( m_list.getParentFeature(), fid, m_featureType, true );
+      newFeature = FeatureFactory.createDefaultFeature( fid, m_featureType, false );
     else if( "change".equals( m_handleExisting ) )
       newFeature = existingFeature;
     else if( "nothing".equals( m_handleExisting ) )
       return true;
     else
-      throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
+      throw new IllegalArgumentException(
+          "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
 
     try
     {
@@ -113,7 +115,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
     String fidhelp = m_fid;
     fidhelp = fidhelp.replaceAll( "\\Q${fromID}\\E", fromID == null ? "<null>" : fromID.toString() );
-    // fidhelp = fidhelp.replaceAll( "\\Q${toID}\\E" , toID );
+    //    fidhelp = fidhelp.replaceAll( "\\Q${toID}\\E" , toID );
     fidhelp = fidhelp.replaceAll( "\\Q${fID}\\E", oldFid );
     if( fidhelp.indexOf( REPLACE_COUNT ) == -1 )
       fidhelp += REPLACE_COUNT;
@@ -121,7 +123,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     int count = -1;
     while( true )
     {
-      final String replace = count == -1 ? "" : ("" + count);
+      final String replace = count == -1 ? "" : ( "" + count );
       final String fid = fidhelp.replaceAll( "\\Q" + REPLACE_COUNT + "\\E", replace );
 
       if( m_fidHash.get( fid ) == null )

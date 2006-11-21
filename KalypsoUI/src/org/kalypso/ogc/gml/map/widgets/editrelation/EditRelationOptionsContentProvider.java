@@ -1,3 +1,21 @@
+package org.kalypso.ogc.gml.map.widgets.editrelation;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,136 +56,116 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.editrelation;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-/**
- * @author doemming
- */
 public class EditRelationOptionsContentProvider implements ITreeContentProvider
 {
-  private Hashtable<Object, Object[]> m_childCache = new Hashtable<Object, Object[]>();
 
-  private Hashtable<Object, Object> m_parentCache = new Hashtable<Object, Object>();
+  private Hashtable m_childCache = new Hashtable();
 
-  private HashSet<Object> m_checkedElements = new HashSet<Object>();
+  private Hashtable m_parentCache = new Hashtable();
 
-  public EditRelationOptionsContentProvider( )
+  private HashSet m_checkedElements = new HashSet();
+
+  /*
+   * 
+   * @author doemming
+   */
+  public EditRelationOptionsContentProvider()
   {
-    // nothing
+  // nothing
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( final Object parentElement )
+  public Object[] getChildren( Object parentElement )
   {
     if( m_childCache.containsKey( parentElement ) )
-      return m_childCache.get( parentElement );
-    final List<Object> result = new ArrayList<Object>();
+      return (Object[])m_childCache.get( parentElement );
+    final List result = new ArrayList();
     if( parentElement == null )
       return new Object[0];
 
     if( parentElement instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) parentElement;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)parentElement;
       final CommandableWorkspace workspace = featureTheme.getWorkspace();
       if( workspace != null )
         result.add( workspace );
     }
     if( parentElement instanceof GMLWorkspace )
     {
-      final IFeatureType[] featureTypes = ((GMLWorkspace) parentElement).getGMLSchema().getAllFeatureTypes();
+      final FeatureType[] featureTypes = ( (GMLWorkspace)parentElement ).getFeatureTypes();
 
       for( int i = 0; i < featureTypes.length; i++ )
       {
-        IFeatureType ft = featureTypes[i];
-        if( ft.getDefaultGeometryPropertyPosition() > -1 )
+        FeatureType ft = featureTypes[i];
+        if( ft.getDefaultGeometryProperty() != null )
           result.add( ft );
       }
     }
 
     if( parentElement instanceof HeavyRelationType )
     {
-      final HeavyRelationType relation = (HeavyRelationType) parentElement;
-      final IFeatureType destFT = relation.getLink2().getTargetFeatureType();
-
-      final IFeatureType destFT2 = relation.getDestFT(); // where is the
+      final HeavyRelationType relation = (HeavyRelationType)parentElement;
+      final FeatureType destFT = relation.getLink2().getAssociationFeatureType();
+      final FeatureType destFT2 = relation.getDestFT(); // where is the
       // difference ?
-      final IFeatureType associationFeatureType = relation.getLink2().getTargetFeatureType();
-      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
-
+      final FeatureType[] associationFeatureTypes = relation.getLink2().getAssociationFeatureTypes();
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
-          IFeatureType ft = associationFeatureTypes[i];
+          FeatureType ft = associationFeatureTypes[i];
           if( !ft.equals( destFT ) )
-            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation.getBodyFT(), relation.getLink2(), ft ) );
+            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation.getBodyFT(), relation
+                .getLink2(), ft ) );
         }
     }
     else if( parentElement instanceof RelationType )
     {
-      final RelationType relation = (RelationType) parentElement;
-      final IFeatureType destFT = relation.getLink().getTargetFeatureType();
-      final IFeatureType destFT2 = relation.getDestFT();
-      final IFeatureType associationFeatureType = relation.getLink().getTargetFeatureType();
-
-      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
+      final RelationType relation = (RelationType)parentElement;
+      final FeatureType destFT = relation.getLink().getAssociationFeatureType();
+      final FeatureType destFT2 = relation.getDestFT();
+      final FeatureType[] associationFeatureTypes = relation.getLink().getAssociationFeatureTypes();
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
-          IFeatureType ft = associationFeatureTypes[i];
+          FeatureType ft = associationFeatureTypes[i];
           if( !ft.equals( destFT ) )
             result.add( new RelationType( relation.getSrcFT(), relation.getLink(), ft ) );
         }
     }
-    if( parentElement instanceof IFeatureType )
+    if( parentElement instanceof FeatureType )
     {
-      IFeatureType ft1 = (IFeatureType) parentElement;
-      IPropertyType[] properties = ft1.getProperties();
+      FeatureType ft1 = (FeatureType)parentElement;
+      FeatureTypeProperty[] properties = ft1.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
-        IPropertyType property = properties[i];
-        if( property instanceof IRelationType )
+        FeatureTypeProperty property = properties[i];
+        if( property instanceof FeatureAssociationTypeProperty )
         {
-          final IRelationType linkFTP1 = (IRelationType) property;
-          final IFeatureType ft2 = linkFTP1.getTargetFeatureType();
+          FeatureAssociationTypeProperty linkFTP1 = (FeatureAssociationTypeProperty)property;
+          FeatureType ft2 = linkFTP1.getAssociationFeatureType();
           // leight: FT,Prop,FT
           // heavy: FT,Prop,FT,PropFT
           // leight relationship ?
-          if( ft2.getDefaultGeometryPropertyPosition() > -1 )
+          if( ft2.getDefaultGeometryProperty() != null )
             result.add( new RelationType( ft1, linkFTP1, ft2 ) );
           else
           {
             // heavy relationship ?
-            final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
-            final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
+            FeatureType[] ft2s = linkFTP1.getAssociationFeatureTypes();
             for( int j = 0; j < ft2s.length; j++ )
             {
-              final IPropertyType[] properties2 = ft2s[j].getProperties();
+              FeatureTypeProperty[] properties2 = ft2s[j].getProperties();
               for( int l = 0; l < properties2.length; l++ )
               {
-                final IPropertyType property2 = properties2[l];
-                if( property2 instanceof IRelationType )
+                FeatureTypeProperty property2 = properties2[l];
+                if( property2 instanceof FeatureAssociationTypeProperty )
                 {
-                  final IRelationType linkFTP2 = (IRelationType) property2;
-                  final IFeatureType ft3 = linkFTP2.getTargetFeatureType();
-                  if( ft3.getDefaultGeometryPropertyPosition() > -1 )
+                  FeatureAssociationTypeProperty linkFTP2 = (FeatureAssociationTypeProperty)property2;
+                  FeatureType ft3 = linkFTP2.getAssociationFeatureType();
+                  if( ft3.getDefaultGeometryProperty() != null )
                   {
                     // it is a heavy relationship;
                     result.add( new HeavyRelationType( ft1, linkFTP1, ft2s[j], linkFTP2, ft3 ) );
@@ -187,7 +185,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
         m_parentCache.put( array[i], parentElement );
     }
     if( m_childCache.containsKey( parentElement ) )
-      return m_childCache.get( parentElement );
+      return (Object[])m_childCache.get( parentElement );
     return new Object[0];
   }
 
@@ -221,8 +219,9 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
   {
     if( inputElement != null && inputElement instanceof IKalypsoFeatureTheme )
     {
-      IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) inputElement;
-      return new GMLWorkspace[] { featureTheme.getWorkspace() };
+      IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)inputElement;
+      return new GMLWorkspace[]
+      { featureTheme.getWorkspace() };
     }
     return new Object[0];
   }
@@ -230,9 +229,9 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nothing to do
+  // nothing to do
   }
 
   /**
@@ -241,28 +240,38 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    // final CheckboxTreeViewer treeviewer = (CheckboxTreeViewer)viewer;
-    // {
-    // treeviewer.getControl().getDisplay().asyncExec( new Runnable()
-    // {
-    // public void run()
-    // {
-    // if( treeviewer != null && !treeviewer.getControl().isDisposed() )
-    // {
-    // treeviewer.expandAll();
-    // treeviewer.setCheckedElements( getCheckedElements() );
-    // }
-    // }
-    // } );
-    // }
+  //    final CheckboxTreeViewer treeviewer = (CheckboxTreeViewer)viewer;
+  //    {
+  //      treeviewer.getControl().getDisplay().asyncExec( new Runnable()
+  //      {
+  //        public void run()
+  //        {
+  //          if( treeviewer != null && !treeviewer.getControl().isDisposed() )
+  //          {
+  //            treeviewer.expandAll();
+  //            treeviewer.setCheckedElements( getCheckedElements() );
+  //          }
+  //        }
+  //      } );
+  //    }
   }
 
-  public boolean isChecked( final Object element )
+  public void accept( Object element, ITreeVisitor visitor )
+  {
+    if( visitor.visit( element, this ) )
+    {
+      Object[] children = getChildren( element );
+      for( int i = 0; i < children.length; i++ )
+        accept( children[i], visitor );
+    }
+  }
+
+  public boolean isChecked( Object element )
   {
     return m_checkedElements.contains( element );
   }
 
-  public void setChecked( final Object element, final boolean checked )
+  public void setChecked( Object element, boolean checked )
   {
     if( checked )
       m_checkedElements.add( element );
@@ -270,20 +279,20 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       m_checkedElements.remove( element );
   }
 
-  Object[] getCheckedElements( )
+  Object[] getCheckedElements()
   {
     return m_checkedElements.toArray();
   }
 
-  public org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType[] getCheckedRelations( )
+  public IRelationType[] getCheckedRelations()
   {
-    final List<org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType> result = new ArrayList<org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType>();
+    final List result = new ArrayList();
     for( Iterator iter = m_checkedElements.iterator(); iter.hasNext(); )
     {
       Object element = iter.next();
-      if( element instanceof org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType )
-        result.add( (org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType) element );
+      if( element instanceof IRelationType )
+        result.add( element );
     }
-    return result.toArray( new org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType[result.size()] );
+    return (IRelationType[])result.toArray( new IRelationType[result.size()] );
   }
 }

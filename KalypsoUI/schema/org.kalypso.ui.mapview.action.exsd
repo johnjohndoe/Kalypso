@@ -40,11 +40,6 @@
    </element>
 
    <element name="MapviewAction">
-      <annotation>
-         <appInfo>
-            <meta.element icon="icon"/>
-         </appInfo>
-      </annotation>
       <complexType>
          <attribute name="title" type="string" use="required">
             <annotation>

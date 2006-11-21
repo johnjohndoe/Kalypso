@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IEncodedStorage;
@@ -25,7 +26,6 @@ import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
@@ -35,32 +35,29 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.actions.FeatureActionUtilities;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author Küpferle
  */
 public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
-  public static final String ID = "org.kalypso.ui.editor.GmlEditor";
+  protected GmlTreeView m_viewer = null;
 
-  private GmlTreeView m_viewer = null;
-
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     if( m_viewer != null )
       m_viewer.dispose();
-
-    // unregister site selection provieder
+    //unregister site selection provieder
     getSite().setSelectionProvider( null );
     super.dispose();
   }
 
-  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     ByteArrayInputStream bis = null;
@@ -96,13 +93,13 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     }
   }
 
-  public GmlTreeView getTreeView( )
+  public GmlTreeView getTreeView()
   {
     return m_viewer;
   }
 
-  @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception,
+      CoreException
   {
     monitor.beginTask( "Vorlage wird geladen", 1000 );
     try
@@ -111,7 +108,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 
       final Reader r;
       if( storage instanceof IEncodedStorage )
-        r = new InputStreamReader( storage.getContents(), ((IEncodedStorage) storage).getCharset() );
+        r = new InputStreamReader( storage.getContents(), ( (IEncodedStorage)storage ).getCharset() );
       else
         r = new InputStreamReader( storage.getContents() );
 
@@ -120,18 +117,19 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+
+        public void run()
         {
           try
           {
-            final GmlTreeView treeView = getTreeView();
-            if( treeView != null )
-              treeView.loadInput( r, context, monitor );
+            if( m_viewer != null )
+              m_viewer.loadInput( r, context, monitor );
           }
-          catch( final CoreException e )
+          catch( CoreException e )
           {
             e.printStackTrace();
           }
+
         }
       } );
     }
@@ -159,72 +157,64 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     }
   }
 
-  @Override
   public synchronized void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
     m_viewer = new GmlTreeView( parent, KalypsoCorePlugin.getDefault().getSelectionManager() );
-    final GridData layoutData = new GridData();
-    layoutData.grabExcessHorizontalSpace = true;
-    layoutData.grabExcessVerticalSpace = true;
-    layoutData.horizontalAlignment = GridData.FILL;
-    layoutData.verticalAlignment = GridData.FILL;
-    m_viewer.getTreeViewer().getControl().setLayoutData( layoutData );
-    
-    // register as site selection provider
+    //register as site selection provider
     getSite().setSelectionProvider( m_viewer );
-
     createContextMenu();
   }
 
-  private void createContextMenu( )
+  /**
+   *  
+   */
+  private void createContextMenu()
   {
-    // create context menu for editor
+    //  create context menu for editor
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
-      public void menuAboutToShow( final IMenuManager manager )
+
+      public void menuAboutToShow( IMenuManager manager )
       {
-        handleMenuAboutToShow( manager );
+        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( new Separator() );
+        IStructuredSelection selection = (IStructuredSelection)m_viewer.getTreeViewer().getSelection();
+        Object firstElement = selection.getFirstElement();
+        CommandableWorkspace workspace = m_viewer.getWorkspace();
+        if( selection.size() == 1 && firstElement instanceof FeatureAssociationTypeElement )
+        {
+          Feature parentFeature = ( (FeatureAssociationTypeElement)firstElement ).getParentFeature();
+          FeatureType featureType = parentFeature.getFeatureType();
+          FeatureAssociationTypeProperty fatp = ( (FeatureAssociationTypeElement)firstElement )
+              .getAssociationTypeProperty();
+          if( featureType.isListProperty( fatp.getName() ) )
+          {
+            List list = (List)parentFeature.getProperty( fatp.getName() );
+            if( list.size() < featureType.getMaxOccurs( fatp.getName() ) )
+              menuManager.add( new AddEmptyLinkAction( "Feature neu", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE, fatp,
+                  parentFeature, workspace, KalypsoCorePlugin.getDefault().getSelectionManager() ) );
+          }
+        }
       }
     } );
-
-    final TreeViewer treeViewer = m_viewer.getTreeViewer();
-    final Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
+    TreeViewer treeViewer = m_viewer.getTreeViewer();
+    Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
     getSite().registerContextMenu( menuManager, m_viewer );
     treeViewer.getControl().setMenu( menu );
   }
 
   /**
-   * Add some special actions to the menuManager, dependend on the current selection.
-   */
-  public void handleMenuAboutToShow( final IMenuManager manager )
-  {
-    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
-    final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
-
-    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( selection, selectionManager );
-    manager.add( newMenuManager );
-
-    // add additions seperator: if not, eclipse whines
-    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-  }
-
-  /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IPostSelectionProvider.class )
       return m_viewer;
-
-    if( adapter == ISelectionProvider.class )
-      return m_viewer;
-
-    if( adapter == ModellEventProvider.class )
+    else if( adapter == ISelectionProvider.class )
       return m_viewer;
 
     return super.getAdapter( adapter );
@@ -233,18 +223,9 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
     m_viewer.getTreeViewer().getControl().setFocus();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
-   */
-  @Override
-  public boolean isDirty( )
-  {
-    return super.isDirty() || m_viewer.isDirty();
-  }
 }

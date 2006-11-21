@@ -41,9 +41,6 @@
 package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
-import java.util.List;
-
-import javax.xml.bind.JAXBElement;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -60,8 +57,7 @@ public class NOperationFilterCreator implements IFilterCreator
   {
     final NOperationFilterType filter = (NOperationFilterType)aft;
 
-    final List<JAXBElement< ? extends AbstractFilterType>> filters = filter.getFilter();
-    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filters, baseObs, context );
+    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filter.getFilter(), baseObs, context );
 
     final NOperationFilter nOperationFilter = new NOperationFilter( filter );
     nOperationFilter.initFilter( innerObs, innerObs[0], context );

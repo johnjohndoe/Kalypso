@@ -41,7 +41,9 @@
 package org.kalypso.ui;
 
 /**
- * Constants for the Kalypso UI. Not intended to be implemented nor extended.
+ * Constants for the Kalypso UI.
+ * 
+ * Not intended to be implemented nor extended.
  * 
  * @author schlienger
  */
@@ -60,11 +62,9 @@ public interface IKalypsoUIConstants
 
   public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
-  /**
-   * Constant for system property intended to be defined in config.ini.
-   * <p>
-   * if true, the pool asks to save released objects if they are dirty.
-   * </p>
-   */
-  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save";
+  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd) */
+  public static final String PL_IMPORT = "dataimportwizard";
+
+  /** Constant for all Kalypso Calculation Services (Extenstion point schema org.kalypso.services.calculation.exsd) */
+  public static final String PL_CALCULATION_SERVICE = "calculationService";
 }

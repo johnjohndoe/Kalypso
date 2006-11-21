@@ -42,9 +42,9 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
+import org.kalypsodeegree.model.feature.Annotation;
 
 public final class ColumnAction extends Action
 {
@@ -59,7 +59,7 @@ public final class ColumnAction extends Action
   private final String m_format;
 
   public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final String propertyName,
-      final IAnnotation annotation )
+      final Annotation annotation )
   {
     super( propertyName );
 
@@ -80,8 +80,7 @@ public final class ColumnAction extends Action
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyName,
         m_alignment, m_format, isChecked() );

@@ -48,14 +48,14 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
+import org.kalypso.zml.ObservationType;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
@@ -64,13 +64,17 @@ import org.kalypso.zml.Observation;
  */
 public class ZmlLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver = new UrlResolver();
+  private final UrlResolver m_urlResolver;
+
+  public ZmlLoader()
+  {
+    m_urlResolver = new UrlResolver();
+  }
 
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected Object loadIntern( final String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     try
@@ -103,7 +107,6 @@ public class ZmlLoader extends AbstractLoader
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
    *      java.lang.Object)
    */
-  @Override
   public void save( final String source, URL context, IProgressMonitor monitor, Object data ) throws LoaderException
   {
     try
@@ -118,12 +121,11 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( "Datei konnte nicht gefunden werden: " + url );
 
-      final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
+      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data, null );
 
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper()
       {
-        @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           final Marshaller marshaller = ZmlFactory.getMarshaller();
@@ -147,7 +149,7 @@ public class ZmlLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "ZML";
   }

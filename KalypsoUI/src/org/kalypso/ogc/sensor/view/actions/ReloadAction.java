@@ -47,8 +47,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.ogc.sensor.cache.ObservationCache;
+import org.eclipse.ui.internal.Workbench;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
@@ -72,7 +72,6 @@ public class ReloadAction extends AbstractObservationChooserAction implements IS
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
@@ -81,7 +80,7 @@ public class ReloadAction extends AbstractObservationChooserAction implements IS
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
         monitor.beginTask( "Ansicht aktualisieren", 2 );
 
@@ -112,7 +111,7 @@ public class ReloadAction extends AbstractObservationChooserAction implements IS
 
     try
     {
-      PlatformUI.getWorkbench().getProgressService().busyCursorWhile( runnable );
+      Workbench.getInstance().getProgressService().busyCursorWhile( runnable );
     }
     catch( final InvocationTargetException e )
     {

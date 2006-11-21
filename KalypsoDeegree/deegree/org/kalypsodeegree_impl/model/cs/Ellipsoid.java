@@ -486,7 +486,7 @@ public class Ellipsoid extends Info
      */
     public CS_LinearUnit getAxisUnit()
     {
-      return (CS_LinearUnit)m_adapters.export( Ellipsoid.this.getAxisUnit() );
+      return (CS_LinearUnit)adapters.export( Ellipsoid.this.getAxisUnit() );
     }
   }
 }

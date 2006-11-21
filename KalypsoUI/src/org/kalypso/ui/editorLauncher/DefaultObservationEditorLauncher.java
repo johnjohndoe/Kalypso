@@ -85,6 +85,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+
     return editorRegistry.getDefaultEditor( getFilename() );
   }
 

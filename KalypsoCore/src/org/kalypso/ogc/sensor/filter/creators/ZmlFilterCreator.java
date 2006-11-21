@@ -49,7 +49,6 @@ import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
-import org.w3._1999.xlinkext.SimpleLinkType;
 
 /**
  * ZmlFilterCreator
@@ -67,8 +66,7 @@ public final class ZmlFilterCreator implements IFilterCreator
     final ZmlFilterType ft = (ZmlFilterType)aft;
 
     final ZmlFilter filter = new ZmlFilter();
-    final SimpleLinkType zml = ft.getZml();
-    filter.initFilter( zml.getHref(), obs, context );
+    filter.initFilter( ft.getZml().getHref(), obs, context );
 
     return filter;
   }

@@ -37,12 +37,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureRemoveActionDelegate
@@ -63,14 +64,16 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       return;
 
     final Feature focusedFeature = m_selection.getFocusedFeature();
-    final IPropertyType focusedProperty = m_selection.getFocusedProperty();
+    final String focusedProperty = m_selection.getFocusedProperty();
+    final FeatureTypeProperty focusedFTP = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
-    if( focusedProperty != null )
+    if( focusedFTP != null )
     {
       final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
 
       final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-      final IPropertyType[] ftpToCopy = new IPropertyType[] { focusedProperty };
+      final FeatureTypeProperty[] ftpToCopy = new FeatureTypeProperty[]
+      { focusedFTP };
       final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, focusedFeature, ftpToCopy, fes );
       try
       {
@@ -98,35 +101,27 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
   {
     action.setEnabled( false );
     m_selection = null;
-    if( selection instanceof IFeatureSelection )
+    final String text = action.getText();
+    String newText = text == null ? "" : text.replaceAll( " \\(.*\\)", "" );
+    final String lang = KalypsoGisPlugin.getDefault().getLang();
+    if( selection instanceof IFeatureSelection
+        && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection)selection ) > 0 )
     {
-      final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
-      if( featureCount > 0 )
+      m_selection = (IFeatureSelection)selection;
+      final Feature focusedFeature = m_selection.getFocusedFeature();
+
+      if( focusedFeature != null )
       {
-        m_selection = (IFeatureSelection) selection;
-        final Feature focusedFeature = m_selection.getFocusedFeature();
+        final String focusedProperty = m_selection.getFocusedProperty();
+        final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
-        if( focusedFeature != null )
+        if( ftp != null && m_selection.size() >= 2 )
         {
-          final IPropertyType focusedProperty = m_selection.getFocusedProperty();
-
-          if( focusedProperty != null && m_selection.size() >= 2 )
-          {
-            action.setEnabled( true );
-            addFocusDescription( action, focusedFeature, focusedProperty );
-          }
+          action.setEnabled( true );
+          newText += " (" + ftp.getAnnotation( lang ).getLabel() + ")";
         }
       }
     }
-  }
-
-  private void addFocusDescription( final IAction action, final Feature focusedFeature, final IPropertyType focusedProperty )
-  {
-    final String text = action.getText();
-    if( text != null )
-    {
-      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + focusedFeature.getProperty( focusedProperty ) + ")";
-      action.setText( newText );
-    }
+    action.setText( newText );
   }
 }

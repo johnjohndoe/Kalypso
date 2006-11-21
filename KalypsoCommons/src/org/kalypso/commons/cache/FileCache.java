@@ -7,12 +7,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -21,11 +19,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.serializer.ISerializer;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
  * FileCache is an object cache using files and a custom serializing mechnismus. The convention is to always use
@@ -34,20 +28,20 @@ import org.kalypso.contribs.java.io.StreamUtilities;
  * 
  * @author schlienger
  */
-public class FileCache<K, V>
+public class FileCache
 {
   private final static String INDEX_FILE = ".filecache";
 
-  private final Comparator< ? super K> m_kc;
+  private final Comparator m_kc;
 
-  private final ISerializer<V> m_ser;
+  private final ISerializer m_ser;
 
   private final File m_directory;
 
   /** maps the keys to files */
-  private final Map<K, File> m_index;
+  private final Map m_index;
 
-  private final IKeyFactory<K> m_keyFactory;
+  private final IKeyFactory m_keyFactory;
 
   /**
    * Constructor
@@ -61,7 +55,7 @@ public class FileCache<K, V>
    * @param directory
    *          location of the index file and of all other files used for caching
    */
-  public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer<V> ser, final File directory )
+  public FileCache( final IKeyFactory kFact, final Comparator kc, final ISerializer ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
       throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
@@ -71,20 +65,19 @@ public class FileCache<K, V>
     m_ser = ser;
     m_directory = directory;
 
-    m_index = new TreeMap<K, File>( m_kc );
+    m_index = new TreeMap( m_kc );
 
     readIndexFile();
   }
 
-  @Override
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     m_index.clear();
 
     super.finalize();
   }
 
-  private final void readIndexFile( )
+  private final void readIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
     if( !indexFile.exists() )
@@ -104,7 +97,7 @@ public class FileCache<K, V>
           final String keySpec = items[0];
           final String fileName = items[1];
 
-          final K key = m_keyFactory.createKey( keySpec );
+          final Object key = m_keyFactory.createKey( keySpec );
           final File file = new File( m_directory, fileName );
 
           m_index.put( key, file );
@@ -124,7 +117,7 @@ public class FileCache<K, V>
     }
   }
 
-  private void writeIndexFile( )
+  private void writeIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
 
@@ -133,11 +126,11 @@ public class FileCache<K, V>
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( indexFile ) ) );
 
-      for( final Iterator<Entry<K, File>> it = m_index.entrySet().iterator(); it.hasNext(); )
+      for( final Iterator it = m_index.entrySet().iterator(); it.hasNext(); )
       {
-        final Map.Entry<K, File> entry = it.next();
+        final Map.Entry entry = (Entry)it.next();
         final String keySpec = m_keyFactory.toString( entry.getKey() );
-        final String fileName = entry.getValue().getName();
+        final String fileName = ( (File)entry.getValue() ).getName();
 
         writer.write( keySpec );
         writer.write( ";" );
@@ -156,7 +149,7 @@ public class FileCache<K, V>
     }
   }
 
-  public void addObject( final K key, final V value )
+  public void addObject( final Object key, final Object object )
   {
     final File file;
     OutputStream os = null;
@@ -164,13 +157,13 @@ public class FileCache<K, V>
     try
     {
       if( m_index.containsKey( key ) )
-        file = m_index.get( key );
+        file = (File)m_index.get( key );
       else
         file = File.createTempFile( "cache", ".item", m_directory );
 
       os = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      m_ser.write( value, os );
+      m_ser.write( object, os );
 
       m_index.put( key, file );
 
@@ -186,42 +179,9 @@ public class FileCache<K, V>
     }
   }
 
-  /**
-   * Directly adds a file to this file cache. The must must be readable by the serializer. The file is copied into the
-   * cache.
-   */
-  public void addFile( final K key, final File fileToAdd ) throws IOException
+  public Object getObject( final Object key )
   {
-    OutputStream os = null;
-    InputStream is = null;
-
-    try
-    {
-      final File file;
-      if( m_index.containsKey( key ) )
-        file = m_index.get( key );
-      else
-        file = File.createTempFile( "cache", ".item", m_directory );
-
-      os = new BufferedOutputStream( new FileOutputStream( file ) );
-      is = new BufferedInputStream( new FileInputStream( fileToAdd ) );
-
-      StreamUtilities.streamCopy( is, os );
-
-      m_index.put( key, file );
-
-      writeIndexFile();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( os );
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  public V getObject( final K key ) throws InvocationTargetException
-  {
-    final File file = m_index.get( key );
+    final File file = (File)m_index.get( key );
     if( file == null )
       return null;
 
@@ -232,20 +192,10 @@ public class FileCache<K, V>
 
       return m_ser.read( ins );
     }
-    catch( final InvocationTargetException e )
+    catch( final Exception e )
     {
-      // if something goes wrong
-      // delete this entry from the cache
-      remove( key );
+      e.printStackTrace();
 
-      // this must be handled outside
-      throw e;
-    }
-    catch( final IOException e )
-    {
-      PluginUtilities.logToPlugin( KalypsoCommonsPlugin.getDefault(), IStatus.WARNING, "Unable to read cache file, although it should be there, returning null.", e );
-
-      // element was not yet in cahce
       return null;
     }
     finally
@@ -254,16 +204,16 @@ public class FileCache<K, V>
     }
   }
 
-  public int size( )
+  public int size()
   {
     return m_index.size();
   }
 
-  public void remove( final K key )
+  public void remove( final Object key )
   {
     if( m_index.containsKey( key ) )
     {
-      final File file = m_index.get( key );
+      final File file = (File)m_index.get( key );
       file.delete();
 
       m_index.remove( key );
@@ -272,10 +222,13 @@ public class FileCache<K, V>
     }
   }
 
-  public void clear( )
+  public void clear()
   {
-    for( File file : m_index.values() )
+    for( final Iterator it = m_index.values().iterator(); it.hasNext(); )
+    {
+      final File file = (File)it.next();
       file.delete();
+    }
 
     final File indexFile = new File( m_directory, INDEX_FILE );
     indexFile.delete();
@@ -292,19 +245,11 @@ public class FileCache<K, V>
    * @param key
    * @return null if not found
    */
-  @SuppressWarnings("unchecked")
-  public K getRealKey( final K key )
+  public Object getRealKey( final Object key )
   {
     if( m_index.containsKey( key ) )
     {
-      final Class< ? > componentType;
-      if( key.getClass().isArray() )
-        componentType = key.getClass().getComponentType();
-      else
-        componentType = key.getClass();
-      final K[] keys = m_index.keySet().toArray( (K[]) java.lang.reflect.Array.newInstance( componentType, m_index.size() ) );
-      // final K[] keys = m_index.keySet().toArray( (K[])java.lang.reflect.Array
-      // .newInstance(K, m_index.size()) );
+      final Object[] keys = m_index.keySet().toArray();
       final int ix = Arrays.binarySearch( keys, key, m_kc );
       return keys[ix];
     }

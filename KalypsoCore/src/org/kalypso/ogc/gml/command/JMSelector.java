@@ -44,16 +44,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -66,40 +64,32 @@ public class JMSelector
 {
   /**
    * // selects all features (display elements) that are located within the submitted bounding box. // GMLGeometry
-   * gmlGeometry=GMLFactory.createGMLGeometry(bbox); //Operation operation=new
-   * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new ComplexFilter(operation);
+   * gmlGeometry=GMLFactory.createGMLGeometry(bbox);
+   * 
+   * //Operation operation=new SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new
+   * ComplexFilter(operation);
    */
-  public List<Object> select( final GM_Envelope env, final JMSpatialIndex<Object> list, final boolean selectWithinBoxStatus )
+  public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus )
   {
     try
     {
-      final List<Object> testFE = new ArrayList<Object>();
+      final List testFE = new ArrayList();
 
-      final List<Object> features = list == null ? new ArrayList<Object>() : list.query( env, new ArrayList<Object>() );
+      final List features = list == null ? new ArrayList() : list.query( env, new ArrayList() );
       final Iterator containerIterator = features.iterator();
 
       while( containerIterator.hasNext() )
       {
-        final Object fe = containerIterator.next();
+        final Feature fe = (Feature)containerIterator.next();
 
-        final Feature feature;
-        if( fe instanceof Feature )
-          feature = (Feature) fe;
-        else if( fe instanceof EasyFeatureWrapper )
-          feature = ((EasyFeatureWrapper) fe).getFeature();
-        else
-          continue;
+        final GM_Object defaultGeometryProperty = fe.getDefaultGeometryProperty();
+        final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-        final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
-        if( defaultGeometryProperty != null )
-        {
-          final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
+        final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
-          final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
-
-          if( (selectWithinBoxStatus && bbox.contains( defaultGeometryProperty )) || (!selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty )) )
-            testFE.add( fe );
-        }
+        if( ( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) )
+            || ( !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) ) )
+          testFE.add( fe );
       }
 
       return testFE;
@@ -109,33 +99,26 @@ public class JMSelector
       e.printStackTrace();
     }
 
-    return new ArrayList<Object>();
+    return new ArrayList();
   }
 
   /**
    * selects all features that intersects the submitted point
    */
-  public List<Object> select( final GM_Position position, final JMSpatialIndex<Object> list )
+  public List select( final GM_Position position, final FeatureList list )
   {
-    final List<Object> resultList = new ArrayList<Object>();
-    final List<Object> testFe = new ArrayList<Object>();
+    final List resultList = new ArrayList();
+    final List testFe = new ArrayList();
 
-    final List<Object> features = list.query( position, new ArrayList<Object>() );
-    for( Object object : features )
+    final List features = list.query( position, new ArrayList() );
+    for( final Iterator containerIterator = features.iterator(); containerIterator.hasNext(); )
     {
-      final Feature feature;
-      if( object instanceof Feature )
-        feature = (Feature) object;
-      else if( object instanceof EasyFeatureWrapper )
-        feature = ((EasyFeatureWrapper) object).getFeature();
-      else
-        continue;
+      final Feature feature = (Feature)containerIterator.next();
 
-      
       try
       {
         if( feature.getDefaultGeometryProperty().contains( position ) )
-          testFe.add( object );
+          testFe.add( feature );
       }
       catch( Exception err )
       {
@@ -155,35 +138,29 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle described by the position and the
    * radius.
    */
-  public List<Object> select( final GM_Position pos, double r, final JMSpatialIndex<Object> list, boolean withinStatus )
+  public List select( final GM_Position pos, double r, final FeatureList list, boolean withinStatus )
   {
-    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos.getY() + r );
-    final List<Object> resultDE = select( env, list, withinStatus );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
+        .getY()
+        + r );
+    final List resultDE = select( env, list, withinStatus );
 
     return resultDE;
   }
 
-  public Object selectNearest( GM_Point pos, final double r, final JMSpatialIndex<Object> list, final boolean withinStatus )
+  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list, final boolean withinStatus )
   {
-    Object result = null;
+    Feature result = null;
     double dist = 0;
     final List listFE = select( pos.getPosition(), r, list, withinStatus );
     for( int i = 0; i < listFE.size(); i++ )
     {
-      final Object fe = listFE.get( i );
+      final Feature fe = (Feature)listFE.get( i );
 
-      final Feature feature;
-      if( fe instanceof Feature )
-        feature = (Feature) fe;
-      else if( fe instanceof EasyFeatureWrapper )
-        feature = ((EasyFeatureWrapper) fe).getFeature();
-      else
-        continue;
-      
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
       // weil deegree die distance nicht implementiert hat!
-      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+      final GM_Object defaultGeometryProperty = fe.getDefaultGeometryProperty();
       double distance = defaultGeometryProperty.distance( pos );
       // some geometries must be prefered, otherwise it is not possible to
       // select a point inside a polygon as the polygone is always more near
@@ -198,40 +175,5 @@ public class JMSelector
       }
     }
     return result;
-  }
-
-  public GM_Position selectNearestHandel( GM_Object geom, GM_Position pos, double snapRadius )
-  {
-    GM_Position[] positions = null;
-    try
-    {
-      if( geom instanceof GM_Surface )
-      {
-        GM_Surface surface = (GM_Surface) geom;
-        positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
-      }
-      else if( geom instanceof GM_Curve )
-      {
-        GM_Curve curve = (GM_Curve) geom;
-        positions = curve.getAsLineString().getPositions();
-      }
-      else if( geom instanceof GM_Point )
-      {
-        GM_Point point = (GM_Point) geom;
-        positions = new GM_Position[] { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
-      }
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-      // do nothing else
-    }
-    for( int i = 0; i < positions.length; i++ )
-    {
-      GM_Position position = positions[i];
-      if( position.getDistance( pos ) <= snapRadius )
-        return position;
-    }
-    return null;
   }
 }

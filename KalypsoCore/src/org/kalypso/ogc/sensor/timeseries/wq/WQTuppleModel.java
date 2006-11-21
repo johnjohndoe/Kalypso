@@ -80,12 +80,16 @@ public class WQTuppleModel extends AbstractTuppleModel
   private final IAxis m_destStatusAxis;
 
   /** backs the generated values for the dest axis */
-  private final Map<Integer, Number> m_values = new HashMap<Integer, Number>();
+  private final Map m_values = new HashMap();
 
   /** backs the stati for the dest status axis */
-  private final Map<Integer, Number> m_stati = new HashMap<Integer, Number>();
+  private final Map m_stati = new HashMap();
 
   private final IWQConverter m_converter;
+
+  private final int m_destAxisPos;
+
+  private final int m_destStatusAxisPos;
 
   /**
    * Creates a <code>WQTuppleModel</code> that can generate either W or Q on the fly. It needs an existing model from
@@ -105,14 +109,25 @@ public class WQTuppleModel extends AbstractTuppleModel
    *          destination axis for which values are computed
    * @param destStatusAxis
    *          status axis for the destAxis (destination axis)
+   * @param destStatusAxisPos
+   *          position of the axis in the array
+   * @param destAxisPos
+   *          position of the axis in the array
    */
-  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
+  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis,
+      final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter,
+      int destAxisPos, int destStatusAxisPos )
   {
     super( axes );
 
     if( converter == null )
       throw new IllegalArgumentException( "WQ-Converter darf nicht null sein" );
 
+    m_destAxisPos = destAxisPos;
+    m_destStatusAxisPos = destStatusAxisPos;
+    mapAxisToPos( destAxis, destAxisPos );
+    mapAxisToPos( destStatusAxis, destStatusAxisPos );
+    
     m_model = model;
     m_converter = converter;
 
@@ -126,7 +141,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( ) throws SensorException
+  public int getCount() throws SensorException
   {
     return m_model.getCount();
   }
@@ -142,7 +157,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     {
       final Integer objIndex = new Integer( index );
 
-      final Number number = (Number) m_model.getElement( objIndex.intValue(), m_srcAxis );
+      final Number number = (Number)m_model.getElement( objIndex.intValue(), m_srcAxis );
 
       if( !m_values.containsKey( objIndex ) )
       {
@@ -165,7 +180,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     Double value = null;
     Integer status = null;
     final IAxis axis = m_destAxis;
-    final Date d = (Date) m_model.getElement( objIndex.intValue(), m_dateAxis );
+    final Date d = (Date)m_model.getElement( objIndex.intValue(), m_dateAxis );
 
     if( number != null )
     {
@@ -188,14 +203,15 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        // Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
+        //Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_DERIVATION_ERROR;
       }
     }
 
-    return new Number[] { value, status };
+    return new Number[]
+    { value, status };
   }
 
   /**
@@ -208,7 +224,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     m_stati.remove( objIndex );
     if( axis.equals( m_destAxis ) )
     {
-      final Date d = (Date) m_model.getElement( index, m_dateAxis );
+      final Date d = (Date)m_model.getElement( index, m_dateAxis );
 
       Double value = null;
       Integer status = null;
@@ -216,12 +232,12 @@ public class WQTuppleModel extends AbstractTuppleModel
       {
         if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
         {
-          final double w = ((Number) element).doubleValue();
+          final double w = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeQ( d, w ) );
         }
         else
         {
-          final double q = ((Number) element).doubleValue();
+          final double q = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
         }
 
@@ -229,7 +245,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        // Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
+        //Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_CHECK;
@@ -239,10 +255,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       if( m_srcStatusAxis != null )
         m_model.setElement( index, status, m_srcStatusAxis );
     }
-    // TODO: besser wäre eigentlich equals, aber das klappt bei status achsen nicht
-    else if( axis == m_destStatusAxis )
+    // TODO: ich glaube Gernot hatte geschrieben:
+    // "besser wäre eigentlich equals, aber das klappt bei status achsen nicht" und hatte == statt equals() benutzt. Ich
+    // bin der Meinung es sollte doch mit equals() klappen.
+    else if( axis.equals( m_destStatusAxis ) )
     {
-      // maybe just ignore??
+      // einfach ignorieren
+
+      // Alte Kommentare:
       // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
       // man versucht, die destStatusAxis zu beschreiben
       // Was soll man tun?
@@ -265,27 +285,27 @@ public class WQTuppleModel extends AbstractTuppleModel
     return m_model.indexOf( element, axis );
   }
 
-  public IAxis getDestStatusAxis( )
+  public IAxis getDestStatusAxis()
   {
     return m_destStatusAxis;
   }
 
-  public IAxis getDestAxis( )
+  public IAxis getDestAxis()
   {
     return m_destAxis;
   }
 
-  public IAxis getSrcAxis( )
+  public IAxis getSrcAxis()
   {
     return m_srcAxis;
   }
 
-  public IAxis getSrcStatusAxis( )
+  public IAxis getSrcStatusAxis()
   {
     return m_srcStatusAxis;
   }
 
-  public IAxis getDateAxis( )
+  public IAxis getDateAxis()
   {
     return m_dateAxis;
   }
@@ -314,7 +334,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     return stm;
   }
 
-  public IWQConverter getConverter( )
+  public IWQConverter getConverter()
   {
     return m_converter;
   }
@@ -322,9 +342,18 @@ public class WQTuppleModel extends AbstractTuppleModel
   /**
    * @return the base model
    */
-  public ITuppleModel getBaseModel( )
+  public ITuppleModel getBaseModel()
   {
     return m_model;
   }
 
+  public int getDestAxisPos()
+  {
+    return m_destAxisPos;
+  }
+  
+  public int getDestStatusAxisPos()
+  {
+    return m_destStatusAxisPos;
+  }
 }

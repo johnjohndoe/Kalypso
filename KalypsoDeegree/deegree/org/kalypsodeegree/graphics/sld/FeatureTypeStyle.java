@@ -60,10 +60,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
-import javax.xml.namespace.QName;
-
-import org.kalypsodeegree.xml.Marshallable;
-
 /**
  * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer). This element may
  * also be externally re-used outside of the scope of WMSes and layers.
@@ -79,7 +75,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface FeatureTypeStyle extends  Marshallable
+public interface FeatureTypeStyle
 {
 
   /**
@@ -88,7 +84,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return name
    */
-  String getName( );
+  String getName();
 
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
@@ -104,7 +100,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return the title of the FeatureTypeStyle
    */
-  String getTitle( );
+  String getTitle();
 
   /**
    * sets the <Title>
@@ -119,7 +115,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return an abstract of the FeatureTypeStyle
    */
-  String getAbstract( );
+  String getAbstract();
 
   /**
    * human-readable information about the style
@@ -134,7 +130,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return the name of the FeatureTypeStyle as String
    */
-  QName getFeatureTypeName( );
+  String getFeatureTypeName();
 
   /**
    * sets the name of the affected feature type
@@ -142,7 +138,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * @param featureTypeName
    *          the name of the FeatureTypeStyle
    */
-  void setFeatureTypeName( QName featureTypeQName );
+  void setFeatureTypeName( String featureTypeName );
 
   /**
    * The SemanticTypeIdentifier is experimental and is intended to be used to identify what the feature style is
@@ -154,7 +150,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
-  String[] getSemanticTypeIdentifier( );
+  String[] getSemanticTypeIdentifier();
 
   /**
    * Sets the SemanticTypeIdentifiers.
@@ -186,7 +182,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * 
    * @return the rules of the FeatureTypeStyle as Array
    */
-  Rule[] getRules( );
+  Rule[] getRules();
 
   /**
    * Sets the Rules.

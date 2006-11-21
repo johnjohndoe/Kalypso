@@ -30,8 +30,10 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -40,9 +42,7 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
-import org.apache.commons.io.IOUtils;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -54,12 +54,21 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * KalypsoPictureTheme
  * <p>
+ * 
  * created by
  * 
  * @author kuepfer (20.05.2005)
  */
 public class KalypsoPictureTheme extends AbstractKalypsoTheme
 {
+  private final static String SUFFIX_TIFF = "TFW";
+
+  private final static String SUFFIX_JPG = "JGW";
+
+  private final static String SUFFIX_PNG = "PGW";
+
+  //private final static String SUFFIX_GIF = "GFW";
+
   private TiledImage m_image;
 
   private GM_Envelope m_origBBox;
@@ -70,9 +79,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   // Andreas: dieses Pattern (variable m_rx und m_ry nicht benutzt)
   // taucht im Code verteilt mehrfach auf; doppelter code?
-  // private double m_rx = 0;
+  //  private double m_rx = 0;
 
-  // private double m_ry = 0;
+  //  private double m_ry = 0;
 
   private double m_dy = 0;
 
@@ -86,42 +95,49 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs, final IMapModell mapModel )
+  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs )
   {
-    super( themeName, linktype.toUpperCase(), mapModel );
+    super( themeName, linktype.toUpperCase() );
     m_themeName = themeName;
     m_linkType = linktype;
     m_source = source;
     m_localCS = cs;
+    URL worldFileURL = null;
     String[] result = source.split( "#" );
     String wf = null;
-    final String baseName = (result[0].substring( 0, (source.lastIndexOf( "." ) + 1) ));
     if( linktype.equals( "tif" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_TIFF );
+    {
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_TIFF );
+    }
     if( linktype.equals( "jpg" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_JPG );
+    {
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_JPG );
+    }
     if( linktype.equals( "png" ) )
-      wf = baseName.concat( WorldFileReader.SUFFIX_PNG );
-    // if( linktype.equals( "gif" ) )
-    // {
-    // wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
-    // .concat( SUFFIX_GIF );
-    // }
+    {
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_PNG );
+    }
+    //if( linktype.equals( "gif" ) )
+    //{
+    //  wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
+    //      .concat( SUFFIX_GIF );
+    //}
 
     double ulcx = 0;
     double ulcy = 0;
 
-    // read worldfile
-    InputStream wfStream = null;
+    //read worldfile
     try
     {
-      final URL worldFileURL = new URL( wf );
-      wfStream = worldFileURL.openStream();
-      final WorldFile worldFile = new WorldFileReader().readWorldFile( wfStream );
-      m_dx = worldFile.getDx();
-      m_dy = worldFile.getDy();
-      ulcx = worldFile.getUlcx();
-      ulcy = worldFile.getUlcy();
+      worldFileURL = new URL( wf );
+      InputStream is = worldFileURL.openStream();
+      BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+      m_dx = Double.parseDouble( br.readLine().trim() );
+      /* m_rx = */Double.parseDouble( br.readLine().trim() );
+      /* m_ry = */Double.parseDouble( br.readLine().trim() );
+      m_dy = Double.parseDouble( br.readLine().trim() );
+      ulcx = Double.parseDouble( br.readLine().trim() );
+      ulcy = Double.parseDouble( br.readLine().trim() );
     }
     catch( MalformedURLException e )
     {
@@ -132,10 +148,6 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( wfStream );
     }
 
     URL imageFileURL = null;
@@ -151,37 +163,37 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     String imagePath = imageFileURL.getPath().substring( 1, imageFileURL.getPath().length() );
     RenderedOp image = JAI.create( "fileload", imagePath );
     m_image = new TiledImage( image, true );
-    // BufferedImage image = m_image.getAsBufferedImage();
-    // m_image = image.getAsBufferedImage();
+    //BufferedImage image = m_image.getAsBufferedImage();
+    //    m_image = image.getAsBufferedImage();
     int height = m_image.getHeight();
     int width = m_image.getWidth();
 
-    // ColorModel cm = m_image.getColorModel();
-    // int[] size = cm.getComponentSize();
-    // int transparency = cm.getTransparency();
+    //    ColorModel cm = m_image.getColorModel();
+    //    int[] size = cm.getComponentSize();
+    //    int transparency = cm.getTransparency();
     //
-    // ColorSpace colorSpace = cm.getColorSpace();
-    // int type = colorSpace.getType();
+    //    ColorSpace colorSpace = cm.getColorSpace();
+    //    int type = colorSpace.getType();
     //
-    // Raster raster = m_image.getData();
+    //    Raster raster = m_image.getData();
     //
-    // DataBuffer databuffer = raster.getDataBuffer();
+    //    DataBuffer databuffer = raster.getDataBuffer();
     //
-    // int bufferType = databuffer.getDataType();
+    //    int bufferType = databuffer.getDataType();
     //
-    // System.out.println( "bounds: " + image.getBounds() + ",\ttransparency: "
-    // + transparency + ",\tcolor space type: " + type );
+    //    System.out.println( "bounds: " + image.getBounds() + ",\ttransparency: "
+    //        + transparency + ",\tcolor space type: " + type );
     //
-    // ColorModel colorModel = new ComponentColorModel( colorSpace, size, false,
+    //    ColorModel colorModel = new ComponentColorModel( colorSpace, size, false,
     // false, Transparency.TRANSLUCENT,
-    // bufferType );
+    //        bufferType );
     //
-    // BufferedImage bi = new BufferedImage(colorModel, (WritableRaster)raster,
+    //    BufferedImage bi = new BufferedImage(colorModel, (WritableRaster)raster,
     // false, getProperties(image));
     //    
-    // m_image = bi;
+    //    m_image = bi;
 
-    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + (height * m_dy), ulcx + (width * m_dx), ulcy );
+    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + ( height * m_dy ), ulcx + ( width * m_dx ), ulcy );
 
     m_imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
   }
@@ -189,13 +201,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
-    if( m_image != null )
-      m_image.dispose();
-    
-    super.dispose();
+  //nothing
   }
 
   /**
@@ -203,7 +211,8 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox,
+      final boolean selected )
   {
     if( selected )
       return;
@@ -222,7 +231,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox()
   {
     GM_Envelope bbox = null;
     try
@@ -238,7 +247,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     return bbox;
   }
 
-  public void fillLayerType( final StyledLayerType layer, String id, boolean visible )
+  public void fillLayerType( Layer layer, String id, boolean visible )
   {
     layer.setName( m_themeName );
     layer.setFeaturePath( "" );

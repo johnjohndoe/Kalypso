@@ -41,6 +41,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -57,13 +58,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
+import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -77,6 +78,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -122,14 +124,15 @@ public class ObservationViewer extends Composite
 
   protected DateRange m_dr;
 
-  private Object m_input = null;
+  private Object m_input;
 
   public ObservationViewer( final Composite parent, final int style )
   {
     this( parent, style, true, true, true, new ButtonControl[0] );
   }
 
-  public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart, final boolean metaDataTable, final ButtonControl[] buttonControls )
+  public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart,
+      final boolean metaDataTable, final ButtonControl[] buttonControls )
   {
     super( parent, style );
 
@@ -138,7 +141,8 @@ public class ObservationViewer extends Composite
     createControl( header, metaDataTable, chart, buttonControls );
   }
 
-  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, ButtonControl[] buttonControls )
+  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart,
+      ButtonControl[] buttonControls )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -166,20 +170,35 @@ public class ObservationViewer extends Composite
 
     if( withHeader )
     {
-      main.setWeights( new int[] { 1, 1, 4 } );
+      main.setWeights( new int[]
+      {
+          1,
+          1,
+          4 } );
     }
     else
     {
-      main.setWeights( new int[] { 0, 1, 5 } );
+      main.setWeights( new int[]
+      {
+          0,
+          1,
+          5 } );
 
     }
     if( withMetaAndTable )
-      bottom.setWeights( new int[] { 1, 3 } );
+      bottom.setWeights( new int[]
+      {
+          1,
+          3 } );
     else
-      bottom.setWeights( new int[] { 0, 4 } );
+      bottom.setWeights( new int[]
+      {
+          0,
+          4 } );
   }
 
   /**
+   * 
    * @param parent
    * @param buttonControls
    */
@@ -211,13 +230,14 @@ public class ObservationViewer extends Composite
 
     m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
-    m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
+    m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+        | GridData.GRAB_VERTICAL ) );
 
     m_txtHref.addFocusListener( new FocusListener()
     {
       public void focusGained( FocusEvent e )
       {
-        // nothing
+      // nothing
       }
 
       public void focusLost( FocusEvent e )
@@ -238,7 +258,8 @@ public class ObservationViewer extends Composite
         {
           final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
           final IContainer baseDir = contextIFile.getParent();
-          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" );
+          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir,
+              IResource.FILE, "*zml" );
           dialog.setBlockOnOpen( true );
 
           if( dialog.open() == Window.OK )
@@ -248,7 +269,7 @@ public class ObservationViewer extends Composite
             {
               if( result[0] instanceof IFile )
               {
-                IFile r = (IFile) result[0];
+                IFile r = (IFile)result[0];
                 URL url1 = m_context;
                 URL url2 = ResourceUtilities.createURL( r );
 
@@ -256,9 +277,7 @@ public class ObservationViewer extends Composite
                 if( href == null )
                   m_txtHref.setText( "" );
                 else
-                  // there was a change in the method getRelativePathTo, the effect was a slash at the beginning of the
-                  // href. this is not valid, so change the string and substract the first character
-                  m_txtHref.setText( href.substring( 1 ) );
+                  m_txtHref.setText( href );
                 // refresh...
                 setInput( m_txtHref.getText(), m_txtFilter.getText() );
               }
@@ -267,13 +286,14 @@ public class ObservationViewer extends Composite
         }
         catch( Exception e2 )
         {
+          // TODO Auto-generated catch block
           e2.printStackTrace();
         }
       }
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        // nothing
+      // nothing
       }
     } );
     m_btnSelectObs = new Button( header, SWT.NONE );
@@ -296,7 +316,7 @@ public class ObservationViewer extends Composite
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        // nothing
+      // nothing
       }
 
     } );
@@ -308,13 +328,14 @@ public class ObservationViewer extends Composite
 
     m_txtFilter = new Text( header, SWT.MULTI | SWT.WRAP );
     m_txtFilter.setSize( 400, m_txtFilter.getSize().y );
-    m_txtFilter.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
+    m_txtFilter.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
+        | GridData.GRAB_VERTICAL ) );
 
     m_txtFilter.addFocusListener( new FocusListener()
     {
       public void focusGained( FocusEvent e )
       {
-        // nothing
+      // nothing
       }
 
       public void focusLost( FocusEvent e )
@@ -343,7 +364,7 @@ public class ObservationViewer extends Composite
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        // nothing
+      // nothing
       }
     } );
 
@@ -366,11 +387,14 @@ public class ObservationViewer extends Composite
     {
       public void widgetSelected( SelectionEvent e )
       {
+        final DateFormat dateFormat = TimeserieUtils.getDateFormat();
+
         final DateRangeInputControlStuct drs;
         if( m_dr == null )
-          drs = new DateRangeInputControlStuct( true, new Date(), new Date(), 0, DateFormat.getDateTimeInstance() );
+          drs = new DateRangeInputControlStuct( true, new Date(), new Date(), 0, dateFormat );
         else
-          drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat.getDateTimeInstance() );
+          drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, dateFormat );
+
         final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "", "", drs );
         if( dlg.open() == Window.OK )
         {
@@ -382,7 +406,7 @@ public class ObservationViewer extends Composite
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
-        // nothing
+      // nothing
       }
     } );
   }
@@ -398,7 +422,7 @@ public class ObservationViewer extends Composite
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
-
+    
     final Composite chartComp = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( chartComp );
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );
@@ -423,14 +447,16 @@ public class ObservationViewer extends Composite
     scrollPane.setBorder( null );
     vFrame.add( scrollPane );
 
-    form.setWeights( new int[] { 2, 5 } );
+    form.setWeights( new int[]
+    {
+        2,
+        5 } );
   }
 
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_diagView.dispose();
     if( m_chart != null )
@@ -445,30 +471,30 @@ public class ObservationViewer extends Composite
 
   void setInput( final String href, final String filter )
   {
-    // try
-    // {
-    // 1. basic href
-    String hereHref = href;
+    try
+    {
+      // 1. basic href
+      String hereHref = href;
 
-    // 2. plus filter stuff
-    if( href.length() > 0 )
-      hereHref = ZmlURL.insertFilter( hereHref, filter );
+      // 2. plus filter stuff
+      if( href.length() > 0 )
+        hereHref = ZmlURL.insertFilter( hereHref, filter );
 
-    // // 3. always insert date-range info
-    // if( href.length() > 0 )
-    // hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
+      // 3. always insert date-range info
+      if( href.length() > 0 )
+        hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
 
-    setInput( hereHref );
-    // }
-    // catch( final SensorException e )
-    // {
-    // e.printStackTrace();
-    // MessageDialog.openError( getShell(), "Fehler beim Laden, Zeitreihe oder Verknüpfung ist fehlerhaft",
-    // e.getLocalizedMessage() );
-    // }
+      setInput( hereHref );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      MessageDialog.openError( getShell(), "Fehler beim Laden, Zeitreihe oder Verknüpfung ist fehlerhaft", e
+          .getLocalizedMessage() );
+    }
   }
 
-  private void updateViewer( )
+  private void updateViewer()
   {
     // check type of input
     final IObservation obs;
@@ -476,26 +502,12 @@ public class ObservationViewer extends Composite
       obs = null;
     else if( m_input instanceof IObservation )
     {
-      obs = (IObservation) m_input;
+      obs = (IObservation)m_input;
     }
     else if( m_input instanceof String )
     {
-
-      String href = (String) m_input;
+      String href = (String)m_input;
       m_txtHref.setText( ZmlURL.getIdentifierPart( href ) );
-
-      // always insert date-range info for loading
-      if( href.length() > 0 )
-      {
-        try
-        {
-          href = ZmlURL.insertRequest( href, new ObservationRequest( m_dr ) );
-        }
-        catch( SensorException e2 )
-        {
-          href = (String) m_input;
-        }
-      }
       final URL url;
       try
       {
@@ -511,9 +523,11 @@ public class ObservationViewer extends Composite
         try
         {
           obs = ZmlFactory.parseXML( url, href );
+          System.out.println(); // TODO debug?
         }
         catch( SensorException e1 )
         {
+          // TODO Auto-generated catch block
           e1.printStackTrace();
           return;
         }
@@ -535,7 +549,7 @@ public class ObservationViewer extends Composite
       // which leads to unsaved changes when a value is set because the underlying
       // (real) model isn't changed, just the copy of it (see setFrom and the calling
       // constructors in SimpleTuppleModel).
-      final PlainObsProvider pop = new PlainObsProvider( obs, null );// new ObservationRequest( m_dr ) );
+      final PlainObsProvider pop = new PlainObsProvider( obs, null );//new ObservationRequest( m_dr ) );
 
       final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null );
       m_diagView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
@@ -573,7 +587,7 @@ public class ObservationViewer extends Composite
   /**
    * @return the input
    */
-  public Object getInput( )
+  public Object getInput()
   {
     return m_input;
   }

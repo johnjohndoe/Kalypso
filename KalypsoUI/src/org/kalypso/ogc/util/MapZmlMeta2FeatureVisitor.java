@@ -49,18 +49,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author belger
  */
 public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
@@ -68,33 +72,33 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
   public static class Metadata
   {
     private String m_name;
-
+    
     public void setName( String name )
     {
       m_name = name;
     }
-
-    public String getName( )
+    
+    public String getName()
     {
       return m_name;
     }
   }
-
+  
   public static class Mapping
   {
     private String m_targetProperty;
-
+    
     private String m_format;
-
-    private List<Metadata> m_metadataEntries = new ArrayList<Metadata>( 2 );
+    
+    private List m_metadataEntries = new ArrayList( 2 );
 
     /** This FeatureProperty will be created */
     public void setTargetProperty( final String targetProperty )
     {
       m_targetProperty = targetProperty;
     }
-
-    public String getTargetProperty( )
+    
+    public String getTargetProperty()
     {
       return m_targetProperty;
     }
@@ -104,10 +108,10 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     {
       m_metadataEntries.add( metadata );
     }
-
-    public Metadata[] getMetadataNames( )
+    
+    public Metadata[] getMetadataNames()
     {
-      return m_metadataEntries.toArray( new Metadata[m_metadataEntries.size()] );
+      return (Metadata[])m_metadataEntries.toArray( new Metadata[m_metadataEntries.size()] );
     }
 
     /** Optional format string, how to parse the values */
@@ -115,24 +119,21 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     {
       m_format = format;
     }
-
-    public String getFormat( )
+    
+    public String getFormat()
     {
       return m_format;
     }
   }
-
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
   private final URL m_context;
-
   private final IUrlResolver m_resolver;
-
   private final String m_zmlLink;
-
   private final Mapping[] m_mappings;
 
-  public MapZmlMeta2FeatureVisitor( final URL context, final IUrlResolver resolver, final String zmlLink, final Mapping[] mappings )
+  public MapZmlMeta2FeatureVisitor( final URL context, final IUrlResolver resolver, final String zmlLink,
+      final Mapping[] mappings )
   {
     m_context = context;
     m_resolver = resolver;
@@ -156,14 +157,14 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     if( property == null )
       return true;
 
-    if( !(property instanceof TimeseriesLinkType) )
+    if( !( property instanceof TimeseriesLinkType ) )
     {
       m_logger.warning( "FeatureProperty is no of type: " + TimeseriesLinkType.class.getName() );
       return true;
     }
 
-    final TimeseriesLinkType link = (TimeseriesLinkType) property;
-    final String href = link.getHref();
+      final TimeseriesLinkType link = (TimeseriesLinkType)property;
+      final String href = link.getHref();
     try
     {
       final URL url = m_resolver.resolveURL( m_context, href );
@@ -177,7 +178,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-
+      
       m_logger.log( Level.SEVERE, "Link to zml not valid: " + href, e );
     }
     catch( final SensorException e )
@@ -191,29 +192,30 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
   private void applyMapping( final Mapping mapping, final IObservation observation, final Feature f )
   {
-    final IPropertyType ftp = f.getFeatureType().getProperty( mapping.getTargetProperty() );
+    final FeatureTypeProperty ftp = f.getFeatureType(  ).getProperty(mapping.getTargetProperty());
     if( ftp == null )
     {
       m_logger.warning( "Feature has no property with name: " + m_zmlLink );
       return;
     }
-
+    
     // welche property wird erzeigt
     final MetadataList metadataList = observation.getMetadataList();
     final Metadata[] names = mapping.getMetadataNames();
     final String[] values = new String[names.length];
     for( int i = 0; i < values.length; i++ )
     {
-      values[i] = metadataList.getProperty( names[i].getName() );
+      values[i] = metadataList.getProperty(names[i].getName());
       if( values[i] == null )
       {
-        m_logger.log( Level.WARNING, "No value in feature (fid=" + f.getId() + ") for metadata-entry: " + names[i] );
+        m_logger.log( Level.WARNING, "No value in feature (fid=" + f.getId() +  ") for metadata-entry: " + names[i] );
         return;
       }
     }
-
-    final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values );
-    f.setProperty( ftp, object );
+    
+    final Object object = FeatureUtils.createFeaturePropertyFromStrings( ftp.getType(), mapping.getFormat(), values );
+    final FeatureProperty fp = FeatureFactory.createFeatureProperty( ftp.getName(), object );
+    f.setProperty( fp );
   }
 
 }

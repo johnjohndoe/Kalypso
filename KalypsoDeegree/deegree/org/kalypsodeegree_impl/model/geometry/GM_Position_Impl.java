@@ -143,10 +143,9 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * returns a shallow copy of the geometry.
    */
-  @Override
   public Object clone()
   {
-    return new GM_Position_Impl( point.clone() );
+    return new GM_Position_Impl( (double[])point.clone() );
   }
 
   /**
@@ -196,7 +195,6 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * compares if all field of other are equal to the corresponding fields of this position
    */
-  @Override
   public boolean equals( Object other )
   {
     boolean eq = true;
@@ -222,7 +220,6 @@ class GM_Position_Impl implements GM_Position, Serializable
     return eq;
   }
 
-  @Override
   public String toString()
   {
     String ret = "GM_Position: ";

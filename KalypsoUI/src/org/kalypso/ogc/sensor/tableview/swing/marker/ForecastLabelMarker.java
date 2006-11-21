@@ -66,14 +66,12 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final DateRange m_dra;
 
-  /**
-   * Constructor
-   * 
-   * @param dra
-   */
-  public ForecastLabelMarker( DateRange dra )
+  private final Color m_defaultBackground;
+
+  public ForecastLabelMarker( DateRange dra, Color defaultBackground )
   {
     m_dra = dra;
+    m_defaultBackground = defaultBackground;
   }
 
   /**
@@ -102,7 +100,7 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public void reset( JLabel label )
   {
-    label.setBackground( null );
+    label.setBackground( m_defaultBackground );
     label.setToolTipText( "" );
     label.setIcon( null );
   }
@@ -121,7 +119,6 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( Object obj )
   {
     return compareTo( obj ) == 0;
@@ -130,9 +127,8 @@ public class ForecastLabelMarker implements ILabelMarker
   /**
    * @see java.lang.Object#hashCode()
    */
-  @Override
   public int hashCode()
   {
-    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();
+    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).toHashCode();
   }
 }

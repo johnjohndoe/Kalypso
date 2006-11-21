@@ -135,7 +135,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
    * Retourne une chaîne de caractères qui énumère tous les préfix contenu dans cet ensemble. La chaîne sera de la forme
    * "milli(m),centi(c),déci(d),kilo(k)" par exemple.
    */
-  @Override
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer();
@@ -166,7 +165,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
    * Vérifie si cet ensemble est identique à l'objet <code>other</code> spécifié. Deux ensembles sont considérés
    * identiques s'ils contienent les mêmes préfix.
    */
-  @Override
   public boolean equals( final Object other )
   {
     if( other == this )
@@ -188,7 +186,6 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   /**
    * Retourne un code représentant cet ensemble de préfix.
    */
-  @Override
   public int hashCode()
   {
     int code = prefix.length << 1;

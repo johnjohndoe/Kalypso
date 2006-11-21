@@ -72,7 +72,6 @@ public abstract class AbstractCommandAction extends Action
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public final void run()
   {
     postCommand( runInternal(), null );

@@ -29,27 +29,34 @@
  */
 package org.kalypso.ogc.gml;
 
-import org.kalypso.gmlschema.adapter.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author doemming
  */
 public class KalypsoLegendUtilities
 {
   private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
 
-  private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[] { GeometryFactory.createGM_Position( 0.00, 0.3 ), GeometryFactory.createGM_Position( 0.33, 0.7 ),
-      GeometryFactory.createGM_Position( 0.66, 0.3 ), GeometryFactory.createGM_Position( 1.00, 0.7 ), };
+  private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
+  {
+      GeometryFactory.createGM_Position( 0.00, 0.3 ),
+      GeometryFactory.createGM_Position( 0.33, 0.7 ),
+      GeometryFactory.createGM_Position( 0.66, 0.3 ),
+      GeometryFactory.createGM_Position( 1.00, 0.7 ), };
 
   private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
 
@@ -90,47 +97,35 @@ public class KalypsoLegendUtilities
    */
   public static void updatePropertiesForLegend( final Feature legendFeature )
   {
-    final IFeatureType featureType = legendFeature.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
+    final FeatureType featureType = legendFeature.getFeatureType();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       final Object legendValue = getLegendValue( properties[i] );
       if( legendValue != null )
-      {
-        try
-        {
-          legendFeature.setProperty( properties[i], legendValue );
-        }
-        catch( Exception e )
-        {
-          // TODO generate legendFeature, that has String properties where are no geometries
-        }
-      }
+        legendFeature.setProperty( FeatureFactory.createFeatureProperty( properties[i].getName(), legendValue ) );
     }
   }
 
-  private static Object getLegendValue( final IPropertyType ftp )
+  private static Object getLegendValue( final FeatureTypeProperty ftp )
   {
-    if( ftp instanceof IValuePropertyType )
+    if(GeometryUtilities.isPointGeometry(ftp)||GeometryUtilities.isMultiPointGeometry(ftp) )
+      return DEFAULT_POINT;
+    if( GeometryUtilities.isLineStringGeometry(ftp)||GeometryUtilities.isMultiLineStringGeometry(ftp)  )
+      return DEFAULT_LINESTRING;
+    if(GeometryUtilities.isPolygonGeometry(ftp)||GeometryUtilities.isMultiPolygonGeometry(ftp)  )
+      return DEFAULT_POLYGONE;
+    if(GeometryUtilities.isUndefinedGeometry(ftp))
+      return DEFAULT_POINT;
+    final String type = ftp.getType();
+    if( type.startsWith( "java.lang." ) )
     {
-      IValuePropertyType vpt = (IValuePropertyType) ftp;
-
-      if( GeometryUtilities.isPointGeometry( vpt ) || GeometryUtilities.isMultiPointGeometry( vpt ) )
-        return DEFAULT_POINT;
-      if( GeometryUtilities.isLineStringGeometry( vpt ) || GeometryUtilities.isMultiLineStringGeometry( vpt ) )
-        return DEFAULT_LINESTRING;
-      if( GeometryUtilities.isPolygonGeometry( vpt ) || GeometryUtilities.isMultiPolygonGeometry( vpt ) )
-        return DEFAULT_POLYGONE;
-      if( GeometryUtilities.isUndefinedGeometry( vpt ) )
-        return DEFAULT_POINT;
-      final String type = vpt.getValueClass().getName();
-      if( type.startsWith( "java.lang." ) )
-      {
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
-        if( annotation != null )
-          return annotation.getLabel();
-        return ftp.getQName().getLocalPart();
-      }
+      final String lang = "de";
+      // TODO get lang from somewhere
+      final Annotation annotation = ftp.getAnnotation( lang );
+      if( annotation != null )
+        return annotation.getLabel();
+      return ftp.getName();
     }
     return null;
   }

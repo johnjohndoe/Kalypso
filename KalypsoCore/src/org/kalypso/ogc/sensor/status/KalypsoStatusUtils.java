@@ -66,22 +66,26 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_UNIT = "";
 
-  private final static ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" );
+  private final static ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class
+      .getResource( "resource/question.gif" ), "question" );
 
-  private final static ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" );
+  private final static ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class
+      .getResource( "resource/warning.gif" ), "warning" );
 
-  // private final static Icon ICON_ERROR = new ImageIcon(
-  // KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
+  //  private final static Icon ICON_ERROR = new ImageIcon(
+  //      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
-  private final static ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) );
+  private final static ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class
+      .getResource( "resource/conflict.gif" ) );
 
-  private final static ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" );
+  private final static ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class
+      .getResource( "resource/write.gif" ), "write" );
 
   private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
 
-  private KalypsoStatusUtils( )
+  private KalypsoStatusUtils()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
@@ -116,12 +120,14 @@ public class KalypsoStatusUtils
    * @throws IllegalArgumentException
    *           if given axis is already a status axis
    */
-  public static IAxis createStatusAxisFor( final IAxis axis, final boolean persistable ) throws IllegalArgumentException
+  public static IAxis createStatusAxisFor( final IAxis axis, final boolean persistable )
+      throws IllegalArgumentException
   {
     if( isStatusAxis( axis ) )
       throw new IllegalArgumentException( "Axis " + axis + " is already a status axis!" );
 
-    return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(), STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false, persistable );
+    return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(), STATUS_AXIS_TYPE, STATUS_AXIS_UNIT,
+        STATUS_AXIS_DATACLASS, false, persistable );
   }
 
   /**
@@ -201,7 +207,7 @@ public class KalypsoStatusUtils
    */
   public static IAxis[] findStatusAxes( final IAxis[] axes )
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>();
+    final ArrayList list = new ArrayList();
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -209,7 +215,7 @@ public class KalypsoStatusUtils
         list.add( axes[i] );
     }
 
-    return list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -219,7 +225,7 @@ public class KalypsoStatusUtils
    */
   public static IAxis[] withoutStatusAxes( final IAxis[] axes )
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>();
+    final ArrayList list = new ArrayList();
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -227,7 +233,7 @@ public class KalypsoStatusUtils
         list.add( axes[i] );
     }
 
-    return list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -243,9 +249,10 @@ public class KalypsoStatusUtils
    * @return axes which are compatible with specified Class of data
    * @throws NoSuchElementException
    */
-  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class< ? > desired, final boolean excludeStatusAxes ) throws NoSuchElementException
+  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class desired, final boolean excludeStatusAxes )
+      throws NoSuchElementException
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -259,7 +266,7 @@ public class KalypsoStatusUtils
     if( list.size() == 0 )
       throw new NoSuchElementException( "No axis found of class: " + desired );
 
-    return list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -275,7 +282,8 @@ public class KalypsoStatusUtils
    * @return first axis found
    * @throws NoSuchElementException
    */
-  public static IAxis findAxisByClass( final IAxis[] axes, final Class< ? > desired, final boolean excludeStatusAxes ) throws NoSuchElementException
+  public static IAxis findAxisByClass( final IAxis[] axes, final Class desired, final boolean excludeStatusAxes )
+      throws NoSuchElementException
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -299,7 +307,7 @@ public class KalypsoStatusUtils
     if( bit == 0 || mask == 0 )
       return mask == bit;
 
-    return (mask & bit) == bit;
+    return ( mask & bit ) == bit;
   }
 
   /**
@@ -392,7 +400,7 @@ public class KalypsoStatusUtils
    */
   public static Color getForegroundFor( final int mask )
   {
-    if( (mask & 0) == 0 )
+    if( ( mask & 0 ) == 0 )
       return null;
 
     // currently returns null, but can be customized in the near
@@ -420,7 +428,7 @@ public class KalypsoStatusUtils
    */
   public static int performInterpolation( final int status1, final int status2 )
   {
-    return (status1 | status2) & KalypsoStati.MASK_INTERPOLATION;
+    return ( status1 | status2 ) & KalypsoStati.MASK_INTERPOLATION;
   }
 
   /**
@@ -442,6 +450,6 @@ public class KalypsoStatusUtils
    */
   public static int performArithmetic( final int status1, final int status2 )
   {
-    return (status1 | status2) & KalypsoStati.MASK_ARITHMETIC;
+    return ( status1 | status2 ) & KalypsoStati.MASK_ARITHMETIC;
   }
 }

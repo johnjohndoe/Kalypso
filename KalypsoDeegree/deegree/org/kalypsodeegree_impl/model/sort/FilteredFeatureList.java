@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -17,9 +17,10 @@ import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
- * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
- * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
- * ändern auch die Originalliste.
+ * Eine gefilterte FeatureListe.
+ * 
+ * Die Liste zeigt nach aussen nur die Features, die einem bestimmten FeatureType entsprechen. Andererseits ist die
+ * Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste ändern auch die Originalliste.
  * 
  * @author belger
  */
@@ -31,16 +32,16 @@ public class FilteredFeatureList implements FeatureList
 
   private final CollectorVisitor m_collector = new CollectorVisitor();
 
-  public FilteredFeatureList( final FeatureList original, final String typeLocalName, final boolean acceptIfSubstituting )
+  public FilteredFeatureList( final FeatureList original, final String typename, final boolean acceptIfSubstituting )
   {
     m_original = original;
-    m_filterVisitor = new FeatureTypeVisitor( null, typeLocalName, acceptIfSubstituting );
+    m_filterVisitor = new FeatureTypeVisitor( null, typename, acceptIfSubstituting );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
-  public Feature[] toFeatures( )
+  public Feature[] toFeatures()
   {
     m_filterVisitor.setVisitor( m_collector );
     m_original.accept( m_filterVisitor );
@@ -60,7 +61,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#size()
    */
-  public int size( )
+  public int size()
   {
     return toFeatures().length;
   }
@@ -68,7 +69,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#clear()
    */
-  public void clear( )
+  public void clear()
   {
     final Feature[] features = toFeatures();
     for( int i = 0; i < features.length; i++ )
@@ -78,7 +79,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#isEmpty()
    */
-  public boolean isEmpty( )
+  public boolean isEmpty()
   {
     return toFeatures().length == 0;
   }
@@ -86,7 +87,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#toArray()
    */
-  public Object[] toArray( )
+  public Object[] toArray()
   {
     return toFeatures();
   }
@@ -154,7 +155,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public boolean add( final Object o )
   {
-    if( !m_filterVisitor.matchesType( (Feature) o ) )
+    if( !m_filterVisitor.matchesType( (Feature)o ) )
       throw new IllegalArgumentException();
 
     return m_original.add( o );
@@ -173,7 +174,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public boolean remove( final Object o )
   {
-    if( m_filterVisitor.matchesType( (Feature) o ) )
+    if( m_filterVisitor.matchesType( (Feature)o ) )
       return m_original.remove( o );
 
     return false;
@@ -238,7 +239,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#iterator()
    */
-  public Iterator iterator( )
+  public Iterator iterator()
   {
     return listIterator();
   }
@@ -254,7 +255,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#listIterator()
    */
-  public ListIterator listIterator( )
+  public ListIterator listIterator()
   {
     return listIterator( 0 );
   }
@@ -286,9 +287,9 @@ public class FilteredFeatureList implements FeatureList
     final Feature[] toFeatures = toFeatures();
     if( a == null || a.length < toFeatures.length )
       return toFeatures;
-
-    System.arraycopy( toFeatures, 0, a, 0, toFeatures.length );
-
+    
+    System.arraycopy( toFeatures, 0, a, 0, toFeatures.length );    
+    
     return a;
   }
 
@@ -309,7 +310,7 @@ public class FilteredFeatureList implements FeatureList
     final List sublist = originalList.subList( oldlength, originalList.size() );
     for( Iterator sIt = sublist.iterator(); sIt.hasNext(); )
     {
-      final Feature f = (Feature) sIt.next();
+      final Feature f = (Feature)sIt.next();
       if( !m_filterVisitor.matchesType( f ) )
         sIt.remove();
     }
@@ -335,6 +336,14 @@ public class FilteredFeatureList implements FeatureList
   }
 
   /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#resort()
+   */
+  public void resort()
+  {
+    m_original.resort();
+  }
+
+  /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
@@ -346,7 +355,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#rsize()
    */
-  public int rsize( )
+  public int rsize()
   {
     throw new UnsupportedOperationException();
   }
@@ -354,7 +363,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox()
   {
     // zu gross!
     return m_original.getBoundingBox();
@@ -363,7 +372,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
    */
-  public Feature getParentFeature( )
+  public Feature getParentFeature()
   {
     return m_original.getParentFeature();
   }
@@ -371,24 +380,9 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
    */
-  public IRelationType getParentFeatureTypeProperty( )
+  public FeatureTypeProperty getParentFeatureTypeProperty()
   {
+
     return m_original.getParentFeatureTypeProperty();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
-   */
-  public void invalidate( )
-  {
-    m_original.invalidate();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
-   */
-  public void invalidate( final Object o )
-  { 
-    m_original.invalidate( o );
   }
 }

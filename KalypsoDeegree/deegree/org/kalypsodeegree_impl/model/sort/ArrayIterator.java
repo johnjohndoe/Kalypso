@@ -9,13 +9,14 @@ import java.util.ListIterator;
  * 
  * @author belger
  */
-public class ArrayIterator<T> implements ListIterator<T>
+public class ArrayIterator implements ListIterator
 {
+
   private int m_index;
 
-  private final T[] m_objects;
+  private final Object[] m_objects;
 
-  public ArrayIterator( final int index, final T[] objects )
+  public ArrayIterator( final int index, final Object[] objects )
   {
     m_index = index;
     m_objects = objects;
@@ -64,7 +65,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.Iterator#next()
    */
-  public T next()
+  public Object next()
   {
     return m_objects[m_index++];
   }
@@ -72,7 +73,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.ListIterator#previous()
    */
-  public T previous()
+  public Object previous()
   {
     m_index--;
     return m_objects[m_index];
@@ -81,7 +82,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.ListIterator#add(java.lang.Object)
    */
-  public void add( T o )
+  public void add( Object o )
   {
     throw new UnsupportedOperationException();
   }
@@ -89,7 +90,7 @@ public class ArrayIterator<T> implements ListIterator<T>
   /**
    * @see java.util.ListIterator#set(java.lang.Object)
    */
-  public void set( T o )
+  public void set( Object o )
   {
     throw new UnsupportedOperationException();
   }

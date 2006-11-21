@@ -49,7 +49,7 @@ package org.kalypso.commons.command;
  * {@link ICommandManager}aufgerufen werden.
  * </p>
  * 
- * @author doemming
+ * @author von Dömming
  */
 public interface ICommand
 {

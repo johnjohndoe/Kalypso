@@ -47,13 +47,13 @@ import org.kalypso.ogc.sensor.IAxis;
  * 
  * @author schlienger
  */
-public final class DefaultAxis extends AbstractAxis implements IAxis
+public class DefaultAxis extends AbstractAxis implements IAxis
 {
   private final String m_label;
 
   private final String m_unit;
 
-  private final Class<?> m_dataClass;
+  private final Class m_dataClass;
 
   private final String m_type;
 
@@ -90,8 +90,8 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
       final boolean isKey, final boolean persistable )
   {
     if( dataClass == null )
-      throw new IllegalArgumentException("Argument dataClass is null");
-    
+      throw new IllegalArgumentException( "Argument dataClass is null" );
+
     m_label = label;
     m_type = type;
     m_unit = unit;
@@ -127,7 +127,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
    */
-  public Class<?> getDataClass()
+  public Class getDataClass()
   {
     return m_dataClass;
   }

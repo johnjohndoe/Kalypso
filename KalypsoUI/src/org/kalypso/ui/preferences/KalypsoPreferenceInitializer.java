@@ -53,16 +53,14 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
   /**
    * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
    */
-  @Override
-  public void initializeDefaultPreferences( )
+  public void initializeDefaultPreferences()
   {
     // location of the server configuration for the clients
-    
-    // BUGFIX: dont set this to a real value, because this can lead to a deadlock
-    // while starting Kalypso.
-    // If someone needs an initial value for a certain configuration, put an option into the
-    // config.ini file.
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "" );
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31467" );
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS,
+        "http://SERVER_NAME:8080/webdav/kalypso-client.ini" );
+
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31469" );
+
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.LANGUAGE, "de" );
   }
 }

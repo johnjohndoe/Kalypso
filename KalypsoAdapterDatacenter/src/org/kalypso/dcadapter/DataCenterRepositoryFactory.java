@@ -78,7 +78,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
   private static class ConfigDialog extends TitleAreaDialog
   {
-    protected String m_url = "jdbc:edbc://134.28.87.75:II7/vn_datacenter::abwb_v2_flows/INGRES";
+    protected String m_url = "";
 
     protected String m_username = "";
 
@@ -102,7 +102,6 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     /**
      * @see org.eclipse.jface.dialogs.Dialog#close()
      */
-    @Override
     public boolean close()
     {
       final IDialogSettings section = DataCenterPlugin.getDefault().getDialogSettings().getSection( "connection" );
@@ -115,7 +114,6 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     /**
      * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
-    @Override
     protected Control createDialogArea( Composite parent )
     {
       final Composite panel = new Composite( parent, SWT.FILL );

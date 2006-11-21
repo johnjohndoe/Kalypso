@@ -62,7 +62,6 @@ public class SimpleObservationTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  @Override
   protected void setUp() throws Exception
   {
     m_obs = getTestObservation();

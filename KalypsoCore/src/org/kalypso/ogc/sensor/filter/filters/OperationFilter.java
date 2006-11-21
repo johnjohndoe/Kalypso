@@ -85,14 +85,12 @@ public class OperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  @Override
   public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs, context );
   }
 
-  @Override
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
@@ -103,7 +101,6 @@ public class OperationFilter extends AbstractObservationFilter
    * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  @Override
   public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );

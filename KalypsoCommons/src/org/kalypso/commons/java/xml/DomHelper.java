@@ -50,8 +50,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
@@ -61,46 +59,11 @@ import org.xml.sax.InputSource;
  */
 public class DomHelper
 {
-  public static String collectChildrenAsString( final Node node )
-  {
-    final StringBuffer buffer = new StringBuffer();
-
-    final NodeList nodes = node.getChildNodes();
-    for( int i = 0; i < nodes.getLength(); i++ )
-      recursiveCollectChildren( nodes.item( i ), buffer );
-
-    return buffer.toString();
-  }
-
-  private static void recursiveCollectChildren( final Node node, final StringBuffer buffer )
-  {
-    switch( node.getNodeType() )
-    {
-      case Node.ELEMENT_NODE:
-      {
-        buffer.append( "<" ).append( node.getNodeName() ).append( ">" );
-        
-        final NodeList nodes = node.getChildNodes();
-        for( int i = 0; i < nodes.getLength(); i++ )
-          recursiveCollectChildren( nodes.item( i ), buffer );
-        
-        buffer.append( "</" ).append( node.getNodeName() ).append( ">" );
-
-        break;
-      }
-
-      case Node.TEXT_NODE:
-      {
-        buffer.append( node.getTextContent() );
-        break;
-      }
-    }
-  }
-
   /**
    * Loads a document from an InputStream. Closes the stream once finished.
    * 
    * @param ins -
+   * 
    * @throws DomLoadException -
    */
   public static Document loadDocument( final InputStream ins ) throws DomLoadException
@@ -126,6 +89,7 @@ public class DomHelper
    * Loads a document from an InputSource.
    * 
    * @param ins -
+   * 
    * @throws DomLoadException -
    */
   public static Document loadDocument( final InputSource ins ) throws DomLoadException
@@ -173,7 +137,7 @@ public class DomHelper
    */
   public static class DomLoadException extends Exception
   {
-    public DomLoadException( )
+    public DomLoadException()
     {
       super();
     }

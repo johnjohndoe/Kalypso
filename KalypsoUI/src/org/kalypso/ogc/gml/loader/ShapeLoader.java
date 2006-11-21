@@ -48,8 +48,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -82,7 +82,6 @@ public class ShapeLoader extends AbstractLoader
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
@@ -172,8 +171,8 @@ public class ShapeLoader extends AbstractLoader
     }
   }
 
-  @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+      throws LoaderException
   {
     try
     {

@@ -2,12 +2,14 @@ package org.kalypsodeegree_impl.model.cv;
 
 /**
  * @author N. Peiler
+ *  
  */
 public class RectifiedGridCoverage
 {
-  private RectifiedGridDomain m_gridDomain = null;
 
-  private RangeSet m_rangeSet = null;
+  RectifiedGridDomain gridDomain = null;
+
+  RangeSet rangeSet = null;
 
   /**
    * constructs a RectifiedGridCoverage with the given gridDomain and rangeSet
@@ -17,11 +19,11 @@ public class RectifiedGridCoverage
    */
   public RectifiedGridCoverage( RectifiedGridDomain gridDomain, RangeSet rangeSet )
   {
-    m_gridDomain = gridDomain;
-    m_rangeSet = rangeSet;
+    this.gridDomain = gridDomain;
+    this.rangeSet = rangeSet;
   }
 
-  public static String getName( )
+  public static String getName()
   {
     return "RectifiedGridCoverage";
   }
@@ -29,9 +31,9 @@ public class RectifiedGridCoverage
   /**
    * @return Returns the gridDomain.
    */
-  public RectifiedGridDomain getGridDomain( )
+  public RectifiedGridDomain getGridDomain()
   {
-    return m_gridDomain;
+    return gridDomain;
   }
 
   /**
@@ -40,15 +42,15 @@ public class RectifiedGridCoverage
    */
   public void setGridDomain( RectifiedGridDomain gridDomain )
   {
-    this.m_gridDomain = gridDomain;
+    this.gridDomain = gridDomain;
   }
 
   /**
    * @return Returns the rangeSet.
    */
-  public RangeSet getRangeSet( )
+  public RangeSet getRangeSet()
   {
-    return m_rangeSet;
+    return rangeSet;
   }
 
   /**
@@ -57,7 +59,12 @@ public class RectifiedGridCoverage
    */
   public void setRangeSet( RangeSet rangeSet )
   {
-    this.m_rangeSet = rangeSet;
+    this.rangeSet = rangeSet;
+  }
+
+  public Object clone()
+  {
+    throw new UnsupportedOperationException( "To be implemented!" );
   }
 
 }

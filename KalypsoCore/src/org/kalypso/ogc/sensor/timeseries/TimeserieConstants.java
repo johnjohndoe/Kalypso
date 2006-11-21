@@ -82,9 +82,6 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** hours [h] */
   public static final String TYPE_HOURS = "H";
 
-  /** minutes [min] */
-  public static final String TYPE_MIN = "min";
-
   /** area as norm [A/Asum] */
   public static final String TYPE_NORM = "n";
 
@@ -108,21 +105,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   static
   {
     String[] types = new String[]
-    {
-        TYPE_DATE,
-        TYPE_EVAPORATION,
-        TYPE_RAINFALL,
-        TYPE_RUNOFF,
-        TYPE_TEMPERATURE,
-        TYPE_VOLUME,
-        TYPE_WATERLEVEL,
-        TYPE_NORM,
-        TYPE_AREA,
-        TYPE_HOURS,
-        TYPE_NORMNULL,
-        TYPE_KC,
-        TYPE_WT,
-        TYPE_LAI };
+    { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC, TYPE_WT, TYPE_LAI };
     Arrays.sort( types );
     TYPES_ALL = types;
   }

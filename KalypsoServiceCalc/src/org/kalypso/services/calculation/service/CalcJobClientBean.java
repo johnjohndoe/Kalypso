@@ -95,7 +95,6 @@ public class CalcJobClientBean implements Serializable
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString()
   {
     return super.toString() + "\n ID: " + m_id + "\n PATH: " + m_path;

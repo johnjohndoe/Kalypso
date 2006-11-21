@@ -69,7 +69,6 @@ import java.util.Iterator;
 import org.kalypsodeegree.graphics.displayelements.Label;
 import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -98,7 +97,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
 
   // null means that the labels have to be created inside the paint-method
   // (and have not been set externally)
-  private ArrayList<Label> m_labels = null;
+  private ArrayList m_labels = null;
 
   /**
    * Creates a new LabelDisplayElement_Impl object.
@@ -128,7 +127,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Returns the caption of the label as <tt>ParameterValueType<tt>.
    */
-  public ParameterValueType getLabel( )
+  public ParameterValueType getLabel()
   {
     return m_label;
   }
@@ -144,12 +143,12 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * @param projection
    *          <tt>GeoTransform</tt> to be used
    */
-  @Override
   public void paint( Graphics g, GeoTransform projection )
   {
+
     if( m_label == null )
       return;
-    Graphics2D g2D = (Graphics2D) g;
+    Graphics2D g2D = (Graphics2D)g;
 
     if( m_labels == null )
     {
@@ -169,7 +168,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
       Iterator it = m_labels.iterator();
       while( it.hasNext() )
       {
-        ((Label) it.next()).paint( g2D );
+        ( (Label)it.next() ).paint( g2D );
       }
     }
     // mark the labels as unset (for the next paint-call)
@@ -179,18 +178,16 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Returns whether the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
-  @Override
   public boolean doesScaleConstraintApply( double scale )
   {
-    final Symbolizer symbolizer = getSymbolizer();
-    return (symbolizer.getMinScaleDenominator() <= scale) && (symbolizer.getMaxScaleDenominator() > scale);
+    return ( symbolizer.getMinScaleDenominator() <= scale ) && ( symbolizer.getMaxScaleDenominator() > scale );
   }
 
   /**
    * Removes all <tt>Label<tt> representations for this
    * <tt>LabelDisplayElement</tt>.
    */
-  public void clearLabels( )
+  public void clearLabels()
   {
     m_labels = null;
   }
@@ -203,7 +200,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   {
     if( m_labels == null )
     {
-      m_labels = new ArrayList<Label>( 100 );
+      m_labels = new ArrayList( 100 );
     }
     m_labels.add( label );
   }
@@ -214,20 +211,23 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void addLabels( Label[] labels )
   {
-    if( m_labels == null )
-      m_labels = new ArrayList<Label>( 100 );
-
+    if( this.m_labels == null )
+    {
+      this.m_labels = new ArrayList( 100 );
+    }
     for( int i = 0; i < labels.length; i++ )
-      m_labels.add( labels[i] );
+    {
+      this.m_labels.add( labels[i] );
+    }
   }
 
   /**
    * Sets the <tt>Label<tt> representations that are to be considered when
    * the <tt>LabelDisplayElement</tt> is painted to the view.
    */
-  public void setLabels( final Label[] labels )
+  public void setLabels( Label[] labels )
   {
-    m_labels = new ArrayList<Label>( 100 );
+    this.m_labels = new ArrayList( 100 );
     for( int i = 0; i < labels.length; i++ )
     {
       this.m_labels.add( labels[i] );

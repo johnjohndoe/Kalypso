@@ -50,11 +50,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.KalypsoCommonsPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 
 /**
@@ -102,7 +100,6 @@ public abstract class SetContentHelper
       m_newCharset = charset;
 
     PipedInputStream m_pis = null;
-    boolean wasCreated = false;
     try
     {
       monitor.beginTask( m_title, 2000 );
@@ -112,7 +109,6 @@ public abstract class SetContentHelper
 
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
-        @Override
         protected void runIntern() throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;
@@ -135,50 +131,13 @@ public abstract class SetContentHelper
       if( file.exists() )
         file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
       else
-      {
         file.create( m_pis, force, new SubProgressMonitor( monitor, 1000 ) );
-        wasCreated = true;
-      }
-      
-      // wait for innerThread to stop
-      while( innerThread.isAlive() )
-      {
-        try
-        {
-          Thread.sleep( 100 );
-        }
-        catch( final InterruptedException e )
-        {
-          e.printStackTrace();
-        }
-      }
 
       m_pis.close();
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, "Fehler beim Schreiben einer Datei" ) );
-    }
-    catch( final CoreException e )
-    {
-      // if we should create the file, silently delete it now
-      if( wasCreated )
-      {
-        try
-        {
-          file.delete( true, new NullProgressMonitor() );
-        }
-        catch( final CoreException ce )
-        {
-          // Log?
-          
-          // ignore
-          ce.printStackTrace();
-        }
-      }
-      
-      // rethrow
-      throw e;
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler", thrown ) );
     }
     catch( final IOException e )
     {

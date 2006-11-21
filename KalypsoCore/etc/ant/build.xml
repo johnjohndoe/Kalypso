@@ -3,7 +3,8 @@
 
 	<property name="project" value="${workspace}/KalypsoCore" />
 
-	<!--path id="compile.classpath">
+	<!-- Override Classpath for utils-->
+	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
@@ -14,19 +15,23 @@
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
-	</path-->
+	</path>
 
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
 	<property name="project-name" value="KalypsoCore" />
 
-	<!-- overriden for copying non-java files -->
-	<!--target name="compile" depends="prepare">
+	<target name="binding">
+		<ant antfile="${project}/etc/schemas/build.xml" inheritall="false" target="deploy" dir="${project}/etc/schemas" />
+	</target>
+
+	<!-- overriden because of dependency to binding and for copying non-java files -->
+	<target name="compile" depends="prepare,binding">
 		<antcall target="commonbuild.compile" />
 
 		<copy todir="${project.bin}">
 			<fileset dir="${project.src}" excludes="**/*.java" />
 		</copy>
-	</target-->
+	</target>
 
 </project>
 

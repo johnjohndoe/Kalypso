@@ -83,9 +83,9 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1399131144729310956L;
 
-  public GM_Ring m_exterior = null;
+  public GM_Ring exterior = null;
 
-  public GM_Ring[] m_interior = null;
+  public GM_Ring[] interior = null;
 
   /**
    * constructor
@@ -93,8 +93,8 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   public GM_SurfaceBoundary_Impl( GM_Ring exterior, GM_Ring[] interior ) 
   {
     super( exterior.getCoordinateSystem() );
-    this.m_exterior = exterior;
-    this.m_interior = interior;
+    this.exterior = exterior;
+    this.interior = interior;
     setValid( false );
   }
 
@@ -103,7 +103,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    */
   public GM_Ring getExteriorRing()
   {
-    return m_exterior;
+    return exterior;
   }
 
   /**
@@ -111,13 +111,12 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    */
   public GM_Ring[] getInteriorRings()
   {
-    return m_interior;
+    return interior;
   }
 
   /**
    * returns the boundary of the boundary
    */
-  @Override
   public GM_Boundary getBoundary()
   {
     return null;
@@ -129,7 +128,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * @param other
    *          object to compare to
    */
-  @Override
   public boolean equals( Object other )
   {
     if( !super.equals( other ) || !( other instanceof GM_SurfaceBoundary_Impl ) )
@@ -137,12 +135,12 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
       return false;
     }
 
-    if( !m_exterior.equals( ( (GM_SurfaceBoundary)other ).getExteriorRing() ) )
+    if( !exterior.equals( ( (GM_SurfaceBoundary)other ).getExteriorRing() ) )
     {
       return false;
     }
 
-    if( m_interior != null )
+    if( interior != null )
     {
       GM_Ring[] r1 = getInteriorRings();
       GM_Ring[] r2 = ( (GM_SurfaceBoundary)other ).getInteriorRings();
@@ -180,13 +178,12 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    */
   public int getCoordinateDimension()
   {
-    return m_exterior.getPositions()[0].getAsArray().length;
+    return exterior.getPositions()[0].getAsArray().length;
   }
 
   /**
    * returns a copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_SurfaceBoundary sb = null;
@@ -194,11 +191,11 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     try
     {
       GM_Ring ext = (GM_Ring)( (GM_Ring_Impl)getExteriorRing() ).clone();
-      GM_Ring[] inn = new GM_Ring[m_interior.length];
+      GM_Ring[] inn = new GM_Ring[interior.length];
 
       for( int i = 0; i < inn.length; i++ )
       {
-        inn[i] = (GM_Ring)( (GM_Ring_Impl)m_interior[i] ).clone();
+        inn[i] = (GM_Ring)( (GM_Ring_Impl)interior[i] ).clone();
       }
 
       sb = new GM_SurfaceBoundary_Impl( ext, inn );
@@ -216,18 +213,17 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
    */
-  @Override
   public boolean intersects( GM_Object gmo )
   {
-    boolean inter = m_exterior.intersects( gmo );
+    boolean inter = exterior.intersects( gmo );
 
     if( !inter )
     {
-      if( m_interior != null )
+      if( interior != null )
       {
-        for( int i = 0; i < m_interior.length; i++ )
+        for( int i = 0; i < interior.length; i++ )
         {
-          if( m_interior[i].intersects( gmo ) )
+          if( interior[i].intersects( gmo ) )
           {
             inter = true;
             break;
@@ -245,20 +241,19 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * </p>
    * At the moment the operation just works with point geometries
    */
-  @Override
   public boolean contains( GM_Object gmo )
   {
     boolean con = false;
 
-    con = m_exterior.contains( gmo );
+    con = exterior.contains( gmo );
 
     if( con )
     {
-      if( m_interior != null )
+      if( interior != null )
       {
-        for( int i = 0; i < m_interior.length; i++ )
+        for( int i = 0; i < interior.length; i++ )
         {
-          if( m_interior[i].intersects( gmo ) )
+          if( interior[i].intersects( gmo ) )
           {
             con = false;
             break;
@@ -277,7 +272,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * </p>
    * dummy implementation
    */
-  @Override
   public boolean contains( GM_Position position )
   {
     return contains( new GM_Point_Impl( position, null ) );
@@ -288,7 +282,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    */
   private void calculateEnvelope()
   {
-    envelope = (GM_Envelope)( (GM_Envelope_Impl)m_exterior.getEnvelope() ).clone();
+    envelope = (GM_Envelope)( (GM_Envelope_Impl)exterior.getEnvelope() ).clone();
   }
 
   /**
@@ -298,24 +292,24 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   {
     try
     {
-      double[] cen = m_exterior.getCentroid().getAsArray().clone();
-      double cnt = m_exterior.getAsCurveSegment().getNumberOfPoints();
+      double[] cen = (double[])exterior.getCentroid().getAsArray().clone();
+      double cnt = exterior.getAsCurveSegment().getNumberOfPoints();
 
       for( int i = 0; i < cen.length; i++ )
       {
         cen[i] *= cnt;
       }
 
-      if( m_interior != null )
+      if( interior != null )
       {
-        for( int i = 0; i < m_interior.length; i++ )
+        for( int i = 0; i < interior.length; i++ )
         {
-          double[] pos = m_interior[i].getCentroid().getAsArray();
-          cnt += m_interior[i].getAsCurveSegment().getNumberOfPoints();
+          double[] pos = interior[i].getCentroid().getAsArray();
+          cnt += interior[i].getAsCurveSegment().getNumberOfPoints();
 
           for( int j = 0; j < pos.length; j++ )
           {
-            cen[j] += ( pos[j] * m_interior[i].getAsCurveSegment().getNumberOfPoints() );
+            cen[j] += ( pos[j] * interior[i].getAsCurveSegment().getNumberOfPoints() );
           }
         }
       }
@@ -325,7 +319,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
         cen[j] /= cnt;
       }
 
-      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() );
+      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), crs );
     }
     catch( Exception ex )
     {
@@ -336,7 +330,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /**
    * calculates the centroid and the envelope of the surface boundary
    */
-  @Override
   protected void calculateParam()
   {
     calculateEnvelope();
@@ -344,23 +337,11 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     setValid( true );
   }
 
-  @Override
   public String toString()
   {
     String ret = null;
-    ret = "interior = " + m_interior + "\n";
-    ret += ( "exterior = " + m_exterior + "\n" );
+    ret = "interior = " + interior + "\n";
+    ret += ( "exterior = " + exterior + "\n" );
     return ret;
-  }
-  
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
-   */
-  @Override
-  public void invalidate( )
-  {
-    m_exterior.invalidate();
-    for( final GM_Object gmobj : m_interior )
-      gmobj.invalidate();
   }
 }

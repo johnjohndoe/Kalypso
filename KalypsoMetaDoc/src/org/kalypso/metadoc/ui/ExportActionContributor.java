@@ -72,7 +72,8 @@ public class ExportActionContributor
    *          the mode (in the sense of the org.kalypso.metadoc.exportTarget) which denotes which kind of perspective
    *          should be supported by the extension. Optional, can be null, which means take all targets.
    */
-  public static ExportAction[] contributeActions( final IEditorPart targetEditor, final String menuPath, final String toolbarGroup, final String mode )
+  public static ExportAction[] contributeActions( final IEditorPart targetEditor, final String menuPath,
+      final String toolbarGroup, final String mode )
   {
     try
     {
@@ -92,13 +93,13 @@ public class ExportActionContributor
         {
           if( menuItem instanceof GroupMarker )
           {
-            final GroupMarker marker = (GroupMarker) menuItem;
+            final GroupMarker marker = (GroupMarker)menuItem;
             final IContributionManager parent = marker.getParent();
             parent.appendToGroup( marker.getGroupName(), action );
           }
           else if( menuItem instanceof IMenuManager )
           {
-            final IMenuManager mm = (IMenuManager) menuItem;
+            final IMenuManager mm = (IMenuManager)menuItem;
             mm.add( action );
           }
         }
@@ -112,7 +113,8 @@ public class ExportActionContributor
     catch( final CoreException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( targetEditor.getSite().getShell(), "Export Targets laden", "Fehler beim Laden der Export Targets", e.getStatus() );
+      ErrorDialog.openError( targetEditor.getSite().getShell(), "Export Targets laden",
+          "Fehler beim Laden der Export Targets", e.getStatus() );
 
       return null;
     }
@@ -121,18 +123,18 @@ public class ExportActionContributor
   private static ExportAction[] createActions( final IWorkbenchPart part, final String mode ) throws CoreException
   {
     final IExportTarget[] targets = KalypsoMetaDocPlugin.getDefault().getTargets();
-    final List<ExportAction> actions = new ArrayList<ExportAction>( targets.length );
+    final List actions = new ArrayList( targets.length );
 
     for( int i = 0; i < targets.length; i++ )
     {
       final IExportTarget target = targets[i];
-
+      
       // tricky: only add targets that support our mode
       if( target.isModeSupported( mode ) )
         actions.add( new ExportAction( target, part ) );
     }
 
-    return actions.toArray( new ExportAction[actions.size()] );
+    return (ExportAction[])actions.toArray( new ExportAction[actions.size()] );
   }
 
 }

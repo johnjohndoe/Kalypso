@@ -56,7 +56,6 @@ public abstract class AbstractAxis implements IAxis
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( final Object obj )
   {
     if( !( obj instanceof IAxis ) )
@@ -83,7 +82,6 @@ public abstract class AbstractAxis implements IAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  @Override
   public int hashCode()
   {
     final HashCodeBuilder builder = new HashCodeBuilder( 27, 13 );
@@ -102,7 +100,6 @@ public abstract class AbstractAxis implements IAxis
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString()
   {
     if( getUnit().length() == 0 )

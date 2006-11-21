@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.awt.geom.Point2D;
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.media.jai.ParameterList;
@@ -95,7 +96,7 @@ public class Projection extends Info
   /**
    * Classification string for projection (e.g. "Transverse_Mercator").
    */
-  private final String m_classification;
+  private final String classification;
 
   /**
    * Parameters to use for projection, in metres or degrees.
@@ -124,8 +125,8 @@ public class Projection extends Info
   {
     super( name );
     ensureNonNull( "classification", classification );
-    m_classification = classification;
-    m_parameters = init( getParameterList( classification ), ellipsoid, centre, translation, scaleFactor );
+    this.classification = classification;
+    this.m_parameters = init( getParameterList( classification ), ellipsoid, centre, translation, scaleFactor );
   }
 
   /**
@@ -147,7 +148,7 @@ public class Projection extends Info
     super( name );
     ensureNonNull( "classification", classification );
     ensureNonNull( "parameters", parameters );
-    this.m_classification = classification;
+    this.classification = classification;
     this.m_parameters = clone( parameters );
   }
 
@@ -164,7 +165,7 @@ public class Projection extends Info
   Projection( final Map properties, final String classification, final ParameterList parameters )
   {
     super( properties );
-    this.m_classification = classification;
+    this.classification = classification;
     this.m_parameters = parameters;
     // Accept null values.
   }
@@ -252,7 +253,7 @@ public class Projection extends Info
    */
   public String getClassName()
   {
-    return m_classification;
+    return classification;
   }
 
   /**
@@ -356,12 +357,11 @@ public class Projection extends Info
   /**
    * Returns a hash value for this projection.
    */
-  @Override
   public int hashCode()
   {
     int code = 45896321;
-    if( m_classification != null )
-      code = code * 37 + m_classification.hashCode();
+    if( classification != null )
+      code = code * 37 + classification.hashCode();
     if( m_parameters != null )
       code = code * 37 + m_parameters.hashCode();
     return code;
@@ -370,19 +370,18 @@ public class Projection extends Info
   /**
    * Compares the specified object with this projection for equality.
    */
-  @Override
   public boolean equals( final Object object )
   {
     if( super.equals( object ) )
     {
       final Projection that = (Projection)object;
-      return Utilities.equals( this.m_classification, that.m_classification )
+      return Utilities.equals( this.classification, that.classification )
           && Utilities.equals( this.m_parameters, that.m_parameters );
     }
     return false;
   }
 
-  @Override /**
+  /**
    * Fill the part inside "[...]". Used for formatting Well Know Text (WKT).
    */
   String addString( final StringBuffer buffer )
@@ -395,7 +394,6 @@ public class Projection extends Info
    * 
    * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
-  @Override
   final Object toOpenGIS( final Object adapters )
   {
     return new Export( adapters );
@@ -431,7 +429,7 @@ public class Projection extends Info
     /**
      * Gets number of parameters of the projection.
      */
-    public int getNumParameters()
+    public int getNumParameters() throws RemoteException
     {
       final CS_ProjectionParameter[] parameters = getParameters();
       return ( parameters != null ) ? parameters.length : 0;
@@ -440,7 +438,7 @@ public class Projection extends Info
     /**
      * Gets an indexed parameter of the projection.
      */
-    public CS_ProjectionParameter getParameter( final int index )
+    public CS_ProjectionParameter getParameter( final int index ) throws RemoteException
     {
       final CS_ProjectionParameter[] parameters = getParameters();
       return (CS_ProjectionParameter)parameters[index].clone();
@@ -449,7 +447,7 @@ public class Projection extends Info
     /**
      * Gets the projection classification name (e.g. 'Transverse_Mercator').
      */
-    public String getClassName()
+    public String getClassName() throws RemoteException
     {
       return Projection.this.getClassName();
     }
@@ -461,7 +459,7 @@ public class Projection extends Info
     {
       if( m_exportParameters == null )
       {
-        m_exportParameters = m_adapters.export( Projection.this.getParameters() );
+        m_exportParameters = adapters.export( Projection.this.getParameters() );
       }
       return m_exportParameters;
     }

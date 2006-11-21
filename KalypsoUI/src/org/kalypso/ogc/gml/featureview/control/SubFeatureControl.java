@@ -4,34 +4,32 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
+import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public class SubFeatureControl extends AbstractFeatureControl
 {
   private IFeatureControl m_fc;
 
+  private final FeatureviewType[] m_views;
+
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final FormToolkit m_formToolkit;
-
-  private final IFeatureviewFactory m_featureviewFactory;
-
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final IFeatureviewFactory featureviewFactory )
+  public SubFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
-    super( ftp );
-    
+    super( workspace, ftp );
     m_selectionManager = selectionManager;
-    m_formToolkit = formToolkit;
-    m_featureviewFactory = featureviewFactory;
+    m_views = views;
   }
 
   /**
@@ -40,20 +38,12 @@ public class SubFeatureControl extends AbstractFeatureControl
   public Control createControl( final Composite parent, int style )
   {
     final Feature feature = getFeature();
-    final Object property = feature.getProperty( getFeatureTypeProperty() );
+    final GMLWorkspace workspace = getWorkspace();
+    final Object property = feature.getProperty( getFeatureTypeProperty().getName() );
     if( property instanceof Feature )
-    {
-      final FeatureComposite fc = new FeatureComposite( (Feature) property, m_selectionManager, m_featureviewFactory );
-
-      /* Set the toolkit to the FeatureComposite. The check for null is perfomrmed in FeatureComposite. */
-      fc.setFormToolkit( m_formToolkit );
-
-      m_fc = fc;
-    }
+      m_fc = new FeatureComposite( workspace, (Feature)property, m_selectionManager, m_views );
     else
-    {
-      m_fc = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
-    }
+      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty(), m_selectionManager );
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {
@@ -62,22 +52,20 @@ public class SubFeatureControl extends AbstractFeatureControl
         fireFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
+      public void openFeatureRequested( final Feature featureToOpen, final FeatureTypeProperty ftpToOpen )
       {
         fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }
     } );
 
     final Control control = m_fc.createControl( parent, SWT.NONE );
-
     return control;
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_fc.dispose();
   }
@@ -85,7 +73,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
     m_fc.updateControl();
   }
@@ -93,7 +81,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return m_fc.isValid();
   }
@@ -112,12 +100,6 @@ public class SubFeatureControl extends AbstractFeatureControl
   public void removeModifyListener( ModifyListener l )
   {
     m_fc.removeModifyListener( l );
-  }
-
-  /** Returns the used feature control. */
-  public IFeatureControl getFeatureControl( )
-  {
-    return m_fc;
   }
 
 }

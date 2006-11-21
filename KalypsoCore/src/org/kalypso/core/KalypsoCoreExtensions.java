@@ -49,12 +49,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalogContribution;
-import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
@@ -67,12 +62,11 @@ public class KalypsoCoreExtensions
 {
   private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor";
 
-  private final static String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution";
-
   /** id -> config-element */
-  private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
+  private static Map THE_VISITOR_MAP = null;
 
-  public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
+  public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties )
+      throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -80,7 +74,7 @@ public class KalypsoCoreExtensions
     if( THE_VISITOR_MAP == null )
     {
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      THE_VISITOR_MAP = new HashMap( configurationElements.length );
       for( int i = 0; i < configurationElements.length; i++ )
       {
         final IConfigurationElement element = configurationElements[i];
@@ -92,53 +86,11 @@ public class KalypsoCoreExtensions
     if( !THE_VISITOR_MAP.containsKey( id ) )
       return null;
 
-    final IConfigurationElement element = THE_VISITOR_MAP.get( id );
-    final FeatureVisitor visitor = (FeatureVisitor) element.createExecutableExtension( "class" );
+    final IConfigurationElement element = (IConfigurationElement)THE_VISITOR_MAP.get( id );
+    final FeatureVisitor visitor = (FeatureVisitor)element.createExecutableExtension( "class" );
     if( visitor instanceof IPropertiesFeatureVisitor )
-      ((IPropertiesFeatureVisitor) visitor).init( properties );
+      ( (IPropertiesFeatureVisitor)visitor ).init( properties );
 
     return visitor;
-  }
-
-  public static void loadXMLCatalogs( final CatalogManager catalogManager )
-  {
-    if( !Platform.isRunning() )
-    {
-      System.out.println( "Platform is not running, plugins are not available" );
-      return;
-    }
-
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( CATALOG_CONTRIBUTIONS_EXTENSION_POINT );
-
-    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( int i = 0; i < configurationElements.length; i++ )
-    {
-      try
-      {
-        final IConfigurationElement element = configurationElements[i];
-        final String name = element.getName();
-        if( "catalogContribution".equals( name ) )
-        {
-          final Object createExecutableExtension = element.createExecutableExtension( "class" );
-          final ICatalogContribution catalogContribution = (ICatalogContribution) createExecutableExtension;
-          catalogContribution.contributeTo( catalogManager );
-        }
-        else if( "urnGenerator".equals( name ) )
-        {
-          final Object createExecutableExtension = element.createExecutableExtension( "class" );
-          final IURNGenerator urnGenerator = (IURNGenerator) createExecutableExtension;
-          catalogManager.register( urnGenerator );
-        }
-      }
-      catch( final Throwable t )
-      {
-        // In order to prevent bad code from other plugins (see Eclipse-PDE-Rules)
-        // catch exception here and just log it
-        final IStatus status = StatusUtilities.statusFromThrowable( t );
-        KalypsoCorePlugin.getDefault().getLog().log( status );
-      }
-    }
   }
 }

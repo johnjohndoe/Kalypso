@@ -41,9 +41,6 @@
 
 package org.kalypso.ui.editor.diagrameditor;
 
-import java.util.Arrays;
-import java.util.TimeZone;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,7 +50,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -66,30 +62,25 @@ import org.eclipse.swt.widgets.Text;
 public class DiagramPropertiesDialog extends TitleAreaDialog
 {
   protected String m_diagTitle;
-
   protected boolean m_showLegend;
-
   protected String m_legendTitle;
 
-  protected String m_tz;
-
-  public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend, final String legendTitle, final String timezoneName )
+  public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend,
+      final String legendTitle )
   {
     super( parentShell );
 
     m_diagTitle = diagTitle;
     m_showLegend = showLegend;
     m_legendTitle = legendTitle;
-    m_tz = timezoneName;
   }
 
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   protected Control createDialogArea( Composite parent )
   {
-    setTitle( "Zeitreihen-Diagramm-Eigenschaften" );
+    setTitle( "Diagramm Eigenschaften" );
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
@@ -121,7 +112,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
-        // empty
+      // empty
       }
     } );
 
@@ -138,45 +129,21 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
       }
     } );
 
-    final Label lblTz = new Label( cmp, SWT.LEFT );
-    lblTz.setText( "Zeitzone" );
-    final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
-    cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
-    final String[] tz = TimeZone.getAvailableIDs();
-    Arrays.sort( tz );
-    cmbTz.setItems( tz );
-    
-    cmbTz.setText( m_tz );
-    
-    cmbTz.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        m_tz = cmbTz.getText();
-      }
-    } );
-    
     return cmp;
   }
 
-  public String getDiagramTitle( )
+  public String getDiagramTitle()
   {
     return m_diagTitle;
   }
 
-  public boolean isShowLegend( )
+  public boolean isShowLegend()
   {
     return m_showLegend;
   }
 
-  public String getLegendTitle( )
+  public String getLegendTitle()
   {
     return m_legendTitle;
-  }
-  
-  public String getTimezoneName( )
-  {
-    return m_tz;
   }
 }

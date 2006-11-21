@@ -59,10 +59,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * 
+ * 
  * Wizard to import a raster from another format (e.g. ascii) to gml
  * 
  * @author Nadja Peiler
@@ -104,7 +106,6 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
-  @Override
   public void addPages()
   {
     super.addPages();
@@ -118,7 +119,6 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performCancel()
    */
-  @Override
   public boolean performCancel()
   {
     return true;
@@ -127,7 +127,6 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
-  @Override
   public boolean performFinish()
   {
     final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
@@ -143,13 +142,12 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
       {
         Job importGridJob = new Job( "Raster importieren" )
         {
-          @Override
           protected IStatus run( final IProgressMonitor monitor )
           {
             try
             {
               monitor.beginTask( "Lese Rasterdaten", 100 );
-              RectifiedGridCoverage2 rasterGrid = GridUtils.importGridArc( fileSource, cs );
+              RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
               monitor.worked( 50 );
               if( monitor.isCanceled() )
               {

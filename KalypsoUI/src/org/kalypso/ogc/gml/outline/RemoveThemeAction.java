@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoPictureTheme;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
 
 /**
  * @author belger
@@ -61,14 +61,12 @@ public class RemoveThemeAction extends AbstractOutlineAction
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run()
   {
     getListManipulator().removeElement( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
-  @Override
-  protected void refresh( )
+  protected void refresh()
   {
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
     setEnabled( !s.isEmpty()

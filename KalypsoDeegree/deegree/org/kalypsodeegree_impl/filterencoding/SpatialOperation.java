@@ -63,20 +63,18 @@ package org.kalypsodeegree_impl.filterencoding;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
+import org.kalypsodeegree.gml.GMLBox;
+import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
-import org.kalypsodeegree_impl.model.geometry.AdapterGmlIO;
-import org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.gml.GMLFactory;
+import org.kalypsodeegree_impl.gml.GMLGeometry_Impl;
+import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Element;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Encapsulates the information of a spatial_ops entity (as defined in the Filter DTD).
@@ -89,38 +87,39 @@ import com.vividsolutions.jts.geom.Geometry;
 public class SpatialOperation extends AbstractOperation
 {
 
+  private GMLGeometry gmlGeometry;
+
   private GM_Object geometryLiteral;
 
-  private PropertyName m_propertyName;
+  private PropertyName propertyName;
 
-  // calvin added on 10/21/2003
-  private double m_distance = -1;
-
-  private GM_Object m_geometry;
+  //calvin added on 10/21/2003
+  private double distance = -1;
 
   /**
    * Constructs a new SpatialOperation.
    * 
    * @see OperationDefines
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry )
+  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry )
   {
     super( operatorId );
-    m_propertyName = propertyName;
-    m_geometry = gmlGeometry;
+    this.propertyName = propertyName;
+    this.gmlGeometry = gmlGeometry;
   }
 
   /**
    * Constructs a new SpatialOperation.
    * 
    * @see OperationDefines Calvin added on 10/21/2003
+   *  
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GM_Object gmlGeometry, double d )
+  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry, double d )
   {
     super( operatorId );
-    this.m_propertyName = propertyName;
-    this.m_geometry = gmlGeometry;
-    this.m_distance = d;
+    this.propertyName = propertyName;
+    this.gmlGeometry = gmlGeometry;
+    this.distance = d;
   }
 
   /**
@@ -128,9 +127,9 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @return the distance for geo spatial comparsions such as DWithin or Beyond
    */
-  public double getDistance( )
+  public double getDistance()
   {
-    return m_distance;
+    return distance;
   }
 
   /**
@@ -150,7 +149,7 @@ public class SpatialOperation extends AbstractOperation
     // every spatial operation has exactly 2 elements
     ElementList children = XMLTools.getChildElements( element );
 
-    if( (children.getLength() != 2) && (operatorId != OperationDefines.DWITHIN) )
+    if( ( children.getLength() != 2 ) && ( operatorId != OperationDefines.DWITHIN ) )
     {
       throw new FilterConstructionException( "'" + name + "' requires exactly 2 elements!" );
     }
@@ -161,31 +160,19 @@ public class SpatialOperation extends AbstractOperation
 
     if( !child1.getLocalName().toLowerCase().equals( "propertyname" ) )
     {
-      throw new FilterConstructionException( "First element of every '" + name + "'-operation must be a " + "'PropertyName'-element!" );
+      throw new FilterConstructionException( "First element of every '" + name + "'-operation must be a "
+          + "'PropertyName'-element!" );
     }
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
-    final String gmlVersion = "2.1.2";
-    final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
-
-    final Object geometry;
-    try
-    {
-      geometry = bindingToGM_ObjectAdapter.wrapFromNode( child2 );
-    }
-    catch( Exception e1 )
-    {
-      e1.printStackTrace();
-      throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name + "'-operation: " + e1.getMessage() );
-    }
-    final GM_Object gmlGeometry = (GM_Object) geometry;
+    PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( child1 );
+    final GMLGeometry gmlGeometry = GMLFactory.createGMLGeometry( child2 );
 
     if( gmlGeometry == null )
     {
       throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name + "'-operation!" );
     }
 
-    // calvin added on 10/21/2003
+    //calvin added on 10/21/2003
     double dist = 0;
 
     if( operatorId == OperationDefines.DWITHIN )
@@ -219,31 +206,31 @@ public class SpatialOperation extends AbstractOperation
 
     switch( operatorId )
     {
-      case OperationDefines.CROSSES:
-      case OperationDefines.BEYOND:
-        throw new FilterConstructionException( "Spatial operator '" + name + "' not implemented!" );
-      case OperationDefines.EQUALS:
-      case OperationDefines.OVERLAPS:
-      case OperationDefines.TOUCHES:
-      case OperationDefines.DISJOINT:
-      case OperationDefines.INTERSECTS:
-      case OperationDefines.WITHIN:
-      case OperationDefines.CONTAINS:
-      // calvin added on 10/21/2003
-      case OperationDefines.DWITHIN:
-        // every GMLGeometry is allowed as Literal-argument here
-        break;
-      case OperationDefines.BBOX:
+    case OperationDefines.CROSSES:
+    case OperationDefines.BEYOND:
+      throw new FilterConstructionException( "Spatial operator '" + name + "' not implemented!" );
+    case OperationDefines.EQUALS:
+    case OperationDefines.OVERLAPS:
+    case OperationDefines.TOUCHES:
+    case OperationDefines.DISJOINT:
+    case OperationDefines.INTERSECTS:
+    case OperationDefines.WITHIN:
+    case OperationDefines.CONTAINS:
+    //calvin added on 10/21/2003
+    case OperationDefines.DWITHIN:
+      // every GMLGeometry is allowed as Literal-argument here
+      break;
+    case OperationDefines.BBOX:
+    {
+      if( !( gmlGeometry instanceof GMLBox ) )
       {
-        if( !(gmlGeometry instanceof GM_Envelope) )
-        {
-          throw new FilterConstructionException( "'" + name + "' can only be used with a 'Box'-geometry!" );
-        }
-
-        break;
+        throw new FilterConstructionException( "'" + name + "' can only be used with a 'Box'-geometry!" );
       }
-      default:
-        throw new FilterConstructionException( "'" + name + "' is not a spatial operator!" );
+
+      break;
+    }
+    default:
+      throw new FilterConstructionException( "'" + name + "' is not a spatial operator!" );
     }
 
     return new SpatialOperation( operatorId, propertyName, gmlGeometry, dist );
@@ -260,14 +247,15 @@ public class SpatialOperation extends AbstractOperation
    */
   public GM_Object getGeometryProperty( Feature feature ) throws FilterEvaluationException
   {
-    Object o = feature.getProperty( m_propertyName.getQValue() );
+    Object o = feature.getProperty( propertyName.getValue() );
 
-    if( o != null && !(o instanceof GM_Object) )
+    if( o != null && !( o instanceof GM_Object ) )
     {
-      throw new FilterEvaluationException( "Specified PropertyName: '" + m_propertyName.getValue() + "' does not denote a geometry object!" );
+      throw new FilterEvaluationException( "Specified PropertyName: '" + propertyName.getValue()
+          + "' does not denote a geometry object!" );
     }
 
-    return (GM_Object) o;
+    return (GM_Object)o;
   }
 
   /**
@@ -278,11 +266,19 @@ public class SpatialOperation extends AbstractOperation
    * @throws FilterEvaluationException
    *           if the Literal can not be converted to a GM_Object
    */
-  public GM_Object getGeometryLiteral( )
+  public GM_Object getGeometryLiteral() throws FilterEvaluationException
   {
     if( geometryLiteral == null )
     {
-      geometryLiteral = m_geometry;
+      try
+      {
+        geometryLiteral = GMLAdapter.wrap( gmlGeometry );
+      }
+      catch( GM_Exception e )
+      {
+        throw new FilterEvaluationException( "Construction of GM_Object from " + "SpatialOperation literal failed: '"
+            + e.getMessage() + "'!" );
+      }
     }
 
     return geometryLiteral;
@@ -293,9 +289,9 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @return the literal as a <tt>GMLGeometry</tt> -object.
    */
-  public GM_Object getGeometry( )
+  public GMLGeometry getGeometry()
   {
-    return m_geometry;
+    return gmlGeometry;
   }
 
   /**
@@ -303,44 +299,30 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @deprecated replaced by {@link #getGeometry()}
    */
-  @Deprecated
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox()
   {
-    final GM_Envelope box = m_geometry.getEnvelope();
+    GM_Envelope box = GMLAdapter.createGM_Envelope( (GMLBox)gmlGeometry );
+
     return box;
   }
 
   /**
    * returns the name of the (spatial) property that shall be use for geo spatial comparsions
    */
-  public PropertyName getPropertyName( )
+  public PropertyName getPropertyName()
   {
-    return m_propertyName;
+    return propertyName;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 2000 );
     sb.append( "<ogc:" ).append( getOperatorName() );
     sb.append( " xmlns:gml='http://www.opengis.net/gml' " ).append( ">" );
-    sb.append( m_propertyName.toXML() );
-    // TODO support gml verisons in filter !!
-    final String gmlVersion = "2.1";
+    sb.append( propertyName.toXML() );
 
-    final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
-    final Element element;
-    try
-    {
-      element = objectToGMLBindingAdapter.wrapToElement( m_geometry );
-    }
-    catch( GM_Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      throw new UnsupportedOperationException();
-    }
-    // final Element element = AdapterBindingToValue_GML31.createElement( gmlVersion, m_geometry );
+    Element element = ( (GMLGeometry_Impl)gmlGeometry ).getAsElement();
     XMLTools.appendNode( element, "", sb );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
 
@@ -368,153 +350,70 @@ public class SpatialOperation extends AbstractOperation
     if( geom == null )
       return false;
 
-    switch( m_operatorId )
+    switch( operatorId )
     {
-      case OperationDefines.EQUALS:
-        value = getGeometryProperty( feature ).equals( getGeometryLiteral() );
-      case OperationDefines.DISJOINT:
-      {
-        try
-        {
-          Geometry geomNotToIntersectWith = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomTestNotToIntersect = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = !geomNotToIntersectWith.intersects( geomTestNotToIntersect );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-        break;
-      }
-      case OperationDefines.WITHIN:
-      {
-        value = getGeometryLiteral().contains( getGeometryProperty( feature ) );
-        break;
-      }
-      case OperationDefines.CONTAINS:
-      {
-        try
-        {
-          Geometry geomWhoContains = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsContained = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomWhoContains.contains( geomIsContained );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-        break;
-      }
-      case OperationDefines.INTERSECTS:
-      {
-        try
-        {
-          Geometry geomWhoIntersects = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsIntersecting = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomWhoIntersects.intersects( geomIsIntersecting );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-        break;
-      }
-      case OperationDefines.BBOX:
-      {
-        value = getGeometryProperty( feature ).intersects( getGeometryLiteral() );
-        break;
-      }
-      // calvin added on 10/21/2003
-      case OperationDefines.DWITHIN:
-      {
-        try
-        {
-          Geometry geomWhomToBeWithIn = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsWithIn = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomWhomToBeWithIn.isWithinDistance( geomIsWithIn, getDistance() );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-        break;
-      }
-      case OperationDefines.CROSSES:
-        try
-        {
-          Geometry geomToCross = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomThatCrosses = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomToCross.crosses( geomThatCrosses );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-      case OperationDefines.BEYOND:
-      case OperationDefines.OVERLAPS:
-        try
-        {
-          Geometry geomToOverlap = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomOverlapping = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomToOverlap.overlaps( geomOverlapping );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-      case OperationDefines.TOUCHES:
-        try
-        {
-          Geometry geomWhoTouches = JTSAdapter.export( getGeometryLiteral() );
-          Geometry geomIsTouched = JTSAdapter.export( getGeometryProperty( feature ) );
-          value = geomWhoTouches.touches( geomIsTouched );
-        }
-        catch( GM_Exception e )
-        {
-          e.printStackTrace();
-        }
-        throw new FilterEvaluationException( "Evaluation for spatial " + "operation '" + OperationDefines.getNameById( m_operatorId ) + "' is not implemented yet!" );
-      default:
-        throw new FilterEvaluationException( "Encountered unexpected " + "operatorId: " + m_operatorId + " in SpatialOperation.evaluate ()!" );
+    case OperationDefines.EQUALS:
+      value = getGeometryProperty( feature ).equals( getGeometryLiteral() );
+    case OperationDefines.DISJOINT:
+    {
+      value = !getGeometryProperty( feature ).intersects( getGeometryLiteral() );
+      break;
+    }
+    case OperationDefines.WITHIN:
+    {
+      value = getGeometryLiteral().contains( getGeometryProperty( feature ) );
+      break;
+    }
+    case OperationDefines.CONTAINS:
+    {
+      value = getGeometryProperty( feature ).contains( getGeometryLiteral() );
+      break;
+    }
+    case OperationDefines.INTERSECTS:
+    case OperationDefines.BBOX:
+    {
+      value = getGeometryProperty( feature ).intersects( getGeometryLiteral() );
+      break;
+    }
+    //calvin added on 10/21/2003
+    case OperationDefines.DWITHIN:
+    {
+      value = getGeometryProperty( feature ).isWithinDistance( getGeometryLiteral(), distance );
+      break;
+    }
+    case OperationDefines.CROSSES:
+    case OperationDefines.BEYOND:
+    case OperationDefines.OVERLAPS:
+    case OperationDefines.TOUCHES:
+      throw new FilterEvaluationException( "Evaluation for spatial " + "operation '"
+          + OperationDefines.getNameById( operatorId ) + "' is not implemented yet!" );
+    default:
+      throw new FilterEvaluationException( "Encountered unexpected " + "operatorId: " + operatorId
+          + " in SpatialOperation.evaluate ()!" );
     }
 
     return value;
   }
 
-  // CK: I added the set methods to change the filter element when it exists as an Object only. These changes must be
+  //CK: I added the set methods to change the filter element when it exists as an Object only. These changes must be
   // reflected when saving the filter somewhere this means the filter has to be exported as a XML in the source
   // Document.
-  // (August 2005)
+  //(August 2005)
 
   public void setProperty( PropertyName name )
   {
-    m_propertyName = name;
+    propertyName = name;
   }
 
-  public void setGeometry( GM_Object geom )
+  public void setGeometry( GMLGeometry geom ) throws GM_Exception
   {
-    geometryLiteral = geom;
-    m_geometry = geom;
+    gmlGeometry = geom;
+    geometryLiteral = GMLAdapter.wrap( geom );
   }
 
   public void setOperatorId( int opearationId )
   {
-    m_operatorId = opearationId;
+    this.operatorId = opearationId;
 
   }
-
-  public void setDistacnce( double distance )
-  {
-    m_distance = distance;
-  }
-
-  /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
-   *      org.kalypsodeegree.filterencoding.Operation, int)
-   */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
-  {
-    fv.visit( this );
-  }
-
 }

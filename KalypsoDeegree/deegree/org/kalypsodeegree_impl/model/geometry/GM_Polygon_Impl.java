@@ -137,7 +137,6 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * @param other
    *          object to compare to
    */
-  @Override
   public boolean equals( Object other )
   {
     if( !super.equals( other ) || !( other instanceof GM_Polygon_Impl ) )
@@ -148,27 +147,25 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     return true;
   }
 
-  @Override
   public String toString()
   {
     String ret = "GM_SurfacePatch: ";
-    ret = "interpolation = " + m_interpolation + "\n";
+    ret = "interpolation = " + interpolation + "\n";
     ret += "exteriorRing = \n";
 
-    for( int i = 0; i < m_exteriorRing.length; i++ )
+    for( int i = 0; i < exteriorRing.length; i++ )
     {
-      ret += ( m_exteriorRing[i] + "\n" );
+      ret += ( exteriorRing[i] + "\n" );
     }
 
-    ret += ( "interiorRings = " + m_interiorRings + "\n" );
-    ret += ( "envelope = " + m_envelope + "\n" );
+    ret += ( "interiorRings = " + interiorRings + "\n" );
+    ret += ( "envelope = " + envelope + "\n" );
     return ret;
   }
 
   /**
    * returns a shallow copy of the geometry
    */
-  @Override
   public Object clone()
   {
     GM_Polygon p = null;
@@ -176,7 +173,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     try
     {
       p = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ), getExteriorRing(),
-          getInteriorRings(), m_crs );
+          getInteriorRings(), this.crs );
     }
     catch( Exception ex )
     {
@@ -293,15 +290,5 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     {}
 
     return true;
-  }
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#invalidate()
-   */
-  @Override
-  public void invalidate( )
-  {
-    boundary.invalidate();
-    
-    super.invalidate();
   }
 }

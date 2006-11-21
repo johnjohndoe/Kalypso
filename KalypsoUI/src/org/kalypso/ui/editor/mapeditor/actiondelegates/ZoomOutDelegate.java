@@ -44,18 +44,17 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author belger
  */
-public class ZoomOutDelegate implements IEditorActionDelegate, IViewActionDelegate
+public class ZoomOutDelegate implements IEditorActionDelegate
 {
-  private WidgetActionPart m_part;
+  private GisMapEditor m_editor;
 
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
@@ -63,15 +62,7 @@ public class ZoomOutDelegate implements IEditorActionDelegate, IViewActionDelega
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_part = new WidgetActionPart( targetEditor );
-  }
-
-  /**
-   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-   */
-  public void init( final IViewPart view )
-  {
-    m_part = new WidgetActionPart( view );
+    m_editor = (GisMapEditor)targetEditor;
   }
 
   /**
@@ -79,15 +70,15 @@ public class ZoomOutDelegate implements IEditorActionDelegate, IViewActionDelega
    */
   public void run( final IAction action )
   {
-    if( m_part == null )
+    if( m_editor == null )
       return;
 
-    final MapPanel mapPanel = m_part.getMapPanel();
+    final MapPanel mapPanel = m_editor.getMapPanel();
     if( mapPanel == null )
       return;
 
     final GM_Envelope zoomBox = mapPanel.getZoomOutBoundingBox();
-    m_part.postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
+    m_editor.postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
   }
 
   /**
@@ -96,6 +87,6 @@ public class ZoomOutDelegate implements IEditorActionDelegate, IViewActionDelega
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // nix tun
+  // nix tun
   }
 }

@@ -63,6 +63,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
@@ -70,7 +71,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -171,7 +171,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
-  @Override
   public final void execute() throws BuildException
   {
     try
@@ -234,9 +233,9 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       final IUrlResolver resolver = new UrlResolver();
       final URL gmlURL = resolver.resolveURL( m_context, m_gml );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
 
-      final List<IStatus> stati = new ArrayList<IStatus>();
+      final List stati = new ArrayList();
       for( int i = 0; i < m_featurePath.length; i++ )
       {
         if( monitor.isCanceled() )
@@ -302,7 +301,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       else
         antProject.log( logString );
 
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "",
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "",
           null );
     }
     catch( final Exception e )

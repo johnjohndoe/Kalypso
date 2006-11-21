@@ -79,7 +79,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -175,12 +174,11 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   /**
    * renders the DisplayElement to the submitted graphic context
    */
-  @Override
   public void paint( Graphics g, GeoTransform projection )
   {
     Debug.debugMethodBegin( this, "paint" );
 
-    LineSymbolizer sym = (LineSymbolizer)getSymbolizer();
+    LineSymbolizer sym = (LineSymbolizer)symbolizer;
     org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
 
     // no stroke defined -> don't draw anything
@@ -190,13 +188,11 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     }
 
     // GraphicStroke label
-    final GM_Object geometry = getGeometry();
     if( stroke.getGraphicStroke() != null )
     {
       try
       {
-        final Image image = stroke.getGraphicStroke().getGraphic().getAsImage( getFeature() );
-        
+        Image image = stroke.getGraphicStroke().getGraphic().getAsImage( feature );
         CurveWalker walker = new CurveWalker( g.getClipBounds() );
 
         if( geometry instanceof GM_Curve )
@@ -307,7 +303,6 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
     // Color & Opacity
     Graphics2D g2 = (Graphics2D)g;
-    final Feature feature = getFeature();
     setColor( g2, stroke.getStroke( feature ), stroke.getOpacity( feature ) );
 
     float[] dash = stroke.getDashArray( feature );

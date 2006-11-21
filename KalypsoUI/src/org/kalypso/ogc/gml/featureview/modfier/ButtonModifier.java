@@ -48,20 +48,20 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -69,15 +69,22 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class ButtonModifier implements IFeatureModifier
 {
-  private final IPropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
+
+  private final GMLWorkspace m_workspace;
 
   private Feature m_feature;
 
+  private final IFeatureSelectionManager m_selectionManager;
+
   private final IFeatureChangeListener m_fcl;
 
-  public ButtonModifier( final IPropertyType ftp, final IFeatureChangeListener fcl )
+  public ButtonModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+      final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
+    m_workspace = workspace;
     m_ftp = ftp;
+    m_selectionManager = selectionManager;
     m_fcl = fcl;
   }
 
@@ -87,7 +94,7 @@ public class ButtonModifier implements IFeatureModifier
   public Object getValue( final Feature f )
   {
     m_feature = f;
-    return f.getProperty( m_ftp );
+    return f.getProperty( m_ftp.getName() );
   }
 
   /**
@@ -104,29 +111,29 @@ public class ButtonModifier implements IFeatureModifier
    */
   public CellEditor createCellEditor( final Composite parent )
   {
+    final IFeatureSelectionManager manager = m_selectionManager;
     final IFeatureChangeListener fcl = m_fcl;
     return new DialogCellEditor( parent )
     {
       IFeatureDialog m_featureDialog = null;
 
-      @Override
       protected boolean openDialog( final Control parentControl )
       {
-        m_featureDialog = ButtonFeatureControl.chooseDialog( getFeature(), getFeatureTypeProperty(), fcl );
+        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(),
+            fcl, manager );
         return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
 
       /**
        * @see org.kalypso.ogc.gml.table.celleditors.DialogCellEditor#doGetValue()
        */
-      @Override
-      protected Object doGetValue( )
+      protected Object doGetValue()
       {
         // collect changes from dialog
-        final List<FeatureChange> col = new ArrayList<FeatureChange>();
+        final List col = new ArrayList();
         m_featureDialog.collectChanges( col );
         if( col.size() > 1 ) // TODO support more
-          throw new UnsupportedOperationException( "Dialog must provide exactly one change" ); //$NON-NLS-1$
+          throw new UnsupportedOperationException( "Dialog must provide exactly one change" );
         if( col.size() > 0 )
         {
           final Object change = col.get( 0 );
@@ -138,7 +145,12 @@ public class ButtonModifier implements IFeatureModifier
     };
   }
 
-  protected Feature getFeature( )
+  protected GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
+
+  protected Feature getFeature()
   {
     return m_feature;
   }
@@ -154,7 +166,7 @@ public class ButtonModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty( )
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
@@ -165,29 +177,26 @@ public class ButtonModifier implements IFeatureModifier
   public String getLabel( final Feature f )
   {
     // TODO: GUITypeHandler konsequent einsetzen
-    // besser: abhängig von der IPropertyType etwas machen
-    final IPropertyType ftp = getFeatureTypeProperty();
-    Object fprop = f.getProperty( ftp );
+    // besser: abhängig von der FeatureTypeProperty etwas machen
+    final FeatureTypeProperty ftp = getFeatureTypeProperty();
+    Object fprop = f.getProperty(ftp.getName());
     final Object value = getValue( f );
-    if( fprop != null )
+    final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( m_ftp.getType() );
+    if(fprop != null)
     {
-      if( m_ftp instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = ((IValuePropertyType) m_ftp);
-        final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
-        if( handler != null && value != null )
-          return handler.getText( value );
-      }
-      if( value instanceof Feature )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.element"); //$NON-NLS-1$
-      else if( value instanceof FeatureList )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.elements"); //$NON-NLS-1$
-      else if( value instanceof GM_Object )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.geometry"); //$NON-NLS-1$
-      else if( ftp instanceof IRelationType )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.link"); //$NON-NLS-1$
+    if( handler != null && value != null )
+      return handler.getText( value );
+    else if( value instanceof Feature )
+      return "<Element...>";
+    else if( value instanceof FeatureList )
+      return "<Elemente...>";
+    else if( value instanceof GM_Object )
+      return "<Geometrie>";
+    else if( ftp instanceof FeatureAssociationTypeProperty)
+      return "<Link auf Element...>";    
     }
-    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.edit"); //$NON-NLS-1$
+    return "<Editieren...>";
   }
 
   /**
@@ -202,9 +211,9 @@ public class ButtonModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nichts zu tun
+  // nichts zu tun
   }
 
   /**
@@ -213,5 +222,13 @@ public class ButtonModifier implements IFeatureModifier
   public boolean equals( final Object newData, final Object oldData )
   {
     return newData.equals( oldData );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#isLabelShown()
+   */
+  public boolean isLabelShown()
+  {
+    return true;
   }
 }

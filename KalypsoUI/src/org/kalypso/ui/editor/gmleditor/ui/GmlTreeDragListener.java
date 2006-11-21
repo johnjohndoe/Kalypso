@@ -29,28 +29,49 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import org.eclipse.swt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceAdapter;
+
 import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.swt.dnd.DragSourceListener;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public class GmlTreeDragListener extends DragSourceAdapter
+public class GmlTreeDragListener extends DragSourceAdapter implements DragSourceListener
 {
-  private final GmlTreeView m_view;
+  // TODO: not used remove it!
+  private GmlTreeView m_viewer;
 
-  public GmlTreeDragListener( final GmlTreeView view )
+  public GmlTreeDragListener( GmlTreeView viewer )
   {
-    m_view = view;
+    m_viewer = viewer;
   }
-  
+
+  /**
+   * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
+   */
+  public void dragStart( DragSourceEvent event )
+  {
+   //do nothing
+  }
+
   /**
    * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
    */
-  @Override
-  public void dragSetData( final DragSourceEvent event )
+  public void dragSetData( DragSourceEvent event )
   {
-    LocalSelectionTransfer.getInstance().setSelection( m_view.getSelection() );
+   //do nothing
   }
+
+  /**
+   * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
+   */
+  public void dragFinished( DragSourceEvent event )
+  {
+   //do nothing
+  }
+
 }

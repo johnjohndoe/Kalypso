@@ -46,6 +46,7 @@ package org.kalypso.core;
 public interface IKalypsoCoreConstants
 {
   public final static String PLUGIN_ID = "org.kalypso.core";
-  
-  public static final String RESOURCE_LOCK_MARKER_TYPE = IKalypsoCoreConstants.PLUGIN_ID + ".resourcePoolLockMarker";
+
+  /** System property dfrom which the locations of the kalypso-client.ini is read. If this property is set, it overwrites (and sets) the user preferences. */
+  public static final String CONFIG_PROPERTY_CLIENT_INI_LOCATION = "kalypso.client-ini-locations";
 }
