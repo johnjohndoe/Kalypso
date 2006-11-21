@@ -440,7 +440,7 @@ public abstract class WasyCalcJob implements ICalcJob
     final URL resource = getClass().getResource( resourceBase + filename );
     if( resource == null )
     {
-      System.out.println( "Für Rechnung benötigte Resource nicht gefunden: " + resource.toString() );
+      System.out.println( "Für Rechnung benötigte Resource nicht gefunden: " + resourceBase + filename );
       return;
     }
 
@@ -631,6 +631,8 @@ public abstract class WasyCalcJob implements ICalcJob
     // get first and last date of observation
     final IAxis dateAxis = ObservationUtilities
         .findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+    final IAxis valueAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
+        TimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );
     final int valueCount = values.getCount();
     if( valueCount < 2 )
@@ -638,6 +640,7 @@ public abstract class WasyCalcJob implements ICalcJob
 
     final Date startPrediction = (Date)values.getElement( 0, dateAxis );
     final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
+    final Double endValue = (Double)values.getElement( valueCount - 1, valueAxis );
 
     final Calendar calBegin = Calendar.getInstance();
     calBegin.setTime( startPrediction );
@@ -645,20 +648,19 @@ public abstract class WasyCalcJob implements ICalcJob
     final Calendar calEnd = Calendar.getInstance();
     calEnd.setTime( endPrediction );
 
-    //    final long dayOfMillis = 1000 * 60 * 60 * 24;
     final long millisOf60hours = 1000 * 60 * 60 * 60;
 
     final double endAccuracy = accuracy
         * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
 
-    final double endFactor = 1 + endAccuracy / 100;
+    final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
 
     final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 1, 1 / endFactor, "*",
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "-",
         TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
             + "_unten.zml" ), "- Spur Unten" );
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 1, endFactor, "*",
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "+",
         TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
             + "_oben.zml" ), "- Spur Oben" );
   }

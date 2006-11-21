@@ -232,7 +232,7 @@ public class WasyInputWorker
       final File wqFile = (File)props.get( WasyCalcJob.DATA_WQFILE );
       final String wqFilename = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( wqFile
           .getAbsolutePath() );
-      final DBaseFile dbf = new DBaseFile( wqFilename, fds );
+      final DBaseFile dbf = new DBaseFile( wqFilename, fds, "CP850" );
 
       for( final Iterator iter = paramMap.entrySet().iterator(); iter.hasNext(); )
       {
@@ -266,8 +266,8 @@ public class WasyInputWorker
 
             if( i < wechmanParamCount - 1 )
             {
-              if( params.hasWGR() )
-
+              /** If we have no following parameters, also write 9999.9; if not the calculation core gets problems. */
+              if( paramArray[i + 1] != null && params.hasWGR() )
                 record.add( new Double( params.getWGR() ) ); // WGR_
               else
                 record.add( new Double( 9999.9 ) );
@@ -467,7 +467,6 @@ public class WasyInputWorker
       fds[3] = new FieldDescriptor( "MAX", "N", (byte)8, (byte)2 );
 
       final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP1252" );
-//      final DBaseFile dbfFile = new DBaseFile( napFilename, fds, "CP850" );
       Charset.availableCharsets();
 
       final Feature[] features = workspace.getFeatures( featureType );
