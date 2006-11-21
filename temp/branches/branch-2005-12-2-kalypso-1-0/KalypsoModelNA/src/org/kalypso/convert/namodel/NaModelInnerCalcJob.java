@@ -76,6 +76,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
@@ -311,7 +312,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     final Feature rootFeature = naControlWorkspace.getRootFeature();
     //    final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
     final TimeseriesLink resultLink = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
-    double accuracyPrediction = 5d;
+    double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
     try
     {
       accuracyPrediction = ( (Double)rootFeature.getProperty( "accuracyPrediction" ) ).doubleValue();
@@ -321,16 +322,11 @@ public class NaModelInnerCalcJob implements ICalcJob
       logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
           + " [%/60h] als Vorhersagegenauigkeit angenommen." );
     }
-    // Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
-    //    if(accuracyProp==null)
-    //      return;
-    //    accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
 
     final Date startPrediction = conf.getSimulationForecastStart();
     final Date endPrediction = conf.getSimulationEnd();
 
     final UrlResolver urlResolver = new UrlResolver();
-    //TODO if measured does not exists
 
     // find values at startPrediction
     final String axisType = TimeserieConstants.TYPE_RUNOFF;
@@ -348,8 +344,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
     catch( Exception e )
     {
-//      logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
-//          + ") kann nicht als Wasserstand berechnet werden. Möglicherweise ungültige WQ-Beziehung am Messpegel." );
       logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
           + ") liegt nicht vor." );
       throw e;
@@ -384,25 +378,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     final Calendar calBegin = timeSettings.getCalendar( startPrediction );
     final Calendar calEnd = timeSettings.getCalendar( endPrediction );
 
-    // test
-    //    final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
-    //    observationType.setName( "orginal-ergebnis" );
-    //    final Marshaller m = ZmlFactory.getMarshaller();
-    //    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    //    FileOutputStream stream = null;
-    //    OutputStreamWriter writer = null;
-    //    try
-    //    {
-    //      stream = new FileOutputStream( new File( "C://TMP/2-test-org.zml" ) );
-    //      writer = new OutputStreamWriter( stream, "UTF-8" );
-    //      m.marshal( observationType, writer );
-    //    }
-    //    finally
-    //    {
-    //      IOUtils.closeQuietly( writer );
-    //      IOUtils.closeQuietly( stream );
-    //    }
-    // test
     final File[] result = new File[]
     {
         getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ),
