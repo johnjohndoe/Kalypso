@@ -10,7 +10,6 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
@@ -59,8 +58,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
-    final RectifiedGridDomain gridDomain = (RectifiedGridDomain)((Feature) object).getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
-    //RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
+    final RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
     Document ownerDocument = node.getOwnerDocument();
 
     Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "gml:RectifiedGrid" );
