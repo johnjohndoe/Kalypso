@@ -4,6 +4,17 @@
   <startforecast>2004-04-27T10:00:00</startforecast>
   <editor>Belger</editor>
   <description>Testdaten für Los-2 Erstellung vom LHWZ</description>
-  <comment>Diese Daten wurden seitens LHWZ als Testdaten für die Erstellung des Prognosesystems bereitgestellt.</comment>
+  <comment>Diese Daten wurden seitens LHWZ als Testdaten für die Erstellung des Prognosesystems bereitgestellt.&#13;
+&#13;
+Der Testdatensatz ist inzwischen veraltet, weil das Spree-Modell um den Pegel Holtendorf erweitert wurde.&#13;
+&#13;
+Zweck des Tests:&#13;
+- Rückwärtskompabilität zu vorhandenen Rechenvarianten vor Spree-Erwiterung testen&#13;
+&#13;
+Zu Testen:&#13;
+- Alle Daten lassen sich noch einsehen&#13;
+&#13;
+Zu Beachten:&#13;
+- Die erste Seite des Vorhersageassistenten (Ombrometer) enthält keine Daten</comment>
   <calctime>2005-03-07T11:10:00</calctime>
 </SpreeControl>

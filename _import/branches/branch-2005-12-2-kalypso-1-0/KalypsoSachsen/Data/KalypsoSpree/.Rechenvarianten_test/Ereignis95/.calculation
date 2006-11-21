@@ -7,8 +7,15 @@
   <description><![CDATA[Testdaten Ereignis '95 von WASY]]></description>
   <comment>Diese Testdaten wurden seitens WASY zum Test der Programmänderungen im FIS-Projekt 215 benutzt.&#13;
 &#13;
-Die Daten wurden von Herrn Belger als Kalypos Rechenvariante aufgebaut und die Berechnungsergebnisse mit den Ergebnissen der direkten Berechnung mit hw_spree.exe verglichen.&#13;
+Die Daten wurden von Herrn Belger als Kalypos Rechenvariante aufgebaut und die Berechnungsergebnisse mit den Ergebnissen der direkten Berechnung mit hw_spree.exe verglichen. Die Ergebnisse waren identisch.&#13;
 &#13;
-Die Ergebnisse waren identisch.</comment>
+Zweck des Tests:&#13;
+- Rechenkern Spree Testen&#13;
+&#13;
+Zu Testen:&#13;
+- Rechnung muss identische Ergebnisse liefern&#13;
+&#13;
+Zu Beachten:&#13;
+- Die erste Seite des Vorhersageassistenten enthält keine Daten</comment>
   <calctime>2006-03-01T20:18:42</calctime>
 </SpreeControl>
