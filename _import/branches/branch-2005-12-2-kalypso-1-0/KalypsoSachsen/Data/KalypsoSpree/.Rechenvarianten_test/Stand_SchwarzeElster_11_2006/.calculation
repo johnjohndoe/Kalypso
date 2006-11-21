@@ -3,11 +3,9 @@
   <scenarioName>Normalbetrieb</scenarioName>
   <startsimulation>2006-11-18T13:00:00</startsimulation>
   <startforecast>2006-11-20T13:00:00</startforecast>
-  <editor>sm9</editor>
-  <description>- bitte ausfüllen -</description>
-  <comment>Testrechenvariante zum Stand des LHWZ zum Zeitpunkt der Integration des Schwarze-Elster Modells.&#13;
-&#13;
-Zweck des Tests:&#13;
+  <editor>Belger</editor>
+  <description>Testrechenvariante zum Stand des LHWZ zum Zeitpunkt der Integration des Schwarze-Elster Modells.</description>
+  <comment>Zweck des Tests:&#13;
 - Rechenkern und Gebietsniederschlagsmodell Spree Testen&#13;
 &#13;
 Zu Testen:&#13;
