@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" elementFormDefault="qualified" version="3.1.0">
+	<!-- ==============================================================
+       includes and imports
+	============================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- RectifiedGridCoverageMember=========================================================== -->
+	<element name="RectifiedGridCoverageMember" type="rgc:RectifiedGridCoverageMemberAssociationType"/>
+	<complexType name="RectifiedGridCoverageMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rgc:RectifiedGridCoverage"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RectifiedGridCoverage" type="rgc:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RectifiedGridCoverageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="rectifiedGridDomain" type="rgc:RectifiedGridDomainType"/>
+					<element name="rangeSet" type="rgc:RangeSetType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="RectifiedGridDomainType">
+		<sequence>
+			<element ref="rgc:RectifiedGrid"/>
+		</sequence>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="RangeSetType">
+		<sequence>
+			<element name="File" type="rgc:FileType"/>
+		</sequence>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="FileType">
+		<sequence>
+			<element name="fileName" type="anyURI"/>
+		</sequence>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- grids.xsd==================================================== -->
+	<!-- =========================================================== -->
+	<element name="Grid" type="rgc:GridType"/>
+	<!-- =========================================================== -->
+	<complexType name="GridType">
+		<annotation>
+			<documentation>Implicitly defines an unrectified grid, which is a network composed of two or more sets of equally spaced parallel lines in which the members of each set intersect the members of the other sets at right angles.</documentation>
+		</annotation>
+		<sequence>
+			<element name="limits" type="rgc:GridLimitsType"/>
+			<!--<element name="axisName" type="string" maxOccurs="unbounded"/>-->
+		</sequence>
+		<attribute name="dimension" type="positiveInteger" use="required"/>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="GridLimitsType">
+		<sequence>
+			<element name="GridEnvelope" type="rgc:GridEnvelopeType"/>
+		</sequence>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="GridEnvelopeType">
+		<annotation>
+			<documentation>Provides grid coordinate values for the diametrically opposed corners of an envelope that bounds a section of grid. The value of a single coordinate is the number of offsets from the origin of the grid in the direction of a specific axis.</documentation>
+		</annotation>
+		<sequence>
+			<element name="low" type="rgc:integerList"/>
+			<element name="high" type="rgc:integerList"/>
+		</sequence>
+	</complexType>
+	<!-- =========================================================== -->
+	<element name="RectifiedGrid" type="rgc:RectifiedGridType" substitutionGroup="rgc:Grid"/>
+	<!-- =========================================================== -->
+	<complexType name="RectifiedGridType">
+		<annotation>
+			<documentation>A rectified grid has an origin and vectors that define its post locations.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="rgc:GridType">
+				<sequence>
+					<element name="origin" type="gml:PointPropertyType"/>
+					<element name="offsetVector" type="rgc:VectorType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- VectorType (geometryBasic0d1d.xsd)=================================================== -->
+	<!-- =========================================================== -->
+	<complexType name="VectorType">
+		<annotation>
+			<documentation>A Vector is an ordered set of numbers called coordinates that represent a position in a coordinate reference system (CRS). For some application the components of the position may be adjusted to yield a unit vector.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="rgc:doubleList"/>
+		</simpleContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- basicTypes.xsd=================================================== -->
+	<!-- =========================================================== -->
+	<simpleType name="doubleList">
+		<annotation>
+			<documentation>XML List based on XML Schema double type.  An element of this type contains a space-separated list of double values</documentation>
+		</annotation>
+		<list itemType="double"/>
+	</simpleType>
+	<simpleType name="integerList">
+		<annotation>
+			<documentation>XML List based on XML Schema integer type.  An element of this type contains a space-separated list of integer values</documentation>
+		</annotation>
+		<list itemType="integer"/>
+	</simpleType>
+</schema>

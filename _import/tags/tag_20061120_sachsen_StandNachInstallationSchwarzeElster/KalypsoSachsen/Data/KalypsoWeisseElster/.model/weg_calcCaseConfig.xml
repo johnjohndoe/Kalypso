@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<createTransformations logFile="calcCase.log">
+		<!-- modell kopieren -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:modell.gml"/>
+			<argument name="output" value=":calcdir:calcCase.gml"/>
+		</transformation>
+		<!-- controls kopieren ... -->
+
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_1.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_1.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_2.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_2.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_3.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_3.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_4.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_4.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_5.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_5.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_6.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_6.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_7.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_7.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_8.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_8.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_9.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_9.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_10.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_10.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_11.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_11.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_12.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_12.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_13.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_13.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_14.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_14.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_15.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_15.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_16.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_16.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/.nacontrol_17.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_17.gml"/>
+		</transformation>
+
+<!-- copy sce config -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/sce.xml"/>
+			<argument name="output" value=":calcdir:.sce.xml"/>
+		</transformation>
+
+
+<!--
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/nacontrol_1302.gml"/>
+			<argument name="output" value=":calcdir:nacontrol_1302.gml"/>
+		</transformation>
+-->	
+<!-- create zml-directories -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Niederschlag/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Zufluss/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Ergebnisse/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Pegel/.info.txt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Ombrometer/.info.txt"/>
+		</transformation>
+
+    <!-- Transformationen fuer den ExpertenModus -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gml"/>
+			<argument name="output" value=":calcdir:expertControl.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gft"/>
+			<argument name="output" value=":calcdir:expertControl.gft"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertKarte.gmt"/>
+			<argument name="output" value=":calcdir:expertKarte.gmt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleKnoten.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleKnoten.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleGewaesser.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleGewaesser.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleTeilgebiete.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleTeilgebiete.gtt"/>
+		</transformation>
+
+	</createTransformations>
+	
+	<updateTransformations logFile="calcCase.log">
+		<!-- Ombrometer -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":project:ombrometer.gml"/>
+			<argument name="feature" value="Ombrometer"/>
+			<argument name="sourceObservation1" value="NRepository"/>
+			<argument name="targetObservation" value="N"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		<!-- Pegel (werden zum visuellen vergleich und fuer die automatische optimierung gebraucht) -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Node"/>
+			<argument name="sourceObservation1" value="pegelZRRepository"/>
+			<argument name="targetObservation" value="pegelZR"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		<!-- Zufluesse -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Node"/>
+			<argument name="sourceObservation1" value="zuflussZRRepository"/>
+			<argument name="sourceObservation2" value="zuflussZRRepositoryVorhersage"/>
+			<argument name="targetObservation" value="zuflussZR"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		<!-- Catchments -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Catchment"/>
+			<argument name="sourceObservation1" value="niederschlagZRRepository"/>
+			<argument name="sourceObservation2" value="niederschlagZRRepositoryVorhersage"/>
+			<argument name="targetObservation" value="niederschlagZR"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		<!--	
+		<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
+			<argument name="protocol0" value="calcdir=:calcdir:"/>
+			<argument name="protocol1" value="localcalc=localcalc:"/>
+			<argument name="file0" value=":calcdir:calcCase.gml"/>
+		</transformation>
+-->
+	</updateTransformations>
+
+	<afterCalcTransformations logFile="calcCase.log">
+	<!-- nach optimierung soll optimierte datei uebernommen werden 
+		 hinweis: ist die datei nicht vorhanden, soll auch nix kopiert werden, z.B. wenn nicht optimiert wurde		 
+     -->
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_1.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_1.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_2.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_2.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_3.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_3.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_4.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_4.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_5.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_5.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_6.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_6.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_7.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_7.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_8.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_8.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_9.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_9.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_10.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_10.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_11.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_11.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_12.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_12.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_13.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_13.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_14.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_14.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_15.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_15.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_16.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_16.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/.nacontrol_17.gml"/>
+			<argument name="output" value=":calcdir:.nacontrol_17.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.MoveTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calc/expertControl.gml"/>
+			<argument name="output" value=":calcdir:expertControl.gml"/>
+			<argument name="ignoreError" value="true"/>
+		</transformation>
+	</afterCalcTransformations>
+</calcCaseConfig>

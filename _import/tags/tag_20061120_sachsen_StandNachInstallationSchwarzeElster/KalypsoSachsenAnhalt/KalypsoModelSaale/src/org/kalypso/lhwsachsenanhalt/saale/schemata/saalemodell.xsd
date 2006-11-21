@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.modell" version="0.1" xmlns:common="org.kalypso.saale.common" xmlns:pegel="org.kalypso.saale.pegel" xmlns:wlm="org.kalypso.saale.wlm" xmlns:speicher="org.kalypso.saale.speicher" xmlns:ombrometer="org.kalypso.saale.ombrometer" xmlns:saale="org.kalypso.saale.modell" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
+	<import namespace="org.kalypso.saale.pegel" schemaLocation="pegel.xsd"/>
+	<import namespace="org.kalypso.saale.wlm" schemaLocation="wlm.xsd"/>
+	<import namespace="org.kalypso.saale.ombrometer" schemaLocation="ombrometer.xsd"/>
+	<import namespace="org.kalypso.saale.speicher" schemaLocation="speicher.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<element name="SaaleModell" type="saale:_SaaleModellType"/>
+	<complexType name="_SaaleModellType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="pegel:PegelCollectionAssociation"/>
+					<element ref="wlm:WLMCollectionAssociation"/>
+					<element ref="speicher:SpeicherCollectionAssociation"/>
+					<element ref="ombrometer:OmbrometerCollectionAssociation"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
