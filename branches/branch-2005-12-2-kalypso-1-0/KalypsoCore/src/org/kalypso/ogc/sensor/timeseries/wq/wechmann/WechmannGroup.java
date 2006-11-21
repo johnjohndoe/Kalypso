@@ -105,11 +105,15 @@ public class WechmannGroup implements IWQConverter
   }
 
   /**
+   * Returns 0.0, if W is too big for current validity
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   public double computeQ( Date date, double W ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForW( W );
+    if( params == null )
+      return 0.0;
+    
     return WechmannFunction.computeQ( params, W );
   }
 }
