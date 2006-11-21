@@ -192,6 +192,7 @@ public class SceJob
           int bufferC = errStream.read( buffer );
           errBuffer.append( buffer, 0, bufferC );
         }
+//        System.out.println( "Canceled: " + monitor.isCanceled() );
         if( monitor.isCanceled() )
         {
           process.destroy();
