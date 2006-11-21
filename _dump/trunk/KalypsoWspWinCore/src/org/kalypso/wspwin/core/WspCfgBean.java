@@ -195,6 +195,13 @@ public class WspCfgBean
 
       return ProfileBean.readProfiles( reader, profilCount );
     }
+    catch( final ParseException pe )
+    {
+      final String msg = "Error in File:" + profprojFile.getAbsolutePath() + " \n" + pe.getLocalizedMessage();
+      final ParseException newPe = new ParseException( msg, pe.getErrorOffset() );
+      newPe.setStackTrace( pe.getStackTrace() );
+      throw newPe;
+    }
     finally
     {
       IOUtils.closeQuietly( reader );
@@ -217,7 +224,7 @@ public class WspCfgBean
     final int[] counts = new int[2];
     counts[0] = Integer.parseInt( firstLineTokenizer.nextToken() );
     counts[1] = Integer.parseInt( firstLineTokenizer.nextToken() );
-    
+
     // if it is a .str file, we ignore the following name and waterName
 
     return counts;

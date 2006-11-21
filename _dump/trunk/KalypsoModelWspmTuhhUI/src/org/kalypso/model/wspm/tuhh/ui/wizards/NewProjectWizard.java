@@ -94,7 +94,6 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
     protected DoFinishOperation( IProject project )
     {
-      super();
       m_project = project;
     }
 
@@ -106,7 +105,15 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     @Override
     protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
     {
-      m_file = doFinish( m_project, monitor );
+      final IFile[] file = new IFile[1];
+      try
+      {
+        doFinish( m_project, file, monitor );
+      }
+      finally
+      {
+        m_file = file[0];
+      }
     }
   }
 
@@ -167,20 +174,28 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     final DoFinishOperation op = new DoFinishOperation( project );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
-    if( status.isOK() )
-    {
-      BasicNewProjectResourceWizard.updatePerspective( m_config );
-      BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
-
-      openTreeView( op.getFile() );
-    }
-    else
+    if( status.matches( IStatus.ERROR ) )
     {
       ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
       deleteProject( project );
     }
+    else if( status.matches( IStatus.CANCEL ) )
+    {
+      deleteProject( project );
+    }
+    else
+    {
+      if( !status.isOK() )
+        ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
+      
+      BasicNewProjectResourceWizard.updatePerspective( m_config );
+      BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
 
-    return status.isOK();
+      openTreeView( op.getFile() );
+      return true;
+    }
+
+    return false;
   }
 
   private void openTreeView( final IFile file )
@@ -245,7 +260,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    * Overwrite, if more has to be done while finishing.
    * </p>
    */
-  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  protected void doFinish( final IProject project, final IFile[] file, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Neues Spiegellinienprojekt", 4 );
 
@@ -257,6 +272,6 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     description.setNatureIds( natures );
     project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
 
-    return TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
+    file[0] = TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
   }
 }

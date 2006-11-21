@@ -35,5 +35,11 @@
                namespace="org.kalypso.model.wspmprofile"/>
       </listener>
    </extension>
+   <extension
+         point="org.kalypso.core.componentHandler">
+      <componentHandler
+            class="org.kalypso.model.wspm.schema.om.WehrartComponentHandler"
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+   </extension>
 
 </plugin>

@@ -57,13 +57,15 @@ import java.util.StringTokenizer;
 public class ProfileBean
 {
   private final String m_waterName;
+  private final String m_stateName;
   private final double m_station;
   private final String m_fileName;
   private final Map<String, String> m_metadata;
 
-  public ProfileBean( final String waterName, final double station, final String fileName, final Map<String, String> metadata )
+  public ProfileBean( final String waterName, final String stateName, final double station, final String fileName, final Map<String, String> metadata )
   {
     m_waterName = waterName;
+    m_stateName = stateName;
     m_station = station;
     m_fileName = fileName;
     m_metadata = metadata;
@@ -89,6 +91,11 @@ public class ProfileBean
     return m_waterName;
   }
 
+  public String getStateName( )
+  {
+    return m_stateName;
+  }
+  
   public static ProfileBean[] readProfiles( final LineNumberReader reader, final int profilCount ) throws IOException, ParseException
   {
     final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
@@ -120,12 +127,11 @@ public class ProfileBean
         metadata.put( "MFB", mfb );
         metadata.put( "ZUSTAND", zustandName );
 
-        final ProfileBean bean = new ProfileBean( waterName, station, fileName, metadata );
+        final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName, metadata );
         beans.add( bean );
       }
       catch( final NumberFormatException e )
       {
-        e.printStackTrace();
         throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
       }
 

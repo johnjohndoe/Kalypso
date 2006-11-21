@@ -89,7 +89,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author thuel2
+ * @author Monika Thül
  */
 public class BreakLinesHelper implements IWspmConstants
 {
@@ -278,8 +278,10 @@ public class BreakLinesHelper implements IWspmConstants
 
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
     final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.HOEHE ), 0.0001 );
-    final PolyLine rwLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.RECHTSWERT ), 0.0001 );
-    final PolyLine hwLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.HOCHWERT ), 0.0001 );
+
+    /* Same for RW and HW, but filter 0-values */
+    final PolyLine rwLine = createPolyline( profil, POINT_PROPERTY.BREITE, POINT_PROPERTY.RECHTSWERT );
+    final PolyLine hwLine = createPolyline( profil, POINT_PROPERTY.BREITE, POINT_PROPERTY.HOCHWERT );
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
@@ -306,6 +308,35 @@ public class BreakLinesHelper implements IWspmConstants
     }
 
     return poses;
+  }
+
+  private static PolyLine createPolyline( final IProfil profil, final POINT_PROPERTY xProperty, final POINT_PROPERTY yProperty ) throws ProfilDataException
+  {
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+
+    final double[] xValues = new double[points.size()];
+    final double[] yValues = new double[points.size()];
+    int count = 0;
+    for( final IProfilPoint point : points )
+    {
+      final double x = point.getValueFor( xProperty );
+      final double y = point.getValueFor( yProperty );
+
+      if( Math.abs( y ) > 0.001 )
+      {
+        xValues[count] = x;
+        yValues[count] = y;
+        count++;
+      }
+    }
+
+    final double[] xFiltered = new double[count];
+    final double[] yFiltered = new double[count];
+
+    System.arraycopy( xValues, 0, xFiltered, 0, count );
+    System.arraycopy( yValues, 0, yFiltered, 0, count );
+
+    return new PolyLine( xFiltered, yFiltered, 0.0001 );
   }
 
 }

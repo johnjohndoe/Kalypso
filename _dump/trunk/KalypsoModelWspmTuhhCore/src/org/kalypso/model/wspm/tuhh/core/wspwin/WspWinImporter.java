@@ -127,7 +127,7 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import-Log", null );
+    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "WspWin Import Probleme", null );
 
     monitor.beginTask( "WspWin Projekt importieren", 1000 );
 
@@ -204,9 +204,20 @@ public class WspWinImporter
       // /////////////// //
       // import profiles //
       // /////////////// //
-      final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
-      final Map<String, WspmProfile> importedProfiles = new HashMap<String, WspmProfile>( commonProfiles.length );
-      logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
+      final Map<String, WspmProfile> importedProfiles = new HashMap<String, WspmProfile>();
+      try
+      {
+        final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
+        logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
+      }
+      catch( final ParseException pe )
+      {
+        /*
+         * If an error in the profproj parsing happens, just give a warning to the user. What we really need are the
+         * profile within the existing strand-elements.
+         */
+        logStatus.add( StatusUtilities.createStatus( IStatus.WARNING, "Fehler beim Lesen der profproj.txt.\nEventuell wurden nicht alle Profildateien übernommen (Betrifft nicht Profile, welche in einem Gewässerstrang referenziert sind).", pe ) );
+      }
 
       // ////////////// //
       // import reaches //
@@ -225,7 +236,7 @@ public class WspWinImporter
       }
 
       // stop, if we have errors until now
-      if( !logStatus.isOK() )
+      if( logStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
         return logStatus;
 
       // /////////////// //
@@ -263,13 +274,23 @@ public class WspWinImporter
     {
       try
       {
-        importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
+        final WspmProfile profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
+
+        final double profStation = profile.getStation();
+        final double beanStation = bean.getStation();
+
+        if( Math.abs( profStation - beanStation ) > 0.001 )
+        {
+          final String msg = String.format( "Achtung: Stationierung der Profildatei (%s - %.4f) passt nicht zur Station in der profproj.txt (Zustand '%s - %s' - %.4f). Station wird korrigiert.", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation );
+          status.add( StatusUtilities.createWarningStatus( msg ) );
+          profile.setStation( bean.getStation() );
+        }
       }
-      catch( FileNotFoundException e )
+      catch( final FileNotFoundException e )
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
-      catch( GMLSchemaException e )
+      catch( final GMLSchemaException e )
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
@@ -290,12 +311,7 @@ public class WspWinImporter
       return knownProfiles.get( fileName );
 
     final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
-    knownProfiles.put( fileName, prof );
 
-    bean.getStation();
-    bean.getFileName();
-
-    // HACK: we now just copy the files directly instead
     Writer urlWriter = null;
     Reader fileReader = null;
     try
@@ -310,6 +326,9 @@ public class WspWinImporter
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
 
+      /* Only add profile if no error occurs */
+      knownProfiles.put( fileName, prof );
+      
       return prof;
     }
     finally
@@ -362,7 +381,7 @@ public class WspWinImporter
     {
       try
       {
-        final ProfileBean fromBean = new ProfileBean( waterName, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
+        final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
         final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
@@ -370,7 +389,7 @@ public class WspWinImporter
         if( bean == segmentBeans[segmentBeans.length - 1] )
         {
           // also add last profile
-          final ProfileBean toBean = new ProfileBean( waterName, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
+          final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
           final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
 
           reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
@@ -592,7 +611,7 @@ public class WspWinImporter
 
     final TupleResult result = obs.getResult();
     final IComponent[] components = result.getComponents();
-    
+
     final IComponent stationComp;
     final IComponent valueComp;
     if( components[0].getName().startsWith( "Station" ) )
@@ -605,7 +624,7 @@ public class WspWinImporter
       valueComp = components[0];
       stationComp = components[1];
     }
-    
+
     final Map<BigDecimal, BigDecimal> values = bean.getEntries();
     for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
     {
@@ -614,7 +633,7 @@ public class WspWinImporter
       record.setValue( stationComp, entry.getKey() );
       record.setValue( valueComp, entry.getValue() );
     }
-    
+
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
     ObservationFeatureFactory.toFeature( obs, runOffFeature );
   }

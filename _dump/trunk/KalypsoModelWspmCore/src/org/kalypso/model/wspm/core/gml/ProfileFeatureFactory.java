@@ -119,7 +119,7 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  public static void toFeature( final IProfil profile, final Feature targetFeature ) 
+  public static void toFeature( final IProfil profile, final Feature targetFeature )
   {
     final FeatureChange[] changes = toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
@@ -133,11 +133,10 @@ public class ProfileFeatureFactory implements IWspmConstants
   public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
-    
+
     if( !GMLSchemaUtilities.substitutes( featureType, QN_PROF_PROFILE ) )
       throw new IllegalArgumentException( "Feature ist not a profile: " + targetFeature );
 
-    
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     try
@@ -238,7 +237,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       final Observation<TupleResult> tableObs = new Observation<TupleResult>( "Profil", "", result, metadata );
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( tableObs, targetFeature );
       Collections.addAll( changes, obsChanges );
-      
+
       //
       // Building
       //
@@ -248,13 +247,13 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IProfilBuilding building = profile.getBuilding();
       if( building != null )
       {
-        final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[]{} );
+        final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
         final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
         final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingType );
         buildingList.add( buildingFeature );
         final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
-        
+
         changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
       }
     }
@@ -264,7 +263,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
     }
-    
+
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
@@ -280,7 +279,8 @@ public class ProfileFeatureFactory implements IWspmConstants
     {
       final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, DICT_COMP_PROFILE_BUILDING_PREFIX + bp.name() );
       result.addComponent( component );
-      record.setValue( component, building.getValueFor( bp ) );
+      final Object value = building.getValueFor( bp );
+      record.setValue( component, value );
     }
 
     final List<MetadataObject> metaList = new ArrayList<MetadataObject>();
@@ -385,7 +385,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.DURCHSTROEMTE.name()).equals( compId ) )
         {
           final Boolean hasDevider = (Boolean) value;
-          if( hasDevider.booleanValue() )
+          if( hasDevider != null && hasDevider.booleanValue() )
           {
             final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.DURCHSTROEMTE, point );
             profil.addDevider( devider );
@@ -394,7 +394,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.BORDVOLL.name()).equals( compId ) )
         {
           final Boolean hasDevider = (Boolean) value;
-          if( hasDevider.booleanValue() )
+          if( hasDevider != null && hasDevider.booleanValue() )
           {
             final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.BORDVOLL, point );
             profil.addDevider( devider );
@@ -403,7 +403,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         else if( (DICT_COMP_PROFILE_DEVIDER_PREFIX + DEVIDER_TYP.TRENNFLAECHE.name()).equals( compId ) )
         {
           final String kind = (String) value;
-          if( !"null".equals( kind ) && !"none".equals( kind ) )
+          if( "low".equals( kind ) || "high".equals( kind ) )
           {
             final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.TRENNFLAECHE, point );
             final Boolean high = Boolean.valueOf( "high".equals( kind ) );
@@ -455,6 +455,11 @@ public class ProfileFeatureFactory implements IWspmConstants
     return (BigDecimal) profileFeature.getProperty( QNAME_STATION );
   }
 
+  public static void setProfileStation( final Feature profileFeature, final BigDecimal decimal )
+  {
+    profileFeature.setProperty( QNAME_STATION, decimal );
+  }
+  
   private static IProfilBuilding buildingFromFeature( final Feature buildingFeature ) throws ProfilDataException
   {
     final IObservation<TupleResult> buildingObs = ObservationFeatureFactory.toObservation( buildingFeature );

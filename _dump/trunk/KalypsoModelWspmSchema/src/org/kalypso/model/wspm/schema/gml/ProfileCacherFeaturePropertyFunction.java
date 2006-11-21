@@ -118,7 +118,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         else
         {
           rw = point.getValueFor( ppB );
-          hw = profil.getStation();
+          hw = profil.getStation() * 1000;
         }
         
         if( rw == 0.0 && hw == 0.0 )

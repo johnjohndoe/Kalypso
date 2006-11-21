@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.util;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -192,7 +191,8 @@ public class ProfilUtil
    */
   public static final IProfilPoint findPoint( final IProfil profil, final int index, final double breite, final double delta )
   {
-    final IProfilPoint point = profil.getPoints().get( index );
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final IProfilPoint point = index >= points.size() ? null : points.get( index );
     try
     {
       if( point != null )

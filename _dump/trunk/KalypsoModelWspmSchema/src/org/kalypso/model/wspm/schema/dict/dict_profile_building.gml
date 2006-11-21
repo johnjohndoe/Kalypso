@@ -176,9 +176,15 @@
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
-    <swe:Number>
-     <gml:unitOfMeasure uom=""/>
-    </swe:Number>
+    <swe:Word>
+     <swe:restriction>
+      <xst:enumeration value="rundkronig"/>
+      <xst:enumeration value="breitkronig"/>
+      <xst:enumeration value="scharfkantig"/>
+      <xst:enumeration value="Beiwert"/>
+     </swe:restriction>
+     <swe:classification/>
+    </swe:Word>
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>

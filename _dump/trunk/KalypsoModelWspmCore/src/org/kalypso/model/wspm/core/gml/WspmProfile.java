@@ -94,6 +94,11 @@ public class WspmProfile
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
+  public void setStation( double station )
+  {
+    ProfileFeatureFactory.setProfileStation( m_feature, new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
+  }
+  
   public IProfil getProfil( )
   {
     try
