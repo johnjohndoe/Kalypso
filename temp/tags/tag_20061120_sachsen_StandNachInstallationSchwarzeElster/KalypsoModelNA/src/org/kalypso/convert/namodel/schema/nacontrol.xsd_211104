@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.namodell.control" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" 
+		schemaLocation="obslink.xsd"/>
+	<element name="NAModellControl" type="na:_NAModellControlType"/>
+    
+	<complexType name="_NAModellControlType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="editor" type="string"/>			
+					<element name="comment" type="string"/>
+					<element name="calctime" type="dateTime"/>
+					<element name="startsimulation" type="dateTime"/>
+					<element name="startforecast" type="dateTime"/>
+					<element name="endsimulation" type="dateTime"/>
+					<element name="timeStep" type="double"/>
+					<element name="tmp" type="boolean"/>
+					<element name="pre" type="boolean"/>
+					<element name="sch" type="boolean"/>
+					<element name="bof" type="boolean"/>
+					<element name="bsp" type="boolean"/>
+					<element name="gws" type="boolean"/>
+					<element name="qgs" type="boolean"/>
+					<element name="qgg" type="boolean"/>
+					<element name="qna" type="boolean"/>
+					<element name="qif" type="boolean"/>
+					<element name="qvs" type="boolean"/>
+					<element name="qbs" type="boolean"/>
+					<element name="qt1" type="boolean"/>
+					<element name="qtg" type="boolean"/>
+					<element name="qgw" type="boolean"/>
+					<element name="kap" type="boolean"/>
+					<element name="vet" type="boolean"/>
+					<element name="hyd" type="boolean"/>
+					<element name="bil" type="boolean"/>
+					<element name="nmq" type="boolean"/>
+					<element name="spi" type="boolean"/>
+					<element name="sub" type="boolean"/>
+					<element name="sph" type="boolean"/>
+					<element name="spv" type="boolean"/>
+					<element name="spn" type="boolean"/>
+					<element name="vep" type="boolean"/>
+					
+					<!-- parameter fuer den prognose-kallibrierung -->
+					<element name="automaticCallibration" type="boolean"/>
+					
+					<element name="Catchments" type="string"/>
+					<element name="CatchmentsBianf" type="double"/>
+					<element name="CatchmentsFaktorRetobTetint" type="double"/>
+					<element name="CatchmentsFaktn" type="double"/>
+					<element name="CatchmentsFaktorAigw" type="double"/>
+					<element name="KMChannels" type="string"/>
+					<element name="KMChannelsFaktorRkf" type="double"/>
+					<element name="KMChannelsFaktorRnf" type="double"/>			
+					<!-- fuer die erstellung der netzdatei -->
+					<element name="rootNode" type="string"/>					
+					<element name="resultForRootNodeOnly" type="boolean"/>
+						<!-- link auf den pegel -->
+			            <element name="pegelZR" type="obslink:TimeseriesLink"/>
+					<!-- link auf das simulations -->
+			            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

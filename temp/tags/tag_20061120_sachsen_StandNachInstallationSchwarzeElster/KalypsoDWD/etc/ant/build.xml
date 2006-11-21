@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<project name="KalypsoDWDBuild" default="deploy">
+
+    <property name="project" value="${workspace}/KalypsoDWD" />
+
+    <!-- 
+    Property you can set from the outside:
+	* web.xml: specifies which web.xml to use as deployment descriptor
+	           when not specified, the default one from the source is used
+	           (see org/kalypso/dwd/servlet/dwdfilecopy/web.xml)
+     -->
+    <property name="web.xml" value="${project}/src/org/kalypso/dwd/servlet/dwdfilecopy/web.xml"/>
+    
+    <path id="compile.classpath">
+        <fileset dir="${project.lib}" includes="**/*.jar" />
+        <fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+        <fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+        <fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
+        <fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+        <fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
+    </path>
+
+    <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+    <property name="project-name" value="KalypsoDWD" />
+
+    <target name="binding">
+        <ant antfile="${project}/etc/schemas/build.xml"
+             inheritall="false"
+             target="deploy"
+             dir="${project}/etc/schemas/dwd" />
+    </target>
+
+    <!-- Override compile to resolve dependencies to binding and for copying non-java files -->
+    <target name="compile" depends="prepare,binding">
+        <antcall target="commonbuild.compile" />
+
+        <copy todir="${project.bin}">
+            <fileset dir="${project.src}" excludes="**/*.java" />
+        </copy>
+    </target>
+
+    <!-- Specific Build for creating the jar that contains the Ant-Task -->
+    <target name="build-ant-task-jar" depends="deploy">
+        <copy tofile="${project.lib}/${project-name}Task.jar" file="${project.deploy}/${project-name}.jar"/>
+    </target>
+        
+    <target name="build-core">
+ 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
+    		
+  		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+   	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="../lib" overwrite="true"/>
+   	</target>
+    	
+    <!-- Specific Build for KalypsoDWDFileCopyServlet -->
+    <target name="build-filecopyservlet-war" depends="build-core, compile">
+
+        <echo message="Building DWDFileCopy Servlet with deployment desc from: ${web.xml}"/>
+        
+        <war webxml="${web.xml}"
+             destfile="${project}/build/deploy/KalypsoDWDFileCopyServlet.war">
+            <classes dir="${project}/build/class" excludes="*.xml" />
+            <lib dir="${project}/etc/libdeploy" />
+        </war>
+    </target>
+
+</project>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
+	<complexType name="TimeseriesLinkFeatureProperty">
+		<annotation>
+			<documentation>
+			Dies ist der Typ, mit dem die FeatureProperties definiert werden und welcher vom TypeHandler behandelt wird.
+		</documentation>
+		</annotation>
+		<sequence>
+			<element ref="obslink:TimeseriesLink" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<element name="TimeseriesLink" type="obslink:TimeseriesLinkType"/>
+	<complexType name="TimeseriesLinkType">
+		<attributeGroup ref="xlink:simpleLink"/>
+		<attribute name="linktype" type="string" use="optional"/>
+		<attribute name="timeaxis" type="string" use="optional"/>
+		<attribute name="valueaxis" type="string" use="optional"/>
+		<!-- Die folgenden Attribute werden nicht mehr gebraucht, sind aber aufgrund der Abwärtskompabilität der Modell-GMLs noch da -->
+	</complexType>
+</schema>

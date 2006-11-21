@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.NACalcJob"
+   name="KalypsoNACalcJob"
+   version="1.0.1"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="kalypsoNACalcJob.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.dwd" export="true"/>
+      <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.jwsdp" export="true"/>
+      <import plugin="org.kalypso.commons" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.kalypso.optimize" export="true"/>
+   </requires>
+   <extension
+         id="KalypsoNA"
+         name="KalypsoNA"
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="KalypsoNA"
+            catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
+            jobClass="org.kalypso.convert.namodel.NaModelCalcJob"/>
+   </extension>
+
+</plugin>
