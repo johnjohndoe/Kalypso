@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<!-- 
+	Delegating build script, used by cruisecontrol to build Kalypso.
+-->
+<project name="build-Kalypso" default="build" basedir="checkout">
+
+	<target name="build">
+             	
+    	<!-- checkout all projects -->
+      	<cvs cvsroot="${cvsroot}" 
+      		 cvsrsh="${cvsrsh}" 
+			 command="up -d -P"
+      		 package="Kalypso/**" />
+        
+    	<!-- Call the target that does everything -->
+        <ant antfile="build.xml" target="build-everything"/>
+    </target>
+</project>
