@@ -50,10 +50,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
-import ogc31.www.opengis.net.gml.CoverageFunctionType;
 import ogc31.www.opengis.net.gml.DerivationUnitTermType;
 import ogc31.www.opengis.net.gml.DirectionPropertyType;
-import ogc31.www.opengis.net.gml.GridDomainType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
@@ -347,7 +345,7 @@ public class TypeHandlerUtilities
         public String convertToXMLString( final BigDecimal value )
         {
           // TODO: format according to fraction digits
-          
+
           // TODO: decide this from outside!
           // GML should write/read the empty string
           // Observations should read/write 'null'
@@ -541,13 +539,13 @@ public class TypeHandlerUtilities
           if( xmlString.length() == 7 )
           {
             RGB rgb = new RGB( 0, 0, 0 );
-            
+
             String red = xmlString.substring( 1, 3 );
             rgb.red = Integer.decode( "0x" + red );
-            
+
             String green = xmlString.substring( 3, 5 );
             rgb.green = Integer.decode( "0x" + green );
-            
+
             String blue = xmlString.substring( 5, 7 );
             rgb.blue = Integer.decode( "0x" + blue );
 
@@ -626,9 +624,11 @@ public class TypeHandlerUtilities
     // other GML3 types:
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
-    //registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
+    // "CoverageFunctionType" ), new QName( NS.GML3, "coverageFunction" ), CoverageFunctionType.class, false ) );
+    // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
+    // "GridDomainType" ), new QName( NS.GML3, "gridDomain" ), GridDomainType.class, false ) );
     // We do not use the binding classes, because they do not work
     // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
     // "RectifiedGridDomainType" ), new QName( NS.GML3, "rectifiedGridDomain" ), RectifiedGridDomainType.class, false )

@@ -52,6 +52,7 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -187,14 +188,27 @@ public class ObservationFeatureFactory implements IAdapterFactory
   private static XsdBaseTypeHandler[] typeHandlersForComponents( final IComponent[] components )
   {
     final XsdBaseTypeHandler[] typeHandlers = new XsdBaseTypeHandler[components.length];
+
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
     for( int i = 0; i < components.length; i++ )
     {
       final IComponent component = components[i];
-      final QName valueTypeName = component.getValueTypeName();
-      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
-      if( handler instanceof XsdBaseTypeHandler )
-        typeHandlers[i] = (XsdBaseTypeHandler) handler;
+
+      /*
+       * Get the marshaller via the component handler mechanism. Only take a default handler based on the type if no
+       * such handler was found.
+       */
+      final IComponentHandler compHandler = KalypsoCoreExtensions.findComponentHandler( component.getId() );
+      if( compHandler != null )
+        typeHandlers[i] = compHandler.getTypeHandler();
+      else
+      {
+        final QName valueTypeName = component.getValueTypeName();
+        final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
+        if( handler instanceof XsdBaseTypeHandler )
+          typeHandlers[i] = (XsdBaseTypeHandler) handler;
+      }
     }
     return typeHandlers;
   }

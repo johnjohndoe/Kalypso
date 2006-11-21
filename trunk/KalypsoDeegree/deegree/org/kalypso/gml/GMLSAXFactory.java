@@ -306,7 +306,7 @@ public class GMLSAXFactory
         fid = (String) next;
         if( m_idMap.containsKey( fid ) )
           fid = m_idMap.get( fid );
-        
+
         fid = "#" + fid;
       }
       else

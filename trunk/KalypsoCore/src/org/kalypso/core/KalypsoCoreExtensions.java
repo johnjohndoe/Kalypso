@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalogContribution;
 import org.kalypso.core.catalog.urn.IURNGenerator;
+import org.kalypso.ogc.gml.om.IComponentHandler;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
@@ -72,13 +73,19 @@ public class KalypsoCoreExtensions
   /** id -> config-element */
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
 
+  /* extension-point 'componentHandler' */
+  
+  private final static String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler";
+
+  private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
+
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( VISITOR_EXTENSION_POINT );
     if( THE_VISITOR_MAP == null )
     {
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( VISITOR_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
       for( int i = 0; i < configurationElements.length; i++ )
@@ -140,5 +147,36 @@ public class KalypsoCoreExtensions
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
+  }
+  
+  /**
+   * @reuturn The handler whichs id-attribute equals the given id. Null if no such handler was found.
+   */
+  public static IComponentHandler findComponentHandler( final String id )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    if( THE_COMPONENT_MAP == null )
+    {
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( COMPONENT_HANDLER_EXTENSION_POINT );
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+      THE_COMPONENT_MAP = new HashMap<String, IComponentHandler>( configurationElements.length );
+      for( int i = 0; i < configurationElements.length; i++ )
+      {
+        try
+        {
+          final IConfigurationElement element = configurationElements[i];
+          final String configid = element.getAttribute( "id" );
+          final IComponentHandler handler = (IComponentHandler) element.createExecutableExtension( "class" );
+          THE_COMPONENT_MAP.put( configid, handler );
+        }
+        catch( final CoreException e )
+        {
+          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
+        }
+      }
+    }
+
+    return THE_COMPONENT_MAP.get( id );
   }
 }
