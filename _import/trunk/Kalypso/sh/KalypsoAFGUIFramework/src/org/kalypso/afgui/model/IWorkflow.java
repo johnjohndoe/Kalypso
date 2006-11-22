@@ -5,21 +5,10 @@ import java.util.List;
 import org.kalypso.afgui.model.events.WorkflowChangeEvent;
 import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
 
-public interface IWorkflow
+public interface IWorkflow extends IActivity
 {
 
-	/**
-	 * To retrieve the children activity of a given activity.
-	 * The childen activity are linked to a parent activities through a part-of
-	 * relationship.
-	 * @param activity the activity on which the request is made
-	 * @param aRelationship a relationship describing the link
-	 * @throws IllegalArgumentException if either activity or relationship are null
-	 * 
-	 */
-	public List<IActivity> getChildrenActivities(
-									IActivity activity,
-									EActivityRelationship relationship);
+	
 	
 	/**
 	 * Returns the roots activity
@@ -92,5 +81,10 @@ public interface IWorkflow
 	 */
 	public void adopt(IWorkflow workflow);
 
+	public IPhase[] getPhases();
+	
+	public Object getWrappedModel();
+	
+	public IWorkflowDataModel getWorkflowDataModel();
 	
 }

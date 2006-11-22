@@ -1,6 +1,8 @@
 
 package org.kalypso.afgui.model;
 
+import java.util.List;
+
 /**
  * The interface that all classes have to implement to become
  * a worfklow activity.
@@ -15,22 +17,6 @@ package org.kalypso.afgui.model;
  */
 public interface IActivity
 {
-//	/**
-//	 * Status to signal that an activity is not stated yet
-//	 */
-//	static final int STATUS_NOT_STARTED=0;
-//	
-//	/**
-//	 * Status code to signal that an activity processing is ongoing
-//	 */
-//	static final int STATUS_ONGOING=1;
-//	
-//	/**
-//	 * Status to signal that an activity is done
-//	 */
-//	static final int STATUS_DONE=2;
-	
-	
 	
 	/**
 	 * To get the activity specification of this activity
@@ -80,8 +66,24 @@ public interface IActivity
 	 * @return the name of the activity
 	 */
 	public String getName();
+	
 	public String getID();
+	
 	public String getHelp();
 	
+	public ITask[] getTask();
+	
+	/**
+	 * To retrieve the children activity of a given activity.
+	 * The childen activity are linked to a parent activities through a part-of
+	 * relationship.
+	 * @param activity the activity on which the request is made
+	 * @param aRelationship a relationship describing the link
+	 * @throws IllegalArgumentException if either activity or relationship are null
+	 * 
+	 */
+	public List<IActivity> getChildrenActivities(
+									IActivity activity,
+									EActivityRelationship relationship);
 	
 }

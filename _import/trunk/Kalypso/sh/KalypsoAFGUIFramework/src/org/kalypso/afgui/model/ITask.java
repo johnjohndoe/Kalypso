@@ -9,7 +9,7 @@ package org.kalypso.afgui.model;
  * @author Patrice Congo
  *
  */
-public class Task
+public class ITask
 {
 
 }

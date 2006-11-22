@@ -13,7 +13,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.model.EActivityAction;
 import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.impl.WorkflowBuilder;
+import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.afgui.model.impl.WorkflowSystem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -34,8 +35,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static KalypsoAFGUIFrameworkPlugin plugin;
 	
-	private IWorkflow workflow;
-	
+	//private IWorkflow workflow;
+	private IWorkflowSystem workflowSystem;
 	/**
 	 * The constructor
 	 */
@@ -49,27 +50,21 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		this.workflow=createWorkflow(context.getBundle());
-		
-		logger.info("\n======Pluging Workflow"+workflow);
+		//this.workflow=createWorkflow(context.getBundle());
+		this.workflowSystem=createWorkflowSystem(context.getBundle());
+		logger.info("\n======Pluging Workflow"+workflowSystem);
 	}
 
-	/**
-	 * This is a temporary test method to create a workflow from its specification
-	 * and static files without using projects
-	 * Only for test purpose. the actual should be based a project nature.
-	 * 
-	 * @return the test Workflow
-	 */
-	final private static IWorkflow createWorkflow(Bundle bundle)
+	final private static IWorkflowSystem createWorkflowSystem(Bundle bundle)
 	{
 		//Bundle bundle=context.getBundle();
 		URL specURL= bundle.getEntry(WORKFLOW_SPEC);
 		URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
-		WorkflowBuilder builder= new WorkflowBuilder();
+		
 		try
 		{
-			return builder.createWorkflow(specURL, statusURL);
+			WorkflowSystem system= new WorkflowSystem(specURL,statusURL);
+			return system;
 		}
 		catch (IOException e)
 		{
@@ -77,6 +72,30 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 			return null;
 		}
 	}
+	
+//	/**
+//	 * This is a temporary test method to create a workflow from its specification
+//	 * and static files without using projects
+//	 * Only for test purpose. the actual should be based a project nature.
+//	 * 
+//	 * @return the test Workflow
+//	 */
+//	final private static IWorkflow createWorkflow(Bundle bundle)
+//	{
+//		//Bundle bundle=context.getBundle();
+//		URL specURL= bundle.getEntry(WORKFLOW_SPEC);
+//		URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
+//		WorkflowSystem builder= new WorkflowSystem();
+//		try
+//		{
+//			return builder.createWorkflow(specURL, statusURL);
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 	
 	/*
 	 * (non-Javadoc)
@@ -107,9 +126,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 	
-	public IWorkflow getWorkflow()
+	public IWorkflowSystem getWorkflowSystem()
 	{
-		return this.workflow;
+		return this.workflowSystem;
 	}
 	
 //	public static final String IMG_PATH_BASE_SWEEZIES="/icons/sweetie2/png/";
@@ -162,8 +181,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	public void reloadWorkflow()
 	{
 		try{
-			
-			this.workflow.adopt(createWorkflow(getBundle()));
+			//TODO adopt also for workflow System
+			//this.workflow.adopt(createWorkflow(getBundle()));
 		}catch(Throwable th)
 		{
 			showMessage(th.getMessage());

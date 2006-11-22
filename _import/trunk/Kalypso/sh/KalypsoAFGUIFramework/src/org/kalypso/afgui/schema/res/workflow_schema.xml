@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
+	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+	
+	<!--==================================================================
+		Defines an activity, which represents a piece of work
+		which can be divided in tasks. 
+	===================================================================-->
+	<rdfs:Class 
+		rdf:about="&wbs;Activity">
+		<rdfs:label>Activity</rdfs:label>
+		<rdfs:comment>
+			Defines an activity, which represents a piece of work. 
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>
+	
+	<!--==================================================================
+	Defines a workflow to fullfill a certain goal.
+    A workflow is  made of activitites and can be organised 
+    in phases
+	===================================================================-->
+	<rdfs:Class 
+		rdf:about="&wbs;Workflow">
+		<rdfs:label xml:lang="en">Workflow</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Defines a workflow to fullfill a certain goal.
+    		A workflow is  made of activitites and can be organised 
+    		in phases
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;ActivitySpec"/>		
+	</rdfs:Class>
+	
+	<!-- =================================================================
+					Phase
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;Phase">
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+		<rdfs:label xml:lang="en">Phase</rdfs:label>
+		<rdfs:comment>
+			Represents a phase of work in a workflow. A phase is basically
+			an ordered sequence of Activities
+		</rdfs:comment>
+	</rdfs:Class>	
+	
+	<!-- =================================================================
+					Task
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;Task">
+		<rdfs:subClassOf rdf:resource="&rdf;Resource"/>
+		<rdfs:label xml:lang="en">Task</rdfs:label>
+		<rdfs:comment>
+			Task represents a small piece of work which is part of an
+			activity. 
+		</rdfs:comment>
+	</rdfs:Class>	
+	
+	
+	<!-- =================================================================
+					Help
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;Help" 
+		rdfs:label="Help">
+		<rdfs:label>Help</rdfs:label>
+		<rdfs:comment>
+			Help resource for activities, workflow and tasks
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>	
+	
+	<!-- =================================================================
+		DataModel
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;DataModel">
+		<rdfs:label>Data Model</rdfs:label>
+		<rdfs:comment>Data Model</rdfs:comment>
+		
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>
+	
+	<!-- =================================================================
+		isRoot
+	================================================================== -->
+	<rdf:Property rdf:about="&wbs;isRoot" rdfs:label="isRoot">
+		<rdfs:comment>Define a condition for a filter</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;ActivitySpec"/>
+		<rdfs:range rdf:resource="xsd:boolean"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<rdf:Property rdf:about="&wbs;hasActivity" rdfs:label="hasActivity">
+		<rdfs:comment>Associates an activity to a workflow</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Workflow"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+		partOf
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;partOf">
+		<rdfs:label>partOf</rdfs:label>
+		<rdfs:comment>Associates an activity to a containing one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+				dependsOn
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;dependsOn" 
+		rdfs:label="Depends On">
+		<rdfs:comment>Associates an activity to a depending one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+	</rdf:Property>	
+	
+	<!-- =================================================================
+				followsOn
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;followsOn" 
+		rdfs:label="Depends On">
+		<rdfs:comment>Associates an activity to a depending one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+	</rdf:Property>	
+	
+	<!-- =================================================================
+		ExeState xml type
+	================================================================== -->
+	<!--xsd:simpleType name="ExeState">
+		<xsd:comment>
+			Represents the execution state a activity has. 
+			3 values are possible: not started, on going and done
+		</xsd:comment>
+	  	<xsd:restriction base="xsd:string">
+	  		<xsd:enumeration value="NOT_STARTED" />
+	  		<xsd:enumeration value="ON_GOING" />
+	  		<xsd:enumeration value="DONE" />
+	  	</xsd:restriction>  	
+  </xsd:simpleType-->
+  
+  <!-- ===================================================================
+  	hasName
+  ==================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasName" 
+		rdfs:label="Has Name">	
+		<rdfs:comment>A name of an activity or workflow</rdfs:comment>
+		<rdfs:subPropertyOf rdf:resource="&rdfs;label"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Workflow"/>
+		<rdfs:range rdf:resource="xsd:string"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			hasHelp
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasHelp">	
+		<rdfs:label>Has Help</rdfs:label>
+		<rdfs:comment>
+			Associate an help resource to an activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Phase"/>
+		
+		<rdfs:range rdf:resource="xsd:string"/>
+		<rdfs:range rdf:resource="&wbs;Help"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			hasTask
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasTask">	
+		<rdfs:label>Has Task</rdfs:label>
+		<rdfs:comment>
+			Associates a task to an activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:range rdf:resource="&wbs;Task"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			nextPhase
+	 ==================================================================-->
+	<rdf:Property 
+		rdf:about="&wbs;nextPhase">	
+		<rdfs:label>Has Task</rdfs:label>
+		<rdfs:comment>
+			Associates a phase with the following phase
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Phase"/>
+		<rdfs:range rdf:resource="&wbs;Phase"/>
+	</rdf:Property>
+	
+	
+	<!-- *****************************************************************
+	**************************RUNTIME STATUS******************************
+	<wbs:WorkflowStatus rdf:resource="&wbs;simulationModel1_WF">
+		<wbs:associatedModelResource rdf:resource="&wbs;resourceURI"/>
+		<wbs:executedWorkflow rdf:resource="&wbs;SimulationModelWF"/>
+		<wbs:activityStates>
+			<rdf:Seq>
+			
+			</rdf:Seq>
+		</wbs:activityStates>
+	</wbs:WorkflowStatus>
+	****************************************************************** -->
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowStatus">
+		<rdfs:label xml:lang="en">Workflow</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Represents the runtime status of a workflow
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>		
+	</rdfs:Class>
+	
+	<!-- =================================================================
+			nextPhase
+	 ==================================================================-->
+	<rdf:Property 
+		rdf:about="&wbs;associatedModelResource">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="xs:anyURI"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;executedWorkflowResource">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="&wbs;Workflow"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;executedWorkflowResource">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="&wbs;Workflow"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;activityStates">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="&wbs;Actvivity"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+		<wbs:ActivityStatus rdf:resource="&wbs;simulationModel1_AS">
+		<wbs:associatedActivity 
+			rdf:resource="&wbs;HydrographViz"/>
+		<wbs:hasState
+			rdf:resource=""/>
+		</wbs:ActivityStatus>
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;ActivityStatus">
+		<rdfs:label xml:lang="en">Activity Status</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Activity Status
+		</rdfs:comment>
+		<rdfs:subClassOf 
+			rdf:resource="&rdfs;Resource"/>		
+	</rdfs:Class>
+	<rdf:Property 
+		rdf:about="&wbs;executedActivity">	
+		<rdfs:label>executed activity</rdfs:label>
+		<rdfs:comment>
+			Executed Activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;ActivtyStatus"/>
+		<rdfs:range rdf:resource="&wbs;Actvivity"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			exeState
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;exeState">
+		<rdfs:label xml:lang="en">Execution State</rdfs:label>
+		<rdfs:comment xml:lang="en">A resource representing the status </rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:range rdf:resource="xsd:string"/>
+	</rdf:Property>
+	
+	
+</rdf:RDF>

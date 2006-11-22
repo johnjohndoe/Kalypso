@@ -47,7 +47,7 @@ final public class Schema
 		"http://www.tu-harburg.de/wb/kalypso/schema/workflow#";
 	
 	final static public String WORKFLOW_SCHEMA_FOLDER="res";
-	final static public String WORKFLOW_SCHEMA_FILE="res/workflow_schema.rdfs";
+	final static public String WORKFLOW_SCHEMA_FILE="res/workflow_schema.xml";
 	final static public Model schemaModel=ModelFactory.createDefaultModel();
 
 	final static public  Property PROP_HAS_NAME;
@@ -86,6 +86,15 @@ final public class Schema
 	final static public String URI_CLASS_HELP=SCHEMA_NS+"Help";
 	final static public Resource CLASS_HELP;
 	
+	final static public String URI_CLASS_PHASE=SCHEMA_NS+"Phase";
+	final static public Resource CLASS_PHASE;
+	
+	final static public String URI_CLASS_WORKFLOW_STATUS=SCHEMA_NS+"WorkflowStatus";
+	final static public Resource CLASS_WORKFLOW_STATUS;
+	
+	final static public String URI_CLASS_ACTIVITY_STATUS=SCHEMA_NS+"ActivityStatus";
+	final static public Resource CLASS_ACTIVITY_STATUS;
+	
 	final static public List<Property> ACTIVITY_LINK_PROPS;
 	final static public Map<Property,
 							EActivityRelationship> REL_STATEMENT_PROP_MAP;
@@ -120,7 +129,9 @@ final public class Schema
 					URI_PROP_EXE_STATE, URI_PROP_PART_OF,URI_PROP_HAS_A,
 					URI_PROP_DEPENDS_ON, URI_PROP_FOLLOWS,URI_PROP_HAS_HELP};
 			String resUris[]={
-					URI_CLASS_ACTIVITY,URI_CLASS_WORKFLOW,URI_CLASS_HELP};
+					URI_CLASS_ACTIVITY,URI_CLASS_WORKFLOW,URI_CLASS_HELP,
+					URI_CLASS_PHASE,URI_CLASS_WORKFLOW_STATUS,
+					URI_CLASS_ACTIVITY_STATUS};
 			
 			//find vokabulary elements
 			fillPropMap(propMap, propUris);
@@ -173,6 +184,9 @@ final public class Schema
 			CLASS_ACTIVITY=resMap.get(URI_CLASS_ACTIVITY);
 			CLASS_WORKFLOW=resMap.get(URI_CLASS_WORKFLOW);
 			CLASS_HELP=resMap.get(URI_CLASS_HELP);
+			CLASS_PHASE=resMap.get(URI_CLASS_PHASE);
+			CLASS_WORKFLOW_STATUS= resMap.get(URI_CLASS_WORKFLOW_STATUS);
+			CLASS_ACTIVITY_STATUS= resMap.get(URI_CLASS_ACTIVITY_STATUS);
 		}
 		
 	}
@@ -230,15 +244,15 @@ final public class Schema
 		pOut.println("isRoot="+PROP_IS_ROOT);
 		pOut.println("partOf="+PROP_PART_OF);
 		pOut.println("exestate="+PROP_EXE_STATE);
-		pOut.println("workflow"+CLASS_WORKFLOW);
-		pOut.println("activity"+CLASS_ACTIVITY);
-		
+		pOut.println("workflow="+CLASS_WORKFLOW);
+		pOut.println("activity="+CLASS_ACTIVITY);
+		pOut.println("Phase="+CLASS_PHASE);
 		//pOut.println("schemaModel="+schemaModel);
 		
 		//schemaModel.write(pOut);
 //		Schema.PROBLEM_FLAG.printStackTrace(pOut);
 		//pOut.println(Schema.class.getResource(WORKFLOW_SCHEMA_FILE));
-		pOut.println(Schema.class.getResource("res/workflow_schema.rdfs"));
+		//pOut.println(Schema.class.getResource("res/workflow_schema.rdfs"));
 	}
 
 	final  static public EActivityRelationship toEActivityRelationship(Property prop)

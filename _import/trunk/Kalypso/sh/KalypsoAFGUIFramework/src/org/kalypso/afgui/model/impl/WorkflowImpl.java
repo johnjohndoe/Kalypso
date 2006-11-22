@@ -3,19 +3,39 @@
  */
 package org.kalypso.afgui.model.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.kalypso.afgui.model.EActivityAction;
+import org.kalypso.afgui.model.EActivityExeState;
 import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
+import org.kalypso.afgui.model.IActivityRuntimeStatus;
 import org.kalypso.afgui.model.IActivitySpecification;
+import org.kalypso.afgui.model.IPhase;
+import org.kalypso.afgui.model.IRelationshipStatement;
+import org.kalypso.afgui.model.ITask;
+import org.kalypso.afgui.model.IWorkflowDataModel;
 import org.kalypso.afgui.model.IWorkflowRuntineStatus;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSpecification;
 import org.kalypso.afgui.model.events.WorkflowChangeEvent;
 import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
+import org.kalypso.afgui.schema.Schema;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * This class abtract the workfow. a workflow is collection of activities.
@@ -54,6 +74,8 @@ public class WorkflowImpl implements IWorkflow
 	//transition history
 	private IWorkflowRuntineStatus runtimeStatus;
 	
+	private Model model;
+	
 	final private List<WorkflowChangeEventListerner> wfceListener;
 	
 	/**
@@ -67,7 +89,8 @@ public class WorkflowImpl implements IWorkflow
 	 */
 	public WorkflowImpl(
 			IWorkflowSpecification workflowSpecification,
-			IWorkflowRuntineStatus runtimeStatus)
+			IWorkflowRuntineStatus runtimeStatus,
+			Model model)
 	{
 		if(	workflowSpecification==null || 
 			runtimeStatus==null)
@@ -78,6 +101,99 @@ public class WorkflowImpl implements IWorkflow
 		this.workflowSpecification=workflowSpecification;
 		this.runtimeStatus=runtimeStatus;
 		this.wfceListener= new ArrayList<WorkflowChangeEventListerner>();
+	}
+	
+	
+	private final IWorkflowSpecification loadSpecifications(URL specURL) throws IOException
+	{
+		logger.info("specURL="+specURL);
+		IWorkflowSpecification wfSpec=null;
+		Map<String, IActivitySpecification> specsMap=
+			new HashMap<String, IActivitySpecification>();
+		List<IRelationshipStatement> stms= new ArrayList<IRelationshipStatement>();
+		//model load
+		InputStream iStream=specURL.openStream();
+		Model rdfModel= ModelFactory.createDefaultModel();
+		rdfModel.read(iStream,"");
+		rdfModel.write(System.out);
+		
+		//fill map
+		IActivitySpecification spec=null;
+
+		
+		StmtIterator it=
+			rdfModel.listStatements((Resource)null,RDF.type,Schema.CLASS_ACTIVITY);//selectActivities);
+		logger.info("\nHAS_NEXT:"+it.hasNext());
+		Statement stm;		
+		for(;it.hasNext();)
+		{
+			stm=it.nextStatement();
+			spec= new ActivitySpecification(stm.getSubject());
+			logger.info(stm.getPredicate());
+			specsMap.put(spec.getID(), spec);
+			
+		}
+		
+		//create statement list, get activity link statements, 
+		//construct statement based on it
+		IActivitySpecification objSpec=null;
+		IActivitySpecification subSpec=null;
+		IRelationshipStatement relStm=null;
+		EActivityRelationship rel;
+		
+		for(Property prop:Schema.ACTIVITY_LINK_PROPS)
+		{
+			it=
+				rdfModel.listStatements((Resource)null,prop,(Resource)null);
+			for(;it.hasNext();)
+			{
+				stm=it.nextStatement();
+				subSpec= specsMap.get(stm.getSubject().getURI());
+				objSpec= specsMap.get(((Resource)stm.getObject()).getURI());
+				rel=Schema.toEActivityRelationship(prop);
+				if(subSpec==null || objSpec==null|| rel==null)
+				{
+					logger.warn("RelationTripple=["+subSpec+", "+rel+"/"+prop+", "+objSpec);
+				}
+				else
+				{
+					relStm= new RelationshipStatement(subSpec,rel,objSpec);
+					stms.add(relStm);
+					if(rel==EActivityRelationship.PART_OF)
+					{
+						IRelationshipStatement inverseRelStm=
+							new RelationshipStatement(
+									objSpec,EActivityRelationship.HAS_A,subSpec);
+						if(!stms.contains(inverseRelStm))
+						{
+							stms.add(inverseRelStm);
+						}
+					}
+					else if(rel==EActivityRelationship.HAS_A)
+					{
+						IRelationshipStatement inverseRelStm=
+							new RelationshipStatement(
+									objSpec,EActivityRelationship.PART_OF,subSpec);
+						if(!stms.contains(inverseRelStm))
+						{
+							stms.add(inverseRelStm);
+						}
+					}
+				}
+				
+			}
+		}
+		logger.info(stms);
+		//create workflow spec
+		wfSpec= new WorkflowSpecification(specsMap,stms);
+		return wfSpec;
+	}
+
+	private final IWorkflowRuntineStatus loadRuntimeStatus(URL specURL)
+	{
+		IWorkflowRuntineStatus wfStatus=null;
+		wfStatus=new WorkflowRuntimeStatus();
+		return wfStatus;
 	}
 	
 	
@@ -219,5 +335,59 @@ public class WorkflowImpl implements IWorkflow
 		this.workflowSpecification=workflow.getWorkflowSpecification();
 		this.runtimeStatus=workflow.getRuntineStatus();
 		fireWorkflowChangedEvent(new WorkflowChangeEvent(this));
+	}
+	
+	public IActivitySpecification getActivitySpecification()
+	{
+		return null;
+	}
+	
+	public EActivityExeState getExeState()
+	{
+		return null;
+	}
+	
+	public String getHelp()
+	{
+		return null;
+	}
+	
+	public String getID()
+	{
+		return null;
+	}
+	
+	public String getName()
+	{
+		return null;
+	}
+	
+	public IPhase[] getPhases()
+	{
+		return null;
+	} 
+	
+	public IActivityRuntimeStatus getRuntimeStatus()
+	{
+		return null;
+	}
+	
+	public ITask[] getTask()
+	{
+		return null;
+	}
+	
+	public void setExeState(EActivityExeState status)
+	{
+		
+	}
+	public Object getWrappedModel()
+	{
+		return model;
+	}
+	
+	public IWorkflowDataModel getWorkflowDataModel()
+	{
+		return null;
 	}
 }

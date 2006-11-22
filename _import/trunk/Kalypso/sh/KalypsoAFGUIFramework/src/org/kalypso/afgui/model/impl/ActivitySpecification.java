@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.kalypso.afgui.model.IActivityHelp;
 import org.kalypso.afgui.model.IActivitySpecification;
-import org.kalypso.afgui.model.IDataModel;
+import org.kalypso.afgui.model.IWorkflowDataModel;
 import org.kalypso.afgui.schema.Schema;
 
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -58,7 +58,7 @@ public class ActivitySpecification implements
 	/* (non-Javadoc)
 	 * @see org.kalypso.afgui.model.IActivitySpecification#getDataModel()
 	 */
-	public IDataModel getDataModel()
+	public IWorkflowDataModel getDataModel()
 	{
 		throw new RuntimeException("not implemented yet");
 		//return null;

@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.kalypso.afgui.model;
 
 /**
@@ -9,7 +7,9 @@ package org.kalypso.afgui.model;
  * @author Patrice Congo
  *
  */
-public interface IDataModel
+public interface IWorkflowDataModel
 {
+	public String getResourceURI();
+	public Object getResourceType();
 	
 }

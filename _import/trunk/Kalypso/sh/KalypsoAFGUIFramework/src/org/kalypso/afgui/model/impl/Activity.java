@@ -1,13 +1,16 @@
-/**
- * 
- */
+
 package org.kalypso.afgui.model.impl;
 
 
+import java.util.Collections;
+import java.util.List;
+
 import org.kalypso.afgui.model.EActivityExeState;
+import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IActivityRuntimeStatus;
 import org.kalypso.afgui.model.IActivitySpecification;
+import org.kalypso.afgui.model.ITask;
 
 
 /**
@@ -143,4 +146,17 @@ public class Activity implements IActivity
 	{
 		return  spec.getHelp().getHelp();
 	}
+	
+	public ITask[] getTask()
+	{
+		return new ITask[]{};
+	}
+
+	public List<IActivity> getChildrenActivities(IActivity activity, EActivityRelationship relationship)
+	{
+		return Collections.emptyList();
+	}
+	
+
+	
 }
