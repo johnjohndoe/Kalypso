@@ -27,9 +27,9 @@
 		
 	<xs:include schemaLocation="simulation_model_math.xsd"/>
 	
-	<xs:element 
+	<!-- xs:element 
 		name="flowRelationshipModel" 
-		type="xs:string"/>
+		type="xs:string"/ -->
 	<!-- =================================================================
 		FlowRelatioshipCoverage
 	================================================================== -->
