@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gml:Dictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="
+     http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
+     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
+     http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
+     http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
+     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
+     xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+     xmlns:swe="http://www.opengis.net/swe" gml:id="components">
+
+     <gml:description>Ein Dictionary für die Modellierung von Zeitreihendaten</gml:description>
+     <gml:name>Zeitreihenkomponente</gml:name>
+
+     <!-- ================================================================
+     	Water Level
+     ==================================================================-->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="WaterLevel">
+               <gml:name>Station</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_waterlevel">
+                         <gml:description>Water Level</gml:description>
+                         <gml:name>Water Level</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+	<!-- =================================================================
+		Discharge
+	================================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Discharge">
+               <gml:name>Abfluss</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_discharge">
+                         <gml:description>Abfluss</gml:description>
+                         <gml:name>Abfluss</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="m³/s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+	
+	<!-- =================================================================
+		Specific Discharge
+	================================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="SpecificDischarge">
+               <gml:name>Specific Dicharge</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_specific_discharge">
+                         <gml:description>Specific Dicharge</gml:description>
+                         <gml:name>Specific Dicharge</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="?"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+	<!-- ==============================================================
+		DeltaTime 
+	=============================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="CurrentTimeInMillis">
+               <gml:name>Kennung</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-time">
+                         <gml:name>Kennung</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                         <gml:unitOfMeasure uom="mS"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+	
+	<!-- =================================================================
+		Time
+	================================================================== -->	
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="Time">
+               <gml:name>Sohlhöhe</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_time">
+                         <gml:name>Sohlhöhe</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+               		<swe:SimpleType>
+               			<st:restriction
+               				base="time">
+               			</st:restriction>
+               		</swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+	
+	<!-- ================================================================
+		FlowVelocityX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="FlowVelocityX">
+               <gml:name>Flow Velocity X</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_flow_velocity">
+                         <gml:name>Flow velocity x component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+	
+	<!-- ================================================================
+		FlowVelocityX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="FlowVelocityY">
+               <gml:name>Flow Velocity Y</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_flow_velocity_y">
+                         <gml:name>Flow velocity y component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+	
+	
+	<!-- ================================================================
+	
+	================================================================= -->
+         
+</gml:Dictionary>
