@@ -26,12 +26,15 @@
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
-                    <swe:SimpleType>
+                    <swe:Number>
+						<gml:unitOfMeasure uom="m"/>	
+					</swe:Number>
+                    <!-- swe:SimpleType>
                          <st:restriction base="decimal">
                               <st:fractionDigits value="4"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="dict_uom.xml#m"/>
-                    </swe:SimpleType>
+					 <gml:unitOfMeasure uom="dict_uom.xml#m"/>			
+                    </swe:SimpleType-->
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
@@ -49,13 +52,16 @@
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
-                    <swe:SimpleType>
+                    <swe:Number>
+						<gml:unitOfMeasure uom="m.m.m/s"/>
+					</swe:Number>
+                    <!--swe:SimpleType>
                          <st:restriction base="decimal">
                               <st:minInclusive value="0.0"/>
                               <st:fractionDigits value="3"/>
                          </st:restriction>
-                         <gml:unitOfMeasure uom="m³/s"/>
-                    </swe:SimpleType>
+						 <gml:unitOfMeasure uom="m�/s"/>
+                    </swe:SimpleType-->
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
@@ -64,26 +70,84 @@
 		Specific Discharge
 	================================================================== -->
      <gml:dictionaryEntry>
-          <swe:ItemDefinition gml:id="SpecificDischarge">
-               <gml:name>Specific Dicharge</gml:name>
+          <swe:ItemDefinition gml:id="SpecificDischargeX">
+               <gml:name>Specific Dicharge X Component</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_specific_discharge">
-                         <gml:description>Specific Dicharge</gml:description>
-                         <gml:name>Specific Dicharge</gml:name>
+                         <gml:description>Specific Dicharge X component</gml:description>
+                         <gml:name>Specific Dicharge X component</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
-                    <swe:SimpleType>
+                    <swe:Number>
+						<gml:unitOfMeasure uom="?"/>		 	
+					</swe:Number>
+                    <!--swe:SimpleType>
                          <st:restriction base="decimal">
-                              <st:fractionDigits value="4"/>
-                         </st:restriction>
-                         <gml:unitOfMeasure uom="?"/>
-                    </swe:SimpleType>
+                         		<st:fractionDigits value="4"/>
+                         		</st:restriction>
+			 			<gml:unitOfMeasure uom="?"/>
+                    </swe:SimpleType-->
+               </swe:representation>
+       </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+	
+  <!-- =================================================================
+		Discharge
+	================================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="SedimentConcentation">
+               <gml:name>SedimentConcentration</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_sediment_concentration">
+                         <gml:description>Sediment Concentration</gml:description>
+                         <gml:name>Sediment Concentration</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+				      <gml:unitOfMeasure uom="kg/m�"/>
+			      	</swe:Number>
+                    <!-- swe:SimpleType>
+                        <st:restriction base="decimal">
+                              <st:minInclusive value="0.0"/>
+                         <st:fractionDigits value="3"/>
+		      	</st:restriction>
+                    </swe:SimpleType-->
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
-	<!-- ==============================================================
+
+	<!-- =================================================================
+		Specific Discharge Y
+	================================================================== -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="SpecificDischargeY">
+               <gml:name>Specific Dicharge Y component</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_specific_discharge_y">
+                         <gml:description>Specific Dicharge Y Component</gml:description>
+                         <gml:name>Specific Dicharge Y Component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <!--swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="4"/>
+                         </st:restriction>
+						 <gml:unitOfMeasure uom="?"/>
+					</swe:SimpleType-->
+					<swe:Number>
+						<gml:unitOfMeasure uom="?"/>	
+					</swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+
+
+     <!-- ==============================================================
 		DeltaTime 
 	=============================================================== -->
      <gml:dictionaryEntry>
@@ -96,7 +160,7 @@
                </swe:property>
                <swe:representation>
                     <swe:Number>
-                         <gml:unitOfMeasure uom="mS"/>
+                         <gml:unitOfMeasure uom="mS"/> 
                     </swe:Number>
                </swe:representation>
           </swe:ItemDefinition>
@@ -107,22 +171,37 @@
 	================================================================== -->	
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="Time">
-               <gml:name>Sohlhöhe</gml:name>
+               <gml:name>Time</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_time">
                          <gml:name>Sohlhöhe</gml:name>
                     </swe:Phenomenon>
                </swe:property>
-               <swe:representation>
+               <swe:representation>                
                		<swe:SimpleType>
-               			<st:restriction
-               				base="time">
-               			</st:restriction>
-               		</swe:SimpleType>
+	               		<st:restriction base="time">                            
+                    	</st:restriction>
+                    	<swe:noScale/>
+                    </swe:SimpleType>
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-	
+     
+	<swe:ItemDefinition gml:id="TimeX">
+			<gml:name>time</gml:name>
+			<!--  swe:property xlink:href="http://sweet.jpl.nasa.gov/ontology/time.owl#Instant"/-->
+			<swe:property>
+                    <swe:Phenomenon gml:id="phen_time">
+                         <gml:name>Time</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xs:dateTime"/>
+					<swe:frame xlink:href="#ISO-8601"/>
+				</swe:General>
+			</swe:representation>
+	</swe:ItemDefinition>
 	<!-- ================================================================
 		FlowVelocityX
 	================================================================= -->
@@ -143,7 +222,7 @@
      </gml:dictionaryEntry>
 	
 	<!-- ================================================================
-		FlowVelocityX
+		FlowVelocityY
 	================================================================= -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="FlowVelocityY">
@@ -160,7 +239,124 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
-	
+
+
+	<!-- ================================================================
+		FlowDevVelocityX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="FlowVelocityDevX">
+               <gml:name>Flow Derived Velocity X</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_flow_velocity_dev_x">
+                         <gml:name>Flow derived velocity y component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>     
+
+	<!-- ================================================================
+		FlowDevVelocityY
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="FlowVelocityDevY">
+               <gml:name>Flow Velocity Derivative X</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_flow_velocity_dev_y">
+                         <gml:name>Flow derived velocity x component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>     
+
+<!-- ================================================================
+		BedShearStressX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="BedShearStressX">
+               <gml:name>Bed shear stress X</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_bed_shear_stress_x">
+                         <gml:name>Bed shear stress x component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>     
+
+	<!-- ================================================================
+		BedShearStressX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="BedShearStressY">
+               <gml:name>Bed shear stress Y</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_bed_shear_stress_y">
+                         <gml:name>Bed shear stress y component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+
+
+	<!-- ================================================================
+		BedShearStressDevX
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="BedShearStressDevX">
+               <gml:name>Bed shear stress derivative X</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_bed_shear_stress_dev_x">
+                         <gml:name>Bed shear stress derivative x component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+
+
+	<!-- ================================================================
+		BedShearStressDevY
+	================================================================= -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="BedShearStressDevY">
+               <gml:name>Bed shear stress derivative Y</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen_bed_shear_stress_dev_y">
+                         <gml:name>Bed shear stress derivative y component</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:Number>
+                    	<gml:unitOfMeasure uom="?"/>
+                    </swe:Number>
+               </swe:representation>
+          </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+
 	
 	<!-- ================================================================
 	
