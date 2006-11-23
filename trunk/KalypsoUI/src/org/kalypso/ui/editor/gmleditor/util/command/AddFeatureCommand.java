@@ -78,6 +78,11 @@ public class AddFeatureCommand implements ICommand
 
   private final int m_depth;
 
+  /**
+   * This variable states, if all features in the selection manager should be removed, by adding a feature.
+   */
+  private boolean m_dropSelection = true;
+
   public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
@@ -169,13 +174,20 @@ public class AddFeatureCommand implements ICommand
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    if( m_selectionManager != null )
+    if( (m_selectionManager != null) && (m_dropSelection == true) )
       m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
   }
-  
+
   public Feature getNewFeature( )
   {
     return m_newFeature;
   }
-  
+
+  /**
+   * Sets, if a existing selection should be dropped after the creation of the feature.
+   */
+  public void dropSelection( boolean dropSelection )
+  {
+    m_dropSelection = dropSelection;
+  }
 }
