@@ -69,7 +69,7 @@ public class BrueckeRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getBuilding() == null) || (profil.getBuilding().getTyp() != IProfilBuilding.BUILDING_TYP.BRUECKE) )
+    if( (profil == null) || (profil.getBuilding() == null) || (IProfilConstants.BUILDING_TYP_BRUECKE.compareTo( profil.getBuilding().getTyp()) != 0) )
       return;
 
     try

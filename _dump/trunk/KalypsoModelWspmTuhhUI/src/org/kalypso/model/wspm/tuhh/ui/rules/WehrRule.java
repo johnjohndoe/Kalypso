@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -69,7 +68,7 @@ public class WehrRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getBuilding() == null) || (profil.getBuilding().getTyp() != IProfilBuilding.BUILDING_TYP.WEHR) )
+    if( (profil == null) || (profil.getBuilding() == null) || (IProfilConstants.BUILDING_TYP_WEHR.compareTo( profil.getBuilding().getTyp()) != 0) )
       return;
     try
     {
@@ -113,6 +112,7 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
     final IProfilBuilding building = profil.getBuilding();
     final Double beiwert = (Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT );
+
     IProfilPoint point = (beiwert == 0.0) ? p : null;
     if( deviders != null )
     {
@@ -132,16 +132,22 @@ public class WehrRule extends AbstractValidatorRule
   private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
     final List<IProfilPoint> points = profil.getPoints();
-    for( final IProfilPoint point : points )
+    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
+    if( deviders == null )
+      return;
+    final int left = points.indexOf( deviders[0].getPoint() ) ;
+    final int right = points.indexOf( deviders[deviders.length - 1].getPoint() );
+    if( (left +1)> right )
+      return;
+    final List<IProfilPoint> midPoints = points.subList( left+1, right );
+    for( final IProfilPoint point : midPoints )
     {
       final double h = point.getValueFor( POINT_PROPERTY.HOEHE );
-      final double b = point.getValueFor( POINT_PROPERTY.BREITE );
       final double wk = point.getValueFor( POINT_PROPERTY.OBERKANTEWEHR );
       if( wk < h )
       {
-        collector.createProfilMarker( true, "ungültige Wehrgeometrie [" + String.format( IProfilConstants.FMT_STATION, b ) + "]", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
+        collector.createProfilMarker( true, "Wehrkante[" + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ) + "] unterhalb Geländeniveau", "", points.indexOf( point ), POINT_PROPERTY.OBERKANTEWEHR.toString(), pluginId, null );
       }
-      break;
     }
   }
 

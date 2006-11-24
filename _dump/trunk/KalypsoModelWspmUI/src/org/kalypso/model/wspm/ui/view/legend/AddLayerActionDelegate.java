@@ -51,10 +51,10 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
@@ -203,25 +203,25 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
   {
 
     public final static AddableLayer BRUECKE = new AddableBuildingLayer( "Brücke",
-        BUILDING_TYP.BRUECKE );
+        IProfilConstants.BUILDING_TYP_BRUECKE );
 
-    public final static AddableLayer WEHR = new AddableBuildingLayer( "Wehr", BUILDING_TYP.WEHR );
+    public final static AddableLayer WEHR = new AddableBuildingLayer( "Wehr", IProfilConstants.BUILDING_TYP_WEHR );
 
     public final static AddableLayer KREIS = new AddableBuildingLayer( "Kreis - Durchlass",
-        BUILDING_TYP.KREIS );
+        IProfilConstants.BUILDING_TYP_KREIS );
 
     public final static AddableLayer TRAPEZ = new AddableBuildingLayer( "Trapez - Durchlass",
-        BUILDING_TYP.TRAPEZ );
+        IProfilConstants.BUILDING_TYP_TRAPEZ );
 
     public final static AddableLayer MAUL = new AddableBuildingLayer( "Maul - Durchlass",
-        BUILDING_TYP.MAUL );
+        IProfilConstants.BUILDING_TYP_MAUL );
 
     public final static AddableLayer EI = new AddableBuildingLayer( "Ei - Durchlass",
-        BUILDING_TYP.EI );
+        IProfilConstants.BUILDING_TYP_EI );
 
-    private final BUILDING_TYP m_buildingTyp;
+    private final String m_buildingTyp;
 
-    private AddableBuildingLayer( final String label, final BUILDING_TYP buildingTyp )
+    private AddableBuildingLayer( final String label, final String buildingTyp )
     {
       super( label );
 

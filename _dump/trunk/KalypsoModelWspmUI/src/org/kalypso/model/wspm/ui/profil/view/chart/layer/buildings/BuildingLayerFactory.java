@@ -45,6 +45,7 @@ import java.util.Arrays;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
 import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
@@ -70,23 +71,21 @@ public class BuildingLayerFactory
     final IProfilBuilding building = chartView.getProfil().getBuilding();
     if( building == null )
       return null;
-    switch( building.getTyp() )
-    {
-      case KREIS:
-        return new KreisBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
-      case EI:
-        return new EiBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
-      case MAUL:
-        return new MaulBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
-      case TRAPEZ:
-        return new TrapezBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
-      case WEHR:
-        return new WehrBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorWehr ), colorWehr, colorWehr, colorForeground );
-      case BRUECKE:
-        return new BrueckeBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorOKBruecke, colorUKBruecke ), colorOKBruecke, colorOKBruecke, colorForeground );
-      default:
-        return null;
-    }
-
+    final String buildingType = building.getTyp();
+    if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_KREIS ) == 0 )
+      return new KreisBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
+    else if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_EI ) == 0 )
+      return new EiBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
+    else if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_MAUL ) == 0 )
+      return new MaulBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
+    else if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+      return new TrapezBuildingLayer( chartView, domainRange, valueRange, colorDurchlass );
+    else if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_WEHR ) == 0 )
+      return new WehrBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorWehr ), colorWehr, colorWehr, colorForeground );
+    else if( buildingType.compareToIgnoreCase( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 )
+      return new BrueckeBuildingLayer( chartView, domainRange, valueRange, Arrays.asList( colorOKBruecke, colorUKBruecke ), colorOKBruecke, colorOKBruecke, colorForeground );
+    else
+      return null;
   }
+
 }

@@ -61,16 +61,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -178,7 +177,7 @@ public class WehrPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_point.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfilPoint point = ProfilUtil.findNearestPoint(getProfil(), value );
+            final IProfilPoint point = ProfilUtil.findNearestPoint( getProfil(), value );
             if( point != m_devider.getPoint() )
             {
 
@@ -253,7 +252,7 @@ public class WehrPanel extends AbstractProfilView
     super( pem, viewdata, null );
     m_deviderLines = new LinkedList<DeviderLine>();
     m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
-    m_addImg =  KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
+    m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
   }
 
   @Override
@@ -284,19 +283,22 @@ public class WehrPanel extends AbstractProfilView
     label.setToolTipText( tooltip );
     m_Wehrart = new Combo( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_Wehrart.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    for( IProfil.WEHR_TYP wt : IProfil.WEHR_TYP.values() )
-    {
-      m_Wehrart.add( wt.toString() );
-    }
+    m_Wehrart.setItems( new String[] { "Scharfkantig", "Rundkronig", "Breitkronig", "Überfallbeiwert" } );
+    m_Wehrart.setData( "Scharfkantig", IProfilConstants.WEHR_TYP_SCHARFKANTIG );
+    m_Wehrart.setData( "Rundkronig", IProfilConstants.WEHR_TYP_RUNDKRONIG );
+    m_Wehrart.setData( "Breitkronig", IProfilConstants.WEHR_TYP_BREITKRONIG );
+    m_Wehrart.setData( "Überfallbeiwert", IProfilConstants.WEHR_TYP_BEIWERT );
+    m_Wehrart.setData( IProfilConstants.WEHR_TYP_SCHARFKANTIG, "Scharfkantig" );
+    m_Wehrart.setData( IProfilConstants.WEHR_TYP_RUNDKRONIG, "Rundkronig" );
+    m_Wehrart.setData( IProfilConstants.WEHR_TYP_BREITKRONIG, "Breitkronig" );
+    m_Wehrart.setData( IProfilConstants.WEHR_TYP_BEIWERT, "Überfallbeiwert" );
     m_Wehrart.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        int i = m_Wehrart.getSelectionIndex();
-        IProfil.WEHR_TYP wt = IProfil.WEHR_TYP.values()[i];
-        IProfilChange change = new BuildingEdit( getProfil().getBuilding(), BUILDING_PROPERTY.WEHRART, wt );
+        IProfilChange change = new BuildingEdit( getProfil().getBuilding(), BUILDING_PROPERTY.WEHRART, m_Wehrart.getData( m_Wehrart.getText() ) );
         final ProfilOperation operation = new ProfilOperation( "Wehrart ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -353,7 +355,7 @@ public class WehrPanel extends AbstractProfilView
         try
         {
           final IProfilBuilding building = getProfil().getBuilding();
-          if( (building == null) || (building.getTyp() != BUILDING_TYP.WEHR) )
+          if( (building == null) || IProfilConstants.BUILDING_TYP_WEHR.compareTo( building.getTyp() )!=0)
           {
             return;
           }
@@ -418,8 +420,8 @@ public class WehrPanel extends AbstractProfilView
       final IProfilBuilding building = getProfil().getBuilding();
       if( building == null )
         return;
-      IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
-      m_Wehrart.select( m_Wehrart.indexOf( wt.toString() ) );
+      //IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
+      m_Wehrart.select( m_Wehrart.indexOf(m_Wehrart.getData( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString()).toString()) );
       m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.WEHR ) );
       m_kronenParameter.setText( building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ).toString() );
       final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.WEHR );

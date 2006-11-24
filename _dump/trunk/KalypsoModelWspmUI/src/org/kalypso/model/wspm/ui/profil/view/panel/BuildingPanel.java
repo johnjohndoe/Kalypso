@@ -59,6 +59,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
@@ -69,13 +70,11 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
 
-
 /**
  * @author belger
  */
 /**
  * @author kimwerner
- * 
  */
 public class BuildingPanel extends AbstractProfilView
 {
@@ -87,20 +86,23 @@ public class BuildingPanel extends AbstractProfilView
   {
     if( property == BUILDING_PROPERTY.BREITE )
     {
-      switch( m_building.getTyp() )
+      final String buildigTyp = m_building.getTyp();
+      if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_EI ) == 0 )
       {
-        case EI:
-          return "grösster Durchmesser [m]";
-        case TRAPEZ:
-          return "lange Seite [m]";
-        case BRUECKE:
-          return "Breite in Fließrichtung [m]";
-        default:
-          return property.toString();
+        return "grösster Durchmesser [m]";
       }
+      else if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+      {
+        return "lange Seite [m]";
+      }
+      else if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 )
+      {
+        return "Breite in Fließrichtung [m]";
+      }
+      else
+        return property.toString();
     }
     return property.toString();
-
   }
 
   public BuildingPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
@@ -111,7 +113,8 @@ public class BuildingPanel extends AbstractProfilView
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final int style )
@@ -171,7 +174,7 @@ public class BuildingPanel extends AbstractProfilView
             if( value == currentValue )
               return;
             final BuildingEdit edit = new BuildingEdit( profil.getBuilding(), buildingProperty, value );
-            final ProfilOperation operation = new ProfilOperation( buildingProperty.getTooltip()+ " ändern", getProfilEventManager(), edit, true );
+            final ProfilOperation operation = new ProfilOperation( buildingProperty.getTooltip() + " ändern", getProfilEventManager(), edit, true );
             new ProfilOperationJob( operation ).schedule();
           }
           catch( ProfilDataException e1 )
@@ -202,7 +205,7 @@ public class BuildingPanel extends AbstractProfilView
       }
       catch( final ProfilDataException e )
       {
-        text.setText("Formatfehler");
+        text.setText( "Formatfehler" );
       }
     }
   }
@@ -211,15 +214,15 @@ public class BuildingPanel extends AbstractProfilView
   {
     if( hint.isBuildingChanged() || hint.isBuildingDataChanged() )
     {
-    final Control control = getControl();
-    if( control != null && !control.isDisposed() )
-      control.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
+      final Control control = getControl();
+      if( control != null && !control.isDisposed() )
+        control.getDisplay().asyncExec( new Runnable()
         {
-          updateControls();
-        }
-      } );
+          public void run( )
+          {
+            updateControls();
+          }
+        } );
     }
   }
 }

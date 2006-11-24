@@ -197,7 +197,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
     m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true,5,1.0 );
-    m_valueRangeRight = new AxisRange( "[ks]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
     m_chart = new ChartCanvas( parent, style, new Insets( 20, 0, 0, 0 ) );
     m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
