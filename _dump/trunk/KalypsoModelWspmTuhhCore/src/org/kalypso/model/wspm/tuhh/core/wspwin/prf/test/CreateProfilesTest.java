@@ -52,13 +52,12 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -112,7 +111,7 @@ public class CreateProfilesTest extends TestCase
   {
     final IProfil p = createMinProf();
     p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE ) );
+    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_BRUECKE ) );
     final IProfilPoint pf = p.getPoints().getFirst();
     final IProfilPoint pl = p.getPoints().getLast();
     final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
@@ -136,7 +135,7 @@ public class CreateProfilesTest extends TestCase
     return p;
   }
 
-  public IProfil createDurchlass( IProfilBuilding.BUILDING_TYP bt ) throws ProfilDataException
+  public IProfil createDurchlass( String bt ) throws ProfilDataException
   {
     final IProfil p = createWspWinProf();
     p.addPointProperty( POINT_PROPERTY.RAUHEIT );
@@ -161,7 +160,7 @@ public class CreateProfilesTest extends TestCase
   {
     final IProfil p = createMinProf();
     p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.WEHR ) );
+    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_WEHR ) );
     final IProfilPoint pf = p.getPoints().getFirst();
     final IProfilPoint pl = p.getPoints().getLast();
     final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );

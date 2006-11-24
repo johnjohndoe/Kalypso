@@ -51,12 +51,11 @@ import java.util.logging.Logger;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -73,6 +72,21 @@ public class PrfSink implements IProfilSink
 {
 
   private final static Logger m_logger = Logger.getLogger( PrfSink.class.getName() );
+
+  private String toDataBlockKey( final Object profilKey )
+  {
+    final String value = profilKey.toString();
+    if( value.compareTo( IProfilConstants.WEHR_TYP_BEIWERT ) == 0 )
+      return "BEIWERT";
+    else if( value.compareTo( IProfilConstants.WEHR_TYP_RUNDKRONIG ) == 0 )
+      return "RUNDKRONIG";
+    else if( value.compareTo( IProfilConstants.WEHR_TYP_SCHARFKANTIG ) == 0 )
+      return "SCHARFKANTIG";
+    else if( value.compareTo( IProfilConstants.WEHR_TYP_BREITKRONIG ) == 0 )
+      return "BREITKRONIG";
+    else
+      return value;
+  }
 
   private void extractDataBlocks( final PrfWriter pw, final IProfil p )
   {
@@ -101,10 +115,18 @@ public class PrfSink implements IProfilSink
   {
     final DataBlockHeader dbhr = PrfWriter.createHeader( "RAU" );
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-    dbr.setSecondLine( profil.getProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP ) == RAUHEIT_TYP.kst ? "kst   m" : "k-s   m" );
+    if( IProfilConstants.RAUHEIT_TYP_KST.compareTo( profil.getProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP ).toString() ) == 0 )
+    {
+      dbr.setSecondLine( "kst   m" );
+    }
+    else
+    {
+      dbr.setSecondLine( "k-s   m" );
+    }
     writeCoords( profil, POINT_PROPERTY.RAUHEIT, dbr );
     final IProfilBuilding building = profil.getBuilding();
-    if( building != null && building.getTyp() != BUILDING_TYP.BRUECKE && building.getTyp() != BUILDING_TYP.WEHR )
+    final String buildingTyp = building == null ? "" : building.getTyp();
+    if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) != 0 && buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_WEHR ) != 0 )
     {
       try
       {
@@ -235,131 +257,123 @@ public class PrfSink implements IProfilSink
   private void writeBuilding( final PrfWriter pw, final IProfil profil )
   {
     final IProfilBuilding building = profil.getBuilding();
-    switch( building.getTyp() )
+    final String buildingTyp = building == null ? "" : building.getTyp();
+    if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 )
     {
-      case BRUECKE:
+      final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" );
+      final CoordDataBlock dbo = new CoordDataBlock( dbho );
+      writeCoords( profil, POINT_PROPERTY.OBERKANTEBRUECKE, dbo );
+      pw.addDataBlock( dbo );
+      final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" );
+      final CoordDataBlock dbu = new CoordDataBlock( dbhu );
+      writeCoords( profil, POINT_PROPERTY.UNTERKANTEBRUECKE, dbu );
+      try
       {
-        final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" );
-        final CoordDataBlock dbo = new CoordDataBlock( dbho );
-        writeCoords( profil, POINT_PROPERTY.OBERKANTEBRUECKE, dbo );
-        pw.addDataBlock( dbo );
-        final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" );
-        final CoordDataBlock dbu = new CoordDataBlock( dbhu );
-        writeCoords( profil, POINT_PROPERTY.UNTERKANTEBRUECKE, dbu );
-        try
-        {
-          final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) )
-              + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
-          dbu.setSecondLine( secLine );
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Brückenparameter" );
-        }
-        pw.addDataBlock( dbu );
-        break;
+        final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.UNTERWASSER ) )
+            + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.RAUHEIT ) )
+            + String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) );
+        dbu.setSecondLine( secLine );
       }
-
-      case WEHR:
+      catch( final ProfilDataException e )
       {
-        final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" );
-        final CoordDataBlock dbw = new CoordDataBlock( dbhw );
-        writeCoords( profil, POINT_PROPERTY.OBERKANTEWEHR, dbw );
-        try
-        {
-          final StringBuffer secLine = new StringBuffer( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString().toUpperCase() );
-          secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) ) );
-          final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
-          if( deviders != null )
-          {
-            for( IProfilDevider devider : deviders )
-            {
-              secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( DEVIDER_PROPERTY.BEIWERT ) ) );
-            }
-          }
-          dbw.setSecondLine( secLine.toString() );
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Wehrparameter" );
-        }
-        pw.addDataBlock( dbw );
-        break;
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Brückenparameter" );
       }
-      case EI:
-      {
-        final DataBlockHeader dbhe = PrfWriter.createHeader( "EI" );
-        final TextDataBlock dbe = new TextDataBlock( dbhe );
-        dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" );
-        try
-        {
-          dbe.addLine( getDoubleStr (building.getValueFor( BUILDING_PROPERTY.BREITE )) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) ) ;
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
-        }
-        pw.addDataBlock( dbe );
-      }
-        break;
-      case MAUL:
-      {
-        final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" );
-        final TextDataBlock dbm = new TextDataBlock( dbhm );
-        dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" );
-        try
-        {
-          dbm.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
-        }
-        pw.addDataBlock( dbm );
-        break;
-      }
-      case KREIS:
-      {
-        final DataBlockHeader dbhk = PrfWriter.createHeader( "KRE" );
-        final TextDataBlock dbk = new TextDataBlock( dbhk );
-        dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" );
-        try
-        {
-          dbk.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
-        }
-        pw.addDataBlock( dbk );
-      }
-        break;
-      case TRAPEZ:
-      {
-        final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" );
-        final TextDataBlock dbt = new TextDataBlock( dbht );
-        dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" );
-        try
-        {
-          dbt.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.STEIGUNG ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
-              + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
-        }
-        catch( final ProfilDataException e )
-        {
-          m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
-        }
-        pw.addDataBlock( dbt );
-      }
+      pw.addDataBlock( dbu );
     }
-    if( building == null )
-      return;
+
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_WEHR ) == 0 )
+    {
+      final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" );
+      final CoordDataBlock dbw = new CoordDataBlock( dbhw );
+      writeCoords( profil, POINT_PROPERTY.OBERKANTEWEHR, dbw );
+      try
+      {
+        final StringBuffer secLine = new StringBuffer( toDataBlockKey( building.getValueFor( BUILDING_PROPERTY.WEHRART ) ) );
+        secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) ) );
+        final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
+        if( deviders != null )
+        {
+          for( IProfilDevider devider : deviders )
+          {
+            secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( DEVIDER_PROPERTY.BEIWERT ) ) );
+          }
+        }
+        dbw.setSecondLine( secLine.toString() );
+      }
+      catch( final ProfilDataException e )
+      {
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Wehrparameter" );
+      }
+      pw.addDataBlock( dbw );
+    }
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_EI ) == 0 )
+    {
+      final DataBlockHeader dbhe = PrfWriter.createHeader( "EI" );
+      final TextDataBlock dbe = new TextDataBlock( dbhe );
+      dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" );
+      try
+      {
+        dbe.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+      }
+      catch( final ProfilDataException e )
+      {
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+      }
+      pw.addDataBlock( dbe );
+    }
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_MAUL ) == 0 )
+    {
+      final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" );
+      final TextDataBlock dbm = new TextDataBlock( dbhm );
+      dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" );
+      try
+      {
+        dbm.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+      }
+      catch( final ProfilDataException e )
+      {
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+      }
+      pw.addDataBlock( dbm );
+    }
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_KREIS ) == 0 )
+    {
+      final DataBlockHeader dbhk = PrfWriter.createHeader( "KRE" );
+      final TextDataBlock dbk = new TextDataBlock( dbhk );
+      dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" );
+      try
+      {
+        dbk.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+      }
+      catch( final ProfilDataException e )
+      {
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+      }
+      pw.addDataBlock( dbk );
+    }
+
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+    {
+      final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" );
+      final TextDataBlock dbt = new TextDataBlock( dbht );
+      dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" );
+      try
+      {
+        dbt.addLine( getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BREITE ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.HOEHE ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.STEIGUNG ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.SOHLGEFAELLE ) )
+            + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y ) ) );
+      }
+      catch( final ProfilDataException e )
+      {
+        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+      }
+      pw.addDataBlock( dbt );
+    }
   }
 
   private String getDoubleStr( final Object o )

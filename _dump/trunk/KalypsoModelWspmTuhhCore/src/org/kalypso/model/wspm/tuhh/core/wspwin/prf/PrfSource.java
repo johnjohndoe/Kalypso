@@ -54,14 +54,13 @@ import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
@@ -187,7 +186,7 @@ public class PrfSource implements IProfilSource
       {
         case 6:// Trapez
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.TRAPEZ );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_TRAPEZ );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.HOEHE ) )
@@ -206,7 +205,7 @@ public class PrfSource implements IProfilSource
         }
         case 7:// Kreis
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.KREIS );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_KREIS );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.SOHLGEFAELLE ) )
@@ -221,7 +220,7 @@ public class PrfSource implements IProfilSource
         }
         case 8:// Ei
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.EI );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_EI );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.HOEHE ) )
@@ -238,7 +237,7 @@ public class PrfSource implements IProfilSource
         }
         case 9:// Maulprofil
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.MAUL );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_MAUL );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.HOEHE ) )
@@ -287,7 +286,7 @@ public class PrfSource implements IProfilSource
     if( dbo == null || dbu == null )
       return false;
 
-    final IProfilBuilding bridge = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
+    final IProfilBuilding bridge = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_BRUECKE );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
     {
@@ -348,11 +347,11 @@ public class PrfSource implements IProfilSource
     {
       if( rks.startsWith( "KST" ) )
       {
-        p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.kst );
+        p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, IProfilConstants.RAUHEIT_TYP_KST );
       }
       else if( rks.startsWith( "KS" ) )
       {
-        p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
+        p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, IProfilConstants.RAUHEIT_TYP_KS );
       }
     }
     catch( ProfilDataException e )
@@ -490,9 +489,9 @@ public class PrfSource implements IProfilSource
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" );
     if( dbw == null )
       return false;
-    final IProfilBuilding wehr = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.WEHR );
+    final IProfilBuilding wehr = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_WEHR );
     final String secLine = dbw.getSecondLine();
-    final IProfil.WEHR_TYP wa = getWehrart( secLine );
+    final String wa = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
     if( wa != null )
       wehr.setValue( BUILDING_PROPERTY.WEHRART, wa );
@@ -536,7 +535,7 @@ public class PrfSource implements IProfilSource
     return wp;
   }
 
-  private final IProfil.WEHR_TYP getWehrart( final String secLine )
+  private final String getWehrart( final String secLine )
   {
     final StringTokenizer sT = new StringTokenizer( secLine, " " );
     final int paramCount = sT.countTokens() - 1;
@@ -547,19 +546,19 @@ public class PrfSource implements IProfilSource
     final String wehrart = sT.nextToken().toUpperCase();
     if( wehrart.startsWith( "RUND" ) )
     {
-      return IProfil.WEHR_TYP.rundkronig;
+      return IProfilConstants.WEHR_TYP_RUNDKRONIG;
     }
     if( wehrart.startsWith( "BREI" ) )
     {
-      return IProfil.WEHR_TYP.breitkronig;
+      return IProfilConstants.WEHR_TYP_BREITKRONIG;
     }
     if( wehrart.startsWith( "SCHA" ) )
     {
-      return IProfil.WEHR_TYP.scharfkantig;
+      return IProfilConstants.WEHR_TYP_SCHARFKANTIG;
     }
     if( wehrart.startsWith( "BEIW" ) )
     {
-      return IProfil.WEHR_TYP.Beiwert;
+      return IProfilConstants.WEHR_TYP_BEIWERT;
     }
     return null;
   }
