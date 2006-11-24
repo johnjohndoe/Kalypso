@@ -57,7 +57,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
 
   private final POINT_PROPERTY[] m_pointProperties;
 
-  public AbstractProfilBuilding( final BUILDING_TYP buildingTyp,
+  public AbstractProfilBuilding( final String buildingTyp,
       final Collection<BUILDING_PROPERTY> properties, final POINT_PROPERTY[] pointProperties )
   {
     super( buildingTyp, properties );
@@ -84,7 +84,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
    * @return Returns the buildingTyp.
    */
   @Override
-  public BUILDING_TYP getTyp( )
+  public String getTyp( )
   {
     return m_buildingTyp;
   }

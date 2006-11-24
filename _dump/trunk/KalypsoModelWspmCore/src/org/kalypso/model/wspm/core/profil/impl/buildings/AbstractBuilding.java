@@ -54,11 +54,11 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
  */
 public abstract class AbstractBuilding implements IProfilBuilding
 {
-  protected final BUILDING_TYP m_buildingTyp;
+  protected final String m_buildingTyp;
 
   protected final Map<BUILDING_PROPERTY, Object> m_buildingValues = new LinkedHashMap<BUILDING_PROPERTY, Object>();
 
-  public AbstractBuilding( final BUILDING_TYP buildingTyp,
+  public AbstractBuilding( final String buildingTyp,
       final Collection<BUILDING_PROPERTY> properties )
   {
     m_buildingTyp = buildingTyp;
@@ -70,7 +70,7 @@ public abstract class AbstractBuilding implements IProfilBuilding
   /**
    * @return Returns the buildingTyp.
    */
-  public BUILDING_TYP getTyp( )
+  public String getTyp( )
   {
     return m_buildingTyp;
   }

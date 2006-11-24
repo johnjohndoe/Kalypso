@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.impl.buildings.building;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -56,7 +57,7 @@ public class BuildingBruecke extends AbstractProfilBuilding
 {
   public BuildingBruecke( )
   {
-    super( BUILDING_TYP.BRUECKE, Arrays.asList( BUILDING_PROPERTY.BREITE,
+    super( IProfilConstants.BUILDING_TYP_BRUECKE, Arrays.asList( BUILDING_PROPERTY.BREITE,
         BUILDING_PROPERTY.UNTERWASSER, BUILDING_PROPERTY.FORMBEIWERT, BUILDING_PROPERTY.RAUHEIT ),
         new POINT_PROPERTY[]
         { POINT_PROPERTY.UNTERKANTEBRUECKE, POINT_PROPERTY.OBERKANTEBRUECKE } );

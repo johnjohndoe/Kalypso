@@ -50,19 +50,55 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
  */
 public interface IProfil
 {
-  public static enum RAUHEIT_TYP
-  {
-    ks,
-    kst
-  };
+//  public static enum RAUHEIT_TYP
+//  {
+//    KS
+//    {
+//      public String toString( )
+//      {
+//        return "k-s   m";
+//      }
+//    },
+//    KST
+//    {
+//      public String toString( )
+//      {
+//        return "kst   m";
+//      }
+//    }
+//  };
 
-  public static enum WEHR_TYP
-  {
-    rundkronig,
-    breitkronig,
-    scharfkantig,
-    Beiwert
-  };
+//  public static enum WEHR_TYP
+//  {
+//    RUNDKRONIG
+//    {
+//      public String toString( )
+//      {
+//        return "Rundkronig";
+//      }
+//    },
+//    BREITKRONIG
+//    {
+//      public String toString( )
+//      {
+//        return "Breitkronig";
+//      }
+//    },
+//    SCHARFKANTIG
+//    {
+//      public String toString( )
+//      {
+//        return "Scharfkantig";
+//      }
+//    },
+//    UEBERFALL
+//    {
+//      public String toString( )
+//      {
+//        return "Überfall";
+//      }
+//    }
+//  };
 
   public static enum PROFIL_PROPERTY
   {
@@ -93,9 +129,6 @@ public interface IProfil
 
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY property );
 
-  /**
-   * gibt Null zurück wenn das profil nicht geändert wurde TODO: wann ist dies der Fall?
-   */
   public IProfilPoint addPoint( final double breite, final double hoehe );
 
   /**
@@ -105,19 +138,20 @@ public interface IProfil
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
 
   /**
-   * @return das aktuelle bauwerk oder Typ Building_typ NONE
+   * @return the current building, maybe null
    */
   public IProfilBuilding getBuilding( );
 
   /**
    * @param deviderTyp
-   * @return IProfilDevider[] mit allen Trennern sortiert nach breite, oder null bei leerem array
+   * @return IProfilDevider[] with all deviders of deviderTyp sort by POINT_PROPERTY.BREITE, maybe null
    */
   public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp );
 
   /**
    * @param deviderTypes
-   * @return IProfilDevider[] mit allen Trennern sortiert nach breite, oder null bei leerem array
+   * @return IProfilDevider[] with all deviders of having deviderTyp in deviderTypes sort by POINT_PROPERTY.BREITE,
+   *         maybe null
    */
   public IProfilDevider[] getDevider( final DEVIDER_TYP[] deviderTypes );
 
@@ -129,26 +163,28 @@ public interface IProfil
 
   public LinkedList<IProfilPoint> getPoints( );
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.impl.points
+   */
   public IProfilPoints getProfilPoints( );
 
   /**
    * @param key
-   *          Schlüsselwert einer Hashmap see IProfil.PROFIL_PROPERTY
-   * @return Wert zu key oder null
+   *          see IProfil.PROFIL_PROPERTY
    */
   public Object getProperty( Object key );
 
   public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );
 
   /**
-   * @return das entfernte Bauwerk
+   * @return the extracted building, IProfil.getBuilding() will return null
    * @throws ProfilDataException
    */
   public IProfilBuilding removeBuilding( ) throws ProfilDataException;
 
   /**
    * @param devider
-   * @return den entfernten Trenner
+   * @return the extracted devider
    */
   public IProfilDevider removeDevider( final IProfilDevider devider );
 
@@ -160,23 +196,21 @@ public interface IProfil
 
   /**
    * @param pointProperty
-   * @return alle übriggebliebenen Eigenschaften
+   *          to remove
    */
   public boolean removePointProperty( final POINT_PROPERTY pointProperty );
 
   /**
    * @param key
-   *          eine HashMap see IProfil.PROFIL_PROPERTY
-   * @return den zugehörigen wert
+   * @see IProfil.PROFIL_PROPERTY
    */
   public Object removeProperty( final Object key );
 
   /**
-   * ändert den Bauwerkstyp
+   * replace the current building
    * 
-   * @see IProfil.BUILDING_TYP setzen der Eigenschaften
-   * @see IProfilBuilding.setValue
-   * @param buildingTyp
+   * @see ProfilBuildingFactory
+   * @param building
    * @throws ProfilDataException
    */
   public void setBuilding( final IProfilBuilding building ) throws ProfilDataException;
@@ -185,17 +219,19 @@ public interface IProfil
    * @param key
    * @param value
    * @throws ProfilDataException
-   * @see PROFIL_PROPERTY
+   * @see IProfil.PROFIL_PROPERTY
    */
   public void setProperty( final Object key, final Object value ) throws ProfilDataException;
 
   public void setActivePoint( final IProfilPoint point );
 
   /**
-   * @return Returns the activePoint.
+   * @return Returns the active Point.
    */
   public IProfilPoint getActivePoint( );
-
+  /**
+   * @return Returns the active Pointproperty.
+   */
   public POINT_PROPERTY getActiveProperty( );
 
   public void setActiveProperty( POINT_PROPERTY activeProperty );

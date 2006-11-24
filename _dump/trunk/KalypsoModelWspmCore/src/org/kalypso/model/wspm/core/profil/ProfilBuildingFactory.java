@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.impl.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.core.profil.impl.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.core.profil.impl.buildings.durchlass.BuildingEi;
@@ -48,34 +47,26 @@ import org.kalypso.model.wspm.core.profil.impl.buildings.durchlass.BuildingKreis
 import org.kalypso.model.wspm.core.profil.impl.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.core.profil.impl.buildings.durchlass.BuildingTrapez;
 
-
 /**
  * @author kimwerner
  */
 public class ProfilBuildingFactory
 {
-
-  public static IProfilBuilding createProfilBuilding( final BUILDING_TYP buildingTyp )
+  public static IProfilBuilding createProfilBuilding( final String buildingTyp )
   {
-    switch( buildingTyp )
-    {
-
-      case EI:
-        return new BuildingEi();
-      case KREIS:
-        return new BuildingKreis();
-      case TRAPEZ:
-        return new BuildingTrapez();
-      case MAUL:
-        return new BuildingMaul();
-      case BRUECKE:
-        return new BuildingBruecke();
-      case WEHR:
-        return new BuildingWehr();
-      default:
-        return null;
-    }
-
+    if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_EI ) == 0 )
+      return new BuildingEi();
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_KREIS ) == 0 )
+      return new BuildingKreis();
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+      return new BuildingTrapez();
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_MAUL ) == 0 )
+      return new BuildingMaul();
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 )
+      return new BuildingBruecke();
+    else if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_WEHR ) == 0 )
+      return new BuildingWehr();
+    else
+      return null;
   }
-
 }

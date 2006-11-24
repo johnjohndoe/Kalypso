@@ -40,18 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
-
 public interface IProfilConstants
 {
   /** Format String für Formatierung der Station in der GUI */
-  public final String FMT_STATION = "%.4f";
+  public static final String FMT_STATION = "%.4f";
+
+  /** Rauhheit */
+  public static final String RAUHEIT_TYP_KS = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_KS";
+
+  public static final String RAUHEIT_TYP_KST = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_KST";
 
   /** default RauheitenTyp für ein neues Profil */
-  public final RAUHEIT_TYP DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP.ks;
+  public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
 
-  
-  
+  /** Wehr-typen */
+  public static final String WEHR_TYP_RUNDKRONIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_RUNDKRONIG";
 
- 
+  public static final String WEHR_TYP_BREITKRONIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_BREITKRONIG";
+
+  public static final String WEHR_TYP_SCHARFKANTIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG";
+
+  public static final String WEHR_TYP_BEIWERT = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_BEIWERT";
+
+  /** buildings */
+
+  public static final String BUILDING_TYP_BRUECKE = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_BRUECKE";
+
+  public static final String BUILDING_TYP_EI = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_EI";
+
+  public static final String BUILDING_TYP_KREIS = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_KREIS";
+
+  public static final String BUILDING_TYP_MAUL = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_MAUL";
+
+  public static final String BUILDING_TYP_TRAPEZ = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_TRAPEZ";
+
+  public static final String BUILDING_TYP_WEHR = "org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP_WEHR";
+
 }

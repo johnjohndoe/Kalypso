@@ -92,13 +92,10 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     {
       point.addProperty( pp );
     }
-
-    if( point.setValueFor( POINT_PROPERTY.HOEHE, hoehe ) & point.setValueFor( POINT_PROPERTY.BREITE, breite ) )
-    {
-      if( add( point ) )
-        return point;
-    }
-    return null;
+    point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
+    point.setValueFor( POINT_PROPERTY.BREITE, breite );
+    add( point );
+    return point;
   }
 
   /**
@@ -245,7 +242,6 @@ public class ProfilPoints extends LinkedList<IProfilPoint> implements IProfilPoi
     return true;
   }
 
-  
   public LinkedList<IProfilPoint> getPoints( )
   {
     return m_unmodifiable;

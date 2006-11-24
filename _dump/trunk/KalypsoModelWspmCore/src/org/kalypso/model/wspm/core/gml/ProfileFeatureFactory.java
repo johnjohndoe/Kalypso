@@ -69,9 +69,7 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderMap;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -285,10 +283,10 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     final List<MetadataObject> metaList = new ArrayList<MetadataObject>();
 
-    final BUILDING_TYP typ = building.getTyp();
-    final String phenomenon = URN_PHENOMENON_BUILDING + typ.name();
+    final String typ = building.getTyp();
+    final String phenomenon = URN_PHENOMENON_BUILDING + typ;
 
-    final IObservation<TupleResult> observation = new Observation<TupleResult>( typ.toString(), "Bauwerk-Observation", result, metaList );
+    final IObservation<TupleResult> observation = new Observation<TupleResult>( typ, "Bauwerk-Observation", result, metaList );
     observation.setPhenomenon( phenomenon );
 
     return observation;
@@ -357,8 +355,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       {
         if( pp == POINT_PROPERTY.RAUHEIT )
         {
-          final RAUHEIT_TYP rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( component.getUnit() );
-          profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, rauheit_typ );
+         // final String rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( component.getUnit() );
+          profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, component.getUnit() );
         }
 
         profil.addPointProperty( pp );
@@ -468,7 +466,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     if( phenomenon == null )
       return null;
 
-    final BUILDING_TYP bType = BUILDING_TYP.valueOf( phenomenon.substring( URN_PHENOMENON_BUILDING.length() ) );
+    final String bType =  phenomenon.substring( URN_PHENOMENON_BUILDING.length()  );
 
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( bType );
 

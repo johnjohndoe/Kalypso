@@ -49,15 +49,14 @@ import junit.framework.TestCase;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
@@ -145,12 +144,12 @@ public class ProfilChangesTest extends TestCase
     // erzeuge Rauheiten
     changes[0] = new PointPropertyAdd( p, POINT_PROPERTY.RAUHEIT, 1.2345 );
     changes[0].doChange( hint );
-    changes[0] = new ProfilPropertyEdit( p, PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
+    changes[0] = new ProfilPropertyEdit( p, PROFIL_PROPERTY.RAUHEIT_TYP, IProfilConstants.RAUHEIT_TYP_KS );
     changes[0].doChange( hint );
 
     // RauheitTest
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( POINT_PROPERTY.RAUHEIT ) );
-    assertEquals( "RauheitTyp:", RAUHEIT_TYP.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
+    assertEquals( "RauheitTyp:", IProfilConstants.RAUHEIT_TYP_KS, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
 
     // erzeuge Kommentar
     final ArrayList<String> stringList = new ArrayList<String>();
@@ -201,11 +200,11 @@ public class ProfilChangesTest extends TestCase
   @SuppressWarnings("boxing")
   public void setGetDeleteBruecke( final IProfil p ) throws Exception
   {
-    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.BRUECKE );
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_BRUECKE );
     IProfilChange change = new BuildingSet( p, building );
     IProfilChange undoChange = change.doChange( null );
 
-    assertEquals( "neue Brücke:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
+    assertEquals( "neue Brücke:", IProfilConstants.BUILDING_TYP_BRUECKE , p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getPoints().getFirst();
     change = new PointPropertyEdit( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
     change.doChange( null );
@@ -229,11 +228,11 @@ public class ProfilChangesTest extends TestCase
   }
   public void setGetDeleteWehr( final IProfil p ) throws Exception
   {
-    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.WEHR );
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_WEHR);
     IProfilChange change = new BuildingSet( p, building );
     IProfilChange undoChange = change.doChange( null );
 
-    assertEquals( "neues Wehr:", BUILDING_TYP.WEHR, p.getBuilding().getTyp() );
+    assertEquals( "neues Wehr:", IProfilConstants.BUILDING_TYP_WEHR, p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getDevider(DEVIDER_TYP.TRENNFLAECHE)[0].getPoint();
     final IProfilPoint midPkt = ProfilUtil.getPointAfter(p,firstPkt);
     change = new PointPropertyEdit( midPkt, POINT_PROPERTY.OBERKANTEWEHR, 1000.23456 );

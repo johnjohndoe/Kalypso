@@ -49,17 +49,17 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
  */
 public interface IProfilBuilding
 {
-  public static enum BUILDING_TYP
-  {
-    BRUECKE,
-    EI,
-    KREIS,
-    MAUL,
-    TRAPEZ,
-    WEHR;
-  }
+//  public static enum BUILDING_TYP
+//  {
+//    BRUECKE,
+//    EI,
+//    KREIS,
+//    MAUL,
+//    TRAPEZ,
+//    WEHR;
+//  }
 
-  public BUILDING_TYP getTyp( );
+  public String getTyp( );
 
   public POINT_PROPERTY[] getPointProperties( );
 
@@ -82,7 +82,7 @@ public interface IProfilBuilding
     RAUHEIT("Rauheit", "Rauheitsbeiwert im Durchlass"),
     FORMBEIWERT("Formbeiwert", null),
     UNTERWASSER("Unterwasser [NN+m]", "Höhe der Gewässersohle im Unterwasser"),
-    WEHRART("Wehrart", "Form der Wehrkrone");
+    WEHRART("Wehrart", "Typ zur bestimmung der Wehrparameter");
 
     private BUILDING_PROPERTY( final String label, final String tooltip )
     {

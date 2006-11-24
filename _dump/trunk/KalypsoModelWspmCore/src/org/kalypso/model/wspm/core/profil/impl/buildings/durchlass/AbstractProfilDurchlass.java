@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.core.profil.impl.buildings.AbstractBuilding;
 public abstract class AbstractProfilDurchlass extends AbstractBuilding
 {
 
-  public AbstractProfilDurchlass( BUILDING_TYP buildingTyp, Collection<BUILDING_PROPERTY> properties )
+  public AbstractProfilDurchlass( String buildingTyp, Collection<BUILDING_PROPERTY> properties )
   {
     super( buildingTyp, properties );
   }

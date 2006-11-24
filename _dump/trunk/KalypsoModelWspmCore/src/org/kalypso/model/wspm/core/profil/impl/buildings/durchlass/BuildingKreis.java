@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.core.profil.impl.buildings.durchlass;
 
 import java.util.Arrays;
 
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
+
 /**
  * @author kimwerner
  */
@@ -49,7 +51,7 @@ public class BuildingKreis extends AbstractProfilDurchlass
 {
   public BuildingKreis( )
   {
-    super( BUILDING_TYP.KREIS, Arrays.asList( BUILDING_PROPERTY.BEZUGSPUNKT_X,
+    super( IProfilConstants.BUILDING_TYP_KREIS, Arrays.asList( BUILDING_PROPERTY.BEZUGSPUNKT_X,
         BUILDING_PROPERTY.BEZUGSPUNKT_Y, BUILDING_PROPERTY.BREITE, BUILDING_PROPERTY.SOHLGEFAELLE,
         BUILDING_PROPERTY.RAUHEIT ) );
   }
