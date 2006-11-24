@@ -95,8 +95,6 @@ public class ProfileFeatureFactory implements IWspmConstants
 {
   public final static QName QN_PROF_PROFILE = new QName( NS_WSPMPROF, "Profile" );
 
-  public static final String URN_PHENOMENON_BUILDING = "urn:ogc:phenomenon:wspm:building:";
-
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
   private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
@@ -284,10 +282,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     final List<MetadataObject> metaList = new ArrayList<MetadataObject>();
 
     final String typ = building.getTyp();
-    final String phenomenon = URN_PHENOMENON_BUILDING + typ;
 
     final IObservation<TupleResult> observation = new Observation<TupleResult>( typ, "Bauwerk-Observation", result, metaList );
-    observation.setPhenomenon( phenomenon );
+    observation.setPhenomenon( typ );
 
     return observation;
   }
@@ -466,9 +463,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     if( phenomenon == null )
       return null;
 
-    final String bType =  phenomenon.substring( URN_PHENOMENON_BUILDING.length()  );
-
-    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( bType );
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( phenomenon );
 
     final TupleResult result = buildingObs.getResult();
     if( result == null )
