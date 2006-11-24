@@ -66,7 +66,10 @@
 						minOccurs="1" maxOccurs="unbounded"/>
 					<xs:element
 						ref="wb1d2d:fe1d2dNode"
-						minOccurs="1" maxOccurs="unbounded"/>						
+						minOccurs="1" maxOccurs="unbounded"/>	
+					<xs:element
+						ref="simBase:elementDisablingSpec"
+						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -429,6 +432,28 @@
 		</xs:complexContent>	
 	</xs:complexType>
 	
+	
+	<!-- =================================================================
+		1d element property 
+	================================================================== -->
+	<xs:element 
+		name="fe1d2d_1DElement"
+		type="wb1d2d:FE1D2D_1DElementPropertyType"/>
+		
+	<xs:complexType name="FE1D2D_1DElementPropertyType">
+		<!-- xs:complexContent>
+			<xs:restriction 
+				base="simBase:FEComplexElementPropertyType"-->
+				<xs:sequence>
+					<xs:element 
+						ref="wb1d2d:FE1D2D_1DElement"
+						minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+			<!--/xs:restriction>
+		</xs:complexContent-->
+	</xs:complexType>
+	
 	<!-- =================================================================
 			FE1D2D_1DElement
 	================================================================== -->
@@ -457,6 +482,50 @@
 	</xs:complexType>
 	
 	<!-- =================================================================
+			FE1D2D_1DRiverElement
+	================================================================== -->
+	<xs:element 
+		name="FE1D2D_1DRiverElement"
+		type="wb1d2d:FE1D2D_1DRiverElementType"
+		substitutionGroup="wb1d2d:FE1D2DElement"
+		/>
+		
+	<xs:complexType name="FE1D2D_1DRiverElementType">
+		<xs:annotation>
+			<xs:documentation>
+				Basic section of a 1D River.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:FE1D2DElementType">
+				<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:fe1d2dDirectedEdge"
+							minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	<!-- =================================================================
+		1d river section property
+	================================================================== -->
+	<!--xs:element 
+		name="fe1d2d_1DRiverElement"
+		type="wb1d2d:FE1D2D_1DRiverElementType"/>
+		
+	<xs:complexType name="FE1D2D_1DRiverElementPropertyType">
+				<xs:sequence>
+					<xs:element 
+						ref="wb1d2d:FE1D2D_1DRiverElement"
+						minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType -->
+	
+	
+	
+	<!-- =================================================================
 		2d element property 
 	================================================================== -->
 	<xs:element 
@@ -476,6 +545,7 @@
 			<!--/xs:restriction>
 		</xs:complexContent-->
 	</xs:complexType>
+	
 	
 	<!-- =================================================================
 			FE1D2DTriElement
@@ -634,6 +704,31 @@
 						<xs:element
 							name="shape"
 							type="gml:GeometryPropertyType"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	
+	<!-- =================================================================
+				FE1D2D_1DRiverChannel
+	================================================================== -->
+	<xs:element 
+		name="FE1D2D_1DRiverChannel"
+		type="wb1d2d:FE1D2D_1DRiverChannelType"
+		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
+	<xs:complexType name="FE1D2D_1DRiverChannelType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:FE1D2DComplexeElementType">
+					<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:fe1d2d_1DElement"
+							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

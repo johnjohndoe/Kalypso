@@ -74,7 +74,7 @@ public class WorkflowHelpView extends ViewPart
 		browser= new Browser(parent,SWT.FILL);
 		browser.setText(BLANK_HTML);
 		IWorkflow workflow=
-			KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflow();
+			KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflowSystem().getCurrentWorkFlow();
 		workflow.addWorkflowChangedEventListener(wfceListener);
 	}
 

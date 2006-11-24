@@ -122,7 +122,8 @@ public class WorkflowView extends ViewPart
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		workflow=KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflow();
+		workflow=
+			KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflowSystem().getCurrentWorkFlow();
 		workflow.addWorkflowChangedEventListener(wfceListener);
 		
 		provider= new WorkflowViewContentProvider(workflow);

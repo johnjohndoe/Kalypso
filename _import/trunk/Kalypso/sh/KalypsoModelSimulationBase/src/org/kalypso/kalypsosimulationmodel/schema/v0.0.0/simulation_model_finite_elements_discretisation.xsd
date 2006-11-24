@@ -556,6 +556,43 @@
 		</xs:complexContent-->
 	</xs:complexType>
 	
+	<!-- =================================================================
 	
-		
+	================================================================== -->
+	<xs:element 
+		name="elementDisablingSpec"
+		type="simBase:ElementDisablingSpecPropertyType">
+	</xs:element>
+	<xs:complexType 
+		name="ElementDisablingSpecPropertyType"
+		abstract="true">
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:ElementDisablingSpec"
+				 minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<!-- =================================================================
+		ElementDisablingSpec
+	================================================================== -->
+	<xs:element 
+		name="ElementDisablingSpec"
+		type="simBase:ElementDisablingSpecType"
+		substitutionGroup="gml:_GML">
+	</xs:element>
+	
+	<xs:complexType 
+			name="ElementDisablingSpecType">
+			<xs:complexContent>
+				<xs:extension 
+					base="gml:AbstractGMLType">
+					<xs:sequence>
+						<xs:element 
+							ref="gml:multiPosition"
+							minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+	</xs:complexType>	
 </xs:schema>

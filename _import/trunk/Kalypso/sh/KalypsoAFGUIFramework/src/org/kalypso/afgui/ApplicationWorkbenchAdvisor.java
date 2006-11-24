@@ -34,7 +34,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 					
 					if(IWorkflow.class.isAssignableFrom(adapter))
 					{
-						return KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflow();
+						return KalypsoAFGUIFrameworkPlugin.getDefault().getWorkflowSystem();
 					}
 					else
 					{
