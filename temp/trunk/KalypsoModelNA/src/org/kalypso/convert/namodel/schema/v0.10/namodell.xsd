@@ -808,7 +808,7 @@
             </annotation>
             <simpleType>
               <restriction base="double">
-                <minInclusive value="1" />
+                <minInclusive value="0.01" />
                 <maxInclusive value="20" />
               </restriction>
             </simpleType>
@@ -828,7 +828,7 @@
             </annotation>
             <simpleType>
               <restriction base="double">
-                <minInclusive value="1" />
+                <minInclusive value="0.1" />
                 <maxInclusive value="50" />
               </restriction>
             </simpleType>
