@@ -320,7 +320,7 @@ public class CatchmentManager extends AbstractManager
     if( nodeFeVers == null )
       buf.append( "    0" );
     else
-      buf.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeVers ) ), "i5" ) + "\n" );
+      buf.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeVers ) ), "i5" ) );
 
     // buf.append( toAscci( nodeFeVers, 18 ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
