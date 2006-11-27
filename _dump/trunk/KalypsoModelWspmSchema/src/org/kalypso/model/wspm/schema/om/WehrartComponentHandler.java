@@ -40,36 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.om;
 
-import org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP;
 import org.kalypso.ogc.gml.om.IComponentHandler;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author Gernot Belger
  */
-public class WehrartComponentHandler extends XsdBaseTypeHandler<WEHR_TYP> implements IComponentHandler
+public class WehrartComponentHandler extends XsdBaseTypeHandler<String> implements IComponentHandler
 {
   public WehrartComponentHandler( )
   {
-    super( "string", WEHR_TYP.class );
+    super( "string", String.class );
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public WEHR_TYP convertToJavaValue( final String xmlString )
+  public String convertToJavaValue( final String xmlString )
   {
-    return WEHR_TYP.valueOf( xmlString );
+    return xmlString;
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final WEHR_TYP value )
+  public String convertToXMLString( final String value )
   {
-    return value.name();
+    return value;
   }
 
   /**
