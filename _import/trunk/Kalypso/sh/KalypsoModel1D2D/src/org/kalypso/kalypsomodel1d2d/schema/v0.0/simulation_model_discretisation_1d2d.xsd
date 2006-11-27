@@ -467,7 +467,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Basic 1D elements in a finite element network.
-				Such  a basic elements are composed with absic edge elements 
+				It just wraps an edge.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -475,7 +475,8 @@
 				base="wb1d2d:FE1D2DElementType">
 				<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"/>
+							ref="wb1d2d:fe1d2dDirectedEdge"
+							minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	
@@ -629,7 +630,7 @@
 	<!-- ================================================================ 
 	Continiuty line element
 	==================================================================-->
-	<xs:element 
+	<!--xs:element 
 		name="FE1D2DContinuityLine"
 		type="wb1d2d:FE1D2DContinuityLineType"
 		substitutionGroup="simBase:_FEElement"
@@ -648,6 +649,31 @@
 					<xs:sequence>
 						<xs:element 
 							ref="wb1d2d:fe1d2dDirectedEdge"
+							minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType-->
+	
+	<xs:element 
+		name="FE1D2DContinuityLine"
+		type="wb1d2d:FE1D2DContinuityLineType"
+		substitutionGroup="simBase:_FEComplexElement"
+		/>
+	<xs:complexType name="FE1D2DContinuityLineType">
+		<xs:annotation>
+			<xs:documentation>
+				A continuity is defined by a set of edges which for a kurve.
+				==the resulting kurve is open
+				==and non self-crossing
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:FEAbstractComplexElementType">
+					<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:fe1d2d_1DElement"
 							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
@@ -685,7 +711,7 @@
 	<!-- ================================================================= 
 		Bridge element 
 	===================================================================-->
-	<xs:element 
+	<!--xs:element 
 		name="FE1D2DBridge"
 		type="wb1d2d:FE1D2DBridgeType"
 		substitutionGroup="simBase:_FEElement"/>
@@ -701,6 +727,33 @@
 						<xs:element 
 							ref="wb1d2d:fe1d2dDirectedEdge"
 							minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element
+							name="shape"
+							type="gml:GeometryPropertyType"/>
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType-->
+	
+	<xs:element 
+		name="FE1D2DBridge"
+		type="wb1d2d:FE1D2DBridgeType"
+		substitutionGroup="simBase:_FEComplexElement"/>
+	<xs:complexType name="FE1D2DBridgeType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:FEAbstractComplexElementType">
+					<xs:sequence>
+						<!--xs:element 
+							ref="wb1d2d:fe1d2dDirectedEdge"
+							minOccurs="1" maxOccurs="unbounded"/ -->
+						<xs:element
+							ref="wb1d2d:fe1d2d_1DElement"
+							minOccurs="1" maxOccurs="1"/>
 						<xs:element
 							name="shape"
 							type="gml:GeometryPropertyType"/>

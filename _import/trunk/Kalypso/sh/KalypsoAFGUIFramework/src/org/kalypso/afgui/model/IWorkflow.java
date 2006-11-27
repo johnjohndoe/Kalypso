@@ -85,6 +85,6 @@ public interface IWorkflow extends IActivity
 	
 	public Object getWrappedModel();
 	
-	public IWorkflowDataModel getWorkflowDataModel();
+	public IWorkflowData getWorkflowDataModel();
 	
 }

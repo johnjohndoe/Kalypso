@@ -21,7 +21,7 @@ import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.IRelationshipStatement;
 import org.kalypso.afgui.model.ITask;
-import org.kalypso.afgui.model.IWorkflowDataModel;
+import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowRuntineStatus;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSpecification;
@@ -386,7 +386,7 @@ public class WorkflowImpl implements IWorkflow
 		return model;
 	}
 	
-	public IWorkflowDataModel getWorkflowDataModel()
+	public IWorkflowData getWorkflowDataModel()
 	{
 		return null;
 	}

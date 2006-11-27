@@ -8,23 +8,35 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.ui.internal.dialogs.EmptyPropertyPage;
+import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IRelationshipStatement;
+import org.kalypso.afgui.model.IWorkflowData;
+import org.kalypso.afgui.model.impl.WorkflowData;
 
 
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 /**
  * 
@@ -78,26 +90,49 @@ final public class Schema
 	final static public Property PROP_HAS_HELP; 
 	
 	final static public String URI_CLASS_ACTIVITY=SCHEMA_NS+"Activity";
-	final static public Resource CLASS_ACTIVITY;
+	final static public Resource CLASS_ACTIVITY=null;
 	
 	final static public String URI_CLASS_WORKFLOW=SCHEMA_NS+"WORKFLOW";
-	final static public Resource CLASS_WORKFLOW;
+	final static public Resource CLASS_WORKFLOW=null;
 	
 	final static public String URI_CLASS_HELP=SCHEMA_NS+"Help";
-	final static public Resource CLASS_HELP;
+	final static public Resource CLASS_HELP=null;
 	
 	final static public String URI_CLASS_PHASE=SCHEMA_NS+"Phase";
-	final static public Resource CLASS_PHASE;
+	final static public Resource CLASS_PHASE=null;
 	
 	final static public String URI_CLASS_WORKFLOW_STATUS=SCHEMA_NS+"WorkflowStatus";
-	final static public Resource CLASS_WORKFLOW_STATUS;
+	final static public Resource CLASS_WORKFLOW_STATUS=null;
 	
 	final static public String URI_CLASS_ACTIVITY_STATUS=SCHEMA_NS+"ActivityStatus";
-	final static public Resource CLASS_ACTIVITY_STATUS;
+	final static public Resource CLASS_ACTIVITY_STATUS=null;
+	//
+	final static public String URI_CLASS_WORKFLOW_DATA=SCHEMA_NS+"WorkflowData";
+	final static public Resource CLASS_WORKFLOW_DATA=null;
+	
+	
+	//hasType
+	final static public String URI_PROP_HAS_TYPE = SCHEMA_NS+"hasType";
+	final static public Property PROP_HAS_TYPE; 
+	
+	 
 	
 	final static public List<Property> ACTIVITY_LINK_PROPS;
+	
 	final static public Map<Property,
-							EActivityRelationship> REL_STATEMENT_PROP_MAP;
+							EActivityRelationship> REL_STATEMENT_PROP_MAP=null;
+	
+	final static private EnumMap<EWorkflowProperty,Property> toPropertyMap;
+	
+	final static public String URI_PROP_HAS_LOCATION = SCHEMA_NS+"hasLocation";
+	
+	final static public String URI_PROP_IS_DERIVED_FROM = SCHEMA_NS+"isDerivedFrom";
+	
+	final static public String URI_PROP_IS_WORKS_ON = SCHEMA_NS+"worksOn";
+	
+	final static public String URI_PROP_IS_CONTAINS = SCHEMA_NS+"contains";
+	
+	
 	/**
 	 * Holds the throwable which describt a failure while initialising 
 	 * the class static fields.
@@ -127,11 +162,12 @@ final public class Schema
 			String propUris[]={
 					URI_PROP_IS_ROOT, URI_PROP_HAS_ACTIVITY,URI_PROP_HAS_NAME,
 					URI_PROP_EXE_STATE, URI_PROP_PART_OF,URI_PROP_HAS_A,
-					URI_PROP_DEPENDS_ON, URI_PROP_FOLLOWS,URI_PROP_HAS_HELP};
+					URI_PROP_DEPENDS_ON, URI_PROP_FOLLOWS,URI_PROP_HAS_HELP,
+					URI_PROP_HAS_TYPE};
 			String resUris[]={
 					URI_CLASS_ACTIVITY,URI_CLASS_WORKFLOW,URI_CLASS_HELP,
 					URI_CLASS_PHASE,URI_CLASS_WORKFLOW_STATUS,
-					URI_CLASS_ACTIVITY_STATUS};
+					URI_CLASS_ACTIVITY_STATUS,URI_CLASS_WORKFLOW_DATA};
 			
 			//find vokabulary elements
 			fillPropMap(propMap, propUris);
@@ -158,6 +194,7 @@ final public class Schema
 			PROP_DEPENDS_ON=propMap.get(URI_PROP_DEPENDS_ON);
 			PROP_FOLLOWS=propMap.get(URI_PROP_FOLLOWS);
 			PROP_HAS_HELP=propMap.get(URI_PROP_HAS_HELP);
+			PROP_HAS_TYPE=propMap.get(URI_PROP_HAS_TYPE);
 			
 			Property tempProps[]= {
 									PROP_HAS_A, PROP_DEPENDS_ON, PROP_PART_OF};
@@ -179,19 +216,52 @@ final public class Schema
 						(EActivityRelationship)pair[1]);
 			}
 			
-			REL_STATEMENT_PROP_MAP=Collections.unmodifiableMap(tempRelPropMap);
-			logger.info(REL_STATEMENT_PROP_MAP);
-			CLASS_ACTIVITY=resMap.get(URI_CLASS_ACTIVITY);
-			CLASS_WORKFLOW=resMap.get(URI_CLASS_WORKFLOW);
-			CLASS_HELP=resMap.get(URI_CLASS_HELP);
-			CLASS_PHASE=resMap.get(URI_CLASS_PHASE);
-			CLASS_WORKFLOW_STATUS= resMap.get(URI_CLASS_WORKFLOW_STATUS);
-			CLASS_ACTIVITY_STATUS= resMap.get(URI_CLASS_ACTIVITY_STATUS);
+			
+			toPropertyMap= computeEWorkflowPropToJena();
+			
+			
+			
+//			REL_STATEMENT_PROP_MAP=Collections.unmodifiableMap(tempRelPropMap);
+//			logger.info(REL_STATEMENT_PROP_MAP);
+//			CLASS_ACTIVITY=resMap.get(URI_CLASS_ACTIVITY);
+//			CLASS_WORKFLOW=resMap.get(URI_CLASS_WORKFLOW);
+//			CLASS_HELP=resMap.get(URI_CLASS_HELP);
+//			CLASS_PHASE=resMap.get(URI_CLASS_PHASE);
+//			CLASS_WORKFLOW_STATUS= resMap.get(URI_CLASS_WORKFLOW_STATUS);
+//			CLASS_ACTIVITY_STATUS= resMap.get(URI_CLASS_ACTIVITY_STATUS);
+//			CLASS_WORKFLOW_DATA=resMap.get(URI_CLASS_WORKFLOW_DATA);
 		}
 		
 	}
 	
-	private static final void fillPropMap(Map<String, Property> propMap, String[] uris)
+	private static final EnumMap<EWorkflowProperty, Property> computeEWorkflowPropToJena()
+	{
+		Object[][] eWorklflowPropToJena=
+		{	
+			{	EWorkflowProperty.HAS_LOCATION,	URI_PROP_HAS_LOCATION},
+			{	EWorkflowProperty.HAS_TYPE,	URI_PROP_HAS_TYPE},
+			{	EWorkflowProperty.IS_DERIVED_FROM,	URI_PROP_IS_DERIVED_FROM},
+			{	EWorkflowProperty.CONTAINS,	URI_PROP_IS_CONTAINS},};
+	
+		EnumMap<EWorkflowProperty, Property> toPropertyMap= 
+				new EnumMap<EWorkflowProperty, Property>(EWorkflowProperty.class);
+		
+		for(Object[] pair:eWorklflowPropToJena)
+		{
+			System.out.println("pair0="+(EWorkflowProperty)pair[0]+
+					" pair1="+pair[1].getClass());
+			toPropertyMap.put(
+					(EWorkflowProperty) pair[0], 
+					(Property)schemaModel.getProperty((String)pair[1]));
+		}
+		
+		return toPropertyMap;
+	}
+	
+	private static final void fillPropMap(
+									Map<String, 
+									Property> propMap, 
+									String[] uris)
 	{
 		Property curProp;
 		for(String uri:uris)
@@ -231,6 +301,12 @@ final public class Schema
 		}
 	}
 	
+	
+	static public Property toJenaProperty(EWorkflowProperty prop)
+	{
+		return toPropertyMap.get(prop);
+	}
+	
 	static public void main(String[] args) throws IOException
 	{
 		System.out.println("------------------------------");
@@ -260,4 +336,103 @@ final public class Schema
 		return REL_STATEMENT_PROP_MAP.get(prop);
 	}
 	
+	final static public RDFNode getProperty(
+										Resource resource,
+										EWorkflowProperty prop)
+	{
+		Statement stm= resource.getProperty(toJenaProperty(prop));
+		if(stm==null)
+		{
+			return null;
+		}
+		else
+		{
+			return stm.getObject();
+		}
+	}
+	
+	final static public String getStringProperty(
+									Resource resource,
+									EWorkflowProperty prop)
+	{
+		Statement stm= resource.getProperty(toJenaProperty(prop));
+		if(stm==null)
+		{
+		return null;
+		}
+		else
+		{
+			RDFNode obj= stm.getObject();
+			if(obj.isLiteral())
+			{
+				return ((Literal)obj).getString();
+			}
+			else
+			{
+				throw new RuntimeException("Node not a literal:"+stm);
+			}
+		}
+	}
+	
+	final  static public void createStatement(
+			Model model,
+			IWorkflowData subject, 
+			IWorkflowData object, 
+			EWorkflowProperty prop)
+	{
+		model.add(
+				(Resource)subject.getModelObject(),
+				toJenaProperty(prop) , 
+				(Resource)object.getModelObject());
+	}
+	
+	final  static public void removeStatement(
+			Model model,
+			IWorkflowData subject, 
+			IWorkflowData object, 
+			EWorkflowProperty prop)
+	{
+		model.removeAll(
+				(Resource)subject.getModelObject(),
+				toJenaProperty(prop) , 
+				(Resource)object.getModelObject());
+	}
+	
+	static final public List<IWorkflowData> getWorkflowDataByType(Model model,String type)
+	{
+		ResIterator it=model.listSubjectsWithProperty(
+				toJenaProperty(EWorkflowProperty.HAS_TYPE), type);
+		List<IWorkflowData> list= new ArrayList<IWorkflowData>();
+		for(;it.hasNext();)
+		{
+			list.add(new WorkflowData(it.nextResource()));
+		}
+		return list;
+	}
+	
+	final static public IWorkflowData getWorkflowDataById(Model model, String id)
+	{
+		Resource res=model.getResource(id);
+		if(res!=null)
+		{
+				return new WorkflowData(res);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public IWorkflowData derivedWorkflowData(
+								Model model,
+								IWorkflowData parent, 
+								String childId)
+	{
+		Resource res=model.createResource(childId,CLASS_WORKFLOW_DATA);
+		model.createStatement(
+					res, 
+					toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM), 
+					(Resource)parent.getModelObject());
+		return new WorkflowData(res);
+	}
 }

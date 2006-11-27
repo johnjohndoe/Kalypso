@@ -26,7 +26,7 @@ public interface IActivitySpecification
 	 *  
 	 * @return the data model for this activity
 	 */
-	public IWorkflowDataModel getDataModel();
+	public IWorkflowData getDataModel();
 	
 	/**
 	 * To get the class of the work pannel class. The class of the 

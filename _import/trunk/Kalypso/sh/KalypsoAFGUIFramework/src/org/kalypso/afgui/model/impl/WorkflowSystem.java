@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IRelationshipStatement;
-import org.kalypso.afgui.model.IWorkflowDataModel;
+import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowRuntineStatus;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSystem;
@@ -45,7 +45,7 @@ public class WorkflowSystem implements IWorkflowSystem
 	final private Model mergedModel;
 	
 	
-	private IWorkflowDataModel currentDataModel;
+	private IWorkflowData currentDataModel;
 	
 	private IWorkflow currentWorkflow;
 	
@@ -87,7 +87,7 @@ public class WorkflowSystem implements IWorkflowSystem
 	 * @param resouceType
 	 * @return
 	 */
-	public IWorkflow getWorflow(IWorkflowDataModel dataModel)
+	public IWorkflow getWorflow(IWorkflowData dataModel)
 	{
 		return null;
 	}
@@ -97,7 +97,7 @@ public class WorkflowSystem implements IWorkflowSystem
 		return null;
 	}
 
-	public IWorkflow setCurrent(IWorkflowDataModel dataModel)
+	public IWorkflow setCurrent(IWorkflowData dataModel)
 	{
 		return null;
 	}

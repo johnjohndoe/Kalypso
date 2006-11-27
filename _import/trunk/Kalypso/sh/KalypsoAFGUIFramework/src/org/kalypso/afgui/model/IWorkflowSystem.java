@@ -10,10 +10,10 @@ package org.kalypso.afgui.model;
  */
 public interface IWorkflowSystem
 {
-	public IWorkflow getWorflow(IWorkflowDataModel dataModel);
+	public IWorkflow getWorflow(IWorkflowData dataModel);
 	
 	public IWorkflow getCurrentWorkFlow();
 	
-	public IWorkflow setCurrent(IWorkflowDataModel dataModel);
+	public IWorkflow setCurrent(IWorkflowData dataModel);
 	
 }
