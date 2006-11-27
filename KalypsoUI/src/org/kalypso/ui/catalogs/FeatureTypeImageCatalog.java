@@ -41,6 +41,8 @@
 package org.kalypso.ui.catalogs;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -53,9 +55,22 @@ public class FeatureTypeImageCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "swtimage";
 
+  private static Map<String, ImageDescriptor> m_imageDescriptorCache = new HashMap<String, ImageDescriptor>();
+
   public static ImageDescriptor getImage( final URL context, final QName qname )
   {
+    /* Try to get cached image descriptor */
+    final String contextStr = context == null ? "null" : context.toExternalForm();
+    final String qnameStr = qname == null ? "null" : qname.toString();
+    final String cacheKey = contextStr + '#' + qnameStr;
+
+    if( m_imageDescriptorCache.containsKey( cacheKey ) )
+      return m_imageDescriptorCache.get( cacheKey );
+
+    /* Search for image descriptor in catalog or local url */
     final URL imgUrl = getURL( BASETYPE, context, qname );
-    return imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
+    final ImageDescriptor newId = imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
+    m_imageDescriptorCache.put( cacheKey, newId );
+    return newId;
   }
 }
