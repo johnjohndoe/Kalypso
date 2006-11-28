@@ -21,6 +21,8 @@ public interface IWorkflowDB
 	
 	public List<IWorkflowData> getWorkflowDataByType(String type);
 	
+	public List<IWorkflowData> getRootWorkflowDataByType(String type);
+	
 	public IWorkflowData getWorkflowDataById(String id);
 	
 	public IWorkflowData createWorkflowData(

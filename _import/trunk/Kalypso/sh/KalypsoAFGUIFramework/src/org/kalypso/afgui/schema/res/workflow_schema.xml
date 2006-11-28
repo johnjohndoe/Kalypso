@@ -197,7 +197,7 @@
 		<rdfs:range  rdf:resource="&wbs;WorkflowData"/>		
 	</rdf:Property>
 	
-	<rdf:Property rdf:about="&wbs;containsData">
+	<rdf:Property rdf:about="&wbs;contains">
 		<rdfs:label>works on</rdfs:label>
 		<rdfs:comment>
 			Associates to a workflow part to the data it works on
