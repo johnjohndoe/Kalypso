@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
@@ -79,6 +80,9 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
   private IProfilProvider2 m_provider;
 
+  /** The part where the profile provider came from. */
+  private IWorkbenchPart m_profilProviderPart = null;
+
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -95,7 +99,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_actionContributor.contributeTo( actionBars.getStatusLineManager() );
   }
 
-  public void setAdapter( final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IProfilProvider2 provider = (IProfilProvider2) adapter;
     if( provider == m_provider )
@@ -117,6 +121,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     final ProfilViewData oldViewData = getProfilViewData();
 
     m_provider = provider;
+    m_profilProviderPart = part;
 
     if( m_provider != null )
       m_provider.addProfilProviderListener( this );
@@ -135,6 +140,8 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     m_adapterPartListener.dispose();
     m_actionContributor.dispose();
+
+    m_profilProviderPart = null;
 
     unhookProvider();
 
@@ -177,6 +184,12 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       m_viewData.addProfilViewDataListener( this );
 
     onProfilChanged();
+  }
+
+  /** Returns the part which provides the current profile. */
+  public IWorkbenchPart getProfileProviderPart( )
+  {
+    return m_profilProviderPart;
   }
 
   private void setPartNames( final String partName, final String tooltip )

@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderDelegator;
@@ -309,7 +310,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
     if( m_provider == provider )

@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
@@ -144,7 +145,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IActiveLayerProvider provider = (IActiveLayerProvider) adapter;
 

@@ -48,6 +48,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.ui.actions.IActionBarContributor;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
@@ -171,7 +172,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final ProfilChartView chartView = (ProfilChartView) adapter;
     

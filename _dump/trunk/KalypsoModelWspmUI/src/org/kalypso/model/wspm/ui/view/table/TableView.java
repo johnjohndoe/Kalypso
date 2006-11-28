@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
@@ -258,7 +259,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IProfilProvider2 provider = (IProfilProvider2) adapter;
 
