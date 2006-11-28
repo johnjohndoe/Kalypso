@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
+	<!ENTITY kb 'http://www.tu-harburg.de/wb/kalypso/kb/workflow#'>
+	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF 
+	xmlns:kb="http://www.tu-harburg.de/wb/kalypso/kb/workflow#" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
+	
+</rdf:RDF>

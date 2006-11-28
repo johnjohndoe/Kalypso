@@ -3,12 +3,19 @@
  */
 package org.kalypso.afgui.model.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -17,6 +24,8 @@ import com.hp.hpl.jena.vocabulary.RDF;
  */
 public class WorkflowData implements IWorkflowData
 {
+	final static private Logger logger=
+			Logger.getLogger(WorkflowData.class);
 	private final Resource resource;
 	
 	
@@ -62,6 +71,43 @@ public class WorkflowData implements IWorkflowData
 	public Object getModelObject()
 	{
 		return resource;
+	}
+	
+	public boolean hasLinkedWorkflowData(EWorkflowProperty prop)
+	{
+		Property jenaProp=Schema.toJenaProperty(prop);
+		if(prop==null)
+		{
+			return false;
+		}
+		else 
+		{	
+			return resource.hasProperty(jenaProp);
+		}
+	}
+	
+	public List<IWorkflowData> getLinkedWorkflowData(EWorkflowProperty prop)
+	{
+		Property jenaProp=Schema.toJenaProperty(prop);
+		if(prop==null)
+		{
+			logger.warn("Cannot get jena property for:"+prop);
+			return Collections.emptyList();
+		}
+		else
+		{
+			StmtIterator stmIt=resource.listProperties(jenaProp);
+			List<IWorkflowData> list= new ArrayList<IWorkflowData>();
+			
+			Resource res;
+			
+			for(;stmIt.hasNext();)
+			{
+				res=(Resource)((Statement)stmIt.next()).getObject();
+				list.add(new WorkflowData(res));
+			}
+			return list;
+		}
 	}
 
 }

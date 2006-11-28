@@ -34,6 +34,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Selector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -423,7 +424,7 @@ final public class Schema
 		}
 	}
 	
-	public IWorkflowData derivedWorkflowData(
+	final static public IWorkflowData derivedWorkflowData(
 								Model model,
 								IWorkflowData parent, 
 								String childId)
@@ -434,5 +435,24 @@ final public class Schema
 					toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM), 
 					(Resource)parent.getModelObject());
 		return new WorkflowData(res);
+	}
+	
+	final  static public List<IWorkflowData> getRootWorkflowDataByType(
+													Model model,String type)
+	{
+		ResIterator it=model.listSubjectsWithProperty(
+				toJenaProperty(EWorkflowProperty.HAS_TYPE), type);
+		List<IWorkflowData> list= new ArrayList<IWorkflowData>();
+		Resource res;
+		final Property PROP=toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM);
+		for(;it.hasNext();)
+		{
+			res=it.nextResource();
+			if(!res.hasProperty(PROP))
+			{
+				list.add(new WorkflowData(res));
+			}
+		}
+		return list;
 	}
 }

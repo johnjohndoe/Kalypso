@@ -9,8 +9,10 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
- org.eclipse.draw2d
-Eclipse-LazyStart: true
+ org.eclipse.draw2d,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
+Eclipse-LazyStart: true 
 Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
  lib/jena_2_3/arq.jar,
  lib/jena_2_3/commons-logging.jar,
@@ -26,3 +28,12 @@ Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
  lib/jena_2_3/xercesImpl.jar,
  lib/jena_2_3/xml-apis.jar,
  .
+Export-Package: org.kalypso.afgui,
+ org.kalypso.afgui.db,
+ org.kalypso.afgui.model,
+ org.kalypso.afgui.model.events,
+ org.kalypso.afgui.model.exception,
+ org.kalypso.afgui.model.impl,
+ org.kalypso.afgui.schema,
+ org.kalypso.afgui.views,
+ org.kalypso.afgui.viz

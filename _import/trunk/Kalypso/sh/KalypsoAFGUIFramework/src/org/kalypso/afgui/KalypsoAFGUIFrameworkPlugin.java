@@ -23,8 +23,12 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 
-	public static final String WORKFLOW_SPEC="/workflow/spec.rdf";
-	public static final String WORKFLOW_STATUS="/workflow/status.rdf";
+	public static final String TEMPLATE_WORKFLOW_DATA=
+								"/workflow/template_workflow_data.xml";
+	public static final String WORKFLOW_SPEC="/workflow/spec.xml";
+	public static final String WORKFLOW_STATUS="/workflow/status.xml";
+	
+	
 	private static final Logger logger=
 			Logger.getLogger(KalypsoAFGUIFrameworkPlugin.class);
 	
@@ -50,9 +54,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		//this.workflow=createWorkflow(context.getBundle());
-		this.workflowSystem=createWorkflowSystem(context.getBundle());
-		logger.info("\n======Pluging Workflow"+workflowSystem);
+//		//this.workflow=createWorkflow(context.getBundle());
+//		this.workflowSystem=createWorkflowSystem(context.getBundle());
+//		logger.info("\n======Pluging Workflow"+workflowSystem);
 	}
 
 	final private static IWorkflowSystem createWorkflowSystem(Bundle bundle)
@@ -202,4 +206,15 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 		        }
 		     );
 	}
+	
+	public URL getTemplateWorkflowData()
+	{
+		return getBundle().getResource(TEMPLATE_WORKFLOW_DATA);
+	}
+	
+	public URL getWorkflowSpec()
+	{
+		return getBundle().getResource(WORKFLOW_SPEC);
+	}
+	
 }
