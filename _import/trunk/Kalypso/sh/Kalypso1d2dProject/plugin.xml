@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin">
+         </run>
+      </application>
+   </extension>
+   
+   
+   <!-- Project extensions -->
+   <extension
+      point="org.eclipse.core.resources.natures"
+      id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"
+      name="Kalypso1D2DProjectNature">
+      <runtime>
+         <run class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+      </runtime>
+   </extension>
+
+	<extension
+       point="org.eclipse.ui.newWizards">
+		<category
+            id="org.kalypso.wizard"
+            name="K1d2dPjt"
+            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
+		<wizard name="Kalypso1D2DNewProjectWizard"
+		icon="icons/kalypso1d2d.png"
+		class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+		project="true"
+		id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard">
+		<description>
+				Creates a new project
+		</description>
+		</wizard>
+	</extension>
+	
+	<!-- perspectives-->
+	<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Kalypso 1d2d"
+            class="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+      </perspective>      
+   </extension>
+   
+   <extension
+         name="Workflow Views"
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
+            id="org.kalypso.afgui.views.SimulationModelBasedView"
+            name="Simulation Model Based View"/>
+      <view
+            allowMultiple="false"
+            class="org.kalypso.kalypso1d2d.pjt.views.ActivitiesView"
+            id="org.kalypso.afgui.views.ActivitiesView"
+            name="Workflow Activities View"/>
+       <view
+            allowMultiple="false"
+            class="org.kalypso.kalypso1d2d.pjt.views.TasksView"
+            id="org.kalypso.afgui.views.TasksView"
+            name="Workflow Task View"/>
+       <view
+            allowMultiple="false"
+            class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
+            id="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
+            name="Workflow View"/>
+            
+   </extension>
+   
+   <extension
+    	point = "org.eclipse.ui.viewActions">
+    	<viewContribution 
+    		id="org.kalypso.kalypso1d2d.pjt.setactiveproject" 
+    		targetID="org.eclipse.ui.views.ResourceNavigator">
+    		<action 
+    			id="org.kalypso.kalypso1d2d.pjt.SetActiveProject" 
+              	label="Set active project" 
+			    menubarPath="1d2d"
+              	toolbarPath="1d2d" 
+              	tooltip="%PopupMenu.ResourceNav.tooltip" 
+              	class="org.kalypso.kalypso1d2d.pjt.actions.SetActiveProjectActionDelegate" 
+              	enablesFor="1"> 
+              	<selection class="org.eclipse.core.resources.IProject" name="*"/> 
+              </action>
+		</viewContribution>
+	</extension>
+   
+</plugin>
