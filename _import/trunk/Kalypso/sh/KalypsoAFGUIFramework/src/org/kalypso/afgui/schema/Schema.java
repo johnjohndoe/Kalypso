@@ -64,7 +64,7 @@ final public class Schema
 	final static public Model schemaModel=ModelFactory.createDefaultModel();
 
 	final static public  Property PROP_HAS_NAME;
-	final static public  String URI_PROP_HAS_NAME=RDFS.label.getURI();//SCHEMA_NS+"hasName";
+	final static public  String URI_PROP_HAS_NAME=SCHEMA_NS+"hasName";
 	
 	final static public  Property PROP_EXE_STATE;
 	final static public  String URI_PROP_EXE_STATE=SCHEMA_NS+"exeState";
@@ -430,7 +430,8 @@ final public class Schema
 			String childId)
 	{
 		Resource res=model.createResource(childId,CLASS_WORKFLOW_DATA);
-		
+		res.addProperty(PROP_HAS_NAME, childId);
+		//TODO set parent child link
 		return new WorkflowData(res);
 	}
 	

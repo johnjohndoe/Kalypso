@@ -63,7 +63,7 @@ public class WorkflowDB implements IWorkflowDB
 		try
 		{
 			IWorkflowData  data= Schema.createWorkflowData(dbModel, parent, id);
-			logger.info(data);
+			logger.info("\n======================rdfModel\n"+dbModel);
 			return data;
 		}
 		catch(Throwable th)

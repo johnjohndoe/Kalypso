@@ -292,6 +292,7 @@
 		<rdfs:subPropertyOf rdf:resource="&rdfs;label"/>
 		<rdfs:domain rdf:resource="&wbs;Activity"/>
 		<rdfs:domain rdf:resource="&wbs;Workflow"/>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
 		<rdfs:range rdf:resource="xsd:string"/>
 	</rdf:Property>
 	
