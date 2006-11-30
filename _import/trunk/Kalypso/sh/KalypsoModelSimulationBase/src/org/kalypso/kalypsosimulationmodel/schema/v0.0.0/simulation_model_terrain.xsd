@@ -57,7 +57,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Terrain model element with one terrain elevation element and 
-				and rougthness layer polygon elements.
+				and roughness layer polygon elements.
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -67,7 +67,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Defined a terrain model type that contains an elevation model
-				and a rougthness layer polygon 
+				and a roughness layer polygon 
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -75,7 +75,7 @@
 				ref="simBase:terrainElevationModel"
 				minOccurs="1" maxOccurs="1"/>
 			<xs:element 
-				ref="simBase:rougthnessLayerPolynomCollection"
+				ref="simBase:roughnessLayerPolynomCollection"
 				minOccurs="1" maxOccurs="1"/>
 			<xs:element
 				ref="simBase:riverProfileNetwork"
@@ -202,14 +202,14 @@
 	</xs:complexType>
 	
 	<!-- =================================================================
-	rougthnessLayerPolynomCollection property
+	roughnessLayerPolynomCollection property
 	================================================================== -->
 	<xs:element 
-		name="rougthnessLayerPolynomCollection">
+		name="roughnessLayerPolynomCollection">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element 
-					ref="simBase:RougthnessLayerPolygonCollection"
+					ref="simBase:RoughnessLayerPolygonCollection"
 					 minOccurs="0" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -220,37 +220,37 @@
 		RougthnessLayerPolygomCollection
 	================================================================== -->
 	<xs:element 
-		name="RougthnessLayerPolygonCollection"
-		type="simBase:RougthnessLayerPolygonCollectionType"
+		name="RoughnessLayerPolygonCollection"
+		type="simBase:RoughnessLayerPolygonCollectionType"
 		substitutionGroup="gml:FeatureCollection">
 	
 	</xs:element>
 	<xs:complexType 
-		name="RougthnessLayerPolygonCollectionType">
+		name="RoughnessLayerPolygonCollectionType">
 		<xs:complexContent>
 			<xs:restriction 
 				base=" gml:FeatureCollectionType ">
 				<xs:sequence>
-					<xs:element ref="simBase:rougthnessLayerMember"/>
-					<xs:element ref="simBase:rougthnessLayerPolygonMembers"/>
+					<xs:element ref="simBase:roughnessLayerMember"/>
+					<xs:element ref="simBase:roughnessLayerPolygonMembers"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
 	<!-- =================================================================
-		rougthnessLayerPolygonMembers
+		roughnessLayerPolygonMembers
 	================================================================== -->
 	<xs:element
-		name="rougthnessLayerPolygonMembers"
-		type="simBase:RougthnessLayerPolygonArrayPropertyType"/>
+		name="roughnessLayerPolygonMembers"
+		type="simBase:RoughnessLayerPolygonArrayPropertyType"/>
 	
-	<xs:complexType name="RougthnessLayerPolygonArrayPropertyType">
+	<xs:complexType name="RoughnessLayerPolygonArrayPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeatureArrayPropertyType">
 				<xs:sequence>
 					<xs:element 
-						ref="simBase:RougthnessPolygon" 
+						ref="simBase:RoughnessPolygon" 
 						minOccurs="0" 
 						maxOccurs="unbounded"/>
 				</xs:sequence>
@@ -263,16 +263,16 @@
 		Rougthness layer polynom member or property 
 	===================================================================-->
 	<xs:element 
-		name="rougthnessLayerMember"
-		type="simBase:RougthnessLayerPolygonPropertyType"/>
+		name="roughnessLayerMember"
+		type="simBase:RoughnessLayerPolygonPropertyType"/>
 		
 	<xs:complexType 
-		name="RougthnessLayerPolygonPropertyType">
+		name="RoughnessLayerPolygonPropertyType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
 					<xs:element 
-						ref="simBase:RougthnessPolygon"
+						ref="simBase:RoughnessPolygon"
 						 minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -281,11 +281,11 @@
 	</xs:complexType>
 	
 	<!-- ================================================================
-		rougthnessPolynom
+		roughnessPolynom
 	================================================================= -->
 	<xs:element 
-		name="RougthnessPolygon"
-		type="simBase:RougthnessPolygonType"
+		name="RoughnessPolygon"
+		type="simBase:RoughnessPolygonType"
 		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
@@ -295,13 +295,13 @@
 		</xs:annotation>
 	</xs:element>
 		
-	<xs:complexType name="RougthnessPolygonType">
+	<xs:complexType name="RoughnessPolygonType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element ref="gml:polygonProperty"/>
 					<xs:element 
-						name="rougthnessID"
+						name="roughnessID"
 						type="xs:anyURI"
 						minOccurs="1"	
 						maxOccurs="1"/>

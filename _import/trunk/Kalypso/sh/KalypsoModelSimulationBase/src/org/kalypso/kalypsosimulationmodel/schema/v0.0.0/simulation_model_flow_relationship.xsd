@@ -199,7 +199,7 @@
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element ref="simBase:polynom1D"/>
+					<xs:element ref="simBase:polynomial1D"/> 
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -249,7 +249,7 @@
 					</xs:element>
 					
 					<xs:element 
-						ref="simBase:polynom1D"
+						ref="simBase:polynomial1D"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
@@ -262,7 +262,7 @@
 	====================================================================== -->
 	<xs:element 
 		name="AOverHPolynom"
-		type="simBase:AOverHType"
+		type="simBase:AOverHPolynomType"
 		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation>
@@ -278,7 +278,7 @@
 				base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
 					<xs:element 
-						ref="simBase:polynom1D"
+						ref="simBase:polynomial1D"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
@@ -323,7 +323,7 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:element
-						ref="simBase:polynom1D"/>
+						ref="simBase:polynomial1D"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -378,7 +378,7 @@
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element ref="simBase:polynom2D"/>
+					<xs:element ref="simBase:polynomial2D"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -424,7 +424,7 @@
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element ref="simBase:polynom1D"/>			
+					<xs:element ref="simBase:polynomial1D"/>			
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

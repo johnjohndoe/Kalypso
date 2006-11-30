@@ -485,13 +485,13 @@
 	<!-- =================================================================
 			FE1D2D_1DRiverElement
 	================================================================== -->
-	<xs:element 
-		name="FE1D2D_1DRiverElement"
-		type="wb1d2d:FE1D2D_1DRiverElementType"
+	<!--xs:element 
+		name="FE1D2D_1DRiverElements"
+		type="wb1d2d:FE1D2D_1DRiverElementTypes"
 		substitutionGroup="wb1d2d:FE1D2DElement"
 		/>
 		
-	<xs:complexType name="FE1D2D_1DRiverElementType">
+	<xs:complexType name="FE1D2D_1DRiverElementTypes">
 		<xs:annotation>
 			<xs:documentation>
 				Basic section of a 1D River.
@@ -507,7 +507,7 @@
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	
-	</xs:complexType>
+	</xs:complexType -->
 	<!-- =================================================================
 		1d river section property
 	================================================================== -->

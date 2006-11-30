@@ -30,18 +30,18 @@
 		polynom property 
 	================================================================== -->
 	<xs:element 
-		name="polynom"
-		type="simBase:Polynom1DPropertyType"/>
+		name="polynomial"
+		type="simBase:Polynomial1DPropertyType"/>
 		
 	<xs:complexType 
-		name="PolynomPropertyType">
+		name="PolynomialPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">				
 			</xs:documentation>			
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="simBase:_Polynom"
+				ref="simBase:_Polynomial"
 				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -51,8 +51,8 @@
 			_Polynom element
 	======================================================================= -->
 	<xs:element
-		name="_Polynom"
-		type="simBase:AbstractPolynomType">
+		name="_Polynomial"
+		type="simBase:AbstractPolynomialType">
 		<xs:annotation>
 			<xs:documentation>
 				Substitutions head for all polynom
@@ -64,7 +64,7 @@
 			AbstractPolynomType
 	======================================================================= -->
 	<xs:complexType 
-		name="AbstractPolynomType"
+		name="AbstractPolynomialType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -82,10 +82,10 @@
 		polynom1D property
 	====================================================================-->	
 	<xs:element 
-		name="polynom1D"
-		type="simBase:Polynom1DPropertyType"/>
+		name="polynomial1D"
+		type="simBase:Polynomial1DPropertyType"/>
 		
-	<xs:complexType name="Polynom1DPropertyType">
+	<xs:complexType name="Polynomial1DPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				
@@ -93,7 +93,7 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="simBase:Polynom1D"
+				ref="simBase:Polynomial1D"
 				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -103,9 +103,9 @@
 			Polynom1D element
 	======================================================================= -->
 	<xs:element 
-		name="Polynom1D"
-		type="simBase:Polynom1DType"
-		substitutionGroup="simBase:_Polynom">
+		name="Polynomial1D"
+		type="simBase:Polynomial1DType"
+		substitutionGroup="simBase:_Polynomial">
 		<xs:annotation>
 			<xs:documentation>
 				1D polynom; a0+a1*x^1+...+an*x^n
@@ -117,7 +117,7 @@
 			Polynom1DType
 	======================================================================= -->
 	<xs:complexType 
-		name="Polynom1DType"
+		name="Polynomial1DType"
 		abstract="false">
 		<xs:annotation>
 			<xs:documentation>
@@ -126,7 +126,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="simBase:AbstractPolynomType">
+				base="simBase:AbstractPolynomialType">
 				<xs:sequence>
 					<xs:element 
 						name="order"
@@ -146,18 +146,18 @@
 		polynom2D property 
 	================================================================== -->
 	<xs:element 
-		name="polynom2D"
-		type="simBase:Polynom1DPropertyType"/>
+		name="polynomial2D"
+		type="simBase:Polynomial1DPropertyType"/>
 		
 	<xs:complexType 
-		name="Polynom2DPropertyType">
+		name="Polynomial2DPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">				
 			</xs:documentation>			
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="simBase:Polynom2D"
+				ref="simBase:Polynomial2D"
 				minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -167,9 +167,9 @@
 			Polynom2D element
 	======================================================================= -->
 	<xs:element 
-		name="Polynom2D"
-		type="simBase:Polynom2DType"
-		substitutionGroup="simBase:_Polynom">
+		name="Polynomial2D"
+		type="simBase:Polynomial2DType"
+		substitutionGroup="simBase:_Polynomial">
 		<xs:annotation>
 			<xs:documentation>
 				Represent a 2D polynom
@@ -180,7 +180,7 @@
 			Polynom2DType
 	======================================================================= -->
 	<xs:complexType 
-		name="Polynom2DType"
+		name="Polynomial2DType"
 		abstract="false">
 		<xs:annotation>
 			<xs:documentation>
@@ -190,7 +190,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="simBase:AbstractPolynomType">
+				base="simBase:AbstractPolynomialType">
 				<xs:sequence>
 					<xs:element 
 						name="orderX"
@@ -200,9 +200,9 @@
 						name="orderY"
 						type="xs:positiveInteger"
 						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
+					<!--xs:element 
 						name="data"
-						type="gml:DataBlockType"/>	
+						type="gml:DataBlockType"/-->	
 					<xs:element
 						name="coeficients"
 						minOccurs="1" maxOccurs="1">

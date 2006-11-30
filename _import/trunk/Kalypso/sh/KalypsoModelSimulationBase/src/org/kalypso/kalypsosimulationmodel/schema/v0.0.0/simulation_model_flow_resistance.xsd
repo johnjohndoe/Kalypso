@@ -648,8 +648,8 @@
 			<xs:restriction 
 				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="simBase:rougthnessCorrectionFactor"/>
-					<xs:element ref="simBase:rougthnessCorrectionFactors"/>
+					<xs:element ref="simBase:roughnessCorrectionFactor"/>
+					<xs:element ref="simBase:roughnessCorrectionFactors"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -659,14 +659,14 @@
 		rougthnessCorrectionFactors
 	================================================================== -->
 	<xs:element 
-			name="rougthnessCorrectionFactors">
+			name="roughnessCorrectionFactors">
 			<xs:complexType>
 				<xs:complexContent>
 					<xs:restriction 
 							base="gml:FeatureArrayPropertyType">
 						<xs:sequence>
 							<xs:element 
-								ref="simBase:RougthnessCorrectionFactor"
+								ref="simBase:RoughnessCorrectionFactor"
 								minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:restriction>
@@ -678,14 +678,14 @@
 		rougthnessCorrectionFactor
 	================================================================== -->
 	<xs:element 
-		name="rougthnessCorrectionFactor"
+		name="roughnessCorrectionFactor"
 		substitutionGroup="gml:featureMember">	
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:restriction base="gml:FeaturePropertyType">
 					<xs:sequence>
 						<xs:element 
-							ref="simBase:RougthnessCorrectionFactor"
+							ref="simBase:RoughnessCorrectionFactor"
 							minOccurs="0" maxOccurs="1"/>
 					</xs:sequence>
 					<xs:attributeGroup 
@@ -696,8 +696,8 @@
 	</xs:element>
 	
 	<xs:element 
-		name="RougthnessCorrectionFactor"
-		type="simBase:RougthnessCorrectionFactorType">
+		name="RoughnessCorrectionFactor"
+		type="simBase:RoughnessCorrectionFactorType">
 		<xs:annotation>
 			<xs:documentation>
 				The rougthness correction factor element maps a correction 
@@ -706,13 +706,13 @@
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType 
-		name="RougthnessCorrectionFactorType">
+		name="RoughnessCorrectionFactorType">
 		<xs:complexContent>
 			<xs:extension 
 				base="gml:AbstractGMLType">
 				<xs:sequence>
 					<xs:element 
-						name="rougthnessURI"
+						name="roughnessURI"
 						type="xs:anyURI">
 						<xs:annotation>
 							<xs:documentation>
