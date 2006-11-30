@@ -85,6 +85,7 @@ public class SetActiveProjectActionDelegate implements IViewActionDelegate
 					else
 					{
 						action.setEnabled(false);
+						logger.info("Project is not open");
 					}
 				}
 				catch (CoreException e)

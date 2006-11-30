@@ -56,7 +56,7 @@
       <view
             allowMultiple="false"
             class="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
-            id="org.kalypso.afgui.views.SimulationModelBasedView"
+            id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView"
             name="Simulation Model Based View"/>
       <view
             allowMultiple="false"
@@ -92,6 +92,23 @@
               	<selection class="org.eclipse.core.resources.IProject" name="*"/> 
               </action>
 		</viewContribution>
-	</extension>
-   
+		
+     </extension>
+   	
+   	<extension
+    	point = "org.eclipse.ui.viewActions">
+    	<viewContribution 
+    		id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib" 
+    		targetID="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView">
+    		<action
+            class="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
+            id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
+            label="AddSM"
+            menubarPath="1d2d"
+            toolbarPath="1d2d"
+            tooltip="Add simulation modell"> 
+              	
+             </action>
+        </viewContribution>
+     </extension>
 </plugin>

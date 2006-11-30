@@ -109,7 +109,7 @@ final public class Schema
 	final static public Resource CLASS_ACTIVITY_STATUS=null;
 	//
 	final static public String URI_CLASS_WORKFLOW_DATA=SCHEMA_NS+"WorkflowData";
-	final static public Resource CLASS_WORKFLOW_DATA=null;
+	final static public Resource CLASS_WORKFLOW_DATA;
 	
 	
 	//hasType
@@ -230,7 +230,7 @@ final public class Schema
 //			CLASS_PHASE=resMap.get(URI_CLASS_PHASE);
 //			CLASS_WORKFLOW_STATUS= resMap.get(URI_CLASS_WORKFLOW_STATUS);
 //			CLASS_ACTIVITY_STATUS= resMap.get(URI_CLASS_ACTIVITY_STATUS);
-//			CLASS_WORKFLOW_DATA=resMap.get(URI_CLASS_WORKFLOW_DATA);
+			CLASS_WORKFLOW_DATA=resMap.get(URI_CLASS_WORKFLOW_DATA);
 		}
 		
 	}
@@ -424,6 +424,16 @@ final public class Schema
 		}
 	}
 	
+	final static public IWorkflowData createWorkflowData(
+			Model model,
+			IWorkflowData parent, 
+			String childId)
+	{
+		Resource res=model.createResource(childId,CLASS_WORKFLOW_DATA);
+		
+		return new WorkflowData(res);
+	}
+	
 	final static public IWorkflowData derivedWorkflowData(
 								Model model,
 								IWorkflowData parent, 
@@ -442,6 +452,7 @@ final public class Schema
 	{
 		ResIterator it=model.listSubjectsWithProperty(
 				toJenaProperty(EWorkflowProperty.HAS_TYPE), type);
+		logger.info(it);
 		List<IWorkflowData> list= new ArrayList<IWorkflowData>();
 		Resource res;
 		final Property PROP=toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM);

@@ -51,4 +51,8 @@ public interface IWorkflowDB
 	 */
 	public List<IWorkflowData> getUnresolvable();
 	
+	public void addWorkflowDBChangeListener(IWorkflowDBChangeListerner l);
+	public void removeWorkflowDBChangeListener(IWorkflowDBChangeListerner l);
+	public void removeAllWorkflowDBChangeListener();
+	
 }

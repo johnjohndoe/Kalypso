@@ -3,20 +3,14 @@
  */
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 
 /**
@@ -74,13 +68,23 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
 
 	public Object[] getElements(Object inputElement)
 	{
+		logger.info("getting root elements:"+inputElement);
 		if(inputElement instanceof ActiveWorkContext)
 		{
 			ActiveWorkContext workContext= (ActiveWorkContext)inputElement;
-			List<IWorkflowData> data=
-				workContext.getWorkflowDB().getRootWorkflowDataByType(
-							Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D.toString());
-			return data.toArray();
+			IWorkflowDB workflowDB=workContext.getWorkflowDB();
+			if(workflowDB==null)
+			{
+				logger.warn("Workflow DB is null");
+				return EMPTY_ARRAY;
+			}
+			else
+			{
+				List<IWorkflowData> data=
+					workflowDB.getRootWorkflowDataByType(
+								Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D.toString());
+				return data.toArray();
+			}
 		}
 		else
 		{

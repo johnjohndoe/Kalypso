@@ -41,7 +41,8 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 			try 
 			{
 				Kalypso1D2DProjectNature.addNature(project);
-				Kalypso1D2DProjectNature.createMetaDataFolder(project);
+				//TODO change back
+				//Kalypso1D2DProjectNature.createMetaDataFolder(project);
 				logger.info("DADADADADA:\n"+project);
 			} 
 			catch (CoreException e) 
@@ -50,12 +51,12 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 				Kalypso1d2dProjectPlugin.getDefault().showException("", e);
 				return false;
 			}
-			catch (IOException e)
-			{
-				logger.info(MSG, e);
-				Kalypso1d2dProjectPlugin.getDefault().showException(MSG, e);
-				return false;
-			}
+//			catch (IOException e)
+//			{
+//				logger.info(MSG, e);
+//				Kalypso1d2dProjectPlugin.getDefault().showException(MSG, e);
+//				return false;
+//			}
 			catch(Throwable th)
 			{
 				logger.error(MSG, th);

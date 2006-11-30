@@ -13,6 +13,7 @@ import org.kalypso.afgui.db.EWorkflowProperty;
  */
 public interface IWorkflowData
 {
+	public String getName();
 	public Object  getModelObject();
 	public String getURI();
 	public String getLocation();

@@ -1,6 +1,8 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -8,13 +10,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.db.IWorkflowDB;
+import org.kalypso.afgui.db.WorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem; 
 import org.kalypso.afgui.model.impl.WorkflowSystem;
+
 
 
 /**
@@ -29,8 +34,11 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 	
 	static final String ID=
 		"org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
+	
 	public static final String METADATA_FOLDER = ".metadata";
+	
 	public static final String WORKFLOW_DESC="workflow.xml";
+	
 	public static final String WORKFLOW_DATA_DESC="worflow_data.xml";
 	
 	private IWorkflowSystem workflowSystem;
@@ -39,38 +47,68 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 	
 	private IProject project;
 	
+	private IFolder metaDataFolder;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.resources.IProjectNature#configure()
 	 */
 	public void configure() throws CoreException
 	{
-		
+		logger.info("Configuring1:"+project);
+		addNature(project);
+		try
+		{
+			createMetaDataFolder(project);
+		}
+		catch (IOException e)
+		{
+			logger.error(e);
+		}
+//		metaDataFolder=project.getFolder(METADATA_FOLDER);
+//		
+//		try
+//		{
+//			workflowDB=
+//				new WorkflowDB(
+//						metaDataFolder.getFile(WORKFLOW_DATA_DESC).getRawLocationURI().toURL());
+//		}
+//		catch (MalformedURLException e)
+//		{
+//			logger.error("Bad url to work flow desc data",e);
+//		}
+//		catch (IOException e)
+//		{
+//			logger.error("Work flow data could not be found",e);
+//		}
+//		logger.info("Config End:"+workflowDB);
 	}
-
+	
+	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.resources.IProjectNature#deconfigure()
 	 */
 	public void deconfigure() throws CoreException
 	{
-		URL specURL=null;
-		URL statusURL=null;
-		try
-		{
-			workflowSystem= new WorkflowSystem(specURL, statusURL);
-		}
-		catch(IOException th)
-		{
-			final String MSG="Error while creating workflow system";
-			
-			IStatus status=
-				new Status( IStatus.ERROR, 
-							Kalypso1d2dProjectPlugin.PLUGIN_ID, 
-							0, 
-							MSG, 
-							th);
-			throw new CoreException(status);
-		}
+//		URL specURL=null;
+//		URL statusURL=null;
+//		try
+//		{
+//			workflowSystem= new WorkflowSystem(specURL, statusURL);
+//			
+//		}
+//		catch(IOException th)
+//		{
+//			final String MSG="Error while creating workflow system";
+//			
+//			IStatus status=
+//				new Status( IStatus.ERROR, 
+//							Kalypso1d2dProjectPlugin.PLUGIN_ID, 
+//							0, 
+//							MSG, 
+//							th);
+//			throw new CoreException(status);
+//		}
 	}
 
 	/* (non-Javadoc)
@@ -86,11 +124,41 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 	 */
 	public void setProject(IProject project)
 	{
+		logger.info("Setting project");
 		this.project=project;
 	}
 	
 	public IWorkflowDB getWorkflowDB()
 	{
+		if(workflowDB==null)
+		{
+			return makeWorkflowDB();
+		}
+		else
+		{
+			return workflowDB;
+		}
+	}
+	
+	private IWorkflowDB makeWorkflowDB()
+	{
+		metaDataFolder=project.getFolder(METADATA_FOLDER);
+		
+		try
+		{
+			workflowDB=
+				new WorkflowDB(
+						metaDataFolder.getFile(WORKFLOW_DATA_DESC).getRawLocationURI().toURL());
+		}
+		catch (MalformedURLException e)
+		{
+			logger.error("Bad url to work flow desc data",e);
+		}
+		catch (IOException e)
+		{
+			logger.error("Work flow data could not be found",e);
+		}
+		logger.info("Config End:"+workflowDB);
 		return workflowDB;
 	}
 	
@@ -131,7 +199,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 		 
 	}
 	
-	public static final IFolder createMetaDataFolder(IProject project) throws CoreException, IOException
+	final static private IFolder createMetaDataFolder(IProject project) throws CoreException, IOException
 	{
 		logger.info(project);
 		final IFolder metaFolder = project.getFolder(METADATA_FOLDER);
@@ -161,21 +229,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 			    			null);			    
 			}
 			metaFolder.getParent().refreshLocal(1, null);
-//			IFile workflowData= metaFolder.getFile(WORKFLOW_DATA_DESC);
-//			//Platform.getPlugin(KalypsoAFGUIFrameworkPlugin.PLUGIN_ID);
-//			
-//			logger.info("plugin:"+plugin);
-//		    URL templWorkflowData=
-//		    		plugin.getTemplateWorkflowData();
-//		    
-//		    logger.info(templWorkflowData);
-//		    metaFolder.getParent().refreshLocal(1, null);
-//		    workflowData.create(
-//		    			templWorkflowData.openStream(), 
-//		    			true, 
-//		    			null);
-//		    
-		     return metaFolder;
+			 return metaFolder;
 		}
 		
 	}

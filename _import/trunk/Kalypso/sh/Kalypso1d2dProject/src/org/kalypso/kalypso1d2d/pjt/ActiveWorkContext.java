@@ -47,24 +47,39 @@ public class ActiveWorkContext
 	synchronized public void setActiveProject(IProject activeProject) throws CoreException
 	{
 		logger.info("New Project to Set:"+activeProject);
+		IProject oldProject=this.activeProject;
+		IWorkflowDB oldWorkflowDB=getWorkflowDB();
+		IWorkflowSystem oldWorkflowSystem=getWorkflowSystem();
 		
 		try
-		{
+		{			
 			if(Kalypso1D2DProjectNature.isOfThisNature(activeProject))
 			{
 				this.activeProject = activeProject;
+				this.workflowDB=
+					Kalypso1D2DProjectNature.toThisNature(activeProject).getWorkflowDB();
+				logger.info("WorkflowDB="+workflowDB);
 			}
 			else
 			{
-				//IProject oldProject=this.activeProject;
+				
 				this.activeProject=null;
-				fireActiveProjectChanged(activeProject);
+				this.workflowDB=null;
+				logger.warn("Project to set is not of 1d2d nature");
 			}
 		}
 		catch (CoreException e)
 		{
 			logger.error("Error setting current project", e);
 			throw e;
+		}
+		finally
+		{
+			fireActiveProjectChanged(
+						activeProject,
+						oldProject,
+						oldWorkflowDB,
+						oldWorkflowSystem);
 		}
 	}
 	
@@ -132,11 +147,19 @@ public class ActiveWorkContext
 		activeProjectChangeListener.clear();
 	}
 	
-	final private void fireActiveProjectChanged(IProject newProject)
+	final private void fireActiveProjectChanged(
+							IProject newProject, 
+							IProject oldProject,
+							IWorkflowDB oldWorkflowDB,
+							IWorkflowSystem oldWorkflowSystem)
 	{
 		for(IActiveProjectChangeListener l:activeProjectChangeListener)
 		{
-			l.activeProjectChanged(newProject);
+			l.activeProjectChanged(
+						newProject, 
+						oldProject,
+						oldWorkflowDB,
+						oldWorkflowSystem);
 		}
 	}
 }

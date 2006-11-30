@@ -110,4 +110,20 @@ public class WorkflowData implements IWorkflowData
 		}
 	}
 
+	/**
+	 * @see org.kalypso.afgui.model.IWorkflowData#getName()
+	 */
+	public String getName()
+	{
+		return resource.getProperty(Schema.PROP_HAS_NAME).getObject().toString();
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer buffer= new StringBuffer(64);
+		buffer.append(resource.getURI());
+		return buffer.toString();
+	}
+
 }
