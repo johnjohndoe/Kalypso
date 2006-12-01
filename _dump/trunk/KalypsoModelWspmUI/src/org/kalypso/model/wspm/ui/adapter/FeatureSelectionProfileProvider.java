@@ -272,6 +272,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
     {
+      // TODO: this causes all profile controls to completely be re-created
+      // even, if the change originally came from one of those...
+      
       try
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );

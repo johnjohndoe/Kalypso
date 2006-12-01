@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.view.table.swt;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Item;
@@ -53,12 +54,10 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 
-
 /**
- * @author belger
- * 
+ * @author Gernot Belger
  */
-public class ProfilCellModifier implements ICellModifier
+public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
 {
   private final TableViewer m_viewer;
 
@@ -75,7 +74,7 @@ public class ProfilCellModifier implements ICellModifier
     final IProfilEventManager pem = (IProfilEventManager) m_viewer.getInput();
     if( pem == null )
       return false;
-      
+
     return propertyForID( pem.getProfil(), property ) != null;
   }
 
@@ -109,7 +108,11 @@ public class ProfilCellModifier implements ICellModifier
     try
     {
       final double oldValue = point.getValueFor( col );
-      final Double newValue = new Double( value.toString().replace( ',', '.' ) );
+      /* Null values are not allowed for the profile. */
+      if( value == null || isValid( value ) != null )
+        return;
+
+      final Double newValue = parseValue( value );
 
       if( Double.compare( oldValue, newValue ) != 0 )
       {
@@ -123,6 +126,14 @@ public class ProfilCellModifier implements ICellModifier
       // ignore, set null?
       t.printStackTrace();
     }
+  }
+
+  private Double parseValue( final Object value )
+  {
+    if( value == null )
+      return null;
+
+    return new Double( value.toString().replace( ',', '.' ) );
   }
 
   public static POINT_PROPERTY propertyForID( final IProfil profil, final String idstr )
@@ -156,6 +167,27 @@ public class ProfilCellModifier implements ICellModifier
 
       return Double.NaN;
     }
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
+   */
+  public String isValid( final Object value )
+  {
+    try
+    {
+      parseValue( value );
+    }
+    catch( final NumberFormatException nfe )
+    {
+      return "Keine Dezimalzahl: " + value;
+    }
+    catch( final Throwable t )
+    {
+      return t.getLocalizedMessage();
+    }
+
+    return null;
   }
 
 }

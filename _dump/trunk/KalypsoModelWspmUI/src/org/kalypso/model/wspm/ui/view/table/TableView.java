@@ -166,6 +166,8 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_control == null || m_control.isDisposed() )
       return;
 
+    final Object viewState = m_view == null ? null : m_view.storeState();
+
     final Control[] childcontrols = m_control.getChildren();
     for( final Control c : childcontrols )
       c.dispose();
@@ -201,14 +203,18 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     }
 
     m_control.layout();
+
+    if( m_view != null )
+      m_view.restoreState( viewState );
   }
 
   private void registerGlobalActions( final ProfilSWTTableView tableView )
   {
     final IActionBars actionBars = getViewSite().getActionBars();
 
-    actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), tableView.getAction( ProfilSWTTableView.ACTION_COPY ) );
-    actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), tableView.getAction( ProfilSWTTableView.ACTION_PASTE ) );
+    // TODO: we can't do that, because then caopy/paste within a cell does not work any more
+//    actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), tableView.getAction( ProfilSWTTableView.ACTION_COPY ) );
+//    actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), tableView.getAction( ProfilSWTTableView.ACTION_PASTE ) );
     actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), tableView.getAction( ProfilSWTTableView.ACTION_DELETEPOINTS ) );
     actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), tableView.getAction( ProfilSWTTableView.ACTION_SELECTALL ) );
     actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, tableView.getAction( ProfilSWTTableView.ACTION_INSERTPOINT ) );
@@ -220,8 +226,8 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     final IActionBars actionBars = getViewSite().getActionBars();
 
-    actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), null );
-    actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), null );
+//    actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), null );
+//    actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), null );
     actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), null );
     actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), null );
     actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, null );

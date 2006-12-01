@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.reparator.ReparatorRuleSet;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -69,7 +68,7 @@ public class ValidationProfilListener implements IProfilListener
 {
   private ValidatorRuleSet m_rules = KalypsoModelWspmCorePlugin.getValidatorSet( "Pasche" );
 
-  private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
+//  private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
 
   private final IProfilEventManager m_pem;
 

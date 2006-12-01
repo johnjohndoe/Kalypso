@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.gml;
 
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -50,7 +48,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.model.feature.GmlWorkspaceListener;
 
@@ -74,25 +71,26 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent instanceof FeaturesChangedModellEvent )
-    {
-      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-      final Feature[] features = fcme.getFeatures();
-      for( final Feature f : features )
-      {
-        if( GMLSchemaUtilities.substitutes( f.getFeatureType(), WspmProfile.QNAME_PROFILE ) )
-          recreateLists( f.getWorkspace() );
-      }
-    }
-    else if( modellEvent instanceof FeatureStructureChangeModellEvent )
-    {
-      final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
-      final Feature[] parentFeatures = fscme.getParentFeatures();
-      for( int i = 0; i < parentFeatures.length; i++ )
-      {
-        // can't do it, must know if a profile was added or not
-      }
-    }
+    // TODO: this takes much too long time at the moment
+//    if( modellEvent instanceof FeaturesChangedModellEvent )
+//    {
+//      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
+//      final Feature[] features = fcme.getFeatures();
+//      for( final Feature f : features )
+//      {
+//        if( GMLSchemaUtilities.substitutes( f.getFeatureType(), WspmProfile.QNAME_PROFILE ) )
+//          recreateLists( f.getWorkspace() );
+//      }
+//    }
+//    else if( modellEvent instanceof FeatureStructureChangeModellEvent )
+//    {
+//      final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
+//      final Feature[] parentFeatures = fscme.getParentFeatures();
+//      for( int i = 0; i < parentFeatures.length; i++ )
+//      {
+//        // can't do it, must know if a profile was added or not
+//      }
+//    }
   }
 
   /** First try: we recreate ALL list everytime ONE profile changes. */

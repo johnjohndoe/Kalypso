@@ -80,9 +80,9 @@ import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.NoMouseDownTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.TableViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1.ADVANCE_MODE;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -118,7 +118,7 @@ import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
  * <li>Problemwerte (Rücksprünge, ungültige Werte) werden markiert.</li>
  * </ul>
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class ProfilSWTTableView extends AbstractProfilView
 {
@@ -169,7 +169,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 
   private Composite m_tableContainer;
 
-  private ExcelTableCursor3_1 m_cursor;
+  private ExcelTableCursor m_cursor;
 
   private final MenuManager m_menuManager = new MenuManager();
 
@@ -218,7 +218,10 @@ public class ProfilSWTTableView extends AbstractProfilView
       final IBaseLabelProvider labelProvider = m_viewer.getLabelProvider();
       if( labelProvider != null )
         labelProvider.dispose();
+
+      // necessary?
       m_viewer.getTable().dispose();
+
       m_viewer = null;
     }
 
@@ -274,9 +277,10 @@ public class ProfilSWTTableView extends AbstractProfilView
     m_viewer.setLabelProvider( new ProfilLabelProvider( m_viewer ) );
     m_viewer.setCellModifier( new ProfilCellModifier( m_viewer ) );
     m_viewer.setUseHashlookup( true );
+    // TODO: is this still necessary with eclipse 3.2?
     TableViewerTooltipListener.hookViewer( m_viewer, false );
 
-    final ExcelTableCursor3_1 cursor = new ExcelTableCursor3_1( m_viewer, SWT.NONE, ExcelTableCursor3_1.ADVANCE_MODE.RIGHT, true );
+    final ExcelTableCursor cursor = new ExcelTableCursor( m_viewer, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.RIGHT, true );
     m_cursor = cursor;
 
     final Menu menu = m_menuManager.createContextMenu( table );
@@ -380,7 +384,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     column.setMoveable( true );
 
     // causes columns to resize and warning images to be stretched; but
-    // what to to else?
+    // what to do else?
     if( columnKey != null )
       column.setImage( m_emptyImage );
 
@@ -393,7 +397,9 @@ public class ProfilSWTTableView extends AbstractProfilView
       }
     } );
 
-    struct.addColumn( new TextCellEditor( table, SWT.BORDER ), id );
+    final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.BORDER );
+    textCellEditor.setValidator( (ProfilCellModifier) m_viewer.getCellModifier() );
+    struct.addColumn( textCellEditor, id );
 
     return column;
   }
@@ -445,12 +451,12 @@ public class ProfilSWTTableView extends AbstractProfilView
 
   public void setAdvanceMode( final String string )
   {
-    m_cursor.setAdvanceMode( ExcelTableCursor3_1.ADVANCE_MODE.valueOf( string ) );
+    m_cursor.setAdvanceMode( ExcelTableCursor.ADVANCE_MODE.valueOf( string ) );
   }
 
   public static String[][] getAdvanceModes( )
   {
-    final ADVANCE_MODE[] advance_modes = ExcelTableCursor3_1.ADVANCE_MODE.values();
+    final ADVANCE_MODE[] advance_modes = ExcelTableCursor.ADVANCE_MODE.values();
     final String[][] descriptions = new String[advance_modes.length][];
     for( int i = 0; i < descriptions.length; i++ )
       descriptions[i] = new String[] { advance_modes[i].toString(), advance_modes[i].name() };
@@ -500,7 +506,7 @@ public class ProfilSWTTableView extends AbstractProfilView
         // if( row == null )
         // return;
 
-        final IProfilPoint thePointBefore = (row == null)?null:(IProfilPoint) row.getData();
+        final IProfilPoint thePointBefore = (row == null) ? null : (IProfilPoint) row.getData();
 
         // final PointInsert change = new PointInsert( getProfil(), thePointBefore );
         final PointAdd change = new PointAdd( getProfil(), thePointBefore, null );
@@ -532,11 +538,14 @@ public class ProfilSWTTableView extends AbstractProfilView
       @Override
       public void run( )
       {
+        // TODO: das Verhalten ist im Moment zu strange....
+        // besser wäre ein separater Dialog fürs einfügen von Punkten aus der Zwischenablage
+        // ausserdem sollte es eine atomare operation sein, d.h. undo macht alles wieder rückgangig
         final ExcelClipboardAdapter adapter = new ExcelClipboardAdapter( getViewer() );
 
         final Table table = getViewer().getTable();
 
-        int row = table.indexOf( getCursor().getRow() );
+        final int row = table.indexOf( getCursor().getRow() );
         final int column = getCursor().getColumn();
 
         // wird wissen, dass das einfügen einen refresh auslöst, deswegen: false
@@ -666,5 +675,48 @@ public class ProfilSWTTableView extends AbstractProfilView
         table.setSelection( new TableItem[] { item } );
       }
     }
+  }
+
+  /**
+   * Stores the current state of the view into an object from which the state can be restored later.
+   * <p>
+   * Currently the following properties are stored:
+   * <ul>
+   * <li>location of the table cursor</li>
+   * </ul>
+   * </p>
+   * 
+   * @see #restoreState(Object)
+   */
+  public Object storeState( )
+  {
+    if( m_cursor == null || m_cursor.isDisposed() )
+      return null;
+
+    final Table table = getViewer().getTable();
+    final TableItem rowItem = m_cursor.getRow();
+
+    final int row = table.indexOf( rowItem );
+    final int col = m_cursor.getColumn();
+
+    return new Integer[] { row, col };
+  }
+
+  /**
+   * @see #storeState()
+   */
+  public void restoreState( final Object viewState )
+  {
+    if( viewState == null || !(viewState instanceof Integer[]) )
+      return;
+
+    if( m_cursor == null || m_cursor.isDisposed() )
+      return;
+    
+    final Integer[] pos = (Integer[]) viewState;
+    m_cursor.setSelection( pos[0], pos[1], true );
+    m_cursor.redraw();
+    m_cursor.setFocus();
+    
   }
 }

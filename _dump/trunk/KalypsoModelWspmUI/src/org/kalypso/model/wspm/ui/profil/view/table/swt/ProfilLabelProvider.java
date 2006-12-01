@@ -57,7 +57,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
@@ -89,7 +88,7 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   public static final String COLUMN_KEY = "columnKey";
 
-  public final static String ENTRY_FORMAT = "%10.4f";
+  public final static String ENTRY_FORMAT = "%.4f";
 
   private final TableViewer m_viewer;
 
