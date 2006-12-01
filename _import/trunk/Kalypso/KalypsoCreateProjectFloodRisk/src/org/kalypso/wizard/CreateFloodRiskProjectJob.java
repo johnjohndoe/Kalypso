@@ -189,22 +189,6 @@ public class CreateFloodRiskProjectJob extends Job
     m_autogenerateLanduseCollection = autogenerateLanduseCollection;
     m_waterlevelGrids = waterlevelGrids;
     m_waterlevelCooSystem = waterlevelCooSystem;
-  
-    /*
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    TypeHandlerUtilities.registerXSDSimpleTypeHandler(registry);
-    try
-    {
-      registry.registerTypeHandler( new RangeSetTypeHandler() );
-      registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
-      TypeHandlerUtilities.registerTypeHandlers(registry);
-    }
-    catch( TypeRegistryException e )
-    {
-      e.printStackTrace();
-    }
-    //registry.toString();
-    */
   }
 
   /**
@@ -571,14 +555,12 @@ public class CreateFloodRiskProjectJob extends Job
       waterlevelDir.mkdir();
       final File targetFile = (m_workspacePath.append( m_projectHandel.getFullPath().append( "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) )).toFile(); //$NON-NLS-1$ //$NON-NLS-2$
       
-      // TODO Dejan: srediti writeRasterData
       GridUtils.writeRasterData( targetFile, grid );
       targetFiles.add( targetFile );
       File sldFile = (m_workspacePath.append( m_projectHandel.getFullPath().append( "/.styles/" + sourceFileNameWithoutExtension + ".sld" ) )).toFile(); //$NON-NLS-1$ //$NON-NLS-2$
       Color lightBlue = new Color( 150, 150, 255 );
       int numOfCategories = 5;
       
-      // TODO Dejan: srediti createRasterStyle
       createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
       m_layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
       grid = null;
@@ -625,7 +607,6 @@ public class CreateFloodRiskProjectJob extends Job
     }
     ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" ); //$NON-NLS-1$
     colorMap.put( new Double( max ), colorMapEntry_max );
-    // FIXME Ne radi rasterSymbolizer
     RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
     Symbolizer[] symbolizers = new Symbolizer[] { rasterSymbolizer };
     FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
@@ -637,7 +618,7 @@ public class CreateFloodRiskProjectJob extends Job
     org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
     StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
-    // FIXME Ne radi exportAsXML za RasterSymbolizer
+    // FIXME Ne radi exportAsXML za RasterSymbolizer (ili radi!?)
     System.out.println(((StyledLayerDescriptor_Impl) sld).exportAsXML());
     Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
@@ -756,6 +737,7 @@ public class CreateFloodRiskProjectJob extends Job
   /**
    * creates a waterlevel layer
    * 
+   * 
    * @param sourceFile
    * @param styleName
    * @return waterlevel layer
@@ -763,13 +745,17 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private StyledLayerType createWaterlevelLayer( File sourceFile, String styleName ) throws Exception
   {
+    
+    // PROBLEM: newLayer.setFeaturePath( "RectifiedGridCoverage" )
+    
+    // poziva se samo iz createWaterlevelGrids
 
     final StyledLayerType newLayer = typeOF.createStyledLayerType();
 
     // set attributes for the layer
     newLayer.setName( styleName );
     newLayer.setVisible( false );
-    newLayer.setFeaturePath( "RectifiedGridCoverageMember" ); //$NON-NLS-1$
+    newLayer.setFeaturePath( "RectifiedGridCoverage" ); //$NON-NLS-1$
     newLayer.setHref( "../Waterlevel/" + sourceFile.getName() ); //$NON-NLS-1$
     newLayer.setType( "simple" ); //$NON-NLS-1$
     newLayer.setLinktype( "gml" ); //$NON-NLS-1$
