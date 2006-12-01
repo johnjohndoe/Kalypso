@@ -284,6 +284,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final String typ = building.getTyp();
 
     final IObservation<TupleResult> observation = new Observation<TupleResult>( typ, "Bauwerk-Observation", result, metaList );
+
     observation.setPhenomenon( typ );
 
     return observation;

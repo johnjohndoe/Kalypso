@@ -63,17 +63,16 @@ public interface IProfilConstants
   public static final String WEHR_TYP_BEIWERT = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_BEIWERT";
 
   /** buildings */
+  public static final String BUILDING_TYP_BRUECKE = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE";
 
-  public static final String BUILDING_TYP_BRUECKE = "urn:ogc:phenomenon:wspm:building:BRUECKE";
+  public static final String BUILDING_TYP_EI = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#EI";
 
-  public static final String BUILDING_TYP_EI = "urn:ogc:phenomenon:wspm:building:EI";
+  public static final String BUILDING_TYP_KREIS = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#KREIS";
 
-  public static final String BUILDING_TYP_KREIS = "urn:ogc:phenomenon:wspm:building:KREIS";
+  public static final String BUILDING_TYP_MAUL = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#MAUL";
 
-  public static final String BUILDING_TYP_MAUL = "urn:ogc:phenomenon:wspm:building:MAUL";
+  public static final String BUILDING_TYP_TRAPEZ = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#TRAPEZ";
 
-  public static final String BUILDING_TYP_TRAPEZ = "urn:ogc:phenomenon:wspm:building:TRAPEZ";
-
-  public static final String BUILDING_TYP_WEHR = "urn:ogc:phenomenon:wspm:building:WEHR";
+  public static final String BUILDING_TYP_WEHR = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR";
 
 }
