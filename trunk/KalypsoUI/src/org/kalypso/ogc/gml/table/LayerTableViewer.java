@@ -78,7 +78,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.gmlschema.adapter.IAnnotation;
@@ -278,7 +278,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // disable capture to let selection of table and tableviewer in sync
     table.setCapture( false );
 
-    final TableCursor tc = new ExcelTableCursor3_1( this, SWT.NONE,ExcelTableCursor3_1.ADVANCE_MODE.DOWN, true );
+    final TableCursor tc = new ExcelTableCursor( this, SWT.NONE,ExcelTableCursor.ADVANCE_MODE.DOWN, true );
     m_tableCursor = tc;
 
     final OpenStrategy strategy = new OpenStrategy( tc );

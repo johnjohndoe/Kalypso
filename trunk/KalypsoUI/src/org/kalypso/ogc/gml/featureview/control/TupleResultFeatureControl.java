@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor3_1;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.observation.IObservation;
@@ -153,7 +153,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     updateControl();
 
-    new ExcelTableCursor3_1( m_viewer, SWT.NONE, ExcelTableCursor3_1.ADVANCE_MODE.RIGHT, true );
+    new ExcelTableCursor( m_viewer, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.RIGHT, true );
 
     return table;
   }
