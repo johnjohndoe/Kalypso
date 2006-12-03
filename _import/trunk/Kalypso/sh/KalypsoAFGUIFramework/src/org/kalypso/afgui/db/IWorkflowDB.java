@@ -3,10 +3,7 @@
  */
 package org.kalypso.afgui.db;
 
-import java.net.URI;
 import java.util.List;
-
-import javax.management.relation.Relation;
 
 import org.kalypso.afgui.model.IWorkflowData;
 
@@ -44,6 +41,8 @@ public interface IWorkflowDB
 				IWorkflowData object, 
 				EWorkflowProperty linkType);
 	
+	public boolean persist();
+	
 	/**
 	 * Return workflow data which cannot be resolved
 	 * 
@@ -52,7 +51,9 @@ public interface IWorkflowDB
 	public List<IWorkflowData> getUnresolvable();
 	
 	public void addWorkflowDBChangeListener(IWorkflowDBChangeListerner l);
+	
 	public void removeWorkflowDBChangeListener(IWorkflowDBChangeListerner l);
+	
 	public void removeAllWorkflowDBChangeListener();
 	
 }

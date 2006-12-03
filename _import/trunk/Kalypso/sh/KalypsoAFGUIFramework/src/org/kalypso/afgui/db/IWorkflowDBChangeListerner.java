@@ -10,6 +10,6 @@ package org.kalypso.afgui.db;
 public interface IWorkflowDBChangeListerner
 {
 	
-	void workflowDBChnaged();
+	void workflowDBChanged();
 	
 }

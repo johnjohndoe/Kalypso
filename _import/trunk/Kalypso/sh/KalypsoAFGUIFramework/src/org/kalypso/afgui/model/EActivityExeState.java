@@ -27,5 +27,9 @@ public enum EActivityExeState
 	/**
 	 * Status to signal that an activity is done
 	 */
-	DONE;
+	DONE, 
+	
+	UNKNOWN;
+	
+	
 }

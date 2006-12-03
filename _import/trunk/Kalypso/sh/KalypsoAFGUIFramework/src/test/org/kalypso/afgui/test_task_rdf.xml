@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
+	<!ENTITY kbtest 'http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#'>
+	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF 
+	xmlns:kbtest="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
+
+	<wbs:Activity 
+			rdf:about="&kbtest;Activity1">
+		<wbs:hasName>Activity1</wbs:hasName>
+		<wbs:hasHelp>ActivityHelp1</wbs:hasHelp>
+	</wbs:Activity>
+		
+	<wbs:Activity 
+			rdf:about="&kbtest;Activity2">
+		<wbs:hasName>Activity2</wbs:hasName>
+		<wbs:hasHelp>ActivityHelp2</wbs:hasHelp>
+	</wbs:Activity>
+	
+	
+	<wbs:Phase
+		rdf:about="&kbtest;Phase1">
+		<wbs:hasName>Phase1</wbs:hasName>
+		<wbs:hasHelp>Phase1</wbs:hasHelp>
+		<wbs:hasTaskGroups rdf:resource="&kbtest;TaskGroup_1_2"/>
+	</wbs:Phase>
+	
+	<wbs:Phase
+		rdf:about="&kbtest;Phase2">
+		<wbs:hasName>Phase2</wbs:hasName>
+		<wbs:hasHelp>Phase2</wbs:hasHelp>
+		<wbs:hasTaskGroups rdf:resource="&kbtest;TaskGroup_1_2"/>
+	</wbs:Phase>
+	<wbs:PhaseSeq
+		rdf:about="&kbtest;Phase_1_2">
+		<rdf:_1 rdf:resource="&kbtest;Phase1"/>
+		<rdf:_2 rdf:resource="&kbtest;Phase2"/>
+	</wbs:PhaseSeq>
+	
+	
+	<wbs:TaskGroup 
+			rdf:about="&kbtest;TaskGroup1">
+		<wbs:hasName>TaskGroup1</wbs:hasName>
+		<wbs:hasHelp>TaskGroup1Help</wbs:hasHelp>
+		<wbs:hasSubTaskGroups 
+			rdf:resource="&kbtest;SubTaskGroup_1_2"/>
+	</wbs:TaskGroup>
+	<wbs:TaskGroup 
+			rdf:about="&kbtest;TaskGroup2">
+		<wbs:hasName>TaskGroup2</wbs:hasName>
+		<wbs:hasHelp>TaskGroup2Help</wbs:hasHelp>
+		<wbs:hasSubTaskGroups 
+			rdf:resource="&kbtest;SubTaskGroup_1_2"/>
+	</wbs:TaskGroup>
+	
+	<wbs:TaskGroupSeq 
+			rdf:about="&kbtest;TaskGroup_1_2">
+		<rdf:_1 rdf:resource="&kbtest;TaskGroup1"/>
+		<rdf:_2 rdf:resource="&kbtest;TaskGroup2"/>
+	</wbs:TaskGroupSeq> 
+	
+	
+	
+	<wbs:SubTaskGroup 
+			rdf:about="&kbtest;SubTaskGroup1">
+		<wbs:hasName>SubTaskGroup1</wbs:hasName>
+		<wbs:hasHelp>SubTaskGroup1Help</wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&kbtest;Task_1_2"/>
+	</wbs:SubTaskGroup>
+	
+	<wbs:SubTaskGroup
+			rdf:about="&kbtest;SubTaskGroup2">
+		<wbs:hasName>SubTaskGroup2</wbs:hasName>
+		<wbs:hasHelp>SubTaskGroup2Help</wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&kbtest;Task_1_2"/>
+	</wbs:SubTaskGroup>
+	
+	<wbs:SubTaskGroupSeq 
+		rdf:about="&kbtest;SubTaskGroup_1_2">
+		<rdf:_1 rdf:resource="&kbtest;SubTaskGroup1"/>
+		<rdf:_2 rdf:resource="&kbtest;SubTaskGroup2"/>
+	</wbs:SubTaskGroupSeq>
+	
+	<wbs:Task 
+			rdf:about="&kbtest;Task1">
+		<wbs:hasName>Task1</wbs:hasName>
+		<wbs:hasHelp>Task1Help</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&kbtest;Activities_1_2"/>
+	</wbs:Task>	
+	
+	<wbs:Task 
+			rdf:about="&kbtest;Task2">
+		<wbs:hasName>Task2</wbs:hasName>
+		<wbs:hasHelp>Task2Help</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&kbtest;Activities_1_2"/>
+	</wbs:Task>	
+	
+	<wbs:TaskSeq 
+		rdf:about="&kbtest;Task_1_2">
+		<rdf:_1 rdf:resource="&kbtest;Task1"/>
+		<rdf:_2 rdf:resource="&kbtest;Task2"/>
+	</wbs:TaskSeq>
+	
+	
+	<wbs:ActivitySeq 
+		rdf:about="&kbtest;Activities_1_2">
+		<rdf:_1 rdf:resource="&kbtest;Activity1"/>
+		<rdf:_2 rdf:resource="&kbtest;Activity2"/>
+	</wbs:ActivitySeq>
+	
+	<wbs:WorkflowData
+			rdf:about="&kbtest;SimMo1">
+		<wbs:hasName>SimulationModel1</wbs:hasName>
+		<wbs:hasLocation>file.xml#SimMo1</wbs:hasLocation>
+		<wbs:contains rdf:resource="&kbtest;SubMo1_1"/>
+		<wbs:contains rdf:resource="&kbtest;SubMo1_2"/>
+		<wbs:hasType>type_simulationmodel</wbs:hasType>
+	</wbs:WorkflowData>	
+	
+	<wbs:WorkflowData
+			rdf:about="&kbtest;SimMo1Dev">
+		<wbs:hasName>SimulationModel1Dev</wbs:hasName>
+		<wbs:hasLocation>file.xml#SimMo1Dev</wbs:hasLocation>
+		<wbs:isDerivedFrom rdf:resource="&kbtest;SimMo1"/>
+		<wbs:hasType>type_simulationmodel</wbs:hasType>
+	</wbs:WorkflowData>	
+	
+	<wbs:WorkflowData
+			rdf:about="&kbtest;SubMo1_1">
+		<wbs:hasName>Sub Model 1_1</wbs:hasName>
+		<wbs:hasLocation>file.xml#submodel1</wbs:hasLocation>
+		<wbs:hasType>sim_sub_model</wbs:hasType>	
+	</wbs:WorkflowData>
+	
+	<wbs:WorkflowData
+			rdf:about="&kbtest;SubMo1_2">
+		<wbs:hasName>Sub Model 1_2</wbs:hasName>
+		<wbs:hasLocation>file.xml#submodel2</wbs:hasLocation>
+		<wbs:hasType>sim_sub_model</wbs:hasType>	
+	</wbs:WorkflowData>
+	
+	<wbs:WorkpartRTContext 
+		rdf:about="&kbtest;RTSimMo1">
+		<wbs:executingWorkflowPart rdf:resource="&kbtest;Task1"/>
+		<wbs:processedResource rdf:resource="&kbtest;SimMo1"/>
+		<wbs:exeState>NotStarted</wbs:exeState>
+	</wbs:WorkpartRTContext>
+	
+	
+</rdf:RDF>

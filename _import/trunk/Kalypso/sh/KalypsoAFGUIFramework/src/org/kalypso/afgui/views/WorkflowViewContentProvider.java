@@ -3,23 +3,12 @@
  */
 package org.kalypso.afgui.views;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import org.eclipse.jface.viewers.IFontProvider;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
-import org.kalypso.afgui.model.EActivityAction;
-import org.kalypso.afgui.model.EActivityRelationship;
+
 import org.kalypso.afgui.model.IActivity;
-import org.kalypso.afgui.model.IRelationshipStatement;
 import org.kalypso.afgui.model.IWorkflow;
 
 public class WorkflowViewContentProvider 
@@ -42,60 +31,62 @@ public class WorkflowViewContentProvider
 	
 	public Object[] getChildren(Object parentElement)
 	{
-		if(parentElement instanceof IActivity)
-		{
-//			IActivity rootActivity=null;
-//			if(root instanceof IActivity[])
+//		if(parentElement instanceof IActivity)
+//		{
+////			IActivity rootActivity=null;
+////			if(root instanceof IActivity[])
+////			{
+////				rootActivity=((IActivity[])root)[0];
+////			}
+//			if(parentElement.equals(root/*Activity*/))
 //			{
-//				rootActivity=((IActivity[])root)[0];
+//				List<IActivity> children=
+//					workflow.getChildrenActivities(
+//								(IActivity)parentElement, 
+//								EActivityRelationship.HAS_A);
+//				return children.toArray();
 //			}
-			if(parentElement.equals(root/*Activity*/))
-			{
-				List<IActivity> children=
-					workflow.getChildrenActivities(
-								(IActivity)parentElement, 
-								EActivityRelationship.HAS_A);
-				return children.toArray();
-			}
-			else
-			{
-				
-				return EMPTY;
-			}
-		}
-		else if(parentElement instanceof IWorkflow)
-		{
-			return workflow.getRootActivities().toArray();
-		}
-		else
-		{
-			return EMPTY;
-		}
+//			else
+//			{
+//				
+//				return EMPTY;
+//			}
+//		}
+//		else if(parentElement instanceof IWorkflow)
+//		{
+//			return workflow.getRootActivities().toArray();
+//		}
+//		else
+//		{
+//			return EMPTY;
+//		}
+		return null;
 	}
 
 	public Object getParent(Object element)
 	{
 		if(element instanceof IActivity)
 		{
-			List<IActivity> parents=
-				workflow.getChildrenActivities(
-							(IActivity)element, 
-							EActivityRelationship.HAS_A);
-			int size=parents.size();
-			if(size==1)
-			{
-				return parents.get(0);
-			}
-			else if(size >1)
-			{
-				//TODO log
-				return parents.get(0);
-			}
-			else
-			{
-				//empty list
-				return null;
-			}
+//			List<IActivity> parents=
+//				workflow.getChildrenActivities(
+//							(IActivity)element, 
+//							EActivityRelationship.HAS_A);
+//			int size=parents.size();
+//			if(size==1)
+//			{
+//				return parents.get(0);
+//			}
+//			else if(size >1)
+//			{
+//				//TODO log
+//				return parents.get(0);
+//			}
+//			else
+//			{
+//				//empty list
+//				return null;
+//			}
+			return null;
 		}
 		else
 		{
@@ -107,23 +98,24 @@ public class WorkflowViewContentProvider
 	{
 		if(element==root)
 		{
-			if(element instanceof IActivity)
-			{
-				List<IActivity> children= 
-					workflow.getChildrenActivities(
-								(IActivity)element, 
-								EActivityRelationship.HAS_A);
-				return !children.isEmpty();
-				//return false;//true;
-			}
-			else if(element instanceof IWorkflow)
-			{
-				return !((IWorkflow)element).getRootActivities().isEmpty();
-			}
-			else
-			{
-				return false;
-			}
+//			if(element instanceof IActivity)
+//			{
+//				List<IActivity> children= 
+//					workflow.getChildrenActivities(
+//								(IActivity)element, 
+//								EActivityRelationship.HAS_A);
+//				return !children.isEmpty();
+//				//return false;//true;
+//			}
+//			else if(element instanceof IWorkflow)
+//			{
+//				return !((IWorkflow)element).getRootActivities().isEmpty();
+//			}
+//			else
+//			{
+//				return false;
+//			}
+			return false;
 		}
 		else
 		{

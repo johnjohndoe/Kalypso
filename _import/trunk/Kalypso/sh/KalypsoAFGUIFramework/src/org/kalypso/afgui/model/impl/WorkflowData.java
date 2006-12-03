@@ -22,7 +22,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
  * @author Patrice Congo
  *
  */
-public class WorkflowData implements IWorkflowData
+public class WorkflowData implements IWorkflowData 
 {
 	final static private Logger logger=
 			Logger.getLogger(WorkflowData.class);
@@ -115,15 +115,36 @@ public class WorkflowData implements IWorkflowData
 	 */
 	public String getName()
 	{
-		return resource.getProperty(Schema.PROP_HAS_NAME).getObject().toString();
+		return resource.getProperty(Schema.PROP_HAS_NAME).getString();//Object().toString();
 	}
 	
 	@Override
 	public String toString()
 	{
-		StringBuffer buffer= new StringBuffer(64);
-		buffer.append(resource.getURI());
+		StringBuffer buffer= new StringBuffer("WorkflowData.");
+		buffer.append(getName());
 		return buffer.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof IWorkflowData)
+		{
+			try
+			{
+				return getURI().equals(((IWorkflowData)obj).getURI());
+			}
+			catch(Throwable th)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+
 	}
 
 }

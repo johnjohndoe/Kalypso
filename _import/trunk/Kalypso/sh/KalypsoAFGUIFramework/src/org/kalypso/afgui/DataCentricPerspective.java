@@ -3,13 +3,9 @@
  */
 package org.kalypso.afgui;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.Perspective;
-import org.kalypso.afgui.views.ModelDataView;
-import org.kalypso.afgui.views.WorkflowHelpView;
-import org.kalypso.afgui.views.WorkflowView;
+
 
 /**
  * @author congo

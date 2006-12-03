@@ -1,18 +1,15 @@
 package org.kalypso.afgui;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.model.EActivityAction;
-import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.model.impl.WorkflowSystem;
 import org.osgi.framework.Bundle;
@@ -29,8 +26,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	public static final String WORKFLOW_STATUS="/workflow/status.xml";
 	
 	
-	private static final Logger logger=
-			Logger.getLogger(KalypsoAFGUIFrameworkPlugin.class);
+//	private static final Logger logger=
+//			Logger.getLogger(KalypsoAFGUIFrameworkPlugin.class);
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.kalypso.afgui.KalypsoAFGUIFramework";
@@ -46,6 +43,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	 */
 	public KalypsoAFGUIFrameworkPlugin() {
 		plugin = this;
+		BasicConfigurator.configure();
 	}
 
 	/*

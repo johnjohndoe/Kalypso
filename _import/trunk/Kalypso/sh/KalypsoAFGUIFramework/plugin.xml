@@ -13,7 +13,7 @@
    </extension>
    
    
-   <extension
+   <!--extension
          point="org.eclipse.ui.perspectives">
       <perspective
             name="Framework Base Perspective"
@@ -56,7 +56,7 @@
             class="org.kalypso.afgui.views.ModelDataView"
             id="org.kalypso.afgui.views.ModelDataView"
             name="Model Data View"/>
-   </extension>
+   </extension -->
    
    <!-- Project extensions -->
    <!--extension

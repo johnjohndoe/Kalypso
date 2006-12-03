@@ -18,6 +18,7 @@ import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IActivityRuntimeStatus;
 import org.kalypso.afgui.model.IActivitySpecification;
+import org.kalypso.afgui.model.IHelp;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.IRelationshipStatement;
 import org.kalypso.afgui.model.ITask;
@@ -204,14 +205,15 @@ public class WorkflowImpl implements IWorkflow
 										IActivity activity,
 										EActivityRelationship relationship)
 	{
-		if(activity ==null || relationship==null)
-		{
-			throw  new IllegalArgumentException("All parameters must not be null");
-		}
-		List<IActivitySpecification> specs=
-			workflowSpecification.getLinkedActivitySpecs(
-					activity.getActivitySpecification(), relationship);
-		return runtimeStatus.getActivities(specs);
+//		if(activity ==null || relationship==null)
+//		{
+//			throw  new IllegalArgumentException("All parameters must not be null");
+//		}
+//		List<IActivitySpecification> specs=
+//			workflowSpecification.getLinkedActivitySpecs(
+//					activity.getActivitySpecification(), relationship);
+//		return runtimeStatus.getActivities(specs);
+		return null;
 	}
 
 	
@@ -347,7 +349,7 @@ public class WorkflowImpl implements IWorkflow
 		return null;
 	}
 	
-	public String getHelp()
+	public IHelp getHelp()
 	{
 		return null;
 	}
@@ -388,6 +390,19 @@ public class WorkflowImpl implements IWorkflow
 	
 	public IWorkflowData getWorkflowDataModel()
 	{
+		return null;
+	}
+	
+	public Object getModelObject()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public String getURI()
+	{
+		//TODO workflow to model then res.getURI
 		return null;
 	}
 }

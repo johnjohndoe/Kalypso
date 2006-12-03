@@ -11,7 +11,7 @@ import org.kalypso.afgui.db.EWorkflowProperty;
  * @author Patrice Congo
  *
  */
-public interface IWorkflowData
+public interface IWorkflowData extends IWorkflowConcept
 {
 	public String getName();
 	public Object  getModelObject();

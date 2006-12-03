@@ -8,11 +8,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.kalypso.afgui.model.EActivityRelationship;
+import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IRelationshipStatement;
 import org.kalypso.afgui.model.IWorkflowData;
@@ -49,11 +51,15 @@ public class WorkflowSystem implements IWorkflowSystem
 	
 	private IWorkflow currentWorkflow;
 	
+	public Map<String, IActivity> activities= new Hashtable<String, IActivity>();
+	
+	
 	public WorkflowSystem(URL specURL, URL statusURL) throws IOException
 	{
 		specModel=loadModel(specURL);
 		mergedModel=loadModel(statusURL);
 		mergedModel.add(specModel);
+		//mergedModel.difference(arg0)
 	}
 	
 	private final Model loadModel(URL url) throws IOException
@@ -103,6 +109,16 @@ public class WorkflowSystem implements IWorkflowSystem
 	}
 	
 	
-	
+	public IActivity getActivity(String uri)
+	{
+		if(uri==null)
+		{
+			return null;
+		}
+		else
+		{
+			return activities.get(uri);
+		}
+	}
 	
 }

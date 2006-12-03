@@ -2,33 +2,19 @@
 package org.kalypso.afgui.model.impl;
 
 
-import java.util.Collections;
-import java.util.List;
 
-import org.kalypso.afgui.model.EActivityExeState;
-import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
-import org.kalypso.afgui.model.IActivityRuntimeStatus;
-import org.kalypso.afgui.model.IActivitySpecification;
-import org.kalypso.afgui.model.ITask;
+
+import com.hp.hpl.jena.rdf.model.Resource;
 
 
 /**
  * Provide the default implementation of {@link IActivity} 
  * @author Patrice Congo
  */
-public class Activity implements IActivity
+public class Activity extends WorkflowPart implements IActivity
 {
-	/**
-	 * The specification of the activity
-	 */
-	final private IActivitySpecification spec;
-	
-	/**
-	 * the current status of the activity
-	 */
-	private IActivityRuntimeStatus status;
-	
+		
 	/**
 	 * Create an Activity base on the provided specification and having 
 	 * the given status
@@ -36,127 +22,19 @@ public class Activity implements IActivity
 	 * @param spec -- the spec of the activity to create
 	 * @param status -- the status of the activity to create
 	 */
-	public Activity(
-				IActivitySpecification spec, 
-				IActivityRuntimeStatus status)
+	public Activity(Resource resource)
 	{
-		if(spec==null)
-		{
-			throw new IllegalArgumentException("Param spec must not be null");
-		}
+			super(resource);
+	}
+	
 		
-		this.spec=spec;
-		this.status=status;
-	}
-	
-//	/**
-//	 * Creates an activity based on the provided specification. 
-//	 * The status of the created Activity is set to {@link EActivityExeState#NOT_STARTED}
-//	 * 
-//	 * @param spec -- the specification of the activity
-//	 */
-//	public Activity(IActivitySpecification spec)
-//	{
-//		this(spec,EActivityExeState.NOT_STARTED);
-//	}
-	
-	
-	/**
-	 * @see org.kalypso.afgui.model.IActivity#getActivitySpecification()
-	 */
-	public IActivitySpecification getActivitySpecification()
-	{
-		return spec;
-	}
-
-	/**
-	 * @see org.kalypso.afgui.model.IActivity#getID()
-	 */
-	public String getID()
-	{
-		return spec.getID();
-	}
-	
-	public String getName()
-	{
-		return spec.getName();
-	}
-
-	/**
-	 * @see org.kalypso.afgui.model.IActivity#getStatus()
-	 */
-	public EActivityExeState getExeState()
-	{
-		return status.getExeState();
-	}
-
-	/**
-	 * Sets the status of this activity.
-	 * no validation of transition is made. It is thus to callers responsibility 
-	 * to make the check.
-	 * 
-	 * @see org.kalypso.afgui.model.IActivity#setStatus(org.kalypso.afgui.model.EActivityExeState)
-	 */
-	public void setExeState(
-			EActivityExeState exeState)	
-	{
-		status.setExeState(exeState);		
-	}
-	
-	public IActivityRuntimeStatus getRuntimeStatus()
-	{
-		return status;
-	}
-	@Override
-	public boolean equals(Object obj)
-	{
-		if(obj==null)
-		{
-			return false;
-		}
-		else if(this==obj)
-		{
-			return true;
-		}
-		else if(obj instanceof Activity)
-		{
-			try
-			{
-				return getID().equals(((Activity)obj).getID());
-			}
-			catch(Throwable th)
-			{
-				th.printStackTrace();
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
 	@Override
 	public String toString()
 	{
-		return getName();
-	}
-
-	public String getHelp()
-	{
-		return  spec.getHelp().getHelp();
+		StringBuffer buffer= new StringBuffer("Activity.");
+		buffer.append(getName());
+		return buffer.toString();
 	}
 	
-	public ITask[] getTask()
-	{
-		return new ITask[]{};
-	}
-
-	public List<IActivity> getChildrenActivities(IActivity activity, EActivityRelationship relationship)
-	{
-		return Collections.emptyList();
-	}
-	
-
 	
 }

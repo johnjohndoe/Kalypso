@@ -5,7 +5,6 @@ package org.kalypso.afgui.model;
 
 import java.util.List;
 
-import org.kalypso.afgui.model.impl.RelationshipStatement;
 
 /**
  * The Interface to implement by classes that provide the workflow

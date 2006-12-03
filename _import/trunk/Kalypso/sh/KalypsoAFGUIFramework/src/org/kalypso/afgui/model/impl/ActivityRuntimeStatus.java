@@ -1,6 +1,5 @@
 package org.kalypso.afgui.model.impl;
 
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.EActivityExeState;
 import org.kalypso.afgui.model.IActivityRuntimeStatus;
 import org.kalypso.afgui.schema.Schema;

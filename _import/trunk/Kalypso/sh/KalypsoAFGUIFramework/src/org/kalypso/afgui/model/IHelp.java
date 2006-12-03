@@ -6,7 +6,7 @@ package org.kalypso.afgui.model;
  * @author Patrice Congo
  */
 
-public interface IHelp
+public interface IHelp extends IWorkflowConcept
 {
 	public enum HELP_TYPE {
 			PLAIN_TEXT,

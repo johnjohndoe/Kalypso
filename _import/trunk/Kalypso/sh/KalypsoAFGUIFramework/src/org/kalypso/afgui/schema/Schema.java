@@ -1,29 +1,44 @@
 package org.kalypso.afgui.schema;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
-import java.net.URL;
+import java.lang.reflect.Constructor;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.ui.internal.dialogs.EmptyPropertyPage;
 import org.kalypso.afgui.db.EWorkflowProperty;
+import org.kalypso.afgui.model.EActivityExeState;
 import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivity;
-import org.kalypso.afgui.model.IActivitySpecification;
-import org.kalypso.afgui.model.IRelationshipStatement;
+import org.kalypso.afgui.model.IHelp;
+import org.kalypso.afgui.model.IPhase;
+import org.kalypso.afgui.model.ISubTaskGroup;
+import org.kalypso.afgui.model.ITask;
+import org.kalypso.afgui.model.ITaskGroup;
+import org.kalypso.afgui.model.IWorkflowConcept;
 import org.kalypso.afgui.model.IWorkflowData;
+import org.kalypso.afgui.model.IWorkflowPart;
+import org.kalypso.afgui.model.IHelp.HELP_TYPE;
+import org.kalypso.afgui.model.impl.Activity;
+import org.kalypso.afgui.model.impl.ActivitySeq;
+import org.kalypso.afgui.model.impl.Help;
+import org.kalypso.afgui.model.impl.Phase;
+import org.kalypso.afgui.model.impl.SubTaskGroup;
+import org.kalypso.afgui.model.impl.SubTaskGroupSeq;
+import org.kalypso.afgui.model.impl.Task;
+import org.kalypso.afgui.model.impl.TaskGroup;
+import org.kalypso.afgui.model.impl.TaskGroupSeq;
+import org.kalypso.afgui.model.impl.TaskSeq;
 import org.kalypso.afgui.model.impl.WorkflowData;
 
 
@@ -34,11 +49,10 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
+import com.hp.hpl.jena.rdf.model.Seq;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+
 /**
  * 
  * A utility java representation of the workflow schema. 
@@ -54,6 +68,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 final public class Schema
 {
+	
+	interface IResourceWrapperConstructor
+	{
+		public IWorkflowConcept construct(Object resource);
+	};
+	
 	static final private Logger logger=
 						Logger.getLogger(Schema.class);
 	public static final String SCHEMA_NS=
@@ -91,43 +111,176 @@ final public class Schema
 	final static public Property PROP_HAS_HELP; 
 	
 	final static public String URI_CLASS_ACTIVITY=SCHEMA_NS+"Activity";
-	final static public Resource CLASS_ACTIVITY=null;
+	final static public Resource CLASS_ACTIVITY;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_ACTIVITY=
+		new IResourceWrapperConstructor()
+	{
+		public IWorkflowConcept construct(Object resource)
+		{
+			return null;
+		}
+	};
 	
 	final static public String URI_CLASS_WORKFLOW=SCHEMA_NS+"WORKFLOW";
 	final static public Resource CLASS_WORKFLOW=null;
 	
 	final static public String URI_CLASS_HELP=SCHEMA_NS+"Help";
-	final static public Resource CLASS_HELP=null;
+	final static public Resource CLASS_HELP;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_HELP= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return null;//new Help(resource); 
+		}	
+	};
 	
-	final static public String URI_CLASS_PHASE=SCHEMA_NS+"Phase";
-	final static public Resource CLASS_PHASE=null;
+	final static public String URI_CLASS_TASK_SEQ=SCHEMA_NS+"TaskSeq";
+	final static public Resource CLASS_TASK_SEQ;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_TASK_SEQ= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new TaskSeq((Seq)resource);//new Help(resource); 
+		}	
+	};
+	
+	
 	
 	final static public String URI_CLASS_WORKFLOW_STATUS=SCHEMA_NS+"WorkflowStatus";
 	final static public Resource CLASS_WORKFLOW_STATUS=null;
 	
 	final static public String URI_CLASS_ACTIVITY_STATUS=SCHEMA_NS+"ActivityStatus";
 	final static public Resource CLASS_ACTIVITY_STATUS=null;
+	
 	//
 	final static public String URI_CLASS_WORKFLOW_DATA=SCHEMA_NS+"WorkflowData";
 	final static public Resource CLASS_WORKFLOW_DATA;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_WORKFLOW_DATA= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new WorkflowData((Resource)resource); 
+		}	
+	};
 	
+	//Task
+	final static public String URI_CLASS_TASK=SCHEMA_NS+"Task";
+	final static public Resource CLASS_TASK;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_TASK= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new Task((Resource)resource); 
+		}	
+	};
+	
+	//TaskGroup
+	final static public String URI_CLASS_TASK_GROUP=SCHEMA_NS+"TaskGroup";
+	final static public Resource CLASS_TASK_GROUP=null;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_TASK_GROUP= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new TaskGroup((Resource)resource); 
+		}	
+	};
+
+	//SubTaskGroup
+	final static public String URI_CLASS_SUB_TASK_GROUP=SCHEMA_NS+"SubTaskGroup";
+	final static public Resource CLASS_SUB_TASK_GROUP=null;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_SUB_TASK_GROUP= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new SubTaskGroup((Resource)resource); 
+		}	
+	};
+	
+	//	SubTaskGroup
+	final static public String URI_CLASS_PHASE=SCHEMA_NS+"Phase";
+	final static public Resource CLASS_PHASE=null;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_PHASE= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new Phase((Resource)resource); 
+		}	
+	};
 	
 	//hasType
 	final static public String URI_PROP_HAS_TYPE = SCHEMA_NS+"hasType";
 	final static public Property PROP_HAS_TYPE; 
 	
+	//ActivitySeq
+	final static public String URI_CLASS_ACTIVITY_SEQ=SCHEMA_NS+"ActvitySeq";
+	final static public Resource CLASS_ACTIVITY_SEQ;
+	final static public IResourceWrapperConstructor CONSTRUCTOR_ACTIVITY_SEQ= 
+		new IResourceWrapperConstructor()
+	{
+
+		public IWorkflowConcept construct(Object resource)
+		{
+			return new ActivitySeq((Resource)resource); 
+		}	
+	};
+	
+	
+	//hasActivities
+	final static public String URI_PROP_HAS_ACTIVITIES = SCHEMA_NS+"hasActivities";
+	final static public Property PROP_HAS_ACTIVITIES; 
+	
+	//hasTasks
+	final static public String URI_PROP_HAS_TASKS = SCHEMA_NS+"hasTasks";
+	final static public Property PROP_HAS_TASKS; 
 	 
+	//hasSubTaskGroups PROP_HAS_SUB_TASK_GROUPS
+	final static public String URI_PROP_HAS_SUB_TASK_GROUPS = SCHEMA_NS+"hasSubTaskGroups";
+	final static public Property PROP_HAS_SUB_TASK_GROUPS;
+	
+	//hasTaskGroups
+	final static public String URI_PROP_HAS_TASK_GROUPS = SCHEMA_NS+"hasTaskGroups";
+	final static public Property PROP_HAS_TASK_GROUPS;
+	
 	
 	final static public List<Property> ACTIVITY_LINK_PROPS;
 	
 	final static public Map<Property,
 							EActivityRelationship> REL_STATEMENT_PROP_MAP=null;
 	
+	final static public Map<Class, IResourceWrapperConstructor> RT_CLASS_MAP;
+	
 	final static private EnumMap<EWorkflowProperty,Property> toPropertyMap;
 	
 	final static public String URI_PROP_HAS_LOCATION = SCHEMA_NS+"hasLocation";
 	
 	final static public String URI_PROP_IS_DERIVED_FROM = SCHEMA_NS+"isDerivedFrom";
+	final static public Property PROP_IS_DERIVED_FROM;
+	//executedWorkflowPart
+	final static public String URI_PROP_EXECUTING_WORKFLOW_PART = SCHEMA_NS+"executingWorkflowPart";
+	final static public Property PROP_EXECUTING_WORKFLOW_PART;
+	
+	//processedResource
+	final static public String URI_PROP_PROCESSED_RES = SCHEMA_NS+"processedResource";
+	final static public Property PROP_PROCESSED_RES;
+	
+	//hasSubRTContext
+	final static public String URI_PROP_HAS_SUB_RT_CONTEXT = 
+											SCHEMA_NS+"hasSubRTContext";
+	final static public Property PROP_HAS_SUB_RT_CONTEXT;
 	
 	final static public String URI_PROP_IS_WORKS_ON = SCHEMA_NS+"worksOn";
 	
@@ -140,6 +293,7 @@ final public class Schema
 	 * A value null signal an error free initialisation
 	 */
 	static final public Throwable PROBLEM_FLAG;
+	final  static public String PJT_NS="pjtNS";
 
 	
 	private Schema()
@@ -164,11 +318,17 @@ final public class Schema
 					URI_PROP_IS_ROOT, URI_PROP_HAS_ACTIVITY,URI_PROP_HAS_NAME,
 					URI_PROP_EXE_STATE, URI_PROP_PART_OF,URI_PROP_HAS_A,
 					URI_PROP_DEPENDS_ON, URI_PROP_FOLLOWS,URI_PROP_HAS_HELP,
-					URI_PROP_HAS_TYPE};
+					URI_PROP_HAS_TYPE,URI_PROP_HAS_ACTIVITIES, 
+					URI_PROP_EXECUTING_WORKFLOW_PART, URI_PROP_PROCESSED_RES,
+					URI_PROP_HAS_SUB_RT_CONTEXT, URI_PROP_HAS_TASKS,
+					URI_PROP_HAS_SUB_TASK_GROUPS, URI_PROP_HAS_TASK_GROUPS};
+			
 			String resUris[]={
 					URI_CLASS_ACTIVITY,URI_CLASS_WORKFLOW,URI_CLASS_HELP,
 					URI_CLASS_PHASE,URI_CLASS_WORKFLOW_STATUS,
-					URI_CLASS_ACTIVITY_STATUS,URI_CLASS_WORKFLOW_DATA};
+					URI_CLASS_ACTIVITY_STATUS,URI_CLASS_WORKFLOW_DATA,
+					URI_CLASS_ACTIVITY_SEQ,URI_CLASS_TASK,
+					URI_CLASS_TASK_SEQ};
 			
 			//find vokabulary elements
 			fillPropMap(propMap, propUris);
@@ -196,6 +356,14 @@ final public class Schema
 			PROP_FOLLOWS=propMap.get(URI_PROP_FOLLOWS);
 			PROP_HAS_HELP=propMap.get(URI_PROP_HAS_HELP);
 			PROP_HAS_TYPE=propMap.get(URI_PROP_HAS_TYPE);
+			PROP_IS_DERIVED_FROM=propMap.get(URI_PROP_IS_DERIVED_FROM);
+			PROP_HAS_ACTIVITIES=propMap.get(URI_PROP_HAS_ACTIVITIES);
+			PROP_EXECUTING_WORKFLOW_PART=propMap.get(URI_PROP_EXECUTING_WORKFLOW_PART);
+			PROP_PROCESSED_RES=propMap.get(URI_PROP_PROCESSED_RES);
+			PROP_HAS_SUB_RT_CONTEXT=propMap.get(URI_PROP_HAS_SUB_RT_CONTEXT);
+			PROP_HAS_TASKS=propMap.get(URI_PROP_HAS_TASKS);
+			PROP_HAS_SUB_TASK_GROUPS=propMap.get(URI_PROP_HAS_SUB_TASK_GROUPS);
+			PROP_HAS_TASK_GROUPS=propMap.get(URI_PROP_HAS_TASK_GROUPS);
 			
 			Property tempProps[]= {
 									PROP_HAS_A, PROP_DEPENDS_ON, PROP_PART_OF};
@@ -224,13 +392,19 @@ final public class Schema
 			
 //			REL_STATEMENT_PROP_MAP=Collections.unmodifiableMap(tempRelPropMap);
 //			logger.info(REL_STATEMENT_PROP_MAP);
-//			CLASS_ACTIVITY=resMap.get(URI_CLASS_ACTIVITY);
+//			
 //			CLASS_WORKFLOW=resMap.get(URI_CLASS_WORKFLOW);
-//			CLASS_HELP=resMap.get(URI_CLASS_HELP);
 //			CLASS_PHASE=resMap.get(URI_CLASS_PHASE);
 //			CLASS_WORKFLOW_STATUS= resMap.get(URI_CLASS_WORKFLOW_STATUS);
 //			CLASS_ACTIVITY_STATUS= resMap.get(URI_CLASS_ACTIVITY_STATUS);
 			CLASS_WORKFLOW_DATA=resMap.get(URI_CLASS_WORKFLOW_DATA);
+			CLASS_ACTIVITY_SEQ=resMap.get(URI_CLASS_ACTIVITY_SEQ);
+			CLASS_TASK=resMap.get(URI_CLASS_TASK);
+			CLASS_ACTIVITY=resMap.get(URI_CLASS_ACTIVITY);
+			CLASS_HELP=resMap.get(URI_CLASS_HELP);
+			CLASS_TASK_SEQ=resMap.get(URI_CLASS_TASK_SEQ);
+			
+			RT_CLASS_MAP=computeRTClassMap();
 		}
 		
 	}
@@ -249,8 +423,8 @@ final public class Schema
 		
 		for(Object[] pair:eWorklflowPropToJena)
 		{
-			System.out.println("pair0="+(EWorkflowProperty)pair[0]+
-					" pair1="+pair[1].getClass());
+//			logger.info("pair0="+(EWorkflowProperty)pair[0]+
+//						" pair1="+pair[1].getClass());
 			toPropertyMap.put(
 					(EWorkflowProperty) pair[0], 
 					(Property)schemaModel.getProperty((String)pair[1]));
@@ -259,6 +433,32 @@ final public class Schema
 		return toPropertyMap;
 	}
 	
+	private static Map<Class, IResourceWrapperConstructor> computeRTClassMap()
+	{
+		Object[][] eWorklflowPropToJena=
+		{	
+			{	IHelp.class,	CONSTRUCTOR_HELP},
+			{	ITask.class,	CONSTRUCTOR_TASK},
+			{	IActivity.class,	CONSTRUCTOR_ACTIVITY},
+			{	ITaskGroup.class,	CONSTRUCTOR_TASK_GROUP},
+			{	ISubTaskGroup.class,	CONSTRUCTOR_SUB_TASK_GROUP},
+			{	IPhase.class,	CONSTRUCTOR_PHASE},
+			//{	,	CONSTRUCTOR_ACTIVITY_SEQ},
+			};
+	
+		 Map<Class, IResourceWrapperConstructor> map= 
+				new Hashtable<Class, IResourceWrapperConstructor>();
+		
+		for(Object[] pair:eWorklflowPropToJena)
+		{
+			map.put(
+					(Class) pair[0], 
+					(IResourceWrapperConstructor)pair[1]);
+		}
+		
+		return Collections.unmodifiableMap(map);
+	}
+
 	private static final void fillPropMap(
 									Map<String, 
 									Property> propMap, 
@@ -359,7 +559,7 @@ final public class Schema
 		Statement stm= resource.getProperty(toJenaProperty(prop));
 		if(stm==null)
 		{
-		return null;
+			return null;
 		}
 		else
 		{
@@ -424,14 +624,42 @@ final public class Schema
 		}
 	}
 	
+	final  static private String toURIString(Model model,String id)
+	{
+		logger.info("id0="+id);
+		try
+		{
+			URI uri=new URI(id);
+			if(uri.getScheme()==null)
+			{
+				id=model.getNsPrefixURI(Schema.PJT_NS)+id;
+			}
+		}
+		catch(Throwable th)
+		{
+			id=model.getNsPrefixURI(Schema.PJT_NS)+id;
+		}
+		logger.info("id1="+id);
+		return id;
+	}
+	
 	final static public IWorkflowData createWorkflowData(
 			Model model,
 			IWorkflowData parent, 
 			String childId)
 	{
-		Resource res=model.createResource(childId,CLASS_WORKFLOW_DATA);
+		Resource res = 
+				model.createResource(toURIString(model, childId),CLASS_WORKFLOW_DATA);
+		
+		
 		res.addProperty(PROP_HAS_NAME, childId);
-		//TODO set parent child link
+		if(parent!=null)
+		{
+			model.add(
+					(Resource)parent.getModelObject(), 
+					PROP_IS_DERIVED_FROM, 
+					res);
+		}
 		return new WorkflowData(res);
 	}
 	
@@ -440,7 +668,10 @@ final public class Schema
 								IWorkflowData parent, 
 								String childId)
 	{
-		Resource res=model.createResource(childId,CLASS_WORKFLOW_DATA);
+		Resource res=
+			model.createResource(
+					toURIString(model, childId),
+					CLASS_WORKFLOW_DATA);
 		model.createStatement(
 					res, 
 					toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM), 
@@ -452,19 +683,353 @@ final public class Schema
 													Model model,String type)
 	{
 		ResIterator it=model.listSubjectsWithProperty(
-				toJenaProperty(EWorkflowProperty.HAS_TYPE), type);
-		logger.info(it);
+											RDF.type, 
+											CLASS_WORKFLOW_DATA);
+		logger.info("Iterator for type="+type+" "+it.hasNext());
 		List<IWorkflowData> list= new ArrayList<IWorkflowData>();
 		Resource res;
-		final Property PROP=toJenaProperty(EWorkflowProperty.IS_DERIVED_FROM);
+		//final Property PROP=toJenaProperty(EWorkflowProperty.HAS_TYPE);
 		for(;it.hasNext();)
 		{
 			res=it.nextResource();
-			if(!res.hasProperty(PROP))
+			if(!res.hasProperty(PROP_HAS_TYPE))
 			{
 				list.add(new WorkflowData(res));
 			}
 		}
 		return list;
 	}
+
+	public static String getName(Resource resource)
+	{
+		logger.info("Getting name:"+resource);
+		if(resource==null)
+		{
+			return null;
+		}
+		else
+		{
+			Statement stm=
+				resource.getProperty(PROP_HAS_NAME);
+			if(stm==null)
+			{
+				logger.warn("No name property:"+resource.getModel());
+				return null;
+			}
+			else
+			{
+				return stm.getObject().toString();
+			}
+		}
+	}
+
+	public static IHelp getHelp(Resource resource)
+	{
+		if(resource==null)
+		{
+			return null;
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_HAS_HELP);
+			if(stm==null)
+			{
+				return null;
+			}
+			else
+			{
+				
+				RDFNode objectNode=stm.getObject();
+				if(objectNode.isLiteral())
+				{
+					return new Help(objectNode.toString(), HELP_TYPE.PLAIN_TEXT);
+				}
+				else
+				{
+					//TODO extends help support
+					throw new RuntimeException("Help Type not supported yet:"+objectNode);
+				}
+				
+			}
+		}
+		
+	}
+	
+	static public List<IActivity> getActivities(Resource resource)
+	{
+		if(resource==null)
+		{
+			logger.warn("Resource is null returning 0 size activity list");
+			return Collections.emptyList();
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_HAS_ACTIVITIES);
+			if(stm==null)
+			{
+				return Collections.emptyList();
+			}
+			else
+			{
+				try
+				{
+					Seq activities=stm.getSeq();
+					return new ActivitySeq(activities);
+				}
+				catch(Throwable th)
+				{
+					logger.error(
+							"No activities sequence found",th);
+					return Collections.emptyList();
+				}
+			}
+		}
+	}
+
+	static public Seq createActivitySeq(String uri, Model model)
+	{
+		//TODO implement create sactivity sequence
+		return null;
+	}
+
+	static public EActivityExeState getExeState(Resource resource)
+	{
+		if(resource==null)
+		{
+			return EActivityExeState.UNKNOWN;
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_EXE_STATE);
+			if(stm==null)
+			{
+				logger.warn("No exe state property");
+				return EActivityExeState.UNKNOWN;
+			}
+			else
+			{
+				try
+				{
+					
+					EActivityExeState state=EActivityExeState.valueOf(stm.getString());
+					if(state==null)
+					{
+						state=EActivityExeState.UNKNOWN;
+					}
+					return state;
+				}
+				catch(Throwable th)
+				{
+					logger.warn("exe property not a literal", th);
+					return EActivityExeState.UNKNOWN;
+				}
+			}
+		}
+		
+	}
+
+	public static IWorkflowData getProcessedWorkflowData(Resource resource)
+	{
+		if(resource==null)
+		{
+			return null;
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_PROCESSED_RES);
+			if(stm==null)
+			{
+				logger.warn("Context does not have processed resource");
+				return null;
+			}
+			else
+			{
+				try
+				{
+					Resource wfData=stm.getResource();
+					return new WorkflowData(wfData);
+				}
+				catch(Throwable th)
+				{
+					logger.error("Cannot processed workflow data", th);
+					return null;
+				}
+			}
+			
+		}
+	}
+
+	public static IWorkflowPart getExecutingWorkflowPart(Resource resource)
+	{
+		if(resource==null)
+		{
+			return null;
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_EXECUTING_WORKFLOW_PART);
+			if(stm==null)
+			{
+				logger.info("resource has no executing workflowpart:"+resource);
+				return null;
+			}
+			else
+			{
+				try
+				{
+					Resource wfPart= stm.getResource(); 
+				}
+				catch(Throwable th)
+				{
+					
+				}
+			}
+		}
+		return null;
+	}
+	
+	final  static public IWorkflowPart toWorkflowPart(Resource resource)
+	{
+		if(resource ==null)
+		{
+			return null;
+		}
+		else
+		{
+			Resource type=resource.getProperty(RDF.type).getResource();
+			Class cls=null;
+			try
+			{
+				Constructor c=cls.getConstructor(new Class[]{Resource.class});
+				return (IWorkflowPart)c.newInstance(new Object[]{resource});
+			}
+			catch(Throwable th)
+			{
+				logger.error("Could not create wrapper class for:"+resource,th);
+				return null;
+			}
+			
+		}
+	}
+	
+	final  static public <T extends IWorkflowPart> T asWorkflowPart(Resource resource, Class<T> cls)
+	{
+		if(resource ==null)
+		{
+			return null;
+		}
+		else
+		{
+			Resource type=resource.getProperty(RDF.type).getResource();
+			
+			try
+			{
+				//Constructor c=cls.getConstructor(new Class[]{Resource.class});
+				IResourceWrapperConstructor constructor=RT_CLASS_MAP.get(cls);
+				return (T)constructor.construct(resource);
+			}
+			catch(Throwable th)
+			{
+				logger.error("Could not create wrapper class for:"+resource,th);
+				return null;
+			}
+			
+		}
+	}
+
+	public static List<ITask> getTasks(Resource resource)
+	{
+		if(resource==null)
+		{
+			logger.warn("Resource is null returning 0 size activity list");
+			return Collections.emptyList();
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_HAS_TASKS);
+			if(stm==null)
+			{
+				return Collections.emptyList();
+			}
+			else
+			{
+				try
+				{
+					Seq tasks=stm.getSeq();
+					return new TaskSeq(tasks);
+				}
+				catch(Throwable th)
+				{
+					logger.error(
+							"No activities sequence found",th);
+					return Collections.emptyList();
+				}
+			}
+		}
+	}
+
+	public static List<ISubTaskGroup> getSubTaskGroups(Resource resource)
+	{
+		if(resource==null)
+		{
+			logger.warn("Resource is null returning 0 size activity list");
+			return Collections.emptyList();
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_HAS_SUB_TASK_GROUPS);
+			if(stm==null)
+			{
+				return Collections.emptyList();
+			}
+			else
+			{
+				try
+				{
+					Seq tasks=stm.getSeq();
+					return new SubTaskGroupSeq(tasks);
+				}
+				catch(Throwable th)
+				{
+					logger.error(
+							"No activities sequence found",th);
+					return Collections.emptyList();
+				}
+			}
+		}
+
+	}
+
+	public static List<ITaskGroup> getTaskGroups(Resource resource)
+	{
+		if(resource==null)
+		{
+			logger.warn("Resource is null returning 0 size activity list");
+			return Collections.emptyList();
+		}
+		else
+		{
+			Statement stm=resource.getProperty(PROP_HAS_TASK_GROUPS);
+			if(stm==null)
+			{
+				return Collections.emptyList();
+			}
+			else
+			{
+				try
+				{
+					Seq tg=stm.getSeq();
+					return new TaskGroupSeq(tg);
+				}
+				catch(Throwable th)
+				{
+					logger.error(
+							"No activities sequence found",th);
+					return Collections.emptyList();
+				}
+			}
+		}
+
+	}
+
 }

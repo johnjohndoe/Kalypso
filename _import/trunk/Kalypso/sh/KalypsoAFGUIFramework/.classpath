@@ -7,10 +7,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/concurrent.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/icu4j_3_4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/jakarta-oro-2.0.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/jena.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/jenatest.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/junit.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/log4j-1.2.12.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/jena.jar" sourcepath="G:/tuhh_workspace/Jena-2.4/src"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/stax-1.1.1-dev.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/stax-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jena_2_3/xercesImpl.jar"/>

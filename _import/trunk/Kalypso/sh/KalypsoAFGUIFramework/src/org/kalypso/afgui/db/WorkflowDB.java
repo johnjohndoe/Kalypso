@@ -1,5 +1,7 @@
 package org.kalypso.afgui.db;
 
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IResource;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
@@ -17,6 +20,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class WorkflowDB implements IWorkflowDB
 {
+	
 	final static private Logger logger=
 			Logger.getLogger(WorkflowDB.class);
 	
@@ -26,11 +30,15 @@ public class WorkflowDB implements IWorkflowDB
 	
 	private List<IWorkflowDBChangeListerner> dbListener=
 		new ArrayList<IWorkflowDBChangeListerner>();
-	private Model dbModel;
+	final private Model dbModel;
+	final private IResource dbDescResource;
+	final private URL dbDescURL;
 	
-	public WorkflowDB(URL dbDescURL) throws IOException
+	public WorkflowDB(IResource dbDescRes) throws IOException
 	{
+		dbDescURL=dbDescRes.getRawLocationURI().toURL();
 		dbModel=loadModel(dbDescURL);
+		this.dbDescResource=dbDescRes;
 	}
 	
 	final static private Model loadModel(URL url) throws IOException
@@ -39,16 +47,21 @@ public class WorkflowDB implements IWorkflowDB
 		InputStream iStream=url.openStream();
 		Model rdfModel= ModelFactory.createDefaultModel();
 		rdfModel.read(iStream,"");
+		rdfModel.setNsPrefix(Schema.PJT_NS, url.toString()+"#");
 		//rdfModel.write(System.out);
 		return rdfModel;
 	}
+	
+	
 	
 	public IWorkflowData createWorkflowData(
 										String id, 
 										String type,
 										IWorkflowData parent)
 	{
+		
 		logger.info("creating data for :"+id);
+		
 		
 		if(type==null)
 		{
@@ -64,6 +77,7 @@ public class WorkflowDB implements IWorkflowDB
 		{
 			IWorkflowData  data= Schema.createWorkflowData(dbModel, parent, id);
 			logger.info("\n======================rdfModel\n"+dbModel);
+			fireWorkflowDBChange();
 			return data;
 		}
 		catch(Throwable th)
@@ -78,6 +92,7 @@ public class WorkflowDB implements IWorkflowDB
 									IWorkflowData parent, 
 									String childId)
 	{
+		
 		return Schema.derivedWorkflowData(dbModel, parent, childId);
 	}
 
@@ -119,8 +134,11 @@ public class WorkflowDB implements IWorkflowDB
 		return Schema.getRootWorkflowDataByType(dbModel, type);
 	}
 	
+	
 	public void addWorkflowDBChangeListener(IWorkflowDBChangeListerner l)
 	{
+		logger.info("Registering:"+l);
+		
 		if(l==null)
 		{
 			return;
@@ -160,4 +178,33 @@ public class WorkflowDB implements IWorkflowDB
 		
 	}
 	
+	private void fireWorkflowDBChange()
+	{
+		for(IWorkflowDBChangeListerner l:dbListener)
+		{
+			l.workflowDBChanged();
+		}
+	}
+	
+	public boolean persist()
+	{
+		try
+		{
+			
+			logger.info("Persisting in :"+dbDescResource);
+			FileOutputStream outStream=
+						new FileOutputStream(dbDescResource.getLocationURI().toURL().getFile());
+			dbModel.shortForm("RDF/XML-ABBREV");
+			dbModel.write(outStream);
+//			RDFWriter rdfWriter=dbModel.getWriter("RDF/XML-ABBREV");
+//			rdfWriter.setProperty("relativeURIs", "same-document");
+//			rdfWriter.write(dbModel, outStream, null);
+			return true;
+		}
+		catch (Exception e)
+		{
+			logger.error("Could not save model",e);
+			return false;
+		}
+	}
 }

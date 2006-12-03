@@ -70,7 +70,7 @@ public class WorkflowRuntimeStatus implements IWorkflowRuntineStatus
 			{
 				status= new ActivityRuntimeStatus();
 			}
-			activities.put(actName, new Activity(spec.getValue(),status));
+//			activities.put(actName, new Activity(spec.getValue(),status));
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class WorkflowRuntimeStatus implements IWorkflowRuntineStatus
 		IActivity a=activities.get(name);
 		if(a==null)
 		{
-			a=new Activity(spec,null);
+//			a=new Activity(spec,null);
 		}
 		return a;
 	}

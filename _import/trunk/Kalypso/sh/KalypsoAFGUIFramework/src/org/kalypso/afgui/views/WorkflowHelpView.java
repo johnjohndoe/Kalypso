@@ -52,7 +52,7 @@ public class WorkflowHelpView extends ViewPart
 					}
 					else
 					{
-						html=activity.getHelp();
+						html=activity.getHelp().getHelp();
 						if(html==null)
 						{
 							html=BLANK_HTML;
