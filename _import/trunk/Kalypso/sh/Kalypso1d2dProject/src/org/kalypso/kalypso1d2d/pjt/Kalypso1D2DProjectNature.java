@@ -148,7 +148,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 		{
 			workflowDB=
 				new WorkflowDB(
-						metaDataFolder.getFile(WORKFLOW_DATA_DESC).getRawLocationURI().toURL());
+						metaDataFolder.getFile(WORKFLOW_DATA_DESC));
 		}
 		catch (MalformedURLException e)
 		{

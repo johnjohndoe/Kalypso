@@ -3,6 +3,7 @@
  */
 package org.kalypso.kalypso1d2d.pjt.views;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -12,7 +13,7 @@ import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-import org.kalypso.kalypso1d2d.pjt.IActiveProjectChangeListener;
+import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
 
 
@@ -22,7 +23,9 @@ import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvide
  */
 public class SimulationModelDBView extends ViewPart
 {
-
+	final static private Logger logger= 
+				Logger.getLogger(SimulationModelDBView.class);
+	
 	static public final String ID=
 				"org.kalypso.afgui.views.SimulationModelBasedView";
 	
@@ -33,8 +36,8 @@ public class SimulationModelDBView extends ViewPart
 	private ActiveWorkContext activeWorkContext= 
 						ActiveWorkContext.getInstance();
 	
-	private IActiveProjectChangeListener activeProjectChangeListener=
-		new IActiveProjectChangeListener()
+	private IActiveContextChangeListener activeProjectChangeListener=
+		new IActiveContextChangeListener()
 	{
 
 		public void activeProjectChanged(
@@ -43,11 +46,20 @@ public class SimulationModelDBView extends ViewPart
 						IWorkflowDB oldWorkflowDB,
 						IWorkflowSystem oldWorkflowSystem)
 		{
-			oldWorkflowDB.removeWorkflowDBChangeListener(dbChangeListerner);
-			IWorkflowDB db=activeWorkContext.getWorkflowDB();
-			if(db!=null)
+			//oldWorkflowDB.removeWorkflowDBChangeListener(dbChangeListerner);
+			if(oldWorkflowDB!=null)
 			{
-				db.addWorkflowDBChangeListener(dbChangeListerner);
+				oldWorkflowDB.removeWorkflowDBChangeListener(
+													dbChangeListerner);
+			}
+			IWorkflowDB newDB=activeWorkContext.getWorkflowDB();
+			if(newDB!=null)
+			{
+				newDB.addWorkflowDBChangeListener(dbChangeListerner);
+			}
+			else
+			{
+				logger.warn("New Project DB is nul");
 			}
 			tv.setInput(activeWorkContext);
 		}
@@ -57,9 +69,10 @@ public class SimulationModelDBView extends ViewPart
 	private IWorkflowDBChangeListerner dbChangeListerner= 
 		new IWorkflowDBChangeListerner()
 	{
-		public void workflowDBChnaged()
+		public void workflowDBChanged()
 		{
 			tv.setInput(activeWorkContext);
+			logger.info("DB changed ");
 		}
 	};
 	
@@ -73,6 +86,7 @@ public class SimulationModelDBView extends ViewPart
 		simModelBasedCP= new SimModelBasedContentProvider();
 		tv.setContentProvider(simModelBasedCP);
 		tv.setInput(activeWorkContext);
+		activeWorkContext.addActiveContextChangeListener(activeProjectChangeListener);
 	}
 
 	/* (non-Javadoc)

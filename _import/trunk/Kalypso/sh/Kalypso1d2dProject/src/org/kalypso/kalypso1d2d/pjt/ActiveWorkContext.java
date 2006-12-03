@@ -8,9 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.afgui.model.impl.WorkflowSystem;
 
-import sun.security.krb5.internal.ac;
 
 /**
  * Represents the work context for a user.
@@ -36,8 +34,8 @@ public class ActiveWorkContext
 	
 	private IProject activeProject;
 	
-	private List< IActiveProjectChangeListener> activeProjectChangeListener=
-		new ArrayList<IActiveProjectChangeListener>();
+	private List< IActiveContextChangeListener> activeProjectChangeListener=
+		new ArrayList<IActiveContextChangeListener>();
 	
 	private ActiveWorkContext()
 	{
@@ -50,6 +48,10 @@ public class ActiveWorkContext
 		IProject oldProject=this.activeProject;
 		IWorkflowDB oldWorkflowDB=getWorkflowDB();
 		IWorkflowSystem oldWorkflowSystem=getWorkflowSystem();
+		if(oldWorkflowDB!=null)
+		{
+			oldWorkflowDB.persist();
+		}
 		
 		try
 		{			
@@ -104,8 +106,9 @@ public class ActiveWorkContext
 	}
 		
 	
-	synchronized public void addActiveProjectChangedListener(IActiveProjectChangeListener l)
+	synchronized public void addActiveContextChangeListener(IActiveContextChangeListener l)
 	{
+		logger.info("Registering Active context change listener:"+l);
 		if(l==null)
 		{
 			return;
@@ -123,7 +126,8 @@ public class ActiveWorkContext
 		}
 	}
 	
-	synchronized public void removeActiveProjectChangedListener(IActiveProjectChangeListener l)
+	synchronized public void removeActiveContextChangeListener(
+										IActiveContextChangeListener l)
 	{
 		if(l==null)
 		{
@@ -142,7 +146,7 @@ public class ActiveWorkContext
 		}
 	}
 	
-	synchronized public void removeAllActiveProjectChangedListener()
+	synchronized public void removeAllActiveContextChangeListener()
 	{
 		activeProjectChangeListener.clear();
 	}
@@ -153,7 +157,7 @@ public class ActiveWorkContext
 							IWorkflowDB oldWorkflowDB,
 							IWorkflowSystem oldWorkflowSystem)
 	{
-		for(IActiveProjectChangeListener l:activeProjectChangeListener)
+		for(IActiveContextChangeListener l:activeProjectChangeListener)
 		{
 			l.activeProjectChanged(
 						newProject, 

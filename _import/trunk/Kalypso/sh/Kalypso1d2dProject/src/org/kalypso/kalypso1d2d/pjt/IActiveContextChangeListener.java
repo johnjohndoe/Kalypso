@@ -9,11 +9,11 @@ import org.kalypso.afgui.model.IWorkflowSystem;
 
 /**
  * Interface to implement in order to be notified if the 
- * active project as been changed
+ * active context changes as been changed
  * 
  * @author Patrice Congo
  */
-public interface IActiveProjectChangeListener
+public interface IActiveContextChangeListener
 {
 	public void activeProjectChanged(
 					IProject newProject, 
