@@ -201,7 +201,7 @@ public class TaskGroupSeq implements ITaskGroupSeq
 
 			public boolean hasNext()
 			{
-				return hasNext();
+				return nit.hasNext();
 			}
 
 			public ITaskGroup next()

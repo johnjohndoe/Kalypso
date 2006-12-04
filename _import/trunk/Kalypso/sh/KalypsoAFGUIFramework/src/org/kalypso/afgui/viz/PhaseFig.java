@@ -1,11 +1,13 @@
 package org.kalypso.afgui.viz;
 
 import org.eclipse.draw2d.Button;
+import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RoundedRectangle;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.impl.Activity;
@@ -24,13 +26,16 @@ public class PhaseFig extends RoundedRectangle
 	
 	public PhaseFig(IPhase phase)
 	{
+		//super(new RoundedRectangle());
 //		super(phase.getName());
-		//label= new Label(phase.getName());
-		//add(label);
+		Label label= new Label(phase.getName());
+		add(label);
 		this.phase=phase;
 		setBorder(new LineBorder(ColorConstants.black,1));
 		setOpaque(true);
-		
+		//setMinimumSize();
+		setFill(true);
+		add(new Button(phase.getName()));
 //		TODO change api use phase.getActivities();
 //		IActivity[] activities=new Activity[0];
 //		for(IActivity act:activities)

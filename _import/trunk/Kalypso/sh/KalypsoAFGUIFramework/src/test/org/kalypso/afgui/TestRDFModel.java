@@ -25,7 +25,7 @@ public class TestRDFModel
 	final static public String DATA_SUB_MOD_1_2=TEST_NS+"SubMo1_2";
 	
 	final static public String TEST_TASK_RDF="test_task_rdf.xml";
-	
+	final static public String TEST_TASK_RDF_SH="test_task_sh.xml";
 	
 	
 	private static final TestRDFModel models=new TestRDFModel();
@@ -48,11 +48,13 @@ public class TestRDFModel
 	public static final String PHASE_1_2 = TEST_NS+"Phase_1_2";
 	
 	public static final String WORKFLOW1 = TEST_NS+"Workflow1";
-	
+	public static final String WORKFLOW_SH = TEST_NS+"WF_Kalypso1D2D";
 	
 	public static final String WORKFLOW_PART_RT_CONTEX_1 = TEST_NS+"RTSimMo1";
 	
 	private Model workflowModel;
+
+	final  private Model shModel;
 	
 	 
 	
@@ -62,6 +64,12 @@ public class TestRDFModel
 				TestRDFModel.class.getResourceAsStream(TEST_TASK_RDF);
 		workflowModel=ModelFactory.createDefaultModel();
 		workflowModel.read(iStream, null);
+		
+		//
+		iStream=
+			TestRDFModel.class.getResourceAsStream(TEST_TASK_RDF_SH);
+		shModel=ModelFactory.createDefaultModel();
+		shModel.read(iStream, null);
 	}
 	
 	static public TestRDFModel getInstance()
@@ -72,6 +80,11 @@ public class TestRDFModel
 	public Model getWorkflowModel()
 	{
 		return workflowModel;
+	}
+	
+	public Model getShModel()
+	{
+		return shModel;
 	}
 	
 	static public void main(String[] d)
