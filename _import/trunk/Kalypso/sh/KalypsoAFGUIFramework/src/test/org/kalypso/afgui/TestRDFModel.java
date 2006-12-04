@@ -47,6 +47,10 @@ public class TestRDFModel
 	public static final String PHASE2 = TEST_NS+"Phase2";
 	public static final String PHASE_1_2 = TEST_NS+"Phase_1_2";
 	
+	public static final String WORKFLOW1 = TEST_NS+"Workflow1";
+	
+	
+	public static final String WORKFLOW_PART_RT_CONTEX_1 = TEST_NS+"RTSimMo1";
 	
 	private Model workflowModel;
 	

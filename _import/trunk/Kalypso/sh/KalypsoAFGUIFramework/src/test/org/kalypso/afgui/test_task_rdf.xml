@@ -23,6 +23,12 @@
 		<wbs:hasHelp>ActivityHelp2</wbs:hasHelp>
 	</wbs:Activity>
 	
+	<wbs:Workflow
+		rdf:about="&kbtest;Workflow1">
+		<wbs:hasName>Workflow1</wbs:hasName>
+		<wbs:hasHelp>Workflow1</wbs:hasHelp>
+		<wbs:hasPhases rdf:resource="&kbtest;Phase_1_2"/>
+	</wbs:Workflow>
 	
 	<wbs:Phase
 		rdf:about="&kbtest;Phase1">
@@ -147,7 +153,7 @@
 	
 	<wbs:WorkpartRTContext 
 		rdf:about="&kbtest;RTSimMo1">
-		<wbs:executingWorkflowPart rdf:resource="&kbtest;Task1"/>
+		<wbs:executingWorkflowPart rdf:resource="&kbtest;Workflow1"/>
 		<wbs:processedResource rdf:resource="&kbtest;SimMo1"/>
 		<wbs:exeState>NotStarted</wbs:exeState>
 	</wbs:WorkpartRTContext>

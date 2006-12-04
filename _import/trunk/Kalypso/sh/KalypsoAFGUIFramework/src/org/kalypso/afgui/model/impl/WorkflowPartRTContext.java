@@ -22,7 +22,7 @@ public class WorkflowPartRTContext implements IWorkflowPartRTContext
 		this.resource=resource;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see org.kalypso.afgui.model.IWorkflowPartContext#getExeState()
 	 */
 	public EActivityExeState getExeState()
@@ -30,15 +30,15 @@ public class WorkflowPartRTContext implements IWorkflowPartRTContext
 		return Schema.getExeState(resource);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.kalypso.afgui.model.IWorkflowPartContext#getExecutedWorkflowData()
+	/**
+	 * @see org.kalypso.afgui.model.IWorkflowPartContext#getProcessedWorkflowData()
 	 */
-	public IWorkflowData getExecutedWorkflowData()
+	public IWorkflowData getProcessedWorkflowData()
 	{
 		return Schema.getProcessedWorkflowData(resource);
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.kalypso.afgui.model.IWorkflowPartContext#getExecutingWorkflowPart()
 	 */
 	public IWorkflowPart getExecutingWorkflowPart()
@@ -46,7 +46,7 @@ public class WorkflowPartRTContext implements IWorkflowPartRTContext
 		return Schema.getExecutingWorkflowPart(resource);
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.kalypso.afgui.model.IWorkflowPartContext#getModelObject()
 	 */
 	public Object getModelObject()
