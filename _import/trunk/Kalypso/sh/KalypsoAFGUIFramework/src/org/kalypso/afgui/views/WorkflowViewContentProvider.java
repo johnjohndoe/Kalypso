@@ -131,13 +131,14 @@ public class WorkflowViewContentProvider
 		{
 			this.workflow=(IWorkflow)inputElement;
 			root=inputElement;
-			return workflow.getRootActivities().toArray();
+			return workflow.getPhases().toArray();//workflow.getRootActivities().toArray();
 			
 		}
 		else if(inputElement instanceof IWorkflow[])
 		{
 			this.root=((IWorkflow[])inputElement)[0];
-			return ((IWorkflow[])inputElement)[0].getRootActivities().toArray();
+//			return ((IWorkflow[])inputElement)[0].getRootActivities().toArray();
+			return ((IWorkflow[])inputElement)[0].getPhases().toArray();
 			//return (Object[])inputElement;
 		}
 		else if(inputElement instanceof IActivity[])

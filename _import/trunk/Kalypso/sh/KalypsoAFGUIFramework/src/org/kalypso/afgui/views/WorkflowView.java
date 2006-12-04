@@ -71,24 +71,24 @@ public class WorkflowView extends ViewPart
 			{
 				logger.info(event);
 				IWorkflow workflow=(IWorkflow)event.getSource();
-				if(workflow.getRuntineStatus().getCurrentAction()==
-												EActivityAction.GET_HELP)
-				{
-					return;
-				}	
-				IActivity activity=
-					 workflow.getCurrentActivity();
-				Object newInput;
-				if(activity==null)
-				{
-					newInput= new IWorkflow[]{workflow};
-				}
-				else
-				{
-					newInput= new IActivity[]{activity};
-				}
-				logger.info("-------------##>"+((Object[])newInput)[0]);
-				view.setInput(newInput);
+//				if(workflow.getRuntineStatus().getCurrentAction()==
+//												EActivityAction.GET_HELP)
+//				{
+//					return;
+//				}	
+//				IActivity activity=
+//					 workflow.getCurrentActivity();
+//				Object newInput;
+//				if(activity==null)
+//				{
+//					newInput= new IWorkflow[]{workflow};
+//				}
+//				else
+//				{
+//					newInput= new IActivity[]{activity};
+//				}
+//				logger.info("-------------##>"+((Object[])newInput)[0]);
+//				view.setInput(newInput);
 				
 			}
 			
@@ -266,7 +266,7 @@ public class WorkflowView extends ViewPart
 				IStructuredSelection sel=
 							(IStructuredSelection)view.getSelection();
 				IActivity activity=(IActivity)sel.getFirstElement();
-				workflow.updateWorkflow(activity, EActivityAction.DO);
+//				workflow.updateWorkflow(activity, EActivityAction.DO);
 				logger.info("sel:"+sel);
 			}
 		};
@@ -282,7 +282,7 @@ public class WorkflowView extends ViewPart
 				IStructuredSelection sel=
 					(IStructuredSelection)view.getSelection();
 				IActivity activity=(IActivity)sel.getFirstElement();
-				workflow.updateWorkflow(activity, EActivityAction.GET_HELP);				//showMessage("Action 2 executed");
+//				workflow.updateWorkflow(activity, EActivityAction.GET_HELP);				//showMessage("Action 2 executed");
 				
 			}
 		};
@@ -322,7 +322,7 @@ public class WorkflowView extends ViewPart
 				IStructuredSelection sel=
 					(IStructuredSelection)view.getSelection();
 				IActivity activity=(IActivity)sel.getFirstElement();
-				workflow.updateWorkflow(activity, EActivityAction.UP);				
+//				workflow.updateWorkflow(activity, EActivityAction.UP);				
 			}
 		};
 		upAction.setText("Parent Activity level");
@@ -336,7 +336,7 @@ public class WorkflowView extends ViewPart
 				IStructuredSelection sel=
 					(IStructuredSelection)view.getSelection();
 				IActivity activity=(IActivity)sel.getFirstElement();
-				workflow.updateWorkflow(activity, EActivityAction.DOWN);	
+//				workflow.updateWorkflow(activity, EActivityAction.DOWN);	
 				
 			}
 		};
@@ -351,7 +351,7 @@ public class WorkflowView extends ViewPart
 //				IStructuredSelection sel=
 //					(IStructuredSelection)view.getSelection();
 //				IActivity activity=(IActivity)sel.getFirstElement();
-				workflow.updateWorkflow(null, EActivityAction.DO);
+//				workflow.updateWorkflow(null, EActivityAction.DO);
 			}
 		};
 		topAction.setText("Root Activities Root");

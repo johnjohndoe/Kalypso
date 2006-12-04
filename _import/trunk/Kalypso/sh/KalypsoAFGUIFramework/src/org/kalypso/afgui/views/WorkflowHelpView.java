@@ -36,30 +36,30 @@ public class WorkflowHelpView extends ViewPart
 			{
 				logger.info("*+*+*+*+*+*+*+*\n"+event);
 				IWorkflow workflow=(IWorkflow)event.getSource();
-				if(!(workflow.getRuntineStatus().getCurrentAction()==
-												EActivityAction.GET_HELP))
-				{
-					browser.setText(BLANK_HTML);
-				}
-				else
-				{
-					IActivity activity=
-						 workflow.getCurrentActivity();
-					String html;
-					if(activity==null)
-					{
-						html=BLANK_HTML;
-					}
-					else
-					{
-						html=activity.getHelp().getHelp();
-						if(html==null)
-						{
-							html=BLANK_HTML;
-						}
-					}
-					browser.setText(html);
-				}
+//				if(!(workflow.getRuntineStatus().getCurrentAction()==
+//												EActivityAction.GET_HELP))
+//				{
+//					browser.setText(BLANK_HTML);
+//				}
+//				else
+//				{
+//					IActivity activity=
+//						 workflow.getCurrentActivity();
+//					String html;
+//					if(activity==null)
+//					{
+//						html=BLANK_HTML;
+//					}
+//					else
+//					{
+//						html=activity.getHelp().getHelp();
+//						if(html==null)
+//						{
+//							html=BLANK_HTML;
+//						}
+//					}
+//					browser.setText(html);
+//				}
 				
 			}
 			

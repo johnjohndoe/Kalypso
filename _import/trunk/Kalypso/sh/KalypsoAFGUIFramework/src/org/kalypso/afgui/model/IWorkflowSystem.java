@@ -16,4 +16,22 @@ public interface IWorkflowSystem
 	
 	public IWorkflow setCurrent(IWorkflowData dataModel);
 	
+	public void updateRTContext(
+			IWorkflowPartRTContext currentWorkflowRTContext,
+			IWorkflowPartRTContext currentTaskGroupRTContext,
+			IWorkflowPartRTContext currentSubTaskGroupRTContext,
+			IWorkflowPartRTContext currentTaskRTContext
+			);
+	public void updateRTContext(
+			IWorkflowPartRTContext currentTaskGroupRTContext,
+			IWorkflowPartRTContext currentSubTaskGroupRTContext,
+			IWorkflowPartRTContext currentTaskRTContext
+			);
+	public void updateRTContext(
+			IWorkflowPartRTContext currentSubTaskGroupRTContext,
+			IWorkflowPartRTContext currentTaskRTContext
+			);
+	public void updateRTContext(
+			IWorkflowPartRTContext currentTaskRTContext
+			);
 }

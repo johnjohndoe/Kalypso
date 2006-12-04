@@ -4,7 +4,7 @@ public interface IWorkflowPartRTContext
 {
 	public IWorkflowPart getExecutingWorkflowPart();
 	
-	public IWorkflowData getExecutedWorkflowData();
+	public IWorkflowData getProcessedWorkflowData();
 	
 	
 	public EActivityExeState getExeState();

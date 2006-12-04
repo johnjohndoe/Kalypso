@@ -1,9 +1,14 @@
 package org.kalypso.afgui.viz;
 
+import java.util.List;
+
+import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.swt.graphics.Color;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.IWorkflow;
@@ -34,13 +39,24 @@ public class WorkflowFigure extends Figure
 	
 	public WorkflowFigure(IWorkflow workflow) 
 	{
-	    //ToolbarLayout layout = new ToolbarLayout();
-	    FlowLayout fLayout= new FlowLayout();
-	    fLayout.setHorizontal(false);
-	    setLayoutManager(fLayout);	
+	    ToolbarLayout tbLayout = new ToolbarLayout();
+//	    FlowLayout fLayout= new FlowLayout();
+//	    fLayout.setHorizontal(false);
+//	    setLayoutManager(fLayout);
+	    setLayoutManager(tbLayout);
 	    setBorder(new LineBorder(ColorConstants.black,1));
 	    setBackgroundColor(classColor);
 	    setOpaque(true);
+	    add(new Label(workflow.getName()));
+	    
+	    List<IPhase> phases=workflow.getPhases();
+	    for(IPhase p:phases)
+	    {
+	    	System.out.println("Fig for phase:"+p);
+	    	add(new PhaseFig(p));
+	    	add(new Button("B_"+p.getName()));
+	    }
+	    
 		
 //	    add(name);	
 //	    //add(attributeFigure);
@@ -63,7 +79,7 @@ public class WorkflowFigure extends Figure
 		}
 		else
 		{
-			IPhase[] phases =workflow.getPhases();
+			List<IPhase> phases =workflow.getPhases();
 			for(IPhase phase:phases)
 			{
 				add(new PhaseFig(phase));

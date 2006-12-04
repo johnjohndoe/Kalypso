@@ -2,7 +2,6 @@ package org.kalypso.afgui.model.impl;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;

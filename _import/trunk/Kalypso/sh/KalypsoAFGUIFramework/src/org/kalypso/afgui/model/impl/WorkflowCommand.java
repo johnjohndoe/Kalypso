@@ -38,7 +38,7 @@ public class WorkflowCommand implements IWorkflowCommand
 	 */
 	public void execute()
 	{
-			workflow.updateWorkflow(activity, activityAction);
+			//workflow.updateWorkflow(activity, activityAction);
 	}
 
 	/* (non-Javadoc)
