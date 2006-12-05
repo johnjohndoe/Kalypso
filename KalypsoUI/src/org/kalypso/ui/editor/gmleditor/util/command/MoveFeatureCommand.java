@@ -41,17 +41,19 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * @author belger
+ * This command moves an arbitrary element within a list property of a feature.
+ * 
+ * @author Gernot Belger
  */
 public class MoveFeatureCommand implements ICommand
 {
@@ -63,21 +65,24 @@ public class MoveFeatureCommand implements ICommand
 
   public static int DOWN = 1;
 
-  private int m_type = -1;
+  private final IPropertyType m_pt;
 
-  private int index = -1;
+  private final int m_step;
 
-  private final IRelationType m_propName;
-
-  private final GMLWorkspace m_workspace;
-
-  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, IRelationType propName, Object moveItem, int type )
+  /**
+   * @param prop
+   *          Must be a list property.
+   * @param moveItem
+   *          The element of the list which is to be moved
+   * @param step
+   *          The amount by which the element is moved (<0 for backwards)
+   */
+  public MoveFeatureCommand( final Feature parentFeature, final IPropertyType pt, final Object moveItem, final int step )
   {
-    m_workspace = workspace;
     m_parentFeature = parentFeature;
-    m_propName = propName;
+    m_pt = pt;
     m_moveItem = moveItem;
-    m_type = type;
+    m_step = step;
   }
 
   /**
@@ -93,7 +98,7 @@ public class MoveFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    move();
+    move( m_step );
   }
 
   /**
@@ -101,7 +106,7 @@ public class MoveFeatureCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    move();
+    move( m_step );
   }
 
   /**
@@ -109,33 +114,7 @@ public class MoveFeatureCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    final Object prop = m_parentFeature.getProperty( m_propName );
-    final Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
-
-    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
-
-    if( pt.isList() )
-    {
-      final List<Object> list = (List<Object>) prop;
-      index = list.indexOf( m_moveItem );
-      if( m_type == UP && ((index - 1) >= 0) )
-      {
-        list.remove( m_moveItem );
-        list.add( (index + 1), m_moveItem );
-      }
-      else if( m_type == DOWN && ((index + 1) < list.size()) )
-      {
-        list.remove( m_moveItem );
-        list.add( (index - 1), m_moveItem );
-      }
-      final List<Feature> feList = new ArrayList<Feature>();
-      feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
-    }
+    move( -m_step );
   }
 
   /**
@@ -143,38 +122,21 @@ public class MoveFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Feature löschen";
+    return "Reihenfolge verändern";
   }
 
-  private void move( )
+  @SuppressWarnings("unchecked")
+  private void move( final int step )
   {
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
+    final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );
+    final int currentIndex = list.indexOf( m_moveItem );
+    final int newIndex = currentIndex + step;
 
-    final IPropertyType pt = m_parentFeature.getFeatureType().getProperties( propIndex );
+    Collections.swap( list, currentIndex, newIndex );
 
-    if( pt.isList() )
-    {
-      final List<Object> list = (List<Object>) prop;
-      index = list.indexOf( m_moveItem );
-      if( m_type == UP && ((index - 1) >= 0) )
-      {
-        list.remove( m_moveItem );
-        list.add( (index - 1), m_moveItem );
-      }
-      else if( m_type == DOWN && ((index + 1) < list.size()) )
-      {
-        list.remove( m_moveItem );
-        list.add( (index + 1), m_moveItem );
-      }
-
-      final List<Feature> feList = new ArrayList<Feature>();
-      feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
-    }
+    final List<Feature> feList = new ArrayList<Feature>();
+    feList.add( m_parentFeature );
+    final GMLWorkspace workspace = m_parentFeature.getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
   }
 }

@@ -128,6 +128,9 @@ public class PointDialog extends Dialog
     m_label = new Label[m_values.length];
     m_text = new Text[m_values.length];
 
+    final CS_CoordinateSystem coordinateSystem = getCS_CoordinateSystem();
+    // TODO: Holger: handle case where crs is null
+    
     for( int i = 0; i < m_values.length; i++ )
     {
       /* The label for the input data. */
@@ -136,9 +139,9 @@ public class PointDialog extends Dialog
 
       try
       {
-        if( i < getCS_CoordinateSystem().getDimension() )
+        if( i < coordinateSystem.getDimension() )
         {
-          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis") + getCS_CoordinateSystem().getAxis( i ).name + " [" + getCS_CoordinateSystem().getUnits( i ).getName() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis") + coordinateSystem.getAxis( i ).name + " [" + coordinateSystem.getUnits( i ).getName() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           m_label[i].setToolTipText( "" ); //$NON-NLS-1$
         }
         else
@@ -211,7 +214,7 @@ public class PointDialog extends Dialog
 
     try
     {
-      combo.setSelection( new StructuredSelection( factory.getCSByName( getCS_CoordinateSystem().getName() ) ) );
+      combo.setSelection( new StructuredSelection( factory.getCSByName( coordinateSystem.getName() ) ) );
     }
     catch( RemoteException e )
     {

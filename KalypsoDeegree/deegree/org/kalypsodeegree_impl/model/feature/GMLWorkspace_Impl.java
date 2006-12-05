@@ -522,7 +522,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
     final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, true, depth );
-    // TODO: because we nowadys recurse, another feature might be created meanwhile
+    // TODO: because we nowadys do recurse, another feature might be created meanwhile
     // so there is a chance, that an id is used twice
     m_indexMap.put( newId, newFeature );
     return newFeature;

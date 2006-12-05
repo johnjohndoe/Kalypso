@@ -209,7 +209,8 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     try
     {
-      result = point.getCoordinateSystem().getName();
+      final CS_CoordinateSystem coordinateSystem = point.getCoordinateSystem();
+      result = coordinateSystem == null ? "" : coordinateSystem.getName();
     }
     catch( RemoteException e )
     {

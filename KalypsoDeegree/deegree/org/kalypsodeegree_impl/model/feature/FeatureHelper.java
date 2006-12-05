@@ -18,6 +18,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -31,6 +32,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.AnnotationUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -65,16 +67,20 @@ public class FeatureHelper
 
       final String[] strings = argument.split( ";" );
       if( strings.length == 0 )
-        return "No argument for property. Must be _qname_;[null-value]";
+        return "No argument for property. Must be _qname_;[null-value];[format-string]";
 
       final String propName = strings[0];
       final String nullValue = strings.length > 1 ? strings[1] : null;
+      final String formatString = strings.length > 2 ? strings[2] : null;
 
       final QName qname = QNameUtilities.createQName( propName );
       final Object property = feature.getProperty( qname );
 
       if( property == null )
         return "" + nullValue;
+
+      if( formatString != null )
+        return String.format( formatString, property );
 
       return "" + property;
     }
@@ -204,7 +210,8 @@ public class FeatureHelper
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>
-   * Die Properties werden dabei anhand der übergebenen {@link Properties}zugeordnet. Es gilt:
+   * Die Properties werden dabei anhand der übergebenen {@link Properties} zugeordnet. Es gilt: TODO: die Doku ist
+   * quatsch, relation properties werden im Moment gar nicht kopiert!
    * <ul>
    * <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett kopiert.</li>
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
@@ -248,6 +255,34 @@ public class FeatureHelper
   }
 
   /**
+   * Clones a feature within a feature-list.
+   */
+  public static Feature cloneFeature( final Feature feature )
+  {
+    final IFeatureType featureType = feature.getFeatureType();
+    final Feature parent = feature.getParent();
+
+    final Feature newFeature = feature.getWorkspace().createFeature( parent, featureType );
+
+    final IPropertyType[] properties = featureType.getProperties();
+    for( final IPropertyType pt : properties )
+    {
+      try
+      {
+        final Object newValue = cloneProperty( feature, pt );
+        newFeature.setProperty( pt, newValue );
+      }
+      catch( final CloneNotSupportedException e )
+      {
+        /* Just log, try to copy at least the rest */
+        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return newFeature;
+  }
+
+  /**
    * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
@@ -257,7 +292,19 @@ public class FeatureHelper
     if( object == null )
       return null;
 
-    // if we have an IMarhsallingTypeHandler, it will do the clone for us.
+    if( pt instanceof IRelationType )
+    {
+      if( object instanceof String )
+        return object;
+      else if( object instanceof XLinkedFeature_Impl )
+        return object;
+      else if( object instanceof Feature )
+        return cloneFeature( (Feature) object );
+
+      return null;
+    }
+
+    // if we have an IMarshallingTypeHandler, it will do the clone for us.
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( pt );
 
@@ -269,10 +316,39 @@ public class FeatureHelper
       }
       catch( Exception e )
       {
-        // nothing as CloneNotSupportedException will be thrown next line
+        final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
+        cnse.initCause( e );
+        throw cnse;
       }
     }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
+  }
+
+  /**
+   * Clones a property of a feature. The clone is deep, i.e. inline feature are also cloned, referenced feature are
+   * kept as reference.
+   */
+  private static Object cloneProperty( final Feature feature, final IPropertyType pt ) throws CloneNotSupportedException
+  {
+    final String version = feature.getWorkspace().getGMLSchema().getGMLVersion();
+
+    final Object property = feature.getProperty( pt );
+    if( pt.isList() )
+    {
+      final List list = (List) property;
+      final List<Object> otherList;
+
+      if( pt instanceof IRelationType )
+        otherList = FeatureFactory.createFeatureList( feature.getParent(), (IRelationType) pt );
+      else
+        otherList = new ArrayList<Object>( list.size() );
+      for( final Object listElement : list )
+        otherList.add( cloneData( listElement, pt, version ) );
+
+      return otherList;
+    }
+
+    return cloneData( property, pt, version );
   }
 
   public static boolean isCompositionLink( Feature srcFE, IRelationType linkProp, Feature destFE )
