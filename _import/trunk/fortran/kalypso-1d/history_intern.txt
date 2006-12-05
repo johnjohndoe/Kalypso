@@ -826,3 +826,7 @@ Kalypso 1.1f   06. Juni 2006
      Fehler tritt auf bei Kollau Projekt von Klütz & Collegen (Wagener)
 
                                                     Wolf Plöger, 06.06.2006
+
+2.)  BUG in Wehrberechnung behoben. Sind eventl. noch weitere drin.
+
+                                     Monika Donner, Wolf Plöger, 01.08.2006
