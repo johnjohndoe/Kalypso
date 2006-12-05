@@ -4,15 +4,19 @@ package org.kalypso.afgui.viz;
 import java.util.List;
 
 
+import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.text.FlowAdapter;
+import org.eclipse.draw2d.text.FlowFigure;
 import org.eclipse.swt.graphics.Color;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.ISubTaskGroup;
@@ -24,9 +28,11 @@ import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
 
 import sun.security.krb5.internal.tools.Klist;
 
-public class WorkflowFigure extends WorkflowPartFigure<IWorkflow> //Figure
+public class WorkflowFigure extends Figure
 {
-	public static Color classColor = new Color(null,255,255,206);
+	public static Color classColor = new Color(null,255,255,106);
+	
+	private IFigure phaseBar;
 	
 //	private Button b1= new Button("B1");
 //	private Button b2= new Button("B2");
@@ -47,7 +53,18 @@ public class WorkflowFigure extends WorkflowPartFigure<IWorkflow> //Figure
 	
 	public WorkflowFigure(IWorkflow workflow) 
 	{
-		super(workflow,IWorkflow.class);
+		super();
+		this.workflow=workflow;
+		
+		BorderLayout bl= new BorderLayout();
+		bl.setHorizontalSpacing(2);
+		bl.setVerticalSpacing(2);
+		setLayoutManager(bl);
+		
+		//phase bar
+		configPhaseBar();
+		
+		
 //	    ToolbarLayout tbLayout = new ToolbarLayout();
 //	    tbLayout.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
 //	    tbLayout.setStretchMinorAxis(true);
@@ -63,43 +80,52 @@ public class WorkflowFigure extends WorkflowPartFigure<IWorkflow> //Figure
 //	    setOpaque(true);
 //	    add(new Label(workflow.getName()));
 	    //add(fig);
-	    List<IPhase> phases=workflow.getPhases();
+	    
+		List<IPhase> phases=workflow.getPhases();
 	    //IFigure comp=new CompartmentFigure();
     	
 	    //comp.setLayoutManager(new FlowLayout(false));
 	    //add(comp);
-	    for(IPhase p:phases)
-	    {
-	    	System.out.println("Fig for phase:"+p);
-	    	//CompartmentFigure cf=new CompartmentFigure(p);
-	    	
-	    	WorkflowPartFigure<IPhase> cf=add(p,IPhase.class);
-	    	for(ITaskGroup tg:p.getTaskGroups())
-	    	{
-	    		WorkflowPartFigure<ITaskGroup> tgCF=cf.add(tg,ITaskGroup.class);
-	    		for(ISubTaskGroup stg:tg.getSubTaskGroups())
-	    		{
-	    			WorkflowPartFigure<ISubTaskGroup> stgCF=tgCF.add(stg,ISubTaskGroup.class);
-	    			for(ITask t:stg.getTasks())
-	    			{
-	    				WorkflowPartFigure<ITask> tCF=stgCF.add(t,ITask.class);
-	    			}
-	    		}
-	    			
-	    	}
-	    	//comp.add(new Label(p.getName()));
-//	    	comp.add(new PhaseFig(p));
-//	    	comp.add(new Button("B_"+p.getName()));
-	    }
-	    
+//	    for(IPhase p:phases)
+//	    {
+//	    	System.out.println("Fig for phase:"+p);
+//	    	//CompartmentFigure cf=new CompartmentFigure(p);
+//	    	
+//	    	WorkflowPartFigure<IPhase> cf=add(p,IPhase.class);
+//	    	for(ITaskGroup tg:p.getTaskGroups())
+//	    	{
+//	    		WorkflowPartFigure<ITaskGroup> tgCF=cf.add(tg,ITaskGroup.class);
+//	    		for(ISubTaskGroup stg:tg.getSubTaskGroups())
+//	    		{
+//	    			WorkflowPartFigure<ISubTaskGroup> stgCF=tgCF.add(stg,ISubTaskGroup.class);
+//	    			for(ITask t:stg.getTasks())
+//	    			{
+//	    				WorkflowPartFigure<ITask> tCF=stgCF.add(t,ITask.class);
+//	    			}
+//	    		}
+//	    			
+//	    	}
+//	    }
+	}
+	
+	final private void configPhaseBar()
+	{
+		List<IPhase> phases = workflow.getPhases();
+		phaseBar= new Figure();		
+		FlowLayout fl= new FlowLayout();
+		fl.setStretchMinorAxis(true);
+		phaseBar.setLayoutManager(fl);
+		phaseBar.setVisible(true);
+		PhaseFig phaseFig;
+		for(IPhase phase:phases)
+		{
+			phaseFig= new PhaseFig(phase);
+			//phaseFig.setBackgroundColor(classColor);
+			phaseBar.add(phaseFig);
+			//phaseBar.add(new Button(phase.getName()));
+		}
 		
-//	    add(name);	
-//	    //add(attributeFigure);
-//	    //add(methodFigure);
-//	    add(b1);
-//	    add(b2);
-//	    add(b3);
-//	    add(b4);
+		add(phaseBar,BorderLayout.TOP);
 	}
 	
 	/**
