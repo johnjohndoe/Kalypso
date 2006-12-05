@@ -16,6 +16,12 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
@@ -145,9 +151,6 @@
 		type="wb1d2d:FE1D2DDirectedNodePropertyType"></xs:element>
 	<xs:complexType 
 		name="FE1D2DDirectedNodePropertyType">
-		<!--xs:complexContent>
-			<xs:restriction 
-					base="simBase:FEDirectedNodePropertyType"-->
 				<xs:sequence>
 					<xs:element 
 						ref="wb1d2d:FE1D2DNode"
@@ -155,8 +158,6 @@
 				</xs:sequence>
 				<xs:attribute name="orientation" type="gml:SignType" default="+"/>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!--/xs:restriction>
-		</xs:complexContent-->
 	</xs:complexType>
 
 	<!-- =================================================================
@@ -180,11 +181,17 @@
 					==Single point edge are also possible, in that case the all
 				
 			</xs:documentation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
 				base="simBase:FEAbstractEdgeType">
 				<xs:sequence>	
+					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
 					<xs:element 
 						ref="wb1d2d:fe1d2dDirectedNode"
 						minOccurs="2" 
@@ -569,7 +576,7 @@
 				base="wb1d2d:FE1D2D_2DElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"/>
+							ref="wb1d2d:fe1d2dDirectedEdge" minOccurs="3" maxOccurs="3"/>
 					</xs:sequence>
 				
 			</xs:extension>
@@ -620,10 +627,19 @@
 				singular edges cannot be used.
 				the edges must build a close kurve.				
 			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DElementType"/>
+				base="wb1d2d:FE1D2DElementType">
+				<xs:sequence>
+				<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
+				</xs:sequence>
+				</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
 	

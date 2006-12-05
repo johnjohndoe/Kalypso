@@ -14,4 +14,21 @@
               class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
               id="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"/>
      </extension>
+     <extension
+           point="org.kalypso.core.catalogContribution">
+        <catalogContribution
+              class="org.kalypso.kalypsomodel1d2d.ui.catalog.Model1d2dCatalogContribution"
+              name="Model1d2dCatalogContribution"/>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.functionProperty">
+        <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometryFunction"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
+              name="FE1D2DEdgeTypeGeometry"/>
+        <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+              name="FE1D2D_2DElementTypeGeometry"/>
+     </extension>
 </plugin>

@@ -12,7 +12,9 @@ Require-Bundle:
  org.kalypso.optimize,
  org.junit,
  org.kalypso.simulation.core,
- org.apache.jakarta_log4j
+ org.apache.jakarta_log4j,
+ KalypsoModelSimulationBase
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.kalypsomodel1d2d.schema,
  org.kalypso.kalypsomodel1d2d.sim
+Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
