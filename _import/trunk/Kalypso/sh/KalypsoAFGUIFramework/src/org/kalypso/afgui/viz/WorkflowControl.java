@@ -3,9 +3,13 @@ package org.kalypso.afgui.viz;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import javax.naming.ldap.Control;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -75,6 +79,9 @@ public class WorkflowControl
 	
 	private FormToolkit toolkit;
 	private ScrolledForm form;
+	private Composite toolBarComp;
+	private Composite taskComposite;
+	
 	ExpansionAdapter expansionAdapter=
 		new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
@@ -114,68 +121,6 @@ public class WorkflowControl
 	public void createControl(Composite parent)
 	{
 		createBaseContainers(parent);
-//		top = new Composite(parent,SWT.FILL);
-//		top.setLayout(new FillLayout());
-//		toolkit= new FormToolkit(top.getDisplay());
-//		Composite containerForm=toolkit.createComposite(top);
-//		
-//			
-//		containerForm.setLayout(new FormLayout());
-//		
-//		FormData fd;
-//		
-//		fd= new FormData();
-//		fd.left= new FormAttachment(0,0);
-//		fd.bottom= new FormAttachment(70,0);
-//		fd.top= new FormAttachment(0,0);
-//		form = 
-//			toolkit.createScrolledForm(containerForm);
-//		form.setLayoutData(fd);
-//		
-//		fd= new FormData();
-//		fd.width=16;
-//		fd.left=new FormAttachment(form);
-//		fd.right= new FormAttachment(90,0);
-//		fd.bottom= new FormAttachment(100,0);
-//		fd.top= new FormAttachment(0,0);
-//		
-//		Composite toolBarComp= 
-//			toolkit.createComposite(containerForm, SWT.BORDER|SWT.BOLD);
-////		Section toolBarComp= 
-////			toolkit.createSection(
-////					containerForm,					 
-////					Section.TREE_NODE|
-////					Section.CLIENT_INDENT|
-////					Section.TWISTIE);
-//		toolBarComp.setLayout(new FillLayout());
-////		toolkit.createComposite(toolBarComp, SWT.BORDER);
-//		//toolBarComp.setText("Activities");
-//		toolBarComp.setLayoutData(fd);
-//		toolkit.createButton(
-//				toolkit.createComposite(toolBarComp, SWT.BORDER),
-//				"DADA",
-//				SWT.BUTTON1);
-//
-//		Composite taskComposite=
-//			toolkit.createComposite(
-//					containerForm,
-//					SWT.BORDER|SWT.BOLD);
-//		
-//		fd= new FormData();
-//		fd.left= new FormAttachment(0,0);
-//		fd.bottom= new FormAttachment(100,0);
-//		fd.top= new FormAttachment(30,0);
-//		fd.right=new FormAttachment(toolBarComp);
-//		taskComposite.setLayoutData(fd);
-//		taskComposite.setLayout(new FillLayout());
-//		
-////			toolkit.createButton(
-////					taskComposite,
-////					"",
-////					SWT.BORDER|SWT.BOLD);
-//		
-//		form.getBody().setLayout(new TableWrapLayout());
-//		
 		///IPhase
 		phaseCntls=
 			new ArrayList<Section>();
@@ -226,26 +171,55 @@ public class WorkflowControl
 			sec.setClient(comp);
 		}
 		
-//		/ITask
-		ISubTaskGroup subTaskGroup;
-		List<Button> taskButtons= new ArrayList<Button>(); 
-		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
-		{
-			//System.out.println("III="+i);
-			
-			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
-			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
-			
-			comp.setLayout(new GridLayout());
-			for(ITask t:subTaskGroup.getTasks())
-			{
-				Button taskButton=createTaskButton(t,comp);
-				taskButtons.add(taskButton);
-			}
-			sec.setClient(comp);
-		}
+////		/ITask
+//		ISubTaskGroup subTaskGroup;
+//		List<Button> taskButtons= new ArrayList<Button>(); 
+//		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
+//		{
+//			//System.out.println("III="+i);
+//			
+//			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
+//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
+//			
+//			comp.setLayout(new GridLayout());
+//			for(ITask t:subTaskGroup.getTasks())
+//			{
+//				Button taskButton=createTaskButton(t,comp);
+//				taskButtons.add(taskButton);
+//			}
+//			sec.setClient(comp);
+//		}
 	}
 
+	Map<Object, List<Control>> taskControlMap;
+	
+	private void contributeSTGTasks(IPhase phase)
+	{
+//		taskComposite.
+//		toolkit.createTree(parent, style)
+//		taskComposite.setLayout(new StackLayout());
+//		
+//		///ITask
+//		ISubTaskGroup subTaskGroup;
+//		List<Button> taskButtons= new ArrayList<Button>(); 
+//		
+//		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
+//		{
+//			//System.out.println("III="+i);
+//			
+//			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
+//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
+//			
+//			comp.setLayout(new GridLayout());
+//			for(ITask t:subTaskGroup.getTasks())
+//			{
+//				Button taskButton=createTaskButton(t,comp);
+//				taskButtons.add(taskButton);
+//			}
+//			sec.setClient(comp);
+//		}
+
+	}
 	
 	private Button createTaskButton(ITask t, Composite comp)
 	{
@@ -271,7 +245,6 @@ public class WorkflowControl
 		
 	}
 
-	Composite toolBarComp;
 	
 	private void createBaseContainers(Composite parent)
 	{
@@ -309,7 +282,7 @@ public class WorkflowControl
 				"DADA",
 				SWT.BUTTON1);
 
-		Composite taskComposite=
+		taskComposite=
 			toolkit.createComposite(
 					containerForm,
 					SWT.BORDER|SWT.BOLD);
