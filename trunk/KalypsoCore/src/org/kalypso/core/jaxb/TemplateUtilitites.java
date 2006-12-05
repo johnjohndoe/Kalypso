@@ -51,6 +51,7 @@ import javax.xml.bind.PropertyException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -79,16 +80,11 @@ public class TemplateUtilitites
   /* GisTableView */
   public static final JAXBContext JC_GISTABLEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
 
-  
   /* GisTreeView */
   public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
 
-
   /* Types */
   public static final org.kalypso.template.types.ObjectFactory OF_TYPES = new org.kalypso.template.types.ObjectFactory();
-
-  
-
 
   private TemplateUtilitites( )
   {
@@ -120,8 +116,13 @@ public class TemplateUtilitites
     final Marshaller marshaller = JaxbUtilities.createMarshaller( TemplateUtilitites.JC_GISMAPVIEW );
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
-    marshaller.setSchema( TemplateUtilitites.getGismapviewSchema() );
+
+    // REMARK: only validate in trace mode, because this lead often to errors
+    // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
+    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) )
+      marshaller.setSchema( TemplateUtilitites.getGismapviewSchema() );
+
     return marshaller;
   }
-  
+
 }
