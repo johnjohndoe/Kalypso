@@ -11,8 +11,10 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	final static private Logger logger=
 				Logger.getLogger(ApplicationWorkbenchAdvisor.class);
-	private static final String PERSPECTIVE_ID = "KalypsoAFGUIFramework.perspective";
-
+	//TODO change perspective	
+	private static final String PERSPECTIVE_ID = 
+		//"KalypsoAFGUIFramework.perspective";
+		"org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         
     	return new ApplicationWorkbenchWindowAdvisor(configurer);

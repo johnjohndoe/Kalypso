@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.afgui.KalypsoAFGUIFramework
-Bundle-SymbolicName: KalypsoAFGUIFramework; singleton:=true
+Bundle-SymbolicName: org.kalypso.afgui; singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
 Bundle-Vendor: org.kalypso
@@ -36,4 +36,5 @@ Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.model.impl,
  org.kalypso.afgui.schema,
  org.kalypso.afgui.views,
- org.kalypso.afgui.viz
+ org.kalypso.afgui.viz,
+ test.org.kalypso.afgui
