@@ -169,7 +169,7 @@ public class SplitSort implements FeatureList
 
   public boolean remove( Object object )
   {
-    GM_Envelope env = getEnvelope( object );
+    final GM_Envelope env = getEnvelope( object );
     if( env != null )
       remove( env, object );
 
@@ -198,7 +198,7 @@ public class SplitSort implements FeatureList
   {
     if( m_invalid )
       resort();
-    
+
     if( m_rootContainer != null )
       return m_rootContainer.getEnvelope();
 
@@ -411,9 +411,16 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#set(int, java.lang.Object)
    */
-  public Object set( int index, Object element )
+  public Object set( final int index, final Object element )
   {
-    throw new UnsupportedOperationException();
+    final GM_Envelope env = getEnvelope( element );
+    remove( env, element );
+
+    /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
+    if( !m_invalid )
+      spacialAdd( env, element );
+
+    return m_objects.set( index, element );
   }
 
   /**

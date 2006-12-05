@@ -96,6 +96,23 @@ public class AddFeatureCommand implements ICommand
   }
 
   /**
+   * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
+   * created feature is provided from outside.
+   */
+  public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager )
+  {
+    m_workspace = workspace;
+    m_parentFeature = parentFeature;
+    m_propName = propertyName;
+    m_pos = pos;
+    m_props = null;
+    m_newFeature = newFeature;
+    m_type = null;
+    m_selectionManager = selectionManager;
+    m_depth = -1;
+  }
+
+  /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   public boolean isUndoable( )
@@ -108,27 +125,23 @@ public class AddFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    m_newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
-
-    if( m_props != null )
-      setProperties();
-
-    addFeature();
-  }
-
-  private void setProperties( )
-  {
-    IPropertyType[] properties = m_newFeature.getFeatureType().getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    if( m_newFeature == null )
     {
-      IPropertyType ftp = properties[i];
-      Object property = m_props.get( ftp );
-      /** Skip all FeatureAssociationProperties, there is a special method to handel these props */
-      if( ftp instanceof IRelationType )
-        continue;
-      if( property != null )
-        m_newFeature.setProperty( ftp, property );
+      m_newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
+
+      if( m_props != null )
+      {
+        for( final Map.Entry<IPropertyType, Object> entry : m_props.entrySet() )
+          m_newFeature.setProperty( entry.getKey(), entry.getValue() );
+      }
     }
+
+    /* Add the new feature */
+    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    if( m_selectionManager != null && m_dropSelection == true )
+      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
   }
 
   /**
@@ -136,10 +149,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    if( m_newFeature == null )
-      return;
-
-    addFeature();
+    process();
   }
 
   /**
@@ -167,15 +177,6 @@ public class AddFeatureCommand implements ICommand
   public String getDescription( )
   {
     return "Feature hinzufügen";
-  }
-
-  private void addFeature( ) throws Exception
-  {
-    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    if( (m_selectionManager != null) && (m_dropSelection == true) )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
   }
 
   public Feature getNewFeature( )

@@ -520,6 +520,11 @@
 				menubarPath="org.kalypso.objectclass.feature.menu.batchedit/editGroup"
 				style="push"
 				tooltip="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.tooltip" />
+   <menu
+         id="featureListMenu"
+         label="featureListMenu">
+      <separator name="featureListMenuSep"/>
+   </menu>
 		</objectContribution>
 		<objectContribution adaptable="false"
 			objectClass="org.kalypsodeegree.filterencoding.Filter"
@@ -682,6 +687,36 @@
 				label="%org.kalypso.ogc.gml.om.ShowObservationAction.label"
 				tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
 		</objectContribution>
+  <objectContribution
+        adaptable="false"
+        id="org.kalypso.objectclass.feature.listElements"
+        objectClass="org.kalypsodeegree.model.feature.Feature">
+     <filter
+           name="featureListElement"
+           value="true"/>
+     <action
+           class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate"
+           icon="icons/feature/gis_feature_down.gif"
+           id="KalypsoUI.action1"
+           label="Feature &amp;Down"
+           menubarPath="featureListMenu"
+           tooltip="Moves the feature one position down"/>
+     <action
+           class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate"
+           icon="icons/feature/gis_feature_up.gif"
+           id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate"
+           label="Feature &amp;Up"
+           menubarPath="featureListMenu"
+           tooltip="Moves the feature one position up"/>
+     <action
+           class="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate"
+           icon="icons/feature/gis_feature_duplicate.gif"
+           id="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate"
+           label="Feature duplizieren"
+           menubarPath="featureListMenu"
+           style="push"
+           tooltip="Dupliziert das selektierte Feature"/>
+  </objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters"
 		point="org.eclipse.ui.ide.resourceFilters">
@@ -832,6 +867,10 @@
         class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
         id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter"
         targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
+  <actionFilter
+        class="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter"
+        id="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter"
+        targetType="org.kalypsodeegree.model.feature.Feature"/>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />
