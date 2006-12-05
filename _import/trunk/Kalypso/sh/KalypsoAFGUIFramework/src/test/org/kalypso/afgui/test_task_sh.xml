@@ -111,13 +111,13 @@
 			rdf:resource="&k1d2dwf;ConditioningGroup"/>
 	</wbs:TaskGroup>
 	
-	<wbs:TaskGroup>
+	<!-- wbs:TaskGroup>
 			rdf:about="&k1d2dwf;Conditioning">
 		<wbs:hasName>Anfangswerte/Randbedingungen</wbs:hasName>
 		<wbs:hasHelp>Anfangswerte und Randbedingungen festlegen</wbs:hasHelp>
 		<wbs:hasSubTaskGroups
 			rdf:resource="&k1d2dwf;CondGroup"/>
-	</wbs:TaskGroup>
+	</wbs:TaskGroup-->
 
 <!--Defining the TaskGroups - Processing-->
 	<wbs:TaskGroup 
