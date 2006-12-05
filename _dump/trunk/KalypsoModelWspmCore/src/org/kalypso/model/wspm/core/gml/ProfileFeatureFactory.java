@@ -467,7 +467,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( phenomenon );
 
     final TupleResult result = buildingObs.getResult();
-    if( result == null )
+    if( building == null || result == null )
       return null;
 
     final IRecord record = result.get( 0 );

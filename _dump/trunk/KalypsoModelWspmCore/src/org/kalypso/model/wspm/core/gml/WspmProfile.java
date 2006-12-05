@@ -53,34 +53,25 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Belger
  */
-public class WspmProfile
+public class WspmProfile extends AbstractFeatureBinder
 {
   public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
 
   public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
 
-  private final Feature m_feature;
-
   public WspmProfile( final Feature feature )
   {
-    if( !QNameUtilities.equals( feature.getFeatureType().getQName(), IWspmConstants.NS_WSPMPROF, "Profile" ) )
-      throw new IllegalStateException( "Feature is of wrong type: " + feature );
-
-    m_feature = feature;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_feature;
+    super( feature, QNAME_PROFILE );
   }
 
   public WspmWaterBody getWater( )
   {
-    final Feature parent = m_feature.getParent();
+    final Feature parent = getFeature().getParent();
     if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
       return new WspmWaterBody( parent );
 
@@ -89,14 +80,14 @@ public class WspmProfile
 
   public double getStation( )
   {
-    final BigDecimal profileStation = ProfileFeatureFactory.getProfileStation( m_feature );
+    final BigDecimal profileStation = ProfileFeatureFactory.getProfileStation( getFeature() );
 
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
   public void setStation( double station )
   {
-    ProfileFeatureFactory.setProfileStation( m_feature, new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
+    ProfileFeatureFactory.setProfileStation( getFeature(), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) );
   }
   
   public IProfil getProfil( )

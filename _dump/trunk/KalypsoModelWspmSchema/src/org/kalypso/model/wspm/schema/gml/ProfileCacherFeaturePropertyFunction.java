@@ -133,6 +133,9 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         positions.add( GeometryFactory.createGM_Position( rw, hw, h ) );
       }
 
+      if( positions.size() < 2 )
+        return null;
+      
       final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
 
       final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );

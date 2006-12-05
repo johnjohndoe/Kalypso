@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.profil.validation;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -79,6 +80,12 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
    */
   public void createProfilMarker( final boolean isSevere, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
   {
+    if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers" ) ) )
+    {
+      final String debugMsg = String.format( "Creating resource marker: isSever=%b, message=%s, location=%s, pointPos=%d", isSevere, message, location, pointPos );
+      System.out.println( debugMsg );
+    }
+    
     final String resSerialised = m_xstream.toXML( resolutionMarkers );
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );

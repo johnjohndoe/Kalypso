@@ -325,6 +325,8 @@ public class WspWinImporter
       prfSource.read( profile, fileReader );
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
+      /* Set state as default name for profile. */
+      prof.setName( bean.getStateName() );
 
       /* Only add profile if no error occurs */
       knownProfiles.put( fileName, prof );

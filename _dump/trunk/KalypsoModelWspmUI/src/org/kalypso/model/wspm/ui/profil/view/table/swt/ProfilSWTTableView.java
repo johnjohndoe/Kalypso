@@ -696,6 +696,9 @@ public class ProfilSWTTableView extends AbstractProfilView
     final Table table = getViewer().getTable();
     final TableItem rowItem = m_cursor.getRow();
 
+    if( rowItem == null )
+      return null;
+      
     final int row = table.indexOf( rowItem );
     final int col = m_cursor.getColumn();
 
@@ -714,9 +717,17 @@ public class ProfilSWTTableView extends AbstractProfilView
       return;
     
     final Integer[] pos = (Integer[]) viewState;
-    m_cursor.setSelection( pos[0], pos[1], true );
-    m_cursor.redraw();
-    m_cursor.setFocus();
     
+    final int columnCount = m_viewer.getTable().getColumnCount();
+    final int rowCount = m_viewer.getTable().getItemCount();
+    
+    final Integer row = Math.min( rowCount - 1, pos[0] );
+    final Integer col = Math.min( columnCount - 1, pos[1] );
+    
+    if( row == -1 || col == -1 )
+      return;
+    
+    m_cursor.setSelection( row, col, true );
+    m_cursor.redraw();
   }
 }

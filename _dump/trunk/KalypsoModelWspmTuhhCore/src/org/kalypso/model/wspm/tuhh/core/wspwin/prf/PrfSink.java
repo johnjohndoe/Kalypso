@@ -126,7 +126,7 @@ public class PrfSink implements IProfilSink
     writeCoords( profil, POINT_PROPERTY.RAUHEIT, dbr );
     final IProfilBuilding building = profil.getBuilding();
     final String buildingTyp = building == null ? "" : building.getTyp();
-    if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) != 0 && buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_WEHR ) != 0 )
+    if( buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 || buildingTyp.compareTo( IProfilConstants.BUILDING_TYP_WEHR ) == 0 )
     {
       try
       {

@@ -56,6 +56,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -72,9 +73,9 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
 {
   private Viewer m_viewer;
 
-  private Map<IProfilPoint, Collection<IMarker>> m_markerIndex = new HashMap<IProfilPoint, Collection<IMarker>>();
+  private final Map<IProfilPoint, Collection<IMarker>> m_markerIndex = new HashMap<IProfilPoint, Collection<IMarker>>();
 
-  private Map<IProfilPoint, Collection<IMarker>> m_unmodmarkerIndex = Collections.unmodifiableMap( m_markerIndex );
+  private final Map<IProfilPoint, Collection<IMarker>> m_unmodmarkerIndex = Collections.unmodifiableMap( m_markerIndex );
 
   private IProfilEventManager m_pem;
 
@@ -105,7 +106,7 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
     m_viewer = viewer;
     m_pem = (IProfilEventManager) newInput;
 
-    indexMarkers();
+    reindexMarkers();
   }
 
   /**
@@ -140,13 +141,13 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
 
     if( refresh )
     {
-      indexMarkers();
+      reindexMarkers();
 
       ViewerUtilities.refresh( m_viewer, true );
     }
   }
 
-  private void indexMarkers( )
+  private void reindexMarkers( )
   {
     try
     {
@@ -159,6 +160,15 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
       for( final IMarker marker : markers )
       {
         final Integer pointPos = (Integer) marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS );
+
+        if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers/table" ) ) )
+        {
+          final String message = marker.getAttribute( IMarker.MESSAGE, null );
+          
+          final String debugMsg = String.format( "Found resource marker: message=%s, pointPos=%d", message, pointPos );
+          System.out.println( debugMsg );
+        }
+        
         final IProfilPoint point = m_pem.getProfil().getPoints().get( pointPos );
 
         if( m_markerIndex.containsKey( pointPos ) )
@@ -184,11 +194,15 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
     }
   }
 
+  /**
+   * Returns the markers indexed by its point. The returned map is not backed by this class, so it should be called
+   * every time the markers are accessed.
+   */
   public Map<IProfilPoint, Collection<IMarker>> getMarkerIndex( )
   {
     return m_unmodmarkerIndex;
   }
-  
+
   public IProfil getProfil( )
   {
     return m_pem == null ? null : m_pem.getProfil();
