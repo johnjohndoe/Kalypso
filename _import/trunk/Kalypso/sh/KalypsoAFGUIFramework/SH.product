@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="GUI Framework Test" id="KalypsoAFGUIFramework.KalypsoAFGUIFramework_product" application="org.kalypso.afgui.AFGUIApplication" useFeatures="false">
-
+<product name="SH1" id="org.kalypso.kalypso1d2d.pjt.KalypsoEnterpriseSH" application="org.kalypso.afgui.AFGUIApplication" useFeatures="false">
 
    <configIni use="default"/>
 
-   <launcherArgs>
-   </launcherArgs>
-
-   <windowImages/>
-
-
-   <launcher>
-      <solaris/>
-      <win useIco="false">
-         <bmp/>
-      </win>
-   </launcher>
-
-
    <plugins>
-      <plugin id="KalypsoAFGUIFramework"/>
       <plugin id="KalypsoModel1D2D"/>
-      <plugin id="KalypsoModelSimulationBase"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.jakarta_log4j"/>
@@ -77,6 +60,8 @@
       <plugin id="org.eclipse.update.ui"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
+      <plugin id="org.kalypso.afgui"/>
+      <plugin id="org.kalypso.auth"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
@@ -87,9 +72,14 @@
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
+      <plugin id="org.kalypso.kalypso1d2d.pjt"/>
+      <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.optimize"/>
       <plugin id="org.kalypso.repository"/>
+      <plugin id="org.kalypso.services.core.client"/>
       <plugin id="org.kalypso.simulation.core"/>
+      <plugin id="org.kalypso.ui"/>
+      <plugin id="org.kalypso.ui.addlayer"/>
    </plugins>
 
 </product>

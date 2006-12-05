@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
+	<extension
+         id="Kalypso1d2dProjectPlugin"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin">
+         </run>
+      </application>
+   </extension>
+   
    <extension
          id="org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin"
          point="org.eclipse.core.runtime.applications">
@@ -111,4 +120,11 @@
              </action>
         </viewContribution>
      </extension>
+    <extension
+          id="KalypsoEnterpriseSH"
+          point="org.eclipse.core.runtime.products">
+       <product
+             application="org.kalypso.afgui.AFGUIApplication"
+             name="SH1"/>
+    </extension>
 </plugin>

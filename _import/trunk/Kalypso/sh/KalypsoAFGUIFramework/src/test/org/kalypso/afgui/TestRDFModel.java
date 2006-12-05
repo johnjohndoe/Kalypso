@@ -2,6 +2,9 @@ package test.org.kalypso.afgui;
 
 import java.io.InputStream;
 
+import org.kalypso.afgui.model.IWorkflow;
+import org.kalypso.afgui.model.impl.WorkflowImpl;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
@@ -52,9 +55,9 @@ public class TestRDFModel
 	
 	public static final String WORKFLOW_PART_RT_CONTEX_1 = TEST_NS+"RTSimMo1";
 	
-	private Model workflowModel;
+	private static Model workflowModel;
 
-	final  private Model shModel;
+	static private Model shModel;
 	
 	 
 	
@@ -85,6 +88,11 @@ public class TestRDFModel
 	public Model getShModel()
 	{
 		return shModel;
+	}
+	
+	static public IWorkflow getTesWorkflow()
+	{
+		return new WorkflowImpl(shModel.getResource(WORKFLOW_SH));
 	}
 	
 	static public void main(String[] d)

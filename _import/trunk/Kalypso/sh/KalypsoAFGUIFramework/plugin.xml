@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
+	
+	<extension
+         id="AFGUIApplication"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.afgui.AFGUIApplication">
+         </run>
+      </application>
+   </extension>
+   
    <extension
          id="org.kalypso.afgui.AFGUIApplication"
          point="org.eclipse.core.runtime.applications">
@@ -10,6 +20,13 @@
                class="org.kalypso.afgui.AFGUIApplication">
          </run>
       </application>
+   </extension>
+   <extension
+         id="KalypsoAFGUIFramework_product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.kalypso.afgui.AFGUIApplication"
+            name="GUI Framework Test"/>
    </extension>
    
    
