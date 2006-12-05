@@ -50,8 +50,11 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.core.repository.Storage;
 
@@ -94,11 +97,9 @@ public abstract class ObjectCatalog<O> extends Storage
     }
     catch( final Exception e )
     {
-      // TODO: NEVER just eat an exception!
-      // e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
       return null;
-      // TODO make new exceptionType CatalogException
-      // throw new UnsupportedOperationException();
     }
   }
 
@@ -129,7 +130,7 @@ public abstract class ObjectCatalog<O> extends Storage
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     if( generator == null )
       throw new UnsupportedOperationException();
-    
+
     store( object, storeLocation );
     final String objectURN = generator.generateURNFor( object );
     final String uriAsString = storeLocation.toString();
@@ -157,11 +158,13 @@ public abstract class ObjectCatalog<O> extends Storage
       if( generator == null )
         return null;
       final String defaultURN = generator.generateDefaultURNForRelated( parent );
-      //      System.out.println( "defaultURN: " + defaultURN );
+      // System.out.println( "defaultURN: " + defaultURN );
       return getValue( resolver, defaultURN, defaultURN );
     }
-    catch( Exception e )
-    {// TODO: at least log it!
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
       return null;
     }
   }

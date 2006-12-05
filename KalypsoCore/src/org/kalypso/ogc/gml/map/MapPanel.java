@@ -438,13 +438,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( m_boundingBox == null )
       return;
 
-    final StringBuffer dump = new StringBuffer();
-    dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-    dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-    dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-    dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-    dump.append( "\n" );
-    System.out.println( dump.toString() );
+    // TODO: introduce a trace option for this
+//    final StringBuffer dump = new StringBuffer();
+//    dump.append( "MinX:" + m_boundingBox.getMin().getX() );
+//    dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
+//    dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
+//    dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
+//    dump.append( "\n" );
+//    System.out.println( dump.toString() );
 
     m_projection.setSourceRect( m_boundingBox );
 
