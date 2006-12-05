@@ -1,0 +1,2 @@
+# Activates or deactivates validation of bindings while marhsalling/unmarshalling 
+org.kalypso.core/debug/validatebinding/gismapview = true
