@@ -728,7 +728,7 @@ final public class Schema
 
 	public static String getName(Resource resource)
 	{
-		logger.info("Getting name:"+resource);
+		logger.info("Getting name:"+resource.getURI());
 		if(resource==null)
 		{
 			return null;
@@ -739,7 +739,7 @@ final public class Schema
 				resource.getProperty(PROP_HAS_NAME);
 			if(stm==null)
 			{
-				logger.warn("No name property:"+resource.getModel());
+				logger.warn("No name property:"+resource.getURI());
 				return null;
 			}
 			else

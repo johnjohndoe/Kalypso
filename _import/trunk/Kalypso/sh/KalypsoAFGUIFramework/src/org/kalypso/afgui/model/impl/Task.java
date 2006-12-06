@@ -28,4 +28,11 @@ public class Task extends WorkflowPart implements ITask
 		return Schema.getActivities(resource);
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuffer buffer= new StringBuffer("Task.");
+		buffer.append(getName());
+		return buffer.toString();
+	}
 }

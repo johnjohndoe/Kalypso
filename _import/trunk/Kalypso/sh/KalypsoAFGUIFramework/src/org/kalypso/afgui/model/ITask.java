@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.kalypso.afgui.model;
 
 import java.util.List;

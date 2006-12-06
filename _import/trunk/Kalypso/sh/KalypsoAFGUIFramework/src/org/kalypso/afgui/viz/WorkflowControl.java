@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.ldap.Control;
 
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -18,7 +20,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
@@ -37,6 +41,8 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.afgui.model.impl.TaskGroup;
 
+import EDU.oswego.cs.dl.util.concurrent.Takable;
+
 public class WorkflowControl
 {
 	
@@ -47,12 +53,91 @@ public class WorkflowControl
 		
 		public void expansionStateChanged(ExpansionEvent e)
 		{
-			if(lastExpanded!=null)
+//			Control controls[]=taskComposite.getChildren();
+//			if(controls!=null)
+//			{
+//				for(Control c:controls)
+//				{
+//					c.dispose();
+//				}
+//			}
+			tbMng.removeAll();
+			if(e.getState())
 			{
-//				lastExpanded.setExpanded(false);
-//				lastExpanded.redraw();
+				Object source=e.getSource();
+				if(source instanceof Control)
+				{
+					Control c=(Control)source;
+					List<TaskAction> actions=(List<TaskAction>)c.getData(KEY_ITASK_ACTIONS);
+					if(actions==null)
+					{
+						IPhase p=(IPhase)c.getData(KEY_IPHASE);
+						ArrayList<ITask> tasks= new ArrayList<ITask>();
+						if(p!=null)
+						{
+							tasks.addAll(p.getTasks());
+						}
+						ITaskGroup tg=
+							(ITaskGroup)c.getData(KEY_ITASKGROUP);
+						if(tg!=null)
+						{
+							System.out.println("================="+tg.getTasks());
+							for(ITask task:tg.getTasks())
+							{
+								tasks.add(task);
+							}
+						}
+						
+						ISubTaskGroup stg=
+							(ISubTaskGroup)c.getData(KEY_ISUBTASKGROUP);
+						if(stg!=null)
+						{
+							System.out.println("===STG=============="+stg.getTasks());
+							for(ITask task:stg.getTasks())
+							{
+								tasks.add(task);
+							}
+						}
+						///
+						actions=new ArrayList<TaskAction>();
+						TaskAction ta;
+						for(ITask task:tasks)
+						{
+							System.out.println("ADDING:"+task);
+							ta=new TaskAction(task);
+							tbMng.add(ta);
+							actions.add(ta);
+						}
+						c.setData(KEY_ITASK_ACTIONS, actions);
+					}
+					else
+					{
+						for(TaskAction ta:actions)
+						{
+							tbMng.add(ta);
+						}
+					}
+					tbMng.update(true);
+					//tbMng.getControl().getParent().getParent().update();//redraw();
+					taskComposite.reflow(false);
+				}
+				
 			}
-			lastExpanded=(Section)e.getSource();
+			tbMng.update(true);
+			taskComposite.reflow(false);
+			
+			if(lastExpanded!=e.getSource())
+			{
+				if(lastExpanded!=null)
+				{
+					
+					lastExpanded.setExpanded(false);
+	//				lastExpanded.redraw();
+				}
+				lastExpanded=(Section)e.getSource();
+				form.reflow(false);
+			}
+			//top.update();
 		}
 
 		public void expansionStateChanging(ExpansionEvent e)
@@ -66,7 +151,49 @@ public class WorkflowControl
 		}
 	};
 	
-	final static public String URI="_URI_"; 
+	
+	/////////////////////////////////////////////////////////////
+	class TaskAction extends Action
+	{
+		private ITask task;
+		
+		public TaskAction(ITask task)
+		{
+			this.task=task;
+		}
+		
+		@Override
+		public String getText()
+		{
+			return getWorkflowPartName(task);
+		}
+		
+		@Override
+		public void run()
+		{
+			System.out.println("RUNNING="+task);
+		}
+		
+		@Override
+		public String getId()
+		{
+			return task.getURI();
+		}
+		@Override
+		public int getStyle()
+		{
+			return Action.AS_PUSH_BUTTON;//super.getStyle();
+		}
+	};
+	
+	final static public String URI="_URI_";
+	
+	final static public String KEY_ITASK_ACTIONS="_KEY_ITASK_ACTIONS_";
+	final static public String KEY_IPHASE=IPhase.class.toString();
+	final static public String KEY_ITASKGROUP=ITaskGroup.class.toString();
+	final static public String KEY_ISUBTASKGROUP=ISubTaskGroup.class.toString();
+	final static public String KEY_ITASK=ITask.class.toString();
+	
 	private IWorkflow workflow;
 	private List<Section> stgSecs;
 	private List<Section> taskGroupECs;
@@ -80,7 +207,9 @@ public class WorkflowControl
 	private FormToolkit toolkit;
 	private ScrolledForm form;
 	private Composite toolBarComp;
-	private Composite taskComposite;
+	private ScrolledForm taskComposite;
+	
+	private ToolBarManager tbMng;
 	
 	ExpansionAdapter expansionAdapter=
 		new ExpansionAdapter() {
@@ -89,29 +218,10 @@ public class WorkflowControl
 			}
 		};
 	
+	SectionListener stgEL = new SectionListener(); 
 	SectionListener tgEL = new SectionListener(); 
 	SectionListener pEL = new SectionListener();
 	
-//		new IExpansionListener()
-//	{
-//
-//		Section lastExpanded;
-//		
-//		public void expansionStateChanged(ExpansionEvent e)
-//		{
-//			if(lastExpanded!=null)
-//			{
-//				lastExpanded.setExpanded(false);
-//				lastExpanded.redraw();
-//			}
-//			lastExpanded=(Section)e.getSource();
-//		}
-//
-//		public void expansionStateChanging(ExpansionEvent e)
-//		{
-//			
-//		}		
-//	};
 	
 	public WorkflowControl(IWorkflow workflow)
 	{
@@ -139,12 +249,12 @@ public class WorkflowControl
 		IPhase phase;
 		for(Section ec:phaseCntls)
 		{
-			phase=(IPhase)ec.getData(URI);
+			phase=(IPhase)ec.getData(KEY_IPHASE);
 			Composite comp=toolkit.createComposite(ec,SWT.BORDER);
 			comp.setLayout(new GridLayout());
 			for(ITaskGroup tg:phase.getTaskGroups())
 			{
-				madeSec=createTaskGroupExpandable(tg,comp);
+				madeSec=createTaskGroupExpandable(tg,comp,phase);
 				taskGroupECs.add(madeSec);
 				madeSec.addExpansionListener(tgEL);
 				toolkit.createCompositeSeparator(madeSec);
@@ -159,13 +269,14 @@ public class WorkflowControl
 		for(Section sec:taskGroupECs)//;int i=0;i<taskGroupECs.size();i++)
 		{
 			//System.out.println("III="+i);
-			
-			taskGroup=(ITaskGroup)sec.getData(URI);
+			phase=(IPhase)sec.getData(KEY_IPHASE);
+			taskGroup=(ITaskGroup)sec.getData(KEY_ITASKGROUP);
 			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
 			comp.setLayout(new GridLayout());
 			for(ISubTaskGroup stg:taskGroup.getSubTaskGroups())
 			{
-				madeSec=createSubTaskGroupExpandable(stg,comp);
+				madeSec=createSubTaskGroupExpandable(stg,comp,taskGroup,phase);
+				madeSec.addExpansionListener(stgEL);
 				stgSecs.add(madeSec);
 			}
 			sec.setClient(comp);
@@ -193,8 +304,34 @@ public class WorkflowControl
 
 	Map<Object, List<Control>> taskControlMap;
 	
-	private void contributeSTGTasks(IPhase phase)
+	private Composite contributeToStack(List<ITask> tasks)
 	{
+		Composite c=toolkit.createComposite(taskComposite);
+		
+		String name;
+		c.setLayout(new GridLayout());
+		for(ITask task:tasks)
+		{
+			name=getWorkflowPartName(task);
+			toolkit.createButton(taskComposite,name,SWT.PUSH);
+		}
+		
+		return c;
+	}
+	
+	private void contributeToTasksPanel(List<ITask> tasks)
+	{
+		String name;
+		taskComposite.setLayout(new GridLayout());
+		for(ITask task:tasks)
+		{
+			name=getWorkflowPartName(task);
+			toolkit.createButton(taskComposite,name,SWT.PUSH);
+		}
+		taskComposite.getParent().pack();
+		taskComposite.redraw();
+		
+		//taskComposite.setVisible(true);
 //		taskComposite.
 //		toolkit.createTree(parent, style)
 //		taskComposite.setLayout(new StackLayout());
@@ -223,13 +360,18 @@ public class WorkflowControl
 	
 	private Button createTaskButton(ITask t, Composite comp)
 	{
+		ArrayList<Object> l=null;
+		
 		String name=getWorkflowPartName(t);
 		Button b= toolkit.createButton(comp, name, SWT.NONE);
 		return b;
 	}
 
 	private Section createSubTaskGroupExpandable(
-			ISubTaskGroup stg, Composite ec)
+									ISubTaskGroup stg, 
+									Composite ec,
+									ITaskGroup parentTG,
+									IPhase phase)
 	{
 		Section childEC = 
 		toolkit.createSection(
@@ -239,7 +381,10 @@ public class WorkflowControl
 			Section.TWISTIE);
 		String name=getWorkflowPartName(stg);
 		childEC.setText(name);
-		childEC.setData(URI, stg);
+		childEC.setData(KEY_IPHASE, phase);
+		childEC.setData(KEY_ISUBTASKGROUP, stg);
+		childEC.setData(KEY_ITASKGROUP, parentTG);
+		
 		
 		return childEC;
 		
@@ -277,28 +422,50 @@ public class WorkflowControl
 			toolkit.createComposite(containerForm, SWT.BORDER|SWT.BOLD);
 		toolBarComp.setLayout(new FillLayout());
 		toolBarComp.setLayoutData(fd);
-		toolkit.createButton(
-				toolkit.createComposite(toolBarComp, SWT.BORDER),
-				"DADA",
-				SWT.BUTTON1);
+//		toolkit.createButton(
+//				toolkit.createComposite(toolBarComp, SWT.BORDER),
+//				"DADA",
+//				SWT.BUTTON1);
 
-		taskComposite=
-			toolkit.createComposite(
-					containerForm,
-					SWT.BORDER|SWT.BOLD);
+		//SEPARAtor
+		Label l=toolkit.createSeparator(containerForm, SWT.HORIZONTAL|SWT.BOLD);
+		fd= new FormData();
+		fd.left= new FormAttachment(0,0);
+		fd.bottom= new FormAttachment(71,0);
+		fd.top= new FormAttachment(form);//30,0);
+		fd.right=new FormAttachment(toolBarComp);
+		l.setLayoutData(fd);
+		
+		taskComposite=toolkit.createScrolledForm(containerForm);
+//			toolkit.createComposite(
+//					containerForm,
+//					SWT.BORDER|SWT.BOLD);
 		
 		fd= new FormData();
 		fd.left= new FormAttachment(0,0);
 		fd.bottom= new FormAttachment(100,0);
-		fd.top= new FormAttachment(30,0);
+		fd.top= new FormAttachment(l);//form);//30,0);
 		fd.right=new FormAttachment(toolBarComp);
 		taskComposite.setLayoutData(fd);
-		taskComposite.setLayout(new FillLayout());
+		//taskComposite.setLayout(new FillLayout());
+		//ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
+		//cf.getBody().setLayout(new TableWrapLayout());
+		
+		taskComposite.getBody().setLayout(new TableWrapLayout());
+		ToolBar tb= new ToolBar(
+					taskComposite.getBody(),
+					SWT.V_SCROLL|SWT.WRAP);
+		tbMng= new ToolBarManager(tb);
+		//Control tbC=tbMng.createControl(taskComposite);
+		toolkit.adapt(tb);
 		form.getBody().setLayout(new TableWrapLayout());
+		
 	}
 	
 	private Section createTaskGroupExpandable(
-								ITaskGroup tg, Composite ec)
+									ITaskGroup tg, 
+									Composite ec,
+									IPhase phase)
 	{
 		Section childEC = 
 			toolkit.createSection(
@@ -309,7 +476,8 @@ public class WorkflowControl
 		
 		childEC.setText(
 				getWorkflowPartName(tg));
-		childEC.setData(URI, tg);
+		childEC.setData(KEY_ITASKGROUP, tg);
+		childEC.setData(KEY_IPHASE,phase);
 		
 		//childEC.setLayout(new TableWrapLayout());
 		
@@ -329,7 +497,7 @@ public class WorkflowControl
 						Section.TWISTIE);
 		ec.setText(
 				getWorkflowPartName(phase));
-		ec.setData(URI, phase);
+		ec.setData(KEY_IPHASE, phase);
 		//ec.setLayout(new TableWrapLayout());
 		return ec;
 	}
