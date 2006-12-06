@@ -30,8 +30,6 @@ public class FE2DElementEditWidget extends AbstractWidget
 
   private ElementGeometryBuilder m_builder = null;
 
-  private FE1D2DNode m_snapNode = null;
-
   private IKalypsoFeatureTheme m_nodeTheme;
 
   private final int m_radius = 20;
@@ -72,20 +70,6 @@ public class FE2DElementEditWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_currentPoint = p;
-
-    /* Try to snap to next node */
-    m_snapNode = null;
-
-    /* find nearest node */
-    // TODO: exclude already found nodes?
-    final MapPanel mapPanel = getMapPanel();
-    final EasyFeatureWrapper[] allNodeWrappers = m_provider.getFeatures( mapPanel );
-    final EasyFeatureWrapper[] nearNodeWrappers = MapfunctionHelper.findFeatureToSelect( mapPanel, new Rectangle( p.x, p.y, 0, 0 ), allNodeWrappers, m_radius );
-    if( nearNodeWrappers.length > 0 )
-    {
-      final FE1D2DNode nearestNode = new FE1D2DNode( nearNodeWrappers[0].getFeature() );
-      m_snapNode = nearestNode;
-    }
   }
 
   /**
@@ -96,9 +80,24 @@ public class FE2DElementEditWidget extends AbstractWidget
   {
     try
     {
+      /* snap to next node */
+      // TODO: exclude already found nodes?
+      final FE1D2DNode snapNode;
+
+      final MapPanel mapPanel = getMapPanel();
+      final EasyFeatureWrapper[] allNodeWrappers = m_provider.getFeatures( mapPanel );
+      final EasyFeatureWrapper[] nearNodeWrappers = MapfunctionHelper.findFeatureToSelect( mapPanel, new Rectangle( p.x, p.y, 0, 0 ), allNodeWrappers, m_radius );
+      if( nearNodeWrappers.length > 0 )
+      {
+        final FE1D2DNode nearestNode = new FE1D2DNode( nearNodeWrappers[0].getFeature() );
+        snapNode = nearestNode;
+      }
+      else
+        snapNode = null;
+      
       final ICommand command;
-      if( m_snapNode != null )
-        command = m_builder.addNode( m_snapNode );
+      if( snapNode != null )
+        command = m_builder.addNode( snapNode );
       else
       {
         final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
@@ -114,10 +113,6 @@ public class FE2DElementEditWidget extends AbstractWidget
     catch( final Exception e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-    finally
-    {
-      m_snapNode = null;
     }
   }
 
@@ -140,11 +135,6 @@ public class FE2DElementEditWidget extends AbstractWidget
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-    finally
-    {
-      m_snapNode = null;
-    }
-
   }
 
   /**
@@ -153,14 +143,7 @@ public class FE2DElementEditWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final Point currentPoint;
-    if( m_snapNode == null )
-      currentPoint = m_currentPoint;
-    else
-    {
-      final GM_Point snapPoint = m_snapNode.getPoint();
-      currentPoint = MapUtilities.retransform( getMapPanel(), snapPoint );
-    }
+    final Point currentPoint = m_currentPoint;
 
     if( currentPoint != null )
     {

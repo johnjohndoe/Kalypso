@@ -12,7 +12,7 @@
 		<Title>FE-Knoten</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
-        <MaxScaleDenominator>10000.01</MaxScaleDenominator>
+        <MaxScaleDenominator>1000.00</MaxScaleDenominator>
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>pointProperty</ogc:PropertyName>
