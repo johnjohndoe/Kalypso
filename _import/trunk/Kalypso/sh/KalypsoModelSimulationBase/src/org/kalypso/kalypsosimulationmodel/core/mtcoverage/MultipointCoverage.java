@@ -1,7 +1,5 @@
 package org.kalypso.kalypsosimulationmodel.core.mtcoverage;
 
-import java.util.List;
-
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IPosition;
 import org.kalypsodeegree.model.feature.Feature;
 

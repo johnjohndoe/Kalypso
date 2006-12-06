@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -23,83 +24,128 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class FE1D2D_2DElement extends AbstractFeatureBinder {
+public class FE1D2D_2DElement extends AbstractFeatureBinder
+{
 
-	public final static QName QNAME_FE1D2D_2DElement = new QName(
-			UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement");
+  public final static QName QNAME_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement" );
 
-	public final static QName QNAME_PROP_DIRECTEDEDGE = new QName(
-			UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge");
+  public static final QName QNAME_FE1D2DTriElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DTriElement" );
 
-	public FE1D2D_2DElement(final Feature featureToBind) {
-		super(featureToBind, QNAME_FE1D2D_2DElement);
-	}
+  public static final QName QNAME_FE1D2DQuadriElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DQuadriElement" );
 
-	/**
-	 * Returns the (dereferenced) nodes of this egde. Elements of the array may
-	 * be null.
-	 */
-	public FE1D2DEdge[] getEdges() {
-		final Feature feature = getFeature();
-		final GMLWorkspace workspace = feature.getWorkspace();
-		final List edgeList = (List) feature
-				.getProperty(QNAME_PROP_DIRECTEDEDGE);
+  public final static QName QNAME_PROP_DIRECTEDEDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge" );
 
-		final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
-		for (int i = 0; i < edges.length; i++) {
-			/*
-			 * Accessing the list via index is ok here, because we should never
-			 * have edges with more than 2 nodes.
-			 */
-			final String ref = (String) edgeList.get(i);
-			if (ref == null)
-				edges[i] = null;
-			else
-				edges[i] = new FE1D2DEdge(workspace.getFeature(ref));
-		}
+  public FE1D2D_2DElement( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME_FE1D2D_2DElement );
+  }
 
-		return edges;
-	}
+  /**
+   * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
+   */
+  public FE1D2DEdge[] getEdges( )
+  {
+    final Feature feature = getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final List edgeList = (List) feature.getProperty( QNAME_PROP_DIRECTEDEDGE );
 
-	/* static helper functions */
-	public GM_Surface recalculateElementGeometry() throws GM_Exception {
+    final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
+    for( int i = 0; i < edges.length; i++ )
+    {
+      /*
+       * Accessing the list via index is ok here, because we should never have edges with more than 2 nodes.
+       */
+      final String ref = (String) edgeList.get( i );
+      if( ref == null )
+        edges[i] = null;
+      else
+        edges[i] = new FE1D2DEdge( workspace.getFeature( ref ) );
+    }
 
-		final FE1D2DEdge[] edges = getEdges();
+    return edges;
+  }
 
-		if (edges.length < 3)
-			return null;
+  @SuppressWarnings("unchecked")
+  public void setEdges( final FE1D2DEdge[] edges )
+  {
+    final Feature feature = getFeature();
+    final List edgeList = (List) feature.getProperty( QNAME_PROP_DIRECTEDEDGE );
 
-		final FE1D2DNode[] nodes = new FE1D2DNode[edges.length + 1];
-		for (int i = 0; i < edges.length; i++) {
-			final FE1D2DEdge edge = edges[i];
-			final FE1D2DNode[] edgeNodes = edge.getNodes();
-			nodes[i] = edgeNodes[0];
-		}
+    edgeList.clear();
 
-		nodes[edges.length] = edges[edges.length - 1].getNodes()[1];
+    for( final FE1D2DEdge edge : edges )
+      edgeList.add( edge.getFeature().getId() );
+  }
 
-		/* Positions from nodes */
-		final GM_Position[] poses = new GM_Position[nodes.length];
+  /* static helper functions */
+  public GM_Surface recalculateElementGeometry( ) throws GM_Exception
+  {
+    final FE1D2DEdge[] edges = getEdges();
 
-		if (nodes.length < 2)
-			return null;
+    if( edges.length < 3 )
+      return null;
 
-		// REMARK: we assume here, that all nodes live in the same coordinate
-		// system.
-		final CS_CoordinateSystem crs = nodes[0].getPoint()
-				.getCoordinateSystem();
+    final FE1D2DNode[] nodes = new FE1D2DNode[edges.length + 1];
+    for( int i = 0; i < edges.length; i++ )
+    {
+      final FE1D2DEdge edge0 = edges[i];
+      final FE1D2DEdge edge1 = edges[(i + 1) % edges.length];
+      
+      final FE1D2DNode[] edge0Nodes = edge0.getNodes();
+      final FE1D2DNode[] edge1Nodes = edge1.getNodes();
 
-		for (int i = 0; i < poses.length; i++) {
-			final GM_Point point = nodes[i].getPoint();
-			final GM_Position position = point.getPosition();
-			poses[i] = GeometryFactory.createGM_Position(position.getX(),
-					position.getY());
-		}
+      final FE1D2DNode edge0node0 = edge0Nodes[0];
+      final FE1D2DNode edge0node1 = edge0Nodes[1];
+      final FE1D2DNode edge1node0 = edge1Nodes[0];
+      final FE1D2DNode edge1node1 = edge1Nodes[1];
 
-		return GeometryFactory
-				.createGM_Surface(poses, null,
-						new GM_SurfaceInterpolation_Impl(
-								GM_SurfaceInterpolation.PLANAR), crs);
-	}
+      /* Always take the node which does not fit to the next edge */
+      if( edge0node1.equals( edge1node0 ) )
+        nodes[i] = edge0node0;
+      else if( edge0node1.equals( edge1node1 ) )
+        nodes[i] = edge0node0;
+      else if( edge0node0.equals( edge1node0 ) )
+        nodes[i] = edge0node1;
+      else if( edge0node0.equals( edge1node1 ) )
+        nodes[i] = edge0node1;
+    }
+
+    nodes[edges.length] = nodes[0];
+
+    /* Positions from nodes */
+    final GM_Position[] poses = new GM_Position[nodes.length];
+
+    if( nodes.length < 2 )
+      return null;
+
+    // REMARK: we assume here, that all nodes live in the same coordinate
+    // system.
+    final CS_CoordinateSystem crs = nodes[0].getPoint().getCoordinateSystem();
+
+    for( int i = 0; i < poses.length; i++ )
+    {
+      final GM_Point point = nodes[i].getPoint();
+      final GM_Position position = point.getPosition();
+      poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
+    }
+
+    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+  }
+
+  public static FE1D2D_2DElement createTriElement( final FE1D2DDiscretisationModel discModel )
+  {
+    final Feature parentFeature = discModel.getFeature();
+    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DTriElement );
+    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
+    return new FE1D2D_2DElement( edgeFeature );
+  }
+
+  public static FE1D2D_2DElement createQuadriElement( final FE1D2DDiscretisationModel discModel )
+  {
+    final Feature parentFeature = discModel.getFeature();
+    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DQuadriElement );
+    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
+    return new FE1D2D_2DElement( edgeFeature );
+  }
 
 }

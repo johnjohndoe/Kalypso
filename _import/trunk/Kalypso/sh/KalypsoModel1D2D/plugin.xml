@@ -31,4 +31,23 @@
               id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
               name="FE1D2D_2DElementTypeGeometry"/>
      </extension>
+     <extension
+           id="editorActions"
+           name="editorActions"
+           point="org.eclipse.ui.editorActions">
+              <editorContribution
+                    id="org.kalypso.kalypsomodel1d2d.mapeditorContributions"
+                    targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+      			<action
+               class="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEElementDelegate"
+               icon="icons/elcl16/edit1d2d.gif"
+               id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEElementDelegate"
+               label="Element hinzufügen"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               style="radio"
+               toolbarPath="karte/edit"
+               tooltip="Ein neues FE Element erzeugen">
+				</action>
+              </editorContribution>
+     </extension>
 </plugin>

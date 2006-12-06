@@ -15,7 +15,7 @@
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Stroke>
-				<CssParameter name="stroke">#000000</CssParameter>
+				<CssParameter name="stroke">#ff00ff</CssParameter>
 				<CssParameter name="stroke-width">2.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
