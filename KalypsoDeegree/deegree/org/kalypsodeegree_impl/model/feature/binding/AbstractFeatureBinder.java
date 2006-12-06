@@ -85,7 +85,7 @@ public class AbstractFeatureBinder
   {
     return m_qnameToBind;
   }
-  
+
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_featureToBind );
@@ -104,6 +104,28 @@ public class AbstractFeatureBinder
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( m_featureToBind, desc );
+  }
+
+  /**
+   * Two bound features are equal if and only if their corresponding features are equal, and this is the case iff they
+   * have the same id and live in the same workspace.
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   * TODO: also implement hashCode
+   */
+  @Override
+  public boolean equals( final Object other )
+  {
+    if( other instanceof AbstractFeatureBinder )
+    {
+      final AbstractFeatureBinder otherBinder = (AbstractFeatureBinder) other;
+      final Feature otherFeature = otherBinder.getFeature();
+
+      if( m_featureToBind.getId().equals( otherFeature.getId() ) && m_featureToBind.getWorkspace() == otherFeature.getWorkspace() )
+        return true;
+    }
+
+    return false;
   }
 
 }
