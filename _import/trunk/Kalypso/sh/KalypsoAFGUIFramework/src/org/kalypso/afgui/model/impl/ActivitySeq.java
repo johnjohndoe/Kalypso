@@ -157,7 +157,15 @@ public class ActivitySeq implements IActivitySeq
 
 			public IActivity next()
 			{
-				return new Activity((Resource)nIt.next());
+				try
+				{
+					return new Activity((Resource)nIt.next());
+				}
+				catch(Throwable th)
+				{
+					//TODO build dummy activity and return it
+					return null;
+				}
 			}
 
 			public void remove()

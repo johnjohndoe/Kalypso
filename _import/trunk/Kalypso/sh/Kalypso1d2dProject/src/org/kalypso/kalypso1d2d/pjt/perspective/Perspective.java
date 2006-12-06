@@ -27,20 +27,28 @@ public class Perspective implements IPerspectiveFactory {
 			 				IPageLayout.LEFT, 
 			 				0.2f,
 			 				editorArea);
+		//with left middle and bottom 
+//		 IFolderLayout leftMiddle = 
+//			 	layout.createFolder(
+//			 				"leftMiddle", 
+//			 				IPageLayout.BOTTOM, 
+//			 				0.4f,
+//			 				"leftTop");
+//		 
+//		 IFolderLayout leftBottom = 
+//			 	layout.createFolder(
+//			 				"leftBottom", 
+//			 				IPageLayout.BOTTOM, 
+//			 				0.5f,
+//			 				"leftMiddle");
 		 
-		 IFolderLayout leftMiddle = 
-			 	layout.createFolder(
-			 				"leftMiddle", 
-			 				IPageLayout.BOTTOM, 
-			 				0.4f,
-			 				"leftTop");
-		 
+		 //only leftbottom
 		 IFolderLayout leftBottom = 
 			 	layout.createFolder(
 			 				"leftBottom", 
 			 				IPageLayout.BOTTOM, 
-			 				0.5f,
-			 				"leftMiddle");
+			 				0.3f,
+			 				"leftTop");
 		 
 		 IFolderLayout bottom = 
 			 	layout.createFolder(
@@ -62,7 +70,7 @@ public class Perspective implements IPerspectiveFactory {
 			 				"rightTop");
 		 
 		 leftTop.addView(WorkflowView.ID);//IPageLayout.ID_RES_NAV);
-		 leftMiddle.addView(TasksView.ID);
+		 //leftMiddle.addView(TasksView.ID);
 		 leftBottom.addView(IPageLayout.ID_OUTLINE);
 		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		 //bottom.addView(IPageLayout.ID_)

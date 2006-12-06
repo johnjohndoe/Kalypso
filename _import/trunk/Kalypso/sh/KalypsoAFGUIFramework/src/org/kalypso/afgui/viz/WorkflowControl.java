@@ -5,9 +5,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.DefaultEditorKit.CutAction;
 
 
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -18,11 +27,20 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
@@ -33,20 +51,31 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.afgui.model.IActivity;
+import org.kalypso.afgui.model.IHelp;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.ISubTaskGroup;
 import org.kalypso.afgui.model.ITask;
 import org.kalypso.afgui.model.ITaskGroup;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
+import org.kalypso.afgui.model.impl.SubTaskGroup;
 import org.kalypso.afgui.model.impl.TaskGroup;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 
 import EDU.oswego.cs.dl.util.concurrent.Takable;
 
 public class WorkflowControl
 {
+	public static final Logger logger= 
+				Logger.getLogger(WorkflowControl.class);
 	
+	public static final String KEY_GROUP_TASKS="_GROUP_TASKS";
+	public static final String KEY_GROUP_ACTIVITIES="_GROUP_ACTIVITIES";
+	/////////////////////////////////////////////////
 	class SectionListener implements IExpansionListener
 	{
 
@@ -62,7 +91,10 @@ public class WorkflowControl
 //					c.dispose();
 //				}
 //			}
+			IContributionItem ci=null;//aTBMng.
+			
 			tTBMng.removeAll();
+			aTBMng.removeAll();
 			if(e.getState())
 			{
 				Object source=e.getSource();
@@ -82,7 +114,7 @@ public class WorkflowControl
 							(ITaskGroup)c.getData(KEY_ITASKGROUP);
 						if(tg!=null)
 						{
-							System.out.println("================="+tg.getTasks());
+							logger.info("================="+tg.getTasks());
 							for(ITask task:tg.getTasks())
 							{
 								tasks.add(task);
@@ -93,7 +125,7 @@ public class WorkflowControl
 							(ISubTaskGroup)c.getData(KEY_ISUBTASKGROUP);
 						if(stg!=null)
 						{
-							System.out.println("===STG=============="+stg.getTasks());
+							logger.info("===STG=============="+stg.getTasks());
 							for(ITask task:stg.getTasks())
 							{
 								tasks.add(task);
@@ -104,9 +136,10 @@ public class WorkflowControl
 						TaskAction ta;
 						for(ITask task:tasks)
 						{
-							System.out.println("ADDING:"+task);
+							logger.info("ADDING:"+task);
 							ta=new TaskAction(task);
 							tTBMng.add(ta);
+							//tTBMng.getControl().
 							actions.add(ta);
 						}
 						c.setData(KEY_ITASK_ACTIONS, actions);
@@ -118,15 +151,14 @@ public class WorkflowControl
 							tTBMng.add(ta);
 						}
 					}
-					tTBMng.update(true);
-					//tbMng.getControl().getParent().getParent().update();//redraw();
-					taskComposite.reflow(false);
+					tTBMng.update(true);					
+					tTBComp.reflow(true);
 				}
 				
 			}
 			tTBMng.update(true);
-			taskComposite.reflow(false);
-			
+			tTBComp.reflow(false);
+			aTBMng.update(true);
 			if(lastExpanded!=e.getSource())
 			{
 				if(lastExpanded!=null)
@@ -187,8 +219,7 @@ public class WorkflowControl
 		@Override
 		public void run()
 		{
-			System.out.println("RUNNING="+workflowPart);
-			
+			logger.info("RUNNING="+workflowPart);
 			if(workflowPart instanceof ITask)
 			{
 				aTBMng.removeAll();
@@ -209,11 +240,15 @@ public class WorkflowControl
 					for(int i=0;i<activityActions.size();i++)
 					{
 						aTBMng.add(activityActions.get(i));
+						
 					}
 				}
 				aTBMng.update(true);
 				aTBComp.reflow(true);
 			}
+			
+			String uri=workflowPart.getURI();
+			doURITask(uri);
 		}
 		
 		@Override
@@ -225,6 +260,19 @@ public class WorkflowControl
 		public int getStyle()
 		{
 			return Action.AS_PUSH_BUTTON;//super.getStyle();
+		}
+		
+		@Override
+		public String getToolTipText()
+		{
+			try
+			{
+				return workflowPart.getHelp().getHelp();
+			}
+			catch(Throwable th)
+			{
+				return null;
+			}
 		}
 		
 		public E getWorkflowPart()
@@ -254,7 +302,7 @@ public class WorkflowControl
 	private FormToolkit toolkit;
 	private ScrolledForm form;
 	private ScrolledForm aTBComp;
-	private ScrolledForm taskComposite;
+	private ScrolledForm tTBComp;
 	
 	private ToolBarManager tTBMng;
 	private ToolBarManager aTBMng;
@@ -277,73 +325,75 @@ public class WorkflowControl
 	
 	public void createControl(Composite parent)
 	{
-		createBaseContainers(parent);
-		///IPhase
-		phaseCntls=
-			new ArrayList<Section>();
-		Section madeSec;
-		for(IPhase phase:workflow.getPhases())
-		{
-			madeSec=createPhaseExpandable(phase,form);
-			phaseCntls.add(madeSec);
-			madeSec.addExpansionListener(pEL);
-			toolkit.createCompositeSeparator(madeSec);
-		}
-				
-		taskGroupECs=
-					new ArrayList<Section>();
+		//top
+		top = new Composite(parent,SWT.FILL);
+		top.setLayout(new FillLayout());
 		
-		IPhase phase;
-		for(Section ec:phaseCntls)
-		{
-			phase=(IPhase)ec.getData(KEY_IPHASE);
-			Composite comp=toolkit.createComposite(ec,SWT.BORDER);
-			comp.setLayout(new GridLayout());
-			for(ITaskGroup tg:phase.getTaskGroups())
-			{
-				madeSec=createTaskGroupExpandable(tg,comp,phase);
-				taskGroupECs.add(madeSec);
-				madeSec.addExpansionListener(tgEL);
-				toolkit.createCompositeSeparator(madeSec);
-			}
-			ec.setClient(comp);
-		}
-		
-		
-		///SubTaskGroup
-		ITaskGroup taskGroup;
-		stgSecs= new ArrayList<Section>(); 
-		for(Section sec:taskGroupECs)//;int i=0;i<taskGroupECs.size();i++)
-		{
-			//System.out.println("III="+i);
-			phase=(IPhase)sec.getData(KEY_IPHASE);
-			taskGroup=(ITaskGroup)sec.getData(KEY_ITASKGROUP);
-			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
-			comp.setLayout(new GridLayout());
-			for(ISubTaskGroup stg:taskGroup.getSubTaskGroups())
-			{
-				madeSec=createSubTaskGroupExpandable(stg,comp,taskGroup,phase);
-				madeSec.addExpansionListener(stgEL);
-				stgSecs.add(madeSec);
-			}
-			sec.setClient(comp);
-		}
-		
-////		/ITask
-//		ISubTaskGroup subTaskGroup;
-//		List<Button> taskButtons= new ArrayList<Button>(); 
-//		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
+		//createBaseContainers(parent);
+		createBaseContainersBottomToolbars(parent);
+		createWorkFlowView();
+//		///IPhase
+//		phaseCntls=
+//			new ArrayList<Section>();
+//		Section madeSec;
+//		
+//		//twd.rowspan=TableWrapData.FILL;
+//		//form.getBody().setLayout(new TableWrapLayout());
+//		form.getBody().setLayout(new FormLayout());
+//		FormData fd= new FormData();
+//		fd.left= new FormAttachment(0,0);
+//		fd.right= new FormAttachment(100,0);
+//		fd.top=new FormAttachment(0,0);
+//		
+//		for(IPhase phase:workflow.getPhases())
 //		{
-//			//System.out.println("III="+i);
+//			madeSec=createPhaseExpandable(phase,form);
+//			phaseCntls.add(madeSec);
+//			madeSec.setLayoutData(fd);
+//			fd= new FormData();
+//			fd.left= new FormAttachment(0,0);
+//			fd.right= new FormAttachment(100,0);
+//			fd.top=new FormAttachment(madeSec);
+//			madeSec.addExpansionListener(pEL);
+//			//toolkit.createCompositeSeparator(madeSec);
 //			
-//			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
-//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
-//			
+//		}
+//				
+//		taskGroupECs=
+//					new ArrayList<Section>();
+//		
+//		IPhase phase;
+//		for(Section ec:phaseCntls)
+//		{
+//			phase=(IPhase)ec.getData(KEY_IPHASE);
+//			Composite comp=toolkit.createComposite(ec,SWT.BORDER);
 //			comp.setLayout(new GridLayout());
-//			for(ITask t:subTaskGroup.getTasks())
+//			for(ITaskGroup tg:phase.getTaskGroups())
 //			{
-//				Button taskButton=createTaskButton(t,comp);
-//				taskButtons.add(taskButton);
+//				madeSec=createTaskGroupExpandable(tg,comp,phase);
+//				taskGroupECs.add(madeSec);
+//				madeSec.addExpansionListener(tgEL);
+//				toolkit.createCompositeSeparator(madeSec);
+//			}
+//			ec.setClient(comp);
+//		}
+//		
+//		
+//		///SubTaskGroup
+//		ITaskGroup taskGroup;
+//		stgSecs= new ArrayList<Section>(); 
+//		for(Section sec:taskGroupECs)//;int i=0;i<taskGroupECs.size();i++)
+//		{
+//			//logger.info("III="+i);
+//			phase=(IPhase)sec.getData(KEY_IPHASE);
+//			taskGroup=(ITaskGroup)sec.getData(KEY_ITASKGROUP);
+//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
+//			comp.setLayout(new GridLayout());
+//			for(ISubTaskGroup stg:taskGroup.getSubTaskGroups())
+//			{
+//				madeSec=createSubTaskGroupExpandable(stg,comp,taskGroup,phase);
+//				madeSec.addExpansionListener(stgEL);
+//				stgSecs.add(madeSec);
 //			}
 //			sec.setClient(comp);
 //		}
@@ -351,16 +401,103 @@ public class WorkflowControl
 
 	Map<Object, List<Control>> taskControlMap;
 	
+	private void createWorkFlowView()
+	{
+//		/IPhase
+		phaseCntls=
+			new ArrayList<Section>();
+		Section madeSec;
+		
+		//twd.rowspan=TableWrapData.FILL;
+		//form.getBody().setLayout(new TableWrapLayout());
+		form.getBody().setLayout(new FormLayout());
+		FormData fd= new FormData();
+		fd.left= new FormAttachment(0,0);
+		fd.right= new FormAttachment(100,0);
+		fd.top=new FormAttachment(0,0);
+		
+		for(IPhase phase:workflow.getPhases())
+		{
+			madeSec=createPhaseExpandable(phase,form);
+			phaseCntls.add(madeSec);
+			madeSec.setLayoutData(fd);
+			fd= new FormData();
+			fd.left= new FormAttachment(0,0);
+			fd.right= new FormAttachment(100,0);
+			fd.top=new FormAttachment(madeSec);
+			madeSec.addExpansionListener(pEL);
+			//toolkit.createCompositeSeparator(madeSec);
+			
+		}
+				
+		taskGroupECs=
+					new ArrayList<Section>();
+		
+		IPhase phase;
+		List<ITaskGroup> curTGList;
+		for(Section ec:phaseCntls)
+		{
+			phase=(IPhase)ec.getData(KEY_IPHASE);
+			curTGList= phase.getTaskGroups();
+			if(curTGList.isEmpty())
+			{
+				//empty
+			}
+			else
+			{
+				Composite comp=toolkit.createComposite(ec,SWT.BORDER);
+				comp.setLayout(new GridLayout());
+				for(ITaskGroup tg:phase.getTaskGroups())
+				{
+					madeSec=createTaskGroupExpandable(tg,comp,phase);
+					taskGroupECs.add(madeSec);
+					madeSec.addExpansionListener(tgEL);
+					//toolkit.createCompositeSeparator(madeSec);
+				}
+				ec.setClient(comp);
+			}
+		}
+		
+		
+		///SubTaskGroup
+		ITaskGroup taskGroup;
+		List<ISubTaskGroup> curSTGList;
+		stgSecs= new ArrayList<Section>(); 
+		for(Section sec:taskGroupECs)//;int i=0;i<taskGroupECs.size();i++)
+		{
+			//logger.info("III="+i);
+			taskGroup=(ITaskGroup)sec.getData(KEY_ITASKGROUP);
+			curSTGList=taskGroup.getSubTaskGroups();
+			if(curSTGList.isEmpty())
+			{
+				//empty
+			}
+			else
+			{
+				phase=(IPhase)sec.getData(KEY_IPHASE);				
+				Composite comp=toolkit.createComposite(sec,SWT.BORDER);
+				comp.setLayout(new GridLayout());
+				for(ISubTaskGroup stg:curSTGList)
+				{
+					madeSec=createSubTaskGroupExpandable(stg,comp,taskGroup,phase);
+					madeSec.addExpansionListener(stgEL);
+					stgSecs.add(madeSec);
+				}
+				sec.setClient(comp);
+			}
+		}
+	}
+	
 	private Composite contributeToStack(List<ITask> tasks)
 	{
-		Composite c=toolkit.createComposite(taskComposite);
+		Composite c=toolkit.createComposite(tTBComp);
 		
 		String name;
 		c.setLayout(new GridLayout());
 		for(ITask task:tasks)
 		{
 			name=getWorkflowPartName(task);
-			toolkit.createButton(taskComposite,name,SWT.PUSH);
+			toolkit.createButton(tTBComp,name,SWT.PUSH);
 		}
 		
 		return c;
@@ -369,14 +506,14 @@ public class WorkflowControl
 	private void contributeToTasksPanel(List<ITask> tasks)
 	{
 		String name;
-		taskComposite.setLayout(new GridLayout());
+		tTBComp.setLayout(new GridLayout());
 		for(ITask task:tasks)
 		{
 			name=getWorkflowPartName(task);
-			toolkit.createButton(taskComposite,name,SWT.PUSH);
+			toolkit.createButton(tTBComp,name,SWT.PUSH);
 		}
-		taskComposite.getParent().pack();
-		taskComposite.redraw();
+		tTBComp.getParent().pack();
+		tTBComp.redraw();
 		
 		//taskComposite.setVisible(true);
 //		taskComposite.
@@ -389,7 +526,7 @@ public class WorkflowControl
 //		
 //		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
 //		{
-//			//System.out.println("III="+i);
+//			//logger.info("III="+i);
 //			
 //			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
 //			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
@@ -452,7 +589,7 @@ public class WorkflowControl
 		
 		fd= new FormData();
 		fd.left= new FormAttachment(0,0);
-		fd.bottom= new FormAttachment(70,0);
+		fd.bottom= new FormAttachment(100,0);
 		fd.top= new FormAttachment(0,0);
 		form = 
 			toolkit.createScrolledForm(containerForm);
@@ -501,7 +638,7 @@ public class WorkflowControl
 		l.setLayoutData(fd);
 		
 		//tasks
-		taskComposite=toolkit.createScrolledForm(containerForm);
+		tTBComp=toolkit.createScrolledForm(containerForm);
 //			toolkit.createComposite(
 //					containerForm,
 //					SWT.BORDER|SWT.BOLD);
@@ -511,19 +648,115 @@ public class WorkflowControl
 		fd.bottom= new FormAttachment(100,0);
 		fd.top= new FormAttachment(l);//form);//30,0);
 		fd.right=new FormAttachment(aTBComp);
-		taskComposite.setLayoutData(fd);
+		tTBComp.setLayoutData(fd);
 		//taskComposite.setLayout(new FillLayout());
 		//ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
 		//cf.getBody().setLayout(new TableWrapLayout());
 		
-		taskComposite.getBody().setLayout(new TableWrapLayout());
+		tTBComp.getBody().setLayout(new TableWrapLayout());
 		ToolBar tb= new ToolBar(
-					taskComposite.getBody(),
-					SWT.V_SCROLL|SWT.WRAP);
+					tTBComp.getBody(),
+					SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
 		tTBMng= new ToolBarManager(tb);
+		tTBMng.add(new GroupMarker(KEY_GROUP_TASKS));
+		//Group g= new Group(tb,SWT.NONE);
+		
+		tTBMng.add(new GroupMarker(KEY_GROUP_ACTIVITIES));
 		//Control tbC=tbMng.createControl(taskComposite);
 		toolkit.adapt(tb);
 		form.getBody().setLayout(new TableWrapLayout());
+		
+	}
+	
+	private void createBaseContainersBottomToolbars(Composite parent)
+	{
+		
+//		top = new Composite(parent,SWT.FILL);
+//		top.setLayout(new FillLayout());
+		toolkit= new FormToolkit(top.getDisplay());
+		Composite containerForm=toolkit.createComposite(top);
+		
+		
+			
+		containerForm.setLayout(new FormLayout());
+		
+		FormData fd;
+		
+		fd= new FormData();
+		fd.left= new FormAttachment(0,0);
+		fd.bottom= new FormAttachment(60,0);
+		fd.top= new FormAttachment(0,0);
+		form = 
+			toolkit.createScrolledForm(containerForm);
+		form.setLayoutData(fd);
+		
+//		SEPARAtor workflow (task activities)
+		Label wSepTA=toolkit.createSeparator(
+					containerForm, SWT.HORIZONTAL|SWT.BOLD);
+		fd= new FormData();
+		fd.height=1;
+		fd.left= new FormAttachment(0,0);
+//		fd.bottom= new FormAttachment(100,0);
+		fd.top= new FormAttachment(form);//30,0);
+		fd.right=new FormAttachment(100,0);//aTBComp);
+		wSepTA.setLayoutData(fd);
+		
+//		tasks bottom left
+		tTBComp=toolkit.createScrolledForm(containerForm);
+//			toolkit.createComposite(
+//					containerForm,
+//					SWT.BORDER|SWT.BOLD);
+		
+		fd= new FormData();
+		fd.left= new FormAttachment(0,0);
+		fd.bottom= new FormAttachment(100,0);
+		fd.top= new FormAttachment(wSepTA);//form);//30,0);
+		fd.right=new FormAttachment(50,0);
+		tTBComp.setLayoutData(fd);
+		
+//		SEPARAtor task activities
+		Label l=toolkit.createSeparator(
+				containerForm, SWT.VERTICAL|SWT.BOLD);
+		fd= new FormData();
+		fd.width=1;
+		fd.left= new FormAttachment(tTBComp);
+		fd.bottom= new FormAttachment(100,0);
+		fd.top= new FormAttachment(form);//30,0);
+		//fd.right=new FormAttachment(al);//aTBComp);
+		l.setLayoutData(fd);
+		
+		//activities
+		fd= new FormData();
+		//fd.width=16;
+		fd.left=new FormAttachment(l);//form);
+		fd.right= new FormAttachment(100,0);
+		fd.bottom= new FormAttachment(100,0);
+		fd.top= new FormAttachment(form);
+		aTBComp= 
+			toolkit.createScrolledForm(containerForm);
+		aTBComp.setLayoutData(fd);
+		aTBComp.getBody().setLayout(new TableWrapLayout());
+		ToolBar aTB= new ToolBar(
+				aTBComp.getBody(),
+				SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
+		aTBMng= new ToolBarManager(aTB);
+		toolkit.adapt(aTB);
+		
+		
+		//taskComposite.setLayout(new FillLayout());
+		//ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
+		//cf.getBody().setLayout(new TableWrapLayout());
+		
+		tTBComp.getBody().setLayout(new TableWrapLayout());
+		ToolBar tb= new ToolBar(
+					tTBComp.getBody(),
+					SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
+		
+		tTBMng= new ToolBarManager(tb);
+		//Control tbC=tbMng.createControl(taskComposite);
+		toolkit.adapt(tb);
+		
+		//form.getBody().setLayout(new TableWrapLayout());
 		
 	}
 	
@@ -537,10 +770,12 @@ public class WorkflowControl
 						ec, 
 						Section.TREE_NODE|
 						Section.CLIENT_INDENT|
-						Section.TWISTIE);
+						Section.TWISTIE|Section.DESCRIPTION|
+						Section.TITLE_BAR);
 		
 		childEC.setText(
 				getWorkflowPartName(tg));
+		childEC.setToolTipText(getWorkflowPartHelp(tg));
 		childEC.setData(KEY_ITASKGROUP, tg);
 		childEC.setData(KEY_IPHASE,phase);
 		
@@ -559,13 +794,18 @@ public class WorkflowControl
 						form.getBody(), 
 						Section.TREE_NODE|
 						Section.CLIENT_INDENT|
-						Section.TWISTIE);
+						Section.TWISTIE|Section.DESCRIPTION|
+						Section.TITLE_BAR
+						);
 		ec.setText(
 				getWorkflowPartName(phase));
+		ec.setToolTipText(getWorkflowPartHelp(phase));
+		
 		ec.setData(KEY_IPHASE, phase);
 		//ec.setLayout(new TableWrapLayout());
 		return ec;
 	}
+	
 	
 	final static public String getWorkflowPartName(IWorkflowPart wp)
 	{
@@ -580,5 +820,101 @@ public class WorkflowControl
 		}
 		return name;
 	}
+	
+	final static public String getWorkflowPartHelp(IWorkflowPart wp)
+	{
+		IHelp  help=wp.getHelp();
+		
+		if(help==null)
+		{
+			return "";
+		}
+		else
+		{
+			String helpString=help.getHelp();
+			if(helpString==null)
+			{
+				return "";
+			}
+			else
+			{
+				return helpString;
+			}
+		}
+	}
+	
+	public static final String LOAD_URI=
+		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad";
+	public static final String LOAD_K2D2D=
+		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadK2D2D";
+	public static final String LOAD_IMG_TIFF=
+		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadTiff";
+	public static final String LOAD_IMG_JPG=
+		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadJPEG";
+	
+	private IWorkbenchPage page;
+	private GisMapOutlineViewer m_outlineviewer;
+	
+	private void resolveGisMapOutlineViewer()
+	{
+//		for(IWorkbenchPage p:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages())
+//		{
+//			ContentOutline co;
+//			IViewPart vp=p.findView(IPageLayout.ID_OUTLINE);
+//			vp.get
+//			
+//		}
+		
+		//go through editor
+		//IContentOutlinePage outlinePage = (IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class);
+	}
+	
+	void openEditor()
+	{
+		logger.info("Opening editor");
+		if(page==null)
+		{
+			page = 
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		}
+		if(page!=null)
+		{
+		   
+			try
+			{
+				IEditorPart ep=IDE.openEditor(
+						page, 
+						ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("/test/Karte.gmt")));
+				logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
+				//GisMapOutlinePage getModelView for  setting themes
+			}
+			catch (PartInitException e)
+			{
+				logger.error("/test/Karte.gmt",e);
+			}
+//		   IEditorDescriptor desc = PlatformUI.getWorkbench().
+//		      getEditorRegistry().getDefaultEditor(file.getName());
+//		   page.openEditor(
+//		      new FileEditorInput(file),
+//		      desc.getId());
+		}
+		
+	}
+	
+	private final void doURITask(String uri)
+	{
+		if(uri==null)
+		{
+			logger.warn("uri task is null");
+		}
+		else
+		{
+			if(LOAD_URI.equals(uri))
+			{
+				openEditor();
+			}
+		}		
+	}
+	
 	
 }
