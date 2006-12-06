@@ -41,7 +41,9 @@
 package org.kalypso.ui.catalogs;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -64,6 +66,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
 {
+  private static Map<String, IAnnotation> m_annotationCache = new HashMap<String, IAnnotation>();
+
   /**
    * @see org.kalypso.gmlschema.adapter.IAnnotationProvider#getAnnotation(java.lang.String, java.lang.Object)
    */
@@ -74,6 +78,12 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
       final QualifiedElement qe = (QualifiedElement) annotableObject;
       final QName qname = qe.getQName();
 
+      /* Try to get cached image descriptor */
+      final String cacheKey = qname == null ? "null" : qname.toString();
+
+      if( m_annotationCache.containsKey( cacheKey ) )
+        return m_annotationCache.get( cacheKey );
+      
       // REMARK: catalog is registered for feature type, not for qname
       // Hint for a refaktoring on the CatalogManager
       final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
@@ -91,13 +101,21 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
       {
         final List<String> enryURNS = baseCatalog.getEnryURNS( baseURN + "*:" + lang );
         if( enryURNS.size() == 0 )
+        {
+          /* Allways add cache value, so this lookup takes only place once (not finding anything is very expensive) */
+          m_annotationCache.put( cacheKey, null );
+
           return null;
+        }
 
         final DefaultAnnotation annotation = new DefaultAnnotation( lang, qname.getLocalPart() );
         annotation.putValue( IAnnotation.ANNO_NAME, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_NAME, lang ) );
         annotation.putValue( IAnnotation.ANNO_LABEL, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_LABEL, lang ) );
         annotation.putValue( IAnnotation.ANNO_DESCRIPTION, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_DESCRIPTION, lang ) );
         annotation.putValue( IAnnotation.ANNO_TOOLTIP, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_TOOLTIP, lang ) );
+        
+        m_annotationCache.put( cacheKey, annotation );
+        
         return annotation;
       }
       catch( final MalformedURLException e )
@@ -110,6 +128,9 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
       }
+      
+      /* Allways add cache value, so this lookup takes only place once (not finding anything is very expensive) */
+      m_annotationCache.put( cacheKey, null );
     }
 
     return null;
