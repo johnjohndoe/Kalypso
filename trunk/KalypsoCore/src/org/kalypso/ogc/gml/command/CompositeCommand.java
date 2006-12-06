@@ -52,7 +52,6 @@ import org.kalypso.commons.command.ICommand;
  */
 public class CompositeCommand implements ICommand
 {
-
   private final String m_description;
 
   private final List<ICommand> m_commands;
@@ -60,13 +59,21 @@ public class CompositeCommand implements ICommand
   private boolean m_canUndo;
 
   /**
-   * Creates a new composite command with given description and command to be executed
+   * Creates a new composite command with given description and an empty command list
    */
-  public CompositeCommand( final String description, final ICommand command )
+  public CompositeCommand( final String description )
   {
     m_commands = new ArrayList<ICommand>();
     m_description = description;
     m_canUndo = true;
+  }
+
+  /**
+   * Creates a new composite command with given description and command to be executed
+   */
+  public CompositeCommand( final String description, final ICommand command )
+  {
+    this(description);
     addCommand( command );
   }
 
@@ -106,9 +113,7 @@ public class CompositeCommand implements ICommand
   public void process( ) throws Exception
   {
     for( final ICommand command : m_commands )
-    {
       command.process();
-    }
   }
 
   /**
@@ -129,9 +134,7 @@ public class CompositeCommand implements ICommand
   public void undo( ) throws Exception
   {
     for( int i = m_commands.size() - 1; i >= 0; i-- )
-    {
       m_commands.get( i ).undo();
-    }
   }
 
 }
