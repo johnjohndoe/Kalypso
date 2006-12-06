@@ -871,8 +871,8 @@
 	</wbs:TaskSeq>
 	<wbs:Task
 		rdf:about="&k1d2dwf;Edit2DElts">
-		<wbs:hasName> 2D-Netzbearbeitung </wbs:hasName>
-		<wbs:hasHelp> Zeichnen, l�schen und andere manuelle Bearbeitungen des 2D-Netzes </wbs:hasHelp>
+		<wbs:hasName>2D-Netzbearbeitung</wbs:hasName>
+		<wbs:hasHelp> Zeichnen, löschen und andere manuelle Bearbeitungen des 2D-Netzes </wbs:hasHelp>
 		<wbs:hasActivities rdf:resource="&k1d2dwf;Edit2DEltsActs"/>
 	</wbs:Task>	
 	<wbs:ActivitySeq 

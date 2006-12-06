@@ -15,7 +15,7 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Seq;
 
-
+//TODO replace with generic type
 public class ActivitySeq implements IActivitySeq
 {
 	final private Seq seq;
@@ -146,10 +146,10 @@ public class ActivitySeq implements IActivitySeq
 
 	public Iterator<IActivity> iterator()
 	{
-		final  NodeIterator nIt=seq.iterator();
+		
 		Iterator<IActivity> it=new Iterator<IActivity>()
 		{
-
+			final  NodeIterator nIt=seq.iterator();
 			public boolean hasNext()
 			{
 				return nIt.hasNext();
