@@ -43,6 +43,8 @@ package org.kalypso.ui.catalogs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -61,17 +63,28 @@ public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "uiproperties";
 
+  private static Map<String, Properties> m_propertiesCache = new HashMap<String, Properties>();
+  
   public static Properties getProperties( final URL context, final QName qname )
   {
+    /* Try to get cached image descriptor */
+    final String contextStr = context == null ? "null" : context.toExternalForm();
+    final String qnameStr = qname == null ? "null" : qname.toString();
+    final String cacheKey = contextStr + '#' + qnameStr;
+
+    if( m_propertiesCache.containsKey( cacheKey ) )
+      return m_propertiesCache.get( cacheKey );
+    
     final Properties properties = new Properties();
 
-    final URL url = getURL( BASETYPE, context, qname );
-    if( url == null )
-      return properties;
 
     InputStream is = null;
     try
     {
+      final URL url = getURL( BASETYPE, context, qname );
+      if( url == null )
+        return properties;
+
       is = url.openStream();
       properties.load( is );
       is.close();
@@ -84,6 +97,9 @@ public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
     finally
     {
       IOUtils.closeQuietly( is );
+      
+      /* Allways add properties, so this lookup takes only place once (not finding anything is very expensive) */
+      m_propertiesCache.put( cacheKey, properties );
     }
 
     return properties;
