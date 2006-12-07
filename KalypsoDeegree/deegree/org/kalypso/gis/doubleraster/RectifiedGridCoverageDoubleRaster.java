@@ -3,15 +3,15 @@ package org.kalypso.gis.doubleraster;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
-import javax.media.jai.TiledImage;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gis.doubleraster.grid.AsciiGrid;
+import org.kalypso.gis.doubleraster.grid.DoubleGrid;
+import org.kalypso.gis.doubleraster.grid.ImageGrid;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -41,10 +41,12 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
 
   private URL m_context;
 
-  private TiledImage m_tiledImage;
+  private DoubleGrid m_grid;
 
   public RectifiedGridCoverageDoubleRaster( final Feature rgcFeature ) throws Exception
   {
+    // TODO: getWorkspace can be null (e.g. for legend features)
+    // what to do??
     m_context = rgcFeature.getWorkspace().getContext();
     final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
     m_rangeSet = (RangeSetType) rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
@@ -61,31 +63,41 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
 
   public final double getValue( final int x, final int y )
   {
-    final TiledImage image = getTiledImage();
-    if( image == null )
+    final DoubleGrid grid = getTiledImage();
+    if( grid == null )
       return Double.NaN;
 
-    return image.getSampleDouble( x, y, 0 ) / 1000.0;
+    return grid.getValue( x, y );
   }
 
-  private TiledImage getTiledImage( )
+  private DoubleGrid getTiledImage( )
   {
-    if( m_tiledImage == null )
+    if( m_grid == null )
     {
+      // TODO: Dejan: for now we are using just a File, will be extended to other data types
+
       final FileType file = m_rangeSet.getFile();
       // TODO: only supported type now is 'File', support other types
       if( file != null )
       {
         try
         {
-          // TODO: we assume that mime-type is image; support other types as well
-          final String fileName = file.getFileName();
-          final URL url = new URL( m_context, fileName );
-
-          final RenderedOp image = JAI.create( "url", url );
-          m_tiledImage = new TiledImage( image, true );
-          m_sizeX = m_tiledImage.getWidth();
-          m_sizeY = m_tiledImage.getHeight();
+          // TODO: we assume that mime-type image is tiff
+          final String mimeType = file.getMimeType();
+          if( mimeType.startsWith( "image" ) )
+          {
+            final String fileName = file.getFileName();
+            
+            final URL url = new URL( m_context, fileName );
+            m_grid = new ImageGrid( url );
+          }
+          else if( mimeType.startsWith( "text/asc" ) )
+          {
+            final String fileName = file.getFileName();
+            
+            final URL url = new URL( m_context, fileName );
+            m_grid = new AsciiGrid( url );
+          }
         }
         catch( MalformedURLException e )
         {
@@ -94,7 +106,7 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
 
     }
 
-    return m_tiledImage;
+    return m_grid;
   }
 
   public Coordinate getOrigin( )

@@ -37,7 +37,8 @@
         <xsd:extension base="sld:SymbolizerType">
           <xsd:sequence>
             <xsd:element ref="sld:Geometry" minOccurs="0"/>
-            <xsd:element ref="sld:Opacity" minOccurs="0"/>
+<!--            <xsd:element ref="sld:Opacity" minOccurs="0"/>
+-->
 <!--            <xsd:element ref="sld:ChannelSelection" minOccurs="0"/>
             <xsd:element ref="sld:OverlapBehavior" minOccurs="0"/>
 -->
@@ -52,7 +53,7 @@
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
-
+<!--
   <xsd:element name="Opacity" type="sld:ParameterValueType"/>
     <xsd:complexType name="ParameterValueType" mixed="true">
     <xsd:annotation>
@@ -66,6 +67,7 @@
       <xsd:element ref="ogc:expression"/>
     </xsd:sequence>
   </xsd:complexType>
+-->
   
   
   <xsd:element name="Geometry">
@@ -98,7 +100,7 @@
   <xsd:element name="ColorMapEntry">
     <xsd:complexType>
       <xsd:attribute name="color" type="xsd:string" use="required"/>
-      <xsd:attribute name="opacity" type="xsd:double"/>
+      <!--<xsd:attribute name="opacity" type="xsd:double"/>-->
       <xsd:attribute name="quantity" type="xsd:double"/>
       <xsd:attribute name="label" type="xsd:string"/>
     </xsd:complexType>

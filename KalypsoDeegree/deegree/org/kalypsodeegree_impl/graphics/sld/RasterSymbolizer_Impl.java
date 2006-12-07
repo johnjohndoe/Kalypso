@@ -156,13 +156,32 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
   public String exportAsXML( )
   {
+    StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<RasterSymbolizer>" );
+    sb.append( "<ColorMap>" );
+    
+    if( m_colorMap != null )
+    {
+      Iterator it = m_colorMap.keySet().iterator();
+      while( it.hasNext() )
+      {
+        ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
+        sb.append( colorMapEntry.exportAsXML() );
+      }
+    }
+    
+    sb.append( "</ColorMap>" );
+    sb.append( "</RasterSymbolizer>" );
+    
+    return sb.toString();
+    
+    /*
     try
     {
       final ObjectFactory fac = new ObjectFactory();
-      //final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      //final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
-      // marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
-      // );
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
       if( m_colorMap != null )
       {
@@ -177,7 +196,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
         rasterSymbolizerElement.setColorMap( colorMapElement );
       }
       StringWriter writer = new StringWriter();
-      //marshaller.marshal( rasterSymbolizerElement, writer );
+      marshaller.marshal( rasterSymbolizerElement, writer );
       writer.close();
       // System.out.println( writer.toString() );
       return ((writer.toString()).replaceFirst( "<?.*?>", "" )).trim();
@@ -187,6 +206,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       System.out.println( e );
       return null;
     }
+    */
 
   }
 

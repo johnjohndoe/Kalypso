@@ -7,13 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
@@ -28,9 +28,9 @@ import org.w3c.dom.Node;
  */
 public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-  public static final String NSRGC = "http://www.tuhh.de/floodrisk/rasterData";
+  //public static final String NSRGC = "http://www.tuhh.de/floodrisk/rasterData";
 
-  public static final QName TYPENAME = new QName( NSRGC, "rangeSetFilePath" );
+  public static final QName TYPENAME = new QName( NS.GML3, "rangeSet" );
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -59,8 +59,8 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
     RangeSet rangeSet = (RangeSet) object;
     Document ownerDocument = node.getOwnerDocument();
 
-    //Element e_File = ownerDocument.createElementNS( NSRGC, "rgc:File" );
-    Element e_FileName = ownerDocument.createElementNS( NSRGC, "risk_rd:rangeSetFilePath" );
+    Element e_rangeSet = ownerDocument.createElementNS( NS.GML3, "rgc:rangeSet" );
+    Element e_FileName = ownerDocument.createElementNS( NS.GML3, "gml:File" );
     File rangeSetDataFile = new File( FileUtilities.nameWithoutExtension( context.getFile() ) + ".dat" );
     if( rangeSet.getRangeSetDataFile() == null )
     {
@@ -68,7 +68,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
       rangeSet.setRangeSetDataFile( fileName );
     }
     e_FileName.appendChild( ownerDocument.createTextNode( rangeSet.getRangeSetDataFile() ) );
-    //e_File.appendChild( e_FileName );
+    e_rangeSet.appendChild( e_FileName );
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
@@ -79,7 +79,7 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
       System.out.println( e );
     }
 
-    node.appendChild( e_FileName );  //node.appendChild( e_File );
+    node.appendChild( e_rangeSet );
   }
 
   /**
@@ -93,8 +93,8 @@ public class RangeSetTypeHandler extends AbstractOldFormatMarshallingTypeHandler
     // Use a wrapper class to access grid data
     
     // TODO do not give context here, better give resolver
-    Node node_File = ((Element) node).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
-    Node node_FileName = ((Element) node_File).getElementsByTagNameNS( NSRGC, "fileName" ).item( 0 );
+    Node node_File = ((Element) node).getElementsByTagNameNS( NS.GML3, "File" ).item( 0 );
+    Node node_FileName = ((Element) node_File).getElementsByTagNameNS( NS.GML3, "fileName" ).item( 0 );
     String fileName = node_FileName.getFirstChild().getNodeValue();
     URL rangeSetDataURL;
     InputStreamReader rangeSetDataReader = null;

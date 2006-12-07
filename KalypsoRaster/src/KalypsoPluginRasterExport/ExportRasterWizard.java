@@ -57,7 +57,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 
 /**
  * 
@@ -131,7 +131,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
           @Override
           protected IStatus run( final IProgressMonitor monitor )
           {
-            RectifiedGridCoverage grid;
+            RectifiedGridCoverage2 grid;
             try
             {
               monitor.beginTask( "Lese Rasterdaten", 100 );

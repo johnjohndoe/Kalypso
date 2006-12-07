@@ -107,14 +107,13 @@ public class RectifiedGridDomainTypeHandler extends AbstractOldFormatMarshalling
 
     double[] offset = gridDomain.getOffset();
     Element e_offsetVector1 = ownerDocument.createElementNS( NSRGC, "rgc:offsetVector" );
-    String offsetVector1 = new String( "0.0" + " " + offset[1] );
+    String offsetVector1 = new String( offset[0] + " " + "0.0" );
     e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
     e_rectifiedGrid.appendChild( e_offsetVector1 );
     Element e_offsetVector2 = ownerDocument.createElementNS( NSRGC, "rgc:offsetVector" );
-    String offsetVector2 = new String( offset[0] + " " + "0.0" );
+    String offsetVector2 = new String( "0.0" + " " + offset[1] );
     e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );
-
     ((Element) node).appendChild( e_rectifiedGrid );
   }
 

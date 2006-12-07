@@ -69,6 +69,7 @@ public class DataBufferRasterWalker implements DoubleRasterWalker
   private final int m_mode;
 
   private int m_nCols;
+  private int m_nRows;
 
   private SampleModel m_sampleModel;
 
@@ -84,6 +85,7 @@ public class DataBufferRasterWalker implements DoubleRasterWalker
   public void start( final DoubleRaster r )
   {
     m_nCols = r.getSizeX();
+    m_nRows = r.getSizeY();
     final int nRows = r.getSizeY();
 
     m_sampleModel = RasterFactory.createBandedSampleModel( DataBuffer.TYPE_INT, m_nCols, nRows, 4 );
@@ -126,9 +128,8 @@ public class DataBufferRasterWalker implements DoubleRasterWalker
     if( y == -1 )
       return;
     
-    Color actualColor = Color.RED;
-    int alphaValue = 128;
-
+    Color actualColor = Color.WHITE;
+    int alphaValue = 0;
     final double value = c.z;
 
     if( !Double.isNaN( value ) )
@@ -183,7 +184,7 @@ public class DataBufferRasterWalker implements DoubleRasterWalker
     final int redValue = actualColor.getRed();
     final int greenValue = actualColor.getGreen();
     final int blueValue = actualColor.getBlue();
-    final int elementNumber = x + (y * m_nCols);
+    final int elementNumber = x + y*m_nCols;
     m_buffer.setElem( 0, elementNumber, redValue );
     m_buffer.setElem( 1, elementNumber, greenValue );
     m_buffer.setElem( 2, elementNumber, blueValue );

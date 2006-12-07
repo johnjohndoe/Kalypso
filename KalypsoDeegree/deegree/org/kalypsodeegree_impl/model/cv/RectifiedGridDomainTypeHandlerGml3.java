@@ -12,7 +12,7 @@ import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML2x;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -111,14 +111,13 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
 
     double[] offset = gridDomain.getOffset();
     Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
-    String offsetVector1 = new String( "0.0" + " " + offset[1] );
+    String offsetVector1 = new String( "0.0" + " " + offset[0] );
     e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
     e_rectifiedGrid.appendChild( e_offsetVector1 );
     Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "gml:offsetVector" );
-    String offsetVector2 = new String( offset[0] + " " + "0.0" );
+    String offsetVector2 = new String( offset[1] + " " + "0.0" );
     e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );
-
     ((Element) node).appendChild( e_rectifiedGrid );
   }
 
@@ -155,7 +154,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     Node n_point = ((Element) n_origin).getElementsByTagNameNS( NS.GML3, "Point" ).item( 0 );
     try
     {
-      AdapterBindingToValue adapter = new AdapterBindingToValue_GML2x();
+      AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
       GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
       // GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
       // GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );

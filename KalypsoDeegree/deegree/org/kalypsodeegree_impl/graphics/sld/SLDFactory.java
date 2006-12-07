@@ -73,9 +73,11 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
+import net.opengis.sld.ColorMap;
 import net.opengis.sld.ObjectFactory;
 
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -1617,14 +1619,15 @@ public class SLDFactory
     return (new CssParameter_Impl( name, pvt ));
   }
 
-  private static RasterSymbolizer createRasterSymbolizer( Element element )
+  private static RasterSymbolizer createRasterSymbolizer( Element element ) //throws XMLParsingException
   {
     try
     {
-      final ObjectFactory fac = new ObjectFactory();
+      //final ObjectFactory fac = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Unmarshaller unmarshaller = jc.createUnmarshaller();
-      net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = (net.opengis.sld.RasterSymbolizer) unmarshaller.unmarshal( element );
+      Object e = unmarshaller.unmarshal( element );
+      net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = ((JAXBElement<net.opengis.sld.RasterSymbolizer>) e).getValue();
       // Geometry geometry = createGeometry(rasterSymbolizerElement.getGeometry());
       final TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
       return new RasterSymbolizer_Impl( colorMap );
@@ -1641,9 +1644,26 @@ public class SLDFactory
    * geometryType.getPropertyName().getContent(); return new Geometry_Impl((String)propertyNames.get(0),null); }
    */
 
-  private static TreeMap createColorMap( net.opengis.sld.ColorMap colorMapType )
+  private static TreeMap createColorMap( ColorMap colorMapType )
   {
     TreeMap colorMap = new TreeMap();
+    /*
+    NodeList nodeList = colorMapElement.getChildNodes();
+    Element node = null;
+    Color color = null;
+    double quantity = 0.0;
+    String label = " ";
+    double opacity = 1.0;
+    for(int i=0; i<nodeList.getLength(); i++)
+    {
+      node = XMLTools.getChildByName( "ColorMapEntry", CommonNamespaces.SLDNS, nodeList.item( i ) );
+      color = Color.decode( XMLTools.getAttrValue( node, "color" ) );
+      quantity = Double.parseDouble( XMLTools.getAttrValue( node, "quantity" ) );
+      ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
+      colorMap.put( new Double( quantity ), colorMapEntryObject );
+    }
+    */
+    
     List colorMapEntries = colorMapType.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
@@ -1653,7 +1673,8 @@ public class SLDFactory
       {
         color = Color.decode( colorMapEntry.getColor() );
       }
-      double opacity = colorMapEntry.getOpacity();
+      //double opacity = colorMapEntry.getOpacity();
+      double opacity = 1.0;
       double quantity = colorMapEntry.getQuantity();
       String label = " ";
       if( colorMapEntry.getLabel() != null )
@@ -1663,6 +1684,7 @@ public class SLDFactory
       ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
       colorMap.put( new Double( quantity ), colorMapEntryObject );
     }
+    
     return colorMap;
   }
 }
