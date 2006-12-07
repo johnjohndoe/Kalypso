@@ -6,11 +6,15 @@ package org.kalypso.kalypso1d2d.pjt.views;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.ResourceDeltaFactory;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
@@ -47,6 +51,8 @@ public class SimulationModelDBView extends ViewPart
 	private WorkflowDataLabelProvider labelProvider=
 							new WorkflowDataLabelProvider();
 	
+	
+	
 	private IActiveContextChangeListener activeProjectChangeListener=
 		new IActiveContextChangeListener()
 	{
@@ -67,15 +73,19 @@ public class SimulationModelDBView extends ViewPart
 			if(newDB!=null)
 			{
 				newDB.addWorkflowDBChangeListener(dbChangeListerner);
+				//top.setVisible(true);
 			}
 			else
 			{
 				logger.warn("New Project DB is nul");
+				//top.setVisible(false);
 			}
 			tv.setInput(activeWorkContext);
 		}
 		
 	};
+	
+	private Composite top;
 	
 	private IWorkflowDBChangeListerner dbChangeListerner= 
 		new IWorkflowDBChangeListerner()
@@ -93,7 +103,10 @@ public class SimulationModelDBView extends ViewPart
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		tv= new TreeViewer(parent,SWT.FILL);
+		top= new Composite(parent,SWT.FILL);
+		top.setLayout(new FillLayout());
+		
+		tv= new TreeViewer(top,SWT.FILL);
 		simModelBasedCP= new SimModelBasedContentProvider();
 		tv.setContentProvider(simModelBasedCP);
 		tv.setInput(activeWorkContext);

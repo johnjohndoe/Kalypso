@@ -13,12 +13,15 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.WorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem; 
 import org.kalypso.afgui.model.impl.WorkflowSystem;
+
+import test.org.kalypso.kalypso1d2d.pjt.TestData;
 
 
 
@@ -201,7 +204,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 	      newNatures[natures.length] = ID;
 	      //Kalypso1d2dProjectPlugin.getDefault().showMessage(Arrays.asList(newNatures).toString());
 	      description.setNatureIds(newNatures);
-	      project.setDescription(description, null);
+	      project.setDescription(description, new NullProgressMonitor());
 		}
 		 
 	}
@@ -224,16 +227,25 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 			Object[][] file_specs=
 				{
 					{WORKFLOW_DATA_DESC,plugin.getTemplateWorkflowData()},
-					{WORKFLOW_DESC, plugin.getWorkflowSpec()}
+					{WORKFLOW_DESC, plugin.getWorkflowSpec()},
+					{TestData.NAME_AGGER_KARTE, TestData.URL_AGGER_KARTE},
+					{TestData.NAME_AGGER_MODEL, TestData.URL_AGGER_MODEL}
 				};
 			for(Object[] file_spec:file_specs)
 			{
-				IFile file= 
-					metaFolder.getFile((String)file_spec[0]);
-			    file.create(
-			    			((URL)file_spec[1]).openStream(), 
-			    			true, 
-			    			null);			    
+				try
+				{
+					IFile file= 
+						metaFolder.getFile((String)file_spec[0]);
+				    file.create(
+				    			((URL)file_spec[1]).openStream(), 
+				    			true, 
+				    			null);
+				}
+				catch(Throwable th)
+				{
+					logger.error("Could not create:"+file_spec[0], th);
+				}
 			}
 			metaFolder.getParent().refreshLocal(1, null);
 			 return metaFolder;

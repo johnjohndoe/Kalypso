@@ -10,7 +10,13 @@ import javax.swing.text.DefaultEditorKit.CutAction;
 
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.jface.action.Action;
@@ -65,6 +71,7 @@ import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.afgui.model.impl.SubTaskGroup;
 import org.kalypso.afgui.model.impl.TaskGroup;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 import EDU.oswego.cs.dl.util.concurrent.Takable;
 
@@ -223,6 +230,9 @@ public class WorkflowControl
 			if(workflowPart instanceof ITask)
 			{
 				aTBMng.removeAll();
+				new Label(
+						aTBMng.getControl(),
+						SWT.BORDER).setText(((ITask)workflowPart).getName());
 				if(activityActions==null)
 				{
 					activityActions= new ArrayList<TaskAction<IActivity>>();
@@ -244,6 +254,7 @@ public class WorkflowControl
 					}
 				}
 				aTBMng.update(true);
+				
 				aTBComp.reflow(true);
 			}
 			
@@ -261,6 +272,8 @@ public class WorkflowControl
 		{
 			return Action.AS_PUSH_BUTTON;//super.getStyle();
 		}
+		
+		
 		
 		@Override
 		public String getToolTipText()
@@ -316,6 +329,7 @@ public class WorkflowControl
 	SectionListener stgEL = new SectionListener(); 
 	SectionListener tgEL = new SectionListener(); 
 	SectionListener pEL = new SectionListener();
+	IProject activeProject;
 	
 	
 	public WorkflowControl(IWorkflow workflow)
@@ -334,6 +348,11 @@ public class WorkflowControl
 		createWorkFlowView();
 	}
 	
+	public void setActiveProject(IProject activeProject)
+	{
+		this.activeProject = activeProject;
+	}
+	
 	public void setWorkflow(IWorkflow workflow)
 	{
 		this.workflow = workflow;
@@ -341,6 +360,22 @@ public class WorkflowControl
 		form.reflow(true);
 		tTBComp.reflow(true);
 		aTBComp.reflow(true);
+		
+	}
+	
+	public void setVisible(boolean visible)
+	{
+		top.setVisible(visible);
+		top.getParent().update();
+		tTBMng.removeAll();
+		tTBMng.update(true);
+		aTBMng.removeAll();
+		aTBMng.update(true);
+//		this.workflow = workflow;
+//		createWorkFlowView();
+//		form.reflow(true);
+//		tTBComp.reflow(true);
+//		aTBComp.reflow(true);
 		
 	}
 	
@@ -815,10 +850,31 @@ public class WorkflowControl
 		   
 			try
 			{
+				if(activeProject==null)
+				{
+					logger.warn("Active project is null");
+					return ;
+				}
+				IWorkspace ws=ResourcesPlugin.getWorkspace();
+				
+				IPath gmtPath=new Path("/.metadata/agger_karte.gmt");
+				IFile gmtFile=
+					activeProject.getFile("project:/.metadata/agger_karte.gmt");
+				if(!gmtFile.exists())
+				{
+					logger.warn(
+							"DO NOT EXISTS:"+gmtFile+
+							" pjt="+activeProject);
+					return;
+				}
+				
 				IEditorPart ep=IDE.openEditor(
 						page, 
-						ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("/test/Karte.gmt")));
-				logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
+						gmtFile);
+				GisMapOutlinePage gmoPage=
+					(GisMapOutlinePage)ep.getAdapter(IContentOutlinePage.class);
+				
+				//logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
 				//GisMapOutlinePage getModelView for  setting themes
 			}
 			catch (PartInitException e)

@@ -17,6 +17,7 @@ import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSystem;
 
+//TODO move to workflow system problem with project??
 
 /**
  * Represents the work context for a user.
@@ -35,7 +36,7 @@ public class ActiveWorkContext
 	{
 		public void selectionChanged(IWorkbenchPart part, ISelection selection)
 		{
-			logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+//			logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
 			if(part instanceof ResourceNavigator)
 			{
 				

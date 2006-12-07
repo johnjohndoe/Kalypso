@@ -32,7 +32,7 @@
 		rdf:about="&k1d2dwf;Preprocessing">
 		<wbs:hasName>Preprocessing: Modellaufbau</wbs:hasName>
 		<wbs:hasHelp>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit
-		Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen
+		Kalypso-1D-2D zusammengestellt und aufgebaut. Es laesst sich zwischen den verschiedenen Arbeitsphasen
 		für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden
 		Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</wbs:hasHelp>
 		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ModBuild"/>
@@ -156,7 +156,7 @@
 	<wbs:TaskGroup
 		rdf:about="&k1d2dwf;Section">
 		<wbs:hasName>Schnittdarstellungen</wbs:hasName>
-		<wbs:hasHelp>???Darstellung von Längs- oder Querschnitten</wbs:hasHelp>
+		<wbs:hasHelp>???Darstellung von Laengs- oder Querschnitten</wbs:hasHelp>
 	        <wbs:hasTasks
                 	rdf:resource="&k1d2dwf;SectionTasks"/>
         </wbs:TaskGroup>
@@ -199,7 +199,7 @@
 <!--Defining the SubTaskGroups - Preprocessing-->
 	<wbs:SubTaskGroup 
 		rdf:about="&k1d2dwf;Net1DRivGroup">
-		<wbs:hasName> 1D Gewässernetz </wbs:hasName>
+		<wbs:hasName> 1D Gewaessernetz </wbs:hasName>
 		<wbs:hasHelp></wbs:hasHelp>
 		<wbs:hasTasks rdf:resource="&k1d2dwf;Net1DRivTasks"/>
 	</wbs:SubTaskGroup>
@@ -310,7 +310,7 @@
 
 	<wbs:TaskSeq 
 		rdf:about="&k1d2dwf;Net1DChanTasks">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:TaskSeq>
 
 	<wbs:TaskSeq 
@@ -471,7 +471,7 @@
     <wbs:Task
 		rdf:about="&k1d2dwf;RivNetLoad">
 		<wbs:hasName>Gewössernetz laden</wbs:hasName>
-		<wbs:hasHelp>Laden von Gewässernetzwerkdaten mit Kilometrierung</wbs:hasHelp>
+		<wbs:hasHelp>Laden von Gewaessernetzwerkdaten mit Kilometrierung</wbs:hasHelp>
 		<wbs:hasActivities rdf:resource="&k1d2dwf;RivNetLoadActs"/>
 	</wbs:Task>	
 	<wbs:ActivitySeq 
@@ -592,12 +592,12 @@
 	</wbs:Activity>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;GetLength">
-		<wbs:hasName> Länge ermitteln </wbs:hasName>
+		<wbs:hasName> Laenge ermitteln </wbs:hasName>
 		<wbs:hasHelp>  </wbs:hasHelp>
 	</wbs:Activity>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;SetLength">
-		<wbs:hasName> Länge zuweisen </wbs:hasName>
+		<wbs:hasName> Laenge zuweisen </wbs:hasName>
 		<wbs:hasHelp> Element zeichnen, d.h. vorhandene Profilknoten verbinden </wbs:hasHelp>
 	</wbs:Activity>
 	<wbs:Activity 
@@ -654,15 +654,15 @@
 		<!--These are the Activities for the View2-->
 		<rdf:_7 rdf:resource="&k1d2dwf;SelCell"/>
 		<rdf:_8 rdf:resource="&k1d2dwf;SelLines"/>
-		<rdf:_9 rdf:resource="&k1d2dwf;SelColumn"/>
-		<rdf:_10 rdf:resource="&k1d2dwf;SetValue"/>
-		<rdf:_11 rdf:resource="&k1d2dwf;SaveChanges"/>
-		<rdf:_12 rdf:resource="&k1d2dwf;FillValues"/>
+		<!--rdf:_9 rdf:resource="&k1d2dwf;SelColumn"/  -->
+		<rdf:_9 rdf:resource="&k1d2dwf;SetValue"/>
+		<rdf:_10 rdf:resource="&k1d2dwf;SaveChanges"/>
+		<rdf:_11 rdf:resource="&k1d2dwf;FillValues"/>
 	</wbs:ActivitySeq>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;SelProf">
-		<wbs:hasName> Profil wählen </wbs:hasName>
-		<wbs:hasHelp> Wählt eine Menü aus Pull-down Menü aus </wbs:hasHelp>
+		<wbs:hasName> Profil waehlen </wbs:hasName>
+		<wbs:hasHelp> Waehlt eine Menü aus Pull-down Menü aus </wbs:hasHelp>
                 <!--Diese Funktion muss auch aus Karte heraus verfögbar sein, dh, wenn in Karte ein Profil ausgewöhlt wird, dann muss das gleichbedeutend sein-->
 	</wbs:Activity>
 	<wbs:Activity 
@@ -707,14 +707,14 @@
 	</wbs:Activity>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;SaveChanges">
-		<wbs:hasName> Änderungen speichern </wbs:hasName>
+		<wbs:hasName> aenderungen speichern </wbs:hasName>
 		<wbs:hasHelp> Speichert önderungen an der Tabelle </wbs:hasHelp>
 	</wbs:Activity>
 	<!--Wird wahrscheinlich überhaupt nicht benötigt-->
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;FillValues">
 		<wbs:hasName> Werte übertragen </wbs:hasName>
-		<wbs:hasHelp> Überträgt zellen-, zeilen- oder spaltenweise die Daten des selektierten Bereiches </wbs:hasHelp>
+		<wbs:hasHelp> Übertraegt zellen-, zeilen- oder spaltenweise die Daten des selektierten Bereiches </wbs:hasHelp>
 	</wbs:Activity>
 
 	<wbs:Task
@@ -748,8 +748,8 @@
 	</wbs:Activity>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;SelKind">
-		<wbs:hasName> Polynomart wählen </wbs:hasName>
-		<wbs:hasHelp> Wählt die Art des zu erstellenden Polynoms aus (HQ,HA,Coef,alle) </wbs:hasHelp>
+		<wbs:hasName> Polynomart waehlen </wbs:hasName>
+		<wbs:hasHelp> Waehlt die Art des zu erstellenden Polynoms aus (HQ,HA,Coef,alle) </wbs:hasHelp>
 	</wbs:Activity>
 	<wbs:Activity 
 		rdf:about="&k1d2dwf;SelMinBorder">
@@ -910,7 +910,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Chan2DGenActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -921,7 +921,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;BandGenActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -932,7 +932,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;AssignElevsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -943,7 +943,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;EltsGroupActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -986,7 +986,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Gen1DCntrStrcEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -997,7 +997,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Gen2DCntrStrcEltsActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1008,7 +1008,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;SetEltLineTransActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 	
 	<wbs:Task
@@ -1019,7 +1019,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;SetEltEltTransActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 	
 	<wbs:Task
@@ -1030,7 +1030,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;SetJunctionActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 	
 	<wbs:Task
@@ -1041,7 +1041,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Val2DNetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1052,7 +1052,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Val1DRivNetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1063,7 +1063,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;Val1DChanNetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1074,7 +1074,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ValTransActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1085,7 +1085,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ModifyDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1096,7 +1096,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ViewDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1107,7 +1107,7 @@
 	</wbs:Task>	
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ExportDBActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1217,7 +1217,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;DenCalcSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1250,18 +1250,18 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;CalcLinesSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
 		rdf:about="&k1d2dwf;NodeObserveSet">
 		<wbs:hasName> Ausgabeknoten bestimmen </wbs:hasName>
-		<wbs:hasHelp> Knoten festlegen, für die während der Berechnung weitere Daten herausgeschrieben werden sollen </wbs:hasHelp>
+		<wbs:hasHelp> Knoten festlegen, für die waehrend der Berechnung weitere Daten herausgeschrieben werden sollen </wbs:hasHelp>
 		<wbs:hasTasks rdf:resource="&k1d2dwf;NodeObserveSetActs"/>
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;NodeObserveSetActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1272,7 +1272,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;CheckBCActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1283,7 +1283,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;CheckStSolActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1294,7 +1294,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;StartCalculationActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1316,7 +1316,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ColoredDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1327,7 +1327,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;IsolineDisplActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1338,7 +1338,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;CrossSecDefActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1371,7 +1371,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ExportFileActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1382,7 +1382,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ExportPictActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/ -->
 	</wbs:ActivitySeq>
 
 	<wbs:Task
@@ -1404,7 +1404,7 @@
 	</wbs:Task>
 	<wbs:ActivitySeq 
 		rdf:about="&k1d2dwf;ExportRiskModellerActs">
-		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+		<!--rdf:_1 rdf:resource="&k1d2dwf;???"/-->
 	</wbs:ActivitySeq>
 
 
