@@ -7,5 +7,35 @@
             configId="org.kalypso.model.product.configId"
             content="content/ext.xml"/>
    </extension>
+   <extension
+         id="editorActions"
+         name="editorActions"
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.kalypso.model.flood.mapeditorContributions"
+            targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+         <action
+               class="org.kalypso.model.flood.ui.map.CreateFeatureDelegate"
+               icon="icons/elcl16/createFeature.gif"
+               id="org.kalypso.model.flood.ui.map.CreateFeatureDelegate"
+               label="Feature digitalisieren"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
+               style="radio"
+               toolbarPath="karte/edit"
+               tooltip="Ein neues Feature durch digitalisieren auf der Karte erzeugen."/>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
+            id="org.kalypso.model.flood.schema.UrlCatalogModelFlood"/>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.flood.ui.catalog.FloodModelCatalogContribution"
+            name="Flood Model Catalog"/>
+   </extension>
 
 </plugin>

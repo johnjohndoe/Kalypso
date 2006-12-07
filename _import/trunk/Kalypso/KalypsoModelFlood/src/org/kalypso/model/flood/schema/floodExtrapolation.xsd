@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" 
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:flood="org.kalypso.model.flood"
+	targetNamespace="org.kalypso.model.flood"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<element name="FloodExtrapolation" type="flood:FloodExtrapolationType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Extrapolation]]></name>
+				<label><![CDATA[Extrapolation]]></label>
+				<tooltip><![CDATA[Extrapolation]]></tooltip>
+				<description><![CDATA[Extrapolation]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="FloodExtrapolationType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaMember" type="flood:ExtrapolationAreaPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Referenz auf Flächenextrapolation</label>
+								<tooltip>Referenz auf Flächenextrapolation</tooltip>
+								<description>Referenz auf Flächenextrapolation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ExtrapolationAreaPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="flood:ExtrapolationArea"/>
+		</sequence>
+	</complexType>
+
+	<element name="ExtrapolationArea" type="flood:ExtrapolationAreaType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Extrapolationsfläche]]></name>
+				<label><![CDATA[Extrapolationsfläche]]></label>
+				<tooltip><![CDATA[Extrapolationsfläche]]></tooltip>
+				<description><![CDATA[Extrapolationsfläche]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="ExtrapolationAreaType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="area" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Fläche</label>
+								<tooltip>Fläche</tooltip>
+								<description>Fläche</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="referencePoint" type="gml:PointPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bezugspunkt</label>
+								<tooltip>Bezugspunkt zum Höhenmodell</tooltip>
+								<description>Bezugspunkt zum Höhenmodell</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>

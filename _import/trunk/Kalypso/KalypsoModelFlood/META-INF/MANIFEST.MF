@@ -8,5 +8,6 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.intro
+ org.eclipse.ui.intro,
+ org.kalypso.ui
 Eclipse-LazyStart: true
