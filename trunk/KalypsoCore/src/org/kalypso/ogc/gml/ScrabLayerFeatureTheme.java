@@ -105,6 +105,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), POINT_GEOM_PROP_NAME ) );
     symbolizers.add( StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), LINESTRING_GEOM_PROP_NAME ) );
     symbolizers.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), POLYGON_GEOM_PROP_NAME ) );
+    // Added/commented by Dejan //symbolizers.add( StyleFactory.createRasterSymbolizer() );
     FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
     UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( STYLE_NAME, STYLE_NAME, "empty Abstract", featureTypeStyle );
     m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName() ) );

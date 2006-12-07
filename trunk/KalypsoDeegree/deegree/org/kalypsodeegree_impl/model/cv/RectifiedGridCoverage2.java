@@ -47,6 +47,11 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
   {
     super( feature, QNAME_RECTIFIED_GRID_COVERAGE );
   }
+  
+  public static String getNameStatic( )
+  {
+    return "RectifiedGridCoverage2";
+  }
 
   /**
    * @return Returns the gridDomain.

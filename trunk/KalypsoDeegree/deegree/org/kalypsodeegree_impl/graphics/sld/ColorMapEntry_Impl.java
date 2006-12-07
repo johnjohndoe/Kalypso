@@ -136,15 +136,25 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_quantity = quantity;
   }
 
-  public net.opengis.sld.ColorMapEntry exportAsXML( )
+  public net.opengis.sld.ColorMapEntry getColorMapEntry( )
   {
     net.opengis.sld.ColorMapEntry colorMapEntry = OF.createColorMapEntry();
     colorMapEntry.setColor( StyleFactory.getColorAsHex( getColor() ) );
-    colorMapEntry.setLabel( getLabel() );
-    colorMapEntry.setOpacity( getOpacity() );
-    colorMapEntry.setQuantity( getQuantity() );
+    //colorMapEntry.setLabel( getLabel() );
+    //colorMapEntry.setOpacity( getOpacity() );
+    //colorMapEntry.setQuantity( getQuantity() );
 
     return colorMapEntry;
+  }
+
+  public String exportAsXML( )
+  {
+    StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<ColorMapEntry" );
+    sb.append( " color=\"" ).append( StyleFactory.getColorAsHex( getColor() ) ).append( "\"" );
+    sb.append( " quantity=\"" ).append( getQuantity() ).append( "\"" );
+    sb.append( "/>" );
+    return sb.toString();
   }
 
   @Override

@@ -38,55 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gis.doubleraster;
+package org.kalypso.gis.doubleraster.grid;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.net.URL;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import javax.media.jai.JAI;
+import javax.media.jai.RenderedOp;
+import javax.media.jai.TiledImage;
 
 /**
- * @author belger
+ * @author daad
+ *
  */
-public abstract class AbstractDoubleRaster implements DoubleRaster
+public class ImageGrid implements DoubleGrid
 {
-  /**
-   * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
-   */
-  public final Coordinate calcCoordinate( final int x, final int y, final Coordinate c )
-  {
-    final Coordinate coordinate = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, c );
+  private TiledImage m_tiledImage;
+  private int m_sizeX;
+  private int m_sizeY;
 
-    final double value = getValueChecked( x, y );
-    coordinate.z = value;
-    return coordinate;
+  public ImageGrid( final URL imageURL  )
+  {
+    final RenderedOp image = JAI.create( "url", imageURL );
+    m_tiledImage = new TiledImage( image, true );
+    m_sizeX = m_tiledImage.getWidth();
+    m_sizeY = m_tiledImage.getHeight();
   }
 
-  public final Object walk( DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException
+  /**
+   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
+   */
+  public int getSizeX( )
   {
-    final int sizeX = getSizeX();
-    final int sizeY = getSizeY();
-    if( monitor != null )
-      monitor.beginTask( "Raster wird durchlaufen", sizeY );
+    return m_sizeX;
+  }
 
-    pwo.start( this );
+  /**
+   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeY()
+   */
+  public int getSizeY( )
+  {
+    return m_sizeY;
+  }
 
-    final Coordinate tmpCrd = new Coordinate();
-
-    for( int y = sizeY - 1; y >= -1; y-- )
-    {
-      for( int x = 0; x < sizeX; x++ )
-        pwo.operate( x, y, calcCoordinate( x, y, tmpCrd ) );
-
-      if( monitor != null )
-        monitor.worked( 1 );
-
-      pwo.afterLine( y );
-
-      if( monitor != null && monitor.isCanceled() )
-        throw new DoubleRasterException( "Abbruch durch Benutzer", null );
-    }
-
-    return pwo.getResult();
+  /**
+   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
+   */
+  public double getValue( int x, int y )
+  {
+    return m_tiledImage.getSampleDouble( x, y, 0 ) / 1000.0;
   }
 
 }

@@ -38,55 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gis.doubleraster;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-
-import com.vividsolutions.jts.geom.Coordinate;
+package org.kalypso.gis.doubleraster.grid;
 
 /**
- * @author belger
+ * @author Dejan Antanaskovic, Gernot Belger
+ *
  */
-public abstract class AbstractDoubleRaster implements DoubleRaster
+public interface DoubleGrid
 {
   /**
-   * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
+   * Returns the value of the raster at (cell-)coordinates x-y. Does not check, if x or y lie within the raster bounds.
+   * <p>
+   * The behaviour is undefined, if x-y lie out of bounds. (May throw an exception or return random numbers).
+   * </p>
    */
-  public final Coordinate calcCoordinate( final int x, final int y, final Coordinate c )
-  {
-    final Coordinate coordinate = DoubleRasterUtilities.rasterCellToCoordinate( this, x, y, c );
+  public double getValue( final int x, final int y );
 
-    final double value = getValueChecked( x, y );
-    coordinate.z = value;
-    return coordinate;
-  }
+  /** Size of the raster. Amount of raster-cells in direction of x. */
+  public int getSizeX( );
 
-  public final Object walk( DoubleRasterWalker pwo, final IProgressMonitor monitor ) throws DoubleRasterException
-  {
-    final int sizeX = getSizeX();
-    final int sizeY = getSizeY();
-    if( monitor != null )
-      monitor.beginTask( "Raster wird durchlaufen", sizeY );
-
-    pwo.start( this );
-
-    final Coordinate tmpCrd = new Coordinate();
-
-    for( int y = sizeY - 1; y >= -1; y-- )
-    {
-      for( int x = 0; x < sizeX; x++ )
-        pwo.operate( x, y, calcCoordinate( x, y, tmpCrd ) );
-
-      if( monitor != null )
-        monitor.worked( 1 );
-
-      pwo.afterLine( y );
-
-      if( monitor != null && monitor.isCanceled() )
-        throw new DoubleRasterException( "Abbruch durch Benutzer", null );
-    }
-
-    return pwo.getResult();
-  }
-
+  /** Size of the raster. Amount of raster-cells in direction of y. */
+  public int getSizeY( );
 }

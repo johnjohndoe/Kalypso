@@ -77,8 +77,10 @@ import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RasterFactory;
 import javax.media.jai.TiledImage;
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -148,10 +150,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     Graphics2D g2 = (Graphics2D) g;
     Feature feature = getFeature();
     // get the geometry informations of the RectifiedGridCoverage
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( new QName(NS.GML3, "rectifiedGridDomain") );
     // create the target Coordinate system
 
-    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( feature.getFeatureType(), "RasterBoundary_rectifiedGridDomain" );
+    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
     final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
     final CS_CoordinateSystem cs = geom.getCoordinateSystem();
 
@@ -198,6 +200,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     int height = highY - lowY;
     // get the required subImage according to the gridExtent
     PlanarImage image = rasterImage.getSubImage( minX, minY, width, height );
+    if( image == null )
+      return;
 
     // get the destinationSurface in target coordinates
     GM_Surface destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
@@ -247,7 +251,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
 
     // draw a transparent backround on the bufferedImage
-    bufferGraphics.setColor( new Color( 255, 0, 255, 128 ) );
+    bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
     bufferGraphics.fillRect( 0, 0, (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight() );
 
     // draw the image with the given transformation
@@ -307,7 +311,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     try
     {
       final RectifiedGridCoverageDoubleRaster raster = new RectifiedGridCoverageDoubleRaster( coverage.getFeature() );
-      final DataBufferRasterWalker pwo = new DataBufferRasterWalker( treeColorMap, mode );
+      DataBufferRasterWalker pwo = new DataBufferRasterWalker( treeColorMap, mode );
       raster.walk( pwo, new NullProgressMonitor() );
 
       final Point origin = new Point( 0, 0 );
