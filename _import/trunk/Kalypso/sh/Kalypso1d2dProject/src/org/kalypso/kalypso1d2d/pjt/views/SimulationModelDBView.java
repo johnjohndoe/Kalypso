@@ -6,17 +6,21 @@ package org.kalypso.kalypso1d2d.pjt.views;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.ResourceDeltaFactory;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
+import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.viz.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
+import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
 
 import test.org.kalypso.afgui.TestRDFModel;
 
@@ -39,6 +43,9 @@ public class SimulationModelDBView extends ViewPart
 	
 	private ActiveWorkContext activeWorkContext= 
 						ActiveWorkContext.getInstance();
+	
+	private WorkflowDataLabelProvider labelProvider=
+							new WorkflowDataLabelProvider();
 	
 	private IActiveContextChangeListener activeProjectChangeListener=
 		new IActiveContextChangeListener()
@@ -92,6 +99,8 @@ public class SimulationModelDBView extends ViewPart
 		tv.setInput(activeWorkContext);
 		activeWorkContext.addActiveContextChangeListener(activeProjectChangeListener);
 		getSite().setSelectionProvider(tv);
+		tv.setLabelProvider(labelProvider);
+		
 	}
 
 	/* (non-Javadoc)
@@ -103,8 +112,9 @@ public class SimulationModelDBView extends ViewPart
 		
 	}
 	
-	public void updateTreeView()
+	public void updateTreeView(IWorkflowData selected)
 	{
 		tv.refresh();
+		IStructuredSelection selection= new StructuredSelection(selected);
 	}
 }

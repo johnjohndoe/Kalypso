@@ -46,7 +46,7 @@ public class RemoveWorkflowData implements IViewActionDelegate
 		}
 		if(viewPart instanceof SimulationModelDBView)
 		{
-			((SimulationModelDBView)viewPart).updateTreeView();
+			((SimulationModelDBView)viewPart).updateTreeView(selected);
 		}
 
 	}

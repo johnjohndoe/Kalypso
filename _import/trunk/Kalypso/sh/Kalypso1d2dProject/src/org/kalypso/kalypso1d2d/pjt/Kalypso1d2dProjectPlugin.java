@@ -1,10 +1,16 @@
 package org.kalypso.kalypso1d2d.pjt;
 
+
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -22,8 +28,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin {
 	private static Kalypso1d2dProjectPlugin plugin;
 	
 	
-	
-	
+	private static final String ICON_SIM_MODEL_PATH="/icons/nuvola_select/ledblue.png";
+	public static final String KEY_ICON_SIM_MODEL="_ICON_SIM_MODEL_";
 	
 	/**
 	 * The constructor
@@ -39,6 +45,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+	
 	}
 
 	/*
@@ -91,4 +98,24 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin {
 		this.showMessage(sw.getBuffer().toString());
 	}
 	
+	protected void initializeImageRegistry(ImageRegistry reg)
+	{
+		String couples[][]={
+				{KEY_ICON_SIM_MODEL,ICON_SIM_MODEL_PATH}				
+		};
+		
+		for(String[] curCouple:couples)
+		{
+			URL url = getBundle().getEntry(curCouple[1]);
+			ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+			//reg.put(curCouple[0], desc);
+			reg.put(KEY_ICON_SIM_MODEL,desc.createImage());
+		}
+		return;
+	}
+	
+	public static Image getImageDescriptor(String key) 
+	{		
+		return getDefault().getImageRegistry().get(key);
+	}
 }

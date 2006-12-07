@@ -51,6 +51,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	public void run(IAction action)
 	{
 		createWorkflowData(viewPart, selected);
+		selected=null;
 	}
 
 	/**
