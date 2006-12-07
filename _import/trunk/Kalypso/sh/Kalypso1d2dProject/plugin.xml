@@ -139,4 +139,12 @@
              application="org.kalypso.afgui.AFGUIApplication"
              name="KalypsoEnterpriseSH"/>
     </extension>
+    
+         <extension
+           point="org.eclipse.ui.intro.configExtension">
+        <configExtension
+              configId="org.kalypso.model.product.configId"
+              content="content/ext.xml"/>
+     </extension>
+    
 </plugin>

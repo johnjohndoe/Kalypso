@@ -7,14 +7,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.afgui.db.IWorkflowDB;
-import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
-
-import sun.security.krb5.internal.ac;
 
 /**
  * 

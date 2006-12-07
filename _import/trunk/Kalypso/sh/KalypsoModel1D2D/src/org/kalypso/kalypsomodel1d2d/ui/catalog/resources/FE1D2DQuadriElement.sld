@@ -4,12 +4,12 @@
 	xmlns:ogc="http://www.opengis.net/ogc"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>FE1D2DTriElement</Name>
-	<Title>FE1D2DTriElement</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DTriElement</FeatureTypeName>
+	<Name>FE1D2DQuadriElement</Name>
+	<Title>FE1D2DQuadriElement</Title>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DQuadriElement</FeatureTypeName>
 	<Rule>
-		<Name>FE1D2DTriElement</Name>
-		<Title>FE1D2DTriElement</Title>
+		<Name>FE1D2DQuadriElement</Name>
+		<Title>FE1D2DQuadriElement</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>2000.0</MaxScaleDenominator>

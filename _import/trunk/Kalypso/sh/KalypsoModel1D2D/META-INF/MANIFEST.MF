@@ -14,7 +14,8 @@ Require-Bundle:
  org.kalypso.simulation.core,
  org.apache.jakarta_log4j,
  KalypsoModelSimulationBase,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.eclipse.ui.intro
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.kalypsomodel1d2d.schema,
  org.kalypso.kalypsomodel1d2d.sim
