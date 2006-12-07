@@ -143,7 +143,7 @@ public class ElementGeometryBuilder
         newNode.setPoint( (GM_Point) node );
         newNode.setName( "" );
         newNode.setDescription( "manuell digitalisiert" );
-        final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null );
+        final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
         command.addCommand( addNodeCommand );
         nodes[i] = newNode;
       }
@@ -165,7 +165,7 @@ public class ElementGeometryBuilder
         newEdge.setNodes( node0, node1 );
         edges[i] = newEdge;
         edgesGen[i] = true;
-        final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge.getFeature(), null );
+        final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge.getFeature(), null, false );
         command.addCommand( addEdgeCommand );
       }
       else
@@ -184,7 +184,7 @@ public class ElementGeometryBuilder
 
     element.setEdges( edges );
 
-    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, element.getFeature(), null );
+    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, element.getFeature(), null, true );
     command.addCommand( addElementCommand );
 
     return command;

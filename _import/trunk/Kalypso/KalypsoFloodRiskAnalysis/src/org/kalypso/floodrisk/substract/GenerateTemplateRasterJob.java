@@ -103,7 +103,7 @@ public class GenerateTemplateRasterJob implements ISimulation
       File templateRasterFile = new File( templateRasterOutputBean.getPath() );
       if( !templateRasterFile.exists() )
         templateRasterFile.createNewFile();
-      rasterDataModel.toFile( templateRasterFile, templateRaster );
+      rasterDataModel.exportToGML( templateRasterFile, templateRaster );
       resultEater.addResult( templateRasterOutputBean.getId(), null );
     }
     catch( MalformedURLException e )

@@ -149,7 +149,7 @@ public class CalculateFloodRiskJob implements ISimulation
           floodRiskResultFile.getParentFile().mkdir();
         floodRiskResultFile.createNewFile();
       }
-      rasterDataModel.toFile( floodRiskResultFile, floodRiskRaster );
+      rasterDataModel.exportToGML( floodRiskResultFile, floodRiskRaster );
       resultEater.addResult( floodRiskOutputBean.getId(), null );
 
       // floodrisk style

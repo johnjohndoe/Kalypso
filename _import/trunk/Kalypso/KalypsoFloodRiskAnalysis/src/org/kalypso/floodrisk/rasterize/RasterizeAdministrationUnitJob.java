@@ -130,7 +130,7 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       if( !resultFile.exists() )
         resultFile.createNewFile();
       monitor.setMessage( Messages.getString("rasterize.RasterizeAdministrationUnitJob.SavingResults") ); //$NON-NLS-1$
-      rasterDataModel.toFile( resultFile, resultGrid );
+      rasterDataModel.exportToGML( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }
     catch( Exception e1 )

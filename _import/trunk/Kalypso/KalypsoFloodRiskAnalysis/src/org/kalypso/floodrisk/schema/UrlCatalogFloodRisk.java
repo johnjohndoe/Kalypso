@@ -56,7 +56,7 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
   public static final String NS_GML                         = "http://www.opengis.net/gml";
   public static final String NS_CONTEXTMODEL                = "http://www.tuhh.de/floodrisk/contextModel";
   public static final String NS_RISKCONTEXTMODEL            = "http://www.tuhh.de/floodrisk/riskContextModel";
-  public static final String NS_RASTERDATAMODEL             = "http://www.tuhh.de/floodrisk/rasterData";
+  //public static final String NS_RASTERDATAMODEL             = "http://www.tuhh.de/floodrisk/rasterData";
   public static final String NS_VECTORDATAMODEL             = "http://www.tuhh.de/floodrisk/vectorData";
   //public static final String NS_RECTIFIEDGRIDCOVERAGE       = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
   public static final String NS_WATERLEVELDATA              = "http://www.tuhh.de/floodrisk/waterlevelData";
@@ -66,7 +66,7 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
   public static final String PREFIX_GML                     = "gml:";
   public static final String PREFIX_CONTEXTMODEL            = "risk_cm:";
   public static final String PREFIX_RISKCONTEXTMODEL        = "risk_rcm:";
-  public static final String PREFIX_RASTERDATAMODEL         = "risk_rd:";
+  //public static final String PREFIX_RASTERDATAMODEL         = "risk_rd:";
   public static final String PREFIX_VECTORDATAMODEL         = "risk_vd:";
   //public static final String PREFIX_RECTIFIEDGRIDCOVERAGE   = "risk_rgc:";
   public static final String PREFIX_WATERLEVELDATA          = "risk_wld:";
@@ -80,7 +80,7 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
   {
     catalog.put( NS_CONTEXTMODEL,           myClass.getResource( "ContextModel.xsd" ) );
     catalog.put( NS_RISKCONTEXTMODEL,       myClass.getResource( "RiskContextModel.xsd" ) );
-    catalog.put( NS_RASTERDATAMODEL,        myClass.getResource( "RasterDataModel.xsd" ) );
+    //catalog.put( NS_RASTERDATAMODEL,        myClass.getResource( "RasterDataModel.xsd" ) );
     catalog.put( NS_VECTORDATAMODEL,        myClass.getResource( "VectorDataModel.xsd" ) );
     //catalog.put( NS_RECTIFIEDGRIDCOVERAGE,  myClass.getResource( "rectifiedGridCoverage.xsd" ) );
     catalog.put( NS_WATERLEVELDATA,         myClass.getResource( "WaterlevelData.xsd" ) );

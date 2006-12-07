@@ -192,7 +192,7 @@ public class CalculateDamageJob implements ISimulation
       File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
       if( !annualDamageResultFile.exists() )
         annualDamageResultFile.createNewFile();
-      rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
+      rasterDataModel.exportToGML( annualDamageResultFile, annualDamageGrid );
       //style
       File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile.toString() ) + ".sld" ); //$NON-NLS-1$
       Color lightRed = new Color( 255, 100, 100 );
@@ -276,7 +276,7 @@ public class CalculateDamageJob implements ISimulation
       double annuality = 1 / key.doubleValue();
       File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids.get( key );
-      rasterDataModel.toFile( damageFile, damageGrid );
+      rasterDataModel.exportToGML( damageFile, damageGrid );
       //style
       File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" ); //$NON-NLS-1$
       Color lightRed = new Color( 255, 100, 100 );
@@ -291,7 +291,7 @@ public class CalculateDamageJob implements ISimulation
         RectifiedGridCoverage tempGrid = (RectifiedGridCoverage)tempGrids.get( i );
         File tempGridFile = new File( damageResultDir, "tempGrid_deltaP" //$NON-NLS-1$
             + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" ); //$NON-NLS-1$
-        rasterDataModel.toFile( tempGridFile, tempGrid );
+        rasterDataModel.exportToGML( tempGridFile, tempGrid );
       }
     }
   }

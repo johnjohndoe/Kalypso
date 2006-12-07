@@ -55,9 +55,10 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
-import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.model.xml.ObjectFactory;
+//import org.kalypso.jwsdp.JaxbUtilities;
+//import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * ProcessInputWizard
@@ -68,7 +69,8 @@ import org.kalypso.simulation.core.simspec.Modeldata;
  */
 public class ProcessInputWizard extends Wizard
 {
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  //private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private static final JAXBContext JC = ModelNature.JC_SPEC;
 
   private IProject m_project;
 

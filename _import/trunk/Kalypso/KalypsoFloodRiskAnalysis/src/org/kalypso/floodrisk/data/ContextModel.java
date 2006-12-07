@@ -47,7 +47,10 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.floodrisk.mathTool.ParseFunction;
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -77,7 +80,7 @@ public class ContextModel
    */
   public ContextModel( URL gmlURL )
   {
-    System.out.println( "/n/n/nDejan: Read " + gmlURL.getPath() + ".../n/n/n" );
+    //System.out.println( "/n/n/nDejan: Read " + gmlURL.getPath() + ".../n/n/n" );
     try
     {
       workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
@@ -96,16 +99,20 @@ public class ContextModel
    */
   public Hashtable getLanduseList()
   {
-    Hashtable<Object, Integer> landuseList = new Hashtable<Object, Integer>();
-    Feature landuseCollection = (Feature)rootFeature.getProperty( "LanduseCollectionMember" );
-    Object landuseMemberList = landuseCollection.getProperty( "LanduseMember" );
+    QName l_LanduseCollectionMember = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseCollectionMember");
+    QName l_LanduseMember           = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "LanduseMember");
+    QName l_Name                    = new QName(UrlCatalogFloodRisk.NS_CONTEXTMODEL, "Name");
+    
+    Hashtable<Object, Long> landuseList = new Hashtable<Object, Long>();
+    Feature landuseCollection = (Feature)rootFeature.getProperty(l_LanduseCollectionMember);
+    Object landuseMemberList = landuseCollection.getProperty(l_LanduseMember);
     if( landuseMemberList instanceof List )
     {
       List list = (List)landuseMemberList;
       for( int i = 0; i < list.size(); i++ )
       {
         Feature feat = (Feature)list.get( i );
-        Object name = feat.getProperty( "Name" );
+        Object name = feat.getProperty(l_Name);
         String fid = feat.getId();
         landuseList.put( name, getID( fid, feat.getFeatureType() ) );
         //System.out.println( "Feature " + getID( fid, feat.getFeatureType() )
@@ -122,10 +129,10 @@ public class ContextModel
    */
   public Hashtable getAdministrationUnitList()
   {
-    Hashtable<Object, Integer> administrationUnitList = null;
+    Hashtable<Object, Long> administrationUnitList = null;
     if( rootFeature.getProperty( "AdministrationUnitCollectionMember" ) != null )
     {
-      administrationUnitList = new Hashtable<Object, Integer>();
+      administrationUnitList = new Hashtable<Object, Long>();
       Feature administrationUnitCollection = (Feature)rootFeature.getProperty( "AdministrationUnitCollectionMember" );
       Object administrationUnitMemberList = administrationUnitCollection.getProperty( "AdministrationUnitMember" );
       if( administrationUnitMemberList instanceof List )
@@ -261,10 +268,10 @@ public class ContextModel
    *          featureType of the feature
    * @return ID as Integer
    */
-  private Integer getID( String fid, IFeatureType featureType )
+  private Long getID( String fid, IFeatureType featureType )
   {
     String id = fid.replaceFirst( featureType.getQName().getLocalPart(), "" );
-    return new Integer( id );
+    return new Long( id );
   }
 
   /**

@@ -52,6 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -76,15 +77,19 @@ public class VectorToGridConverter
    * @return new RectifiedGridCoverage
    * @throws Exception
    */
-  public static RectifiedGridCoverage toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage baseGrid, ISimulationMonitor monitor ) throws Exception
+  public static RectifiedGridCoverage2 toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage2 baseGrid, ISimulationMonitor monitor ) throws Exception
   {
     String propertyName = "RasterProperty"; //$NON-NLS-1$
-    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( baseGrid.getGridDomain().getOrigin( null ), baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
     GM_Point origin = baseGrid.getGridDomain().getOrigin( null );
+    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( origin, baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain().getGridRange() );
     double originX = origin.getX();
     double originY = origin.getY();
     Vector<Vector<Double>> newRangeSetData = new Vector<Vector<Double>>();
+    
+    // ovde treba da iscitam fajl
+    RangeSet rangeSet = baseGrid.getRangeSet();
     Vector rangeSetData = baseGrid.getRangeSet().getRangeSetData();
+    
     for( int i = 0; i < rangeSetData.size(); i++ )
     {
       Vector rowData = (Vector) rangeSetData.get( i );
@@ -97,7 +102,7 @@ public class VectorToGridConverter
         Feature actualFeature = null;
         if( rowData.get( j ) != null )
         {
-          Integer key = null;
+          Long key = null;
           for( int k = 0; k < featureList.size(); k++ )
           {
             actualFeature = (Feature) featureList.get( k );
@@ -105,7 +110,7 @@ public class VectorToGridConverter
             if( gm_Object.contains( position ) )
             {
               String property = actualFeature.getProperty( propertyName ).toString();
-              key = (Integer) propertyTable.get( property );
+              key = (Long) propertyTable.get( property );
               break;
             }
           }
@@ -130,7 +135,7 @@ public class VectorToGridConverter
       // calculated"+ " Progress: "+100 * i / rangeSetData.size());
     }
     RangeSet newRangeSet = new RangeSet( newRangeSetData, null );
-    RectifiedGridCoverage newGrid = new RectifiedGridCoverage( newGridDomain, newRangeSet );
+    RectifiedGridCoverage2 newGrid = RectifiedGridCoverage2.createRectifiedGridCoverage( newGridDomain, newRangeSet );
     return newGrid;
   }
 }

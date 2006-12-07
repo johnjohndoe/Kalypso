@@ -41,13 +41,8 @@
 package org.kalypso.floodrisk.tools;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Vector;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
@@ -56,12 +51,10 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.floodrisk.data.RasterDataModel;
-import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -85,9 +78,12 @@ public abstract class GridUtils
    *          RectifiedGridCoverage to export
    * @throws Exception
    */
-  public static void exportGridArc( File out, RectifiedGridCoverage grid ) throws Exception
+  public static void exportGridArc( File out, RectifiedGridCoverage2 grid ) throws Exception
   {
-    BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
+    // FIXME: Dejan: use RectifiedGridCoverage2 (File)
+    // instead of RectifiedGridCoverage (Vector<Vector>Double>>)
+    
+/*    BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
     RectifiedGridDomain gridDomain = grid.getGridDomain();
     RangeSet rangeSet = grid.getRangeSet();
     int nCols = gridDomain.getNumColumns();
@@ -119,9 +115,9 @@ public abstract class GridUtils
           {
             bw.write( nodata + " " ); //$NON-NLS-1$
           }
-          /*
+          
            * System.out.println(i + "," + j + ": " + rowData.get(j) + " ");
-           */
+           
         }// for j
         bw.newLine();
       }// for i
@@ -137,8 +133,9 @@ public abstract class GridUtils
       bw.close();
       if( out.length() == 0 )
         out.delete();
-    }// finally
-  }// exportGridArc
+    }
+*/
+  }
 
   // /**
   // * imports an ascii-grid file
@@ -247,15 +244,14 @@ public abstract class GridUtils
       rangeSetFile.setFileName( in.toURL().toExternalForm() );
       // TODO: define a good mime type
       rangeSetFile.setMimeType( "text/asc" );
-      rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
+      //rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
       final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
       rangeSet.setFile( rangeSetFile );
+      //final RangeSet rangeSet = new RangeSet();
+      //rangeSet.setRangeSetDataFile( rangeSetFile.getFileName() );
 
-      final RectifiedGridCoverage2 grid = RectifiedGridCoverage2.createRectifiedGridCoverage();
-      grid.setGridDomain( gridDomain );
-      grid.setRangeSet( rangeSet );
-      return grid;
+      return RectifiedGridCoverage2.createRectifiedGridCoverage(gridDomain, rangeSet);
     }
     finally
     {
@@ -275,14 +271,13 @@ public abstract class GridUtils
   }
 
   /**
-   * @see org.kalypso.floodrisk.data.RasterDataModel#toFile(File, RectifiedGridCoverage)
    * @param rasterDataModelGML
    * @param grid
    * @throws Exception
    */
   public static void writeRasterData( File rasterDataModelGML, RectifiedGridCoverage2 grid ) throws Exception
   {
-    rasterDataModel.toFile( rasterDataModelGML, grid );
+    rasterDataModel.exportToGML( rasterDataModelGML, grid );
   }
 
 }

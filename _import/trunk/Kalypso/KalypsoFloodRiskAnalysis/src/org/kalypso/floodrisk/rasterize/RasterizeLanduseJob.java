@@ -57,7 +57,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
@@ -114,17 +114,17 @@ public class RasterizeLanduseJob implements ISimulation
       // baseRaster
       URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
+      RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
       monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.Calculating") ); //$NON-NLS-1$
-      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, landuseTypeList, baseRaster, monitor );
+      RectifiedGridCoverage2 resultGrid = VectorToGridConverter.toGrid( featureList, landuseTypeList, baseRaster, monitor );
 
       SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( LanduseRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
       monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.SavingResults") ); //$NON-NLS-1$
-      rasterDataModel.toFile( resultFile, resultGrid );
+      rasterDataModel.exportToGML( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }
     catch( Exception e1 )
