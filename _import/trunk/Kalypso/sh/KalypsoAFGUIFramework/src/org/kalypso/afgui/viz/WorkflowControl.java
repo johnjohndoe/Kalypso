@@ -24,6 +24,7 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -72,6 +73,8 @@ import org.kalypso.afgui.model.impl.SubTaskGroup;
 import org.kalypso.afgui.model.impl.TaskGroup;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
+import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
+import org.kalypso.ui.wizard.image.ImportImageWizardPage;
 
 import EDU.oswego.cs.dl.util.concurrent.Takable;
 
@@ -161,7 +164,17 @@ public class WorkflowControl
 					tTBMng.update(true);					
 					tTBComp.reflow(true);
 				}
-				
+				IPhase p=(IPhase)((Control)source).getData(KEY_IPHASE);
+				if(p!=null)
+				{
+					final String PP=
+						"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing";
+					String actualURI=p.getURI();
+					if(PP.equals(actualURI))
+					{
+						openEditor();
+					}
+				}
 			}
 			tTBMng.update(true);
 			tTBComp.reflow(false);
@@ -837,7 +850,7 @@ public class WorkflowControl
 		//IContentOutlinePage outlinePage = (IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class);
 	}
 	
-	void openEditor()
+	public void openEditor()
 	{
 		logger.info("Opening editor");
 		if(page==null)
@@ -890,6 +903,67 @@ public class WorkflowControl
 		
 	}
 	
+	public void importAll()
+	{
+		if(page==null)
+		{
+			page = 
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		}
+		if(page!=null)
+		{
+		   
+			try
+			{
+				if(activeProject==null)
+				{
+					logger.warn("Active project is null");
+					return ;
+				}
+				IWorkspace ws=ResourcesPlugin.getWorkspace();
+				
+				IPath gmtPath=new Path("/.metadata/agger_karte.gmt");
+				IFile gmtFile=
+					activeProject.getFile("project:/.metadata/agger_karte.gmt");
+				if(!gmtFile.exists())
+				{
+					logger.warn(
+							"DO NOT EXISTS:"+gmtFile+
+							" pjt="+activeProject);
+					return;
+				}
+				
+				IEditorPart ep=IDE.openEditor(
+						page, 
+						gmtFile);
+				GisMapOutlinePage gmoPage=
+					(GisMapOutlinePage)ep.getAdapter(IContentOutlinePage.class);
+				
+				KalypsoAddLayerWizard wiz=
+					new KalypsoAddLayerWizard(gmoPage.getModellView());
+				//TODO add wizard page
+//				ImportImageWizardPage imgIP=
+//					new ImportImageWizardPage("","",null);
+//				wiz.addPage(imgIP);
+				//dlg
+				WizardDialog wd= new WizardDialog(top.getShell(),wiz);
+				wd.setTitle("Neue Simulationsmodel");
+				//wd.setMessage("Neue Simulationsmodell");
+				//wd.setBlockOnOpen(true);
+				int decision=wd.open();
+			}
+			catch (PartInitException e)
+			{
+				logger.error("/test/Karte.gmt",e);
+			}
+//		   IEditorDescriptor desc = PlatformUI.getWorkbench().
+//		      getEditorRegistry().getDefaultEditor(file.getName());
+//		   page.openEditor(
+//		      new FileEditorInput(file),
+//		      desc.getId());
+		}
+		
+	}
 	private final void doURITask(String uri)
 	{
 		if(uri==null)
@@ -898,9 +972,17 @@ public class WorkflowControl
 		}
 		else
 		{
-			if(LOAD_URI.equals(uri))
+			if(LOAD_IMG_JPG.equals(uri))
 			{
-				openEditor();
+				importAll();
+			}
+			else if(LOAD_IMG_TIFF.equals(uri))
+			{
+				importAll();
+			}
+			else
+			{
+				//empty
 			}
 		}		
 	}

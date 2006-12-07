@@ -84,6 +84,7 @@ public class WorkflowView extends ViewPart
 			workflowControl.setWorkflow(workflow);
 			workflowControl.setActiveProject(newProject);
 			workflowControl.setVisible(false);
+			
 		}
 		
 	};
@@ -108,6 +109,7 @@ public class WorkflowView extends ViewPart
 					if(first instanceof IWorkflowData)
 					{
 						workflowControl.setVisible(true);
+						//workflowControl.openEditor();
 					}
 					else
 					{
