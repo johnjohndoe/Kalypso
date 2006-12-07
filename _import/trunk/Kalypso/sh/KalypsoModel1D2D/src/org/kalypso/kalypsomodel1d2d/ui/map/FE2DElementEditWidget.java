@@ -52,16 +52,29 @@ public class FE2DElementEditWidget extends AbstractWidget
 
     // find the right themes to edit i.e. the discretisation model
 
+    reinit();
+  }
+  
+  private final void reinit()
+  {
+    m_builder = null;
+    m_nodeTheme = null;
+    
     // we must have the node and the element theme, one of them must be active
-    final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
-    if( activeTheme instanceof IKalypsoFeatureTheme )
+    // First node theme gets it
+    // TODO: change that
+    final IKalypsoTheme[] allThemes = getMapPanel().getMapModell().getAllThemes();
+    for( final IKalypsoTheme theme : allThemes )
     {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-      final IFeatureType featureType = theme.getFeatureType();
-      if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) )
+      if( theme instanceof IKalypsoFeatureTheme )
       {
-        m_nodeTheme = theme;
-        m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
+        final IFeatureType featureType = ftheme.getFeatureType();
+        if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) )
+        {
+          m_nodeTheme = ftheme;
+          m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+        }
       }
     }
   }
@@ -94,7 +107,7 @@ public class FE2DElementEditWidget extends AbstractWidget
       }
       else
         snapNode = null;
-      
+
       final ICommand command;
       if( snapNode != null )
         command = m_builder.addNode( snapNode );
@@ -107,7 +120,8 @@ public class FE2DElementEditWidget extends AbstractWidget
       if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
-        m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
+        
+        reinit();
       }
     }
     catch( final Exception e )
