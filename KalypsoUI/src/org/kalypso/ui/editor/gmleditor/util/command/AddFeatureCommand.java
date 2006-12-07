@@ -83,6 +83,9 @@ public class AddFeatureCommand implements ICommand
    */
   private boolean m_dropSelection = true;
 
+  /* HACK: this fixes the create fe element speed problem */
+  private final boolean m_doFireEvents;
+
   public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
@@ -93,6 +96,7 @@ public class AddFeatureCommand implements ICommand
     m_type = type;
     m_selectionManager = selectionManager;
     m_depth = depth;
+    m_doFireEvents = true;
   }
 
   /**
@@ -101,10 +105,20 @@ public class AddFeatureCommand implements ICommand
    */
   public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager )
   {
+    this( workspace, parentFeature, propertyName, pos, newFeature, selectionManager, true );
+  }
+
+  /**
+   * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
+   * created feature is provided from outside.
+   */
+  public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents )
+  {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
+    m_doFireEvents = doFireEvents;
     m_props = null;
     m_newFeature = newFeature;
     m_type = null;
@@ -138,7 +152,9 @@ public class AddFeatureCommand implements ICommand
 
     /* Add the new feature */
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    if( m_doFireEvents )
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true )
       m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
