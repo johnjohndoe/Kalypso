@@ -3,11 +3,14 @@ package org.kalypso.ui.wizard.raster;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -108,8 +111,10 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       {
         gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
-        IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverageMember" );
-        // IFeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
+        
+        // FIXME: Change this, RectifiedGridCoverageMember doesn't exists any more
+        //IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverage" );
+        IFeatureType ft = workspace.getFeatureType( new QName(NS.GML3, "RectifiedGridCoverage", null ));
         styleName = ft.getName();
         stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft, styleName ).toString();
       }
@@ -133,7 +138,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, filePath.lastSegment(), "gml", "RectifiedGridCoverageMember", getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, filePath.lastSegment(), "gml", "RectifiedGridCoverage", getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
         m_outlineviewer.postCommand( command, null );
       }
       catch( Exception e )
