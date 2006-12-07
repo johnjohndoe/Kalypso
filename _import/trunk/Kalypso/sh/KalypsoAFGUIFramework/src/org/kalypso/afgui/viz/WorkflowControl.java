@@ -71,6 +71,7 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.afgui.model.impl.SubTaskGroup;
 import org.kalypso.afgui.model.impl.TaskGroup;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
@@ -941,6 +942,7 @@ public class WorkflowControl
 				
 				KalypsoAddLayerWizard wiz=
 					new KalypsoAddLayerWizard(gmoPage.getModellView());
+				wiz.init( PlatformUI.getWorkbench() );
 				//TODO add wizard page
 //				ImportImageWizardPage imgIP=
 //					new ImportImageWizardPage("","",null);
