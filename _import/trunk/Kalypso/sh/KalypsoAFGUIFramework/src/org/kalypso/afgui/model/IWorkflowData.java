@@ -18,6 +18,7 @@ public interface IWorkflowData extends IWorkflowConcept
 	public String getURI();
 	public String getLocation();
 	public String getType();
+	public void remove();
 	
 	public  boolean hasLinkedWorkflowData(EWorkflowProperty prop);
 	public List<IWorkflowData> getLinkedWorkflowData(EWorkflowProperty prop);

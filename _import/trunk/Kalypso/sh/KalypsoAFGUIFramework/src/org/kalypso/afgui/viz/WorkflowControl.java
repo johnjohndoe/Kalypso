@@ -332,77 +332,35 @@ public class WorkflowControl
 		//createBaseContainers(parent);
 		createBaseContainersBottomToolbars(parent);
 		createWorkFlowView();
-//		///IPhase
-//		phaseCntls=
-//			new ArrayList<Section>();
-//		Section madeSec;
-//		
-//		//twd.rowspan=TableWrapData.FILL;
-//		//form.getBody().setLayout(new TableWrapLayout());
-//		form.getBody().setLayout(new FormLayout());
-//		FormData fd= new FormData();
-//		fd.left= new FormAttachment(0,0);
-//		fd.right= new FormAttachment(100,0);
-//		fd.top=new FormAttachment(0,0);
-//		
-//		for(IPhase phase:workflow.getPhases())
-//		{
-//			madeSec=createPhaseExpandable(phase,form);
-//			phaseCntls.add(madeSec);
-//			madeSec.setLayoutData(fd);
-//			fd= new FormData();
-//			fd.left= new FormAttachment(0,0);
-//			fd.right= new FormAttachment(100,0);
-//			fd.top=new FormAttachment(madeSec);
-//			madeSec.addExpansionListener(pEL);
-//			//toolkit.createCompositeSeparator(madeSec);
-//			
-//		}
-//				
-//		taskGroupECs=
-//					new ArrayList<Section>();
-//		
-//		IPhase phase;
-//		for(Section ec:phaseCntls)
-//		{
-//			phase=(IPhase)ec.getData(KEY_IPHASE);
-//			Composite comp=toolkit.createComposite(ec,SWT.BORDER);
-//			comp.setLayout(new GridLayout());
-//			for(ITaskGroup tg:phase.getTaskGroups())
-//			{
-//				madeSec=createTaskGroupExpandable(tg,comp,phase);
-//				taskGroupECs.add(madeSec);
-//				madeSec.addExpansionListener(tgEL);
-//				toolkit.createCompositeSeparator(madeSec);
-//			}
-//			ec.setClient(comp);
-//		}
-//		
-//		
-//		///SubTaskGroup
-//		ITaskGroup taskGroup;
-//		stgSecs= new ArrayList<Section>(); 
-//		for(Section sec:taskGroupECs)//;int i=0;i<taskGroupECs.size();i++)
-//		{
-//			//logger.info("III="+i);
-//			phase=(IPhase)sec.getData(KEY_IPHASE);
-//			taskGroup=(ITaskGroup)sec.getData(KEY_ITASKGROUP);
-//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
-//			comp.setLayout(new GridLayout());
-//			for(ISubTaskGroup stg:taskGroup.getSubTaskGroups())
-//			{
-//				madeSec=createSubTaskGroupExpandable(stg,comp,taskGroup,phase);
-//				madeSec.addExpansionListener(stgEL);
-//				stgSecs.add(madeSec);
-//			}
-//			sec.setClient(comp);
-//		}
 	}
-
+	
+	public void setWorkflow(IWorkflow workflow)
+	{
+		this.workflow = workflow;
+		createWorkFlowView();
+		form.reflow(true);
+		tTBComp.reflow(true);
+		aTBComp.reflow(true);
+		
+	}
+	
 	Map<Object, List<Control>> taskControlMap;
 	
 	private void createWorkFlowView()
 	{
+		//remove old layout element in form
+		for(Control c:form.getBody().getChildren())
+		{
+			//recycle getData(key)
+			c.dispose();
+		}
+		aTBMng.removeAll();
+		tTBMng.removeAll();
+		if(workflow==null)
+		{
+			return;
+		}
+		
 //		/IPhase
 		phaseCntls=
 			new ArrayList<Section>();
@@ -514,32 +472,6 @@ public class WorkflowControl
 		}
 		tTBComp.getParent().pack();
 		tTBComp.redraw();
-		
-		//taskComposite.setVisible(true);
-//		taskComposite.
-//		toolkit.createTree(parent, style)
-//		taskComposite.setLayout(new StackLayout());
-//		
-//		///ITask
-//		ISubTaskGroup subTaskGroup;
-//		List<Button> taskButtons= new ArrayList<Button>(); 
-//		
-//		for(Section sec:stgSecs)//;int i=0;i<taskGroupECs.size();i++)
-//		{
-//			//logger.info("III="+i);
-//			
-//			subTaskGroup=(ISubTaskGroup)sec.getData(URI);
-//			Composite comp=toolkit.createComposite(sec,SWT.BORDER);
-//			
-//			comp.setLayout(new GridLayout());
-//			for(ITask t:subTaskGroup.getTasks())
-//			{
-//				Button taskButton=createTaskButton(t,comp);
-//				taskButtons.add(taskButton);
-//			}
-//			sec.setClient(comp);
-//		}
-
 	}
 	
 	private Button createTaskButton(ITask t, Composite comp)
@@ -683,6 +615,7 @@ public class WorkflowControl
 		FormData fd;
 		
 		fd= new FormData();
+		fd.width=270;//TODO check how not to use width
 		fd.left= new FormAttachment(0,0);
 		fd.bottom= new FormAttachment(60,0);
 		fd.top= new FormAttachment(0,0);

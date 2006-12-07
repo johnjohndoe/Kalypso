@@ -345,7 +345,7 @@ final public class Schema
 					URI_PROP_EXECUTING_WORKFLOW_PART, URI_PROP_PROCESSED_RES,
 					URI_PROP_HAS_SUB_RT_CONTEXT, URI_PROP_HAS_TASKS,
 					URI_PROP_HAS_SUB_TASK_GROUPS, URI_PROP_HAS_TASK_GROUPS,
-					URI_PROP_HAS_PHASES};
+					URI_PROP_HAS_PHASES,URI_PROP_IS_DERIVED_FROM};
 			
 			String resUris[]={
 					URI_CLASS_ACTIVITY,URI_CLASS_WORKFLOW,URI_CLASS_HELP,
@@ -681,10 +681,23 @@ final public class Schema
 		res.addProperty(PROP_HAS_NAME, childId);
 		if(parent!=null)
 		{
-			model.add(
-					(Resource)parent.getModelObject(), 
-					PROP_IS_DERIVED_FROM, 
-					res);
+			try{
+//				model.add(
+//						(Resource)parent.getModelObject(), 
+//						PROP_IS_DERIVED_FROM, 
+//						res);
+				
+				model.add(
+						res, 
+						PROP_IS_DERIVED_FROM, 
+						(Resource)parent.getModelObject());
+			}
+			catch(Throwable th)
+			{
+				logger.error(
+						"New Res="+res+" parent="+parent+" propIsDevFrom="+PROP_IS_DERIVED_FROM,
+						th);
+			}
 		}
 		return new WorkflowData(res);
 	}
@@ -711,14 +724,15 @@ final public class Schema
 		ResIterator it=model.listSubjectsWithProperty(
 											RDF.type, 
 											CLASS_WORKFLOW_DATA);
-		logger.info("Iterator for type="+type+" "+it.hasNext());
+		//logger.info("Iterator for type="+type+" "+it.hasNext());
 		List<IWorkflowData> list= new ArrayList<IWorkflowData>();
 		Resource res;
 		//final Property PROP=toJenaProperty(EWorkflowProperty.HAS_TYPE);
 		for(;it.hasNext();)
 		{
 			res=it.nextResource();
-			if(!res.hasProperty(PROP_HAS_TYPE))
+			//TODO change has_a to has_child
+			if(!res.hasProperty(PROP_HAS_TYPE) && !res.hasProperty(PROP_IS_DERIVED_FROM))
 			{
 				list.add(new WorkflowData(res));
 			}
@@ -1098,6 +1112,17 @@ final public class Schema
 				}
 			}
 		}
+	}
+
+	public static void removeWorkflowData(Resource resource)
+	{
+		
+		Model model=resource.getModel();
+		logger.info("REM_MODEL0:"+model);
+		model.removeAll(resource, null, null);
+		model.removeAll(null, null, resource);
+		logger.info("REM_MODEL1:"+model);
+		
 	}
 
 }

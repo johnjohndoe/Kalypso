@@ -25,7 +25,7 @@ public class Perspective implements IPerspectiveFactory {
 			 	layout.createFolder(
 			 				"leftTop", 
 			 				IPageLayout.LEFT, 
-			 				0.2f,
+			 				0.3f,//0.2f,
 			 				editorArea);
 		//with left middle and bottom 
 //		 IFolderLayout leftMiddle = 
@@ -47,7 +47,7 @@ public class Perspective implements IPerspectiveFactory {
 			 	layout.createFolder(
 			 				"leftBottom", 
 			 				IPageLayout.BOTTOM, 
-			 				0.3f,
+			 				0.7f,
 			 				"leftTop");
 		 
 		 IFolderLayout bottom = 
@@ -74,9 +74,10 @@ public class Perspective implements IPerspectiveFactory {
 		 leftBottom.addView(IPageLayout.ID_OUTLINE);
 		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		 //bottom.addView(IPageLayout.ID_)
-		 rightTop.addView(SimulationModelDBView.ID);
+		 //rightTop.addView(SimulationModelDBView.ID);
 		 rightTop.addView(IPageLayout.ID_RES_NAV);
-		 rightMiddle.addView(ActivitiesView.ID);
+		 //rightMiddle.addView(ActivitiesView.ID);
+		 rightMiddle.addView(SimulationModelDBView.ID);
 		 layout.addNewWizardShortcut(Kalypso1D2DNewProjectWizard.ID);
 	}
 }

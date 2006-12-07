@@ -29,18 +29,25 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	
 	protected ActiveWorkContext activeWorkContext=
 								ActiveWorkContext.getInstance();
-	protected Object selection;
+	protected Object selected;
 	/**
 	 * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
 	 */
 	public void init(IViewPart view)
 	{
 		viewPart=view;
-		IContributionItem cItem=
-			view.getViewSite().getActionBars().getToolBarManager().
-				find("org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib");
-		cItem.update();
-		logger.info(cItem);
+		try
+		{
+			IContributionItem cItem=
+				view.getViewSite().getActionBars().getToolBarManager().
+					find("org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib");
+			cItem.update();
+			logger.info(cItem);
+		}
+		catch(Throwable th)
+		{
+			logger.error("Erro while updating contribution items",th);
+		}
 	}
 
 	/**
@@ -48,7 +55,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	 */
 	public void run(IAction action)
 	{
-		createWorkflowData(viewPart, selection);
+		createWorkflowData(viewPart, selected);
 	}
 
 	/**
@@ -56,6 +63,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	 */
 	public void selectionChanged(IAction action, ISelection selection)
 	{
+		this.selected=canHandle(selection);
 //		IWorkflowDB workflowDB=activeWorkContext.getWorkflowDB();
 //		
 //		if(workflowDB==null)

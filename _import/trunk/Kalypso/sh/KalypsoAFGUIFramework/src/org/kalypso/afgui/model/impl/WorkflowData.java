@@ -12,6 +12,7 @@ import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -75,14 +76,20 @@ public class WorkflowData implements IWorkflowData
 	
 	public boolean hasLinkedWorkflowData(EWorkflowProperty prop)
 	{
+		
 		Property jenaProp=Schema.toJenaProperty(prop);
+		logger.info("PropertyLinkToGet="+jenaProp+" Res="+resource.getModel());
 		if(prop==null)
 		{
+			logger.warn("No Jena property for:"+prop);
 			return false;
 		}
 		else 
 		{	
-			return resource.hasProperty(jenaProp);
+			
+			boolean hasProp=resource.getModel().contains(null, jenaProp, resource);//resource.hasProperty(jenaProp);
+			logger.info("HasProp="+hasProp);
+			return hasProp;
 		}
 	}
 	
@@ -96,16 +103,32 @@ public class WorkflowData implements IWorkflowData
 		}
 		else
 		{
-			StmtIterator stmIt=resource.listProperties(jenaProp);
+//			StmtIterator stmIt=resource.listProperties(jenaProp);
+//			List<IWorkflowData> list= new ArrayList<IWorkflowData>();
+//			
+//			Resource res;
+//			
+//			for(;stmIt.hasNext();)
+//			{
+//				res=(Resource)((Statement)stmIt.next()).getObject();
+//				list.add(new WorkflowData(res));
+//			}
+			
+
+			StmtIterator stmIt=
+				resource.getModel().listStatements(null, jenaProp, resource);//
+					//Properties(jenaProp);
 			List<IWorkflowData> list= new ArrayList<IWorkflowData>();
 			
 			Resource res;
 			
 			for(;stmIt.hasNext();)
 			{
-				res=(Resource)((Statement)stmIt.next()).getObject();
+				res=(Resource)((Statement)stmIt.next()).getSubject();
 				list.add(new WorkflowData(res));
 			}
+
+			logger.info("ChildrenData:"+list);
 			return list;
 		}
 	}
@@ -145,6 +168,11 @@ public class WorkflowData implements IWorkflowData
 			return false;
 		}
 
+	}
+	
+	public void remove()
+	{
+		Schema.removeWorkflowData(resource);
 	}
 
 }

@@ -16,6 +16,8 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPartRTContext;
 import org.kalypso.afgui.model.IWorkflowSystem;
 
+import test.org.kalypso.afgui.TestRDFModel;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
@@ -54,13 +56,20 @@ public class WorkflowSystem implements IWorkflowSystem
 		//mergedModel.difference(arg0)
 	}
 	
+	public WorkflowSystem(URL mergedSpecURL) throws IOException
+	{
+		specModel=null;//ModelFactory.createDefaultModel();//loadModel(specURL);
+		mergedModel=loadModel(mergedSpecURL);
+		//mergedModel.add(specModel);
+		//mergedModel.difference(arg0)
+	}
+	
 	private final Model loadModel(URL url) throws IOException
 	{
 		logger.info("specURL="+url);
 		InputStream iStream=url.openStream();
 		Model rdfModel= ModelFactory.createDefaultModel();
 		rdfModel.read(iStream,"");
-		//rdfModel.write(System.out);
 		return rdfModel;
 	}
 	
@@ -92,7 +101,12 @@ public class WorkflowSystem implements IWorkflowSystem
 
 	public IWorkflow getCurrentWorkFlow()
 	{
-		return null;
+		if(currentWorkflow==null)
+		{
+			currentWorkflow=
+				new WorkflowImpl(mergedModel.getResource(TestRDFModel.WORKFLOW_SH));
+		}
+			return currentWorkflow;
 	}
 
 	public IWorkflow setCurrent(IWorkflowData dataModel)

@@ -31,7 +31,7 @@ public class SimulationModelDBView extends ViewPart
 				Logger.getLogger(SimulationModelDBView.class);
 	
 	static public final String ID=
-				"org.kalypso.afgui.views.SimulationModelBasedView";
+				"org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView";
 	
 	private TreeViewer tv;
 	
@@ -91,6 +91,7 @@ public class SimulationModelDBView extends ViewPart
 		tv.setContentProvider(simModelBasedCP);
 		tv.setInput(activeWorkContext);
 		activeWorkContext.addActiveContextChangeListener(activeProjectChangeListener);
+		getSite().setSelectionProvider(tv);
 	}
 
 	/* (non-Javadoc)
@@ -102,4 +103,8 @@ public class SimulationModelDBView extends ViewPart
 		
 	}
 	
+	public void updateTreeView()
+	{
+		tv.refresh();
+	}
 }

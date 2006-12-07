@@ -90,16 +90,16 @@
     	<viewContribution 
     		id="org.kalypso.kalypso1d2d.pjt.setactiveproject" 
     		targetID="org.eclipse.ui.views.ResourceNavigator">
-    		<action 
+    		<!--action 
     			id="org.kalypso.kalypso1d2d.pjt.SetActiveProject" 
               	label="Set active project" 
 			    menubarPath="1d2d"
               	toolbarPath="1d2d" 
               	tooltip="%PopupMenu.ResourceNav.tooltip" 
               	class="org.kalypso.kalypso1d2d.pjt.actions.SetActiveProjectActionDelegate" 
-              	enablesFor="1"> 
+              	enablesFor="0"> 
               	<selection class="org.eclipse.core.resources.IProject" name="*"/> 
-              </action>
+              </action -->
 		</viewContribution>
 		
      </extension>
@@ -111,11 +111,23 @@
     		targetID="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView">
     		<action
             class="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
+            icon="icons/nuvola_select/edit_add.png"
             id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
             label="AddSM"
             menubarPath="1d2d"
             toolbarPath="1d2d"
             tooltip="Add simulation modell"> 
+              	
+             </action>
+             
+             <action
+            class="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
+            icon="icons/nuvola_select/edit_remove.png"
+            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
+            label="Remove model Data"
+            menubarPath="1d2d"
+            toolbarPath="1d2d"
+            tooltip="Remove model data"> 
               	
              </action>
         </viewContribution>
@@ -125,6 +137,6 @@
           point="org.eclipse.core.runtime.products">
        <product
              application="org.kalypso.afgui.AFGUIApplication"
-             name="SH1"/>
+             name="KalypsoEnterpriseSH"/>
     </extension>
 </plugin>

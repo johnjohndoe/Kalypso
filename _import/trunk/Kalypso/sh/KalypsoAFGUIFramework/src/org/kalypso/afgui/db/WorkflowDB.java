@@ -60,9 +60,7 @@ public class WorkflowDB implements IWorkflowDB
 										IWorkflowData parent)
 	{
 		
-		logger.info("creating data for :"+id);
-		
-		
+		logger.info("creating data for :"+id);		
 		if(type==null)
 		{
 			throw new IllegalArgumentException(
@@ -76,7 +74,7 @@ public class WorkflowDB implements IWorkflowDB
 		try
 		{
 			IWorkflowData  data= Schema.createWorkflowData(dbModel, parent, id);
-			logger.info("\n======================rdfModel\n"+dbModel);
+			//logger.info("\n======================rdfModel\n"+dbModel);
 			fireWorkflowDBChange();
 			return data;
 		}

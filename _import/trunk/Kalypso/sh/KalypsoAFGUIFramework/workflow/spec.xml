@@ -2,192 +2,1452 @@
 <!DOCTYPE rdf:RDF [
 	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
 	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
-	<!ENTITY kb 'http://www.tu-harburg.de/wb/kalypso/kb/workflow#'>
+	<!ENTITY k1d2dwf 'http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#'>
 	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
 ]>
 <rdf:RDF 
-	xmlns:kb="http://www.tu-harburg.de/wb/kalypso/kb/workflow#" 
+	xmlns:k1d2dwf="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#" 
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
 	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
-	
-	<wbs:Workflow 
-			rdf:about="&kb;SimulationWorkflow">
-		<rdfs:label>Wimulation Workflow</rdfs:label>
-		<wbs:isRoot>true</wbs:isRoot>
-		<wbs:hasPhase rdf:resource="&kb;PreProcessing"/>
-		<wbs:hasPhase rdf:resource="&kb;Processing"/>
-		<wbs:hasPhase rdf:resource="&kb;PostProcessing"/>
+
+<!--program defintion, that contains the workflow Kalypso-1D2D-->
+	<wbs:Workflow
+		rdf:about="&k1d2dwf;WF_Kalypso1D2D">
+		<wbs:hasName>Kalypso 1D-2D Workflow</wbs:hasName>
+		<wbs:hasHelp>??? mir ist das eine Ebene zu viel!!!</wbs:hasHelp>
+		<wbs:hasPhases rdf:resource="&k1d2dwf;PhaseOrder"/>
 	</wbs:Workflow>
+
+<!--definition of order of the phases for building up a 1D-2D-model-->
+	<wbs:PhaseSeq
+		rdf:about="&k1d2dwf;PhaseOrder">
+		<rdf:_1 rdf:resource="&k1d2dwf;Preprocessing"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Processing"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Postprocessing"/>
+	</wbs:PhaseSeq>
+
+<!--first hierarchical level are the Phases (Processings)-->
+	<wbs:Phase
+		rdf:about="&k1d2dwf;Preprocessing">
+		<wbs:hasName>Preprocessing: Modellaufbau</wbs:hasName>
+		<wbs:hasHelp>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit
+		Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen
+		für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden
+		Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</wbs:hasHelp>
+		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ModBuild"/>
+	</wbs:Phase>
 	
 	<wbs:Phase
-		rdf:about="&kb;Preprocessing">
-		<rdfs:label>Preprocessing</rdfs:label>
-		<wbs:hasActivity>
-			<rdf:Seq>
-				<rdf:_1 rdf:resource="&kb;TerrainModelBuilding"/>
-				<rdf:_1 rdf:resource="&kb;Discretisierung"/>
-			</rdf:Seq>
-		</wbs:hasActivity>
-		<wbs:nextPhase rdf:resource="&kb;Processing"/>;
+		rdf:about="&k1d2dwf;Processing">
+		<wbs:hasName>Processing: Kalibrieren und Rechnen</wbs:hasName>
+		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder 
+		Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
+		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;CalSim"/>
 	</wbs:Phase>
-	
-	<wbs:Phase rdf:about="&kb;Processing">
-		<rdfs:label>Processing</rdfs:label>
-		<wbs:dependsOn rdf:resource="&kb;Preprocessing"/>
-		<wbs:nextPhase rdf:resource="&kb;PostProcessing"/>;
+
+	<wbs:Phase
+		rdf:about="&k1d2dwf;Postprocessing">
+		<wbs:hasName>Postprocessing: Ergebnisauswertungen</wbs:hasName>
+		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder 
+		Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
+		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ResVis"/>
 	</wbs:Phase>
+
+<!--Within the phases there are ordered TaskGroups-->
+	<wbs:TaskGroupSeq 
+		rdf:about="&k1d2dwf;ModBuild">
+		<rdf:_1 rdf:resource="&k1d2dwf;DataLoad"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;NetCstr"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;RoughMod"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;Cond"/>
+	</wbs:TaskGroupSeq> 
+
+	<wbs:TaskGroupSeq 
+		rdf:about="&k1d2dwf;CalSim">
+		<rdf:_1 rdf:resource="&k1d2dwf;CalcSet"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ResDef"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;ModCheck"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;Calc"/>
+	</wbs:TaskGroupSeq> 
+
+	<wbs:TaskGroupSeq 
+		rdf:about="&k1d2dwf;ResVis">
+		<rdf:_1 rdf:resource="&k1d2dwf;PlanView"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Section"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Export"/>
+	</wbs:TaskGroupSeq> 
+
+<!--Defining the TaskGroups - Preprocessing-->
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;DataLoad">
+		<wbs:hasName>Daten laden</wbs:hasName>
+		<wbs:hasHelp>Daten aus dem Dateisystem laden.</wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;DataLoadTasks"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;NetCstr">
+		<wbs:hasName>Netzaufbau</wbs:hasName>
+		<wbs:hasHelp>Hier sind alle Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netztes enthalten</wbs:hasHelp>
+		<wbs:hasSubTaskGroups 
+			rdf:resource="&k1d2dwf;NetBuildGroup"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;RoughMod">
+		<wbs:hasName>Rauheitsmodellierung</wbs:hasName>
+		<wbs:hasHelp>Kreieren von Rauheitszonen sowie Bearbeitung der Rauheitsklassen</wbs:hasHelp>
+		<wbs:hasSubTaskGroups 
+			rdf:resource="&k1d2dwf;RoughModGroup"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;Cond">
+		<wbs:hasName>Anfangswerte/Randbedingungen</wbs:hasName>
+		<wbs:hasHelp>Anfangswerte und Randbedingungen festlegen</wbs:hasHelp>
+		<wbs:hasSubTaskGroups
+			rdf:resource="&k1d2dwf;CondGroup"/>
+	</wbs:TaskGroup>
+
+<!--Defining the TaskGroups - Processing-->
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;CalcSet">
+		<wbs:hasName>Berechnungseinstellungen</wbs:hasName>
+		<wbs:hasHelp>Einstellung der generellen Berechnungsparameter</wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;CalcSetTasks"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;ResDef">
+		<wbs:hasName>spezielle Ausgaben definieren</wbs:hasName>
+		<wbs:hasHelp>???spezielle Ausgaben wie Ausgabeintervall zwischen den Iterationen spezifizieren</wbs:hasHelp>
+		<wbs:hasTasks
+			rdf:resource="&k1d2dwf;ResDefTasks"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;ModCheck">
+		<wbs:hasName> Modell prüfen </wbs:hasName>
+		<wbs:hasHelp> ???Pröfen des Modells auf Konsistenz </wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;ModCheckTasks"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;Calc">
+		<wbs:hasName>Berechnung starten</wbs:hasName>
+		<wbs:hasHelp>Starten einer Berechnung zur Kalibrierung oder Szenariensimulation</wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;CalcTasks"/>
+	</wbs:TaskGroup>
+
+<!--Defining the TaskGroups - Postprocessing-->
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;PlanView">
+		<wbs:hasName>Einstellungen Draufsicht</wbs:hasName>
+		<wbs:hasHelp>Einstellung der generellen Berechnungsparameter</wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;PlanViewTasks"/>
+	</wbs:TaskGroup>
+
+	<wbs:TaskGroup
+		rdf:about="&k1d2dwf;Section">
+		<wbs:hasName>Schnittdarstellungen</wbs:hasName>
+		<wbs:hasHelp>???Darstellung von Längs- oder Querschnitten</wbs:hasHelp>
+	        <wbs:hasTasks
+                	rdf:resource="&k1d2dwf;SectionTasks"/>
+        </wbs:TaskGroup>
+
+	<wbs:TaskGroup 
+		rdf:about="&k1d2dwf;Export">
+		<wbs:hasName>Datenexportieren</wbs:hasName>
+		<wbs:hasHelp>???Exportieren der Daten für die Weiterbearbeitung: FloodModeller/RiskModeller</wbs:hasHelp>
+		<wbs:hasTasks 
+			rdf:resource="&k1d2dwf;ExportTasks"/>
+	</wbs:TaskGroup>
+
+<!--Within the TaskGroups there are ordered SubTaskGroups - Preprocessing-->
+	<wbs:SubTaskGroupSeq 
+		rdf:about="&k1d2dwf;NetBuildGroup">
+		<rdf:_1 rdf:resource="&k1d2dwf;Net1DRivGroup"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Net1DChanGroup"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Net2DGroup"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;CntrStrcGroup"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;TransGroup"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;ValGroup"/>
+	</wbs:SubTaskGroupSeq>
+
+	<wbs:SubTaskGroupSeq 
+		rdf:about="&k1d2dwf;RoughModGroup">
+		<rdf:_1 rdf:resource="&k1d2dwf;ClassDefGroup"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ZoneDefGroup"/>
+        </wbs:SubTaskGroupSeq>
+
+	<wbs:SubTaskGroupSeq 
+		rdf:about="&k1d2dwf;CondGroup">
+		<rdf:_1 rdf:resource="&k1d2dwf;BCDefGroup"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;StSolGroup"/>
+	</wbs:SubTaskGroupSeq>
+
+<!--Within the TaskGroups there are ordered SubTaskGroups - Processing-->
+
+<!--Within the TaskGroups there are ordered SubTaskGroups - Postrocessing-->
+
+<!--Defining the SubTaskGroups - Preprocessing-->
+	<wbs:SubTaskGroup 
+		rdf:about="&k1d2dwf;Net1DRivGroup">
+		<wbs:hasName> 1D Gewässernetz </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;Net1DRivTasks"/>
+	</wbs:SubTaskGroup>
 	
-	<wbs:Phase rdf:about="&kb;Postprocessing">
-		<rdfs:label>Post-Processing</rdfs:label>
-	</wbs:Phase>
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;Net1DChanGroup">
+		<wbs:hasName> 1D Kanalnetz </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;Net1DChanTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;Net2DGroup">
+		<wbs:hasName> 2D-Netz </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;Net2DTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;CntrStrcGroup">
+		<wbs:hasName> Bauwerkselemente </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CntrStrcTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;TransGroup">
+		<wbs:hasName> 1D-2D-Kopplungen/ Kopplungen </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;TransTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;ValGroup">
+		<wbs:hasName> Netzvalidierung </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ValTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;ClassDefGroup">
+		<wbs:hasName> Rauheitsdatenbank </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ClassDefTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;ZoneDefGroup">
+		<wbs:hasName> Rauheitszonen definieren </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ZoneDefTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;BCDefGroup">
+		<wbs:hasName> Randbedingungen </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;BCDefTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;StSolGroup">
+		<wbs:hasName> Anfangslösung </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;StSolTasks"/>
+	</wbs:SubTaskGroup>
+
+<!--Defining the SubTaskGroups - Processing-->
+
+<!--Defining the SubTaskGroups - Postprocessing-->
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;CrossSecGroup">
+		<wbs:hasName> (Quer)Schnitte </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CrossSecSubTasks"/>
+	</wbs:SubTaskGroup>
+
+	<wbs:SubTaskGroup
+		rdf:about="&k1d2dwf;LongSecDefGroup">
+		<wbs:hasName> Löngsschnitte </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;LongSecDefTasks"/>
+	</wbs:SubTaskGroup>
+
+<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Preprocessing-->
+	<!--coming from TaskGroups-->
+    <wbs:TaskSeq 
+		rdf:about="&k1d2dwf;DataLoadTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;MapLoad"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ElevLoad"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;RivNetLoad"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;ProfImpLoad"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;RoughLoad"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;TimeSerLoad"/>
+	</wbs:TaskSeq>
+
+	<!--coming from SubTaskGroups-->
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;Net1DRivTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;Net1DImport"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Chan1DGen"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Edit1DRivElts"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;EditDataTable"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;GeneratePolynoms"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;Net1DRivVis"/>
+		<rdf:_7 rdf:resource="&k1d2dwf;Net1DRivVal"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;Net1DChanTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;Net2DTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;Net2DImport"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Edit2DElts"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Chan2DGen"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;BandGen"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;AssignElevs"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;EltsGroup"/>
+		<rdf:_7 rdf:resource="&k1d2dwf;Net2DVis"/>
+		<rdf:_8 rdf:resource="&k1d2dwf;Net2DVal"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;CntrStrcTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;Gen1DCntrStrcElts"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Gen2DCntrStrcElts"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;TransTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;SetEltLineTrans"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;SetEltEltTrans"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;SetJunction"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ValTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;Val2DNet"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;Val1DRivNet"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;Val1DChanNet"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;ValTrans"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ClassDefTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;ModifyDB"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ViewDB"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;ExportDB"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ZoneDefTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;ZoneAreaDef"/>
+         	<rdf:_2 rdf:resource="&k1d2dwf;ZoneParaDef"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;BCDefTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;CCLDef"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;NodalBCDef"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;LineBCDef"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;StSolTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;DefManStSol"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ChoseRestSol"/>
+	</wbs:TaskSeq>
 	
-	
-	<wbs:Activity rdf:about="&kb;Projectmanagement">
-		<rdfs:label>Projectmanagement</rdfs:label>
-		<wbs:isRoot>true</wbs:isRoot>
-	</wbs:Activity>	
-	
-	
-	<wbs:Activity rdf:about="&kb;BuildStaticModel" >
-		<rdfs:label>Build Static Model</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Preprocessing"/>
-		<wbs:hasA  rdf:resource="&kb;Discretisierung"/>	
-		<wbs:isRoot>false</wbs:isRoot>
+<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Processing-->
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;CalcSetTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;DryAlgorithmDef"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ConvParDef"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;GenCalcSet"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;RelaxSet"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;TurbRoughDef"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ResDefTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;CalcLinesSet"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;NodeObserveSet"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ModCheckTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;CheckBC"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;CheckStSol"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;CalcTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;StartCalculation"/>
+	</wbs:TaskSeq>
+
+<!--Within the TaskGroups or SubTaskGroups there are ordered Tasks - Postprocessing-->
+    <wbs:TaskSeq 
+		rdf:about="&k1d2dwf;PlanViewTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;VectorDispl"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ColoredDispl"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;IsolineDispl"/>
+	</wbs:TaskSeq>
+ 
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;SectionTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;CrossSecDef"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;LongSecDef"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;TimeSeriesDispl"/>
+	</wbs:TaskSeq>
+
+	<wbs:TaskSeq 
+		rdf:about="&k1d2dwf;ExportTasks">
+		<rdf:_1 rdf:resource="&k1d2dwf;ExportFile"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ExportPict"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;ExportFloodModeller"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;ExportRiskModeller"/>
+	</wbs:TaskSeq>
+
+<!--Specifying Tasks!!!-->
+	<!--Specifying DataLoadTasks!!!-->
+    <wbs:Task
+		rdf:about="&k1d2dwf;MapLoad">
+		<wbs:hasName> Karte laden </wbs:hasName>
+		<wbs:hasHelp>Laden von Karten in verschiedenen Bildformaten</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;MapLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;MapLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadTiff"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;LoadJPEG"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadTiff">
+		<wbs:hasName>Tiff-Karte laden</wbs:hasName>
+		<wbs:hasHelp>Eine Karte im Tiff-Format als Hintergrundinformation laden</wbs:hasHelp>
 	</wbs:Activity>
-	
-	<wbs:Activity rdf:about="&kb;BasisKartenl">
-		<rdfs:label>Basis Karten laden</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Preprocessing"/>	
-		<wbs:isRoot>false</wbs:isRoot>
-	</wbs:Activity>
-	
-	<wbs:Activity rdf:about="&kb;Discretisierung">
-		<rdfs:label>Discretisierung des Ueberschemmungsgebiet</rdfs:label>
-		<wbs:isRoot>false</wbs:isRoot>
-	</wbs:Activity>
-	
-	<wbs:Activity rdf:about="&kb;FlussSchlauModellierren">
-		<rdfs:label>Flussschlau modellieren</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;BuildStaticModel"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadJPEG">
+		<wbs:hasName>JPEG-Karte laden</wbs:hasName>
+		<wbs:hasHelp>Eine Karte im JPEG-Format als Hintergrundinformation laden</wbs:hasHelp>
 	</wbs:Activity>
 
-	<wbs:Activity rdf:about="&kb;TerrainModelBuilding">
-		<rdfs:label>build a terrain model</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;BuildStaticModel"/>
-		<wbs:isRoot>false</wbs:isRoot>
+        <wbs:Task
+		rdf:about="&k1d2dwf;ElevLoad">
+		<wbs:hasName>Höhendaten laden</wbs:hasName>
+		<wbs:hasHelp>Laden von Höhendaten als TIN oder als GRID aus vorbereitender Arbeit in einem GIS</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ElevLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ElevLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadGRID"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;LoadTIN"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadGRID">
+		<wbs:hasName>GRID-Höhendaten laden</wbs:hasName>
+		<wbs:hasHelp>Höhendaten im GRID-Rasterformat laden</wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadTIN">
+		<wbs:hasName>TIN-Höhendaten laden</wbs:hasName>
+		<wbs:hasHelp>Höhendaten als trianguliertes TIN laden</wbs:hasHelp>
 	</wbs:Activity>
 
-
-	<wbs:Activity rdf:about="&kb;ModelFlowResistance">
-		<rdfs:label>Model flow resistance</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;BuildStaticModel"/>
-		<wbs:isRoot>false</wbs:isRoot>
-		<wbs:hasHelp>Defines the flow resistance Model</wbs:hasHelp>
+    <wbs:Task
+		rdf:about="&k1d2dwf;RivNetLoad">
+		<wbs:hasName>Gewössernetz laden</wbs:hasName>
+		<wbs:hasHelp>Laden von Gewässernetzwerkdaten mit Kilometrierung</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;RivNetLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;RivNetLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadNetshape"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadNetshape">
+		<wbs:hasName>Gewössernetzshape laden</wbs:hasName>
+		<wbs:hasHelp>Laden einer shape Datei mit den Daten zum Gewössernetz(werk)</wbs:hasHelp>
 	</wbs:Activity>
 
-
-	<wbs:Activity rdf:about="&kb;ModelFlowRelationship">
-		<rdfs:label>Model flow resistance</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;StaticModel"/>
-		<wbs:isRoot>false</wbs:isRoot>
+        <wbs:Task
+		rdf:about="&k1d2dwf;ProfImpLoad">
+		<wbs:hasName>Import von Profildaten</wbs:hasName>
+		<wbs:hasHelp>Einladen von 1D-Profilen</wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ProfImpLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ProfImpLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadWSPWINProf"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;LoadDA66Prof"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadWSPWINProf">
+		<wbs:hasName>Profildaten (WSPWIN) importieren</wbs:hasName>
+		<wbs:hasHelp> Importieren von Profildaten im WSPWIN-Format </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadDA66Prof">
+		<wbs:hasName>Profildaten (DA66) importieren</wbs:hasName>
+		<wbs:hasHelp> Importieren von Profildaten im Format da66 </wbs:hasHelp>
 	</wbs:Activity>
 
-	<wbs:Activity rdf:about="&kb;RoughnessLayerModelling">
-		<rdfs:label>Define Rougness Sectors</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;TerrainModelBuilding"/>
-		<wbs:isRoot>false</wbs:isRoot>
+    <wbs:Task
+		rdf:about="&k1d2dwf;RoughLoad">
+		<wbs:hasName> Rauheitsshapes laden </wbs:hasName>
+		<wbs:hasHelp> Einladen einer Polygon *.shp-Datei mit Rauheitszonenabgrenzung </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;RoughLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;RoughLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadRoughshp"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadRoughshp">
+		<wbs:hasName>Rauheitsshapes laden</wbs:hasName>
+		<wbs:hasHelp> Enladen einer Polygon *.shp-Datei mit Rauheitszonenabgrenzung </wbs:hasHelp>
+	</wbs:Activity>
+
+    <wbs:Task
+		rdf:about="&k1d2dwf;TimeSerLoad">
+		<wbs:hasName> Zeitreihen laden </wbs:hasName>
+		<wbs:hasHelp> Einladen von Zeitreihendaten </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;TimeSerLoadActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;TimeSerLoadActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadWISKI"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadWISKI">
+		<wbs:hasName>Zeitreihe laden</wbs:hasName>
+		<wbs:hasHelp> Enladen einer Zeitreihendatei im WISKI-Format </wbs:hasHelp>
+	</wbs:Activity>
+
+	<!--Specifying Net1DRivTasks!!!-->
+        <wbs:Task
+		rdf:about="&k1d2dwf;Net1DImport">
+		<wbs:hasName> 1D-Netz laden </wbs:hasName>
+		<wbs:hasHelp> Laden von Finite Elemente 1D-Netzen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net1DImportActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net1DImportActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D1DRiv"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadK2D1DRiv">
+		<wbs:hasName>Kalypso2D 1D-Netz laden</wbs:hasName>
+		<wbs:hasHelp> Laden eines 1D-Finite Elemente Netzes im Kalypso2D-Format </wbs:hasHelp>
 	</wbs:Activity>
 	
-	<wbs:Activity rdf:about="&kb;RiverProfileNetwork">
-		<rdfs:label>Define River Profile Network</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;TerrainModelBuilding"/>
-		<wbs:isRoot>false</wbs:isRoot>
+    <wbs:Task
+		rdf:about="&k1d2dwf;Chan1DGen">
+		<wbs:hasName>  Profilnetz verknüpfen </wbs:hasName>
+		<wbs:hasHelp> ??? </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Chan1DGenActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Chan1DActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Edit1DRivElts">
+		<wbs:hasName> 1D-Elemente bearbeiten </wbs:hasName>
+		<wbs:hasHelp> Zeichnen, löschen und weitere Bearbeitung von 1D-Elementen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Edit1DRivEltsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Edit1DRivEltsActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;DrawElts"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;GetLength"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;SetLength"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;DelElts"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;DelElt"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;DragNode"/>
+		<rdf:_7 rdf:resource="&k1d2dwf;GroupElts"/>
+		<rdf:_8 rdf:resource="&k1d2dwf;SelGroup"/>
+		<rdf:_9 rdf:resource="&k1d2dwf;ChangeGroupName"/>
+		<rdf:_10 rdf:resource="&k1d2dwf;SelElts"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DrawElts">
+		<wbs:hasName> Element zeichnen </wbs:hasName>
+		<wbs:hasHelp> Element zeichnen, d.h. vorhandene Profilknoten verbinden </wbs:hasHelp>
 	</wbs:Activity>
-	<wbs:Activity rdf:about="&kb;DefinedDigitalTerrainModel">
-		<rdfs:label>Define the digital Terrain model</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;TerraimModelBuilding"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;GetLength">
+		<wbs:hasName> Länge ermitteln </wbs:hasName>
+		<wbs:hasHelp>  </wbs:hasHelp>
 	</wbs:Activity>
-		
-	<wbs:Activity rdf:about="&kb;StartSimulation">
-		<rdfs:label>start a simulation</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Processing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SetLength">
+		<wbs:hasName> Länge zuweisen </wbs:hasName>
+		<wbs:hasHelp> Element zeichnen, d.h. vorhandene Profilknoten verbinden </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DelElts">
+		<wbs:hasName> Elemente löschen </wbs:hasName>
+		<wbs:hasHelp> mehrere Elemente gleichzeitig löschen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DelElt">
+		<wbs:hasName> Element löschen </wbs:hasName>
+		<wbs:hasHelp> ein Element löschen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DragNode">
+		<wbs:hasName> Knoten verschieben </wbs:hasName>
+		<wbs:hasHelp> verschiebt einen Knoten und passt entsprechend das verbundene Element an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;GroupElts">
+		<wbs:hasName> Element gruppieren </wbs:hasName>
+		<wbs:hasHelp> Gruppiert die selektierten Elemente zu einer komplexen Gruppe von Elementen und vergibt einen Namen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelGroup">
+		<wbs:hasName> Element gruppieren </wbs:hasName>
+		<wbs:hasHelp> Gruppiert die selektierten Elemente zu einer komplexen Gruppe von Elementen und vergibt einen Namen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ChangeGroupName">
+		<wbs:hasName> Elementgruppe bennenen </wbs:hasName>
+		<wbs:hasHelp> Vergibt einen individuellen Namen för eine Elementgruppe </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelElts">
+		<wbs:hasName> Element selektieren </wbs:hasName>
+		<wbs:hasHelp> selektiert Elemente innerhalb des gezeichneten Polygons </wbs:hasHelp>
 	</wbs:Activity>
 
-
-	<wbs:Activity rdf:about="&kb;StopSimulation">
-		<rdfs:label>Stop a running simulaton</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Processing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;EditDataTable">
+		<wbs:hasName> Polynomdaten bearbeiten </wbs:hasName>
+		<wbs:hasHelp> Editierfunktionen zur Bearbeitung der Datentabelle von Profilen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;EditDataTableActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;EditDataTableActs">
+		<!--These are the Activities for the View1-->
+		<rdf:_1 rdf:resource="&k1d2dwf;SelProf"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;ShowDataTable"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;ShowHQDiag"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;ShowHADiag"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;ShowHCoefDiag"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;ShowSFValue"/>
+		<!--These are the Activities for the View2-->
+		<rdf:_7 rdf:resource="&k1d2dwf;SelCell"/>
+		<rdf:_8 rdf:resource="&k1d2dwf;SelLines"/>
+		<rdf:_9 rdf:resource="&k1d2dwf;SelColumn"/>
+		<rdf:_10 rdf:resource="&k1d2dwf;SetValue"/>
+		<rdf:_11 rdf:resource="&k1d2dwf;SaveChanges"/>
+		<rdf:_12 rdf:resource="&k1d2dwf;FillValues"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelProf">
+		<wbs:hasName> Profil wählen </wbs:hasName>
+		<wbs:hasHelp> Wählt eine Menü aus Pull-down Menü aus </wbs:hasHelp>
+                <!--Diese Funktion muss auch aus Karte heraus verfögbar sein, dh, wenn in Karte ein Profil ausgewöhlt wird, dann muss das gleichbedeutend sein-->
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowDataTable">
+		<wbs:hasName> Zeige Datentabelle </wbs:hasName>
+		<wbs:hasHelp> Zeigt die Datentabelle in View2 an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowHQDiag">
+		<wbs:hasName> H-Q-Diagramm </wbs:hasName>
+		<wbs:hasHelp> Zeigt die H-Q-Wertetabelle im Diagramm an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowHADiag">
+		<wbs:hasName> H-A-Diagramm </wbs:hasName>
+		<wbs:hasHelp> Zeigt die H-A-Wertetabelle im Diagramm an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowHCoefDiag">
+		<wbs:hasName> H-Coef-Diagramm </wbs:hasName>
+		<wbs:hasHelp> Zeigt die Beiwerttabelle im Diagramm an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowSFValue">
+		<wbs:hasName> Referenzgefölle </wbs:hasName>
+		<wbs:hasHelp> Zeigt das Referenzgefölle der Datentabelle an (aus stationörer Berechnung) </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelCell">
+		<wbs:hasName> Datenzelle selektieren </wbs:hasName>
+		<wbs:hasHelp> Selektiert eine Datenzelle  </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelLines">
+		<wbs:hasName> Datenzeile selektieren </wbs:hasName>
+		<wbs:hasHelp> Selektiert eine Datenzeile </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SetValue">
+		<wbs:hasName> Wert festschreiben </wbs:hasName>
+		<wbs:hasHelp> Schreibt einen eingegebenen Wert fest </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SaveChanges">
+		<wbs:hasName> Änderungen speichern </wbs:hasName>
+		<wbs:hasHelp> Speichert önderungen an der Tabelle </wbs:hasHelp>
+	</wbs:Activity>
+	<!--Wird wahrscheinlich überhaupt nicht benötigt-->
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;FillValues">
+		<wbs:hasName> Werte übertragen </wbs:hasName>
+		<wbs:hasHelp> Überträgt zellen-, zeilen- oder spaltenweise die Daten des selektierten Bereiches </wbs:hasHelp>
 	</wbs:Activity>
 
-	
-	<wbs:Activity rdf:about="&kb;MonitorSimulation">
-		<rdfs:label>Monitor Simulation</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Processing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;GeneratePolynoms">
+		<wbs:hasName> Polynome erstellen </wbs:hasName>
+		<wbs:hasHelp> Erstellen der Polynomeingabedaten för die FE-Berechnung </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;GeneratePolynomsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;GeneratePolynomsActs">
+		<!--These are the Activities for the View1-->
+		<rdf:_1 rdf:resource="&k1d2dwf;SelProfs"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;SelOrder"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;SelKind"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;SelMinBorder"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;SelMaxBorder"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;GenPolynom"/>
+        <rdf:_7 rdf:resource="&k1d2dwf;SelPolynom"/>
+		<rdf:_8 rdf:resource="&k1d2dwf;ShowPolynom"/>
+		<rdf:_9 rdf:resource="&k1d2dwf;ShowCoefs"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelProfs">
+		<wbs:hasName> Profile selektieren </wbs:hasName>
+		<wbs:hasHelp> Wöhlt mehrere Profile aus, für die Polynome erstellt werden sollen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelOrder">
+		<wbs:hasName> Polynomgrad festlegen </wbs:hasName>
+		<wbs:hasHelp> Legt den Polynomgrad fest (max 14) </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelKind">
+		<wbs:hasName> Polynomart wählen </wbs:hasName>
+		<wbs:hasHelp> Wählt die Art des zu erstellenden Polynoms aus (HQ,HA,Coef,alle) </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelMinBorder">
+		<wbs:hasName> min. Gültigkeitsgrenze </wbs:hasName>
+		<wbs:hasHelp> Spezifiziert die minimale Wassertiefe, för die das Polynom noch göltig ist </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelMaxBorder">
+		<wbs:hasName> max. Gültigkeitsgrenze </wbs:hasName>
+		<wbs:hasHelp> Spezifiziert die maximale Wassertiefe, für die das Polynom göltig ist </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;GenPolynom">
+		<wbs:hasName> Generiere Polynome </wbs:hasName>
+		<wbs:hasHelp> Generiert die spezifizierten Polynome </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SelPolynom">
+		<wbs:hasName> Polynome selektieren </wbs:hasName>
+		<wbs:hasHelp> Selektiert ein Polynom der erstellten Polynome des selektierten Profils </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowPolynom">
+		<wbs:hasName> Polynome zeigen </wbs:hasName>
+		<wbs:hasHelp> Zeigt das aktuelle Polynom in Grafik an </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;ShowCoefs">
+		<wbs:hasName> Zeige Koeffizienten </wbs:hasName>
+		<wbs:hasHelp> Zeigt Koeffizienten in tabellarischer Form an </wbs:hasHelp>
 	</wbs:Activity>
 	
-	
-	<wbs:Activity rdf:about="&kb;ComposeScenario">
-		<rdfs:label>Compose scenarios</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Processing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;Net1DRivVis">
+		<wbs:hasName> Netzvisualisierung </wbs:hasName>
+		<wbs:hasHelp> ??? </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net1DRivVisActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net1DRivVisActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;Vis1DRiv"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Vis1DRiv">
+		<wbs:hasName> 1D-Netz visualisieren </wbs:hasName>
+		<wbs:hasHelp> Visualisiert das 1D-Netz </wbs:hasHelp>
 	</wbs:Activity>
 
-
-	<wbs:Activity rdf:about="&kb;FloodModelling">
-		<rdfs:label>start a simulation</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Postprocessing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;Net1DRivVal">
+		<wbs:hasName> Netzvalidierung </wbs:hasName>
+		<wbs:hasHelp> Validiert das 1D-Flussprofile-Netz </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net1DRivValActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net1DRivValActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;Val1DRiv"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Val1DRiv">
+		<wbs:hasName> 1D Flusselemente validieren </wbs:hasName>
+		<wbs:hasHelp> Validiert die 1D-Flussschlauchelemente </wbs:hasHelp>
 	</wbs:Activity>
 
-	
-	<wbs:Activity rdf:about="&kb;RiskModelling">
-		<rdfs:label>Risk modelling</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Postprocessing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<!--Specifying Net2DTasks!!!-->
+	<wbs:Task
+		rdf:about="&k1d2dwf;Net2DImport">
+		<wbs:hasName> 2D-Netzimport </wbs:hasName>
+		<wbs:hasHelp> Importiert ein 2D-Netz aus einer externen Datei </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net2DImportActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net2DImportActs">
+		<!--These are the Activities for the View1-->
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D2D"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadK2D2D">
+		<wbs:hasName> Kalypso2D-Netz importieren </wbs:hasName>
+		<wbs:hasHelp> Import ein 2D-Netz aus einer Kalypso-2D Datei </wbs:hasHelp>
 	</wbs:Activity>
 
-	
-	<wbs:Activity rdf:about="&kb;HydrographViz">
-		<rdfs:label>Show Simmulation results as hydrograph</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Processing"/>
-		<wbs:isRoot>false</wbs:isRoot>
-	</wbs:Activity>	
-	
-	<wbs:Activity rdf:about="&kb;FlowVectorViz">
-		<rdfs:label>Show Simulation result as flow vector</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Postprocessing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;Edit2DElts">
+		<wbs:hasName> 2D-Netzbearbeitung </wbs:hasName>
+		<wbs:hasHelp> Zeichnen, löschen und andere manuelle Bearbeitungen des 2D-Netzes </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Edit2DEltsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Edit2DEltsActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;Draw2DElts"/>
+		<rdf:_2 rdf:resource="&k1d2dwf;DrawTriangle"/>
+		<rdf:_3 rdf:resource="&k1d2dwf;DrawQuadri"/>
+		<rdf:_4 rdf:resource="&k1d2dwf;SplitQuadri"/>
+		<rdf:_5 rdf:resource="&k1d2dwf;Sel2DElts"/>
+		<rdf:_6 rdf:resource="&k1d2dwf;CombineTriangles"/>
+		<rdf:_7 rdf:resource="&k1d2dwf;Del2DElts"/>
+		<rdf:_8 rdf:resource="&k1d2dwf;Group2DElts"/>
+		<rdf:_9 rdf:resource="&k1d2dwf;Sel2DGroup"/>
+		<rdf:_10 rdf:resource="&k1d2dwf;ChangeGroupName"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Draw2DElts">
+		<wbs:hasName> Dreieck/Viereck zeichnen </wbs:hasName>
+		<wbs:hasHelp> Zeichnet ein Dreieck oder Viereck entsprechend dem Klickverhalten </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DrawTriangle">
+		<wbs:hasName> Dreieck zeichnen </wbs:hasName>
+		<wbs:hasHelp> Zeichnet nur Dreiecke </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;DrawQuadri">
+		<wbs:hasName> Viereck zeichnen </wbs:hasName>
+		<wbs:hasHelp> Zeichnet nur Vierecke </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;SplitQuadri">
+		<wbs:hasName> Teile Viereck </wbs:hasName>
+		<wbs:hasHelp> Teilt Vierecke in zwei Dreiecke durch Spezifikation eines Eckknoten eines selektierten Vierecks </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Sel2DElts">
+		<wbs:hasName> Selektiere Elemente </wbs:hasName>
+		<wbs:hasHelp> Selektiert angeklicktes Element oder Elemente innerhalb des spezifizierten Bereiches </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;CombineTriangles">
+		<wbs:hasName> Dreiecke zusammenfögen </wbs:hasName>
+		<wbs:hasHelp> Fögt zwei Dreiecke, die eine Kante Teilen zu einem Viereck zusammen </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Del2DElts">
+		<wbs:hasName> 2D-Elemente löschen </wbs:hasName>
+		<wbs:hasHelp> Löscht angeklicktes oder ausgewöhlte Elemente </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Group2DElts">
+		<wbs:hasName> 2D-Elemente gruppieren </wbs:hasName>
+		<wbs:hasHelp> Gruppiert selektierte Elemente zu einer komplexen Elementgruppe </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Sel2DGroup">
+		<wbs:hasName> Gruppe selektieren </wbs:hasName>
+		<wbs:hasHelp> Selektiert eine Gruppe durch Namensauswahl </wbs:hasHelp>
+	</wbs:Activity>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Change2DGroupName">
+		<wbs:hasName> Gruppenname öndern </wbs:hasName>
+		<wbs:hasHelp> öndert den Namen der ausgewöhlten Gruppe </wbs:hasHelp>
 	</wbs:Activity>
 
-	<wbs:Activity rdf:about="&kb;IsolineViz">
-		<rdfs:label>Show simulation result as isolines</rdfs:label>
-		<wbs:partOf rdf:resource="&kb;Postprocessing"/>
-		<wbs:isRoot>false</wbs:isRoot>
+	<wbs:Task
+		rdf:about="&k1d2dwf;Chan2DGen">
+		<wbs:hasName> Flussschlauchgenerator </wbs:hasName>
+		<wbs:hasHelp> Generiert Flussschlauchelemente aus Profilen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Chan2DGenActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Chan2DGenActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;BandGen">
+		<wbs:hasName> Bandgenerator </wbs:hasName>
+		<wbs:hasHelp> Generiert ein regelmöööiges Elementnetz im spezifizierten Bereich </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;BandGenActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;BandGenActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;AssignElevs">
+		<wbs:hasName> Höhen zuweisen </wbs:hasName>
+		<wbs:hasHelp> Weist die Höhen aus dem Höhenmodell zu und ermöglicht die manuelle überschreibung der Höheninformationen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;AssignElevsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;AssignElevsActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;EltsGroup">
+		<wbs:hasName> Elemente gruppieren </wbs:hasName>
+		<wbs:hasHelp> Gruppiert Elemente zu komplexen Elementgruppen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;EltsGroupActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;EltsGroupActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Net2DVis">
+		<wbs:hasName> Netzvisualisierung </wbs:hasName>
+		<wbs:hasHelp> ??? </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net2DVisActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net2DVisActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;LoadK2D2D"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;LoadK2D2D">
+		<wbs:hasName> 2D-Netz visualisieren </wbs:hasName>
+		<wbs:hasHelp> Visualisiert das 2D-Netz </wbs:hasHelp>
 	</wbs:Activity>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Net2DVal">
+		<wbs:hasName> Netzvalidierung </wbs:hasName>
+		<wbs:hasHelp> ??? </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Net2DValActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Net2DValActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;Val2D"/>
+	</wbs:ActivitySeq>
+	<wbs:Activity 
+		rdf:about="&k1d2dwf;Val2D">
+		<wbs:hasName> 2D-Netz validieren </wbs:hasName>
+		<wbs:hasHelp> Validiert das 1D-Netz </wbs:hasHelp>
+	</wbs:Activity>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Gen1DCntrStrcElts">
+		<wbs:hasName> 1D-Bauwerkselemente </wbs:hasName>
+		<wbs:hasHelp> Bearbeitung und Generierung von Bauwerkselementen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Gen1DCntrStrcEltsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Gen1DCntrStrcEltsActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Gen2DCntrStrcElts">
+		<wbs:hasName> 2D-Bauwerkselemente </wbs:hasName>
+		<wbs:hasHelp> Bearbeitung und Generierung von Bauwerkselementen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Gen2DCntrStrcEltsActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Gen2DCntrStrcEltsActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;SetEltLineTrans">
+		<wbs:hasName> 1D-2D-Linienkopplung </wbs:hasName>
+		<wbs:hasHelp> Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;SetEltLineTransActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;SetEltLineTransActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
 	
-	<wbs:WorkflowStatus rdf:resource="&wbs;simulationModel1_WF">
-		<wbs:associatedModelResource rdf:resource="&wbs;resourceURI"/>
-		<wbs:executedWorkflow rdf:resource="&wbs;SimulationModelWF"/>
-		<wbs:activityStates>
-			<rdf:Seq>
-				
-			</rdf:Seq>
-		</wbs:activityStates>
-		<wbs:currentActivity rdf:resource="&wbs;Activity"/>
-		<wbs:currentTask rdf:resource="&wbs;Task"/>
-	</wbs:WorkflowStatus>
+	<wbs:Task
+		rdf:about="&k1d2dwf;SetEltEltTrans">
+		<wbs:hasName> 1D-2D-Elementkopplung </wbs:hasName>
+		<wbs:hasHelp> Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;SetEltEltTransActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;SetEltEltTransActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
 	
-	<wbs:ActivityStatus rdf:resource="&wbs;simulationModel1_AS">
-		<wbs:associatedActivity 
-			rdf:resource="&wbs;HydrographViz"/>
-		<wbs:hasState
-			rdf:resource=""/>
-	</wbs:ActivityStatus>
+	<wbs:Task
+		rdf:about="&k1d2dwf;SetJunction">
+		<wbs:hasName> 1D-1D-Verbindungen </wbs:hasName>
+		<wbs:hasHelp> Verbindet und verzweigt 1D-Netze </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;SetJunctionActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;SetJunctionActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
 	
+	<wbs:Task
+		rdf:about="&k1d2dwf;Val2DNet">
+		<wbs:hasName> 2D-Netzvalidierung </wbs:hasName>
+		<wbs:hasHelp> Validiert aufgebautes 2D-Netz </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Val2DNetActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Val2DNetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Val1DRivNet">
+		<wbs:hasName> 1D-Flussnetzvalidierung </wbs:hasName>
+		<wbs:hasHelp> Validiert aufgebautes 1D-Flussnetz </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Val1DRivNetActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Val1DRivNetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;Val1DChanNet">
+		<wbs:hasName> 1D-Kanalnetzvalidierung </wbs:hasName>
+		<wbs:hasHelp> Validiert aufgebautes 1D-Kanalnetz </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;Val1DChanNetActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;Val1DChanNetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ValTrans">
+		<wbs:hasName> Kopplungsvalidierung </wbs:hasName>
+		<wbs:hasHelp> Validiert Netzkopplungen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ValTransActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ValTransActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ModifyDB">
+		<wbs:hasName> Rauheitsdatenbank bearbeiten </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht die Bearbeitung der Eintröge in der globalen Rauheitsdatenbank </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ModifyDBActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ModifyDBActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ViewDB">
+		<wbs:hasName> Rauheitsdatenbank anzeigen </wbs:hasName>
+		<wbs:hasHelp> Zeigt die globale Rauheitsdatenbank ohne die Möglichkeit, Verönderungen vorzunehmen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ViewDBActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ViewDBActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ExportDB">
+		<wbs:hasName> Datenbank exportieren </wbs:hasName>
+		<wbs:hasHelp> Exportiert die Datenbank in eine externe Datei </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ExportDBActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ExportDBActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ZoneAreaDef">
+		<wbs:hasName> Rauheitszonen definieren </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht die polygonale Definition von Rauheitszonen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ZoneAreaDefActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ZoneAreaDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ZoneParaDef">
+		<wbs:hasName> Rauheitsparameter bearbeiten </wbs:hasName>
+		<wbs:hasHelp> Tabellarische Bearbeitung der Rauheitszonen, d.h. die Zuweisung von Rauheitsklassen und Korrekturen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ZoneParaDefActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ZoneParaDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+ 
+        <wbs:Task
+		rdf:about="&k1d2dwf;CCLDef">
+		<wbs:hasName> Randbedingungslinien definieren </wbs:hasName>
+		<wbs:hasHelp> Definiert Linien auf dem Gebietsrand zur Angabe von Randbedingungen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;CCLDefActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;CCLDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;NodalBCDef">
+		<wbs:hasName> Knotenrandbedingungen spezifizieren </wbs:hasName>
+		<wbs:hasHelp> Definition von Randbedingungen, die nur auf einen Knoten angewendet werden sollen </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;NodalBCDefActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;NodalBCDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;LineBCDef">
+		<wbs:hasName> Linienrandbedingungen definieren </wbs:hasName>
+		<wbs:hasHelp> Definition von Randbedingungen, die auf eine Linie angewendet werden </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;LineBCDefActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;LineBCDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;DefManStSol">
+		<wbs:hasName> Anfangswerte schötzen </wbs:hasName>
+		<wbs:hasHelp> Definition von Anfangswerten (z.B. Lake-Solution) </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;DefManStSolActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;DefManStSolActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ChoseRestSol">
+		<wbs:hasName> Restartlösung spezifizieren </wbs:hasName>
+		<wbs:hasHelp> Spezifikation eines Berechnungsergebnisses als Anfangswerte för eine neue Berechnung </wbs:hasHelp>
+		<wbs:hasActivities rdf:resource="&k1d2dwf;ChoseRestSolActs"/>
+	</wbs:Task>	
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ChoseRestSolActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+	
+	<wbs:Task
+		rdf:about="&k1d2dwf;DryAlgorithmDef">
+	        <wbs:hasName> Drying/Wetting Algorithmus </wbs:hasName>
+		<wbs:hasHelp> Einstellen des Trockenfallalgorithmus </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;DryAlgorithmDefActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;DryAlgorithmDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ConvParDef">
+		<wbs:hasName> Konvergenz Parameter </wbs:hasName>
+		<wbs:hasHelp> Festlegen der Konvergenz Parameter för den Berechnungsalgorithmus </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ConvParDefActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ConvParDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;GenCalcSet">
+		<wbs:hasName> Berechnungseinstellungen </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;GenCalcSetActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;DenCalcSetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;RelaxSet">
+		<wbs:hasName> Widerstands- und Turbulenzansatz </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;RelaxSetActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;RelaxSetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;TurbRoughDef">
+		<wbs:hasName> Widerstands- und Turbulenzansatz </wbs:hasName>
+		<wbs:hasHelp></wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;TurbRoughDefActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;TurbRoughDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;CalcLinesSet">
+		<wbs:hasName> Kontinuitötslinien bestimmen </wbs:hasName>
+		<wbs:hasHelp> Linien im Gebiet festlegen, för die gesonderte Checks wöhrend der Berechnung durchgeföhrt werden sollen. </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CalcLinesSetActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;CalcLinesSetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;NodeObserveSet">
+		<wbs:hasName> Ausgabeknoten bestimmen </wbs:hasName>
+		<wbs:hasHelp> Knoten festlegen, für die während der Berechnung weitere Daten herausgeschrieben werden sollen </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;NodeObserveSetActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;NodeObserveSetActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;CheckBC">
+		<wbs:hasName> Randbedingungen pröfen </wbs:hasName>
+		<wbs:hasHelp> Pröfen der Randbedingungen auf Konsistenz mit dem Netz </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CheckBCActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;CheckBCActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;CheckStSol">
+		<wbs:hasName> Anfangswerte pröfen </wbs:hasName>
+		<wbs:hasHelp> Pröfung der Anfangswerte auf Konsistenz mit dem FE-Modell </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CheckStSolActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;CheckStSolActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;StartCalculation">
+		<wbs:hasName> Berechnung durchföhren </wbs:hasName>
+		<wbs:hasHelp> Startet die Berechnung unter Verwendung eines Kontrolldisplays </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;StartCalculationActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;StartCalculationActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;VectorDispl">
+		<wbs:hasName> Vektorendarstellung </wbs:hasName>
+		<wbs:hasHelp> Erstellt spezifizierte Ergebnisse in Vektorform </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;VectorDisplActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;VectorDisplActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ColoredDispl">
+		<wbs:hasName> Farbflöchendarstellung </wbs:hasName>
+		<wbs:hasHelp> Erstellt spezifizierte Ergebnisse in Farbflöchendarstellung </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ColoredDisplActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ColoredDisplActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;IsolineDispl">
+		<wbs:hasName> Isoliniendarstellung </wbs:hasName>
+		<wbs:hasHelp> Erstellt spezifizierte Ergebnisse in Isoliniendarstellung </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;IsolineDisplActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;IsolineDisplActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;CrossSecDef">
+		<wbs:hasName> Schnitte definieren/bearbeiten </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht die Erstellung oder Bearbeitung von beliebigen Schnitten durch das Gebiet </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;CrossSecDefActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;CrossSecDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;LongSecDef">
+		<wbs:hasName> Löngsschnitt definieren </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht die Definition von Gewösserlöngsschnitten auf der Basis vordefinierter Querschnitte </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;LongSecDefActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;LongSecDefActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;TimeSeriesDispl">
+		<wbs:hasName> Gangliniendarstellung </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht die Gangliniendarstellung selektierter Ergebnisgeometrien </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;TimeSeriesDisplActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;TimeSeriesDisplActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ExportFile">
+		<wbs:hasName> Ergebnisdatei exportieren </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht den Export von Daten in Kalypso2D-Format </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ExportFileActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ExportFileActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ExportPict">
+		<wbs:hasName> Bild exportieren </wbs:hasName>
+		<wbs:hasHelp> aktuelle Darstellung als Bild exportieren </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ExportPictActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ExportPictActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ExportFloodModeller">
+		<wbs:hasName> Export för Floodmodeller </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht den Datentransfer zum Floodmodeller </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;;ExportFloodModellerActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;;ExportFloodModellerActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+	<wbs:Task
+		rdf:about="&k1d2dwf;ExportRiskModeller">
+		<wbs:hasName> Export för Riskmodeller </wbs:hasName>
+		<wbs:hasHelp> Ermöglicht den Datentransfer zum Riskmodeller </wbs:hasHelp>
+		<wbs:hasTasks rdf:resource="&k1d2dwf;ExportRiskModellerActs"/>
+	</wbs:Task>
+	<wbs:ActivitySeq 
+		rdf:about="&k1d2dwf;ExportRiskModellerActs">
+		<rdf:_1 rdf:resource="&k1d2dwf;???"/>
+	</wbs:ActivitySeq>
+
+
+
+
+
+	<wbs:WorkflowData
+			rdf:about="&k1d2dwf;SimMo1">
+		<wbs:hasName>SimulationModel1</wbs:hasName>
+		<wbs:hasLocation>file.xml#SimMo1</wbs:hasLocation>
+		<wbs:contains rdf:resource="&k1d2dwf;SubMo1_1"/>
+		<wbs:contains rdf:resource="&k1d2dwf;SubMo1_2"/>
+		<wbs:hasType>type_simulationmodel</wbs:hasType>
+	</wbs:WorkflowData>	
+	
+	<wbs:WorkflowData
+			rdf:about="&k1d2dwf;SimMo1Dev">
+		<wbs:hasName>SimulationModel1Dev</wbs:hasName>
+		<wbs:hasLocation>file.xml#SimMo1Dev</wbs:hasLocation>
+		<wbs:isDerivedFrom rdf:resource="&k1d2dwf;SimMo1"/>
+		<wbs:hasType>type_simulationmodel</wbs:hasType>
+	</wbs:WorkflowData>	
+	
+	<wbs:WorkflowData
+			rdf:about="&k1d2dwf;SubMo1_1">
+		<wbs:hasName>Sub Model 1_1</wbs:hasName>
+		<wbs:hasLocation>file.xml#submodel1</wbs:hasLocation>
+		<wbs:hasType>sim_sub_model</wbs:hasType>	
+	</wbs:WorkflowData>
+	
+	<wbs:WorkflowData
+			rdf:about="&k1d2dwf;SubMo1_2">
+		<wbs:hasName>Sub Model 1_2</wbs:hasName>
+		<wbs:hasLocation>file.xml#submodel2</wbs:hasLocation>
+		<wbs:hasType>sim_sub_model</wbs:hasType>	
+	</wbs:WorkflowData>
+	
+	<wbs:WorkpartRTContext 
+		rdf:about="&k1d2dwf;RTSimMo1">
+		<wbs:executingWorkflowPart rdf:resource="&k1d2dwf;Workflow1"/>
+		<wbs:processedResource rdf:resource="&k1d2dwf;SimMo1"/>
+		<wbs:exeState>NotStarted</wbs:exeState>
+	</wbs:WorkpartRTContext>
+	
+
 </rdf:RDF>

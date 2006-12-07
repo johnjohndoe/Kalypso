@@ -122,25 +122,25 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
 	 */
-	public void setProject(IProject project)
+	synchronized public void setProject(IProject project)
 	{
 		logger.info("Setting project");
 		this.project=project;
 	}
 	
-	public IWorkflowDB getWorkflowDB()
+	synchronized public IWorkflowDB getWorkflowDB()
 	{
 		if(workflowDB==null)
 		{
-			return makeWorkflowDB();
+			makeWorkflowDB_Sys();
 		}
-		else
-		{
-			return workflowDB;
-		}
+		
+		return workflowDB;
+		
 	}
 	
-	private IWorkflowDB makeWorkflowDB()
+	
+	private void makeWorkflowDB_Sys()
 	{
 		metaDataFolder=project.getFolder(METADATA_FOLDER);
 		
@@ -149,6 +149,9 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 			workflowDB=
 				new WorkflowDB(
 						metaDataFolder.getFile(WORKFLOW_DATA_DESC));
+			workflowSystem=
+				new WorkflowSystem(
+						metaDataFolder.getFile(WORKFLOW_DESC).getRawLocationURI().toURL());
 		}
 		catch (MalformedURLException e)
 		{
@@ -159,11 +162,15 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 			logger.error("Work flow data could not be found",e);
 		}
 		logger.info("Config End:"+workflowDB);
-		return workflowDB;
+		//return workflowDB;
 	}
 	
-	public IWorkflowSystem getWorkflowSystem()
+	synchronized public IWorkflowSystem getWorkflowSystem()
 	{
+		if(workflowSystem==null)
+		{
+			makeWorkflowDB_Sys();
+		}
 		return workflowSystem;
 	}
 	

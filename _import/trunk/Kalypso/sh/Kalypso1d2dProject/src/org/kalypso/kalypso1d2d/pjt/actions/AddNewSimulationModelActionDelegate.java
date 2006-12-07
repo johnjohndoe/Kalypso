@@ -43,7 +43,7 @@ public class AddNewSimulationModelActionDelegate extends AddNewWorkflowData
 			}
 			else
 			{
-				logger.warn("No Workflow data selcted:"+object.getClass());
+				logger.warn("No Workflow data selcted:"+object);
 				object=super.activeWorkContext;
 			}
 			return object;
@@ -63,10 +63,18 @@ public class AddNewSimulationModelActionDelegate extends AddNewWorkflowData
 	@Override
 	protected void createWorkflowData(IViewPart viewPart, Object dataContext)
 	{
+		logger.info("Creating Data:"+dataContext);
 		IWorkflowData workflowData=
 			(dataContext instanceof IWorkflowData)?(IWorkflowData)dataContext:null;
-		NewSimulationModelControlBuilder.startWizard(
-						viewPart.getSite().getShell(), workflowData);
+		try
+		{
+			NewSimulationModelControlBuilder.startWizard(
+							viewPart.getSite().getShell(), workflowData);
+		}
+		catch(Throwable th)
+		{
+			logger.error("Error creating data", th);
+		}
 	}
 
 }

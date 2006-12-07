@@ -120,6 +120,7 @@ public class NewSimulationModelControlBuilder
 		parentLabel.setText("Parent:");
 		parentTFE= new Text(panel,SWT.BORDER);
 		parentTFE.setEditable(false);
+		parentTFE.setText(getParentDataName());
 		parentTFE.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label commentLabel=new Label(panel, SWT.NONE);
@@ -131,6 +132,20 @@ public class NewSimulationModelControlBuilder
 		
 		//VerifyListener vl;
 			
+	}
+	private String getParentDataName()
+	{
+		if(parentWorkflowData==null)
+			
+		{
+			return "";
+		}
+		String pname=parentWorkflowData.getName();
+		if(pname==null)
+		{
+			pname="";
+		}
+		return pname;
 	}
 	
 	private void updateContent()
@@ -244,6 +259,11 @@ public class NewSimulationModelControlBuilder
 				return "Sim1";
 			}
 			
+			public void remove()
+			{
+				
+			}
+			
 		};
 		Display d = new Display();
 		final Shell shell = new Shell(d);
@@ -276,8 +296,11 @@ public class NewSimulationModelControlBuilder
 	///////////
 	final static public void startWizard(Shell shell, IWorkflowData workflowData )
 	{
+		logger.info("starting wizard");
 		NewSimulationModelWizardPage wpage=
-			new NewSimulationModelWizardPage("Neues Simulation Model",workflowData);
+			new NewSimulationModelWizardPage(
+							"Neues Simulation Model",
+							workflowData);
 		
 		Wizard iWizard=new Wizard()
 		{
@@ -306,6 +329,7 @@ public class NewSimulationModelControlBuilder
 		//wd.setMessage("Neue Simulationsmodell");
 		//wd.setBlockOnOpen(true);
 		int decision=wd.open();
+		logger.info("Opendecision:"+decision);
 		if(decision==WizardDialog.OK)
 		{
 			String name=wpage.getNewSimulaionControlBuilder().getNewName();

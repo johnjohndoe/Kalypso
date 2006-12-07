@@ -6,7 +6,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.afgui.db.IWorkflowDB;
+import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowSystem;
 
 
@@ -21,8 +29,46 @@ import org.kalypso.afgui.model.IWorkflowSystem;
  * </ul>
  * @author Patrice Congo
  */
-public class ActiveWorkContext
+public class ActiveWorkContext 
 {
+	ISelectionListener resSelListener= new ISelectionListener()
+	{
+		public void selectionChanged(IWorkbenchPart part, ISelection selection)
+		{
+			logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+			if(part instanceof ResourceNavigator)
+			{
+				
+				if(selection instanceof IStructuredSelection)
+				{
+					IStructuredSelection isl= (IStructuredSelection)selection;
+					int size=isl.size();
+					if(size==1)
+					{
+						Object firstEl=isl.getFirstElement();
+						if(firstEl instanceof IProject)
+						{
+							try
+							{
+								setActiveProject((IProject)firstEl);
+							}
+							catch(Throwable th)
+							{
+								logger.error("Error secting active:"+firstEl,th);
+								try{setActiveProject(null);}catch(Throwable th1){}
+								
+							}
+						}
+					}
+					else
+					{
+						logger.warn("Can only cope with single selection: "+isl);
+					}
+				}
+			}
+		}		
+	};
+	
 	final static Logger logger=
 				Logger.getLogger(ActiveWorkContext.class);
 	
@@ -39,11 +85,17 @@ public class ActiveWorkContext
 	
 	private ActiveWorkContext()
 	{
-		//empty
+		IWorkbenchWindow window=
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		window.getSelectionService().addPostSelectionListener(resSelListener);
 	}
 	
 	synchronized public void setActiveProject(IProject activeProject) throws CoreException
 	{
+		if(this.activeProject==activeProject)
+		{
+			return;
+		}
 		logger.info("New Project to Set:"+activeProject);
 		IProject oldProject=this.activeProject;
 		IWorkflowDB oldWorkflowDB=getWorkflowDB();
@@ -57,10 +109,13 @@ public class ActiveWorkContext
 		{			
 			if(Kalypso1D2DProjectNature.isOfThisNature(activeProject))
 			{
+				Kalypso1D2DProjectNature nature=
+					Kalypso1D2DProjectNature.toThisNature(activeProject);
 				this.activeProject = activeProject;
-				this.workflowDB=
-					Kalypso1D2DProjectNature.toThisNature(activeProject).getWorkflowDB();
+				this.workflowDB=nature.getWorkflowDB();
+				this.workflowSystem=nature.getWorkflowSystem();
 				logger.info("WorkflowDB="+workflowDB);
+				logger.info("WorkflowSystem:"+workflowSystem);
 			}
 			else
 			{
@@ -105,6 +160,21 @@ public class ActiveWorkContext
 		return workflowSystem;
 	}
 		
+	public IWorkflow getCurrentWorkflow()
+	{
+		if(activeProject==null)
+		{
+			return null;
+		}
+		if(workflowSystem==null)
+		{
+			return null;
+		}
+		else
+		{
+			return workflowSystem.getCurrentWorkFlow();
+		}
+	}
 	
 	synchronized public void addActiveContextChangeListener(IActiveContextChangeListener l)
 	{
