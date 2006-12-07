@@ -131,6 +131,7 @@
       <plugin id="org.kalypso.kalypso1d2d.pjt"/>
       <plugin id="org.kalypso.layerprovider"/>
       <plugin id="org.kalypso.metadoc"/>
+      <plugin id="org.kalypso.model.flood"/>
       <plugin id="org.kalypso.model.product"/>
       <plugin id="org.kalypso.model.wspm.core"/>
       <plugin id="org.kalypso.model.wspm.schema"/>
