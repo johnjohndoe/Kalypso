@@ -171,8 +171,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
       yArray.add( new Integer( y ) );
     }
 
-    xArray.add( currentPoint.x );
-    yArray.add( currentPoint.y );
+    if( currentPoint != null )
+    {
+      xArray.add( currentPoint.x );
+      yArray.add( currentPoint.y );
+    }
 
     final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
     final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
