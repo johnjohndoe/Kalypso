@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-class Geometry_Impl implements Geometry, Marshallable
+public class Geometry_Impl implements Geometry, Marshallable
 {
   // private GMLGeometry geometryAsGML = null;
 
@@ -85,7 +85,7 @@ class Geometry_Impl implements Geometry, Marshallable
   /**
    * constructor initializing the class with the <Geometry>
    */
-  Geometry_Impl( String propertyName )
+  public Geometry_Impl( String propertyName )
   {
     setPropertyName( propertyName );
     // setGeometryAsGML( geometryAsGML );
