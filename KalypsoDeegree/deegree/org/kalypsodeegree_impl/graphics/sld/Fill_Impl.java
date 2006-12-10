@@ -96,7 +96,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  protected Fill_Impl( HashMap cssParams, GraphicFill graphicFill )
+  public Fill_Impl( HashMap cssParams, GraphicFill graphicFill )
   {
     super( cssParams, graphicFill );
   }

@@ -128,7 +128,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param cssParams keys are <tt>Strings<tt> (see above), values are
    *                  <tt>CssParameters</tt>
    */
-  protected Stroke_Impl( HashMap cssParams, GraphicStroke graphicStroke, GraphicFill graphicFill )
+  public Stroke_Impl( HashMap cssParams, GraphicStroke graphicStroke, GraphicFill graphicFill )
   {
     super( cssParams, graphicFill );
     this.graphicStroke = graphicStroke;

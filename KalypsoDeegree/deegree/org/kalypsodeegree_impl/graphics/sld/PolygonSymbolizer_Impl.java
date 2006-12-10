@@ -101,7 +101,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  PolygonSymbolizer_Impl( Fill fill, Stroke stroke, Geometry geometry, double min, double max )
+  public PolygonSymbolizer_Impl( Fill fill, Stroke stroke, Geometry geometry, double min, double max )
   {
     super( geometry );
     setFill( fill );
