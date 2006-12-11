@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    3:59 pm
+!     Last change:  WP   11 Dec 2006    3:28 pm
 !--------------------------------------------------------------------------
 ! This code, read_kalypso_config_file.f90, contains the following
 ! subroutines and functions of the hydrodynamic modell for
@@ -187,6 +187,8 @@ else if (INDEX(part1,'VERZOEGERUNGSVERLUST')/=0) then
     VERZOEGERUNGSVERLUST = 'BJOE'
   else if (INDEX(part2,'DFG')/=0) then
     VERZOEGERUNGSVERLUST = 'DFG '
+  else if (INDEX(part2,'BWK')/=0) then
+    VERZOEGERUNGSVERLUST = 'BWK '
   else
     write (*,*) 'Keine Zuweisung fuer VERZOEGERUNGSVERLUST. Abbruch.'
     stop
