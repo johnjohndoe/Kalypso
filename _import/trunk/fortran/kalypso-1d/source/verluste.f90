@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Dec 2006    3:05 pm
+!     Last change:  WP   11 Dec 2006    3:37 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -344,7 +344,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     bges_uw = fges_uw / 1.0   ! Annahme einer virtuellen Wassertiefe von 1,0 m, kann vielleicht mal um genauen Wert ergänzt werden?
     bges_ow = fges_ow / 1.0   ! Annahme einer virtuellen Wassertiefe von 1,0 m, kann vielleicht mal um genauen Wert ergänzt werden?
 
-    write (*,1005) hv_uw, hv_ow
+    !write (*,1005) hv_uw, hv_ow
     1005 format (1X, 'Geschwindigkeitshoehe Unterwasser (alt) = ', F10.6, /, &
                & 1X, 'Geschwindigkeitshoehe Oberwasser (neu)  = ', F10.6)
 
@@ -356,49 +356,49 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         alpha_RAD = ATAN( (bges_uw-bges_ow) / (2*str) )
         alpha_GRAD = alpha_RAD * 180.0 / pi
 
-        write (*,1006) alpha_GRAD
+        !write (*,1006) alpha_GRAD
         1006 format (1X, 'Aufweitung nach Oberwasser mit einem Winkel von ALPHA = ', F10.7)
 
         if (alpha_GRAD < 1.0) then
-          write (*,*) 'Aufweitung ist kleiner als 1 grad.'
+          !write (*,*) 'Aufweitung ist kleiner als 1 grad.'
           zeta = 0.0
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >=1.0 .and. alpha_GRAD < 8.0) then
-          write (*,*) 'Aufweitung ist zwischen 1,0 und 8,0 grad.'
+          !write (*,*) 'Aufweitung ist zwischen 1,0 und 8,0 grad.'
           zeta = (alpha_GRAD - 1) * 0.1 / (8.0 - 1.0)
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
-          write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
+          !write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
           zeta = ( (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0) ) + 0.1
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
-          write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
+          !write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
           zeta = ( (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0) ) + 0.1
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >=12.5 .and. alpha_GRAD < 18.5) then
-          write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
+          !write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
           zeta = ( (alpha_GRAD - 12.5) * 0.3 / (18.5 - 12.5) ) + 0.2
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >=18.5 .and. alpha_GRAD < 45.0) then
-          write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
+          !write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
           zeta = ( (alpha_GRAD - 18.5) * 0.25 / (45.0 - 18.5) ) + 0.5
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
 
         else if (alpha_GRAD >= 45.0) then
-          write (*,*) 'Aufweitung ist groesser als 45,0 grad.'
+          !write (*,*) 'Aufweitung ist groesser als 45,0 grad.'
           zeta = 0.75
-          write (*, 1009) zeta
+          !write (*, 1009) zeta
         end if
         1009 format (1X, 'Verlustbeiwert bei seitlicher Verziehung. ZETA = ', F10.7 )
 
         hvst = zeta * ( hv_ow - hv_uw)
 
-        write (*, 1010) hvst
+        !write (*, 1010) hvst
         1010 format (1X, 'Verlusthoehe bei deutlicher Profilaufweitung. HVST = ', F10.7, /)
 
       else
@@ -406,39 +406,39 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         alpha_RAD = ATAN( (bges_ow - bges_uw) / (2*str) )
         alpha_GRAD = alpha_RAD * 180.0 / pi
 
-        write (*,1006) alpha_GRAD
+        !write (*,1006) alpha_GRAD
         1011 format (1X, 'Einschnuerung nach Oberwasser mit einem Winkel von ALPHA = ', F10.7)
 
         if (alpha_GRAD < 8.0) then
-          write (*,*) 'Einschnuerung ist kleiner als 8 grad.'
+          !write (*,*) 'Einschnuerung ist kleiner als 8 grad.'
           zeta = 0.0
-          write (*, 1012) zeta
+          !write (*, 1012) zeta
 
         else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
-          write (*,*) 'Einschnuerung ist zwischen 8,0 und 12,5 grad.'
+          !write (*,*) 'Einschnuerung ist zwischen 8,0 und 12,5 grad.'
           zeta = (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0)
-          write (*, 1012) zeta
+          !write (*, 1012) zeta
 
         else if (alpha_GRAD >=12.5 .and. alpha_GRAD < 18.5) then
-          write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
+          !write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
           zeta = ( (alpha_GRAD - 12.5) * 0.1 / (18.5 - 12.5) ) + 0.1
-          write (*, 1012) zeta
+          !write (*, 1012) zeta
 
         else if (alpha_GRAD >=18.5 .and. alpha_GRAD < 45.0) then
-          write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
+          !write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
           zeta = ( (alpha_GRAD - 18.5) * 0.25 / (45.0 - 18.5) ) + 0.2
-          write (*, 1012) zeta
+          !write (*, 1012) zeta
 
         else if (alpha_GRAD >= 45.0) then
-          write (*,*) 'Einschnuerung ist groesser als 45,0 grad.'
+          !write (*,*) 'Einschnuerung ist groesser als 45,0 grad.'
           zeta = 0.30
-          write (*, 1012) zeta
+          !write (*, 1012) zeta
         end if
         1012 format (1X, 'Verlustbeiwert bei seitlicher Verziehung. ZETA = ', F10.7 )
 
         hvst = zeta * ( hv_uw - hv_ow )
 
-        write (*, 1013) hvst
+        !write (*, 1013) hvst
         1013 format (1X, 'Verlusthoehe bei deutlicher Profileinschnuerung. HVST = ', F10.7, /)
 
 
