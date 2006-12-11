@@ -11,5 +11,5 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  */
 public interface IExtrapolationAlgorithm
 {
-	public IPolynom toPolynon();
+	public IPolynom toPolynom();
 }

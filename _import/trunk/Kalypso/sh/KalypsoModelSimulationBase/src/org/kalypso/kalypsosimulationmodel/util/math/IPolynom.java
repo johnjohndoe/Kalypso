@@ -28,7 +28,7 @@ public interface IPolynom
 	 * 
 	 * @return the order corresponding the given index.
 	 */
-	public int getOder(int oderIndex) throws IndexOutOfRangeException;
+	public int getOrder(int orderIndex) throws IndexOutOfRangeException;
 	
 	/**
 	 * Return all the coeficients of the array as 1 dimentional array.
@@ -52,5 +52,5 @@ public interface IPolynom
 	 * @param input a array of double representing independent value 
 	 * @return
 	 */
-	public double[] comupteResult(double[] input);
+	public double[] computeResult(double[] input);
 }

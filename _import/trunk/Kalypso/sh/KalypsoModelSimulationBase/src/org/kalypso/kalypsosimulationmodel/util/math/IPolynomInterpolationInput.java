@@ -21,8 +21,5 @@ public interface IPolynomInterpolationInput
 	 *  
 	 * @return the interpolation tuples
 	 */
-	public double[][] getTupple();
-	
-	
-	
+	public double[][] getTupple();	
 }
