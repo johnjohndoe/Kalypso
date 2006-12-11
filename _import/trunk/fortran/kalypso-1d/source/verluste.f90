@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:10 am
+!     Last change:  WP   11 Dec 2006    3:05 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -227,6 +227,17 @@ REAL :: vo, vu, vm
 REAL :: rgm
 REAL :: wurzrg
 REAL :: sohle
+REAL :: hv_ow           ! Verlusthoehe im Oberwasser (aktuell zu berechnendes Profil)
+REAL :: hv_uw           ! Verlusthoehe im Unterwasser (altes Profil)
+REAL :: fges_ow         ! Gesamter Fließquerschnitt im Oberwasser (aktuell zu berechnendes Profil)
+REAL :: fges_uw         ! Gesamter Fließquerschnitt im Unterwasser (altes Profil)
+REAL :: bges_ow         ! Gesamte Fließbreite im Oberwasser (aktuell zu berechnendes Profil)
+REAL :: bges_uw         ! Gesamte Fließbreite im Unterwasser (altes Profil)
+
+REAL :: alpha_RAD
+REAL :: alpha_GRAD
+
+REAL :: zeta            ! Verlustbeiwert bei seitlicher Verzeihung (Aufweitung oder Einschnuerung)
 
 ! istat=0      --> stationaer ungleichfoermig
 ! istat=1      --> stationaer gleichfoermig
@@ -291,14 +302,14 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
                                                                         
                                                                         
   ! ------------------------------------------------------------------
-  ! Berechnung des wirksamen Geschwindikeitsverlustes (hv) und Rei-
-  ! bungsverlustes des Profils (rg)
+  ! Berechnung des wirksamen Reibungsverlustes des Profils (rg)
   ! ------------------------------------------------------------------
                                                                         
   !JK  BERECHNUNG NACH DARCY-WEISBACH
   IF (FLIESSGESETZ/='MANNING_STR') then
     nstat = nprof
     CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
+
   !JK  BERECHNUNG NACH GMS
   ELSE
     ! vorbelegung
@@ -316,44 +327,161 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
 
 
-  ! Geschwindigkeitsverlust:
+  ! -------------------------------------------------------------------
+  ! Berechnung des wirksamen Geschwindikeitsverlustes (hvm) des Profils
+  ! -------------------------------------------------------------------
   IF (nprof.eq.1.or.istat.eq.1) then
     hvst = 0.
+
   ELSE
-    hvst = hv1 - hv
 
-    IF (hv1.lt.hv) then
+    hv_uw = hv1
+    hv_ow = hv
 
-      ! beruecksichtigung aufweitungsverlust
-      ! betta(dvwk)=2./3.
-      ! betta(bjoernsen)=0.5
-      ! betta(DFG)=2./(1.+Ai/Ai-1)
+    fges_uw = fges1
+    fges_ow = fges
 
-      IF (fges.lt. (fges1 - 2. * str / 7.) ) then
-        ! Aufweitung > 1:7 --> Borda'scher Stossdruck
-        ht = MIN (hr, hmax) - hmin
-        vo = sqrt (hv * 2 * g)
-        vu = sqrt (hv1 * 2 * g)
-        hborda = GET_BORDA (vo, vu, ht)
+    bges_uw = fges_uw / 1.0   ! Annahme einer virtuellen Wassertiefe von 1,0 m, kann vielleicht mal um genauen Wert ergänzt werden?
+    bges_ow = fges_ow / 1.0   ! Annahme einer virtuellen Wassertiefe von 1,0 m, kann vielleicht mal um genauen Wert ergänzt werden?
 
-      ELSE
+    write (*,1005) hv_uw, hv_ow
+    1005 format (1X, 'Geschwindigkeitshoehe Unterwasser (alt) = ', F10.6, /, &
+               & 1X, 'Geschwindigkeitshoehe Oberwasser (neu)  = ', F10.6)
 
-        if (VERZOEGERUNGSVERLUST == 'DVWK') then
-          betta = 2. / 3.
-        else if (VERZOEGERUNGSVERLUST == 'BJOE') then
-          betta = 0.5
-        else if (VERZOEGERUNGSVERLUST == 'DFG ') then
-          betta = 2. / (1. + fges1 / fges)
-        end if                                          
+    if (VERZOEGERUNGSVERLUST == 'DFG ' .or. VERZOEGERUNGSVERLUST == 'BWK ') then
+      ! Neue Berechnungsmethode vom Dez. 2006 (siehe BWK Merkblatt 1, 1999, S. 39f)
+      if (hv_uw < hv_ow) then
 
-        hvst = betta * hvst
+        ! Bestimmung des Aufweitungswinkels
+        alpha_RAD = ATAN( (bges_uw-bges_ow) / (2*str) )
+        alpha_GRAD = alpha_RAD * 180.0 / pi
 
-        !IF (betta.lt.1.e-04) then
-        !  betta1 = 2. / (1. + fges1 / fges)
-        !  hvst = betta1 * hvst
-        !ELSE
-        !  hvst = betta * hvst
-        !ENDIF
+        write (*,1006) alpha_GRAD
+        1006 format (1X, 'Aufweitung nach Oberwasser mit einem Winkel von ALPHA = ', F10.7)
+
+        if (alpha_GRAD < 1.0) then
+          write (*,*) 'Aufweitung ist kleiner als 1 grad.'
+          zeta = 0.0
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >=1.0 .and. alpha_GRAD < 8.0) then
+          write (*,*) 'Aufweitung ist zwischen 1,0 und 8,0 grad.'
+          zeta = (alpha_GRAD - 1) * 0.1 / (8.0 - 1.0)
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
+          write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
+          zeta = ( (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0) ) + 0.1
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
+          write (*,*) 'Aufweitung ist zwischen 8,0 und 12,5 grad.'
+          zeta = ( (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0) ) + 0.1
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >=12.5 .and. alpha_GRAD < 18.5) then
+          write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
+          zeta = ( (alpha_GRAD - 12.5) * 0.3 / (18.5 - 12.5) ) + 0.2
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >=18.5 .and. alpha_GRAD < 45.0) then
+          write (*,*) 'Aufweitung ist zwischen 12,5 und 18,5 grad.'
+          zeta = ( (alpha_GRAD - 18.5) * 0.25 / (45.0 - 18.5) ) + 0.5
+          write (*, 1009) zeta
+
+        else if (alpha_GRAD >= 45.0) then
+          write (*,*) 'Aufweitung ist groesser als 45,0 grad.'
+          zeta = 0.75
+          write (*, 1009) zeta
+        end if
+        1009 format (1X, 'Verlustbeiwert bei seitlicher Verziehung. ZETA = ', F10.7 )
+
+        hvst = zeta * ( hv_ow - hv_uw)
+
+        write (*, 1010) hvst
+        1010 format (1X, 'Verlusthoehe bei deutlicher Profilaufweitung. HVST = ', F10.7, /)
+
+      else
+        ! Bestimmung des Einschnuerungswinkels
+        alpha_RAD = ATAN( (bges_ow - bges_uw) / (2*str) )
+        alpha_GRAD = alpha_RAD * 180.0 / pi
+
+        write (*,1006) alpha_GRAD
+        1011 format (1X, 'Einschnuerung nach Oberwasser mit einem Winkel von ALPHA = ', F10.7)
+
+        if (alpha_GRAD < 8.0) then
+          write (*,*) 'Einschnuerung ist kleiner als 8 grad.'
+          zeta = 0.0
+          write (*, 1012) zeta
+
+        else if (alpha_GRAD >=8.0 .and. alpha_GRAD < 12.5) then
+          write (*,*) 'Einschnuerung ist zwischen 8,0 und 12,5 grad.'
+          zeta = (alpha_GRAD - 8) * 0.1 / (12.5 - 8.0)
+          write (*, 1012) zeta
+
+        else if (alpha_GRAD >=12.5 .and. alpha_GRAD < 18.5) then
+          write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
+          zeta = ( (alpha_GRAD - 12.5) * 0.1 / (18.5 - 12.5) ) + 0.1
+          write (*, 1012) zeta
+
+        else if (alpha_GRAD >=18.5 .and. alpha_GRAD < 45.0) then
+          write (*,*) 'Einschnuerung ist zwischen 12,5 und 18,5 grad.'
+          zeta = ( (alpha_GRAD - 18.5) * 0.25 / (45.0 - 18.5) ) + 0.2
+          write (*, 1012) zeta
+
+        else if (alpha_GRAD >= 45.0) then
+          write (*,*) 'Einschnuerung ist groesser als 45,0 grad.'
+          zeta = 0.30
+          write (*, 1012) zeta
+        end if
+        1012 format (1X, 'Verlustbeiwert bei seitlicher Verziehung. ZETA = ', F10.7 )
+
+        hvst = zeta * ( hv_uw - hv_ow )
+
+        write (*, 1013) hvst
+        1013 format (1X, 'Verlusthoehe bei deutlicher Profileinschnuerung. HVST = ', F10.7, /)
+
+
+      end if
+
+    else
+
+      hvst = hv1 - hv
+
+      IF (hv1.lt.hv) then
+
+        ! beruecksichtigung aufweitungsverlust
+        ! betta(dvwk)=2./3.
+        ! betta(bjoernsen)=0.5
+        ! betta(DFG)=2./(1.+Ai/Ai-1)
+
+        IF (fges.lt. (fges1 - 2. * str / 7.) ) then
+          ! Aufweitung > 1:7 --> Borda'scher Stossdruck
+          ht = MIN (hr, hmax) - hmin
+          vo = sqrt (hv * 2 * g)
+          vu = sqrt (hv1 * 2 * g)
+          hborda = GET_BORDA (vo, vu, ht)
+
+        ELSE
+
+          if (VERZOEGERUNGSVERLUST == 'DVWK') then
+            betta = 2. / 3.
+          else if (VERZOEGERUNGSVERLUST == 'BJOE') then
+            betta = 0.5
+          else
+            betta = 0.5
+          end if
+
+          hvst = betta * hvst
+
+          !IF (betta.lt.1.e-04) then
+          !  betta1 = 2. / (1. + fges1 / fges)
+          !  hvst = betta1 * hvst
+          !ELSE
+          !  hvst = betta * hvst
+          !ENDIF
+
+        ENDIF
 
       ENDIF
 

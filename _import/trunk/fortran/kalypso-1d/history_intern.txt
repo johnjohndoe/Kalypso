@@ -830,3 +830,16 @@ Kalypso 1.1f   06. Juni 2006
 2.)  BUG in Wehrberechnung behoben. Sind eventl. noch weitere drin.
 
                                      Monika Donner, Wolf Plöger, 01.08.2006
+
+Kalypso 1.2 RC1   11. Dezember 2006
+-----------------------------------
+1.)  Neue Berechnungsmethode für den Verzögerungsverlust hinzugefügt.
+     Dieser Verlust wurde bisher über die Verfahren DVWK, Björnsen oder DFG
+     bestimmt. Hierbei wurde die Verlusthöhe teilweise deutlich überschätzt.
+     Neues Verfahren wird nach BWK Merkblatt 1, 1999 (S.28f) implemetiert.
+     Bei alter WSPWIN-Oberfläche wird bei Wahl der Option DFG intern nun
+     nach BWK gerechnet! 
+     Bei KALYPSO-Oberfläche wird DFG-Option durch BWK-Option ersetzt.
+
+                                                    Wolf Plöger, 11.12.2006
+
