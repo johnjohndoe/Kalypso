@@ -48,6 +48,7 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
@@ -81,7 +82,10 @@ public class JTSUtilities
       Point pointN = line.getPointN( i );
 
       if( geometry_2nd.contains( pointN ) )
-        return new Point( new Coordinate( pointN.getCoordinate() ), pointN.getPrecisionModel(), pointN.getSRID() );
+      {
+        GeometryFactory factory = new GeometryFactory( pointN.getPrecisionModel(), pointN.getSRID() );
+        return factory.createPoint( new Coordinate( pointN.getCoordinate() ) );
+      }
     }
 
     return null;
@@ -115,7 +119,8 @@ public class JTSUtilities
       Point startPoint = lineJTS.getPointN( i );
       Point endPoint = lineJTS.getPointN( i + 1 );
 
-      line = new LineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) }, lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      line = factory.createLineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) } );
       double lineLength = line.getLength();
 
       if( distance - lineLength < 0 )
@@ -148,7 +153,8 @@ public class JTSUtilities
         y = computeY.computeX( distance );
       }
 
-      Point pointJTS = new Point( new Coordinate( x, y ), lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      Point pointJTS = factory.createPoint( new Coordinate( x, y ) );
 
       return pointJTS;
     }
@@ -237,7 +243,8 @@ public class JTSUtilities
 
       /* Build a line with the two points to check the flag. */
       Coordinate[] coordinates = new Coordinate[] { new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) };
-      LineString testLine = new LineString( coordinates, line.getPrecisionModel(), line.getSRID() );
+      GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+      LineString testLine = factory.createLineString( coordinates );
 
       if( testLine.intersects( start ) )
         add = true;
@@ -257,9 +264,9 @@ public class JTSUtilities
     for( int i = 0; i < points.size(); i++ )
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
 
-    LineString newLine = new LineString( coordinates, line.getPrecisionModel(), line.getSRID() );
+    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
-    return newLine;
+    return factory.createLineString( coordinates );
   }
 
   /**
@@ -296,7 +303,9 @@ public class JTSUtilities
 
         /* Build a line with the two points to check the flag. */
         Coordinate[] coordinates = new Coordinate[] { new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) };
-        LineString testLine = new LineString( coordinates, lineN.getPrecisionModel(), lineN.getSRID() );
+        GeometryFactory factory = new GeometryFactory( lineN.getPrecisionModel(), lineN.getSRID() );
+
+        LineString testLine = factory.createLineString( coordinates );
 
         if( testLine.intersects( start ) )
           add = true;
@@ -320,10 +329,9 @@ public class JTSUtilities
 
     for( int i = 0; i < points.size(); i++ )
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
+    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
-    LineString newLine = new LineString( coordinates, line.getPrecisionModel(), line.getSRID() );
-
-    return newLine;
+    return factory.createLineString( coordinates );
   }
 
   /**
@@ -338,9 +346,9 @@ public class JTSUtilities
   public static Point getVector( Point start, Point end )
   {
     Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
-    Point vector = new Point( coords, start.getPrecisionModel(), start.getSRID() );
+    GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
 
-    return vector;
+    return factory.createPoint( coords );
   }
 
   /**
@@ -358,7 +366,7 @@ public class JTSUtilities
     double laenge = Math.sqrt( x * x + y * y );
 
     Coordinate coord = new Coordinate( x / laenge, y / laenge );
-
-    return new Point( coord, vector.getPrecisionModel(), vector.getSRID() );
+    GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
+    return factory.createPoint( coord );
   }
 }

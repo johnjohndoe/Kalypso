@@ -41,6 +41,7 @@
 package org.kalypso.jts;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
@@ -77,7 +78,8 @@ public class SnapUtilities
    */
   public static Point snapPoint( Point pointJTS )
   {
-    return new Point( pointJTS.getCoordinate(), pointJTS.getPrecisionModel(), pointJTS.getSRID() );
+    GeometryFactory factory = new GeometryFactory( pointJTS.getPrecisionModel(), pointJTS.getSRID() );
+    return factory.createPoint( pointJTS.getCoordinate() );
   }
 
   /**
