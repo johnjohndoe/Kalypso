@@ -146,10 +146,20 @@
 						name="coefficients1"
 						type="simBase:DoubleListPropertyType"/-->	
 						
-					<xs:element
+					<!--xs:element
 						name="coefficients"
 						type="gml:doubleList"
-						minOccurs="1" maxOccurs="1"/>
+						minOccurs="1" maxOccurs="1"/-->
+					<!--xs:element
+						name="coefficients"
+						minOccurs="1" maxOccurs="1">
+						<xs:simpleType>
+							<xs:list itemType="xs:double"/>
+						</xs:simpleType>
+					</xs:element -->
+					<xs:element
+						name="coefficients"
+						type="gml:doubleOrNullList"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -39,7 +39,8 @@ public class TestPolynom1D extends TestCase
 					Arrays.asList(workspace.getRootFeature().getProperties()));
 			for(Object o:workspace.getRootFeature().getProperties())
 			{
-				System.out.println("GGGGGGG:"+o.getClass());
+				System.out.println("GGGGGGG:"+
+						(o!=null?o.getClass():null));
 			}
 		}
 		catch(Throwable th)
