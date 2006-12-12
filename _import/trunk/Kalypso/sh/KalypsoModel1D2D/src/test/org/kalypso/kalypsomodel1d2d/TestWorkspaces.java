@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,44 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package test.org.kalypso.kalypsomodel1d2d;
 
-package org.kalypso.kalypsosimulationmodel.schema;
-
+import java.io.File;
+import java.io.FileWriter;
 import java.net.URL;
-import java.util.Map;
 
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
-
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
- * Catalog which provides the url to the 1d2d schema
- * 
  * @author Patrice Congo
+ *
  */
-public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
+public class TestWorkspaces
 {
-	final static public String CURRENT_VERSION="v0.0.0";
-	final static public String SIM_MODEL_REL_PATH=CURRENT_VERSION+"/simulation_model_base.xsd";
-	final static public URL SIM_MODEL_SCHEMA_URL=
-					UrlCatalogModelSimulationBase.class.getResource( 
-														SIM_MODEL_REL_PATH );
-	final static public String SIM_MODEL_NS="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
-	final static public String SIM_MODEL_NS_PREFIX="simBase";
-  
-	/**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
-  @Override
-  protected void fillCatalog( 
-		  				final Class myClass, 
-		  				final Map<String, URL> catalog, 
-		  				Map<String, String> prefixes )
+  public static GMLWorkspace loadGMLWorkspace(
+                            URL gmlURL,
+                            String schemaLocation) throws Exception
   {
-	  
-    catalog.put( 
-    			SIM_MODEL_NS, 
-    			myClass.getResource( SIM_MODEL_REL_PATH ) );
-    prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
+    GMLSchemaCatalog schemaCatalog = 
+             KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    
+    GMLSchema modelGmlSchema = 
+                schemaCatalog.getSchema( 
+                    Kalypso1D2DSchemaConstants.SIMULATION_MODEL1D2D.toString(), 
+                    (String)null );
+    
+    IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
+    
+    GMLWorkspace modelWorkspace = 
+            new GMLWorkspace_Impl( 
+                modelGmlSchema, 
+                featureTypes, 
+                (null), 
+                gmlURL, 
+                schemaLocation, 
+                null );
+    
+    return modelWorkspace;
   }
-
 }
