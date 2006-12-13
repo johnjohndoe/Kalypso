@@ -115,5 +115,4 @@ public class PointGeometryBuilder implements IGeometryBuilder
     for( int i = 0; i < y.length; i++ )
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
-
 }
