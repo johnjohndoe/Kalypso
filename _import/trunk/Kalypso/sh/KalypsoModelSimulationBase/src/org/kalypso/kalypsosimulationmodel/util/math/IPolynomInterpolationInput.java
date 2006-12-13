@@ -9,8 +9,8 @@ public interface IPolynomInterpolationInput
 {
 	/**
 	 * Return the dimention of the interpolation 
-	 * input. E.g. for a 2D polynms this will be a point cloud in the 3D space 
-	 * and the returned is 4. 
+	 * input. E.g. for a 2D polynms this will be a point cloud 
+	 * and the returned is 3. 
 	 * 
 	 * @return
 	 */
@@ -19,7 +19,8 @@ public interface IPolynomInterpolationInput
 	/**
 	 * Returns the interpolation tuples.
 	 *  
-	 * @return the interpolation tuples
+	 * @return the interpolation tuples as array of arrays with the length 
+	 * 	equal to the dimention
 	 */
 	public double[][] getTupple();	
 }

@@ -5,19 +5,36 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class MultipointCoverage<DomainClass> implements IMultipointCoverage<DomainClass>
 {
-
-	public void addCoverageEntry(Feature flowRelationship, Feature position) throws IllegalArgumentException
+	/**
+	 * Add a coverage entry, which is  basically a pair made from a 
+	 * a rangeElement feature and the position where it is applying 
+	 * @throws IllegalArgumentException if any parameter is null
+	 * 
+	 */
+	public void addCoverageEntry(
+						Feature rangeElement, 
+						Feature position) 
+						throws IllegalArgumentException
 	{
 		
 		
 	}
 
-	public IPosition[] getApplicablePosition(Feature flowRelationship) throws IllegalArgumentException
+	/**
+	 * Get the position where the given flow relationship applyes
+	 * @param flowRelationship -- the flow relationship for which the 
+	 * 		application locations is are to be computed
+	 */
+	public IPosition[] getApplicablePosition(
+								Feature flowRelationship) 
+								throws IllegalArgumentException
 	{
 		return null;
 	}
 
-	public DomainClass getRangeValue(Feature location) throws IllegalArgumentException
+	public DomainClass getRangeValue(
+								Feature location) 
+								throws IllegalArgumentException
 	{
 		return null;
 	}
