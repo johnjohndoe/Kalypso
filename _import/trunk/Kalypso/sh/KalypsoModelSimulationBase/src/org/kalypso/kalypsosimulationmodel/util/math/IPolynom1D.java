@@ -35,6 +35,28 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  */
 public interface IPolynom1D
 {
+	static public enum CONSISTENCY_CHECK {
+		/**
+		 * If less or equals to null
+		 */
+		ILLEGAL_ORGER, 
+		/**
+		 * If order not equals to the number of coefficients
+		 */
+		ORDER_COEF_MISMATCH,
+		
+		/**
+		 * Basically the number of the coefficients is equals to the
+		 * order+1; and the last coeficient must be non null. 
+		 * Use this value to signal  that the most significant 
+		 * coefficient is zero  
+		 */
+		ZERO_MOST_SIGNIFICANT_COEFS,
+		/**
+		 * The cofiguration set with order and the coefficients is
+		 * consistent
+		 */
+		CONSISTENCY_OK};
 //	/**
 //	 * Return the dimension of the polynom
 //	 * @return the dimention of the polynom as interger
@@ -56,13 +78,21 @@ public interface IPolynom1D
 	public int getOrder();
 	
 	/**
-	 * Return all the coeficients of the array as 1 dimentional array.
-	 * Note that for polynom with oder equals and greater 2 there is a mapping 
-	 * from a to and more dimentional array to a one dimentional array.
-	 * For 2 dimentional coefficient aij will be found a index 
-	 * i*(getOrder(0))+j in the return array.
+	 * Set order without any relational consistancy check.
+	 * One will typically call {}
 	 * 
-	 * @return a doouble array containing all the polynom coefficients
+	 * @param order
+	 * @throws IllegalArgumentException if the passed order is 
+	 * 			equal or less then zero
+	 */
+	public void setOrder(
+					int order) 
+					throws IllegalArgumentException;
+	
+	/**
+	 * Return all the coeficients of the array as 1 dimentional array.
+	 * 
+	 * @return a double array containing all the polynom coefficients
 	 */
 	public double[] getCoefficients();
 	
@@ -72,19 +102,21 @@ public interface IPolynom1D
 	 * its dimention and the coefficients
 	 *   
 	 * @param oder --- the new order auf this polynom
-	 * @param dim -- the new dimention of this polynom
 	 * @param coefficients -- the coefficient of this polynom
 	 * @throws illegal argument exception if 
 	 * 	<ul>
-	 * 		<li/>order or is negative
+	 * 		<li/>order zero or is negative
 	 * 		<li/>coefficient is null
 	 * 		<li/>number of double passed as coefficient is not
-	 * 			equal to order
+	 * 			equal to order+1
 	 * 	</ul>
 	 * 			
 	 */
-	public void setPolynomParameters(int order, double[] coefficients);
-	
+	public void setPolynomParameters(
+								int order, 
+								double[] coefficients)
+								throws IllegalArgumentException;
+								
 	/**
 	 * compute the polynom value for the given value.
 	 * 
@@ -94,6 +126,12 @@ public interface IPolynom1D
 	 */
 	public double computeResult(double input);
 	
-	
+	/**
+	 * Check the consistency between order and coeffients:
+	 * the number of coeficients must be equals to order.
+	 *  
+	 * @return 
+	 */
+	public CONSISTENCY_CHECK checkConsistency();
 	
 }

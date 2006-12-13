@@ -65,6 +65,9 @@ public class TestWorkspaces
 	public static final URL URL_POLYNOMS;
 	public static final String REL_RES_POLYNOMS="data/polynoms1d.xml";
 	
+	public static final URL URL_EMPTY_GML;
+	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml";
+	
 	public static final Throwable EXCEPTION;
 	
 	static 
@@ -78,6 +81,9 @@ public class TestWorkspaces
 			urlMap.put(
 					REL_RES_POLYNOMS,
 					TestWorkspaces.class.getResource(REL_RES_POLYNOMS));
+			urlMap.put(
+					REL_RES_EMPTY_GML,
+					TestWorkspaces.class.getResource(REL_RES_EMPTY_GML));
 		}
 		catch(Throwable th)
 		{
@@ -90,6 +96,7 @@ public class TestWorkspaces
 		{
 			EXCEPTION=th1;
 			URL_POLYNOMS=urlMap.get(REL_RES_POLYNOMS);
+			URL_EMPTY_GML=urlMap.get(REL_RES_EMPTY_GML);
 		}
 	}
 	
