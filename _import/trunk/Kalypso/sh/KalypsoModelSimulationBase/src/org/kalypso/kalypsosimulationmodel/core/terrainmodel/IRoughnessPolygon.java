@@ -1,0 +1,53 @@
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+
+/**
+ * The interface to be implemented by classes representing
+ * a simBase:RoughnessPolygon element
+ * 
+ * @author Dejan Antanaskovic, Patrice Congo
+ *
+ */
+public interface IRoughnessPolygon 
+{
+	/**
+	 * Returns the rougthness ID for this polynom
+	 * 
+	 * @return the id of the rougthness associated to the polygon
+	 */
+	public String getRoughnessID();
+	
+	/**
+	 * 
+	 * @param id the new ID for the rougthness associated to the polygon
+	 * 
+	 * @throws IllegalArgumentException if id is null or empty
+	 */
+	public void setRougthnessID(String id)
+				throws IllegalArgumentException;
+	
+	/**
+	 * Returns the rougthness polygon
+	 * @return the polygom 
+	 */
+	public GM_Polygon getPolygon();
+	
+	/**
+	 * Sets the geometry of the roughness polygon
+	 * 
+	 * @param polygon the polygon to set
+	 * 
+	 */
+	public void setPolygon(GM_Polygon polygon);
+	
+	/**
+	 * Returns the feature on which the this roughness
+	 * poly gon is based
+	 * 
+	 * @return feature wrapped by this roughness polygon
+	 */
+	public Feature getFeature();
+	
+}
