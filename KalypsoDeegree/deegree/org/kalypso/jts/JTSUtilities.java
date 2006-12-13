@@ -49,6 +49,7 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
@@ -363,10 +364,42 @@ public class JTSUtilities
     double x = vector.getX();
     double y = vector.getY();
 
+    /* The length of a vector is the sum of all elements with the power of two and than the square root of it. */
     double laenge = Math.sqrt( x * x + y * y );
 
     Coordinate coord = new Coordinate( x / laenge, y / laenge );
     GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
     return factory.createPoint( coord );
+  }
+
+  /**
+   * This function creates a line segment with the two given points, calculates the length of the line segment and
+   * returns the length.
+   * 
+   * @param pointOne
+   *          This point will be used as start point of the line segment.
+   * @param pointTwo
+   *          This point will be used as end point of the line segment.
+   * @return The length of the line between the two points given.
+   */
+  public static double getLengthBetweenPoints( Point pointOne, Point pointTwo )
+  {
+    return getLengthBetweenPoints( pointOne.getCoordinate(), pointTwo.getCoordinate() );
+  }
+
+  /**
+   * This function creates a line segment with the two given coordinates, calculates the length of the line segment and
+   * returns the length.
+   * 
+   * @param coordinateOne
+   *          This coordinate will be used as start point of the line segment.
+   * @param coordinateTwo
+   *          This coordinate will be used as end point of the line segment.
+   * @return The length of the line between the two coordinates given.
+   */
+  public static double getLengthBetweenPoints( Coordinate coordinateOne, Coordinate coordinateTwo )
+  {
+    LineSegment segment = new LineSegment( coordinateOne, coordinateTwo );
+    return segment.getLength();
   }
 }
