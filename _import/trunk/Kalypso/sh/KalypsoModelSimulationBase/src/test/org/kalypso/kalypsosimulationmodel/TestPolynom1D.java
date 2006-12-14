@@ -49,7 +49,14 @@ public class TestPolynom1D extends TestCase
 		{
 			return new double[]{0,1,2,3,4};
 		}
-
+		
+		public void setCoefficients(
+						double[] coefficients) 
+						throws IllegalArgumentException
+		{
+		
+		}
+		
 		public int getOrder()
 		{
 			return 4;
@@ -136,6 +143,67 @@ public class TestPolynom1D extends TestCase
 			workspace=
 				GmlSerializer.createGMLWorkspace( 
 					TestWorkspaces.URL_EMPTY_GML, null );;
+			Feature root=workspace.getRootFeature();	
+			Polynom1D pol1d= new Polynom1D(workspace);
+			try
+			{
+				pol1d.getOrder();
+				fail("no order set therefore illegal state exception expected");
+			}
+			catch(IllegalStateException e)
+			{
+				//expected
+			}
+			
+			try
+			{
+				pol1d.getCoefficients();
+				fail("no coefficient set therefor exception expected");
+			}
+			catch(Throwable e)
+			{
+				//expected
+			}
+			final int SET_ORDER=2;
+			pol1d.setOrder(SET_ORDER);
+			assertEquals(SET_ORDER, pol1d.getOrder());
+			
+			final double[] coefs={0,1,2};
+			pol1d.setCoefficients(coefs);
+			double[] retCoefs=pol1d.getCoefficients();
+			assertTrue(Arrays.equals(coefs, retCoefs));
+			assertEquals(
+					pol1d.checkConsistency(), 
+					IPolynom1D.CONSISTENCY_CHECK.CONSISTENCY_OK);
+			assertEquals(0.0, pol1d.computeResult(0));
+			assertEquals(21.0, pol1d.computeResult(3));
+			assertEquals(55.0, pol1d.computeResult(5));
+			
+			pol1d.setPolynomParameters(0, new double[]{0});
+			try
+			{
+				pol1d.setPolynomParameters(1, new double[]{0});
+				fail("Bad combination order=1 coefs=0; illegal exception must be thrown");
+			}
+			catch(IllegalArgumentException e)
+			{
+				//expected
+			}
+			
+			try
+			{
+				pol1d.setPolynomParameters(1, new double[]{1,1});
+				//0 at end is not okay
+				pol1d.setPolynomParameters(1, new double[]{1,0});
+				fail(
+					"Bad combination order=1 coefs=1,0; since last element "+
+					"is zero illegal exception must be thrown");
+			}
+			catch(IllegalArgumentException e)
+			{
+				//expected
+			}
+			//System.out.println("Root="+workspace.getRootFeature().getClass());
 		}
 		catch(Throwable th)
 		{

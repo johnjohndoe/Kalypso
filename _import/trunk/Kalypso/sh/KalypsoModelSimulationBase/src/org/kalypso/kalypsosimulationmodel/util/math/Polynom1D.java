@@ -3,7 +3,9 @@
  */
 package org.kalypso.kalypsosimulationmodel.util.math;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -53,7 +55,7 @@ public class Polynom1D implements IPolynom1D
 		{
 			throw new RuntimeException();
 		}
-		
+		i--;//last element
 		double result=coefs[i];
 		i--;
 		for(;i>=0;i--)
@@ -86,6 +88,39 @@ public class Polynom1D implements IPolynom1D
 			throw new RuntimeException();//TODO throw better exception
 		}
 		
+	}
+	//TODO check for  the polynom with order 0 and a0=0
+	
+	public void setCoefficients(
+						double[] coefficients) 
+						throws IllegalArgumentException
+	{
+		if(coefficients==null)
+		{
+			throw new IllegalArgumentException();
+		}
+		if(coefficients.length==0)
+		{
+			throw new IllegalArgumentException(
+					"a polynom must have at least ");
+		}
+		//allow
+		if(coefficients[coefficients.length-1]==0 && coefficients.length==1)
+		{
+			throw new IllegalArgumentException(
+					"Last element, except if element 0, must not be null to"+
+					" respect the order matching with length only");
+		}
+		
+		StringBuffer buf= new StringBuffer(128);
+		for(double coef:coefficients)
+		{
+			buf.append(coef);
+			buf.append(' ');
+		}
+		polFeature.setProperty(
+				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_COEFFICIENTS, 
+				buf.toString());
 	}
 
 	/* (non-Javadoc)
@@ -124,7 +159,7 @@ public class Polynom1D implements IPolynom1D
 		
 		polFeature.setProperty(
 				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ORDER, 
-				String.valueOf(order));
+				new Integer(order));
 	}
 	
 	/* (non-Javadoc)
@@ -135,19 +170,32 @@ public class Polynom1D implements IPolynom1D
 						double[] coefficients) 
 						throws IllegalArgumentException
 	{
-		if(order<=0 )
+//		if(order<=0 )
+//		{
+//			throw new IllegalArgumentException();
+//		}
+//		
+//		if(coefficients==null)
+//		{
+//			throw new IllegalArgumentException();
+//		}
+//		
+//		if(order!=coefficients.length)
+//		{
+//			throw new IllegalArgumentException();
+//		}
+		CONSISTENCY_CHECK checkHint=checkConsistency(order, coefficients);
+		if(checkHint!=CONSISTENCY_CHECK.CONSISTENCY_OK)
 		{
-			throw new IllegalArgumentException();
-		}
-		
-		if(coefficients==null)
-		{
-			throw new IllegalArgumentException();
-		}
-		
-		if(order!=coefficients.length)
-		{
-			throw new IllegalArgumentException();
+			StringBuffer buf= new StringBuffer("64");
+			buf.append("Illegal order coefficient combination:");
+			buf.append("\tcheckHint=");
+			buf.append(checkHint);
+			buf.append("\torder=");
+			buf.append(order);
+			buf.append("\tcoefficients=");
+			buf.append(Arrays.toString(coefficients));
+			throw new IllegalArgumentException(buf.toString());
 		}
 		
 		polFeature.setProperty(
@@ -197,7 +245,7 @@ public class Polynom1D implements IPolynom1D
 			throw new IllegalArgumentException();
 		}
 		
-		if(order<=0)
+		if(order<0)
 		{
 			return CONSISTENCY_CHECK.ILLEGAL_ORGER;
 		}
@@ -207,11 +255,19 @@ public class Polynom1D implements IPolynom1D
 		}
 		else if(coefs[order]==0)
 		{
-			return CONSISTENCY_CHECK.ZERO_MOST_SIGNIFICANT_COEFS;
+			if(order==0)
+			{
+				//allow 0*x^0
+				return CONSISTENCY_CHECK.CONSISTENCY_OK;
+			}
+			else
+			{
+				return CONSISTENCY_CHECK.ZERO_MOST_SIGNIFICANT_COEFS;
+			}
 		}
 		else
 		{
-			return CONSISTENCY_CHECK.ORDER_COEF_MISMATCH;
+			return CONSISTENCY_CHECK.CONSISTENCY_OK;
 		}
 	}
 	

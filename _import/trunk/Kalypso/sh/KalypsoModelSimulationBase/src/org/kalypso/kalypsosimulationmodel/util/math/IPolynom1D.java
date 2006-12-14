@@ -96,6 +96,20 @@ public interface IPolynom1D
 	 */
 	public double[] getCoefficients();
 	
+	/**
+	 * Set coefficients without a realtional check with the
+	 * already set coefficient.
+	 * 
+	 * @param coefficients the coefficients to set
+	 * @throws IllegalArgumentException if coefficients is null or
+	 * 	the last element in coefficient is zero 
+	 * (since this has an implication when checking the order of the 
+	 * polynom).
+	 * 
+	 */
+	public void setCoefficients(
+							double[] coefficients)
+							throws IllegalArgumentException;
 	
 	/**
 	 * Sets the polynom parameter, which are its order, 
