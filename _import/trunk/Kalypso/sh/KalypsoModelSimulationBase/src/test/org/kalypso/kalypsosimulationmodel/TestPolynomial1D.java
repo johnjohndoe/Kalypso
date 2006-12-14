@@ -3,25 +3,17 @@
  */
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.lang.reflect.Array;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Collections;
 
-import org.deegree_impl.gml.GMLDocument_Impl;
-import org.deegree_impl.gml.GMLFactory;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D;
-import org.kalypso.kalypsosimulationmodel.util.math.Polynom1D;
+import org.kalypso.kalypsosimulationmodel.util.math.PolynomialConfigState;
+import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
+import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 import junit.framework.TestCase;
 
@@ -29,13 +21,13 @@ import junit.framework.TestCase;
  * @author Patrice Congo
  *
  */
-public class TestPolynom1D extends TestCase
+public class TestPolynomial1D extends TestCase
 {
-	public static final IPolynom1D EXPECTED_POL1D=
-		new IPolynom1D()
+	public static final IPolynomial1D EXPECTED_POL1D=
+		new IPolynomial1D()
 	{
 
-		public CONSISTENCY_CHECK checkConsistency()
+		public PolynomialConfigState checkConsistency()
 		{
 			return null;
 		}
@@ -75,15 +67,15 @@ public class TestPolynom1D extends TestCase
 		@Override
 		public boolean equals(Object obj)
 		{
-			if(obj instanceof IPolynom1D)
+			if(obj instanceof IPolynomial1D)
 			{
 				int order=getOrder();
-				if(order!=((IPolynom1D)obj).getOrder())
+				if(order!=((IPolynomial1D)obj).getOrder())
 				{
 					return false;
 				}
 				double[] thisCoefs=getCoefficients();
-				double[] compCoefs=((IPolynom1D)obj).getCoefficients();
+				double[] compCoefs=((IPolynomial1D)obj).getCoefficients();
 				for(int i=thisCoefs.length-1;i>=0;i--)
 				{
 					if(thisCoefs[i]!=compCoefs[i])
@@ -119,17 +111,18 @@ public class TestPolynom1D extends TestCase
 			{
 				workspace=
 					GmlSerializer.createGMLWorkspace( 
-									TestWorkspaces.URL_POLYNOMS, null );
+									TestWorkspaces.URL_POLYNOMIAL1D, 
+									null );
 			}
 			catch(Throwable th)
 			{
-				fail(th.toString());
+				fail(TestUtils.getStackTraceAsString(th));
 			}
 			Feature pol1dFeature=workspace.getRootFeature();
 			assertEquals(
 					pol1dFeature.getFeatureType().getQName(), 
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PLYNOMIAL1D);
-			Polynom1D pol1d= new Polynom1D(pol1dFeature);
+			Polynomial1D pol1d= new Polynomial1D(pol1dFeature);
 			
 			assertEquals(EXPECTED_POL1D,pol1d);
 			
@@ -144,7 +137,7 @@ public class TestPolynom1D extends TestCase
 				GmlSerializer.createGMLWorkspace( 
 					TestWorkspaces.URL_EMPTY_GML, null );;
 			Feature root=workspace.getRootFeature();	
-			Polynom1D pol1d= new Polynom1D(workspace);
+			Polynomial1D pol1d= new Polynomial1D(workspace);
 			try
 			{
 				pol1d.getOrder();
@@ -174,7 +167,7 @@ public class TestPolynom1D extends TestCase
 			assertTrue(Arrays.equals(coefs, retCoefs));
 			assertEquals(
 					pol1d.checkConsistency(), 
-					IPolynom1D.CONSISTENCY_CHECK.CONSISTENCY_OK);
+					PolynomialConfigState.CONSISTENCY_OK);
 			assertEquals(0.0, pol1d.computeResult(0));
 			assertEquals(21.0, pol1d.computeResult(3));
 			assertEquals(55.0, pol1d.computeResult(5));
@@ -208,8 +201,10 @@ public class TestPolynom1D extends TestCase
 		catch(Throwable th)
 		{
 		
-			fail(th.toString());
+			fail(TestUtils.getStackTraceAsString(th));
 		}
 		
 	}
+	
+	
 }

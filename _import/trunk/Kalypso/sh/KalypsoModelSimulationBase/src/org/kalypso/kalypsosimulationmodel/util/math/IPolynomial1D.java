@@ -33,36 +33,8 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  * 
  * @author Patrice Congo
  */
-public interface IPolynom1D
+public interface IPolynomial1D
 {
-	static public enum CONSISTENCY_CHECK {
-		/**
-		 * If less or equals to null
-		 */
-		ILLEGAL_ORGER, 
-		/**
-		 * If order not equals to the number of coefficients
-		 */
-		ORDER_COEF_MISMATCH,
-		
-		/**
-		 * Basically the number of the coefficients is equals to the
-		 * order+1; and the last coeficient must be non null. 
-		 * Use this value to signal  that the most significant 
-		 * coefficient is zero  
-		 */
-		ZERO_MOST_SIGNIFICANT_COEFS,
-		/**
-		 * The cofiguration set with order and the coefficients is
-		 * consistent
-		 */
-		CONSISTENCY_OK};
-//	/**
-//	 * Return the dimension of the polynom
-//	 * @return the dimention of the polynom as interger
-//	 */
-//	public int getDim();
-	
 	/**
 	 * To get the oder of a polynom. 
 	 * Depending on the polynom dimention the polynom
@@ -146,6 +118,6 @@ public interface IPolynom1D
 	 *  
 	 * @return 
 	 */
-	public CONSISTENCY_CHECK checkConsistency();
+	public PolynomialConfigState checkConsistency();
 	
 }

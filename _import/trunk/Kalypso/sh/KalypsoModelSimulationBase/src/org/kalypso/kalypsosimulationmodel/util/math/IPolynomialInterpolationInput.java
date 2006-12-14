@@ -5,7 +5,7 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  * @author Patrice Congo
  *
  */
-public interface IPolynomInterpolationInput
+public interface IPolynomialInterpolationInput
 {
 	/**
 	 * Return the dimention of the interpolation 

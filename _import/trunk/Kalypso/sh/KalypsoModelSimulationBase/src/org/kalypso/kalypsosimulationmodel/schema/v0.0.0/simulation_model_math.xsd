@@ -238,8 +238,9 @@
 		abstract="false">
 		<xs:annotation>
 			<xs:documentation>
-				Type for 1D polynoms: y=sum of ai*bj*xi*yj for all i less 
-										than orderX and jless than oderY
+				Type for 2D polynoms
+				z=SUM(aij*x^i*y^j) for  i from 0 to degreeX 
+										j from 0 to degreeY
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -247,17 +248,17 @@
 				base="simBase:AbstractPolynomialType">
 				<xs:sequence>
 					<xs:element 
-						name="orderX"
+						name="degreeX"
 						type="xs:positiveInteger"
 						minOccurs="1" maxOccurs="1"/>
 					<xs:element 
-						name="orderY"
+						name="degreeY"
 						type="xs:positiveInteger"
 						minOccurs="1" maxOccurs="1"/>
 					<!--xs:element 
 						name="data"
 						type="gml:DataBlockType"/-->	
-					<xs:element
+					<!-- xs:element
 						name="coeficients"
 						minOccurs="1" maxOccurs="1">
 						<xs:annotation>
@@ -269,8 +270,10 @@
 						<xs:simpleType>
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
-					</xs:element>
-					
+					</xs:element-->	
+					<xs:element
+						name="coefficients"
+						type="gml:doubleOrNullList"/>				
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

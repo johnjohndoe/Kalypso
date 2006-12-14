@@ -17,6 +17,6 @@ public interface IExtrapolationAlgorithm1D
 	 * @param interpolationInput -- the interpolation input
 	 * @return the interpolated 1d polynom
 	 */
-	public IPolynom1D to1DPolynom(IPolynomInterpolationInput interpolationInput);
+	public IPolynomial1D to1DPolynom(IPolynomialInterpolationInput interpolationInput);
 	
 }

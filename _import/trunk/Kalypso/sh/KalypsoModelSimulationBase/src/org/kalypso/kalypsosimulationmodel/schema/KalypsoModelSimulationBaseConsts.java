@@ -12,6 +12,7 @@ public class KalypsoModelSimulationBaseConsts
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
 				"Polynomial1D");
+	
 	public static final QName SIM_BASE_PROP_ORDER=
 			new QName(
 					UrlCatalogModelSimulationBase.SIM_MODEL_NS,
@@ -38,6 +39,20 @@ public class KalypsoModelSimulationBaseConsts
 				new QName(NS.GML3, "polygonProperty");
 	
 	
+	public static final QName SIM_BASE_PROP_DEGREEX = 
+			new QName(
+					UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+					"degreeX");
+	
+	public static final QName SIM_BASE_PROP_DEGREEY = 
+		new QName(
+				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+				"degreeY");
+	
+	public static final QName SIM_BASE_F_POLYNOMIAL2D = 
+		new QName(
+				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+				"Polynomial2D");
 	static
 	{
 	

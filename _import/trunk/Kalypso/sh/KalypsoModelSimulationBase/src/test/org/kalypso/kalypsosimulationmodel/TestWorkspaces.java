@@ -62,8 +62,11 @@ public class TestWorkspaces
 {
 	private static final Logger logger= 
 			Logger.getLogger(TestWorkspaces.class);
-	public static final URL URL_POLYNOMS;
-	public static final String REL_RES_POLYNOMS="data/polynoms1d.xml";
+	public static final URL URL_POLYNOMIAL1D;
+	public static final String REL_RES_POLYNOMIAL1D="data/polynomial1d.xml";
+	
+	public static final URL URL_POLYNOMIAL2D;
+	public static final String REL_RES_POLYNOMIAL2D="data/polynomial2d.xml";
 	
 	public static final URL URL_EMPTY_GML;
 	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml";
@@ -79,8 +82,11 @@ public class TestWorkspaces
 			
 			
 			urlMap.put(
-					REL_RES_POLYNOMS,
-					TestWorkspaces.class.getResource(REL_RES_POLYNOMS));
+					REL_RES_POLYNOMIAL1D,
+					TestWorkspaces.class.getResource(REL_RES_POLYNOMIAL1D));
+			urlMap.put(
+					REL_RES_POLYNOMIAL2D,
+					TestWorkspaces.class.getResource(REL_RES_POLYNOMIAL2D));
 			urlMap.put(
 					REL_RES_EMPTY_GML,
 					TestWorkspaces.class.getResource(REL_RES_EMPTY_GML));
@@ -95,7 +101,8 @@ public class TestWorkspaces
 		finally
 		{
 			EXCEPTION=th1;
-			URL_POLYNOMS=urlMap.get(REL_RES_POLYNOMS);
+			URL_POLYNOMIAL1D=urlMap.get(REL_RES_POLYNOMIAL1D);
+			URL_POLYNOMIAL2D=urlMap.get(REL_RES_POLYNOMIAL2D);
 			URL_EMPTY_GML=urlMap.get(REL_RES_EMPTY_GML);
 		}
 	}

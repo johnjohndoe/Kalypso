@@ -19,16 +19,16 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * @author Patrice Congo
  *
  */
-public class Polynom1D implements IPolynom1D
+public class Polynomial1D implements IPolynomial1D
 {
 	final private Feature polFeature;
 	
-	public Polynom1D(Feature polFeature)
+	public Polynomial1D(Feature polFeature)
 	{
 		this.polFeature=polFeature;
 	}
 	
-	public Polynom1D(GMLWorkspace workWorkspace)
+	public Polynomial1D(GMLWorkspace workWorkspace)
 	{
 		IFeatureType featureType=
 			workWorkspace.getGMLSchema().getFeatureType(
@@ -184,8 +184,8 @@ public class Polynom1D implements IPolynom1D
 //		{
 //			throw new IllegalArgumentException();
 //		}
-		CONSISTENCY_CHECK checkHint=checkConsistency(order, coefficients);
-		if(checkHint!=CONSISTENCY_CHECK.CONSISTENCY_OK)
+		PolynomialConfigState checkHint=checkConsistency(order, coefficients);
+		if(checkHint!=PolynomialConfigState.CONSISTENCY_OK)
 		{
 			StringBuffer buf= new StringBuffer("64");
 			buf.append("Illegal order coefficient combination:");
@@ -216,9 +216,9 @@ public class Polynom1D implements IPolynom1D
 	}
 	
 	/**
-	 * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D#checkConsistency()
+	 * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D#checkConsistency()
 	 */
-	public CONSISTENCY_CHECK checkConsistency()
+	public PolynomialConfigState checkConsistency()
 	{
 		int order=getOrder();
 		double[] coefs=getCoefficients();
@@ -235,7 +235,7 @@ public class Polynom1D implements IPolynom1D
 	}
 	
 	
-	public static final CONSISTENCY_CHECK checkConsistency(
+	public static final PolynomialConfigState checkConsistency(
 									int order,
 									double[] coefs)
 									throws IllegalArgumentException
@@ -247,27 +247,27 @@ public class Polynom1D implements IPolynom1D
 		
 		if(order<0)
 		{
-			return CONSISTENCY_CHECK.ILLEGAL_ORGER;
+			return PolynomialConfigState.NEGATIVE_DEGREE;
 		}
 		else if(order!=coefs.length-1)
 		{
-			return CONSISTENCY_CHECK.ORDER_COEF_MISMATCH;
+			return PolynomialConfigState.ORDER_COEF_MISMATCH;
 		}
 		else if(coefs[order]==0)
 		{
 			if(order==0)
 			{
 				//allow 0*x^0
-				return CONSISTENCY_CHECK.CONSISTENCY_OK;
+				return PolynomialConfigState.CONSISTENCY_OK;
 			}
 			else
 			{
-				return CONSISTENCY_CHECK.ZERO_MOST_SIGNIFICANT_COEFS;
+				return PolynomialConfigState.ZERO_MOST_SIGNIFICANT_COEFS;
 			}
 		}
 		else
 		{
-			return CONSISTENCY_CHECK.CONSISTENCY_OK;
+			return PolynomialConfigState.CONSISTENCY_OK;
 		}
 	}
 	
@@ -278,16 +278,16 @@ public class Polynom1D implements IPolynom1D
 		{
 			return true;
 		}
-		else if(obj instanceof IPolynom1D)
+		else if(obj instanceof IPolynomial1D)
 		{
 			final int THIS_ORDER=getOrder();
-			if(THIS_ORDER!=((IPolynom1D)obj).getOrder())
+			if(THIS_ORDER!=((IPolynomial1D)obj).getOrder())
 			{
 				return false;
 			}
 			
 			double thisCoefs[]=getCoefficients();
-			double compCoefs[]=((IPolynom1D)obj).getCoefficients();
+			double compCoefs[]=((IPolynomial1D)obj).getCoefficients();
 			int i=thisCoefs.length;
 			if(i!=compCoefs.length)
 			{
