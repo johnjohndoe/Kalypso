@@ -133,6 +133,8 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
   private IStorage m_storage;
 
+  private String m_partName;
+
   private StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   private GisMapOutlinePage m_outlinePage = null;
@@ -144,6 +146,8 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
     /* Register this view at the mapPanel. */
     m_mapPanel.addMapPanelListener( this );
+
+    m_partName = null;
   }
 
   /**
@@ -314,7 +318,8 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
         @SuppressWarnings("synthetic-access")
         public void run( )
         {
-          setPartName( name );
+          if( m_partName == null )
+            setPartName( name );
         }
       } );
     }
@@ -403,5 +408,15 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
         m_statusBar.setText( message );
       }
     } );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#setPartName(java.lang.String)
+   */
+  @Override
+  public void setPartName( String partName )
+  {
+    m_partName = partName;
+    super.setPartName( partName );
   }
 }
