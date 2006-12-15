@@ -13,7 +13,7 @@ import org.kalypso.kalypsosimulationmodel.exception.IllegalFeatureState;
  * 
  * @author Patrice Congo
  */
-public interface IPolynomial2D
+public interface IPolynomial2D extends IPolynomial
 {
 	/**
 	 * To get the x degree of this polynom. 
@@ -78,5 +78,5 @@ public interface IPolynomial2D
 	 */
 	public double evaluate(double inputX, double inputY);
 	
-	public PolynomialConfigState checkConsistency();
+//	public PolynomialConfigState checkConsistency();
 }

@@ -33,7 +33,7 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  * 
  * @author Patrice Congo
  */
-public interface IPolynomial1D
+public interface IPolynomial1D extends IPolynomial	
 {
 	/**
 	 * To get the oder of a polynom. 
@@ -112,12 +112,12 @@ public interface IPolynomial1D
 	 */
 	public double computeResult(double input);
 	
-	/**
-	 * Check the consistency between order and coeffients:
-	 * the number of coeficients must be equals to order.
-	 *  
-	 * @return 
-	 */
-	public PolynomialConfigState checkConsistency();
+//	/**
+//	 * Check the consistency between order and coeffients:
+//	 * the number of coeficients must be equals to order.
+//	 *  
+//	 * @return 
+//	 */
+//	public PolynomialConfigState checkConsistency();
 	
 }

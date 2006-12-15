@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsosimulationmodel.core;
 
 /**
  * Implements to provide the algorithm to tranform an

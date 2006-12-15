@@ -3,6 +3,7 @@
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypso.kalypsosimulationmodel.core.ITransformAlgorithm;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
 /**
@@ -12,14 +13,13 @@ import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
  * @author Dejan Antanaskovic, Patrice Congo
  */
 public class ShapeToIRougthnessCollection 
-		implements ITransformAlgorithm<ShapeFile,IRoughnessPolygonCollection> 
+		implements ITransformAlgorithm<IRoughnessPolygonCollection,ShapeFile> 
 {
 
 	//check gml workspace availability issue
-	public ShapeFile transform(
-				IRoughnessPolygonCollection toTransform) 
+	public IRoughnessPolygonCollection transform(
+									ShapeFile toTransform) 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

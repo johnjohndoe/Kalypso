@@ -16,14 +16,16 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 public interface IRoughnessPolygonCollection 
 {
 	/**
-	 * Select the rougthness polygon containing this point
+	 * Select the rougthness polygon containing this point. since the point
+	 * may be on the border there can be several polygon containing the
+	 * specified point.
 	 * 
 	 * @param location the location where to find the roughness polygon
 	 * 
-	 * @return the rougness polygon which at the given location
+	 * @return the rougness polygons which at the given location
 	 *  
 	 */
-	public IRoughnessPolygon select(GM_Point location);
+	public IRoughnessPolygon[] select(GM_Point location);
 	
 	/**
 	 * Get all rougthness polygons in this collection 

@@ -12,6 +12,20 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IRoughnessEstimateSpec 
 {
+	public static enum ERoughnessSelectionMechanism
+	{
+		/**
+		 *chrink the polygon area and make the selection afterward still one
+		 *is most spread 
+		 */
+		SCHRINK_AND_SEL,
+		
+		/**
+		 * Select one of most spread randomly
+		 */
+		RANDOM_SEL;		
+	};
+	
 	/**
 	 * returns the area ratio between the element geometry area
 	 * and the brid cell area
@@ -38,9 +52,27 @@ public interface IRoughnessEstimateSpec
 	
 	public GM_Envelope[] getCells();
 	
+	/**
+	 * returns the most spread rougthness in the  
+	 * @return
+	 */
+	public String[] mostSpreadRoughness();
 	
-	public String mostSpreadRoughness();
+	/**
+	 * returns the most spread roughness using the specified selection
+	 * mechanism
+	 * 
+	 * @param rsm the sellection mechanism to use
+	 * @return the mostpread roughness 
+	 */
+	public String mostSpreadRoughness(ERoughnessSelectionMechanism rsm);
 	
+	/**
+	 * Get all rougthness polygons that contribute roughnesses to this
+	 * estimation e.i. containing the acessed polygon in this area
+	 * 
+	 * @return all contibuting rougthness polygons
+	 */
 	public List<IRoughnessPolygon> getContributingRoughnessPolygons();
 	
 	
