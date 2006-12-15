@@ -16,7 +16,7 @@
       <vmArgs>-Xmx512m</vmArgs>
    </launcherArgs>
 
-   <windowImages i16="/KalypsoModelProduct/etc/kalypso16.gif"/>
+   <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
 
    <splash
       location="org.kalypso.model.product"
@@ -26,7 +26,14 @@
    <launcher name="kalypso">
       <solaris/>
       <win useIco="false">
-         <bmp/>
+         <bmp
+            winSmallHigh="/KalypsoModelProduct/etc/launchericons/icon_16_32.bmp"
+            winSmallLow="/KalypsoModelProduct/etc/launchericons/icon_16_8.bmp"
+            win24Low="/KalypsoModelProduct/etc/launchericons/icon_24_8.bmp"
+            winMediumHigh="/KalypsoModelProduct/etc/launchericons/icon_32_32.bmp"
+            winMediumLow="/KalypsoModelProduct/etc/launchericons/icon_32_8.bmp"
+            winLargeHigh="/KalypsoModelProduct/etc/launchericons/icon_48_32.bmp"
+            winLargeLow="/KalypsoModelProduct/etc/launchericons/icon_48_8.bmp"/>
       </win>
    </launcher>
 
