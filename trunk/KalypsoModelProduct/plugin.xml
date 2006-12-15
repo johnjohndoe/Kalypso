@@ -23,7 +23,7 @@
                value="%aboutText"/>
          <property
                name="windowImages"
-               value="etc/kalypso16.gif"/>
+               value="etc/applicationicons/icon_16.gif,etc/applicationicons/icon_32.gif,etc/applicationicons/icon_48.gif,etc/applicationicons/icon_64.gif,etc/applicationicons/icon_128.gif"/>
          <property
                name="startupMessageRect"
                value="0,200,400,15"/>
@@ -39,7 +39,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
-            icon="etc/kalypso16.gif"
+            icon="etc/applicationicons/icon_16.gif"
             id="org.kalypso.model.product.introID">
       </intro>
       <introProductBinding
