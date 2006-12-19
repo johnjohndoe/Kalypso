@@ -54,7 +54,7 @@ public class ZoomOutMapAction extends AbstractCommandAction
 {
   public ZoomOutMapAction( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    super( commandTarget, mapPanel, null, ImageProvider.IMAGE_MAPVIEW_ZOOMOUT, "Auschnitt verkleinern" );
+    super( commandTarget, mapPanel, null, ImageProvider.IMAGE_MAPVIEW_ZOOMOUT, "Ausschnitt verkleinern" );
   }
 
   /**
