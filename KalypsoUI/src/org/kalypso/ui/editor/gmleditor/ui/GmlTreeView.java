@@ -635,6 +635,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     public IRelationType getParentFeatureProperty( final Feature feature )
     {
       final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) getTreeViewer().getContentProvider();
+      if( contentProvider == null )
+        return null;
+      
       return contentProvider.getParentFeatureProperty( feature );
     }
 
