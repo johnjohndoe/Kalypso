@@ -1,0 +1,147 @@
+package org.kalypso.kalypsosimulationmodel.core.roughness;
+
+/**
+ * Interface for klasses representing the roughness feature
+ * of the type wbr:Roughness 
+ * 
+ * @author Patrice Congo
+ *
+ */
+public interface IRoughnessClsCorrection
+{
+	public static  enum RoughnessCorConfigConsistency
+	{
+		OK
+	};
+	
+	/**
+	 * To get the correction factor for the roughness ks value
+	 * 
+	 * @return the correction factor for ks   value 
+	 */
+	public double getKsCor();
+	
+	/**
+	 * To sets correction factor for the roughness ks value
+	 * @param ksCor -- the new correctionfactor for ks value
+	 * @throws IllegalArgumentException
+	 */
+	public void setKsCor(
+					double ksCor) 
+					throws IllegalArgumentException;
+	
+	/**
+	 * Gets correction factor for vegetation parameter axay 
+	 * @return returns the correction factor for vegetation parameter axay
+	 */
+	public double getAxAyCor();
+	
+	/**
+	 * Sets the correction factor for vegetation parameter axay 
+	 * 
+	 * @param axayCor the new correction factor  for the vegetation 
+	 * 			parameter axay
+	 * @throws IllegalArgumentException
+	 */
+	public void setAxAyCor(
+					double axayCor)  
+					throws IllegalArgumentException;;
+	/**
+	 * Get the correction factor for vegetation parameter DP
+	 * 
+	 * @return the correction parameter for vegetation parameter DP
+	 */
+	public double getDpcor();
+	
+	/**
+	 * Set the correction parameter for vegetation factor dp
+	 * @param dpCor  the new correction parameter for vegetation dp
+	 * 
+	 * @throws IllegalArgumentException if dp is negativ
+	 */
+	public void setDpCor(
+					double dp)
+					throws IllegalArgumentException;
+	
+	/**
+	 * To get correction parameter fo the eddy viscosity
+	 *  
+	 * @return the correction parameter for the eddy  viskosity
+	 */
+	public double getEddyCor();
+	
+	/**
+	 * Sets a new correction parameter for the  eddy viscosity
+	 * 
+	 * @param eddyCor  the new correction parameter for the eddy  viscosity
+	 * 
+	 * @throws IllegalArgumentException if correction parameter is neagtiv
+	 * 
+	 */
+	public void setEddy(
+				double eddyCor)
+				throws IllegalArgumentException;
+	
+	/**
+	 * Configure this roughness correction with all the correction 
+	 * factors. 
+	 * The configuration is only applied if the set of parameter
+	 * passed the valitidy check 
+	 * 
+	 * @param name  the name for the roughness
+	 * @param ksCor  correction factor for ks value
+	 * @param axayCor correction factor for axay value  
+	 * @param dpCor correction factor for dp value
+	 * @param eddyCor correction factor for the eddy viskosity
+	 * @return
+	 */
+	public RoughnessCorConfigConsistency configure(
+									double ks,
+									double axay,
+									double dp,
+									double eddy);
+	/**
+	 * To validates the current configuration of this 
+	 * roughness.
+	 * This method is specially usefull after an independent setting
+	 * of the different parameter of the roughness 
+	 * 
+	 * @return a {@link RoughnessCorConfigConsistency} hint the the actual
+	 * 			roughness configuration
+	 */
+	public RoughnessCorConfigConsistency validate();
+	
+	/**
+	 * The return the uri identifying this roughness correction
+	 * 
+	 * @return the uri of this roughness correction as string
+	 */
+	public String getURI();
+	
+	/**
+	 * changes the uri for this roughness correction
+	 * 
+	 * @param uri -- the new uri to set
+	 * @throws IllegalArgumentException if uri is null
+	 * 	or an empty string 
+	 * 	
+	 * 
+	 */
+	public void setURI(
+				String uri)
+				throws IllegalArgumentException;
+	
+	/**
+	 * To get the description for this roughness collection
+	 * 
+	 * @return the roughness description as string
+	 */
+	public String getDescription();
+	
+	/**
+	 * Sets the description of the roughness class
+	 * 
+	 * @param descriptionText the new description text  
+	 */
+	public void setDescription(String descriptionText);
+}

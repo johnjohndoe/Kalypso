@@ -109,11 +109,13 @@
 			<xs:complexContent>
 				<xs:restriction 
 					base="gml:RangeSetType">
-					<xs:choice>
+					<!--xs:choice-->
+					<xs:sequence>
 						<xs:element 
 							ref="simBase:RougthnessValueArray" 
 							maxOccurs="unbounded"/>
-					</xs:choice>
+					</xs:sequence>
+					<!--/xs:choice-->
 				</xs:restriction>
 			</xs:complexContent>
 		</xs:complexType>		
@@ -796,6 +798,10 @@
 			</xs:complexType>
 	</xs:element>
 	
+	
+	<!-- =================================================================
+		eddyViscosityCorrectionFactors
+	================================================================== -->
 	
 	<!-- =================================================================
 		EddyViscosityCorrectionFactor

@@ -48,13 +48,11 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 
 /**
- * Catalog which provides the url to the simulation model base schema.
- * This schema contains base type and elements to constract other gml 
- * simulation model schema
+ * Catalog which provides the url to the roughness schema.
  * 
  * @author Patrice Congo
  */
-public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
+public class UrlCatalogRoughness extends AbstractUrlCatalog
 {
 	/**
 	 * Latest version for schema
@@ -64,30 +62,29 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 	/**
 	 * path for simulation base schema file
 	 */
-	final static public String SIM_MODEL_REL_PATH=
-								CURRENT_VERSION+"/simulation_model_base.xsd";
+	final static public String REL_PATH_ROUGHNESS_DB=
+								CURRENT_VERSION+"/roughness_model.xsd";
 	/**
 	 * Url for simulation base model schema  
 	 */
-	final static public URL SIM_MODEL_SCHEMA_URL=
-					UrlCatalogModelSimulationBase.class.getResource( 
-														SIM_MODEL_REL_PATH );
+	final static public URL ROUGHNESS_MODEL_SCHEMA_URL=
+					UrlCatalogRoughness.class.getResource( 
+														REL_PATH_ROUGHNESS_DB );
 	
 	/**
 	 * Namespace for simulation model base 
 	 */
-	final static public String SIM_MODEL_NS="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
+	final static public String NS_ROUGHNESS_MODEL="http://www.tu-harburg.de/wb/kalypso/schemata/roughness";
 	
 	/**
 	 * Prefix for the simulation model base 
 	 */
-	final static public String SIM_MODEL_NS_PREFIX="simBase";
+	final static public String NS_PREFIX_ROUGHNESS="wbr";
   
 	
 	/**
-	 *Fills the catalog with the roughness and model simulation base schemas
-	 *schema elements 
-	 *  
+	 *Fills the catalog with the roughness base schemas path namespace and location
+	 *
 	 * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
 	 */
 	  @Override
@@ -95,14 +92,11 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
 			  				final Class myClass, 
 			  				final Map<String, URL> catalog, 
 			  				Map<String, String> prefixes )
-	  {
-		  
+	  {  
 	    catalog.put( 
-	    			SIM_MODEL_NS, 
-	    			myClass.getResource( SIM_MODEL_REL_PATH ) );
-	    prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
-	    
-	    
+	    			NS_ROUGHNESS_MODEL, 
+	    			myClass.getResource( REL_PATH_ROUGHNESS_DB ) );
+	    prefixes.put(NS_ROUGHNESS_MODEL, NS_PREFIX_ROUGHNESS);	    
 	  }
 
 }

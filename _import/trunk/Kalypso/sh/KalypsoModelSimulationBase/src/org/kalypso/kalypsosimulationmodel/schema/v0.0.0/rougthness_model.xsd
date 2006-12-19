@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--  
-	Provide schema to model rougthness
+	Provides gml schema types and elemen to model rougthnesses.
+	Basic element is the Roughness element which can be gouped 
+	in a collection
+	
 	@author Patrice Congo
 -->
 
 
 <xs:schema 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d" 
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:wb="http://www.tu-harburg.de/wb/kalypso/rma10s/2d" 
+	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
@@ -19,177 +22,226 @@
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
-		
-		<xs:element 
-			name="rougthnessModel"
-			type="wb:RougthnessModelPropertyType"/>
-	<xs:complexType name="RougthnessModelPropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="wb:RougthnessModel"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/> 
-	</xs:complexType>	
-	<xs:element 
-		name="RougthnessModel"
-		type="wb:RougthnessModelType"
-		abstract="true"
-		substitutionGroup="gml:_Feature"
-		/>
-	<xs:complexType 
-		name="RougthnessModelType">
-		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractFeatureType"/>
-		</xs:complexContent>
-	</xs:complexType>
 	
-	<xs:element 
-		name="rougthness"
-		type="wb:RougthnessPropertyType"/>
-	<xs:complexType name="RougthnessPropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="wb:Rougthness"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
-		
-	<xs:element
-		name="Rougthness"
-		type="wb:RougthnessType"
-		substitutionGroup="gml:_GML"/>
-	<xs:complexType 
-		name="RougthnessType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractGMLType">
-				<xs:sequence>
-					<xs:element 
-						name="value"
-						type="xs:integer"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	
-	<xs:element
-		name="DirectlyAssignedRougthnessModel"
-		substitutionGroup="wb:RougthnessModel"/>
-	<xs:complexType 
-		name="DirectlyAssignedRougthnessModel">
-		<xs:complexContent>
-			<xs:restriction 
-				base="gml:AbstractDiscreteCoverageType">
-				<xs:sequence>
-					<xs:element 
-						ref="wb:rougthnessRangeSet"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						ref="wb:finiteElementDomain"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						ref="wb:rougthnessMapping"/>
-				</xs:sequence>
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType> 
-	<xs:element
-		name="rougthnessMapping"
-		type="wb:RougthnessMappingPropertyType"/>
-	<xs:complexType name="RougthnessMappingPropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="wb:RougthnessDirectMapping"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
-
+	<!-- =================================================================
+		RoughnessCollection
+	================================================================== -->
 	<xs:element 
-		name="RougthnessDirectMapping"
-		type="wb:RougthnessDirectMappingType"
-		/>
-	<xs:complexType 
-		name="RougthnessDirectMappingType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractGMLType">
-				<xs:sequence>
-					<xs:element ref="wb:mappedFiniteElement"/>
-					<xs:element ref="wb:rougthness"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+		name="RoughnessClsCollection"
+		type="wbr:RoughnessClsCollectionType"
+		substitutionGroup="gml:FeatureCollection">
 	
-	<xs:element 
-		name="mappedFiniteElement"
-		type="wb:mappedFiniteElementProperty">
-		
 	</xs:element>
-	<xs:complexType name="mappedFiniteElementProperty">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="gml:_Geometry"/>
+	<xs:complexType 
+		name="RoughnessClsCollectionType">
+		<xs:annotation>
+			<xs:documentation>
+				A collection made up of roughnessses
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction 
+				base=" gml:FeatureCollectionType ">
+				<xs:sequence>
+					<xs:element ref="wbr:roughnessClsMember"/>
+					<xs:element ref="wbr:roughnessClsMembers"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- =================================================================
+		roughnessMembers
+	================================================================== -->
+	<xs:element
+		name="roughnessClsMembers"
+		type="wbr:RoughnessClsArrayPropertyType"/>
+	
+	<xs:complexType name="RoughnessClsArrayPropertyType">
+		<xs:complexContent>
+			<xs:restriction base="gml:FeatureArrayPropertyType">
+				<xs:sequence>
+					<xs:element 
+						ref="wbr:RoughnessCls" 
+						minOccurs="0" 
+						maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- =================================================================
+		roughnessMember; RoughnessPropertyType
+	================================================================== -->
+	<xs:element 
+		name="roughnessClsMember"
+		type="wbr:RoughnessClsPropertyType"/>
+		
+	<xs:complexType name="RoughnessClsPropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="wbr:RoughnessCls"
+				 minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	
+	<!-- =================================================================
+		Roughness
+	================================================================== -->	
 	<xs:element
-		name="finiteElementDomain"
-		type="wb:FiniteElementDomainType"
-		substitutionGroup="gml:domainSet"/>
+		name="RoughnessCls"
+		type="wbr:RoughnessClsType"
+		substitutionGroup="gml:_Feature"/>
+
 	<xs:complexType 
-		name="FiniteElementDomainType">
+		name="RoughnessClsType">
 		<xs:complexContent>
-			<xs:restriction 
-				base="gml:DomainSetType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element
-						ref="wb:mappedFiniteElement"/>
-				</xs:sequence>	
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element 
-		name="rougthnessRangeSet"
-		type="wb:RougthnessRangeSetType"
-		substitutionGroup="gml:rangeSet"/>
-	<xs:complexType 
-		name="RougthnessRangeSetType">
-		<xs:complexContent>
-			<xs:restriction 
-				base="gml:RangeSetType">
-				<xs:sequence>
-					<xs:element ref="wb:rougthnessValueArray"/>
+					<xs:element 
+						name="ks"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>
+											
+					<xs:element 
+						name="ratioAxAy"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>						
+						
+					<xs:element 
+						name="dp"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>						
+					
+					<xs:element 
+						name="eddy"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>
+						
+					<xs:element 
+						name="marsh"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>
+					
 				</xs:sequence>
-			</xs:restriction>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element
-		name="rougthnessValueArray"
-		type="wb:RougthnessValueArrayType"
-		substitutionGroup="gml:ValueArray"/>
-	<xs:complexType 
-		name="RougthnessValueArrayType">
-		<xs:complexContent>
-			<xs:restriction 
-				base="gml:ValueArrayType">
-				<xs:sequence>
-					<xs:element
-						ref="wb:rougthnessValueComponent"/>
-				</xs:sequence>
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
+	
+	<!-- =================================================================
+		roughnessCorrection Property 
+	================================================================== -->
 	<xs:element 
-		name="rougthnessValueComponent"
-		type="wb:RougthnessValueComponentType"
-		substitutionGroup="gml:valueComponent"/>
+		name="roughnessClsCorretion"
+		type="wbr:RoughnessClsCorrectionPropertyType">
+	</xs:element>
 	<xs:complexType 
-		name="RougthnessValueComponentType">
+		name="RoughnessClsCorrectionPropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="wbr:RoughnessClsCorrection"
+				 minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+	<!-- =================================================================
+			Roughnesscorrection
+	================================================================== -->
+	<xs:element 
+		name="RoughnessClsCorrection"
+		type="wbr:RoughnessClsCorrectionType"/>
+	<xs:complexType 
+		name="RoughnessClsCorrectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element 
+						name="ksCor"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>
+											
+					<xs:element 
+						name="axayCorrection"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>
+												
+					<xs:element 
+						name="dpCor"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>					
+						
+					<xs:element 
+						name="eddyCor"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>						
+						
+					<xs:element 
+						name="marshCor"
+						type="xs:double"
+						minOccurs="0" maxOccurs="1"/>					
+						
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<!--xs:complexType 
+		name="RoughnessPropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="wbr:Roughness"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType -->
+	
+	<!--xs:complexType 
+		name="RoughnessValueComponentType">
 		<xs:complexContent>
 			<xs:restriction 
 				base="gml:ValuePropertyType">
 				<xs:sequence>
-					<xs:element ref="wb:Rougthness"/>
+					<xs:element ref="wbr:Roughness"/>
 				</xs:sequence>
 			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType-->
+	
+	<!-- =================================================================
+		DirectRoughnessClassCorrection
+	================================================================== -->
+	<xs:element 
+		name="DirectRoughnessClsCorrection"
+		type="wbr:DirectRoughnessClsCorrectionType">
+	</xs:element>
+	
+	<xs:complexType 
+		name="DirectRoughnessClsCorrectionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Type for element that defined a global collection 
+				factor for roughness classes.
+				The roughness classes is identified by its URI
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element 
+						ref="wbr:roughnessClsCorretion"
+						minOccurs="1" maxOccurs="1"/>
+					
+					<xs:element 
+						name="roughnessURI"
+						type="xs:anyURI"
+						minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	

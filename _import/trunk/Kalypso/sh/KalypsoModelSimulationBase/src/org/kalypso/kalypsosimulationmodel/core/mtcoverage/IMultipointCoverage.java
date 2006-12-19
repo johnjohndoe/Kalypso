@@ -1,15 +1,21 @@
 package org.kalypso.kalypsosimulationmodel.core.mtcoverage;
 
+import java.util.List;
+
+import org.deegree.model.geometry.GM_Polygon;
+import org.deegree_impl.gml.GML_Transformer;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IPosition;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IRegion;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Interface for a flow relationship coverage feature adapter.
  * 
  * @author Patrice Congo
  */
-public interface IMultipointCoverage<RangeClass>
+public interface IMultipointCoverage<RangeCls>
 {
 	
 	/**
@@ -20,9 +26,9 @@ public interface IMultipointCoverage<RangeClass>
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public RangeClass getRangeValue(
-									Feature location)
-									throws IllegalArgumentException;
+	public RangeCls getRangeValue(
+						GM_Point location)
+						throws IllegalArgumentException;
 	
 	
 	/**
@@ -34,9 +40,9 @@ public interface IMultipointCoverage<RangeClass>
 	 * @throws IllegalArgumentException if region is null or cannot be
 	 * 			adapted into a {@link IRegion} 
 	 */
-	public RangeClass[] getRangeValues(
-										Feature region)
-										throws IllegalArgumentException;
+	public RangeCls[] getRangeValues(
+								GM_Polygon region)
+								throws IllegalArgumentException;
 
 	/**
 	 * To  Get the position where the given flow relationship can be applied.
@@ -49,7 +55,7 @@ public interface IMultipointCoverage<RangeClass>
 	 * 			 
 	 */
 	public IPosition[] getApplicablePosition(
-									Feature rangeValue)
+									RangeCls rangeValue)
 									throws IllegalArgumentException;
 	/**
 	 * Add a coverage entry at the provided value with a range value
@@ -62,9 +68,9 @@ public interface IMultipointCoverage<RangeClass>
 	 *  or position feature cannot be adapted into a IPosition 
 	 */
 	public void addCoverageEntry(
-								Feature rangeValue, 
-								Feature position) 
-								throws IllegalArgumentException;
+							RangeCls rangeValue, 
+							GM_Point position) 
+							throws IllegalArgumentException;
 	
 	/**
 	 * Remove all entry in the coverage concerning the given position
@@ -73,7 +79,7 @@ public interface IMultipointCoverage<RangeClass>
 	 * @throws IllegalArgumentException
 	 */
 	public void removeCoveredPosition(
-								Feature position) 
+								GM_Position position) 
 								throws IllegalArgumentException;
 	/**
 	 * 
