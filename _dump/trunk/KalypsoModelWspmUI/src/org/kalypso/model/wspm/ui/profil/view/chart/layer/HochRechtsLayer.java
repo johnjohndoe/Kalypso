@@ -72,7 +72,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   public HochRechtsLayer( final ProfilChartView  pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
   {
-    super( pvp,domainRange, valueRange );
+    super( pvp,domainRange, valueRange, false );
 
     m_pem = pvp.getProfilEventManager() ;
     m_color = color;

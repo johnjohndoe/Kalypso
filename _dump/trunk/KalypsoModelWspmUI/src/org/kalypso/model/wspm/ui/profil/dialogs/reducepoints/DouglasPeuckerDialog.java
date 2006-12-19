@@ -80,13 +80,11 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable;
-
 
 /**
  * @author Belger
@@ -348,7 +346,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     final String lastDistanceStr = m_dialogSettings.get( SETTINGS_DISTANCE );
     m_distance = NumberUtils.parseQuietDouble( lastDistanceStr );
-    
+
     final Spinner spinner = new Spinner( sectionClient, SWT.NONE );
     toolkit.adapt( spinner, true, true );
     spinner.setData( FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER );
@@ -361,7 +359,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     spinner.setMaximum( Integer.MAX_VALUE );
     spinner.setIncrement( 10 );
     spinner.setPageIncrement( 100 );
-    spinner.setSelection( (int) ( m_distance * 100 ) );
+    spinner.setSelection( (int) (m_distance * 100) );
     spinner.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -371,7 +369,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     } );
 
     toolkit.createLabel( sectionClient, "[m]", SWT.LEFT );
-    
+
     toolkit.paintBordersFor( sectionClient );
 
     return section;
@@ -459,7 +457,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final IProfil profil = m_pem.getProfil();
 
     // reduce points
-    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
+    final IProfilDevider[] deviders = profil.getDevider();
     final IProfilPoint[] pointsToKeep = new IProfilPoint[deviders.length];
     for( int i = 0; i < pointsToKeep.length; i++ )
       pointsToKeep[i] = deviders[i].getPoint();

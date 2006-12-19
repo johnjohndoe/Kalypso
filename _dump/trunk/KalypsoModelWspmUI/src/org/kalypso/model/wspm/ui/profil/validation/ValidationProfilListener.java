@@ -66,9 +66,9 @@ import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
  */
 public class ValidationProfilListener implements IProfilListener
 {
-  private ValidatorRuleSet m_rules = KalypsoModelWspmCorePlugin.getValidatorSet( "Pasche" );
+  private final ValidatorRuleSet m_rules;
 
-//  private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
+  // private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
 
   private final IProfilEventManager m_pem;
 
@@ -82,14 +82,18 @@ public class ValidationProfilListener implements IProfilListener
 
   private final ResourceValidatorMarkerCollector m_collector;
 
-  public ValidationProfilListener( final IProfilEventManager profil, final IFile file, final String editorID )
+  public ValidationProfilListener( final IProfilEventManager pem, final IFile file, final String editorID )
   {
     // validierung (re-)initialisieren
     // TODO: das (WspWin-)Projekt weiss, welcher Art es ist
 
-    m_pem = profil;
+    m_pem = pem;
     m_file = file;
     m_editorID = editorID;
+
+    final IProfil profil = m_pem.getProfil();
+    final String profiletype = profil == null ? null : profil.getType();
+    m_rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
     m_collector = new ResourceValidatorMarkerCollector( m_file, m_editorID );
 
@@ -124,8 +128,8 @@ public class ValidationProfilListener implements IProfilListener
   protected void revalidate( )
   {
     // bisserl hack, aber der richtige zeitpunkt, um das profil zu validieren
-//    if( m_reparatorRules.repairProfile( m_pem.getProfil() ) )
-//      return;
+    // if( m_reparatorRules.repairProfile( m_pem.getProfil() ) )
+    // return;
 
     final boolean validate = m_preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
     final String excludes = m_preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );

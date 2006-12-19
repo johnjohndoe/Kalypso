@@ -62,7 +62,6 @@ import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -205,7 +204,7 @@ public class PrfSource implements IProfilSource
         }
         case 7:// Kreis
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_KREIS );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_KREIS );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.SOHLGEFAELLE ) )
@@ -220,7 +219,7 @@ public class PrfSource implements IProfilSource
         }
         case 8:// Ei
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_EI );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_EI );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.HOEHE ) )
@@ -237,7 +236,7 @@ public class PrfSource implements IProfilSource
         }
         case 9:// Maulprofil
         {
-          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_MAUL );
+          final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_MAUL );
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.BREITE ) )
             return;
           if( !writeBuildingProperty( building, sT, BUILDING_PROPERTY.HOEHE ) )
@@ -286,7 +285,7 @@ public class PrfSource implements IProfilSource
     if( dbo == null || dbu == null )
       return false;
 
-    final IProfilBuilding bridge = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_BRUECKE );
+    final IProfilBuilding bridge = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_BRUECKE );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
     {
@@ -412,12 +411,12 @@ public class PrfSource implements IProfilSource
     // --------------------
     if( p1 != null )
     {
-      final IProfilDevider devider1 = p.addDevider( p1, DEVIDER_TYP.TRENNFLAECHE );
+      final IProfilDevider devider1 = p.addDevider( p1, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
       devider1.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, (pos1 == 3) );
     }
     if( p2 != null )
     {
-      final IProfilDevider devider2 = p.addDevider( p2, DEVIDER_TYP.TRENNFLAECHE );
+      final IProfilDevider devider2 = p.addDevider( p2, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
       devider2.setValueFor( DEVIDER_PROPERTY.BOESCHUNG, (pos2 == 4) );
     }
   }
@@ -459,9 +458,9 @@ public class PrfSource implements IProfilSource
     }
     // ---------------
     if( p1 != null )
-      p.addDevider( p1, DEVIDER_TYP.DURCHSTROEMTE );
+      p.addDevider( p1, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
     if( p2 != null )
-      p.addDevider( p2, DEVIDER_TYP.DURCHSTROEMTE );
+      p.addDevider( p2, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
   }
 
   private void readWehrtrenner( final double[] values, final IProfil p, final PrfReader pr )
@@ -477,7 +476,7 @@ public class PrfSource implements IProfilSource
       {
         if( (values != null) && (values.length > i + 1) )
         {
-          final IProfilDevider dev = p.addDevider( point, DEVIDER_TYP.WEHR );
+          final IProfilDevider dev = p.addDevider( point, IProfilConstants.DEVIDER_TYP_WEHR );
           dev.setValueFor( DEVIDER_PROPERTY.BEIWERT, values[i + 1] );
         }
       }
@@ -489,7 +488,7 @@ public class PrfSource implements IProfilSource
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" );
     if( dbw == null )
       return false;
-    final IProfilBuilding wehr = ProfilBuildingFactory.createProfilBuilding(  IProfilConstants.BUILDING_TYP_WEHR );
+    final IProfilBuilding wehr = ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_WEHR );
     final String secLine = dbw.getSecondLine();
     final String wa = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
@@ -599,9 +598,9 @@ public class PrfSource implements IProfilSource
     }
     // ----------------------------
     if( p1 != null )
-      p.addDevider( p1, DEVIDER_TYP.BORDVOLL );
+      p.addDevider( p1, IProfilConstants.DEVIDER_TYP_BORDVOLL );
     if( p2 != null )
-      p.addDevider( p2, DEVIDER_TYP.BORDVOLL );
+      p.addDevider( p2, IProfilConstants.DEVIDER_TYP_BORDVOLL );
   }
 
   /**

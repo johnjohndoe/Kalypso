@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.bce.profil.ui">
+<schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.bce.profil.ui" id="profilPointsSource" name="profilPointsSource"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="profilPointMarker" name="profilPointMarker"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="profilPointsSource"/>
+            <element ref="pointMarker" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,13 +42,16 @@
       </complexType>
    </element>
 
-   <element name="profilPointsSource">
+   <element name="pointMarker">
       <annotation>
          <appInfo>
             <meta.element labelAttribute="label"/>
          </appInfo>
       </annotation>
       <complexType>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -56,28 +59,35 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="label" type="string" use="required">
+         <attribute name="label" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="description" type="string" use="required">
+      </complexType>
+   </element>
+
+   <element name="parameter">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="key"/>
+         </appInfo>
+      </annotation>
+      <complexType>
+         <attribute name="key" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="valueClassName" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="com.bce.profil.ui.wizard.pointsInsert.IPointsSource"/>
-               </appInfo>
             </annotation>
          </attribute>
       </complexType>

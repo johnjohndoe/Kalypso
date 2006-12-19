@@ -46,9 +46,12 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 public class KalypsoModelWspmUIExtensions
 {
@@ -73,6 +76,9 @@ public class KalypsoModelWspmUIExtensions
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( extensionPoint );
 
+//    elements[0].getAttribute( "id" );
+//    elements[0].createExecutableExtension( "class" );
+    
     final Collection<T> targets = new ArrayList<T>( elements.length );
     for( int i = 0; i < elements.length; i++ )
     {
@@ -88,6 +94,32 @@ public class KalypsoModelWspmUIExtensions
     }
 
     return targets.toArray( a );
+  }
+
+  public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
+    for( final IConfigurationElement element : elements )
+    {
+      final String type = element.getAttribute( "profiletype" );
+      if( type.equals( profiletype ))
+      {
+        try
+        {
+          return (IProfilLayerProvider) element.createExecutableExtension( "provider" );
+        }
+        catch( final CoreException e )
+        {
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( e.getStatus() );
+        }
+      }
+    }
+    
+    final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
+    KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+    
+    return null;
   }
   
 }

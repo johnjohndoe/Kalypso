@@ -45,9 +45,9 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 
@@ -71,8 +71,8 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
   protected IProfilChange[] resolve( IProfil profil )
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
-    if( deviders == null )
+    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    if( deviders.length < 1 )
     {
       return null;
     }

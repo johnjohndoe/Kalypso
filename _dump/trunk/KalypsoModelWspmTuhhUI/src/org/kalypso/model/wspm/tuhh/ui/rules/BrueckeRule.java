@@ -49,11 +49,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -69,7 +67,7 @@ public class BrueckeRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getBuilding() == null) || (IProfilConstants.BUILDING_TYP_BRUECKE.compareTo( profil.getBuilding().getTyp()) != 0) )
+    if( (profil == null) || (profil.getBuilding() == null) || (IProfilConstants.BUILDING_TYP_BRUECKE.compareTo( profil.getBuilding().getTyp() ) != 0) )
       return;
 
     try
@@ -87,18 +85,18 @@ public class BrueckeRule extends AbstractValidatorRule
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
+    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
     if( devider.length < 2 )
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
-    if( devider[0].getPoint() != points.getFirst()  )
+    if( devider[0].getPoint() != points.getFirst() )
     {
-      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, DEVIDER_TYP.DURCHSTROEMTE, null ) }  );
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, null ) } );
     }
-    if  (devider[devider.length -1].getPoint() != points.getLast())
+    if( devider[devider.length - 1].getPoint() != points.getLast() )
     {
-      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( devider.length -1, DEVIDER_TYP.DURCHSTROEMTE, null ) }  );
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( devider.length - 1, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, null ) } );
     }
   }
 

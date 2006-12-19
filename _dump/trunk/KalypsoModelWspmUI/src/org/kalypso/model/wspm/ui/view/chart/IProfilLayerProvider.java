@@ -38,34 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.jface.resource.ColorRegistry;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.result.IStationResult;
+import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
 
-public interface IProfilDevider
+import de.belger.swtchart.axis.AxisRange;
+
+/**
+ * A layer provider provides layers for the view, depending on the specific profile type.
+ * 
+ * @author kimwerner
+ */
+public interface IProfilLayerProvider
 {
-  // public static enum DEVIDER_TYP
-  // {
-  // BORDVOLL, DURCHSTROEMTE, TRENNFLAECHE, WEHR;
-  // }
-
-  public static enum DEVIDER_PROPERTY
-  {
-    BOESCHUNG,
-    RAUHEIT,
-    BEIWERT
-  };
-
-  public Object getValueFor( final Object key );
-
-  public void setValueFor( final Object key, final Object value );
-
-  public IProfilPoint getPoint( );
-
-  /**
-   * @return the old position
-   */
-  public IProfilPoint setPoint( final IProfilPoint point );
-
-  public String getTyp( );
-
+  public IProfilChartLayer[] createLayer( final ProfilChartView view, final IProfil profil, final IStationResult[] results, final AxisRange domainRange, final AxisRange valueRangeLeft, final AxisRange valueRangeRight, final ColorRegistry registry );
 }

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.bce.eind.core">
+<schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.bce.eind.core" id="reparatorrule" name="reparatorrule"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="reparatorrule" name="reparatorrule"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -76,7 +76,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="com.bce.eind.core.profil.reparator.IProfilReparator"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.reparator.IProfilReparator"/>
                </appInfo>
             </annotation>
          </attribute>

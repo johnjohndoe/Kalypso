@@ -47,10 +47,8 @@ import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.impl.PlainProfil;
-
 
 public class BuildingWehr extends AbstractProfilBuilding
 {
@@ -79,9 +77,8 @@ public class BuildingWehr extends AbstractProfilBuilding
   public void removeProfilProperties( PlainProfil profil ) throws ProfilDataException
   {
     super.removeProfilProperties( profil );
-    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.WEHR );
-    final int deviderCount = devider == null ? 0 : devider.length;
-    for( int i = 0; i < deviderCount; i++ )
+    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
+    for( int i = 0; i < devider.length; i++ )
     {
       profil.removeDevider( devider[i] );
     }

@@ -50,10 +50,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
@@ -77,7 +77,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   @Override
   public List<IProfilPoint> getPoints( )
   {
-    return ProfilUtil.getInnerPoints( getProfil(), DEVIDER_TYP.TRENNFLAECHE );
+    return ProfilUtil.getInnerPoints( getProfil(), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
   }
 
   public WehrBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor )
@@ -122,11 +122,10 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   public void removeYourself( )
   {
     final IProfilEventManager pem = getProfilEventManager();
-    final IProfilDevider[] deviders = pem.getProfil().getDevider( DEVIDER_TYP.WEHR );
-    final int deviderCount = deviders == null ? 0 : deviders.length;
-    final IProfilChange[] changes = new IProfilChange[deviderCount + 1];
+    final IProfilDevider[] deviders = pem.getProfil().getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
+    final IProfilChange[] changes = new IProfilChange[deviders.length + 1];
     changes[0] = new BuildingSet( pem.getProfil(), null );
-    for( int i = 0; i < deviderCount; i++ )
+    for( int i = 0; i < deviders.length; i++ )
     {
       changes[i + 1] = new DeviderRemove( pem.getProfil(), deviders[i] );
     }
@@ -152,12 +151,12 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     final IProfil profil = getProfil();
     final LinkedList points = profil.getPoints();
     final int i = points.indexOf( point );
-    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
-    if (i<points.indexOf( deviders[0].getPoint()))
+    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    if( i < points.indexOf( deviders[0].getPoint() ) )
     {
       return false;
     }
-    if (i>points.indexOf( deviders[deviders.length -1].getPoint()))
+    if( i > points.indexOf( deviders[deviders.length - 1].getPoint() ) )
     {
       return false;
     }

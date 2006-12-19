@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.impl.marker.ProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -23,6 +26,8 @@ public class KalypsoModelWspmCoreExtensions
   private static IProfileFeatureProvider[] PROFILE_FEATURE_PROVIDER = null;
 
   private static IProfilePointFilter[] PROFILE_POINT_FILTER = null;
+
+  private static Map<String, IProfilPointMarker> PROFILE_POINT_MARKER = null;
 
   public static IProfilReparator[] createReaparatorRules( )
   {
@@ -99,12 +104,12 @@ public class KalypsoModelWspmCoreExtensions
 
     return map;
   }
-  
-  public synchronized static IProfileFeatureProvider[] getProfileFeatureProvider(  )
+
+  public synchronized static IProfileFeatureProvider[] getProfileFeatureProvider( )
   {
     if( PROFILE_FEATURE_PROVIDER != null )
       return PROFILE_FEATURE_PROVIDER;
-    
+
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileFeatureProvider" );
 
@@ -122,9 +127,8 @@ public class KalypsoModelWspmCoreExtensions
       }
     }
 
-    
     PROFILE_FEATURE_PROVIDER = provider.toArray( new IProfileFeatureProvider[provider.size()] );
-    
+
     return PROFILE_FEATURE_PROVIDER;
   }
 
@@ -132,7 +136,7 @@ public class KalypsoModelWspmCoreExtensions
   {
     if( PROFILE_POINT_FILTER != null )
       return PROFILE_POINT_FILTER;
-    
+
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilePointFilter" );
 
@@ -149,9 +153,31 @@ public class KalypsoModelWspmCoreExtensions
         KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
       }
     }
-    
+
     PROFILE_POINT_FILTER = filter.toArray( new IProfilePointFilter[filter.size()] );
-    
+
     return PROFILE_POINT_FILTER;
+  }
+
+  public static Map<String, IProfilPointMarker> getProfilePointMarker( )
+  {
+    if( PROFILE_POINT_MARKER != null )
+      return PROFILE_POINT_MARKER;
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] markers = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointMarker" );
+    PROFILE_POINT_MARKER = new HashMap<String, IProfilPointMarker>( markers.length );
+    for( int i = 0; i < markers.length; i++ )
+    {
+      final IConfigurationElement marker = markers[i];
+
+      final IConfigurationElement[] markerParam = marker.getChildren( "parameter" );
+      final String[] params = new String[markerParam.length];
+      for( int k = 0; k < markerParam.length; k++ )
+      {
+        params[k] = markerParam[k].getAttribute( "key" );
+      }
+      PROFILE_POINT_MARKER.put( marker.getAttribute( "id" ), new ProfilPointMarker( marker.getAttribute( "id" ), params ) );
+    }
+    return PROFILE_POINT_MARKER;
   }
 }

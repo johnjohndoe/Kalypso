@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
@@ -153,7 +152,7 @@ public class CreateProfileDeviderWizard extends Wizard
 
     final FeatureList lineFeatures = m_deviderPage.getFeatures();
     final IPropertyType lineGeomProperty = m_deviderPage.getGeomProperty();
-    final DEVIDER_TYP deviderType = m_deviderPage.getDeviderType();
+    final String deviderType = m_deviderPage.getDeviderType();
 
     final IKalypsoFeatureTheme commandTarget = m_foundProfiles.theme;
 
@@ -193,7 +192,7 @@ public class CreateProfileDeviderWizard extends Wizard
   }
 
   @SuppressWarnings("unchecked")
-  protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final DEVIDER_TYP deviderType, final IProgressMonitor monitor )
+  protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final String deviderType, final IProgressMonitor monitor )
   {
     monitor.beginTask( "erzeuge Begrenzer", profileFeatures.length );
 
@@ -276,7 +275,7 @@ public class CreateProfileDeviderWizard extends Wizard
   /**
    * At the moment, only existing points are taken
    */
-  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final DEVIDER_TYP deviderType )
+  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final String deviderType )
   {
     // find corresponding profile points // create new profile points
 

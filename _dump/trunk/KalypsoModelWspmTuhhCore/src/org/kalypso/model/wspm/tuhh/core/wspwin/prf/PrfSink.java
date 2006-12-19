@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.wspwin.core.prf.PrfWriter;
@@ -181,8 +180,8 @@ public class PrfSink implements IProfilSink
   private void writeDevider( final PrfWriter pw, final IProfil profil )
   {
 
-    final IProfilDevider[] trennf = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
-    if( trennf != null && trennf.length > 0 )
+    final IProfilDevider[] trennf = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    if( trennf.length > 0 )
     {
       final DataBlockHeader dbht = PrfWriter.createHeader( "TRENNF" );
       final CoordDataBlock dbt = new CoordDataBlock( dbht );
@@ -219,9 +218,9 @@ public class PrfSink implements IProfilSink
       dbt.setCoords( xs, ys );
       pw.addDataBlock( dbt );
     }
-    writeDeviderTyp( pw, "BOR", profil.getDevider( DEVIDER_TYP.BORDVOLL ) );
-    writeDeviderTyp( pw, "DUR", profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE ) );
-    writeDeviderTyp( pw, "TRENNL", profil.getDevider( DEVIDER_TYP.WEHR ) );
+    writeDeviderTyp( pw, "BOR", profil.getDevider( IProfilConstants.DEVIDER_TYP_BORDVOLL ) );
+    writeDeviderTyp( pw, "DUR", profil.getDevider( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE ) );
+    writeDeviderTyp( pw, "TRENNL", profil.getDevider( IProfilConstants.DEVIDER_TYP_WEHR ) );
   }
 
   private void writeDeviderTyp( final PrfWriter pw, final String key, IProfilDevider[] deviders )
@@ -290,13 +289,10 @@ public class PrfSink implements IProfilSink
       {
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( building.getValueFor( BUILDING_PROPERTY.WEHRART ) ) );
         secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ) ) );
-        final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.WEHR );
-        if( deviders != null )
+        final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
+        for( IProfilDevider devider : deviders )
         {
-          for( IProfilDevider devider : deviders )
-          {
-            secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( DEVIDER_PROPERTY.BEIWERT ) ) );
-          }
+          secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( DEVIDER_PROPERTY.BEIWERT ) ) );
         }
         dbw.setSecondLine( secLine.toString() );
       }

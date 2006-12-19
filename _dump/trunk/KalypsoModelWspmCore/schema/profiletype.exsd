@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.bce.profil.ui">
+<schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.bce.profil.ui" id="profilPointsSource" name="profilPointsSource"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="profiletype" name="profiletype"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="profilPointsSource"/>
+            <element ref="profiletype" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,12 +42,7 @@
       </complexType>
    </element>
 
-   <element name="profilPointsSource">
-      <annotation>
-         <appInfo>
-            <meta.element labelAttribute="label"/>
-         </appInfo>
-      </annotation>
+   <element name="profiletype">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -56,7 +51,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="label" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -68,15 +63,8 @@
                <documentation>
                   
                </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="com.bce.profil.ui.wizard.pointsInsert.IPointsSource"/>
+                  <meta.attribute translatable="true"/>
                </appInfo>
             </annotation>
          </attribute>

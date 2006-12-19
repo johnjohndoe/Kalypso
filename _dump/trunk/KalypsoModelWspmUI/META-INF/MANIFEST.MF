@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  org.kalypso.model.wspm.core,
- de.belger.swtchart.core,
+ de.belger.swtchart.core;visibility:=reexport,
  org.eclipse.ui.forms,
  org.kalypso.featureview,
  org.kalypso.model.wspm.schema

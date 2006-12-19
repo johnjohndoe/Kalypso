@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 
 public class ProfilDevider implements IProfilDevider
 {
-  private DEVIDER_TYP m_Typ;
+  private String m_Typ;
 
   private IProfilPoint m_point;
 
@@ -56,7 +56,7 @@ public class ProfilDevider implements IProfilDevider
 
   private final HashMap<Object, Object> m_properties = new HashMap<Object, Object>();
 
-  public ProfilDevider( final DEVIDER_TYP typ, final IProfilPoint point )
+  public ProfilDevider( final String typ, final IProfilPoint point )
   {
     m_Typ = typ;
     m_point = point;
@@ -84,7 +84,7 @@ public class ProfilDevider implements IProfilDevider
     return m_point;
   }
 
-  public DEVIDER_TYP getTyp( )
+  public String getTyp( )
   {
     return m_Typ;
   }

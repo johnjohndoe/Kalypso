@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil;
 
 import java.util.LinkedList;
 
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
@@ -50,56 +49,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
  */
 public interface IProfil
 {
-//  public static enum RAUHEIT_TYP
-//  {
-//    KS
-//    {
-//      public String toString( )
-//      {
-//        return "k-s   m";
-//      }
-//    },
-//    KST
-//    {
-//      public String toString( )
-//      {
-//        return "kst   m";
-//      }
-//    }
-//  };
-
-//  public static enum WEHR_TYP
-//  {
-//    RUNDKRONIG
-//    {
-//      public String toString( )
-//      {
-//        return "Rundkronig";
-//      }
-//    },
-//    BREITKRONIG
-//    {
-//      public String toString( )
-//      {
-//        return "Breitkronig";
-//      }
-//    },
-//    SCHARFKANTIG
-//    {
-//      public String toString( )
-//      {
-//        return "Scharfkantig";
-//      }
-//    },
-//    UEBERFALL
-//    {
-//      public String toString( )
-//      {
-//        return "Überfall";
-//      }
-//    }
-//  };
-
   public static enum PROFIL_PROPERTY
   {
     /** ObjectTyp=List<String> */
@@ -123,7 +72,7 @@ public interface IProfil
    * @param devider
    * @return IProfilDevider
    */
-  public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider );
+  public IProfilDevider addDevider( IProfilPoint point, String devider );
 
   public void addDevider( IProfilDevider devider );
 
@@ -143,17 +92,27 @@ public interface IProfil
   public IProfilBuilding getBuilding( );
 
   /**
-   * @param deviderTyp
-   * @return IProfilDevider[] with all deviders of deviderTyp sort by POINT_PROPERTY.BREITE, maybe null
+   * @return IProfilDevider[] with all deviders linked with the given point
    */
-  public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp );
+  public IProfilDevider[] getDevider( final IProfilPoint point );
+
+  /**
+   * @return IProfilDevider[] with all deviders in this profil sort by POINT_PROPERTY.BREITE
+   */
+  public IProfilDevider[] getDevider( );
+
+  /**
+   * @param deviderTyp
+   * @return IProfilDevider[] with all deviders of deviderTyp sort by POINT_PROPERTY.BREITE
+   */
+  public IProfilDevider[] getDevider( final String deviderTyp );
 
   /**
    * @param deviderTypes
    * @return IProfilDevider[] with all deviders of having deviderTyp in deviderTypes sort by POINT_PROPERTY.BREITE,
    *         maybe null
    */
-  public IProfilDevider[] getDevider( final DEVIDER_TYP[] deviderTypes );
+  public IProfilDevider[] getDevider( final String[] deviderTypes );
 
   /**
    * @param filterNonVisible
@@ -229,6 +188,7 @@ public interface IProfil
    * @return Returns the active Point.
    */
   public IProfilPoint getActivePoint( );
+
   /**
    * @return Returns the active Pointproperty.
    */
@@ -239,4 +199,16 @@ public interface IProfil
   public void setStation( final double station );
 
   public double getStation( );
+
+  /**
+   * Returns the type of the profile.
+   * <p>
+   * The type controls the following behaviour:
+   * <ul>
+   * <li>Visualisation (which layers are used)</li>
+   * <li>Serialization</li>
+   * <li>Validation (which rules are applied)</li>
+   * </ul>
+   */
+  public String getType( );
 }

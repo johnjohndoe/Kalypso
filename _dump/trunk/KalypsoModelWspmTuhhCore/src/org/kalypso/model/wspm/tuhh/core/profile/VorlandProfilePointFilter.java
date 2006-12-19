@@ -43,9 +43,9 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 
@@ -55,24 +55,25 @@ import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 public class VorlandProfilePointFilter extends AbstractProfilePointFilter implements IProfilePointFilter
 {
   /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil, org.kalypso.model.wspm.core.profil.IProfilPoint)
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
   public boolean accept( final IProfil profil, final IProfilPoint point )
   {
-    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
+    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
     if( devider.length != 2 )
       return true;
-    
+
     final IProfilPoint leftPoint = devider[0].getPoint();
     final IProfilPoint rightPoint = devider[1].getPoint();
-    
+
     final LinkedList<IProfilPoint> points = profil.getPoints();
 
     final int left = points.indexOf( leftPoint );
     final int right = points.indexOf( rightPoint );
     final int index = points.indexOf( point );
-    
-    return !( left <= index && index < right );
+
+    return !(left <= index && index < right);
   }
 
 }

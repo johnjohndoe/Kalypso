@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
+import java.util.Map;
+
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
 
 /**
@@ -48,9 +50,12 @@ import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
  */
 public class ProfilDeviderFactory
 {
-  public static IProfilDevider createDevider( final DEVIDER_TYP deviderTyp, final IProfilPoint point )
+  public static IProfilDevider createDevider( final String deviderTyp, final IProfilPoint point )
   {
-    return new ProfilDevider( deviderTyp, point );
+    final Map<String,IProfilPointMarker> markerTypes = KalypsoModelWspmCoreExtensions.getProfilePointMarker() ;
+    final IProfilPointMarker profilPointMarker = markerTypes.get( deviderTyp );
+    if(profilPointMarker!=null )
+      return new ProfilDevider( deviderTyp, point );
+    return null;
   }
-
 }

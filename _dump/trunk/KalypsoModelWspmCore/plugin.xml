@@ -2,9 +2,73 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
-   <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
+   <extension-point id="profiletype" name="profiletype" schema="schema/profiletype.exsd"/>
    <extension-point id="profilserializer" name="profilserializer" schema="schema/profilserializer.exsd"/>
    <extension-point id="profileFeatureProvider" name="profileFeatureProvider" schema="schema/profileFeatureProvider.exsd"/>
    <extension-point id="profilePointFilter" name="profilePointFilter" schema="schema/profilePointFilter.exsd"/>
    <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
+   <extension-point id="profilPointMarker" name="profilPointMarker" schema="schema/profilPointMarker.exsd"/>
+   <extension-point id="profilBuilding" name="profilBuilding" schema="schema/profilBuilding.exsd"/>
+   <extension
+         point="org.kalypso.model.wspm.core.profilPointMarker">
+      <pointMarker
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"
+            label="Trennflächen">
+         <parameter
+               key="BOESCHUNGSFUSS"
+               valueClassName="Boolean"/>
+         <parameter
+               key="RAUHEIT"
+               valueClassName="Double"/>
+      </pointMarker>
+      <pointMarker
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#BORDVOLL"
+            label="Bordvollpunkte"/>
+      <pointMarker
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"
+            label="Wehrfeldtrenner">
+         <parameter
+               key="BEIWERT"
+               valueClassName="Double"/>
+      </pointMarker>
+      <pointMarker
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"
+            label="durchströmte Bereiche">
+         <parameter
+               key="RAUHEIT"
+               valueClassName="Double"/>
+      </pointMarker>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilBuilding">
+      <building
+            caption="Brücke"
+            class="org.kalypso.model.wspm.core.profil.impl.buildings.building.BuildingBruecke"
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"
+            label="Brücke">
+         <parameter
+               key="FORMBEIWERT"
+               valueClassName="Double"/>
+         <parameter
+               key="BREITE"
+               valueClassName="Double"/>
+         <parameter
+               key="UNTERWASSER"
+               valueClassName="Double"/>
+         <parameter
+               key="RAUHEIT"
+               valueClassName="Double"/>
+      </building>
+      <building
+            caption="Wehr"
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR"
+            label="Wehr">
+         <parameter
+               key="WEHRART"
+               valueClassName="String"/>
+         <parameter
+               key="FORMBEIWERT"
+               valueClassName="Double"/>
+      </building>
+   </extension>
 </plugin>

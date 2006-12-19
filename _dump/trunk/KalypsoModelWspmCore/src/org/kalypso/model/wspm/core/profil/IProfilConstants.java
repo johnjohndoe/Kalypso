@@ -45,34 +45,76 @@ public interface IProfilConstants
   /** Format String für Formatierung der Station in der GUI */
   public static final String FMT_STATION = "%.4f";
 
-  /** Rauhheit */
-  public static final String RAUHEIT_TYP_KS = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_KS";
+  /**
+   * profilProperties
+   */
+  /** ObjectTyp=List<String> */
+  public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY_";
 
-  public static final String RAUHEIT_TYP_KST = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_KST";
+  public static final String PROFIL_PROPERTY_KOMMENTAR = PROFIL_PROPERTY + "KOMMENTAR";
+
+  // /** ObjectTyp=String */
+  public static final String PROFIL_PROPERTY_MEHRFELDBRUECKE = PROFIL_PROPERTY + "MEHRFELDBRUECKE";
+
+  // /** ObjectTyp=List<String> */
+  public static final String PROFIL_PROPERTY_METASTRINGS = PROFIL_PROPERTY + "METASTRINGS";
+
+  // /** ObjectTyp=String */
+  public static final String PROFIL_PROPERTY_STATUS = PROFIL_PROPERTY + "STATUS";
+
+  // /** ObjectTyp=String */
+  public static final String PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG = PROFIL_PROPERTY + "VERZWEIGUNGSKENNUNG";
+
+  // /** ObjectTyp=String */
+  public static final String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL";
+
+  /** Rauhheit */
+  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.core.profil.IProfil.RAUHEIT_TYP_";
+
+  public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
+
+  public static final String RAUHEIT_TYP_KST = RAUHEIT_TYP + "KST";
 
   /** default RauheitenTyp für ein neues Profil */
   public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
 
   /** Wehr-typen */
-  public static final String WEHR_TYP_RUNDKRONIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_RUNDKRONIG";
+  public static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
 
-  public static final String WEHR_TYP_BREITKRONIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_BREITKRONIG";
+  public static final String WEHR_TYP_RUNDKRONIG = WEHR_TYP + "RUNDKRONIG";
 
-  public static final String WEHR_TYP_SCHARFKANTIG = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG";
+  public static final String WEHR_TYP_BREITKRONIG = WEHR_TYP + "BREITKRONIG";
 
-  public static final String WEHR_TYP_BEIWERT = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_BEIWERT";
+  public static final String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG";
+
+  public static final String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT";
+
+  /** Trenner-typen */
+  public static final String DEVIDER_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
+
+  public static final String DEVIDER_TYP_BORDVOLL = DEVIDER_TYP + "BORDVOLL";
+
+  public static final String DEVIDER_TYP_DURCHSTROEMTE = DEVIDER_TYP + "DURCHSTROEMTE";
+
+  public static final String DEVIDER_TYP_TRENNFLAECHE = DEVIDER_TYP + "TRENNFLAECHE";
+
+  public static final String DEVIDER_TYP_WEHR = DEVIDER_TYP + "WEHR";
+
+  public static final String[] DEVIDER_TYPES = { DEVIDER_TYP_BORDVOLL, DEVIDER_TYP_DURCHSTROEMTE, DEVIDER_TYP_TRENNFLAECHE, DEVIDER_TYP_WEHR };
 
   /** buildings */
-  public static final String BUILDING_TYP_BRUECKE = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE";
+  public static final String BUILDING_TYP = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#";
 
-  public static final String BUILDING_TYP_EI = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#EI";
+  public static final String BUILDING_TYP_BRUECKE = BUILDING_TYP + "BRUECKE";
 
-  public static final String BUILDING_TYP_KREIS = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#KREIS";
+  public static final String BUILDING_TYP_EI = BUILDING_TYP + "EI";
 
-  public static final String BUILDING_TYP_MAUL = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#MAUL";
+  public static final String BUILDING_TYP_KREIS = BUILDING_TYP + "KREIS";
 
-  public static final String BUILDING_TYP_TRAPEZ = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#TRAPEZ";
+  public static final String BUILDING_TYP_MAUL = BUILDING_TYP + "MAUL";
 
-  public static final String BUILDING_TYP_WEHR = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR";
+  public static final String BUILDING_TYP_TRAPEZ = BUILDING_TYP + "TRAPEZ";
+
+  public static final String BUILDING_TYP_WEHR = BUILDING_TYP + "WEHR";
 
 }

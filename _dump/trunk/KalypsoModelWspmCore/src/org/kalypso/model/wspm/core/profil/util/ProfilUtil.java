@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
@@ -81,22 +80,23 @@ public class ProfilUtil
       return null;
     }
   }
-  public static final HashMap<IProfilPoint,IProfilDevider> getDdeviderPoints(final IProfil profil)
+
+  public static final HashMap<IProfilPoint, IProfilDevider> getDdeviderPoints( final IProfil profil )
   {
-    final HashMap<IProfilPoint,IProfilDevider> pointMap = new HashMap<IProfilPoint,IProfilDevider>();
-    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.values() );
-    if (deviders==null){return pointMap;}
-    for (final IProfilDevider devider :deviders)
+    final HashMap<IProfilPoint, IProfilDevider> pointMap = new HashMap<IProfilPoint, IProfilDevider>();
+    final IProfilDevider[] deviders = profil.getDevider();
+    for( final IProfilDevider devider : deviders )
     {
       pointMap.put( devider.getPoint(), devider );
     }
     return pointMap;
   }
-/**
- * @return  a subList include both Deviderpoints, maybe null
- */
-  
-  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final DEVIDER_TYP deviderTyp )
+
+  /**
+   * @return a subList include both Deviderpoints, maybe null
+   */
+
+  public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final String deviderTyp )
   {
     final IProfilDevider[] deviders = profil.getDevider( deviderTyp );
     final LinkedList<IProfilPoint> points = profil.getPoints();
@@ -104,14 +104,14 @@ public class ProfilUtil
     final int rightPos = (deviders.length > 1) ? points.indexOf( deviders[deviders.length - 1].getPoint() ) + 1 : 0;
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
   }
-  
+
   /**
    * @throws ProfilDataException
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getValuesFor(org.kalypso.model.wspm.core.profildata.tabledata.ColumnKey)
    */
-  public static double[] getValuesFor(final IProfil profil, final POINT_PROPERTY pointProperty ) throws ProfilDataException
+  public static double[] getValuesFor( final IProfil profil, final POINT_PROPERTY pointProperty ) throws ProfilDataException
   {
-    final LinkedList<IProfilPoint> points = profil.getPoints() ;
+    final LinkedList<IProfilPoint> points = profil.getPoints();
     final double[] values = new double[points.size()];
     int i = 0;
     for( IProfilPoint point : points )
@@ -121,6 +121,7 @@ public class ProfilUtil
     }
     return values;
   }
+
   public static final List<IProfilPoint> getInnerPoints( final IProfil profil, final IProfilDevider leftDevider, final IProfilDevider rightDevider )
   {
 

@@ -46,9 +46,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -68,23 +68,23 @@ public class TrennerRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfilDevider db[] = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
-    final IProfilDevider tf[] = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
-    final IProfilDevider bv[] = profil.getDevider( DEVIDER_TYP.BORDVOLL );
+    final IProfilDevider db[] = profil.getDevider( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    final IProfilDevider tf[] = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final IProfilDevider bv[] = profil.getDevider( IProfilConstants.DEVIDER_TYP_BORDVOLL );
 
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
-    if( db == null )
-      collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( DEVIDER_TYP.DURCHSTROEMTE ) } );
-    if( tf == null )
-      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( DEVIDER_TYP.TRENNFLAECHE ) } );
+    if( db.length == 0 )
+      collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE ) } );
+    if( tf.length == 0 )
+      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE ) } );
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
   }
 
   private void validatePosition( IProfilDevider[] db, IProfilDevider[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( db == null || db.length < 2 || toValidate == null || toValidate.length < 2 )
+    if( db.length < 2 || toValidate == null || toValidate.length < 2 )
       return;
     try
     {
@@ -93,14 +93,14 @@ public class TrennerRule extends AbstractValidatorRule
       final double xleft = toValidate[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final double xright = toValidate[toValidate.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      final DEVIDER_TYP deviderTyp = toValidate[0].getTyp();
+      final String deviderTyp = toValidate[0].getTyp();
       if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, DEVIDER_TYP.DURCHSTROEMTE ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE ) } );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, DEVIDER_TYP.DURCHSTROEMTE ) } );
+        collector.createProfilMarker( true, deviderTyp.toString() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), "", pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE ) } );
       }
     }
     catch( ProfilDataException e )

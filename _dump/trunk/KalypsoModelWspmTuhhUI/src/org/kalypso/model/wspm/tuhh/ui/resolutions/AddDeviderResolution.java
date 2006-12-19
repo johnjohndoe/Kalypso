@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
 
 /**
@@ -52,12 +51,12 @@ import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
 
 public class AddDeviderResolution extends AbstractProfilMarkerResolution
 {
-  final private DEVIDER_TYP m_deviderType;
+  final private String m_deviderType;
 
   /**
    * erzeugt fehlende Trennfläche
    */
-  public AddDeviderResolution( final DEVIDER_TYP deviderType )
+  public AddDeviderResolution( final String deviderType )
   {
     super( "fehlende Trennflächen erzeugen", null, null );
     m_deviderType = deviderType;

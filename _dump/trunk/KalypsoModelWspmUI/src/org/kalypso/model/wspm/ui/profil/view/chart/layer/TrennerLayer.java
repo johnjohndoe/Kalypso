@@ -52,11 +52,11 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
@@ -79,7 +79,6 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class TrennerLayer extends AbstractProfilChartLayer
 {
-
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer#setActivePoint(java.lang.Object)
    */
@@ -103,12 +102,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
   private enum DEVIDER
   {
 
-    Durchstroemte(DEVIDER_TYP.DURCHSTROEMTE, IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE, true, 0, "Durchströmter Bereich"),
-    Fliesszone(DEVIDER_TYP.TRENNFLAECHE, IProfilColorSet.COLOUR_TRENNFLAECHEN, false, 20, "Trennflächen"),
-    Bordvoll(DEVIDER_TYP.BORDVOLL, IProfilColorSet.COLOUR_BORDVOLLPUNKTE, false, 40, "Bordvollpunkt"),
-    Wehr(DEVIDER_TYP.WEHR, IProfilColorSet.COLOUR_WEHR, false, 60, "Wehrfeldtrenner");
+    Durchstroemte(IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE, true, 0, "Durchströmter Bereich"),
+    Fliesszone(IProfilConstants.DEVIDER_TYP_TRENNFLAECHE, IProfilColorSet.COLOUR_TRENNFLAECHEN, false, 20, "Trennflächen"),
+    Bordvoll(IProfilConstants.DEVIDER_TYP_BORDVOLL, IProfilColorSet.COLOUR_BORDVOLLPUNKTE, false, 40, "Bordvollpunkt"),
+    Wehr(IProfilConstants.DEVIDER_TYP_WEHR, IProfilColorSet.COLOUR_WEHR, false, 60, "Wehrfeldtrenner");
 
-    private DEVIDER( final DEVIDER_TYP deviderTyp, final String colorKey, final boolean isclosed, final int topOffset, final String label )
+    private DEVIDER( final String deviderTyp, final String colorKey, final boolean isclosed, final int topOffset, final String label )
     {
       m_colorKey = colorKey;
 
@@ -119,21 +118,18 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
     }
 
-    public final static DEVIDER getDevider( DEVIDER_TYP typ )
+    public final static DEVIDER getDevider( String typ )
     {
-      switch( typ )
-      {
-        case TRENNFLAECHE:
-          return Fliesszone;
-        case WEHR:
-          return Wehr;
-        case BORDVOLL:
-          return Bordvoll;
-        case DURCHSTROEMTE:
-          return Durchstroemte;
-        default:
-          return null;
-      }
+      if( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE.equals( typ ) )
+        return Fliesszone;
+      else if( IProfilConstants.DEVIDER_TYP_WEHR.equals( typ ) )
+        return Wehr;
+      else if( IProfilConstants.DEVIDER_TYP_BORDVOLL.equals( typ ) )
+        return Bordvoll;
+      else if( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE.equals( typ ) )
+        return Durchstroemte;
+      else
+        return null;
     }
 
     public final boolean isClosed( )
@@ -153,7 +149,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
     private final String m_colorKey;
 
-    private final DEVIDER_TYP m_deviderTyp;
+    private final String m_deviderTyp;
 
     private final boolean m_isclosed;
 
@@ -161,7 +157,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
     private final String m_label;
 
-    public DEVIDER_TYP getDeviderTyp( )
+    public String getDeviderTyp( )
     {
       return m_deviderTyp;
     }
@@ -170,23 +166,22 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       try
       {
-        switch( m_deviderTyp )
-        {
-          case BORDVOLL:
-            return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ) } );
-          case DURCHSTROEMTE:
-            return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ) } );
-          case WEHR:
-            return String.format( "%s%n%s%n%s: %10.4f", new Object[] { m_label, "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ),
-                (Double) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT ) } );
-          case TRENNFLAECHE:
-          {
-            final Boolean position = (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
-            final boolean pos = position == null ? false : position;
 
-            return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, pos ? "Böschungsfuss" : "Vorland", devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
-          }
+        if( m_deviderTyp.compareTo( IProfilConstants.DEVIDER_TYP_BORDVOLL ) == 0 )
+          return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ) } );
+        else if( m_deviderTyp.compareTo( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE ) == 0 )
+          return String.format( "%s%n%10.4f [m]", new Object[] { m_label, devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ) } );
+        else if( m_deviderTyp.compareTo( IProfilConstants.DEVIDER_TYP_WEHR ) == 0 )
+          return String.format( "%s%n%s%n%s: %10.4f", new Object[] { m_label, "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ),
+              (Double) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT ) } );
+        else if( m_deviderTyp.compareTo( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE ) == 0 )
+        {
+          final Boolean position = (Boolean) devider.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BOESCHUNG );
+          final boolean pos = position == null ? false : position;
+
+          return String.format( "%s%n%s%n%10.4f %s", new Object[] { m_label, pos ? "Böschungsfuss" : "Vorland", devider.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.BREITE ), "[m]" } );
         }
+
       }
       catch( ProfilDataException e )
       {
@@ -237,22 +232,20 @@ public class TrennerLayer extends AbstractProfilChartLayer
         if( getViewData().getDeviderVisibility( dev.getDeviderTyp() ) )
         {
           final IProfilDevider[] deviders = m_profil.getDevider( dev.getDeviderTyp() );
-          if( deviders != null )
+
+          gc.setForeground( m_colorRegistry.get( dev.getColorKey() ) );
+          for( IProfilDevider devider : deviders )
           {
-            gc.setForeground( m_colorRegistry.get( dev.getColorKey() ) );
-            for( IProfilDevider devider : deviders )
-            {
-              final IProfilPoint point = devider.getPoint();
-              final double leftvalue = point.getValueFor( POINT_PROPERTY.BREITE );
-              final int left = (int) getDomainRange().logical2screen( leftvalue );
-              gc.drawLine( left, top + dev.getTopOffset(), left, bottom );
-            }
-            if( dev.isClosed() )
-            {
-              final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
-              final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
-              gc.drawLine( l, top + dev.getTopOffset(), r, top + dev.getTopOffset() );
-            }
+            final IProfilPoint point = devider.getPoint();
+            final double leftvalue = point.getValueFor( POINT_PROPERTY.BREITE );
+            final int left = (int) getDomainRange().logical2screen( leftvalue );
+            gc.drawLine( left, top + dev.getTopOffset(), left, bottom );
+          }
+          if( dev.isClosed() )
+          {
+            final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
+            final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
+            gc.drawLine( l, top + dev.getTopOffset(), r, top + dev.getTopOffset() );
           }
         }
       }
@@ -270,8 +263,8 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     try
     {
-      final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.values() );
-      if( (deviders == null) || (deviders.length < 2) )
+      final IProfilDevider[] deviders = getProfil().getDevider();
+      if( deviders.length < 2 )
         return MINIMAL_RECT;
 
       final double left = deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
@@ -332,7 +325,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
       operation.addChange( new DeviderMove( activeDevider, destinationPoint ) );
-      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, (activeDevider.getTyp() == DEVIDER_TYP.WEHR ? POINT_PROPERTY.OBERKANTEWEHR : null) ) );
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, (activeDevider.getTyp() == IProfilConstants.DEVIDER_TYP_WEHR ? POINT_PROPERTY.OBERKANTEWEHR : null) ) );
       new ProfilOperationJob( operation ).schedule();
     }
   }
@@ -367,10 +360,10 @@ public class TrennerLayer extends AbstractProfilChartLayer
     for( int i = devs.length; i > 0; i-- )
     {
       final DEVIDER dev = devs[i - 1];
-      final DEVIDER_TYP devTyp = dev.getDeviderTyp();
+      final String devTyp = dev.getDeviderTyp();
       final IProfilDevider[] deviders = profil.getDevider( devTyp );
 
-      if( (deviders != null) && getViewData().getDeviderVisibility( devTyp ) )
+      if( getViewData().getDeviderVisibility( devTyp ) )
       {
         int pos = 0;
         for( IProfilDevider devider : deviders )

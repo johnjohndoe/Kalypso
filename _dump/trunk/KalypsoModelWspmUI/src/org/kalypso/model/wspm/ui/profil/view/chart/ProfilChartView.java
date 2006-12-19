@@ -45,7 +45,6 @@ import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.action.IAction;
@@ -58,19 +57,13 @@ import org.eclipse.ui.IPersistableElement;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.profil.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.BewuchsLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.GelaendeLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.HochRechtsLayer;
 import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.RauheitLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.TrennerLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.WspLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.buildings.BuildingLayerFactory;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.belger.swtchart.ChartCanvas;
 import de.belger.swtchart.action.ChartStandardActions;
@@ -126,9 +119,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_poslisteners.add( l );
   }
 
-  private void addLayer( final IProfilChartLayer layer, final Map<String, Boolean> visibility, final boolean defaultVisibility )
+  private void addLayer( final IProfilChartLayer layer, final Map<String, Boolean> visibility )
   {
     final Boolean visible = visibility.get( layer.toString() );
+    final boolean defaultVisibility = layer.getInitialVisibility();
     m_chart.addLayer( layer, visible == null ? defaultVisibility : visible );
   }
 
@@ -145,27 +139,15 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     final IProfil profil = getProfil();
     if( profil != null )
     {
-      addLayer( new GelaendeLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_GELAENDE ), m_colorRegistry.get( IProfilColorSet.COLOUR_GELAENDE_MARKED ), m_colorRegistry.get( IProfilColorSet.COLOUR_STATIONS ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) ), visibility, true );
-      final IProfilChartLayer buildingLayer = BuildingLayerFactory.createLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry );
-      if( buildingLayer != null )
-        addLayer( buildingLayer, visibility, true );
-      addLayer( new TrennerLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry ), visibility, true );
-      final List lst = profil.getPointProperties( false );
-      if( lst.contains( POINT_PROPERTY.HOCHWERT ) )
-        addLayer( new HochRechtsLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) ), visibility, false );
-      if( lst.contains( POINT_PROPERTY.BEWUCHS_AX ) )
-        addLayer( new BewuchsLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_BEWUCHS ) ), visibility, true );
-      if( lst.contains( POINT_PROPERTY.RAUHEIT ) )
-        addLayer( new RauheitLayer( this, m_domainRange, m_valueRangeRight, m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_RAUHEIT ) ), visibility, false );
-
-      // Wasserpiegel
-      final IStationResult[] results = getResults();
-      for( final IStationResult result : results )
-      {
-        // only if we have got a wsp for this profile
-        if( result.getComponentValue( "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" ) != null )
-          addLayer( new WspLayer( this, m_domainRange, m_valueRangeLeft, m_colorRegistry.get( IProfilColorSet.COLOUR_WSP ), result ), visibility, true );
-      }
+      final String profiletype = profil.getType();
+      final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+      if( provider == null )
+        return;
+      
+      // call provider
+      final IProfilChartLayer[] layers = provider.createLayer( this, profil, getResults(), m_domainRange, m_valueRangeLeft, m_valueRangeRight,m_colorRegistry );
+      for( final IProfilChartLayer layer : layers )
+        addLayer( layer, visibility );
     }
   }
 

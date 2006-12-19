@@ -41,52 +41,19 @@
 package org.kalypso.model.wspm.core.profil;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 
-/**
- * Helper class to retrieve deviders of a profile by points.
- * <p>
- * The class is initialized on construction and NOT will not reflect later changes of the profile.
- * </p>
- * 
- * @author belger
- */
-public class ProfilDeviderMap extends HashMap<IProfilPoint, Collection<IProfilDevider>>
+public interface IProfilPointMarker
 {
-  public ProfilDeviderMap( final IProfil profil )
-  {
-    for( final DEVIDER_TYP deviderTyp : DEVIDER_TYP.values() )
-    {
-      final IProfilDevider[] deviders = profil.getDevider( deviderTyp );
-      if( deviders == null )
-        continue;
+  public Object getValueFor( final String key );
 
-      for( final IProfilDevider devider : deviders )
-      {
-        final IProfilPoint point = devider.getPoint();
-        if( !containsKey( point ) )
-          put( point, new HashSet<IProfilDevider>( 1 ) );
-        final Collection<IProfilDevider> list = get( point );
-        list.add( devider );
-      }
-    }
-  }
+  public void setValueFor( final String key, final Object value )throws IllegalArgumentException;
+  
+  public IProfilPoint getPoint();
 
-  /**
-   * @see java.util.HashMap#get(java.lang.Object)
-   */
-  @Override
-  public Collection<IProfilDevider> get( final Object key )
-  {
-    final Collection<IProfilDevider> collection = super.get( key );
-    if( collection == null )
-      return Collections.emptyList();
-    
-    return collection;
-  }
+  public void setPoint( final IProfilPoint point );
+  
+  public Collection<String> getKeys();
 
+  public String getTyp( );
 }

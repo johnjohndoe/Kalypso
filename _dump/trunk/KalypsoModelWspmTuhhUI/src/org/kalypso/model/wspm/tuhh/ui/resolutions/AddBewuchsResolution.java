@@ -46,10 +46,10 @@ import java.util.ListIterator;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 
@@ -73,8 +73,8 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     {
       return null;
     }
-    final IProfilDevider[] deviders = profil.getDevider( DEVIDER_TYP.TRENNFLAECHE );
-    if( (deviders == null) || (deviders.length < 2) )
+    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    if (deviders.length < 2) 
     {
       return null;
     }
@@ -120,7 +120,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
         }
       }
     }
-    if(  m_deviderIndex > 0  )
+    if( m_deviderIndex > 0 )
     {
       point = devider.getPoint();
       final int i = points.indexOf( point );
@@ -156,7 +156,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     {
       return null;
     }
-    if (params[0]*params[1]*params[2]==0.0)
+    if( params[0] * params[1] * params[2] == 0.0 )
     {
       return null;
     }

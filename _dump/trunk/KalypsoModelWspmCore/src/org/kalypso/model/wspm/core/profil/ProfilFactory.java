@@ -47,8 +47,8 @@ import org.kalypso.model.wspm.core.profil.impl.PlainProfil;
  */
 public class ProfilFactory
 {
-  public static IProfil createProfil( )
+  public static IProfil createProfil( final String type )
   {
-    return new PlainProfil();
+    return new PlainProfil( type );
   }
 }

@@ -102,10 +102,11 @@
    </extension>
 
      <extension
-           point="org.kalypso.model.wspm.core.validatortype">
-        <validatortype
-              description="Pasche"
-              id="pasche"/>
+           point="org.kalypso.model.wspm.core.profiletype">
+        <profiletype
+              name="Pasche"
+              description="Profile nach dem 1D-stationären Rechenkern der TUHH (nach Prof. Pasche)"
+              id="org.kalypso.model.wspm.tuhh.profiletype"/>
      </extension>
    <extension
          point="org.kalypso.model.wspm.core.validatorrule">
@@ -113,37 +114,37 @@
             class="org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule"
             description="Rücksprung"
             id="pasche.ruecksprung"
-            type="Pasche"/>
+            type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule"
               description="Trennflächen"
               id="pasche.trenner"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule"
               description="Brücke"
               id="pasche.bruecke"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.WehrRule"
               description="Wehr"
               id="pasche.wehr"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule"
               description="DoppelterPunkt"
               id="pasche.doppelterpunkt"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule"
               description="Bewuchs"
               id="pasche.bewuchs"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule"
               description="Rauheit"
               id="pasche.rauheit"
-              type="Pasche"/>
+              type="org.kalypso.model.wspm.tuhh.profiletype"/>
    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">
@@ -203,5 +204,12 @@
       <profileFeatureProvider
             class="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"
             id="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.ui.profilChartLayerProvider">
+      <profilLayerProvider
+            id="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"/>
    </extension>
 </plugin>

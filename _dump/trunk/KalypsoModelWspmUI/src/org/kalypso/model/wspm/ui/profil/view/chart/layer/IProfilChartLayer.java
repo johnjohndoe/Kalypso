@@ -52,24 +52,24 @@ import de.belger.swtchart.layer.IChartLayer;
 
 /**
  * @author gernot
- * 
  */
 public interface IProfilChartLayer extends IChartLayer
 {
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
-  public IProfilView createLayerPanel( final IProfilEventManager pem,
-      final ProfilViewData viewData );
+  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData );
 
   /**
-   * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem
-   * Profil, die durch diesen Layer repräsentiert werden.
-   * @throws ProfilDataException 
+   * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
+   * repräsentiert werden.
    * 
-   * @throws UnsupportedOperationException Falls diese Art von Layer nicht gelöscht werden kann.
+   * @throws ProfilDataException
+   * @throws UnsupportedOperationException
+   *           Falls diese Art von Layer nicht gelöscht werden kann.
    */
   public void removeYourself( ) throws ProfilDataException;
-  
+
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
-  
-  public ProfilChartView getProfilChartView();
+
+  public ProfilChartView getProfilChartView( );
+
 }

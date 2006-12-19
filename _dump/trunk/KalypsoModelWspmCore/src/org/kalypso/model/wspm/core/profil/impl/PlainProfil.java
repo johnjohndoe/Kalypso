@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPoints;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import org.kalypso.model.wspm.core.profil.impl.devider.DeviderComparator;
@@ -83,10 +82,13 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   private double m_station = Double.NaN;
 
-  public PlainProfil( )
+  private final String m_type;
+
+  public PlainProfil( final String type )
   {
+    m_type = type;
     m_profilMetaData = new HashMap<Object, Object>();
-    m_profilMetaData.put( PROFIL_PROPERTY.RAUHEIT_TYP, DEFAULT_RAUHEIT_TYP );
+    m_profilMetaData.put( IProfilConstants.RAUHEIT_TYP, DEFAULT_RAUHEIT_TYP );
     m_points = new ProfilPoints();
     m_points.addProperty( POINT_PROPERTY.BREITE );
     m_points.addProperty( POINT_PROPERTY.HOEHE );
@@ -97,7 +99,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#addDevider(org.kalypso.model.wspm.core.profil.IProfilPoint,
    *      org.kalypso.model.wspm.core.profil.IProfil.DEVIDER_TYP)
    */
-  public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider )
+  public IProfilDevider addDevider( IProfilPoint point, String devider )
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
     addDevider( pd );
@@ -141,27 +143,45 @@ public class PlainProfil implements IProfilConstants, IProfil
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getDevider(DEVIDER_TYP[])
    */
-  public IProfilDevider[] getDevider( final DEVIDER_TYP[] deviderTypes )
+  public IProfilDevider[] getDevider( final String[] deviderTypes )
   {
     final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
     for( IProfilDevider devider : m_devider )
     {
-      for( DEVIDER_TYP deviderTyp : deviderTypes )
+      for( String deviderTyp : deviderTypes )
       {
-        if( devider.getTyp() == deviderTyp )
+        if( deviderTyp.compareTo( devider.getTyp() ) == 0 )
         {
           deviderList.add( devider );
         }
       }
     }
-    
+
     Collections.sort( deviderList, new DeviderComparator() );
-    return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList.size()] );
+    return  deviderList.toArray( new IProfilDevider[0] );
   }
 
-  public IProfilDevider[] getDevider( DEVIDER_TYP deviderTyp )
+  public IProfilDevider[] getDevider( )
   {
-    return getDevider( new DEVIDER_TYP[] { deviderTyp } );
+    final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>( m_devider );
+    Collections.sort( deviderList, new DeviderComparator() );
+    return deviderList.toArray( new IProfilDevider[0] );
+  }
+
+  public IProfilDevider[] getDevider( final IProfilPoint point )
+  {
+    final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
+    for( IProfilDevider devider : m_devider )
+    {
+      if( devider.getPoint() == point )
+        deviderList.add( devider );
+    }
+    return deviderList.toArray( new IProfilDevider[0] );
+  }
+
+  public IProfilDevider[] getDevider( String deviderTyp )
+  {
+    return getDevider( new String[] { deviderTyp } );
   }
 
   /**
@@ -331,5 +351,13 @@ public class PlainProfil implements IProfilConstants, IProfil
   public double getStation( )
   {
     return m_station;
+  }
+  
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
+   */
+  public String getType( )
+  {
+    return m_type;
   }
 }

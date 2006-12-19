@@ -51,7 +51,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -82,7 +82,7 @@ public class ProfilViewData
 
   protected boolean m_useDeviderValue = false;
 
-  private List<IProfilDevider.DEVIDER_TYP> m_visibleDevider = new ArrayList<IProfilDevider.DEVIDER_TYP>();
+  private List<String> m_visibleDevider = new ArrayList<String>();
 
   private IChartLayer m_activeLayer;
 
@@ -95,7 +95,6 @@ public class ProfilViewData
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
       m_document = builder.newDocument();
-      m_visibleDevider.addAll( Arrays.asList( IProfilDevider.DEVIDER_TYP.values() ) );
     }
     catch( final ParserConfigurationException e )
     {
@@ -106,7 +105,7 @@ public class ProfilViewData
     m_legendMemento = new XMLMemento( m_document, legendelement );
     final Element chartelement = m_document.createElement( "chartView" );
     m_chartMemento = new XMLMemento( m_document, chartelement );
-
+    m_visibleDevider.addAll( Arrays.asList( IProfilConstants.DEVIDER_TYPES ) );
   }
 
   public void dispose( )
@@ -144,7 +143,7 @@ public class ProfilViewData
     m_edithorz = edithorz;
   }
 
-  public void setDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp, final boolean visible )
+  public void setDeviderVisibility( final String deviderTyp, final boolean visible )
   {
     if( visible )
     {
@@ -158,7 +157,7 @@ public class ProfilViewData
       m_visibleDevider.remove( deviderTyp );
   }
 
-  public boolean getDeviderVisibility( final IProfilDevider.DEVIDER_TYP deviderTyp )
+  public boolean getDeviderVisibility( final String deviderTyp )
   {
 
     return m_visibleDevider.contains( deviderTyp );

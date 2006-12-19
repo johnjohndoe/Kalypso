@@ -70,7 +70,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.BuildingEdit;
@@ -355,14 +354,14 @@ public class WehrPanel extends AbstractProfilView
         try
         {
           final IProfilBuilding building = getProfil().getBuilding();
-          if( (building == null) || IProfilConstants.BUILDING_TYP_WEHR.compareTo( building.getTyp() )!=0)
+          if( (building == null) || IProfilConstants.BUILDING_TYP_WEHR.compareTo( building.getTyp() ) != 0 )
           {
             return;
           }
           final double wehrParameter = (Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT );
-          final IProfilDevider[] trennFl = getProfil().getDevider( DEVIDER_TYP.TRENNFLAECHE );
+          final IProfilDevider[] trennFl = getProfil().getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
           final IProfilPoint point = trennFl[0].getPoint();
-          final IProfilDevider devider = ProfilDeviderFactory.createDevider( DEVIDER_TYP.WEHR, point );
+          final IProfilDevider devider = ProfilDeviderFactory.createDevider( IProfilConstants.DEVIDER_TYP_WEHR, point );
           final IProfilChange[] changes = new IProfilChange[3];
           changes[0] = new DeviderAdd( getProfil(), devider );
           changes[1] = new DeviderEdit( devider, IProfilDevider.DEVIDER_PROPERTY.BEIWERT, wehrParameter );
@@ -397,8 +396,8 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        getViewData().setDeviderVisibility( DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
-        IProfilChange change = new VisibleDeviderEdit( getProfil(), DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
+        getViewData().setDeviderVisibility( IProfilConstants.DEVIDER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
+        IProfilChange change = new VisibleDeviderEdit( getProfil(), IProfilConstants.DEVIDER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
         hint.setDeviderMoved();
         getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
@@ -420,18 +419,17 @@ public class WehrPanel extends AbstractProfilView
       final IProfilBuilding building = getProfil().getBuilding();
       if( building == null )
         return;
-      //IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
-      m_Wehrart.select( m_Wehrart.indexOf(m_Wehrart.getData( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString()).toString()) );
-      m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( DEVIDER_TYP.WEHR ) );
+      // IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
+      m_Wehrart.select( m_Wehrart.indexOf( m_Wehrart.getData( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString() ).toString() ) );
+      m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( IProfilConstants.DEVIDER_TYP_WEHR ) );
       m_kronenParameter.setText( building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ).toString() );
-      final IProfilDevider[] deviders = getProfil().getDevider( DEVIDER_TYP.WEHR );
-      final int deviderCount = (deviders == null ? 0 : deviders.length);
+      final IProfilDevider[] deviders = getProfil().getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
       {
-        while( m_deviderLines.size() < deviderCount )
+        while( m_deviderLines.size() < deviders.length )
         {
           m_deviderLines.add( new DeviderLine( m_deviderLines.size() + 1 ) );
         }
-        while( m_deviderLines.size() > deviderCount )
+        while( m_deviderLines.size() > deviders.length )
         {
           m_deviderLines.getLast().dispose();
           m_deviderLines.removeLast();

@@ -45,7 +45,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
 public class DeviderAdd implements IProfilChange
@@ -60,7 +59,7 @@ public class DeviderAdd implements IProfilChange
     m_devider = devider;
   }
 
-  public DeviderAdd( final IProfil profil, final DEVIDER_TYP typ, final IProfilPoint position )
+  public DeviderAdd( final IProfil profil, final String typ, final IProfilPoint position )
   {
     m_profil = profil;
     m_devider = ProfilDeviderFactory.createDevider( typ, position );

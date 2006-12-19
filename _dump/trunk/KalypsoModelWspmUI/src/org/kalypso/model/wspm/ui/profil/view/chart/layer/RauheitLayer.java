@@ -54,12 +54,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
@@ -93,7 +93,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public RauheitLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
   {
-    super( pvp, domainRange, valueRange );
+    super( pvp, domainRange, valueRange, false );
 
     m_pem = pvp.getProfilEventManager();
     m_color = color;
@@ -131,8 +131,8 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       e.printStackTrace();
     }
 
-    bounds.add(bounds.getX(),bounds.getMinY()*0.9);
-    return  bounds;
+    bounds.add( bounds.getX(), bounds.getMinY() * 0.9 );
+    return bounds;
   }
 
   /**
@@ -144,7 +144,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    IProfilDevider[] deviders = profil.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE } );
+    IProfilDevider[] deviders = profil.getDevider( new String[] { IProfilConstants.DEVIDER_TYP_TRENNFLAECHE, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE } );
     List<IProfilPoint> points = new ArrayList<IProfilPoint>();
     double[] values;
     if( getViewData().useDeviderValue() && deviders.length == 4 )
@@ -170,7 +170,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
       points = getProfil().getPoints();
       try
       {
-        values = ProfilUtil.getValuesFor(getProfil(), POINT_PROPERTY.RAUHEIT );
+        values = ProfilUtil.getValuesFor( getProfil(), POINT_PROPERTY.RAUHEIT );
       }
       catch( ProfilDataException e )
       {
@@ -257,7 +257,9 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   public String toString( )
   {
     final Object rw = m_pem.getProfil().getProperty( PROFIL_PROPERTY.RAUHEIT_TYP );
-    return "Rauheit " + ((rw == null) ? "unbekannter Typ" : rw.toString());
+    if (IProfilConstants.RAUHEIT_TYP_KS.equals( rw))return "Rauheit Typ ks";
+    if (IProfilConstants.RAUHEIT_TYP_KST.equals( rw))return "Rauheit Typ kst";
+    return "Rauheit Typ unbekannt";
   }
 
   /**
@@ -304,13 +306,13 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    
+
     if( !hint.isPointValuesChanged() )
       return;
     final AxisRange valueRange = getValueRange();
     final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
     final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
-    if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 ||minProfilValue<valueRange.getLogicalFrom())
+    if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
       valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
   }
 

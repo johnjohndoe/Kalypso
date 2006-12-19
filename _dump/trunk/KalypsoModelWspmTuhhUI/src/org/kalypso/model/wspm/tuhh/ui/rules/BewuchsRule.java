@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
@@ -75,7 +76,7 @@ public class BewuchsRule extends AbstractValidatorRule
       return;
     if( !profil.getProfilPoints().propertyExists( POINT_PROPERTY.BEWUCHS_AX ) )
       return;
-    final IProfilDevider[] devider = profil.getDevider( IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
+    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
     final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
     final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length - 1].getPoint() : null;
     if( (leftP == null) || (rightP == null) )
@@ -130,20 +131,20 @@ public class BewuchsRule extends AbstractValidatorRule
       {
         if( ax * ay * dp == 0.0 )
         {
-          final StringBuffer stringBuffer = new StringBuffer("Bewuchsparameter(");
-          if (ax==0.0)
+          final StringBuffer stringBuffer = new StringBuffer( "Bewuchsparameter(" );
+          if( ax == 0.0 )
           {
             stringBuffer.append( "aX, " );
           }
-          if (ay==0.0)
+          if( ay == 0.0 )
           {
             stringBuffer.append( "aY, " );
           }
-          if (dp==0.0)
+          if( dp == 0.0 )
           {
             stringBuffer.append( "dP" );
           }
-          stringBuffer.append( ") fehlt");
+          stringBuffer.append( ") fehlt" );
           collector.createProfilMarker( true, stringBuffer.toString(), "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
         }
         else

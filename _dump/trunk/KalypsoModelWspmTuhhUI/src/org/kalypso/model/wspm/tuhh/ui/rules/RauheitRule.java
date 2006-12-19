@@ -47,9 +47,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
@@ -64,7 +64,7 @@ public class RauheitRule extends AbstractValidatorRule
       return;
     if( !profil.getProfilPoints().propertyExists( POINT_PROPERTY.RAUHEIT ) )
       return;
-    final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, DEVIDER_TYP.DURCHSTROEMTE );
+    final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
     if( points == null )
       return;
     int i = 0;

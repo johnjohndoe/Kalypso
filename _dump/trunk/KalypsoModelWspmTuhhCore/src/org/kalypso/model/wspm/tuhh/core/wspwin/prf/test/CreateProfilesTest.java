@@ -53,7 +53,6 @@ import junit.framework.TestCase;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
@@ -76,21 +75,21 @@ public class CreateProfilesTest extends TestCase
   public void testRunTest( ) throws Exception
   {
     fail( "This test depends on external data, so it fails!" );
-//
-//    final ArrayList<IProfil> p = new ArrayList<IProfil>();
-//
-//    p.add( createMinProf() );
-//    p.add( createWspWinProf() );
-//    p.add( createBruecke() );
-//    p.add( createWehr() );
-//    p.add( createBewuchs() );
-//    p.add( createGeoCoord() );
-//    p.add( createDurchlass( BUILDING_TYP.EI ) );
-//    p.add( createDurchlass( BUILDING_TYP.KREIS ) );
-//    p.add( createDurchlass( BUILDING_TYP.MAUL ) );
-//    p.add( createDurchlass( BUILDING_TYP.TRAPEZ ) );
-//    writePrf( p );
-//    writeStr( p );
+    //
+    // final ArrayList<IProfil> p = new ArrayList<IProfil>();
+    //
+    // p.add( createMinProf() );
+    // p.add( createWspWinProf() );
+    // p.add( createBruecke() );
+    // p.add( createWehr() );
+    // p.add( createBewuchs() );
+    // p.add( createGeoCoord() );
+    // p.add( createDurchlass( BUILDING_TYP.EI ) );
+    // p.add( createDurchlass( BUILDING_TYP.KREIS ) );
+    // p.add( createDurchlass( BUILDING_TYP.MAUL ) );
+    // p.add( createDurchlass( BUILDING_TYP.TRAPEZ ) );
+    // writePrf( p );
+    // writeStr( p );
 
   }
 
@@ -99,10 +98,10 @@ public class CreateProfilesTest extends TestCase
     final IProfil p = createMinProf();
     p.addPointProperty( POINT_PROPERTY.RAUHEIT );
 
-    p.addDevider( p.getPoints().get( 0 ), IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( p.getPoints().get( 4 ), IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( p.getPoints().get( 1 ), IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
-    p.addDevider( p.getPoints().get( 3 ), IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
+    p.addDevider( p.getPoints().get( 0 ), IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( p.getPoints().get( 4 ), IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( p.getPoints().get( 1 ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    p.addDevider( p.getPoints().get( 3 ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
 
     return p;
   }
@@ -116,12 +115,12 @@ public class CreateProfilesTest extends TestCase
     final IProfilPoint pl = p.getPoints().getLast();
     final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
 
-    p.addDevider( pf, IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( pl, IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( pm, IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
-    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
-    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    final List<IProfilPoint> uList = ProfilUtil.getInnerPoints( p, IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
+    p.addDevider( pf, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( pl, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( pm, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    final List<IProfilPoint> uList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
     for( IProfilPoint pkt : oList )
     {
       pkt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, pf.getValueFor( POINT_PROPERTY.HOEHE ) );
@@ -146,13 +145,14 @@ public class CreateProfilesTest extends TestCase
   public IProfil createBewuchs( )
   {
     final IProfil p = createWspWinProf();
-    p.addPointProperty( POINT_PROPERTY.BEWUCHS_AX  );
+    p.addPointProperty( POINT_PROPERTY.BEWUCHS_AX );
     return p;
   }
+
   public IProfil createGeoCoord( )
   {
     final IProfil p = createWspWinProf();
-    p.addPointProperty( POINT_PROPERTY.HOCHWERT  );
+    p.addPointProperty( POINT_PROPERTY.HOCHWERT );
     return p;
   }
 
@@ -165,11 +165,11 @@ public class CreateProfilesTest extends TestCase
     final IProfilPoint pl = p.getPoints().getLast();
     final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
 
-    p.addDevider( pf, IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( pl, IProfilDevider.DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( pm, IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
-    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
-    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilDevider.DEVIDER_TYP.TRENNFLAECHE );
+    p.addDevider( pf, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( pl, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    p.addDevider( pm, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
 
     for( IProfilPoint pkt : oList )
     {
@@ -216,7 +216,7 @@ public class CreateProfilesTest extends TestCase
 
   public IProfil createMinProf( )
   {
-    final IProfil p = ProfilFactory.createProfil();
+    final IProfil p = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
     p.addPoint( 0, 100 );
     p.addPoint( 15, 70 );
     p.addPoint( 35, 40 );

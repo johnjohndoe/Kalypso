@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.bce.eind.core">
+<schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.bce.eind.core" id="validatorrule" name="validatorrule"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="validatorrule" name="validatorrule"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension-point defines rules which validate profiles.
       </documentation>
    </annotation>
 
@@ -61,7 +61,7 @@
          <attribute name="type" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The id of a profile type. Must be one of the ids, registered with extension-point org.kalypso.model.wspm.core.profiletype.
                </documentation>
             </annotation>
          </attribute>
@@ -71,7 +71,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="com.bce.eind.core.profil.validator.IValidatorRule"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.validator.IValidatorRule"/>
                </appInfo>
             </annotation>
          </attribute>

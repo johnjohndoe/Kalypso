@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
@@ -59,9 +58,9 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
   final private int m_deviderIndex;
 
-  final private DEVIDER_TYP m_deviderTyp;
+  final private String m_deviderTyp;
 
-  final private DEVIDER_TYP m_destination;
+  final private String m_destination;
 
   /**
    * verschieben der Trennfläche auf die Trenner "Durchströmter Bereich"
@@ -69,7 +68,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    * @param deviderTyp,deviderIndex
    *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public MoveDeviderResolution( final int deviderIndex, final DEVIDER_TYP deviderTyp, DEVIDER_TYP destination )
+  public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, String destination )
   {
     super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
     m_deviderIndex = deviderIndex;

@@ -21,17 +21,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil</name>
-				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
-				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-leer-}]]></tooltip>
-				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-leer-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Profile</name>
-				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-not set-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
-				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-empty-}]]>
-				</tooltip>
-				<description><![CDATA[${property:http://www.opengis.net/gml#description;-no	description-}]]>
-				</description>
+				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-not set-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;-empty-}</tooltip>
+				<description>${property:http://www.opengis.net/gml#description;-no description-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -54,6 +52,12 @@
 						<annotation>
 							<documentation xml:lang="de">Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.</documentation>
 							<documentation xml:lang="en">The profile stationing, important for editing cross sections.</documentation>
+						</annotation>
+					</element>
+					<element name="type" type="string" minOccurs="0" maxOccurs="1" default="org.kalypso.model.wspm.tuhh.profiletype">
+						<annotation>
+							<documentation xml:lang="de">Der Profiltype, bestimmt wie das Profil dargestellt oder validiert wird.</documentation>
+							<documentation xml:lang="en">The profile type, determines how the profile is shown or validated.</documentation>
 						</annotation>
 					</element>
 					<element name="profileLocation" type="gml:LineStringPropertyType">

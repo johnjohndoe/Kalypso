@@ -66,7 +66,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -87,7 +87,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   private final PropertyDescriptor m_geoPd;
 
-  private DEVIDER_TYP m_deviderType = null;
+  private String m_deviderType = null;
 
   private boolean m_deleteExisting = false;
 
@@ -194,24 +194,24 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final ComboViewer viewer = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider() );
-    viewer.setInput( new DEVIDER_TYP[] { DEVIDER_TYP.TRENNFLAECHE, DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.BORDVOLL } );
+    viewer.setInput( new String[] { IProfilConstants.DEVIDER_TYP_TRENNFLAECHE, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_BORDVOLL } );
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleDeviderChanged( (DEVIDER_TYP) ((IStructuredSelection) event.getSelection()).getFirstElement() );
+        handleDeviderChanged( (String) ((IStructuredSelection) event.getSelection()).getFirstElement() );
       }
     } );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    StructuredSelection deviderSelection = new StructuredSelection( DEVIDER_TYP.TRENNFLAECHE );
+    StructuredSelection deviderSelection = new StructuredSelection( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
     if( dialogSettings != null )
     {
       final String typeName = dialogSettings.get( SETTINGS_DEVIDER );
       if( typeName != null )
       {
-        final DEVIDER_TYP type = DEVIDER_TYP.valueOf( typeName );
-        deviderSelection = new StructuredSelection( type );
+        // final String type = DEVIDER_TYP.valueOf( typeName );
+        deviderSelection = new StructuredSelection( typeName );
       }
     }
     viewer.setSelection( deviderSelection );
@@ -219,7 +219,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     return group;
   }
 
-  protected void handleDeviderChanged( final DEVIDER_TYP type )
+  protected void handleDeviderChanged( final String type )
   {
     if( m_deviderType == type )
       return;
@@ -228,7 +228,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-      dialogSettings.put( SETTINGS_DEVIDER, type.name() );
+      dialogSettings.put( SETTINGS_DEVIDER, type );
   }
 
   private IKalypsoFeatureTheme getTheme( )
@@ -291,7 +291,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     return false;
   }
 
-  public DEVIDER_TYP getDeviderType( )
+  public String getDeviderType( )
   {
     return m_deviderType;
   }

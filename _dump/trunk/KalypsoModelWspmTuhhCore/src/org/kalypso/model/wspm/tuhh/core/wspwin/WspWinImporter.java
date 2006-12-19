@@ -208,7 +208,7 @@ public class WspWinImporter
       try
       {
         final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
-        logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
+        logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
       }
       catch( final ParseException pe )
       {
@@ -266,7 +266,7 @@ public class WspWinImporter
    * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
    * the profile is added as reference to it.
    */
-  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfile> addedProfiles, final boolean isDirectionUpstreams )
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfile> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Fehler beim Importieren der Profile", null );
 
@@ -274,7 +274,7 @@ public class WspWinImporter
     {
       try
       {
-        final WspmProfile profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
+        final WspmProfile profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, isNotTuhhProject );
 
         final double profStation = profile.getStation();
         final double beanStation = bean.getStation();
@@ -303,7 +303,7 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException, FileNotFoundException
+  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, FileNotFoundException
   {
     final String fileName = bean.getFileName();
 
@@ -321,7 +321,18 @@ public class WspWinImporter
 
       // final PrfSource prfSource = ProfilesSerializer.load( prfFile );
       final IProfilSource prfSource = new PrfSource();
-      final IProfil profile = ProfilFactory.createProfil();
+
+      final String profiletype;
+      if( isNotTuhhProject )
+      {
+        // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
+        // yet supported
+        profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+      }
+      else
+        profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+
+      final IProfil profile = ProfilFactory.createProfil( profiletype );
       prfSource.read( profile, fileReader );
 
       ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
@@ -330,7 +341,7 @@ public class WspWinImporter
 
       /* Only add profile if no error occurs */
       knownProfiles.put( fileName, prof );
-      
+
       return prof;
     }
     finally
@@ -384,7 +395,7 @@ public class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
-        final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
+        final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
 
@@ -392,7 +403,7 @@ public class WspWinImporter
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
-          final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
+          final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
 
           reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
         }

@@ -60,12 +60,12 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
@@ -111,8 +111,8 @@ public class RauheitenPanel extends AbstractProfilView
     m_enablePanel = !((building != null) && (pointProperties == null));
     m_blockRauheit = new Button( panel, SWT.CHECK );
     m_blockRauheit.setSelection( getViewData().useDeviderValue() );
-    final IProfilDevider[] devs = (getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } ));
-    m_blockRauheit.setEnabled( m_enablePanel && (devs != null) && (devs.length == 4) );
+    final IProfilDevider[] devs = (getProfil().getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } ));
+    m_blockRauheit.setEnabled( m_enablePanel && (devs.length == 4) );
     m_blockRauheit.setText( "einfache Rauheiten verwenden" );
     final GridData blockData = new GridData();
     blockData.horizontalSpan = 3;
@@ -189,7 +189,7 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected void updateProperty( final IProfil p )
   {
-    final IProfilDevider[] deviders = p.getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
+    final IProfilDevider[] deviders = p.getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } );
     if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || deviders.length != 4 )
       return;
     final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
@@ -238,63 +238,8 @@ public class RauheitenPanel extends AbstractProfilView
       }
 
     }
-    //
-    // final List<IProfilPoint> leftPoints = ProfilUtil.getInnerPoints( p, deviders[0], deviders[1] );
-    // for( IProfilPoint point : leftPoints )
-    // {
-    // Double oldvalue;
-    // try
-    // {
-    // oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
-    // }
-    // catch( ProfilDataException e1 )
-    // {
-    // oldvalue = 0.0;
-    // }
-    // if( !value1.isNaN() && Math.abs( oldvalue - value1 ) > prec )
-    // {
-    // changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value1 ) );
-    // }
-    // }
-    //
-    // final List<IProfilPoint> midPoints = ProfilUtil.getInnerPoints( p, deviders[1], deviders[2] );
-    // for( IProfilPoint point : midPoints )
-    // {
-    // Double oldvalue;
-    // try
-    // {
-    // oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
-    // }
-    // catch( ProfilDataException e1 )
-    // {
-    // oldvalue = 0.0;
-    // }
-    // if( !value2.isNaN() && Math.abs( oldvalue - value2 ) > prec )
-    // {
-    // changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value2 ) );
-    // }
-    // }
-    //
-    // final List<IProfilPoint> rightPoints = ProfilUtil.getInnerPoints( p, deviders[2], deviders[3] );
-    // for( IProfilPoint point : rightPoints )
-    // {
-    // Double oldvalue;
-    // try
-    // {
-    // oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
-    // }
-    // catch( ProfilDataException e1 )
-    // {
-    // oldvalue = 0.0;
-    // }
-    // if( !value3.isNaN() && Math.abs( oldvalue - value3 ) > prec )
-    // {
-    // changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, value3 ) );
-    // }
-    // }
 
     final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
-
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -313,7 +258,7 @@ public class RauheitenPanel extends AbstractProfilView
   void updateControls( )
   {
 
-    final IProfilDevider[] devider = getProfil().getDevider( new DEVIDER_TYP[] { DEVIDER_TYP.DURCHSTROEMTE, DEVIDER_TYP.TRENNFLAECHE } );
+    final IProfilDevider[] devider = getProfil().getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } );
     Boolean isBlockSetting = getViewData().useDeviderValue();
     if( !m_blockRauheit.isDisposed() )
     {
@@ -322,20 +267,20 @@ public class RauheitenPanel extends AbstractProfilView
     if( !m_VL.isDisposed() )
     {
       m_VL.setEnabled( isBlockSetting && m_enablePanel );
-      if( (devider != null) && (devider.length > 0) )
+      if( devider.length > 0 )
         setBlockValue( m_VL, devider[0] );
     }
     if( !m_HF.isDisposed() )
     {
       m_HF.setEnabled( isBlockSetting && m_enablePanel );
-      if( (devider != null) && (devider.length > 1) )
+      if( devider.length > 1 )
         setBlockValue( m_HF, devider[1] );
     }
 
     if( !m_VR.isDisposed() )
     {
       m_VR.setEnabled( isBlockSetting && m_enablePanel );
-      if( (devider != null) && (devider.length > 2) )
+      if( devider.length > 2 )
         setBlockValue( m_VR, devider[2] );
     }
   }

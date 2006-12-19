@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.bce.eind.core">
+<schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="com.bce.eind.core" id="validatortype" name="validatortype"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="profilBuilding" name="profilBuilding"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="validatortype"/>
+            <element ref="building"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,8 +42,11 @@
       </complexType>
    </element>
 
-   <element name="validatortype">
+   <element name="building">
       <complexType>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -51,14 +54,45 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="description" type="string" use="required">
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute translatable="true"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.IProfilBuilding"/>
                </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="parameter">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="key"/>
+         </appInfo>
+      </annotation>
+      <complexType>
+         <attribute name="key" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="valueClassName" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

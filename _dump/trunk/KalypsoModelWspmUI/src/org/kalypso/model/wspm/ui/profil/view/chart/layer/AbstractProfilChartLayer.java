@@ -57,6 +57,7 @@ import de.belger.swtchart.layer.AbstractChartLayer;
 public abstract class AbstractProfilChartLayer extends AbstractChartLayer implements IProfilChartLayer
 {
   private final ProfilChartView m_chartView;
+  private boolean m_initialVisibility = true;
 
   public AbstractProfilChartLayer( final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange )
   {
@@ -65,6 +66,22 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
     m_chartView = chartView;
   }
 
+  public AbstractProfilChartLayer( final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final boolean initalVisibility )
+  {
+    super( domainRange, valueRange );
+    
+    m_chartView = chartView;
+    m_initialVisibility = initalVisibility;
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.IChartLayer#getInitialVisibility()
+   */
+  public boolean getInitialVisibility( )
+  {
+    return m_initialVisibility;
+  }
+  
   public final void edit( final Point point, final Object data )
   {
     editProfil( point, data );

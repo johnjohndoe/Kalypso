@@ -368,19 +368,23 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     final IFile file = (IFile) input.getAdapter( IFile.class );
     final String name = (String) input.getAdapter( String.class );
 
+    // TODO: get profiletype from input (possible if input represents a 'Zustand').
+    // Use pasche as default.
+    final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+    
     final IStationResult[] results = (IStationResult[]) input.getAdapter( IStationResult[].class );
     setResults( results );
 
     if( file != null )
     {
-      loadFile( file );
+      loadFile( file, profiletype );
 
       if( name != null )
         setPartName( "Profil km " + name );
     }
   }
 
-  private void loadFile( final IFile file )
+  private void loadFile( final IFile file, final String profiletype )
   {
     if( file == null )
     {
@@ -405,7 +409,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           if( source == null )
             throw new Exception( "No Profil-Source found for type 'prf'." );
           
-          final IProfil profil = ProfilFactory.createProfil();
+          final IProfil profil = ProfilFactory.createProfil( profiletype );
           if( !source.read( profil, reader ) )
           {
             contents.close();

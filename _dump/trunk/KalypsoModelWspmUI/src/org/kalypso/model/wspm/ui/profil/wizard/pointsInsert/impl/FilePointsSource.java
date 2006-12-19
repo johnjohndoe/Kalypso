@@ -91,7 +91,9 @@ public class FilePointsSource extends AbstractPointsSource
     try
     {
       final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
-      final IProfil profil = ProfilFactory.createProfil();
+      // TODO: here the profile type is directly given (always read as pasche)
+      // change this later to let the user choose how to read
+      final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
       if( prfS.read( profil, fr ) )
         return profil.getProfilPoints();
     }

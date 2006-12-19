@@ -59,9 +59,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_TYP;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.view.chart.DefaultProfilColorRegistryFactory;
@@ -98,7 +98,7 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
 
   private ColorRegistry m_profilColorRegistry;
 
-  private Map<DEVIDER_TYP, Color> m_deviderColors = new HashMap<DEVIDER_TYP, Color>();
+  private Map<String, Color> m_deviderColors = new HashMap<String, Color>();
 
   public ProfilLabelProvider( final TableViewer viewer )
   {
@@ -116,10 +116,10 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
     m_colorWarning = display.getSystemColor( SWT.COLOR_YELLOW );
 
     m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( display );
-    m_deviderColors.put( DEVIDER_TYP.BORDVOLL, m_profilColorRegistry.get( IProfilColorSet.COLOUR_BORDVOLLPUNKTE ) );
-    m_deviderColors.put( DEVIDER_TYP.TRENNFLAECHE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_TRENNFLAECHEN ) );
-    m_deviderColors.put( DEVIDER_TYP.DURCHSTROEMTE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE ) );
-    m_deviderColors.put( DEVIDER_TYP.WEHR, m_profilColorRegistry.get( IProfilColorSet.COLOUR_WEHR ) );
+    m_deviderColors.put( IProfilConstants.DEVIDER_TYP_BORDVOLL, m_profilColorRegistry.get( IProfilColorSet.COLOUR_BORDVOLLPUNKTE ) );
+    m_deviderColors.put( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_TRENNFLAECHEN ) );
+    m_deviderColors.put( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, m_profilColorRegistry.get( IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE ) );
+    m_deviderColors.put( IProfilConstants.DEVIDER_TYP_WEHR, m_profilColorRegistry.get( IProfilColorSet.COLOUR_WEHR ) );
   }
 
   /**
@@ -137,7 +137,7 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
         final Map<IProfilPoint, Collection<IMarker>> markerIndex = ((ProfilContentProvider) contentProvider).getMarkerIndex();
         final Collection<IMarker> markers = markerIndex.get( element );
         final Integer severity = worstOf( markers );
-        final DEVIDER_TYP deviderTyp = (element instanceof IProfilPoint) ? getDeviderTyp( (IProfilPoint) element ) : null;
+        final String deviderTyp = (element instanceof IProfilPoint) ? getDeviderTyp( (IProfilPoint) element ) : null;
         if( severity != null )
         {
           if( IMarker.SEVERITY_ERROR == severity )
@@ -145,18 +145,16 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
           if( IMarker.SEVERITY_WARNING == severity )
             return m_imgRegistry.get( IMAGE_WARNING );
         }
-        if( deviderTyp != null )
-        {
-          if( deviderTyp == DEVIDER_TYP.DURCHSTROEMTE )
-            return m_imgRegistry.get( IMAGE_DEVIDER_D );
-          if( deviderTyp == DEVIDER_TYP.TRENNFLAECHE )
-            return m_imgRegistry.get( IMAGE_DEVIDER_T );
-          if( deviderTyp == DEVIDER_TYP.BORDVOLL )
-            return m_imgRegistry.get( IMAGE_DEVIDER_B );
-          if( deviderTyp == DEVIDER_TYP.WEHR )
-            return m_imgRegistry.get( IMAGE_DEVIDER_W );
-        }
-        return null;
+        if( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE.equals( deviderTyp ) )
+          return m_imgRegistry.get( IMAGE_DEVIDER_D );
+        else if( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE.equals( deviderTyp ) )
+          return m_imgRegistry.get( IMAGE_DEVIDER_T );
+        else if( IProfilConstants.DEVIDER_TYP_BORDVOLL.equals( deviderTyp ) )
+          return m_imgRegistry.get( IMAGE_DEVIDER_B );
+        else if( IProfilConstants.DEVIDER_TYP_WEHR.equals( deviderTyp ) )
+          return m_imgRegistry.get( IMAGE_DEVIDER_W );
+        else
+          return null;
       }
     }
     return null;
@@ -262,17 +260,13 @@ public class ProfilLabelProvider extends LabelProvider implements ITableLabelPro
     return null;
   }
 
-  public final DEVIDER_TYP getDeviderTyp( final IProfilPoint point )
+  public final String getDeviderTyp( final IProfilPoint point )
   {
     final IContentProvider contentProvider = m_viewer.getContentProvider();
     if( contentProvider instanceof ProfilContentProvider )
     {
       final IProfil profil = ((ProfilContentProvider) contentProvider).getProfil();
-      final IProfilDevider[] deviders = profil == null ? null : profil.getDevider( DEVIDER_TYP.values() );
-      if( deviders == null )
-      {
-        return null;
-      }
+      final IProfilDevider[] deviders = profil == null ? null : profil.getDevider();
       for( final IProfilDevider devider : deviders )
       {
         if( devider.getPoint() == point )
