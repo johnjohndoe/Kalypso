@@ -1,22 +1,25 @@
 package org.kalypso.kalypsosimulationmodel.core.mtcoverage;
 
-import java.util.List;
-
 import org.deegree.model.geometry.GM_Polygon;
-import org.deegree_impl.gml.GML_Transformer;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IPosition;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IRegion;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Interface for a flow relationship coverage feature adapter.
+ * Generic interface to be implemented by classes representing the
+ * multipoint coverage for which the range set is a "list" of feature.
+ * 
+ * All range set feature are required to be adaptable to the template class
+ * 
  * 
  * @author Patrice Congo
  */
 public interface IMultipointCoverage<RangeCls>
 {
+	public GM_MultiPoint getDomain();
 	
 	/**
 	 * Returns the applying range value  the given position
@@ -89,7 +92,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * 			into an IFlowRelationship 
 	 */
 	public void removeRangeValue(
-								Feature rangeValue) 
+								RangeCls rangeValue) 
 								throws IllegalArgumentException;
 
 	
