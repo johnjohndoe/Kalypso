@@ -69,7 +69,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * @throws IllegalArgumentException if any parameter is null or
 	 * 	flowRelationship cannot be adapted to a flowrelationship or 
 	 *  or position feature cannot be adapted into a IPosition 
-	 */
+	 */ 
 	public void addCoverageEntry(
 							RangeCls rangeValue, 
 							GM_Point position) 
@@ -91,7 +91,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * @throws IllegalArgumentException if the given flow relationship feature cannot be adapted
 	 * 			into an IFlowRelationship 
 	 */
-	public void removeRangeValue(
+	public void removeRangeValue( 
 								RangeCls rangeValue) 
 								throws IllegalArgumentException;
 
