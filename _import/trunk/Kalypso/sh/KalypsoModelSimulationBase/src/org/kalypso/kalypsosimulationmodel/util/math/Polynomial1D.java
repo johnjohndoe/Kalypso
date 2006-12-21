@@ -72,6 +72,7 @@ public class Polynomial1D implements IPolynomial1D
 	{
 		Object coefs=polFeature.getProperty(
 				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_COEFFICIENTS);
+		
 		if(coefs instanceof String)
 		{
 			String[] subStrings=((String)coefs).split(" ");//"/s+");

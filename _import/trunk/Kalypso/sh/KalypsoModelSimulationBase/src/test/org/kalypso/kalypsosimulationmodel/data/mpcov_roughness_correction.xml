@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
 
-<gml:MultipointCoverage 
+<!--gml:MultiPointCoverage 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	>
 	<gml:domainSet>
-		<gml:MultiPoint srsName="urn:epsg:v6.1:coordinateReferenceSystem:4267">
+		<gml:MultiPoint srsName="urn:epsg:v6.1:coordinateReferenceSystem:4267"> 
 			<gml:pointMembers>
 				<gml:Point>
 					<gml:pos>0 0</gml:pos>
@@ -16,7 +16,7 @@
 					<gml:pos>1 0</gml:pos>
 				</gml:Point>
 				<gml:Point>
-					<gml:pos>0 1</gml:pos>
+					<gml:pos>0 1</gml:pos> 
 				</gml:Point>
 			</gml:pointMembers>
 		</gml:MultiPoint>
@@ -29,4 +29,40 @@
 		</gml:ValueArray>
 	</gml:rangeSet>
 
-</gml:MultipointCoverage>
+</gml:MultiPointCoverage-->
+
+<wbGml:MultiPointCoverage 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" 
+	>
+	<wbGml:multiPointDomain>
+		<wbGml:MultiPoint srsName="urn:epsg:v6.1:coordinateReferenceSystem:4267"> 
+			<gml:pointMember>
+				<gml:Point>
+					<gml:pos>0 0</gml:pos>
+				</gml:Point>
+				<!--gml:Point>
+					<gml:pos>1 0</gml:pos>
+				</gml:Point>
+				<gml:Point>
+					<gml:pos>0 1</gml:pos> 
+				</gml:Point-->
+			</gml:pointMember>
+			<gml:pointMember>
+				<gml:Point>
+					<gml:pos>0 0</gml:pos>
+				</gml:Point>
+			</gml:pointMember>
+		</wbGml:MultiPoint>
+	</wbGml:multiPointDomain>
+	
+	<gml:rangeSet>
+		<gml:ValueArray>
+			<gml:valueComponent>				
+			</gml:valueComponent>
+		</gml:ValueArray>
+	</gml:rangeSet>
+
+</wbGml:MultiPointCoverage> 

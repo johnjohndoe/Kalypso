@@ -123,7 +123,8 @@ public class TestPolynomial1D extends TestCase
 					pol1dFeature.getFeatureType().getQName(), 
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PLYNOMIAL1D);
 			Polynomial1D pol1d= new Polynomial1D(pol1dFeature);
-			
+			System.out.println(
+					"POL1PROPS:"+Arrays.asList(pol1dFeature.getFeatureType().getProperties()));
 			assertEquals(EXPECTED_POL1D,pol1d);
 			
 	}

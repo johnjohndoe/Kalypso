@@ -31,6 +31,25 @@
 		schemaLocation="../3.1.1/base/gml.xsd"
 		/-->
 	
+	<xs:element 
+		name="Coverage"
+		type="simBase:CoverageType"
+		substitutionGroup="gml:_Coverage"/>
+	<xs:complexType 
+		name="CoverageType"
+		abstract="false">
+		<xs:annotation>
+			<xs:documentation>
+				coverage to get arround the parsing limitation
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractCoverageType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!-- =================================================================
 		terrainModel
 	================================================================== -->

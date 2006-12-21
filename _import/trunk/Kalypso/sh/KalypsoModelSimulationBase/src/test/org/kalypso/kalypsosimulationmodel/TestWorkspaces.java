@@ -71,6 +71,9 @@ public class TestWorkspaces
 	public static final URL URL_EMPTY_GML;
 	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml";
 	
+	public static final URL URL_MPCOV_ROUGHNESS_CORRECTION;
+	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_roughness_correction.xml";
+	
 	public static final Throwable EXCEPTION;
 	
 	static 
@@ -90,6 +93,10 @@ public class TestWorkspaces
 			urlMap.put(
 					REL_RES_EMPTY_GML,
 					TestWorkspaces.class.getResource(REL_RES_EMPTY_GML));
+			urlMap.put(
+					REL_RES_MPCOV_ROUGHNESS_CORRECTION,
+					TestWorkspaces.class.getResource(
+								REL_RES_MPCOV_ROUGHNESS_CORRECTION));
 		}
 		catch(Throwable th)
 		{
@@ -104,6 +111,8 @@ public class TestWorkspaces
 			URL_POLYNOMIAL1D=urlMap.get(REL_RES_POLYNOMIAL1D);
 			URL_POLYNOMIAL2D=urlMap.get(REL_RES_POLYNOMIAL2D);
 			URL_EMPTY_GML=urlMap.get(REL_RES_EMPTY_GML);
+			URL_MPCOV_ROUGHNESS_CORRECTION=
+					urlMap.get(REL_RES_MPCOV_ROUGHNESS_CORRECTION);
 		}
 	}
 	

@@ -6,5 +6,8 @@
       <catalog
             class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"
             id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"/>
+      <catalog
+            class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogGmlImitations"
+            id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelGmlImitations"/>
    </extension>
 </plugin>

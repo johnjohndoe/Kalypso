@@ -137,33 +137,17 @@
 						name="order"
 						type="xs:positiveInteger"
 						minOccurs="1" maxOccurs="1"/>
-					
-					<!--xs:element 
-						name="coeficients"
-						minOccurs="1" maxOccurs="1"
-						type="xs:double"/ -->
-					<!--xs:element
-						name="coefficients1"
-						type="simBase:DoubleListPropertyType"/-->	
-						
-					<!--xs:element
-						name="coefficients"
-						type="gml:doubleList"
-						minOccurs="1" maxOccurs="1"/-->
-					<!--xs:element
-						name="coefficients"
-						minOccurs="1" maxOccurs="1">
-						<xs:simpleType>
-							<xs:list itemType="xs:double"/>
-						</xs:simpleType>
-					</xs:element -->
 					<xs:element
-						name="coefficients"
-						type="gml:doubleOrNullList"/>
+						ref="simBase:coefficients"
+						minOccurs="1" maxOccurs="1"/>	
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element
+		name="coefficients"
+		type="gml:doubleOrNullList"/>
 	
 	<xs:simpleType
 		name="doubleList">
@@ -271,9 +255,11 @@
 							<xs:list itemType="xs:double"/>
 						</xs:simpleType>
 					</xs:element-->	
-					<xs:element
+					<!--xs:element
 						name="coefficients"
-						type="gml:doubleOrNullList"/>				
+						type="gml:doubleOrNullList"/-->	
+					<xs:element
+						ref="simBase:coefficients"/>			
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
