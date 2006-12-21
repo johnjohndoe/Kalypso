@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -56,14 +57,15 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.swtchart.configuration.ConfigurationLoader;
-import org.ksp.chart.viewerconfiguration.AbstractAxisType;
-import org.ksp.chart.viewerconfiguration.AxisDirectionType;
-import org.ksp.chart.viewerconfiguration.ChartType;
-import org.ksp.chart.viewerconfiguration.ConfigurationType;
+import org.kalypso.swtchart.configuration.NewConfigLoader;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
 
 /**
- * @author Gernot Belger
+ * 
+ * @author Gernot Belger, Alex Burtscher
+ * 
  */
 public class LaengsschnittHelper
 {
@@ -80,30 +82,32 @@ public class LaengsschnittHelper
       return;
 
     /* We just load the template and tweak the direction of the station-axis */
-    final Unmarshaller unmarshaller = ConfigurationLoader.JC.createUnmarshaller();
+    final Unmarshaller unmarshaller = NewConfigLoader.JC.createUnmarshaller();
     final JAXBElement<ConfigurationType> config = (JAXBElement<ConfigurationType>) unmarshaller.unmarshal( LaengsschnittHelper.class.getResource( "resources/lengthSection.kod" ) );
-
-    final List<ChartType> chartList = config.getValue().getChart();
-    for( final ChartType chart : chartList )
+    
+    List<Object> chartOrLayerOrAxis = config.getValue().getChartOrLayerOrAxis();
+    for( Object object : chartOrLayerOrAxis )
     {
-      chart.setTitle( lsObs.getName() );
-      chart.setAbstract( lsObs.getDescription() );
-
-      final List<JAXBElement< ? extends AbstractAxisType>> axisList = chart.getAxis();
-      for( final JAXBElement< ? extends AbstractAxisType> element : axisList )
+      if (object instanceof ChartType)
       {
-        final AbstractAxisType axis = element.getValue();
-        if( axis.getId().equals( "Station_Axis" ) )
+        ChartType ct=(ChartType) object;
+        ct.setTitle( lsObs.getName() );
+        ct.setDescription( lsObs.getDescription() );
+      }
+      else if (object instanceof AxisType)
+      {
+        AxisType axis=(AxisType) object;
+        if( axis.getName().equals( "Station_Axis" ) )
         {
           if( isDirectionUpstreams )
-            axis.setDirection( AxisDirectionType.NEGATIVE );
+            axis.setDirection( "NEGATIVE" );
           else
-            axis.setDirection( AxisDirectionType.POSITIVE );
+            axis.setDirection( "POSITIVE" );
         }
       }
     }
 
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( ConfigurationLoader.JC, true );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( NewConfigLoader.JC, true );
 
     OutputStream os = null;
 
