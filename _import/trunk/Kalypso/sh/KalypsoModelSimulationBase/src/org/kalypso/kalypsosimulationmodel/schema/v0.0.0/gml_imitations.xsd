@@ -44,7 +44,7 @@
 				base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element
-						ref="gml:rangeSet"/>
+						ref="wbGml:featureRangeSet"/>
 					<xs:element
 						ref="wbGml:multiPointDomain"/>
 				</xs:sequence>
@@ -72,7 +72,7 @@
 	<xs:element 
 		name="MultiPoint" 
 		type="wbGml:MultiPointType" 
-		substitutionGroup="gml:_GeometricAggregate"/>
+		substitutionGroup="gml:_FeatureCollection"/>
 	<!-- ======================================================= -->
 	<xs:complexType name="MultiPointType">
 		<xs:annotation>
@@ -80,7 +80,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:annotation>
 						<xs:documentation>
@@ -98,4 +98,44 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	
+	<!-- ============================================================= 
+		featureRangeSet
+	===============================================================-->
+	<xs:element 
+		name="featureRangeSet"
+		type="wbGml:FeatureRangeSetPropertyType"/>
+		
+	<xs:complexType name="FeatureRangeSetPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wbGml:FeatureRangeSet"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
+		name="FeatureRangeSet" 
+		type="wbGml:FeatureRangeSetType" 
+		substitutionGroup="gml:_Feature"/>
+	<!-- ======================================================= -->
+	<xs:complexType name="FeatureRangeSetType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element
+						ref="gml:featureMember"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>

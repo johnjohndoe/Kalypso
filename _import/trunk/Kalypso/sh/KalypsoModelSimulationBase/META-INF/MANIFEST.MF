@@ -12,5 +12,6 @@ Require-Bundle:
  org.kalypso.optimize,
  org.junit,
  org.kalypso.simulation.core,
- org.apache.jakarta_log4j
+ org.apache.jakarta_log4j,
+ org.kalypso.contribs.ogc31
 Eclipse-LazyStart: true 

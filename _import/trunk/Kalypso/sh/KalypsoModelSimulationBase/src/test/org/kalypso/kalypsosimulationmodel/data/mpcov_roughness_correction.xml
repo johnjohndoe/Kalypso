@@ -36,6 +36,7 @@
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	>
 	<wbGml:multiPointDomain>
 		<wbGml:MultiPoint srsName="urn:epsg:v6.1:coordinateReferenceSystem:4267"> 
@@ -58,11 +59,24 @@
 		</wbGml:MultiPoint>
 	</wbGml:multiPointDomain>
 	
-	<gml:rangeSet>
-		<gml:ValueArray>
-			<gml:valueComponent>				
-			</gml:valueComponent>
-		</gml:ValueArray>
-	</gml:rangeSet>
+	<wbGml:featureRangeSet>
+		<wbGml:FeatureRangeSet>
+		
+			<gml:featureMember>
+				<simBase:Polynomial1D gml:id="pol1">
+				 <simBase:order>4</simBase:order>
+				 <simBase:coefficients>0 1 2 3 4</simBase:coefficients>
+				</simBase:Polynomial1D>						
+			</gml:featureMember>
+			
+			<gml:featureMember>
+				<simBase:Polynomial1D gml:id="pol2">
+				 <simBase:order>4</simBase:order>
+				 <simBase:coefficients>0 1 2 3 4</simBase:coefficients>
+				</simBase:Polynomial1D>						
+			</gml:featureMember>
+			
+		</wbGml:FeatureRangeSet>
+	</wbGml:featureRangeSet>
 
 </wbGml:MultiPointCoverage> 
