@@ -29,10 +29,5 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.strang,
  org.kalypso.model.wspm.core.util
 Require-Bundle: org.junit,
- org.eclipse.core.runtime,
- org.kalypso.contribs.java,
- org.kalypso.commons,
- org.kalypso.contribs.eclipsercp,
- org.kalypso.deegree,
  org.kalypso.core
 Eclipse-LazyStart: true

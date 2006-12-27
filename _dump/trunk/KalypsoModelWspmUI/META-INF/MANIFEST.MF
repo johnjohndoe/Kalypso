@@ -6,16 +6,7 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.ui.ide,
- org.eclipse.core.resources,
- org.kalypso.contribs.eclipseplatform;visibility:=reexport,
- org.kalypso.commons;visibility:=reexport,
- org.kalypso.core;visibility:=reexport,
- org.kalypso.ui,
- org.kalypso.simulation.core,
- org.kalypso.simulation.ui,
+Require-Bundle: org.kalypso.ui,
  org.kalypso.model.wspm.core,
  de.belger.swtchart.core;visibility:=reexport,
  org.eclipse.ui.forms,

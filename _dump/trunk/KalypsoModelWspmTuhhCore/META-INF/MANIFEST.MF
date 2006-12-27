@@ -6,9 +6,7 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.model.wspm.core,
- org.eclipse.core.resources,
+Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.wspwin.core;visibility:=reexport,
  org.kalypso.ui,
  org.junit,
