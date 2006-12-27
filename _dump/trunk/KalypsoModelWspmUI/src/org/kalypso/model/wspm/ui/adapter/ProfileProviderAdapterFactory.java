@@ -48,7 +48,7 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 
 /**
  * @author Gernot Belger

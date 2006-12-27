@@ -46,7 +46,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.profil.AbstractProfilPart;
+import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
 import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
 
 /**

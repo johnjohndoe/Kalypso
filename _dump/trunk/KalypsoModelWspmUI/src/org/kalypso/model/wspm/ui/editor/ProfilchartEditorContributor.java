@@ -58,8 +58,8 @@ import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInf
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.editor.actions.ChartActionHandler;
 import org.kalypso.model.wspm.ui.editor.actions.ShowTableAction;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
-import org.kalypso.model.wspm.ui.profil.view.chart.action.StatusPosContributionItem;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.view.chart.action.StatusPosContributionItem;
 
 /**
  * @author Belger

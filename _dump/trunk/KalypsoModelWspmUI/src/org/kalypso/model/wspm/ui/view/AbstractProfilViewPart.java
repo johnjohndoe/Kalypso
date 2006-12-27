@@ -56,9 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.editor.IProfilchartEditorListener;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewDataListener;
-import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.profil.view.chart.action.StatusPosContributionItem;
+import org.kalypso.model.wspm.ui.view.chart.action.StatusPosContributionItem;
 
 
 /**

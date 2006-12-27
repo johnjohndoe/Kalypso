@@ -57,11 +57,9 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewDataListener;
-import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.profil.view.chart.action.ProfilChartViewActionBarContributor;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
 
 /**
  * @author Gernot Belger

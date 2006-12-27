@@ -64,10 +64,10 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditorContributor;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.profil.view.table.swt.ProfilSWTTableView;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem(!) Editor.

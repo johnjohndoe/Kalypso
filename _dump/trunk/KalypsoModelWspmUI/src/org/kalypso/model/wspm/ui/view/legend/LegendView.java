@@ -72,9 +72,9 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider;
-import org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.layer.IActiveLayerChangeListener;
 import de.belger.swtchart.layer.IActiveLayerProvider;

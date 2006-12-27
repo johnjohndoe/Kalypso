@@ -186,22 +186,22 @@
       <factory
             adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider2"/>
       </factory>
       <factory
             adaptableType="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider2"/>
       </factory>
       <factory
             adaptableType="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider2"/>
       </factory>
       <factory
             adaptableType="org.kalypso.ui.views.map.MapView"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.view.IProfilProvider2"/>
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider2"/>
       </factory>
    </extension>
       <extension
@@ -292,7 +292,7 @@
         <objectContribution
               adaptable="true"
               id="org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer.objectcontribution"
-              objectClass="org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer">
+              objectClass="org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer">
            <action
                  class="org.kalypso.model.wspm.ui.action.ProfilLayerActionDelegate"
                  enablesFor="1"

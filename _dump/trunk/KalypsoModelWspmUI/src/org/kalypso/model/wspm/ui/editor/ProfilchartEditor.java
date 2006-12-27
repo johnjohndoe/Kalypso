@@ -101,14 +101,14 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
-import org.kalypso.model.wspm.ui.profil.AbstractProfilPart;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProvider2;
-import org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.profil.view.IProfilViewProvider;
-import org.kalypso.model.wspm.ui.profil.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
+import org.kalypso.model.wspm.ui.view.IProfilViewProvider;
+import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 
 import de.belger.swtchart.legend.ChartLegend;
 

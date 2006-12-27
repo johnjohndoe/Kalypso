@@ -44,7 +44,7 @@ import org.eclipse.ui.IEditorPart;
 import org.kalypso.contribs.eclipse.ui.AbstractEditorPartAction;
 import org.kalypso.contribs.eclipse.ui.IEditorPartAction;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 
 
 /**

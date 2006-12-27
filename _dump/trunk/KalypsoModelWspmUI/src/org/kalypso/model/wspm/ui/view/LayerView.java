@@ -55,9 +55,8 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.ui.profil.view.IProfilView;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.layer.IActiveLayerChangeListener;
 import de.belger.swtchart.layer.IActiveLayerProvider;

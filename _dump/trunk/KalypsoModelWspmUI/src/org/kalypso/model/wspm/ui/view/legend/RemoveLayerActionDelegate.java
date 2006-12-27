@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.view.legend;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 
 public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate

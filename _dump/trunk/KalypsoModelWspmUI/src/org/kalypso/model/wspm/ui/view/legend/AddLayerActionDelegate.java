@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 
 public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate

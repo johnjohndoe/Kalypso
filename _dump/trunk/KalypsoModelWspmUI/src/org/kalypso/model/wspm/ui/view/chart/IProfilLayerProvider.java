@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
 
 import de.belger.swtchart.axis.AxisRange;
 

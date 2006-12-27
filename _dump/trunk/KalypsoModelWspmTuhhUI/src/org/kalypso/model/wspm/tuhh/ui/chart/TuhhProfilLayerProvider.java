@@ -47,17 +47,10 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.ui.profil.view.chart.IProfilColorSet;
-import org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.BewuchsLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.GelaendeLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.HochRechtsLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.RauheitLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.TrennerLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.WspLayer;
-import org.kalypso.model.wspm.ui.profil.view.chart.layer.buildings.BuildingLayerFactory;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 
 import de.belger.swtchart.axis.AxisRange;
 
