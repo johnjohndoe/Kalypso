@@ -310,5 +310,34 @@ public class Polynomial1D implements IPolynomial1D
 			return false;//super.equals(obj);
 		}
 	}
-
+	
+	public Feature getWrappedFeature()
+	{
+		return polFeature;
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer buf= new StringBuffer(64);
+		buf.append("Polynomial1D");
+		String id=polFeature.getId();
+		if(id!=null)
+		{
+			buf.append('.');
+			buf.append(id);
+		}
+		//gml.id
+		buf.append("[ order=");
+		buf.append(getOrder());
+		buf.append(", coefs=");
+		//coefs
+		for(double coef:getCoefficients())
+		{
+			buf.append(String.valueOf(coef));
+			buf.append(' ');
+		}
+		buf.append(']');
+		return buf.toString();
+	}
 }

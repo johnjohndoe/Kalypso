@@ -1,6 +1,8 @@
 
 package org.kalypso.kalypsosimulationmodel.util.math;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+
 
 /**
  * Specifies the interface for object representing a 1D polynom 
@@ -33,7 +35,7 @@ package org.kalypso.kalypsosimulationmodel.util.math;
  * 
  * @author Patrice Congo
  */
-public interface IPolynomial1D extends IPolynomial	
+public interface IPolynomial1D extends IPolynomial,IFeatureWrapper	
 {
 	/**
 	 * To get the oder of a polynom. 

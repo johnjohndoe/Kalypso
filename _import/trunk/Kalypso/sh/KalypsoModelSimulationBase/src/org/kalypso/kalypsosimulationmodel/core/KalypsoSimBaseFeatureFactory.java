@@ -3,11 +3,15 @@
  */
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
+import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
+import org.kalypso.kalypsosimulationmodel.util.math.Polynomial2D;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -18,7 +22,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 {
-	interface AdapterConstructor<T>
+	interface AdapterConstructor
 	{
 		/**
 		 * Construct the Adapter of the specified class for the
@@ -34,24 +38,18 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		 * 		<li/>feature cannnot be converted 
 		 *  </ul>
 		 */
-		public T constructAdapter(
+		public Object constructAdapter(
 							Feature feature,
-							Class<T> cls) 
+							Class cls) 
 							throws IllegalArgumentException;
 	}
 	
-	AdapterConstructor test= new AdapterConstructor<IPolynomial1D>()
-	{
-		public IPolynomial1D constructAdapter(Feature feature, Class<IPolynomial1D> cls) throws IllegalArgumentException
-		{
-			return null;
-		}
-	};
-	
+		
 	private final Class[] ADAPTER_LIST=
 				{IPolynomial1D.class,IPolynomial2D.class};
 	
-	private Map<Class, AdapterConstructor> constructors;
+	private Map<Class, AdapterConstructor> constructors= 
+											createConstructorMap();
 	
 	
 	
@@ -74,7 +72,13 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		}
 		
 		
-		
+		AdapterConstructor ctor=constructors.get(adapterType);
+		if(ctor!=null)
+		{
+			return ctor.constructAdapter(
+							(Feature)adaptableObject, 
+							adapterType);
+		}
 		return null;
 	}
 
@@ -86,4 +90,39 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		return ADAPTER_LIST;
 	}
 
+	private final Map<Class, AdapterConstructor> createConstructorMap()
+	{
+		Map<Class, AdapterConstructor> cMap= 
+				new Hashtable<Class, AdapterConstructor>();
+		
+		//polynomial 1d
+		AdapterConstructor cTor= new AdapterConstructor()
+		{
+			public Object constructAdapter(
+										Feature feature, 
+										Class cls) 
+										throws IllegalArgumentException
+			{
+				
+				return new Polynomial1D(feature);
+			}
+		};
+		cMap.put(IPolynomial1D.class, cTor);
+		
+		//Polynomial 2d
+		cTor= new AdapterConstructor()
+		{
+			public Object constructAdapter(
+										Feature feature, 
+										Class cls) 
+										throws IllegalArgumentException
+			{
+				
+				return new Polynomial2D(feature);
+			}
+		};
+		cMap.put(IPolynomial2D.class, cTor);
+		
+		return Collections.unmodifiableMap(cMap);
+	}
 }

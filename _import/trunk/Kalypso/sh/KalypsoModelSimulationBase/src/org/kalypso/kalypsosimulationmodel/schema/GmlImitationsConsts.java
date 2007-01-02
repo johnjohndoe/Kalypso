@@ -27,6 +27,11 @@ public class GmlImitationsConsts
 					UrlCatalogGmlImitations.NS_GML_IMITATIONS,
 					"featureRangeSet");
 	
+	public static final QName WBGML_F_FEATURERANGESET=
+		new QName(
+				UrlCatalogGmlImitations.NS_GML_IMITATIONS,
+				"FeatureRangeSet");
+	
 	public static final QName GML_PROP_RANGESET=
 			new QName(
 					NS.GML3,
@@ -36,5 +41,9 @@ public class GmlImitationsConsts
 		new QName(
 				NS.GML3,
 				"featureMember");
+	public static final QName GML_PROP_POINT_MEMBER=
+		new QName(
+				NS.GML3,
+				"pointMember");
 	
 }

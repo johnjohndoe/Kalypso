@@ -133,7 +133,8 @@
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:element
-						ref="gml:featureMember"/>
+						ref="gml:featureMember" 
+						minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>

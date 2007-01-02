@@ -10,4 +10,20 @@
             class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogGmlImitations"
             id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelGmlImitations"/>
    </extension>
+   
+   <extension
+         id="org.kalypso.core.adapters"
+         name="Kalypso Simulation-Base Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D"/>
+      </factory>
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
+      </factory>
+   </extension>
 </plugin>

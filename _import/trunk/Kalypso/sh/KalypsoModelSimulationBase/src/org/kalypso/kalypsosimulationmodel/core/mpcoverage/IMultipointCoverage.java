@@ -1,12 +1,11 @@
-package org.kalypso.kalypsosimulationmodel.core.mtcoverage;
+package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
-import org.deegree.model.geometry.GM_Polygon;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IPosition;
+import java.util.List;
+
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IRegion;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Generic interface to be implemented by classes representing the
@@ -17,9 +16,10 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * 
  * @author Patrice Congo
  */
-public interface IMultipointCoverage<RangeCls>
+public interface IMultipointCoverage<RangeCls extends IFeatureWrapper> 
+				extends IFeatureWrapper
 {
-	public GM_MultiPoint getDomain();
+	public MultiPoint getDomain();
 	
 	/**
 	 * Returns the applying range value  the given position
@@ -43,7 +43,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * @throws IllegalArgumentException if region is null or cannot be
 	 * 			adapted into a {@link IRegion} 
 	 */
-	public RangeCls[] getRangeValues(
+	public List<RangeCls> getRangeValues(
 								GM_Polygon region)
 								throws IllegalArgumentException;
 
@@ -57,7 +57,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * 			to a Iflow Relationship 
 	 * 			 
 	 */
-	public IPosition[] getApplicablePosition(
+	public List<GM_Point> getApplicablePosition(
 									RangeCls rangeValue)
 									throws IllegalArgumentException;
 	/**
@@ -82,7 +82,7 @@ public interface IMultipointCoverage<RangeCls>
 	 * @throws IllegalArgumentException
 	 */
 	public void removeCoveredPosition(
-								GM_Position position) 
+								GM_Point position) 
 								throws IllegalArgumentException;
 	/**
 	 * 

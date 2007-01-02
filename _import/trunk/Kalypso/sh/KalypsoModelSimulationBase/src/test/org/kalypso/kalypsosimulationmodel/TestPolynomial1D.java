@@ -3,8 +3,6 @@
  */
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -97,6 +95,12 @@ public class TestPolynomial1D extends TestCase
 			
 			return "EXPECTED_POLYNOM[o="+getOrder()+
 					" coefs="+Arrays.toString(getCoefficients())+"]";
+		}
+
+		public Feature getWrappedFeature()
+		{
+			// TODO Auto-generated method stub
+			return null;
 		}
 	};
 	

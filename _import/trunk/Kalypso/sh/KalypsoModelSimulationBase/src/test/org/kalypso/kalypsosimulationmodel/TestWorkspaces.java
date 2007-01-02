@@ -72,7 +72,14 @@ public class TestWorkspaces
 	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml";
 	
 	public static final URL URL_MPCOV_ROUGHNESS_CORRECTION;
-	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_roughness_correction.xml";
+	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_pol1d.xml";
+	
+	public static final URL URL_MULTIPOINT;
+	public static final String REL_RES_MULTIPOINT="data/multipoint.xml";
+	
+	
+	public static final URL URL_FEATURERANGESET;
+	public static final String REL_RES_FEATURERANGESET="data/feature_range_set.xml";
 	
 	public static final Throwable EXCEPTION;
 	
@@ -97,6 +104,14 @@ public class TestWorkspaces
 					REL_RES_MPCOV_ROUGHNESS_CORRECTION,
 					TestWorkspaces.class.getResource(
 								REL_RES_MPCOV_ROUGHNESS_CORRECTION));
+			urlMap.put(
+					REL_RES_MULTIPOINT,
+					TestWorkspaces.class.getResource(
+								REL_RES_MULTIPOINT));
+			urlMap.put(
+					REL_RES_FEATURERANGESET,
+					TestWorkspaces.class.getResource(
+								REL_RES_FEATURERANGESET));
 		}
 		catch(Throwable th)
 		{
@@ -113,6 +128,8 @@ public class TestWorkspaces
 			URL_EMPTY_GML=urlMap.get(REL_RES_EMPTY_GML);
 			URL_MPCOV_ROUGHNESS_CORRECTION=
 					urlMap.get(REL_RES_MPCOV_ROUGHNESS_CORRECTION);
+			URL_MULTIPOINT=urlMap.get(REL_RES_MULTIPOINT);
+			URL_FEATURERANGESET=urlMap.get(REL_RES_FEATURERANGESET);
 		}
 	}
 	

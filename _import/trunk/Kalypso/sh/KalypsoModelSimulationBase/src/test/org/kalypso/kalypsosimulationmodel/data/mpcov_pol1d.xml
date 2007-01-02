@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
 
-<!--gml:MultiPointCoverage 
-	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	xmlns:gml="http://www.opengis.net/gml" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
-	>
-	<gml:domainSet>
-		<gml:MultiPoint srsName="urn:epsg:v6.1:coordinateReferenceSystem:4267"> 
-			<gml:pointMembers>
-				<gml:Point>
-					<gml:pos>0 0</gml:pos>
-				</gml:Point>
-				<gml:Point>
-					<gml:pos>1 0</gml:pos>
-				</gml:Point>
-				<gml:Point>
-					<gml:pos>0 1</gml:pos> 
-				</gml:Point>
-			</gml:pointMembers>
-		</gml:MultiPoint>
-	</gml:domainSet>
-	
-	<gml:rangeSet>
-		<gml:ValueArray>
-			<gml:valueComponent>				
-			</gml:valueComponent>
-		</gml:ValueArray>
-	</gml:rangeSet>
-
-</gml:MultiPointCoverage-->
-
 <wbGml:MultiPointCoverage 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:gml="http://www.opengis.net/gml" 
@@ -44,16 +13,15 @@
 				<gml:Point>
 					<gml:pos>0 0</gml:pos>
 				</gml:Point>
-				<!--gml:Point>
-					<gml:pos>1 0</gml:pos>
-				</gml:Point>
-				<gml:Point>
-					<gml:pos>0 1</gml:pos> 
-				</gml:Point-->
 			</gml:pointMember>
 			<gml:pointMember>
 				<gml:Point>
-					<gml:pos>0 0</gml:pos>
+					<gml:pos>0 1</gml:pos>
+				</gml:Point>
+			</gml:pointMember>
+			<gml:pointMember>
+				<gml:Point>
+					<gml:pos>1 0</gml:pos>
 				</gml:Point>
 			</gml:pointMember>
 		</wbGml:MultiPoint>
@@ -76,6 +44,12 @@
 				</simBase:Polynomial1D>						
 			</gml:featureMember>
 			
+			<gml:featureMember>
+				<simBase:Polynomial1D gml:id="pol3">
+				 <simBase:order>4</simBase:order>
+				 <simBase:coefficients>0 1 2 3 4</simBase:coefficients>
+				</simBase:Polynomial1D>						
+			</gml:featureMember>
 		</wbGml:FeatureRangeSet>
 	</wbGml:featureRangeSet>
 
