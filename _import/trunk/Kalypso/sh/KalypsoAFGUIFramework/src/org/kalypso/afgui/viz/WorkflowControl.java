@@ -495,42 +495,42 @@ public class WorkflowControl
 		}
 	}
 	
-	private Composite contributeToStack(List<ITask> tasks)
-	{
-		Composite c=toolkit.createComposite(tTBComp);
-		
-		String name;
-		c.setLayout(new GridLayout());
-		for(ITask task:tasks)
-		{
-			name=getWorkflowPartName(task);
-			toolkit.createButton(tTBComp,name,SWT.PUSH);
-		}
-		
-		return c;
-	}
+//	private Composite contributeToStack(List<ITask> tasks)
+//	{
+//		Composite c=toolkit.createComposite(tTBComp);
+//		
+//		String name;
+//		c.setLayout(new GridLayout());
+//		for(ITask task:tasks)
+//		{
+//			name=getWorkflowPartName(task);
+//			toolkit.createButton(tTBComp,name,SWT.PUSH);
+//		}
+//		
+//		return c;
+//	}
 	
-	private void contributeToTasksPanel(List<ITask> tasks)
-	{
-		String name;
-		tTBComp.setLayout(new GridLayout());
-		for(ITask task:tasks)
-		{
-			name=getWorkflowPartName(task);
-			toolkit.createButton(tTBComp,name,SWT.PUSH);
-		}
-		tTBComp.getParent().pack();
-		tTBComp.redraw();
-	}
+//	private void contributeToTasksPanel(List<ITask> tasks)
+//	{
+//		String name;
+//		tTBComp.setLayout(new GridLayout());
+//		for(ITask task:tasks)
+//		{
+//			name=getWorkflowPartName(task);
+//			toolkit.createButton(tTBComp,name,SWT.PUSH);
+//		}
+//		tTBComp.getParent().pack();
+//		tTBComp.redraw();
+//	}
 	
-	private Button createTaskButton(ITask t, Composite comp)
-	{
-		ArrayList<Object> l=null;
-		
-		String name=getWorkflowPartName(t);
-		Button b= toolkit.createButton(comp, name, SWT.NONE);
-		return b;
-	}
+//	private Button createTaskButton(ITask t, Composite comp)
+//	{
+//		ArrayList<Object> l=null;
+//		
+//		String name=getWorkflowPartName(t);
+//		Button b= toolkit.createButton(comp, name, SWT.NONE);
+//		return b;
+//	}
 
 	private Section createSubTaskGroupExpandable(
 									ISubTaskGroup stg, 
@@ -556,98 +556,98 @@ public class WorkflowControl
 	}
 
 	
-	private void createBaseContainers(Composite parent)
-	{
-		top = new Composite(parent,SWT.FILL);
-		top.setLayout(new FillLayout());
-		toolkit= new FormToolkit(top.getDisplay());
-		Composite containerForm=toolkit.createComposite(top);
-		
-			
-		containerForm.setLayout(new FormLayout());
-		
-		FormData fd;
-		
-		fd= new FormData();
-		fd.left= new FormAttachment(0,0);
-		fd.bottom= new FormAttachment(100,0);
-		fd.top= new FormAttachment(0,0);
-		form = 
-			toolkit.createScrolledForm(containerForm);
-		form.setLayoutData(fd);
-		
-		//sep activities
-		Label al=toolkit.createSeparator(containerForm, SWT.VERTICAL|SWT.BOLD);
-		fd= new FormData();
-		fd.width=1;
-		fd.left=new FormAttachment(form);
-		//fd.right= new FormAttachment(90,0);
-		fd.bottom= new FormAttachment(100,0);
-		fd.top= new FormAttachment(0,0);
-		al.setLayoutData(fd);
-		//activities
-		fd= new FormData();
-		//fd.width=16;
-		fd.left=new FormAttachment(al);//form);
-		fd.right= new FormAttachment(100,0);
-		fd.bottom= new FormAttachment(100,0);
-		fd.top= new FormAttachment(0,0);
-		aTBComp= 
-			toolkit.createScrolledForm(containerForm);
-		aTBComp.setLayoutData(fd);
-		aTBComp.getBody().setLayout(new TableWrapLayout());
-		ToolBar aTB= new ToolBar(
-				aTBComp.getBody(),
-				SWT.H_SCROLL|SWT.WRAP);
-		aTBMng= new ToolBarManager(aTB);
-		//Control tbC=tbMng.createControl(taskComposite);
-		//toolkit.adapt(aTB);
-//		Action a= new Action()
-//		{
-//		};
-//		a.setText("DADADADAD");
-//		aTBMng.add(a);
-//		aTB.update();
-		
-		//SEPARAtor
-		Label l=toolkit.createSeparator(containerForm, SWT.HORIZONTAL|SWT.BOLD);
-		fd= new FormData();
-		fd.left= new FormAttachment(0,0);
-		fd.bottom= new FormAttachment(71,0);
-		fd.top= new FormAttachment(form);//30,0);
-		fd.right=new FormAttachment(al);//aTBComp);
-		l.setLayoutData(fd);
-		
-		//tasks
-		tTBComp=toolkit.createScrolledForm(containerForm);
-//			toolkit.createComposite(
-//					containerForm,
-//					SWT.BORDER|SWT.BOLD);
-		
-		fd= new FormData();
-		fd.left= new FormAttachment(0,0);
-		fd.bottom= new FormAttachment(100,0);
-		fd.top= new FormAttachment(l);//form);//30,0);
-		fd.right=new FormAttachment(aTBComp);
-		tTBComp.setLayoutData(fd);
-		//taskComposite.setLayout(new FillLayout());
-		//ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
-		//cf.getBody().setLayout(new TableWrapLayout());
-		
-		tTBComp.getBody().setLayout(new TableWrapLayout());
-		ToolBar tb= new ToolBar(
-					tTBComp.getBody(),
-					SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
-		tTBMng= new ToolBarManager(tb);
-		tTBMng.add(new GroupMarker(KEY_GROUP_TASKS));
-		//Group g= new Group(tb,SWT.NONE);
-		
-		tTBMng.add(new GroupMarker(KEY_GROUP_ACTIVITIES));
-		//Control tbC=tbMng.createControl(taskComposite);
-		toolkit.adapt(tb);
-		form.getBody().setLayout(new TableWrapLayout());
-		
-	}
+//	private void createBaseContainers(Composite parent)
+//	{
+//		top = new Composite(parent,SWT.FILL);
+//		top.setLayout(new FillLayout());
+//		toolkit= new FormToolkit(top.getDisplay());
+//		Composite containerForm=toolkit.createComposite(top);
+//		
+//			
+//		containerForm.setLayout(new FormLayout());
+//		
+//		FormData fd;
+//		
+//		fd= new FormData();
+//		fd.left= new FormAttachment(0,0);
+//		fd.bottom= new FormAttachment(100,0);
+//		fd.top= new FormAttachment(0,0);
+//		form = 
+//			toolkit.createScrolledForm(containerForm);
+//		form.setLayoutData(fd);
+//		
+//		//sep activities
+//		Label al=toolkit.createSeparator(containerForm, SWT.VERTICAL|SWT.BOLD);
+//		fd= new FormData();
+//		fd.width=1;
+//		fd.left=new FormAttachment(form);
+//		//fd.right= new FormAttachment(90,0);
+//		fd.bottom= new FormAttachment(100,0);
+//		fd.top= new FormAttachment(0,0);
+//		al.setLayoutData(fd);
+//		//activities
+//		fd= new FormData();
+//		//fd.width=16;
+//		fd.left=new FormAttachment(al);//form);
+//		fd.right= new FormAttachment(100,0);
+//		fd.bottom= new FormAttachment(100,0);
+//		fd.top= new FormAttachment(0,0);
+//		aTBComp= 
+//			toolkit.createScrolledForm(containerForm);
+//		aTBComp.setLayoutData(fd);
+//		aTBComp.getBody().setLayout(new TableWrapLayout());
+//		ToolBar aTB= new ToolBar(
+//				aTBComp.getBody(),
+//				SWT.H_SCROLL|SWT.WRAP);
+//		aTBMng= new ToolBarManager(aTB);
+//		//Control tbC=tbMng.createControl(taskComposite);
+//		//toolkit.adapt(aTB);
+////		Action a= new Action()
+////		{
+////		};
+////		a.setText("DADADADAD");
+////		aTBMng.add(a);
+////		aTB.update();
+//		
+//		//SEPARAtor
+//		Label l=toolkit.createSeparator(containerForm, SWT.HORIZONTAL|SWT.BOLD);
+//		fd= new FormData();
+//		fd.left= new FormAttachment(0,0);
+//		fd.bottom= new FormAttachment(71,0);
+//		fd.top= new FormAttachment(form);//30,0);
+//		fd.right=new FormAttachment(al);//aTBComp);
+//		l.setLayoutData(fd);
+//		
+//		//tasks
+//		tTBComp=toolkit.createScrolledForm(containerForm);
+////			toolkit.createComposite(
+////					containerForm,
+////					SWT.BORDER|SWT.BOLD);
+//		
+//		fd= new FormData();
+//		fd.left= new FormAttachment(0,0);
+//		fd.bottom= new FormAttachment(100,0);
+//		fd.top= new FormAttachment(l);//form);//30,0);
+//		fd.right=new FormAttachment(aTBComp);
+//		tTBComp.setLayoutData(fd);
+//		//taskComposite.setLayout(new FillLayout());
+//		//ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
+//		//cf.getBody().setLayout(new TableWrapLayout());
+//		
+//		tTBComp.getBody().setLayout(new TableWrapLayout());
+//		ToolBar tb= new ToolBar(
+//					tTBComp.getBody(),
+//					SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
+//		tTBMng= new ToolBarManager(tb);
+//		tTBMng.add(new GroupMarker(KEY_GROUP_TASKS));
+//		//Group g= new Group(tb,SWT.NONE);
+//		
+//		tTBMng.add(new GroupMarker(KEY_GROUP_ACTIVITIES));
+//		//Control tbC=tbMng.createControl(taskComposite);
+//		toolkit.adapt(tb);
+//		form.getBody().setLayout(new TableWrapLayout());
+//		
+//	}
 	
 	private void createBaseContainersBottomToolbars(Composite parent)
 	{

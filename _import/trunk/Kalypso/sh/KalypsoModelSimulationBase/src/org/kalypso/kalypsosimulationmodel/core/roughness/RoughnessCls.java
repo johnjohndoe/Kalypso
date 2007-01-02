@@ -1,7 +1,17 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
 
 /**
  * Default implementation for {@link IRoughnessCls} which 
@@ -27,6 +37,8 @@ public class RoughnessCls implements IRoughnessCls
 				Feature feature) 
 				throws IllegalArgumentException
 	{
+		Assert.throwIAEOnNotDirectInstanceOf(
+				feature, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
 		this.feature=feature;
 	}
 	
@@ -45,26 +57,53 @@ public class RoughnessCls implements IRoughnessCls
 				GMLWorkspace workspace)
 				throws IllegalArgumentException
 	{
+		
 		this.feature=null;
 	}
 	
 	/**
-	 * Creates a feature into the given workspace as roughnessMember into
-	 * the specified roughness collection. The roughness collection here 
-	 * must not be the  root of the workspace but is only required to  be 
-	 * part of the workspace.
+	 * This constructor creates {@link RoughnessCls} based on a
+	 * wbr:RoughnessCls feature which is created as child of the
+	 * given parent feaure and linked to it by the property of the 
+	 * type specified by the argument propQName.
 	 * 
-	 * @param workspace -- the gml  workspace to addd the
-	 *  feature into
+	 * @param parentFeature the parent feature for the new wbr:Roughness class
+	 * @param propQName  the Q-name of the linking property type
 	 * @throws IllegalArgumentException if workspace is null
 	 *  or the roughness collection is not part of the workspace
 	 */
 	public RoughnessCls(
-				GMLWorkspace workspace,
-				Feature roughnessCollection)
+				Feature parentFeature,
+				QName propQName)
 				throws IllegalArgumentException
 	{
-		this.feature=null;
+		Assert.throwIAEOnNull(
+				propQName, "Argument propQName must not be null");
+		Assert.throwIAEOnNull(
+				parentFeature, 
+				"Argument roughnessCollection must not be null");
+		try
+		{
+			System.out.println("ParentFeature="+parentFeature+
+					"\n\tpropQName="+propQName+
+					"\n\ttype="+KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
+			this.feature=
+				FeatureHelper.addFeature(
+					parentFeature, 
+					propQName, 
+					KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
+			
+			
+		}
+		catch(GMLSchemaException ex)
+		{
+			 
+			throw new IllegalArgumentException(
+					"Property "+propQName+
+						" does not accept element of type"+
+					KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS,
+					ex);
+		}	
 	}
 	
 	
@@ -75,7 +114,10 @@ public class RoughnessCls implements IRoughnessCls
 	public double getAxAy()
 	{
 		
-		return 0;
+		return FeatureHelper.getAsDouble(
+					feature, 
+					KalypsoModelRoughnessConsts.WBR_PROP_AXAY, 
+					Double.NaN);
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +125,10 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public double getDp()
 	{
-		return 0;
+		return FeatureHelper.getAsDouble(
+				feature, 
+				KalypsoModelRoughnessConsts.WBR_PROP_DP, 
+				Double.NaN);
 	}
 
 	/* (non-Javadoc)
@@ -91,7 +136,10 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public double getEddy()
 	{
-		return 0;
+		return FeatureHelper.getAsDouble(
+				feature, 
+				KalypsoModelRoughnessConsts.WBR_PROP_EDDY, 
+				Double.NaN);
 	}
 
 	/* (non-Javadoc)
@@ -99,24 +147,29 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public double getKs()
 	{
-		return 0;
+		return FeatureHelper.getAsDouble(
+				feature, 
+				KalypsoModelRoughnessConsts.WBR_PROP_KS, 
+				Double.NaN);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#set(double, double, double, double)
-	 */
-	public RoughnessConfigConsistency set(double ks, double axay, double dp,
-			double eddy)
+	public double getMarsh()
 	{
-		return null;
+		return FeatureHelper.getAsDouble(
+				feature, 
+				KalypsoModelRoughnessConsts.WBR_PROP_MARSH, 
+				Double.NaN);
 	}
+
 
 	/* (non-Javadoc)
 	 * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setAxAy(double)
 	 */
 	public void setAxAy(double axay) throws IllegalArgumentException
 	{
-		
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_AXAY, 
+				Double.valueOf(axay));
 	}
 
 	/* (non-Javadoc)
@@ -124,7 +177,9 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public void setDp(double dp) throws IllegalArgumentException
 	{
-		
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_DP, 
+				Double.valueOf(dp));
 	}
 
 	/* (non-Javadoc)
@@ -132,7 +187,9 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public void setEddy(double eddy) throws IllegalArgumentException
 	{
-		
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_EDDY, 
+				Double.valueOf(eddy));
 	}
 
 	/* (non-Javadoc)
@@ -140,7 +197,19 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public void setKs(double ks) throws IllegalArgumentException
 	{
-		
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_KS, 
+				Double.valueOf(ks));
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setMarsh(double)
+	 */
+	public void setMarsh(double marsh) throws IllegalArgumentException
+	{
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_MARSH, 
+				Double.valueOf(marsh));
 	}
 
 	///Ask nico for details
@@ -154,17 +223,81 @@ public class RoughnessCls implements IRoughnessCls
 	}
 
 	/* (non-Javadoc)
-	 * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, java.lang.String, double, double, double, double)
+	 * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, double, double, double, double)
 	 */
 	public RoughnessConfigConsistency configure(
-											String URI, 
 											String name, 
 											double ks, 
 											double axay, 
 											double dp, 
-											double eddy)
+											double eddy,
+											double marsh)
 	{
-		return null;
+		RoughnessConfigConsistency check=
+				validate(name, ks, axay, dp, eddy,marsh);
+		if(check!=RoughnessConfigConsistency.OK)
+		{
+			return check;
+		}
+		
+		
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+				name);
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_KS, 
+				Double.valueOf(ks));
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_DP, 
+				Double.valueOf(dp));
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_EDDY, 
+				Double.valueOf(eddy));
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_AXAY, 
+				Double.valueOf(axay));
+		
+		return RoughnessConfigConsistency.OK;
+	}
+	
+	public static RoughnessConfigConsistency validate(
+			String name,
+			double ks,
+			double axay,
+			double dp,
+			double eddy,
+			double marsh)
+	{
+		
+		if(Assert.isNullOrEmpty(name))
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_NAME;
+		}
+		
+		
+		
+		if(ks<0)
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_KS;
+		}
+		
+		if(eddy<0)
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY;
+		}
+		if(dp<0)
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_DP;
+		}
+		if(axay<0)
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_AXAY;
+		}
+		if(marsh<0)
+		{
+			return RoughnessConfigConsistency.ILLEGAL_VALUE_MARSH;
+		}
+		return RoughnessConfigConsistency.OK;
 	}
 
 	/* (non-Javadoc)
@@ -172,7 +305,27 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public String getName()
 	{
-		return null;
+		Object obj= feature.getProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_NAME);
+		if(obj instanceof String)
+		{
+			return (String)obj;
+		}
+		else if(obj instanceof List)
+		{
+			if(((List)obj).size()>0)
+			{
+				return (String)((List)obj).get(0);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -180,7 +333,21 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public String getURI()
 	{
-		return null;
+		return feature.getId();
+//		Object obj= feature.getProperty(
+//				KalypsoModelRoughnessConsts.GML_PROP_ID);
+//		if(obj instanceof String)
+//		{
+//			return (String)obj;
+//		}
+//		else
+//		{
+////			throw new IllegalFeatureState(
+////						feature,
+////						KalypsoModelRoughnessConsts.GML_PROP_NAME,
+////						obj);
+//			return null;
+//		}
 	}
 
 	/* (non-Javadoc)
@@ -190,7 +357,14 @@ public class RoughnessCls implements IRoughnessCls
 					String name) 
 					throws IllegalArgumentException
 	{
-		
+		name=Assert.throwIAEOnNullOrEmpty(name);
+		FeatureHelper.addProperty(
+				feature,
+				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+				Arrays.asList(new String[]{name}) );
+//		feature.setProperty(
+//				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+//				name);
 	}
 
 	/* (non-Javadoc)
@@ -200,7 +374,21 @@ public class RoughnessCls implements IRoughnessCls
 				String uri)
 				throws IllegalArgumentException
 	{
-		
+		uri=Assert.throwIAEOnNullOrEmpty(uri);
+		if(uri.equals(feature.getId()))
+		{
+			return;
+		}
+		//uri ist treated as the gml:id
+		if(feature.getWorkspace().getFeature(uri)!=null)
+		{
+			throw new IllegalArgumentException(
+					"uri already in workspace:"+uri);
+		}
+		//TODO this does not work change it
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+				uri);
 		
 	}
 
@@ -209,7 +397,22 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public String getDescription()
 	{
-		return null;
+		Object obj= feature.getProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_DESCRIPTION);
+		if(obj instanceof String)
+		{
+			return (String)obj;
+		}
+		else if(obj==null)
+		{
+			return null;
+		}
+		else
+		{
+			throw new RuntimeException(
+					"Unexpected property value:"+obj+
+					"\n\tof type:"+obj.getClass());
+		}		
 	}
 
 	/* (non-Javadoc)
@@ -217,11 +420,18 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public void setDescription(String descriptionText)
 	{
-		
+		Assert.throwIAEOnNull(
+				descriptionText, null);
+		feature.setProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_DESCRIPTION, 
+				descriptionText);
 	}
 
 	
-	
+	public Feature getWrappedFeature()
+	{
+		return feature;
+	}
 	
 
 }

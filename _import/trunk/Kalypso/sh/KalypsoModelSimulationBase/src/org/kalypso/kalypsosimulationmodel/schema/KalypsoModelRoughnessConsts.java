@@ -2,23 +2,30 @@ package org.kalypso.kalypsosimulationmodel.schema;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
+
 
 public class KalypsoModelRoughnessConsts
 {
 	public static final QName WBR_F_ROUGHNESS=
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
-				"Roughness");
+				"RoughnessCls");
 	
 	public static final QName WBR_PROP_KS=
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
 				"ks");
-	
-	public static final QName WBR_PROP_ROUGHNESS=
+	public static final QName WBR_PROP_AXAY=
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
-				"ratioAxAy");
+				"axay");
+	
+//	public static final QName WBR_PROP_ROUGHNESS=
+//		new QName(
+//				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+//				"axay");
+	
 	public static final QName WBR_PROP_DP=
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
@@ -33,5 +40,53 @@ public class KalypsoModelRoughnessConsts
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
 				"marsh");
+	////corrections
+	public static final QName WBR_F_ROUGHNESS_CORRECTION=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"RoughnessClsCorrection");
 	
+	public static final QName WBR_PROP_KS_COR=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"ksCor");
+	public static final QName WBR_PROP_AXAY_COR=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"axayCor");
+	
+//	public static final QName WBR_PROP_ROUGHNESS=
+//		new QName(
+//				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+//				"axay");
+	
+	public static final QName WBR_PROP_DP_COR=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"dpCor");
+	
+	public static final QName WBR_PROP_EDDY_COR=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"eddyCor");
+	
+	public static final QName WBR_PROP_MARSH_COR=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"marshCor");
+	
+	//gml
+	public static final QName GML_PROP_ID=
+		new QName(
+				NS.GML3,
+				"id");
+	public static final QName GML_PROP_NAME=
+		new QName(
+				NS.GML3,
+				"name");
+	
+	public static final QName GML_PROP_DESCRIPTION=
+		new QName(
+				NS.GML3,
+				"description");
 }

@@ -1,5 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+
 /**
  * Interface for klasses representing the roughness feature
  * of the type wbr:Roughness 
@@ -7,10 +9,17 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
  * @author Patrice Congo
  *
  */
-public interface IRoughnessClsCorrection
+public interface IRoughnessClsCorrection extends IFeatureWrapper
 {
 	public static  enum RoughnessCorConfigConsistency
 	{
+		ILLEGAL_VALUE_KS_COR,
+		ILLEGAL_VALUE_DP_COR,
+		ILLEGAL_VALUE_EDDY_COR,
+		ILLEGAL_VALUE_AXAY_COR,
+		ILLEGAL_VALUE_MARSH_COR,
+		ILLEGAL_VALUE_URI_COR,
+		URI_IN_WORKSPACE_COR,
 		OK
 	};
 	
@@ -36,6 +45,10 @@ public interface IRoughnessClsCorrection
 	 */
 	public double getAxAyCor();
 	
+	public double getMarshCor();
+	
+	public void setMarshCor(double marsh);
+	
 	/**
 	 * Sets the correction factor for vegetation parameter axay 
 	 * 
@@ -51,7 +64,7 @@ public interface IRoughnessClsCorrection
 	 * 
 	 * @return the correction parameter for vegetation parameter DP
 	 */
-	public double getDpcor();
+	public double getDpCor();
 	
 	/**
 	 * Set the correction parameter for vegetation factor dp
@@ -78,7 +91,7 @@ public interface IRoughnessClsCorrection
 	 * @throws IllegalArgumentException if correction parameter is neagtiv
 	 * 
 	 */
-	public void setEddy(
+	public void setEddyCor(
 				double eddyCor)
 				throws IllegalArgumentException;
 	

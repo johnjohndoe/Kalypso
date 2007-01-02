@@ -1,5 +1,8 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.exception.IllegalFeatureState;
+
 /**
  * Interface for klasses representing the roughness feature
  * of the type wbr:Roughness 
@@ -7,10 +10,18 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
  * @author Patrice Congo
  *
  */
-public interface IRoughnessCls
+public interface IRoughnessCls extends IFeatureWrapper
 {
 	public static  enum RoughnessConfigConsistency
 	{
+		ILLEGAL_VALUE_KS,
+		ILLEGAL_VALUE_DP,
+		ILLEGAL_VALUE_EDDY,
+		ILLEGAL_VALUE_AXAY,
+		ILLEGAL_VALUE_MARSH,
+		ILLEGAL_VALUE_NAME,
+		ILLEGAL_VALUE_URI,
+		URI_IN_WORKSPACE,
 		OK
 	};
 	
@@ -50,6 +61,11 @@ public interface IRoughnessCls
 					double dp)
 					throws IllegalArgumentException;
 	
+	public double getMarsh();
+	public void setMarsh(
+					double marsh)
+					throws IllegalArgumentException;
+	
 	/**
 	 * To get the eddy viscosity of this roughness
 	 *  
@@ -74,21 +90,21 @@ public interface IRoughnessCls
 	 * The configuration is only apply if the set of parameter
 	 * passed the valitidy check 
 	 * 
-	 * @param URI  the uri identifying the roughness
 	 * @param name  the name for the roughness
 	 * @param ks  the Manning Strickler coefficient
 	 * @param axay  
 	 * @param dp
 	 * @param eddy the eddy viskosity
+	 * @param marsh marsh parameter
 	 * @return
 	 */
 	public RoughnessConfigConsistency configure(
-									String URI,
 									String name,
 									double ks,
 									double axay,
 									double dp,
-									double eddy);
+									double eddy,
+									double marsh);
 	/**
 	 * To validates the current configuration of this 
 	 * roughness.
@@ -105,7 +121,7 @@ public interface IRoughnessCls
 	 * Note that the name is not the identifying token for
 	 * a roughness but the URI {@link #getURI()} 
 	 * 
-	 * @return the name of the roughness as string
+	 * @return the name of the roughness as string 
 	 */
 	public String getName();
 	

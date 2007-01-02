@@ -44,7 +44,10 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.apache.log4j.Logger;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -81,6 +84,17 @@ public class TestWorkspaces
 	public static final URL URL_FEATURERANGESET;
 	public static final String REL_RES_FEATURERANGESET="data/feature_range_set.xml";
 	
+	public static final URL URL_ROUGHNESS_CLS;
+	public static final String REL_RES_ROUGHNESS_CLS=
+							"data/roughness_cls.xml";
+	
+	public static final URL URL_ROUGHNESS_CLS_COR;
+	public static final String REL_RES_ROUGHNESS_CLS_COR=
+							"data/roughness_cls_correction.xml";
+	
+	public static final QName GML_PROP_FEATURE_MEMBER= 
+						new QName(NS.GML3,"featureMember");
+	
 	public static final Throwable EXCEPTION;
 	
 	static 
@@ -112,6 +126,14 @@ public class TestWorkspaces
 					REL_RES_FEATURERANGESET,
 					TestWorkspaces.class.getResource(
 								REL_RES_FEATURERANGESET));
+			urlMap.put(
+					REL_RES_ROUGHNESS_CLS,
+					TestWorkspaces.class.getResource(
+								REL_RES_ROUGHNESS_CLS));
+			urlMap.put(
+					REL_RES_ROUGHNESS_CLS_COR,
+					TestWorkspaces.class.getResource(
+								REL_RES_ROUGHNESS_CLS_COR));
 		}
 		catch(Throwable th)
 		{
@@ -130,6 +152,8 @@ public class TestWorkspaces
 					urlMap.get(REL_RES_MPCOV_ROUGHNESS_CORRECTION);
 			URL_MULTIPOINT=urlMap.get(REL_RES_MULTIPOINT);
 			URL_FEATURERANGESET=urlMap.get(REL_RES_FEATURERANGESET);
+			URL_ROUGHNESS_CLS=urlMap.get(REL_RES_ROUGHNESS_CLS);
+			URL_ROUGHNESS_CLS_COR=urlMap.get(REL_RES_ROUGHNESS_CLS_COR);
 		}
 	}
 	

@@ -165,7 +165,7 @@
 						minOccurs="0" maxOccurs="1"/>
 											
 					<xs:element 
-						name="axayCorrection"
+						name="axayCor"
 						type="xs:double"
 						minOccurs="0" maxOccurs="1"/>
 												
@@ -183,6 +183,7 @@
 						name="marshCor"
 						type="xs:double"
 						minOccurs="0" maxOccurs="1"/>					
+
 						
 				</xs:sequence>
 			</xs:extension>

@@ -53,6 +53,8 @@ public class Assert
 		return str;
 	}
 	
+	
+	
 	public static final boolean isNullOrEmpty(String str)
 	{
 		if(str==null)
