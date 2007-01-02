@@ -36,6 +36,52 @@ public class Assert
 		}
 	}
 	
+	
+	public static final String throwIAEOnNullOrEmpty(
+									String str)
+									throws IllegalArgumentException
+	{
+		if(str==null)
+		{
+			throw new IllegalArgumentException("String must not be null");
+		}
+		str=str.trim();
+		if(str.length()==0)
+		{
+			throw new IllegalArgumentException("String must not be empty");
+		}
+		return str;
+	}
+	
+	public static final boolean isNullOrEmpty(String str)
+	{
+		if(str==null)
+		{
+			return true;
+		}
+		str=str.trim();
+		if(str.length()==0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public static final void throwIAEOnLessThan0(
+						double d,
+						String message)
+						throws IllegalArgumentException
+	{
+		if(d<0)
+		{
+			if(message==null)
+			{
+				message="number must be greater or equals to 0";
+			}
+			throw new IllegalArgumentException(message);
+		}
+	}
+	
 	public static final void throwIAEOnNotDirectInstanceOf(
 										Feature feature, 
 										QName expectedType)
