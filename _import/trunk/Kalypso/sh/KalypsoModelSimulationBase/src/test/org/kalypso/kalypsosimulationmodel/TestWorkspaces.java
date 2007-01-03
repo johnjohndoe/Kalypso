@@ -92,6 +92,14 @@ public class TestWorkspaces
 	public static final String REL_RES_ROUGHNESS_CLS_COR=
 							"data/roughness_cls_correction.xml";
 	
+	public static final URL URL_ROUGHNESS_CLS_COLLECTION;
+	public static final String REL_RES_ROUGHNESS_CLS_COLLECTION=
+							"data/roughness_cls_collection.xml";
+	
+	public static final URL URL_COL_ROUGHNESS_CLS_COR;
+	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
+							"data/collection_of_roughness_cls_correction.xml";
+	
 	public static final QName GML_PROP_FEATURE_MEMBER= 
 						new QName(NS.GML3,"featureMember");
 	
@@ -134,10 +142,18 @@ public class TestWorkspaces
 					REL_RES_ROUGHNESS_CLS_COR,
 					TestWorkspaces.class.getResource(
 								REL_RES_ROUGHNESS_CLS_COR));
+			urlMap.put(
+					REL_RES_ROUGHNESS_CLS_COLLECTION,
+					TestWorkspaces.class.getResource(
+								REL_RES_ROUGHNESS_CLS_COLLECTION));
+			urlMap.put(
+					REL_RES_COL_ROUGHNESS_CLS_COR,
+					TestWorkspaces.class.getResource(
+								REL_RES_COL_ROUGHNESS_CLS_COR));
 		}
 		catch(Throwable th)
 		{
-			logger.error("Error while building test constants",th);
+			th.printStackTrace();
 			th1=th;
 			urlMap.clear();
 			
@@ -154,6 +170,12 @@ public class TestWorkspaces
 			URL_FEATURERANGESET=urlMap.get(REL_RES_FEATURERANGESET);
 			URL_ROUGHNESS_CLS=urlMap.get(REL_RES_ROUGHNESS_CLS);
 			URL_ROUGHNESS_CLS_COR=urlMap.get(REL_RES_ROUGHNESS_CLS_COR);
+			
+			URL_ROUGHNESS_CLS_COLLECTION=
+				urlMap.get(REL_RES_ROUGHNESS_CLS_COLLECTION);
+			
+			URL_COL_ROUGHNESS_CLS_COR=
+					urlMap.get(REL_RES_COL_ROUGHNESS_CLS_COR);
 		}
 	}
 	

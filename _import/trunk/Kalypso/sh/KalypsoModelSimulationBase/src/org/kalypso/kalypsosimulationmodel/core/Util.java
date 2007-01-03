@@ -2,12 +2,20 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Holds utility methods
@@ -64,5 +72,90 @@ public class Util
 		return fl;
 	}
 	
+	public static final String getFirstName(Feature feature)
+	{
+		Object obj= feature.getProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_NAME);
+		if(obj instanceof String)
+		{
+			return (String)obj;
+		}
+		else if(obj instanceof List)
+		{
+			if(((List)obj).size()>0)
+			{
+				return (String)((List)obj).get(0);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
+	public static final List<String> getAllName(Feature feature)
+	{
+		Object obj= feature.getProperty(
+				KalypsoModelRoughnessConsts.GML_PROP_NAME);
+		if(obj instanceof String)
+		{
+			return Arrays.asList( new String[]{(String)obj});
+		}
+		else if(obj instanceof List)
+		{
+		
+				ArrayList<String> names=
+					new ArrayList<String>((List<String>)obj);
+				return names;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public static Feature createFeatureForListProp( 
+									final FeatureList list, 
+									final QName listProperty, 
+									final QName newFeatureName ) 
+									throws GMLSchemaException
+	  {
+	    
+	    final Feature parentFeature = list.getParentFeature();
+	    final GMLWorkspace workspace = parentFeature.getWorkspace();
+	
+	    final IFeatureType targetFeatureType = 
+	    	list.getParentFeatureTypeProperty().getTargetFeatureType();
+	
+	    final IFeatureType newFeatureType;
+	    if( newFeatureName == null )
+	    {
+	      newFeatureType = targetFeatureType;
+	    }
+	    else
+	    {
+	      newFeatureType = 
+	    	  workspace.getGMLSchema().getFeatureType( newFeatureName );
+	    }
+	
+	    if( 	newFeatureName != null && 
+	    		!GMLSchemaUtilities.substitutes( 
+	    							newFeatureType, 
+	    							targetFeatureType.getQName() ) )
+	    {
+	      throw new GMLSchemaException( 
+	    		  "Type of new feature (" + newFeatureName + 
+	    		  ") does not substitutes target feature type of the list: " + 
+	    		  targetFeatureType.getQName() );
+	    }
+	    
+	    final Feature newFeature = 
+	    		workspace.createFeature( parentFeature, newFeatureType );
+	
+	    return newFeature;
+	  }
 }

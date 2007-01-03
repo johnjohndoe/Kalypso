@@ -1,7 +1,8 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import java.util.Collection;
 import java.util.List;
+
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes representing
@@ -10,7 +11,8 @@ import java.util.List;
  * @author Patrice Congo
  *
  */
-public interface IRoughnessClsCollection extends Collection<IRoughnessCls>
+public interface IRoughnessClsCollection 
+					extends IFeatureWrapperCollection<IRoughnessCls>
 {
 	/**
 	 * To get the name the roughness collection
@@ -30,12 +32,6 @@ public interface IRoughnessClsCollection extends Collection<IRoughnessCls>
 					String name)
 					throws IllegalArgumentException;
 	
-	
-	/**
-	 * To gets all roughnesses in this roughness collection
-	 * @return
-	 */
-	public List<IRoughnessCls> getAllRoughnesses();
 	
 	
 	/**

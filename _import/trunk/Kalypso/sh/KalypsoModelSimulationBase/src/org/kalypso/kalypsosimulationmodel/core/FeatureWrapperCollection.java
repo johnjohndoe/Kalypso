@@ -1,0 +1,523 @@
+package org.kalypso.kalypsosimulationmodel.core;
+
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import javax.xml.namespace.QName;
+
+
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
+/**
+ * Class representing the wbGml:RangeSetFeature element.
+ * 
+ * The feature contained in the range set need to be adaptable 
+ * into a {@link RangeSetCls} object
+ * 
+ * @author Patrice Congo
+ */
+public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> 
+				implements IFeatureWrapperCollection<FWCls>
+{
+	/**
+	 * The feature wrapped by this object
+	 */
+	private final Feature featureCol;
+	
+	/**
+	 * the list of features in the range set
+	 */
+	private final FeatureList featureList;
+	
+	private final QName featureMemberProp;
+	
+	/**
+	 * The class of the feature wrapper in this collection
+	 */
+	private final Class<FWCls> fwClass;
+	
+	/**
+	 *Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
+	 *@param featureCol the range set feature to wrapp 
+	 */
+	public FeatureWrapperCollection(
+							Feature featureCol, 
+							Class<FWCls> fwClass,
+							QName featureMemberProp)
+	{
+		Assert.throwIAEOnNull(
+				fwClass, "Parameter fwClass must not be null");
+		
+		Assert.throwIAEOnNull(
+				featureCol, 
+				"Parameter featureCol must not be null");
+		
+		Assert.throwIAEOnNull(
+				featureMemberProp, 
+				"Parameter featureMemberProp must not be null");
+		
+		this.fwClass=fwClass;
+		this.featureCol=featureCol;
+		this.featureMemberProp=featureMemberProp;
+		if(featureMemberProp==null)
+		{
+			this.featureList=
+				(FeatureList)this.featureCol.getProperty(
+						GmlImitationsConsts.GML_PROP_FEATURE_MEMBER);
+		}
+		else
+		{
+			this.featureList=
+				(FeatureList)this.featureCol.getProperty(featureMemberProp);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public FeatureWrapperCollection(
+			Feature parentFeature, 
+			QName childQName,
+			QName featureMemberProp,
+			Class<FWCls> fwClass)
+			throws IllegalArgumentException
+	{
+		Assert.throwIAEOnNull(
+				parentFeature, "Parameter parentFeature must not be null");
+		Assert.throwIAEOnNull(
+				childQName, "Parameter childQName must not be null");
+		
+		Assert.throwIAEOnNull(
+				featureMemberProp, 
+				"Parameter featureMemberProp must not be null");
+		
+		try
+		{
+			this.featureCol=
+				FeatureHelper.addFeature(
+					parentFeature, 
+					featureMemberProp,
+					childQName 
+					);
+		}
+		catch(GMLSchemaException ex)
+		{
+			 
+			throw new IllegalArgumentException(
+					"Parent does not accept property of the specified type"+
+						"\n\tparent="+parentFeature+
+						"\n\tpropertyType="+featureMemberProp+
+						"\n\tchildType="+childQName,					
+					ex);
+		}
+	
+		this.featureList = (FeatureList)
+		this.featureCol.getProperty(featureMemberProp);
+		this.featureMemberProp=featureMemberProp;
+		
+		this.fwClass=fwClass;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public void add(int index, FWCls element)
+	{
+		Assert.throwIAEOnNull(
+						element, 
+						"argument element must not be null");
+		Feature f=element.getWrappedFeature();
+		Assert.throwIAEOnNull(f, "wrapped feature must not be null");
+		featureList.add(index, f);		
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean add(FWCls o)
+	{
+		Assert.throwIAEOnNull(o, "Argument o must not be null");
+		Feature f= o.getWrappedFeature();
+		Assert.throwIAEOnNull(f, "wrapped feature must not be null");
+		
+		return featureList.add(f);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public FWCls addNew(QName newChildType)
+	{
+		Assert.throwIAEOnNull(newChildType, "newChildType must not null");
+		try
+		{
+			Feature feature =
+				Util.createFeatureForListProp(
+							featureList, 
+							featureMemberProp, 
+							newChildType);
+			FWCls wrapper= (FWCls)feature.getAdapter(fwClass);
+			if(wrapper==null)
+			{
+				throw new IllegalArgumentException(
+						"Feature not adaptable:"+
+						"\n\tfeatureType="+newChildType+
+						"\n\tadapatble type="+fwClass);
+			}
+			featureList.add(feature);
+			return wrapper;
+		}
+		catch(GMLSchemaException e)
+		{
+			throw new IllegalArgumentException(e);
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public FWCls addNew(int index, QName newChildType)
+	{
+		Assert.throwIAEOnNull(newChildType, "newChildType must not null");
+		try
+		{
+			Feature feature =
+				Util.createFeatureForListProp(
+							featureList, 
+							featureMemberProp, 
+							newChildType);
+			FWCls wrapper= (FWCls)feature.getAdapter(fwClass);
+			if(wrapper==null)
+			{
+				throw new IllegalArgumentException(
+						"Feature not adaptable:"+
+						"\n\tfeatureType="+newChildType+
+						"\n\tadapatble type="+fwClass);
+			}
+			
+			featureList.add(index,feature);
+				
+			return wrapper;
+		}
+		catch(GMLSchemaException e)
+		{
+			throw new IllegalArgumentException(e);
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean addAll(Collection<? extends FWCls> c)
+	{
+		Assert.throwIAEOnNull(c, "Argument c must not be null");
+		return featureList.addAll(Util.toFeatureList(c));
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean addAll(
+						int index, 
+						Collection<? extends FWCls> c)
+	{
+		Assert.throwIAEOnNull(c, "Argument c must not be null");
+		return featureList.addAll(index,Util.toFeatureList(c));
+	}
+
+	public void clear()
+	{
+		featureList.clear();		
+	}
+
+	public boolean contains(Object o)
+	{
+		if(o instanceof IFeatureWrapper)
+		{
+			return featureList.contains(
+						((IFeatureWrapper)o).getWrappedFeature());
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean containsAll(Collection<?> c)
+	{
+		return featureList.containsAll(c);
+	}
+
+	@SuppressWarnings("unchecked")
+	public FWCls get(int index)
+	{
+		Feature f=(Feature)featureList.get(index);
+		FWCls adapted=(FWCls)f.getAdapter(fwClass);
+		return adapted;
+	}
+
+	public int indexOf(Object o)
+	{
+		if(o instanceof IFeatureWrapper)
+		{
+			return featureList.indexOf(
+						((IFeatureWrapper)o).getWrappedFeature());
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	public boolean isEmpty()
+	{
+		return featureList.isEmpty();
+	}
+
+	public Iterator<FWCls> iterator()
+	{
+		return new Iterator<FWCls>()
+		{
+			private final Iterator it=
+							featureList.iterator();
+			public boolean hasNext()
+			{
+				return it.hasNext();
+			}
+
+			@SuppressWarnings("unchecked")
+			public FWCls next()
+			{
+				Feature f= (Feature)it.next();
+				FWCls wrapper= (FWCls)f.getAdapter(fwClass);
+				if(wrapper==null)
+				{
+					throw new RuntimeException(
+							"Feature "+f+" could not be adapted to "+fwClass);
+				}
+				return wrapper;
+			}
+
+			public void remove()
+			{
+				it.remove();
+			}
+			
+		};
+	}
+
+	public int lastIndexOf(Object o)
+	{
+		if(o instanceof IFeatureWrapper)
+		{
+			return featureList.lastIndexOf(
+					((IFeatureWrapper)o).getWrappedFeature());
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	public ListIterator<FWCls> listIterator()
+	{
+		return listIterator(0);
+	}
+
+	public ListIterator<FWCls> listIterator(final int index)
+	{
+		return new ListIterator<FWCls>()
+		{
+			private final ListIterator lit=featureList.listIterator(index);
+			@SuppressWarnings("unchecked")
+			public void add(FWCls o)
+			{
+				lit.add(o.getWrappedFeature());
+			}
+
+			public boolean hasNext()
+			{
+				return lit.hasNext();
+			}
+
+			public boolean hasPrevious()
+			{
+				return lit.hasPrevious();
+			}
+
+			@SuppressWarnings("unchecked")
+			public FWCls next()
+			{
+				Feature f= (Feature)lit.next();
+				Object wrapper=f.getAdapter(fwClass);
+				return (FWCls)wrapper;
+			}
+
+			public int nextIndex()
+			{
+				return lit.nextIndex();
+			}
+
+			@SuppressWarnings("unchecked")
+			public FWCls previous()
+			{
+				Feature f= (Feature)lit.previous();
+				Object wrapper=f.getAdapter(fwClass);
+				return (FWCls)wrapper;
+			}
+
+			public int previousIndex()
+			{
+				return lit.previousIndex();
+			}
+
+			public void remove()
+			{
+				lit.remove();
+			}
+
+			@SuppressWarnings("unchecked")
+			public void set(FWCls o)
+			{
+				lit.set(o.getWrappedFeature());
+			}
+			
+		};
+	}
+
+	@SuppressWarnings("unchecked")
+	public FWCls remove(int index)
+	{
+		Feature f= (Feature)featureList.remove(index);
+		IFeatureWrapper wrapper=
+				(IFeatureWrapper)f.getAdapter(fwClass);
+		return (FWCls)wrapper;
+	}
+
+	public boolean remove(Object o)
+	{
+		if(o instanceof IFeatureWrapper)
+		{
+			return featureList.remove(
+					((IFeatureWrapper)o).getWrappedFeature());
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean removeAll(Collection<?> c)
+	{
+		boolean ret=false;
+		for(Object o:c)
+		{
+			Assert.throwIAEOnNull(
+					o, "Collection must not contain a null element");
+			ret=ret||remove(o);
+		}
+		return ret;
+	}
+
+	public boolean retainAll(Collection<?> c)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@SuppressWarnings("unchecked")
+	public FWCls set(int index, FWCls element)
+	{
+		FWCls r=get(index);
+		Feature f=element.getWrappedFeature();
+		Assert.throwIAEOnNull(f, "Wrapped feature must not be null");
+		
+		featureList.set(index, f);
+		return r;
+	}
+
+	public int size()
+	{
+		return featureList.size();
+	}
+
+	public List<FWCls> subList(int fromIndex, int toIndex)
+	{
+		return null;
+	}
+
+	public Object[] toArray()
+	{
+		int i=size(); 
+		Object objs[]=new Object[i];
+		Feature f;
+		for(i--;i>=0;i--)
+		{
+			f=(Feature)featureList.get(i);
+			objs[i]=f.getAdapter(fwClass);
+		}
+		return objs;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T[] toArray(T[] a)
+	{
+		final int  SIZE=size();
+		Class compType=a.getClass().getComponentType();
+		if(!compType.isAssignableFrom(fwClass))
+		{
+			throw new ArrayStoreException();
+		}
+		
+		if (a.length < SIZE)
+		{
+            a = (T[])Array.newInstance(compType, SIZE);
+		}
+		for(int i=SIZE-1;i>=0;i--)
+		{
+			a[i]=(T)get(i);
+		}
+		
+		if (a.length > SIZE)
+        {
+            a[SIZE] = null;
+        }
+        return a;		
+	}	
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof FeatureWrapperCollection)
+		{
+			return featureList.equals(((FeatureWrapperCollection)obj).featureList);
+		}
+		else if(obj instanceof IFeatureWrapperCollection)
+		{
+			IFeatureWrapperCollection frs=
+				(IFeatureWrapperCollection)obj;
+			final int SIZE=size(); 
+			if(SIZE!=frs.size())
+			{
+				return false;
+			}
+			for(int i=SIZE-1;i>=0;i--)
+			{
+				if(!get(i).equals(frs.get(0)))
+				{
+					return false;
+				}
+			}
+			return true;
+		}			
+		else
+		{
+			return super.equals(obj);
+		}
+	}
+	
+	public Feature getWrappedFeature()
+	{
+		return featureCol;
+	}
+}

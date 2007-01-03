@@ -1,10 +1,6 @@
-/**
- * 
- */
 package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -13,7 +9,6 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**

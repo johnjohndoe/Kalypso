@@ -21,8 +21,11 @@
       <factory
             adaptableType="org.kalypsodeegree.model.feature.Feature"
             class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
       </factory>
+      
       <factory
             adaptableType="org.kalypsodeegree.model.feature.Feature"
             class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">

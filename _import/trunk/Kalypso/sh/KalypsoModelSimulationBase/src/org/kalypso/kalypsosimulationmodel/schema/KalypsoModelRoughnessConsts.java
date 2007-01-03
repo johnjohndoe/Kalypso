@@ -74,6 +74,15 @@ public class KalypsoModelRoughnessConsts
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
 				"marshCor");
+	//roughness collection
+	public static final QName WBR_F_ROUGHNESS_CLS_COLLECTION=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"RoughnessClsCollection");
+	public static final QName WBR_PROP_ROUGHNESS_CLS_MEMBER=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"roughnessClsMember");
 	
 	//gml
 	public static final QName GML_PROP_ID=

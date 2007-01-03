@@ -433,5 +433,44 @@ public class RoughnessCls implements IRoughnessCls
 		return feature;
 	}
 	
+	@Override
+	public String toString()
+	{
+		StringBuffer buf= new StringBuffer(64);
+		buf.append("RoughnessCls");
+		String id=feature.getId();
+		if(id!=null)
+		{
+			buf.append('{');
+			buf.append(id);
+			buf.append('}');
+		}
+		buf.append('[');
+		buf.append("name=");
+		buf.append(getName());
+		
+		buf.append("axay=");
+		buf.append(getAxAy());
+		
+		
+		buf.append(", dp=");
+		buf.append(getDp());
+		
+		
+		buf.append(", eddy=");
+		buf.append(getEddy());
+		
+		buf.append(",ks=");
+		buf.append(getKs());
+		
+		
+		buf.append(",marsh=");
+		buf.append(getMarsh());
+		
+		buf.append(' ');
+		buf.append(']');
+		
+		return buf.toString();
+	}
 
 }

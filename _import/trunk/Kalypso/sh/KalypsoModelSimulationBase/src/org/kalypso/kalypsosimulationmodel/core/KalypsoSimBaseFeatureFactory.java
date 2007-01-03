@@ -8,6 +8,10 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
 import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
@@ -122,6 +126,35 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 			}
 		};
 		cMap.put(IPolynomial2D.class, cTor);
+		
+		//IRoughnessCls
+		cTor= new AdapterConstructor()
+		{
+			public Object constructAdapter(
+										Feature feature, 
+										Class cls) 
+										throws IllegalArgumentException
+			{
+				
+				return new RoughnessCls(feature);
+			}
+		};
+		cMap.put(IRoughnessCls.class, cTor);
+		
+		//IRoughnessClsCorrection
+		cTor= new AdapterConstructor()
+		{
+			public Object constructAdapter(
+										Feature feature, 
+										Class cls) 
+										throws IllegalArgumentException
+			{
+				
+				return new RoughnessClsCorrection(feature);
+			}
+		};
+		cMap.put(IRoughnessClsCorrection.class, cTor);
+		
 		
 		return Collections.unmodifiableMap(cMap);
 	}

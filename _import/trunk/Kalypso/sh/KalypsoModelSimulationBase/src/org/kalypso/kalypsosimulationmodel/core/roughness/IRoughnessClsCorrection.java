@@ -106,13 +106,18 @@ public interface IRoughnessClsCorrection extends IFeatureWrapper
 	 * @param axayCor correction factor for axay value  
 	 * @param dpCor correction factor for dp value
 	 * @param eddyCor correction factor for the eddy viskosity
-	 * @return
+	 * @param marshCor correction parameter for configure
+	 * 
+	 * @return {@link RoughnessCorConfigConsistency#OK} if the  operation 
+	 *    succed otherwise a corresponding consistency check key 
+	 *  
 	 */
 	public RoughnessCorConfigConsistency configure(
-									double ks,
-									double axay,
-									double dp,
-									double eddy);
+									double ksCor,
+									double axayCor,
+									double dpCor,
+									double eddyCor,
+									double marshcor);
 	/**
 	 * To validates the current configuration of this 
 	 * roughness.
@@ -131,6 +136,7 @@ public interface IRoughnessClsCorrection extends IFeatureWrapper
 	 */
 	public String getURI();
 	
+	
 	/**
 	 * changes the uri for this roughness correction
 	 * 
@@ -142,6 +148,11 @@ public interface IRoughnessClsCorrection extends IFeatureWrapper
 	 */
 	public void setURI(
 				String uri)
+				throws IllegalArgumentException;
+	
+	public String getName();
+	public void setName(
+				String name)
 				throws IllegalArgumentException;
 	
 	/**
