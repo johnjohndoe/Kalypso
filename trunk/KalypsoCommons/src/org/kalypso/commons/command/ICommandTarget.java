@@ -47,5 +47,6 @@ package org.kalypso.commons.command;
  */
 public interface ICommandTarget
 {
+  // TODO: comment!
   public void postCommand( final ICommand command, final Runnable runnable );
 }
