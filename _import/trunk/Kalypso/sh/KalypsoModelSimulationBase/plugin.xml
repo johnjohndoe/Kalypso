@@ -24,6 +24,7 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon"/>
       </factory>
       
       <factory

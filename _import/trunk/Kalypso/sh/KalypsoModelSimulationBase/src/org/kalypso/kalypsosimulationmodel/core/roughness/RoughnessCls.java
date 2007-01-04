@@ -7,8 +7,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -333,21 +335,17 @@ public class RoughnessCls implements IRoughnessCls
 	 */
 	public String getURI()
 	{
-		return feature.getId();
-//		Object obj= feature.getProperty(
-//				KalypsoModelRoughnessConsts.GML_PROP_ID);
-//		if(obj instanceof String)
-//		{
-//			return (String)obj;
-//		}
-//		else
-//		{
-////			throw new IllegalFeatureState(
-////						feature,
-////						KalypsoModelRoughnessConsts.GML_PROP_NAME,
-////						obj);
-//			return null;
-//		}
+//		return feature.getId();
+		Object obj= feature.getProperty(
+				KalypsoModelRoughnessConsts.WBR_PROP_URI);
+		if(obj instanceof String)
+		{
+			return (String)obj;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -379,15 +377,23 @@ public class RoughnessCls implements IRoughnessCls
 		{
 			return;
 		}
+		//TODO test the workspace for uri not already in use
+//		GMLWorkspace workspace=feature.getWorkspace();
+//		FeatureVisitor vi
 		//uri ist treated as the gml:id
-		if(feature.getWorkspace().getFeature(uri)!=null)
+		
+		
+		if(Util.isInFeatureWorkspace(
+						feature, 
+						KalypsoModelRoughnessConsts.WBR_PROP_URI, 
+						uri))
 		{
 			throw new IllegalArgumentException(
 					"uri already in workspace:"+uri);
 		}
-		//TODO this does not work change it
+		
 		feature.setProperty(
-				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+				KalypsoModelRoughnessConsts.WBR_PROP_URI, 
 				uri);
 		
 	}

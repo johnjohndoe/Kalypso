@@ -16,6 +16,7 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Holds utility methods
@@ -158,4 +159,23 @@ public class Util
 	
 	    return newFeature;
 	  }
+	
+	/**
+	 * 
+	 * @param feature -- the feature which workspace of to search for other
+	 * 			feature of the same type having the specified uri
+	 * 
+	 * @param uri the uri to lookup
+	 * 
+	 * @return true is  in the feature workspace there is a feature of the some 
+	 * 			type with the given 
+	 */
+	public static final boolean isInFeatureWorkspace(
+												Feature feature,
+												QName propQName,
+												String uri)
+	{
+		
+		return false;
+	}
 }

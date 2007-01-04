@@ -96,15 +96,20 @@ public class RoughnessPolygon implements IRoughnessPolygon
 	
 	
 	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
+	public String toString() 
+	{
 		return super.toString();
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
+	public boolean equals(Object obj) 
+	{
 		return super.equals(obj);
+	}
+	
+	public Feature getWrappedFeature()
+	{
+		return feature;
 	}
 
 }

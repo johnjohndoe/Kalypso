@@ -6,6 +6,7 @@
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	gml:id="htpp://wwww.tuhh.de/wb/roughness_db/grass">
+	<wbr:uri>htpp://wwww.tuhh.de/wb/roughness_db/grass</wbr:uri>
 	<gml:name>grass</gml:name>
 	<wbr:ks>0.1</wbr:ks>
 	<wbr:axay>0.2</wbr:axay>

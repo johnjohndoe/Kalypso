@@ -30,9 +30,9 @@
 	<xs:element 
 		name="RoughnessClsCollection"
 		type="wbr:RoughnessClsCollectionType"
-		substitutionGroup="gml:FeatureCollection">
-	
+		substitutionGroup="gml:_Feature">	
 	</xs:element>
+	
 	<xs:complexType 
 		name="RoughnessClsCollectionType">
 		<xs:annotation>
@@ -41,13 +41,14 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:restriction 
-				base=" gml:FeatureCollectionType ">
+			<xs:extension 
+				base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="wbr:roughnessClsMember"/>
-					<xs:element ref="wbr:roughnessClsMembers"/>
-				</xs:sequence>
-			</xs:restriction>
+					<xs:element 
+						ref="wbr:roughnessClsMember"
+						minOccurs="0" maxOccurs="unbounded"/>					
+				</xs:sequence>				
+			</xs:extension> 			
 		</xs:complexContent>
 	</xs:complexType>
 	
@@ -102,6 +103,9 @@
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element 
+						ref="wbr:uri"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
 						name="ks"
 						type="xs:double"
 						minOccurs="0" maxOccurs="1"/>
@@ -153,7 +157,8 @@
 	================================================================== -->
 	<xs:element 
 		name="RoughnessClsCorrection"
-		type="wbr:RoughnessClsCorrectionType"/>
+		type="wbr:RoughnessClsCorrectionType"
+		substitutionGroup="gml:_Feature"/>
 	<xs:complexType 
 		name="RoughnessClsCorrectionType">
 		<xs:complexContent>
@@ -245,5 +250,10 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+	<!-- =================================================================
+		uri
+	================================================================== -->
+	<xs:element 
+		name="uri"
+		type="xs:anyURI"/>
 </xs:schema>

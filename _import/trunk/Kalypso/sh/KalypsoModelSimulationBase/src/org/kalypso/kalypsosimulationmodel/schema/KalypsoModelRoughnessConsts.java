@@ -7,6 +7,11 @@ import org.kalypso.commons.xml.NS;
 
 public class KalypsoModelRoughnessConsts
 {
+	public static final QName WBR_PROP_URI=
+		new QName(
+				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,
+				"uri");
+	
 	public static final QName WBR_F_ROUGHNESS=
 		new QName(
 				UrlCatalogRoughness.NS_ROUGHNESS_MODEL,

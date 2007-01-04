@@ -2,6 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
@@ -13,7 +14,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public interface IRoughnessPolygonCollection 
+public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<IRoughnessPolygon>
 {
 	/**
 	 * Select the rougthness polygon containing this point. since the point

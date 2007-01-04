@@ -49,9 +49,9 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 				"Argument parentFeature must not be null");
 		try
 		{
-			System.out.println("ParentFeature="+parentFeature+
-					"\n\tpropQName="+propQName+
-					"\n\ttype="+KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
+//			System.out.println("ParentFeature="+parentFeature+
+//					"\n\tpropQName="+propQName+
+//					"\n\ttype="+KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
 			this.feature=
 				FeatureHelper.addFeature(
 					parentFeature, 
@@ -103,28 +103,6 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 												double eddyCor,
 												double marshCor)
 	{
-//		if(axayCor<0)
-//		{
-//			return RoughnessCorConfigConsistency.ILLEGAL_VALUE_AXAY_COR;
-//		}
-//		if(dpCor<0)
-//		{
-//			return RoughnessCorConfigConsistency.ILLEGAL_VALUE_DP_COR;
-//		}
-//		if(eddyCor<0)
-//		{
-//			return RoughnessCorConfigConsistency.ILLEGAL_VALUE_EDDY_COR;
-//		}
-//		if(marshCor<0)
-//		{
-//			return RoughnessCorConfigConsistency.ILLEGAL_VALUE_MARSH_COR;
-//		}
-//		if(ksCor<0)
-//		{
-//			return RoughnessCorConfigConsistency.ILLEGAL_VALUE_KS_COR;
-//		}
-//		
-//		return RoughnessCorConfigConsistency.OK;
 		
 		if(Double.isNaN(axayCor) || axayCor<0)
 		{

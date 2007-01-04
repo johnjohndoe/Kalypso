@@ -68,12 +68,16 @@ public class RoughnessClsCollection
 	public IRoughnessCls getRoughnessByURI(String uri) throws IllegalArgumentException
 	{
 		Assert.throwIAEOnNullOrEmpty(uri);
-		
+		String curUri;
 		for(IRoughnessCls rc:this)
 		{
-			if(uri.equals(rc.getURI()))
+			curUri=rc.getURI();
+			if(uri!=null)
 			{
-				return rc;
+				if(uri.equals(curUri))
+				{
+					return rc;
+				}
 			}
 		}
 		

@@ -9,6 +9,7 @@
 	<gml:name>ColName1</gml:name>
 	<wbr:roughnessClsMember>
 		<wbr:RoughnessCls>
+			<wbr:uri>uri_r1</wbr:uri>
 			<gml:name>r1</gml:name>
 			<wbr:ks>0.1</wbr:ks>
 			<wbr:axay>0.2</wbr:axay>
@@ -20,6 +21,7 @@
 	
 	<wbr:roughnessClsMember>
 		<wbr:RoughnessCls gml:id="uri_r2">
+			<wbr:uri>uri_r2</wbr:uri>
 			<gml:name>r2</gml:name>
 			<wbr:ks>0.1</wbr:ks>
 			<wbr:axay>0.2</wbr:axay>
@@ -31,6 +33,7 @@
 	
 	<wbr:roughnessClsMember>
 		<wbr:RoughnessCls>
+			<wbr:uri>uri_r3</wbr:uri>
 			<gml:name>r33</gml:name>
 			<wbr:ks>0.1</wbr:ks>
 			<wbr:axay>0.2</wbr:axay>

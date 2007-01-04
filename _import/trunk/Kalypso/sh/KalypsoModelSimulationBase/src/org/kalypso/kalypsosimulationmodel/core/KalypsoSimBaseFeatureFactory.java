@@ -12,6 +12,8 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
 import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
@@ -154,6 +156,22 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 			}
 		};
 		cMap.put(IRoughnessClsCorrection.class, cTor);
+		
+		
+			
+		//IRoughnessPolygon
+		cTor= new AdapterConstructor()
+		{
+			public Object constructAdapter(
+										Feature feature, 
+										Class cls) 
+										throws IllegalArgumentException
+			{
+				
+				return new RoughnessPolygon(feature);
+			}
+		};
+		cMap.put(IRoughnessPolygon.class, cTor);
 		
 		
 		return Collections.unmodifiableMap(cMap);
