@@ -1,12 +1,6 @@
-/**
- * 
- */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 

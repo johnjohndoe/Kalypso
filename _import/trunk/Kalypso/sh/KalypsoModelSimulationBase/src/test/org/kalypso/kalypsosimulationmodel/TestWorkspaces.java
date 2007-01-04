@@ -96,6 +96,10 @@ public class TestWorkspaces
 	public static final String REL_RES_ROUGHNESS_CLS_COLLECTION=
 							"data/roughness_cls_collection.xml";
 	
+	public static final URL URL_ROUGHNESS_POLYGON;
+	public static final String REL_RES_ROUGHNESS_POLYGON=
+							"data/roughness_polygon.xml";
+	
 	public static final URL URL_COL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
 							"data/collection_of_roughness_cls_correction.xml";
@@ -150,6 +154,10 @@ public class TestWorkspaces
 					REL_RES_COL_ROUGHNESS_CLS_COR,
 					TestWorkspaces.class.getResource(
 								REL_RES_COL_ROUGHNESS_CLS_COR));
+			urlMap.put(
+					REL_RES_ROUGHNESS_POLYGON,
+					TestWorkspaces.class.getResource(
+								REL_RES_ROUGHNESS_POLYGON));
 		}
 		catch(Throwable th)
 		{
@@ -176,6 +184,9 @@ public class TestWorkspaces
 			
 			URL_COL_ROUGHNESS_CLS_COR=
 					urlMap.get(REL_RES_COL_ROUGHNESS_CLS_COR);
+			
+			URL_ROUGHNESS_POLYGON=
+				urlMap.get(REL_RES_ROUGHNESS_POLYGON);
 		}
 	}
 	

@@ -43,12 +43,4 @@ public interface IRoughnessPolygon extends IFeatureWrapper
 	 */
 	public void setPolygon(GM_Polygon polygon);
 	
-	/**
-	 * Returns the feature on which the this roughness
-	 * poly gon is based
-	 * 
-	 * @return feature wrapped by this roughness polygon
-	 */
-	public Feature getFeature();
-	
 }

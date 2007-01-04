@@ -356,13 +356,13 @@ public class RoughnessCls implements IRoughnessCls
 					throws IllegalArgumentException
 	{
 		name=Assert.throwIAEOnNullOrEmpty(name);
-		FeatureHelper.addProperty(
-				feature,
+//		FeatureHelper.addProperty(
+//				feature,
+//				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
+//				Arrays.asList(new String[]{name}) );
+		feature.setProperty(
 				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
 				Arrays.asList(new String[]{name}) );
-//		feature.setProperty(
-//				KalypsoModelRoughnessConsts.GML_PROP_NAME, 
-//				name);
 	}
 
 	/* (non-Javadoc)
