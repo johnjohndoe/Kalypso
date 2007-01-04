@@ -13,5 +13,6 @@ Require-Bundle: org.kalypso.afgui,
  org.apache.jakarta_log4j,
  KalypsoModel1D2D,
  org.kalypso.ui,
- org.kalypso.ui.addlayer
+ org.kalypso.ui.addlayer,
+ org.junit4
 Eclipse-LazyStart: true
