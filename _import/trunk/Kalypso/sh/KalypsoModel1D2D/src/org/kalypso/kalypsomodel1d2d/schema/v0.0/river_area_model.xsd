@@ -10,6 +10,12 @@
 			targetNamespace="http://www.tu-harburg.de/wb/kalypso/rma10s/2d" 
 			elementFormDefault="qualified" 
 			attributeFormDefault="unqualified">
+			
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
 	<!-- remote from ogc -->
 	<!-- xs:import 	
 		namespace="http://www.opengis.net/gml" 

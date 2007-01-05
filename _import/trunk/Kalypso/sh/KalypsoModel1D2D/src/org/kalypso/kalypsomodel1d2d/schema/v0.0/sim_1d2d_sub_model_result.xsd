@@ -11,7 +11,12 @@
 	<!-- xs:import 	
 		namespace="http://www.opengis.net/gml" 
 		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/ -->
-
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	
 	<!-- local modified for successful binding -->
 	<xs:import
 		namespace="http://www.opengis.net/gml"

@@ -18,7 +18,7 @@
 	
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 	
@@ -323,16 +323,51 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element ref="gml:polygonProperty"/>
+					<!--TODO Parser parse as GM_Surface if using gml:polygonProperty
+					 	directly
+					 -->
+					<!--xs:element ref="gml:polygonProperty"/ -->
+					<!--xs:element 
+						name="polygonProperty"
+						type="gml:SurfacePropertyType"
+						minOccurs="0" maxOccurs="1"/-->
+					<!--xs:element
+						ref="simBase:roughnessPolygonPatchProperty"
+						minOccurs="1" maxOccurs="1"/ -->	
+					<xs:element
+						ref="simBase:polygonProperty"
+						minOccurs="0" maxOccurs="1"/>
+					<!--xs:element
+						ref="gml:surfaceProperty"/-->	
 					<xs:element 
 						name="roughnessID"
 						type="xs:anyURI"
 						minOccurs="1"	
 						maxOccurs="1"/>
+						
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element 
+		name="polygonProperty"
+		type="simBase:RoughnessPolygonPatchPropertyType"/>
+	<xs:complexType 
+		name="RoughnessPolygonPatchPropertyType">
+		<xs:annotation>
+			<xs:documentation>				
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="gml:_Surface"
+				 minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	
+		
 	<!-- =================================================================
 		riverProfileNetworkProperty
 	================================================================== -->

@@ -65,6 +65,9 @@ public class TestWorkspaces
 {
 	private static final Logger logger= 
 			Logger.getLogger(TestWorkspaces.class);
+	
+	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
+	
 	public static final URL URL_POLYNOMIAL1D;
 	public static final String REL_RES_POLYNOMIAL1D="data/polynomial1d.xml";
 	

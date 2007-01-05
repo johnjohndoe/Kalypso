@@ -18,7 +18,7 @@
 	attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 	

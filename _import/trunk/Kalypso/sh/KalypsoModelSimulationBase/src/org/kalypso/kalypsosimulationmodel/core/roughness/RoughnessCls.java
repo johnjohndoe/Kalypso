@@ -86,9 +86,6 @@ public class RoughnessCls implements IRoughnessCls
 				"Argument roughnessCollection must not be null");
 		try
 		{
-			System.out.println("ParentFeature="+parentFeature+
-					"\n\tpropQName="+propQName+
-					"\n\ttype="+KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
 			this.feature=
 				FeatureHelper.addFeature(
 					parentFeature, 

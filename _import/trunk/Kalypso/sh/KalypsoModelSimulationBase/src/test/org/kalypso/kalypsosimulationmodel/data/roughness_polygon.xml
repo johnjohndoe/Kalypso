@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
+
+
+<!--simBase:RoughnessPolygon
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
+	gml:id="htpp://wwww.tuhh.de/wb/roughness_db/grass">
+	<simBase:roughnessID>htpp://wwww.tuhh.de/wb/roughness_db/grass</simBase:roughnessID>
+	
+	<simBase:polygonProperty>
+		<gml:Surface>
+			<gml:patches>
+			 	<gml:Polygon srsName="EPSG:31467">
+		    	 	<gml:exterior>
+				      	<gml:LinearRing>
+				        	<gml:coordinates	ts="," decimal="." cs=" ">0.0 0.0, 0.0 1.0, 1.0 1.0, 1.0 0.0, 0.0 0.0</gml:coordinates>
+				      	</gml:LinearRing>
+		     		</gml:exterior>
+	    		</gml:Polygon>
+	    	</gml:patches>
+	    </gml:Surface>
+	</simBase:polygonProperty>
+</simBase:RoughnessPolygon -->
+
 <simBase:RoughnessPolygon
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:gml="http://www.opengis.net/gml" 

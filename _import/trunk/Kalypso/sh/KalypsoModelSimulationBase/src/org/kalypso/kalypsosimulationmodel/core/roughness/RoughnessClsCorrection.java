@@ -49,9 +49,6 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 				"Argument parentFeature must not be null");
 		try
 		{
-//			System.out.println("ParentFeature="+parentFeature+
-//					"\n\tpropQName="+propQName+
-//					"\n\ttype="+KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS);
 			this.feature=
 				FeatureHelper.addFeature(
 					parentFeature, 
