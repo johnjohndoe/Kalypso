@@ -55,9 +55,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NamedFeatureHelper
 {
-  private static final QName GML_NAME = new QName( NS.GML3, "name" );
+  public static final QName GML_NAME = new QName( NS.GML3, "name" );
 
-  private static final QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
+  public static final QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
 
   private NamedFeatureHelper( )
   {
