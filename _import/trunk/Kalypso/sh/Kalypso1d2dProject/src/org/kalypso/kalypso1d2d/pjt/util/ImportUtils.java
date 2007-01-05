@@ -82,7 +82,7 @@ public class ImportUtils
 	 * @param sourceCrs - coordinate sistem used by input SHP file
 	 * @param schemaNamespace - GML schema namespace used for creating GML data
 	 * @param outputFileURL - URL of output GML file
-	 * @param shpPropertyName - ...
+	 * @param shpPropertyName - 
 	 * @throws GmlSerializeException - if input SHP file cannot be deserialized, or output GML cannot be serialized (for any reason)
 	 * @throws IOException - if output file cannot be created/opened for writing
 	 * 
