@@ -100,6 +100,12 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Der Speicherinhalt des Interzeptionsspeichers in einem Nutzungszyklus [mm] */
   public static final String TYPE_LAI = "LAI";
 
+  /** Humidity [%] */
+  public static final String TYPE_HUMIDITY = "U";
+
+  /** Velocity [m/s] */
+  public static final String TYPE_VELOCITY = "v";
+
   public static final String[] TYPES_ALL;
 
   /**
@@ -122,7 +128,9 @@ public abstract class TimeserieConstants implements ObservationConstants
         TYPE_NORMNULL,
         TYPE_KC,
         TYPE_WT,
-        TYPE_LAI };
+        TYPE_LAI,
+        TYPE_HUMIDITY,
+        TYPE_VELOCITY};
     Arrays.sort( types );
     TYPES_ALL = types;
   }
