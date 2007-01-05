@@ -72,5 +72,6 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "v0.2/ombrometer.xsd" ) );
     catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "v0.6/synthN.xsd" ) );    
     catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "v0.8/initialValues.xsd" ) );
+    catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "v1.0.0/NAFortranLog.xsd" ) );
   }
 }

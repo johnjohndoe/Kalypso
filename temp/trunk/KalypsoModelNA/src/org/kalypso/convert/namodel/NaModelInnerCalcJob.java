@@ -54,7 +54,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,6 +74,7 @@ import java.util.logging.XMLFormatter;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -84,6 +87,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -96,6 +100,7 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -141,7 +146,7 @@ public class NaModelInnerCalcJob implements ISimulation
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-//  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
+  // private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
   // private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
 
@@ -150,6 +155,8 @@ public class NaModelInnerCalcJob implements ISimulation
   private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
   private final String EXE_FILE_2_06 = "start/kalypso_2.0.6.exe";
+
+  private final String EXE_FILE_TEST = "start/kalypso_test.exe";
 
   private boolean m_succeeded = false;
 
@@ -187,6 +194,16 @@ public class NaModelInnerCalcJob implements ISimulation
     try
     {
       File loggerFile = new File( tmpdir, "infoLog.txt" );
+      // try
+      // {
+      // Writer logWriter = new FileWriter( loggerFile );
+      // logWriter.write( getLogHeader() );
+      // logWriter.close();
+      // }
+      // catch( IOException e )
+      // {
+      //        e.printStackTrace();
+      //      }
       h = new StreamHandler( new FileOutputStream( loggerFile ), f );
       logger.addHandler( h );
       h.flush();
@@ -278,15 +295,12 @@ public class NaModelInnerCalcJob implements ISimulation
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, resultEater, conf );
-
-        // System.out.println( "fertig - Ergebnisse vorhanden" );
       }
       else
       {
         monitor.setMessage( "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
         logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
-        loadLogs( tmpdir, logger, resultEater );
-        // System.out.println( "fertig - Fehler siehe Log-Dateien" );
+        loadLogs( tmpdir, logger, resultEater, modellWorkspace, conf );
       }
     }
     catch( Exception e )
@@ -295,6 +309,19 @@ public class NaModelInnerCalcJob implements ISimulation
       throw new SimulationException( "Simulation konnte nicht durchgefuehrt werden", e );
     }
 
+  }
+
+  private String getLogHeader( )
+  {
+    return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "\n"
+        + "<LogMessage xmlns=\"http://www.tuhh.de/NAFortranLog\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:zmlinline=\"inline.zml.kalypso.org\" xmlns:obslink=\"obslink.zml.kalypso.org\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+        + "\n" + "<log>" + "\n");
+  }
+
+  private String getLogFooter( )
+  {
+    return ("</log>" + "\n" + "</LogMessage>");
   }
 
   /**
@@ -565,7 +592,7 @@ public class NaModelInnerCalcJob implements ISimulation
     if( conf.isUsePrecipitationForm().equals( true ) )
     {
       // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
-      conf.setAnnuality( 1d/(Double) metaFE.getProperty( "xjah" ) );
+      conf.setAnnuality( 1d / (Double) metaFE.getProperty( "xjah" ) );
       Double durationMinutes = (Double) metaFE.getProperty( "xwahl2" );
       Double durationHours = durationMinutes / 60d;
       conf.setDuration( durationHours );
@@ -874,7 +901,7 @@ public class NaModelInnerCalcJob implements ISimulation
   private void chooseSimulationExe( final String kalypsoNAVersion )
   {
     if( kalypsoNAVersion.equals( "test" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_06;
+      m_kalypsoKernelPath = EXE_FILE_TEST;
     // else if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
     // m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
     // else if( kalypsoNAVersion.equals( "v2.0.2" ) )
@@ -1012,7 +1039,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final LzsimManager lzsimManager = new LzsimManager();
       lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir, conf );
     }
-    loadLogs( tmpdir, logger, resultEater );
+    loadLogs( tmpdir, logger, resultEater, modellWorkspace, conf );
     final File[] files = resultDir.listFiles();
     if( files != null )
     {
@@ -1381,7 +1408,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void loadLogs( final File tmpDir, final Logger logger, ISimulationResultEater resultEater )
+  private void loadLogs( final File tmpDir, final Logger logger, ISimulationResultEater resultEater, final GMLWorkspace modellWorkspace, final NAConfiguration conf )
   {
 
     try
@@ -1412,9 +1439,45 @@ public class NaModelInnerCalcJob implements ISimulation
       e.printStackTrace();
       logger.info( e.getMessage() );
     }
+    File logFile = new File( tmpDir, "start/error.gml" );
+    GMLWorkspace naFortranLogWorkspace = null;
     try
     {
-      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( tmpDir, "start/error.gml" ) );
+      naFortranLogWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURL(), null );
+    }
+    catch( MalformedURLException e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    catch( Exception e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    try
+    {
+      GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
+      GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" );
+    }
+    catch( IOException e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    catch( GmlSerializeException e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    catch( ParseException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    try
+    {
+      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, logFile );
     }
     catch( SimulationException e )
     {
@@ -1431,7 +1494,20 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     try
     {
-      resultEater.addResult( NaModelConstants.LOG_INFO_ID, new File( tmpDir, "infoLog.txt" ) );
+
+      File loggerFile = new File( tmpDir, "infoLog.txt" );
+      // try
+      // {
+      // Writer logWriter = new FileWriter( loggerFile );
+      // logWriter.write( getLogFooter() );
+      // logWriter.close();
+      // }
+      // catch( IOException e )
+      // {
+      //        e.printStackTrace();
+      //      }
+
+      resultEater.addResult( NaModelConstants.LOG_INFO_ID, loggerFile );
     }
     catch( SimulationException e )
     {
@@ -1439,6 +1515,42 @@ public class NaModelInnerCalcJob implements ISimulation
       logger.info( e.getMessage() );
     }
 
+  }
+
+  private GMLWorkspace readLog( GMLWorkspace naFortranLogWorkspace, GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws ParseException
+  {
+    final IDManager idManager = conf.getIdManager();
+    final IFeatureType recordFT = naFortranLogWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_NAFORTRANLOG, "record" ) );
+    final Feature[] recordFEs = naFortranLogWorkspace.getFeatures( recordFT );
+    for( final Feature feature : recordFEs )
+    {
+      String elementString = (String) feature.getProperty( new QName( NaModelConstants.NS_NAFORTRANLOG, "element" ) );
+      int i = elementString.indexOf( "       " );
+      String element = elementString.substring( 0, i );
+      String fortranID = elementString.substring( i ).trim();
+      Integer asciiID = 0;
+      int type = 0;
+      if( !fortranID.equals( "" ) )
+        asciiID = NumberUtils.toInteger( fortranID );
+      if( (elementString.contains( "Teilgebiet" )) )
+        type = IDManager.CATCHMENT;
+      if( (elementString.contains( "Knoten" )) )
+        type = IDManager.NODE;
+      if( (elementString.contains( "Strang" )) )
+        type = IDManager.CHANNEL;
+      try
+      {
+        String gmlName = (String) (idManager.getFeature( asciiID, type )).getProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_NAME_PROP ) );
+        String FeatureID = idManager.getFeature( asciiID, type ).getId();
+        feature.setProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_NAME_PROP ), gmlName );
+        feature.setProperty( new QName( "http://www.opengis.net/gml", NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), ("FeatureID: " + gmlName) );
+      }
+      catch( Exception e )
+      {
+        System.out.println( "Fortran Element in model.gml nicht vorhanden: " + element + " " + fortranID );
+      }
+    }
+    return naFortranLogWorkspace;
   }
 
   private void copyExecutable( File basedir ) throws Exception

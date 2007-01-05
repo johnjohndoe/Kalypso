@@ -62,6 +62,8 @@ public interface NaModelConstants
 
   public static final String NS_INIVALUES = "http://www.tuhh.de/initialValues";
 
+  public static final String NS_NAFORTRANLOG = "http://www.tuhh.de/NAFortranLog";
+
   /** server client bean constants */
   // input
   public static final String IN_META_ID = "MetaSteuerdaten";

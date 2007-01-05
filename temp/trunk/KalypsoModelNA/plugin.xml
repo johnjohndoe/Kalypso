@@ -8,4 +8,10 @@
               simulationClass="org.kalypso.convert.namodel.NaModelCalcJob"
               typeID="KalypsoNA"/>
      </extension>
+     <extension
+           point="org.kalypso.contribs.java.urlCatalog">
+        <catalog
+              class="org.kalypso.convert.namodel.schema.UrlCatalogNA"
+              id="org.kalypso.convert.namodel.UrlCatalogNA"/>
+     </extension>
 </plugin>
