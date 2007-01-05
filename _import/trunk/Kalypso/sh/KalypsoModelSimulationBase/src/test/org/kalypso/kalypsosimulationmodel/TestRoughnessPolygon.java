@@ -1,28 +1,22 @@
 package test.org.kalypso.kalypsosimulationmodel;
 
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import junit.framework.TestCase;
@@ -54,6 +48,7 @@ public class TestRoughnessPolygon extends TestCase
 					rFeature, 
 					TestWorkspaces.GML_PROP_FEATURE_MEMBER,
 					KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON);
+			
 			//gm pos
 			GM_Position exteriorRing[]= new GM_Position[5];
 			
@@ -74,13 +69,25 @@ public class TestRoughnessPolygon extends TestCase
 								new  GM_Position[0][0], 
 								(GM_SurfaceInterpolation)null, 
 								CS_GAUSS_KRUEGER);
-				GM_Surface surface=
-					GeometryFactory.createGM_Surface(pol1);
+//				GM_Surface surface=
+//					GeometryFactory.createGM_Surface(pol1);
+			
+			GM_Surface surface=
+				GeometryFactory.createGM_Surface(
+						exteriorRing, 
+						new  GM_Position[0][0], 
+						(GM_SurfaceInterpolation)null, 
+						CS_GAUSS_KRUEGER);
+			
+			
+			System.out.println("RP_PROPS=="+pol1.getClass()+
+					"\n "+pol1);
 			System.out.println("RP_PROPS=="+Arrays.asList(rp.getProperties()));
 			
 			rp.setProperty(
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
-					surface);
+					pol1//surface
+					);
 			
 //			FeatureHelper.addProperty(
 //					rp,

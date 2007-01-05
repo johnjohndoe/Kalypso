@@ -18,7 +18,7 @@
 	
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 	
@@ -334,8 +334,17 @@
 					<!--xs:element
 						ref="simBase:roughnessPolygonPatchProperty"
 						minOccurs="1" maxOccurs="1"/ -->	
-					<xs:element
+					<!--xs:element
 						ref="simBase:polygonProperty"
+						minOccurs="0" maxOccurs="1"/-->
+					<xs:element ref="simBase:polygonProperty"/>
+					<!-- xs:element
+						name="polygonProperty"
+						type="gml:SurfacePropertyType"
+						minOccurs="0" maxOccurs="1"/-->
+					<xs:element
+						name="polygonPropertyQQ"
+						type="gml:MultiPolygonType"
 						minOccurs="0" maxOccurs="1"/>
 					<!--xs:element
 						ref="gml:surfaceProperty"/-->	
@@ -350,19 +359,19 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:element 
+	<xs:element
 		name="polygonProperty"
+		type="gml:SurfacePropertyType"/>
+	
+	<xs:element 
+		name="polygonPropertys"
 		type="simBase:RoughnessPolygonPatchPropertyType"/>
 	<xs:complexType 
 		name="RoughnessPolygonPatchPropertyType">
-		<xs:annotation>
-			<xs:documentation>				
-			</xs:documentation>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="gml:_Surface"
-				 minOccurs="0" maxOccurs="1"/>
+				ref="gml:_Geometry"
+				 minOccurs="0" maxOccurs="1"/>			
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
