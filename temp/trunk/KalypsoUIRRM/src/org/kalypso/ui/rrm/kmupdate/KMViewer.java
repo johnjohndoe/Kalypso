@@ -416,7 +416,7 @@ public class KMViewer
           Profile profileData = fac.createKalininMiljukovTypeProfile();
           profileData.setFile( file.toString() );
           profileData.setPositionKM( position );
-          System.out.println("Profil: " + pd.getPosition());
+          System.out.print("Profil: " + pd.getPosition());
           profileData.setEnabled( pd.isValidForKalypso() );
           profileList.add( profileData );
           // m_profileListViewer.setChecked( profileData, true );

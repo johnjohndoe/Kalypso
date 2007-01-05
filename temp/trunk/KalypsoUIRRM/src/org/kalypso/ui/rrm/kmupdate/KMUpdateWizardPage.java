@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.dialog.ScrolledTextInformationDialog;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -595,12 +596,18 @@ public class KMUpdateWizardPage extends WizardPage
         final Feature kmParameterFE = kmParameter[i];
         final AbstractKMValue value = values[i];
         detailedLogger.log( (i + 1) + ". " + value.toString() + "\n" );
-        result.add( new FeatureChange( kmParameterFE, rkfPT, value.getK() ) );
-        result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
-        result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
-        result.add( new FeatureChange( kmParameterFE, rnvPT, value.getNForeland() ) );
-        result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQSum() ) );
-        result.add( new FeatureChange( kmParameterFE, cPT, value.getAlpha() ) );
+        // result.add( new FeatureChange( kmParameterFE, rkfPT, value.getK() ) );
+        // result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
+        // result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
+        // result.add( new FeatureChange( kmParameterFE, rnvPT, value.getNForeland() ) );
+        // result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQSum() ) );
+        // result.add( new FeatureChange( kmParameterFE, cPT, value.getAlpha() ) );
+        result.add( new FeatureChange( kmParameterFE, rkfPT, Double.parseDouble( FortranFormatHelper.printf( value.getK(), "f8.4" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, rkvT, Double.parseDouble( FortranFormatHelper.printf( value.getKForeland(), "f8.4" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, rnfPT, Double.parseDouble( FortranFormatHelper.printf( value.getN(), "f7.2" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, rnvPT, Double.parseDouble( FortranFormatHelper.printf( value.getNForeland(), "f7.2" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, qrkPT, Double.parseDouble( FortranFormatHelper.printf( value.getQSum(), "f8.3" ) ) ) );
+        result.add( new FeatureChange( kmParameterFE, cPT, Double.parseDouble( FortranFormatHelper.printf( value.getAlpha(), "f8.3" ) ) ) );
       }
     }
     return result;
