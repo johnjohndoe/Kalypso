@@ -8,7 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -21,7 +24,6 @@ import com.bce.datacenter.db.persistent.Persistent;
  * business logic upon timeseries.
  * 
  * @author Marc Schlienger
- * 
  * @see Channel
  */
 public class Timeserie extends Persistent
@@ -60,8 +62,7 @@ public class Timeserie extends Persistent
   /**
    * Constructor with parameters
    */
-  public Timeserie( final Connection con, int id, String name, String desc, String type, String tableName,
-      int channelRef )
+  public Timeserie( final Connection con, int id, String name, String desc, String type, String tableName, int channelRef )
   {
     super( con, id, false );
 
@@ -72,22 +73,22 @@ public class Timeserie extends Persistent
     m_channelRef = channelRef;
   }
 
-  public String getType()
+  public String getType( )
   {
     return m_type;
   }
-  
-  public String getDescription()
+
+  public String getDescription( )
   {
     return m_description;
   }
 
-  public String getDataTableName()
+  public String getDataTableName( )
   {
     return m_dataTableName;
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -97,7 +98,7 @@ public class Timeserie extends Persistent
    * 
    * @return min date, or null if error occurs
    */
-  public Date getRealBegin()
+  public Date getRealBegin( )
   {
     try
     {
@@ -138,7 +139,7 @@ public class Timeserie extends Persistent
    * 
    * @return max date, or null if error occurs
    */
-  public Date getRealEnd()
+  public Date getRealEnd( )
   {
     try
     {
@@ -191,7 +192,7 @@ public class Timeserie extends Persistent
 
     Timeserie ts = null;
 
-    //System.out.println("Resultset get Object: "+rs.getObject(1));
+    // System.out.println("Resultset get Object: "+rs.getObject(1));
 
     if( rs.getObject( 1 ) != null )
       ts = new Timeserie( con, rs.getInt( 1 ) );
@@ -203,7 +204,7 @@ public class Timeserie extends Persistent
     return ts;
   }
 
-  public Channel getChannel()
+  public Channel getChannel( )
   {
     if( m_channel == null )
       m_channel = new Channel( m_con, m_channelRef );
@@ -224,7 +225,6 @@ public class Timeserie extends Persistent
    *          string representing the separator between the tokens: date, value, and flag. (if null default is comma)
    * @param dateFormatPattern
    *          string such as in SimpleDateFormat representing the format of the date. (if null uses the locale default)
-   * 
    * @return amount of lines written if successfull, otherwise -1
    */
   public int ExportToFile( String filename, Date from, Date to, String separator, String dateFormatPattern )
@@ -332,7 +332,7 @@ public class Timeserie extends Persistent
       else
       {
         // add time-to specification
-        tmp_stmt += ( " AND TSTIME <= '" + m_sqlDateFormat.format( to ) + "')" );
+        tmp_stmt += (" AND TSTIME <= '" + m_sqlDateFormat.format( to ) + "')");
       }
     }
     else
@@ -347,20 +347,20 @@ public class Timeserie extends Persistent
     if( tmp_stmt != "" )
     {
       // add where clause
-      str += ( " WHERE " + tmp_stmt );
+      str += (" WHERE " + tmp_stmt);
     }
     return str;
   }
 
   /**
    * Returns values in the form of an array of TimeserieTupples
-   *  
    */
   public TimeserieTupple[] getValues( final java.util.Date from, final java.util.Date to ) throws SQLException
   {
     try
     {
       final Statement st = m_con.createStatement();
+      // TODO: Berücksichtigt die Zeitzone nicht richtig - es sollte die Datenbankzeitzone gewählt werden!!!
       final ResultSet set = st.executeQuery( createQuery( from, to ) );
 
       final Vector<TimeserieTupple> list = new Vector<TimeserieTupple>();
@@ -402,7 +402,7 @@ public class Timeserie extends Persistent
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_name + " (" + m_dataTableName + ")";
   }
@@ -411,12 +411,11 @@ public class Timeserie extends Persistent
    * @see com.bce.datacenter.db.persistent.Persistent#dbRead()
    */
   @Override
-  protected void dbRead()
+  protected void dbRead( )
   {
     try
     {
-      PreparedStatement stmt = m_con
-          .prepareStatement( "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
+      PreparedStatement stmt = m_con.prepareStatement( "SELECT NAME, DESCRIPTION, TYPE, CHANNEL_REF, DATATABLENAME FROM TS_TIMESERIES WHERE TSID = ?" );
 
       stmt.setInt( 1, m_ID );
 
@@ -461,8 +460,7 @@ public class Timeserie extends Persistent
 
     try
     {
-      PreparedStatement stmt = con
-          .prepareStatement( "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
+      PreparedStatement stmt = con.prepareStatement( "SELECT TSID, NAME, DESCRIPTION, TYPE, DATATABLENAME FROM TS_TIMESERIES WHERE CHANNEL_REF = ? ORDER BY NAME" );
 
       stmt.setInt( 1, channelRef );
 
@@ -470,8 +468,7 @@ public class Timeserie extends Persistent
 
       while( rs.next() )
       {
-        Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs
-            .getString( 5 ), channelRef );
+        Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getString( 5 ), channelRef );
 
         v.add( c );
       }
@@ -503,8 +500,8 @@ public class Timeserie extends Persistent
   {
     if( object == null )
       return false;
-    if( !( object instanceof Timeserie ) )
+    if( !(object instanceof Timeserie) )
       return false;
-    return ( (Timeserie)object ).getID() == getID();
+    return ((Timeserie) object).getID() == getID();
   }
 }
