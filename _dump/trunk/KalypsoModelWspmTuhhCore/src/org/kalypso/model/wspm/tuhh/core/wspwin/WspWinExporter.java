@@ -407,9 +407,6 @@ public class WspWinExporter
         prfWriter = new PrintWriter( outPrfFile );
         final IProfilSink ps = new PrfSink();
         ps.write( profil, prfWriter );
-
-        // ProfilesSerializer.store( profil,outPrfFile );
-        // ProfilesSerializer.store( profil,zustFile.getParent() + File.separatorChar + prfName );
       }
 
       zustWriter.close();

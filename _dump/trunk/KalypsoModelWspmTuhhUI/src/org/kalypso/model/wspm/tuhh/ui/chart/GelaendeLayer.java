@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.axis.AxisRange;

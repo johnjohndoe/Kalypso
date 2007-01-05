@@ -65,15 +65,16 @@ import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.ui.chart.AbstractPolyLineLayer.EditData;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;

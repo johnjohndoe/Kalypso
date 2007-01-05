@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;

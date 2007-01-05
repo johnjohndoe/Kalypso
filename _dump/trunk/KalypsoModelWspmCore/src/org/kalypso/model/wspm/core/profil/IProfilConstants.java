@@ -51,6 +51,8 @@ public interface IProfilConstants
   /** ObjectTyp=List<String> */
   public static final String PROFIL_PROPERTY = "org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY_";
 
+  public static final String PROFIL_PROPERTY_NAME = PROFIL_PROPERTY + "NAME";
+
   public static final String PROFIL_PROPERTY_KOMMENTAR = PROFIL_PROPERTY + "KOMMENTAR";
 
   // /** ObjectTyp=String */

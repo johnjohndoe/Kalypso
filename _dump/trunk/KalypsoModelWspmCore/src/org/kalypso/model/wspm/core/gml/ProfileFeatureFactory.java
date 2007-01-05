@@ -84,6 +84,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile
@@ -139,6 +140,16 @@ public class ProfileFeatureFactory implements IWspmConstants
     try
     {
       //
+      // Name + Description
+      //
+      final String name = (String)profile.getProperty( IProfilConstants.PROFIL_PROPERTY_NAME );
+      final List<String> namelist = new ArrayList<String>( 1 );
+      namelist.add(  name  );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
+      final String description = (String)profile.getProperty( IProfilConstants.PROFIL_PROPERTY_KOMMENTAR );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
+      
+      //
       // Station
       //
       final double station = profile.getStation();
@@ -149,7 +160,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       //
       final String profiletype = profile.getType();
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_TYPE ), profiletype ) );
-      
+
       /* Ensure that record-definition is there */
       final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
       if( recordDefinition == null )
@@ -331,6 +342,8 @@ public class ProfileFeatureFactory implements IWspmConstants
     profil.setProperty( IProfilConstants.PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG, "0" );
     profil.setProperty( IProfilConstants.PROFIL_PROPERTY_WASSERSPIEGEL, "Gewaesser" );
     profil.setProperty( IProfilConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, "0" );
+    profil.setProperty( IProfilConstants.PROFIL_PROPERTY_NAME, observation.getName() );
+    profil.setProperty( IProfilConstants.PROFIL_PROPERTY_KOMMENTAR, observation.getDescription() );
 
     final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
@@ -359,8 +372,10 @@ public class ProfileFeatureFactory implements IWspmConstants
       {
         if( pp == POINT_PROPERTY.RAUHEIT )
         {
-          // final String rauheit_typ = IProfil.RAUHEIT_TYP.valueOf( component.getUnit() );
-          profil.setProperty( IProfilConstants.RAUHEIT_TYP, component.getUnit() );
+          if( "ks".equals( component.getUnit() ) )
+            profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, IProfilConstants.RAUHEIT_TYP_KS );
+          else
+            profil.setProperty( IProfil.PROFIL_PROPERTY.RAUHEIT_TYP, IProfilConstants.RAUHEIT_TYP_KST );
         }
 
         profil.addPointProperty( pp );

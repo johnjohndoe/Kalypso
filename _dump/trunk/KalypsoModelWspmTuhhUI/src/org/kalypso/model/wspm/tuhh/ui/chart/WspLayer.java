@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.tuhh.ui.panel.WspPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 

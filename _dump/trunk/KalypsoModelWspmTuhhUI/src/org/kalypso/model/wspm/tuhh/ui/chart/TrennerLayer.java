@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 

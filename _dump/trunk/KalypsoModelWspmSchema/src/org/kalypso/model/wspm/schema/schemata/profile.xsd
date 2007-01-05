@@ -21,15 +21,17 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil</name>
-				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name;-leer-}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}</description>
+				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
+				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-leer-}]]></tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Profile</name>
-				<label>Station km ${property:org.kalypso.model.wspmprofile#station;-not set-}</label>
-				<tooltip>${property:http://www.opengis.net/gml#name;-empty-}</tooltip>
-				<description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-not set-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
+				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-empty-}]]>
+				</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-no	description-}]]>
+				</description>
 			</documentation>
 		</annotation>
 	</element>

@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import de.belger.swtchart.layer.IChartLayer;
 
 /**
- * @author gernot
+ * @author Gernot Belger
  */
 public interface IProfilChartLayer extends IChartLayer
 {
