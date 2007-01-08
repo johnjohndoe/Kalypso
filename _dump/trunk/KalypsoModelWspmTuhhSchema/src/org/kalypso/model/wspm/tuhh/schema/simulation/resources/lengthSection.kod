@@ -1,83 +1,119 @@
-<?xml version="1.0" encoding="CP1252"?>
-<Configuration xmlns="http://www.ksp.org/chart/viewerConfiguration"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:style="http://www.ksp.org/chart/layerStyle"
-    xsi:schemaLocation="
-    http://www.ksp.org/chart/viewerConfiguration file:/C:/Eclipse/Kalypso/KalypsoChart/etc/binding/conf/viewerConfiguration.xsd
-    http://www.ksp.org/chart/layerStyle file:/C:/Eclipse/Kalypso/KalypsoChart/etc/binding/style/layerStyle.xsd
-    ">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Configuration xmlns="http://www.ksp.org/chart/configuration" >
     <Chart name="ls">
-        <Title>Spiegellinien-Längsschnitt</Title>
-        <Abstract>Die ist das Ergebnis einer 1D-Spiegellinienberechnung in Form eines Längsschnitts</Abstract>
-        <LayerProvider name="org.kalypso.layerprovider.observation.WasserstandLayerProvider">
-            <Parameter name="href" value="Daten/Längsschnitt.gml"/>
-            <Parameter name="gmlxpath" value=""/>
-            <ChartElement>
-                <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
-                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
-                </AxisMapping>
-                <StyleLink name="LINE" ref="wspStyle"/>
-            </ChartElement>
-
-            <ChartElement>
-                <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
-                    <Value axisLink="M3SAxis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
-                </AxisMapping>
-                <StyleLink name="LINE" ref="runoffStyle"/>
-            </ChartElement>
-
-            <ChartElement>
-                <AxisMapping>
-                    <Domain axisLink="Station_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
-                    <Value axisLink="NN_Axis" equation="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
-                </AxisMapping>
-                <StyleLink name="LINE" ref="soilStyle"/>
-            </ChartElement>
-        </LayerProvider>
-
-        <DoubleAxis id="Station_Axis">
-            <Name>Station</Name>
-            <Direction>NEGATIVE</Direction>
-            <Position>BOTTOM</Position>
-            <MinVal>0.0</MinVal>
-            <MaxVal>100.0</MaxVal>
-        </DoubleAxis>
-        <DoubleAxis id="NN_Axis">
-            <Name>NN+m</Name>
-            <Direction>POSITIVE</Direction>
-            <Position>LEFT</Position>
-            <MinVal>-5.0</MinVal>
-            <MaxVal>10.0</MaxVal>
-        </DoubleAxis>
-        <DoubleAxis id="M3SAxis">
-            <Name>m³/s</Name>
-            <Direction>POSITIVE</Direction>
-            <Position>RIGHT</Position>
-            <MinVal>-5.0</MinVal>
-            <MaxVal>10.0</MaxVal>
-        </DoubleAxis>
+        <title>Spiegellinien-Längsschnitt</title>
+        <description>Dies ist das Ergebnis einer 1D-Spiegellinienberechnung in Form eines Längsschnitts</description>
+        <layers>
+        	<LayerRef ref="wsp"/>
+        	<LayerRef ref="runoff"/>
+        	<LayerRef ref="soil"/>
+        </layers>
     </Chart>
-    <style:Style id="wspStyle">
-        <style:Line>
-            <style:LineWidth>2</style:LineWidth>
-            <style:LineStyle>SOLID</style:LineStyle>
-            <style:LineColor>0000ff</style:LineColor>
-        </style:Line>
-    </style:Style>
-    <style:Style id="soilStyle">
-        <style:Line>
-            <style:LineWidth>2</style:LineWidth>
-            <style:LineStyle>SOLID</style:LineStyle>
-            <style:LineColor>00ff00</style:LineColor>
-        </style:Line>
-    </style:Style>
-    <style:Style id="runoffStyle">
-        <style:Line>
-            <style:LineWidth>2</style:LineWidth>
-            <style:LineStyle>SOLID</style:LineStyle>
-            <style:LineColor>ff0000</style:LineColor>
-        </style:Line>
-    </style:Style>
+    <Layer name="wsp">
+        <title></title>
+        <description></description>
+        <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="Station_Axis"></DomainAxisRef>
+			<ValueAxisRef ref="NN_Axis"></ValueAxisRef>
+		</axes>
+		<style>
+			<StyleRef ref="wspStyle"></StyleRef>
+		</style>
+		<parameters>
+			<Parameter name="href" value="Daten/Längsschnitt.gml"></Parameter>
+			<Parameter name="gxlpath" value=""></Parameter>
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" />
+		</parameters>
+    </Layer>
+    <Layer name="runoff">
+        <title></title>
+        <description></description>
+        <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="Station_Axis"></DomainAxisRef>
+			<ValueAxisRef ref="M3S_Axis"></ValueAxisRef>
+		</axes>
+		<style>
+			<StyleRef ref="runoffStyle"></StyleRef>
+		</style>
+		<parameters>
+			<Parameter name="href" value="Daten/Längsschnitt.gml"></Parameter>
+			<Parameter name="gxlpath" value=""></Parameter>
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
+		</parameters>
+    </Layer>
+    <Layer name="soil">
+        <title></title>
+        <description></description>
+        <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="Station_Axis"></DomainAxisRef>
+			<ValueAxisRef ref="NN_Axis"></ValueAxisRef>
+		</axes>
+		<style>
+			<StyleRef ref="soilStyle"></StyleRef>
+		</style>
+		<parameters>
+			<Parameter name="href" value="Daten/Längsschnitt.gml"></Parameter>
+			<Parameter name="gxlpath" value=""></Parameter>
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" />
+		</parameters>
+    </Layer>
+
+    <Axis name="Station_Axis">
+    	<label>Station</label>
+    	<provider id="org.kalypso.axisprovider.Number" />
+    	<direction>POSITIVE</direction>
+    	<position>BOTTOM</position>
+    	<minVal>0.0</minVal>
+    	<maxVal>100.0</maxVal>
+    </Axis>
+    <Axis name="NN_Axis">
+    	<label>NN+m</label>
+    	<provider id="org.kalypso.axisprovider.Number" />
+    	<direction>POSITIVE</direction>
+    	<position>LEFT</position>
+    	<minVal>5.0</minVal>
+    	<maxVal>10.0</maxVal>
+    </Axis>
+    <Axis name="M3S_Axis">
+    	<label>m³/s</label>
+    	<provider id="org.kalypso.axisprovider.Number" />
+    	<direction>POSITIVE</direction>
+    	<position>RIGHT</position>
+    	<minVal>-5.0</minVal>
+    	<maxVal>10.0</maxVal>
+    </Axis>
+
+    <Style name="wspStyle">
+	    <styleID></styleID>
+	    <type>LINE</type>
+	    <parameters>
+	    	<Parameter name="lineWidth" value="2"></Parameter>
+	    	<Parameter name="lineStyle" value="SOLID"></Parameter>
+	    	<Parameter name="lineColor" value="#0000ff"></Parameter>
+	    </parameters>
+    </Style>
+    <Style name="runoffStyle">
+	    <styleID></styleID>
+	    <type>LINE</type>
+	    <parameters>
+	    	<Parameter name="lineWidth" value="2"></Parameter>
+	    	<Parameter name="lineStyle" value="SOLID"></Parameter>
+	    	<Parameter name="lineColor" value="#ff0000"></Parameter>
+	    </parameters>
+    </Style>
+    <Style name="soilStyle">
+	    <styleID></styleID>
+	    <type>LINE</type>
+	    <parameters>
+	    	<Parameter name="lineWidth" value="2"></Parameter>
+	    	<Parameter name="lineStyle" value="SOLID"></Parameter>
+	    	<Parameter name="lineColor" value="#00ff00"></Parameter>
+	    </parameters>
+    </Style>
 </Configuration>
