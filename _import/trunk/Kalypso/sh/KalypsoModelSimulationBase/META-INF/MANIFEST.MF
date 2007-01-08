@@ -14,4 +14,6 @@ Require-Bundle:
  org.kalypso.simulation.core,
  org.apache.jakarta_log4j,
  org.kalypso.contribs.ogc31
+Export-Package: org.kalypso.kalypsosimulationmodel.core.terrainmodel,
+ org.kalypso.kalypsosimulationmodel.core
 Eclipse-LazyStart: true 
