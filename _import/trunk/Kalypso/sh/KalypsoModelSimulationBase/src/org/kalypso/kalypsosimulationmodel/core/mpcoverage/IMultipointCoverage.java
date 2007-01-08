@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IRegion;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**

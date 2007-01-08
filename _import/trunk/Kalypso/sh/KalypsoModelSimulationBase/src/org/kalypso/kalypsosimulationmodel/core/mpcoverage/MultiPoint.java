@@ -12,14 +12,10 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**

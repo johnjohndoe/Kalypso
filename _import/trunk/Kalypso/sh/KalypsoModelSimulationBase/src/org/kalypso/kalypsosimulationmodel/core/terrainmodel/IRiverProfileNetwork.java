@@ -8,7 +8,8 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
  * 
  * @author Patrice Congo
  */
-public interface IRiverProfileNetwork extends IFeatureWrapperCollection
+public interface IRiverProfileNetwork 
+			extends IFeatureWrapperCollection<IRiverProfile>
 {
 	/**
 	 * To get the river profile which is located before the given river
