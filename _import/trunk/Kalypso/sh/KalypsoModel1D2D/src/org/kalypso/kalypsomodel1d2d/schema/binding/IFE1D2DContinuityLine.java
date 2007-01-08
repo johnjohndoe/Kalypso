@@ -40,47 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
-
 /**
- * @author Gernot Belger
+ * @author Patrice Congo
+ *
  */
-public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
+public interface IFE1D2DContinuityLine 
+          <CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
+                  extends IFE1D2DElement<CT, ET>
 {
-  public final static QName QNAME_FE1D2DDiscretisationModel = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DDiscretisationModel" );
-
-  public final static QName QNAME_PROP_EDGES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dEdge" );
-
-  public final static QName QNAME_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElement" );
-
-  public FE1D2DDiscretisationModel( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME_FE1D2DDiscretisationModel );
-  }
-
-  public FE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
-  {
-    final List edgeList = (List) getFeature().getProperty( QNAME_PROP_EDGES );
-    // TODO: brute force search, check if this scales good with big models
-    for( final Object object : edgeList )
-    {
-      final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
-      final FE1D2DNode[] nodes = edge.getNodesAsArray();
-
-      if( nodes.length != 2 )
-        return null;
-
-      if( (node0.equals( nodes[0] ) && node1.equals( nodes[1] )) || (node0.equals( nodes[1] ) && node1.equals( nodes[0] )) )
-        return edge;
-    }
-
-    return null;
-  }
 
 }

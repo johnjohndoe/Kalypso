@@ -208,7 +208,8 @@
 	<xs:element 
 		name="_FENode"
 		abstract="true"
-		type="simBase:FEAbstractNodeType">
+		type="simBase:FEAbstractNodeType"
+		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for all nodes in a finite  element network
@@ -230,8 +231,10 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
+			<!--xs:extension 
+				base="gml:AbstractTopologyType"-->				
 			<xs:extension 
-				base="gml:AbstractTopologyType">				
+				base="gml:AbstractFeatureType">
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>

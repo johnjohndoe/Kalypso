@@ -200,7 +200,8 @@
 						ref="wb1d2d:fe1d2dMiddleNode"
 						minOccurs="0" maxOccurs="1"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dEdgeContainer"/>
+						ref="wb1d2d:fe1d2dEdgeContainer"
+						minOccurs="0" maxOccurs="unbounded"/>
 					<!--xs:element
 						name="container"
 						type="wb1d2d:FE1D2DEdgeContainerPropertyType"/-->
@@ -671,7 +672,7 @@
 		</xs:complexContent>	
 	</xs:complexType-->
 	
-	<xs:element 
+	<!--xs:element 
 		name="FE1D2DContinuityLine"
 		type="wb1d2d:FE1D2DContinuityLineType"
 		substitutionGroup="simBase:_FEComplexElement"
@@ -692,6 +693,30 @@
 							ref="wb1d2d:fe1d2d_1DElement"
 							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType-->
+	<xs:element 
+		name="FE1D2DContinuityLine"
+		type="wb1d2d:FE1D2DContinuityLineType"
+		substitutionGroup="wb1d2d:FE1D2D_2DElement"/>
+	
+	<xs:complexType name="FE1D2DContinuityLineType">
+		<xs:annotation>
+			<xs:documentation>
+				An 2D fe continuity line element 
+				is defined by succession of edges.				
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:FE1D2D_2DElementType">
+					<xs:sequence>
+					<xs:element
+						ref="wb1d2d:fe1d2dDirectedEdge"
+						minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>

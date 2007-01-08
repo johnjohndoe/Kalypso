@@ -40,47 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author Gernot Belger
+ * @author Patrice Congo
+ *
  */
-public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
+public class Util
 {
-  public final static QName QNAME_FE1D2DDiscretisationModel = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DDiscretisationModel" );
-
-  public final static QName QNAME_PROP_EDGES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dEdge" );
-
-  public final static QName QNAME_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElement" );
-
-  public FE1D2DDiscretisationModel( final Feature featureToBind )
+  public static final  Feature createFeatureAsProperty(
+      Feature parentFeature,
+      QName propQName, 
+      QName featureQName)
+      throws IllegalArgumentException
   {
-    super( featureToBind, QNAME_FE1D2DDiscretisationModel );
-  }
-
-  public FE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
-  {
-    final List edgeList = (List) getFeature().getProperty( QNAME_PROP_EDGES );
-    // TODO: brute force search, check if this scales good with big models
-    for( final Object object : edgeList )
+    Assert.throwIAEOnNull(
+    propQName, "Argument propQName must not be null");
+    Assert.throwIAEOnNull(
+        parentFeature, 
+        "Argument roughnessCollection must not be null");
+    try
     {
-      final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
-      final FE1D2DNode[] nodes = edge.getNodesAsArray();
-
-      if( nodes.length != 2 )
-        return null;
-
-      if( (node0.equals( nodes[0] ) && node1.equals( nodes[1] )) || (node0.equals( nodes[1] ) && node1.equals( nodes[0] )) )
-        return edge;
+       return FeatureHelper.addFeature(
+          parentFeature, 
+          propQName, 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE);
     }
-
-    return null;
+    catch(GMLSchemaException ex)
+    {
+      throw new IllegalArgumentException(
+          "Property "+propQName+
+              " does not accept element of type"+
+          featureQName,
+          ex);
+    }   
   }
-
 }

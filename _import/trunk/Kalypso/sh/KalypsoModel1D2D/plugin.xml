@@ -50,4 +50,19 @@
 				</action>
               </editorContribution>
      </extension>
+     
+     <extension
+         id="org.kalypso.core.adapters"
+         name="Kalypso Model 1D 2D Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement"/>
+      </factory>
+   </extension>
 </plugin>
