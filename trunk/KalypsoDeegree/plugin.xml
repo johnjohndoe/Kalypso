@@ -32,6 +32,10 @@
               class="org.kalypsodeegree_impl.model.feature.function.DontInvalidGeomFeaturePropertyFunction"
               id="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
               name="Do not invalidate Geometry"/>
+         <function
+              class="org.kalypsodeegree_impl.model.feature.function.EqualsFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.equals"
+              name="Equals"/>
      </extension>
 
 </plugin>
