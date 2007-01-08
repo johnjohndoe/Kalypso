@@ -3,6 +3,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * Base interface  for all classes abstracting a finite
@@ -13,7 +14,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
  								ET extends IFEEdge> 
  					extends IFeatureWrapper
 {
-	 public List<CT> getContainers();
+	 public IFeatureWrapperCollection<CT> getContainers();
 	 
-	 public List<ET> getEdges();
+	 public IFeatureWrapperCollection<ET> getEdges();
 }

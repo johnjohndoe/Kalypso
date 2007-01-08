@@ -6,6 +6,7 @@ import org.kalypso.commons.xml.NS;
 
 
 
+
 public class KalypsoModelSimulationBaseConsts
 {
 	public static final QName SIM_BASE_PLYNOMIAL1D=
@@ -64,6 +65,7 @@ public class KalypsoModelSimulationBaseConsts
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
 				"Polynomial2D");
+	
 	static
 	{
 	
