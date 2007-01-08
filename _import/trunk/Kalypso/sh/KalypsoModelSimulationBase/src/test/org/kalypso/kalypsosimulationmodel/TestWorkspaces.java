@@ -112,6 +112,9 @@ public class TestWorkspaces
 	
 	public static final Throwable EXCEPTION;
 	
+	public static final URL URL_SHAPE_2_ROUGHNESS_POLYGON;
+	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
+	
 	static 
 	{
 		Map<String ,URL> urlMap=new Hashtable<String, URL>();
@@ -161,6 +164,10 @@ public class TestWorkspaces
 					REL_RES_ROUGHNESS_POLYGON,
 					TestWorkspaces.class.getResource(
 								REL_RES_ROUGHNESS_POLYGON));
+			urlMap.put(
+					REL_RES_SHAPE_2_ROUGHNESS_POLYGON,
+					TestWorkspaces.class.getResource(
+							REL_RES_SHAPE_2_ROUGHNESS_POLYGON));
 		}
 		catch(Throwable th)
 		{
@@ -190,6 +197,7 @@ public class TestWorkspaces
 			
 			URL_ROUGHNESS_POLYGON=
 				urlMap.get(REL_RES_ROUGHNESS_POLYGON);
+			URL_SHAPE_2_ROUGHNESS_POLYGON=urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
 		}
 	}
 	

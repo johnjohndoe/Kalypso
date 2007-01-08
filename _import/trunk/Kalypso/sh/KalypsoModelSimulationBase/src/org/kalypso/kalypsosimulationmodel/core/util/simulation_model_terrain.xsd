@@ -393,26 +393,8 @@
 	<!-- =================================================================
 		riverProfileNetworkProperty
 	================================================================== -->
-	<xs:element
-		name="RiverProfileNetworkCollection"
-		type="simBase:RiverProfileNetworkCollectionType"
-		substitutionGroup="gml:_Feature"/>
-	<xs:complexType 
-		name="RiverProfileNetworkCollectionType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureCollectionType">
-				<xs:sequence>
-					<xs:element 
-						ref="simBase:riverProfileNetwork"
-						minOccurs="0" maxOccurs="unbounded"
-						/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
 	<xs:element 
-		name="riverProfileNetwork" 
+		name="riverProfileNetworkProperty" 
 		type="simBase:RiverProfileNetworkPropertyType"/>
 	<xs:complexType 
 		name="RiverProfileNetworkPropertyType">
@@ -423,20 +405,20 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="simBase:RiverProfileNetwork"
+				ref="simBase:riverProfileNetwork"
 				 minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<xs:element
-		name="RiverProfileNetwork"
+		name="riverProfileNetwork"
 		type="simBase:RiverProfileNetworkType"
 		substitutionGroup="gml:_Feature"/>
 	<xs:complexType 
 		name="RiverProfileNetworkType">
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureCollectionType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element 
 						ref="simBase:riverProfile"
@@ -466,12 +448,10 @@
 	================================================================== -->
 	<xs:element
 		name="_RiverProfile"
-		type="simBase:AbstractRiverProfileType"
-		abstract="true"/>
+		type="simBase:AbstractRiverProfileType"/>
 	
 	<xs:complexType 
-		name="AbstractRiverProfileType"
-		abstract="true">
+		name="AbstractRiverProfileType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractGMLType">
 			</xs:extension>

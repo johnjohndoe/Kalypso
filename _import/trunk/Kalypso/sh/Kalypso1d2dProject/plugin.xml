@@ -146,5 +146,11 @@
               configId="org.kalypso.model.product.configId"
               content="content/ext.xml"/>
      </extension>
+         <extension
+               point="org.kalypso.contribs.java.urlCatalog">
+            <catalog
+                  class="org.kalypso.kalypso1d2d.pjt.util.UrlCatalogShapeImport"
+                  id="org.kalypso.kalypso1d2d.pjt.util.UrlCatalogShapeImport"/>
+         </extension>
     
 </plugin>

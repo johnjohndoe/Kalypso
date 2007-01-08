@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.util;
+package org.kalypso.kalypsosimulationmodel.core.util;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -9,16 +9,13 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.wizards.datatransfer.FileSystemImportWizard;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -38,24 +35,9 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class ImportUtils
 {
-	private static final Logger logger= Logger.getLogger(ImportUtils.class);
+	//private static final String m_shapeSchemaNamespace = "http://www.tuhh.de/Kalypso1D2D/shapeData";
+	private static final String m_shapeSchemaNamespace = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
 
-	public void importGML(Shell parentShell)
-	{
-		FileSystemImportWizard fsiWizard= new FileSystemImportWizard();
-
-		WizardDialog wd= new WizardDialog(parentShell,fsiWizard);
-		wd.setTitle("Import GML");
-		int decision=wd.open();
-		if(decision==WizardDialog.OK)
-		{
-
-		}
-		else
-		{
-			logger.info("Wizard canceled:"+decision);
-		}
-	}
 	/**
 	 * Utility for fetching GML schema from global schema catalog
 	 * 
@@ -76,31 +58,39 @@ public class ImportUtils
 		}
 	}
 	/**
-	 * Utility function for creating GML document based on ArcView shape data and certain GML schema
+	 * Utility function for creating GML document based on ArcView shape data
 	 * 
 	 * @param inputFileURL - URL of input SHP file
 	 * @param sourceCrs - coordinate sistem used by input SHP file
-	 * @param schemaNamespace - GML schema namespace used for creating GML data
 	 * @param outputFileURL - URL of output GML file
-	 * @param shpPropertyName - 
+	 * @param shpCustomProperty - property to extract from SHP data
 	 * @throws GmlSerializeException - if input SHP file cannot be deserialized, or output GML cannot be serialized (for any reason)
 	 * @throws IOException - if output file cannot be created/opened for writing
 	 * 
 	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
 	 */
-	public static void convertShp2Gml( URL inputFileURL, CS_CoordinateSystem sourceCrs, String schemaNamespace, URL outputFileURL, String shpPropertyName) throws IOException, GmlSerializeException
+	public static void convertShp2Gml( URL inputFileURL, CS_CoordinateSystem sourceCrs, URL outputFileURL, String shpCustomProperty) throws IOException, GmlSerializeException
 	{
 	    File outputFile = new File(outputFileURL.getPath());
 	    final GMLWorkspace 	workSpace 	= ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
-		final GMLSchema 	schema 		= getGMLSchema(schemaNamespace, null);
+		GMLSchema schema = null;
+		schema = getGMLSchema(m_shapeSchemaNamespace, null);
 		
 		QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
-		QName shpCustomPropertyName = new QName( "namespace", shpPropertyName ); //$NON-NLS-1$
+		QName shpCustomPropertyName = new QName( "namespace", shpCustomProperty ); //$NON-NLS-1$
 
-	    final IFeatureType[] types = schema.getAllFeatureTypes();
-	    Feature rootFeature = FeatureFactory.createFeature( null, types[0].getQName() + "0", types[0], true ); //$NON-NLS-1$
-	    IPropertyType ftp_feature = types[0].getProperties(0);
+	    final IFeatureType rootFT = schema.getFeatureType(new QName(m_shapeSchemaNamespace, "RoughnessLayerPolygonCollection", ""));
+	    final IFeatureType polygonFT = schema.getFeatureType(new QName(m_shapeSchemaNamespace, "RoughnessPolygonType", ""));
+	    
+	    Feature rootFeature = FeatureFactory.createFeature( null, rootFT.getQName() + "0", rootFT, true ); //$NON-NLS-1$
+	    Feature polygonFeature = FeatureFactory.createFeature( rootFeature, polygonFT.getQName() + "0", polygonFT, true ); //$NON-NLS-1$
+	    int defaultGeometryPropertyPosition = polygonFT.getDefaultGeometryPropertyPosition();
+	    IPropertyType ftp_feature = polygonFT.getProperties(defaultGeometryPropertyPosition);
+	    
+	    RoughnessPolygon roughnessPolygon = new RoughnessPolygon(polygonFeature);
+	    
+	    
 	    Feature shapeRootFeature = workSpace.getRootFeature();
 	    List featureList = (List) shapeRootFeature.getProperty( shpFeatureName );
 	    for( int i = 0; i < featureList.size(); i++ )
@@ -108,10 +98,19 @@ public class ImportUtils
 	      final Feature feat = (Feature) featureList.get( i );
 	      final String propertyValue = (String) feat.getProperty( shpCustomPropertyName );
 	      Object[] properties = new Object[] { null, null, null, null, null, (GM_Object) feat.getProperty( shpGeomPropertyName ), propertyValue };
-	      final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties ); //$NON-NLS-1$
+	      //IRelationType aaa = (IRelationType) ftp_feature;
+	      //IFeatureType  bbb = aaa.getTargetFeatureType();
+	      //((PropertyType)ftp_feature).getTypeHandler().getTypeName()
+	      
+	      
+	      //RelationType
+	      // TODO nekako napravi da procitas IFeatureType iz ftp_feature (Jebe ga CustomPropertyType)
+	      
+	      final Feature feature = FeatureFactory.createFeature( rootFeature, "ShapeData" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties ); //$NON-NLS-1$
+	      //final Feature feature = FeatureFactory.createFeature( rootFeature, "ShapeData" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties ); //$NON-NLS-1$
 	      FeatureHelper.addProperty( rootFeature, ftp_feature, feature );
 	    }
-	    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, outputFileURL, "", null ); //$NON-NLS-1$
+	    final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFeature, outputFileURL, "", null ); //$NON-NLS-1$
 	    FileWriter fw = new FileWriter( outputFile );
 	    GmlSerializer.serializeWorkspace( fw, workspace );
 	    fw.close();
