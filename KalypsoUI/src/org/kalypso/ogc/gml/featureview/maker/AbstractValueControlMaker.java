@@ -154,6 +154,9 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       validatorLabel.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
       validatorLabel.setVisible( true );
+
+      if( property == null )
+        System.out.println( "Invalid validator label for feature type property: " + ftp );
       validatorLabel.setProperty( property );
 
       final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();

@@ -282,18 +282,26 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof ValidatorLabelType )
     {
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
+      if( ftp == null )
+      {
+        // TODO: should never happen. The error occurs whule generating the ValidatorLabelType
+        System.out.println( "ValidatorLabelType without property" );
+      }
+      else
+      {
 
-      final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, true );
+        final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, true );
 
-      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
+        final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
 
-      addFeatureControl( vfc );
+        addFeatureControl( vfc );
 
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( control, true, true );
+        /* If a toolkit is set, use it. */
+        if( m_formToolkit != null )
+          m_formToolkit.adapt( control, true, true );
 
-      return control;
+        return control;
+      }
     }
     else if( controlType instanceof GeometryLabelType )
     {
