@@ -42,21 +42,22 @@ package org.kalypsodeegree_impl.model.feature.function;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
  * @author thuel2
- *
  */
-public class EqualsFeaturePropertyFunction extends FeaturePropertyFunction
+public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  private String m_compareValue;
-  public EqualsFeaturePropertyFunction( )
-  {
-    // TODO Auto-generated constructor stub
-  }
+
+  private Object m_compareToValue;
+
+  private QName m_compareValueName = null;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -64,26 +65,49 @@ public class EqualsFeaturePropertyFunction extends FeaturePropertyFunction
   @Override
   public void init( Map<String, String> properties )
   {
-    m_compareValue = properties.get( "compareValue" );
+
+    m_compareToValue = Double.valueOf( properties.get( "compareToValue" ) );
+    final String compareValueProperty = properties.get( "compareValueProperty" );
+
+    try
+    {
+      m_compareValueName = compareValueProperty == null ? null : QName.valueOf( compareValueProperty );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      // ignore
+    }
 
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( m_compareValueName == null )
+      return null;
+
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType compareValueProperty = featureType.getProperty( m_compareValueName );
+    if( compareValueProperty == null )
+      return null;
+
+    final Object propCompareValue = feature.getProperty( compareValueProperty );
+    if( propCompareValue == null )
+      return null;
+
+    return propCompareValue.equals( m_compareToValue );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
-    
-    return valueToSet;
-  }
 
+    return null;
+  }
 }

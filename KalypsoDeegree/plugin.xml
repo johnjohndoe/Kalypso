@@ -33,9 +33,9 @@
               id="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
               name="Do not invalidate Geometry"/>
          <function
-              class="org.kalypsodeegree_impl.model.feature.function.EqualsFeaturePropertyFunction"
-              id="org.kalypso.gmlschema.functionProperty.equals"
-              name="Equals"/>
+              class="org.kalypsodeegree_impl.model.feature.function.ValuesEqualsFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.valueEquals"
+              name="Value Equals"/>
      </extension>
 
 </plugin>
