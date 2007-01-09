@@ -264,7 +264,8 @@
 	<xs:element 
 		name="_FEEdge"
 		abstract="true"
-		type="simBase:FEAbstractEdgeType">
+		type="simBase:FEAbstractEdgeType"
+		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for all edged in a finite element network
@@ -284,8 +285,10 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
+			<!--xs:extension 
+				base="gml:AbstractTopologyType"-->
 			<xs:extension 
-				base="gml:AbstractTopologyType">
+				base="gml:AbstractFeatureType">
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
@@ -320,7 +323,7 @@
 		name="_FEElement"
 		abstract="true"
 		type="simBase:FEAbstractElementType"
-		substitutionGroup="gml:_Topology">
+		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				Substitution head for all finite element
@@ -343,7 +346,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="gml:AbstractTopologyType">
+				base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element
 						name="elementContainer"

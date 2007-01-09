@@ -1,8 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.util.List;
-
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * Base tagging interface  for all classes abstracting a finite
@@ -14,7 +13,15 @@ public interface IFEComplexElement<	CT extends IFEComplexElement,
 									ET extends IFEElement>
 				extends IFeatureWrapper
 {
-	//to see
-	public  List<CT> getContainers();
-	public  List<ET> getElements();
+	
+	
+	public  IFeatureWrapperCollection<CT> getContainers();
+	
+	/**
+	 * To get the element this complex element is made of
+	 * 
+	 * @return a {@link IFeatureWrapperCollection} of element composing
+	 * this complex elements
+	 */
+	public  IFeatureWrapperCollection<ET> getElements();
 }

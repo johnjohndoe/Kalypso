@@ -10,5 +10,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 public interface IWspmRiverProfileWrapper extends IRiverProfile
 {
 	public Object getWspmRiverProfile();
+	public void setWspmRiverProfile( Object wspmProfile);
 	
 }
