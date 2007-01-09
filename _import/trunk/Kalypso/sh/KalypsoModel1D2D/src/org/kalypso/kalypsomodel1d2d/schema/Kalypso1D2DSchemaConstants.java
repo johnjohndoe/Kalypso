@@ -39,6 +39,9 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_FE1D2D_2DElement = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement" );
 
+      public final static QName WB1D2D_F_FE1D2DContinuityLine = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DContinuityLine" );
+      
       public static final QName WB1D2D_F_FE1D2DTriElement = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DTriElement" );
 
@@ -52,5 +55,27 @@ public class Kalypso1D2DSchemaConstants
         
       public final static QName WB1D2D_PROP_FE1D2DEDGE_CONTAINER= 
         new QName(UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:fe1d2dEdgeContainer");
+      
+      
+      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_COMPLEX_ELE = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DComplexElement" );
+      
+      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DComplexElement" );
+      
+      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_MAIN_RIVER_CHANNEL = 
+        new QName( 
+              UrlCatalog1D2D.MODEL_1D2D_NS, 
+              "FE1D2DMainChannel" );
+      
+      public final static QName WB1D2D_PROP_FE1D2DCOMPLEX_ELE_CONTAINER= 
+        new QName(
+                  UrlCatalog1D2D.MODEL_1D2D_NS, 
+                  "wb1d2d:fe1d2dComplexElementContainer");
+      public final static QName WB1D2D_PROP_FE1D2D_2D_ELE= 
+        new QName(
+                  UrlCatalog1D2D.MODEL_1D2D_NS, 
+                  "wb1d2d:fe1d2d_2DElement");
+      //fe1d2d_2DElement
       
 }

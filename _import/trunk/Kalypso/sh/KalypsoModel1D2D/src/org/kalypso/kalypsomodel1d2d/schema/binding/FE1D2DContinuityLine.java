@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -57,5 +60,21 @@ public class FE1D2DContinuityLine
   {
     super(featureToBind);
   }
+  
+  public FE1D2DContinuityLine( Feature pareFeature, QName propQName)
+  {
+    super(
+        pareFeature,
+        propQName,
+        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine);
+  }
+
+  
+  public FE1D2DContinuityLine( Feature parentFeature, QName propQName, QName newFeatureQName ) throws IllegalArgumentException
+  {
+    super(parentFeature, propQName, newFeatureQName);
+  }
+  
+  
   
 }

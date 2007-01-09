@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
@@ -25,7 +22,17 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author Gernot Belger
+ * Provide the default implementation for 
+ * {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
+ * Those classes kann be used as java abtract for the subtituable of 
+ * wb1d2d:FE1D2D_2DElement:  wb1d2d:FE1D2DQuadriElement, 
+ *  wb1d2d:FE1D2DTriElement and 
+ * wb1d2d:FE1D2DContinuityLine 
+ *  
+ * 
+ * @author Gernot Belger, Patrice Congo
+ * @see IFE1D2DContinuityLine
+ * @see FE1D2DContinuityLine
  */
 public class FE1D2D_2DElement extends AbstractFeatureBinder
               implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
@@ -100,6 +107,36 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     }
   }
 
+  /**
+   * This constructor creates {@link FE1D2D_2DElement} based on a
+   * feature which is created as child of the given parent feaure and 
+   * linked to it by the property of the type specified by the 
+   * argument propQName. The Type of the feature is also specified by the given
+   * element.
+   * This constructor is typicaly used to construct feature like 
+   * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and 
+   * wb1d2d:FE1D2DContinuityLine 
+   * 
+   * @param parentFeature the parent feature for the new wbr:Roughness class
+   * @param propQName  the Q-name of the linking property type
+   * @param newFeatureQName the Q-Name denoting the type of the
+   *            new feature
+   * @throws IllegalArgumentException if workspace is null
+   *  or the roughness collection is not part of the workspace
+   */
+  public FE1D2D_2DElement(
+        Feature parentFeature,
+        QName propQName,
+        QName newFeatureQName
+        )
+        throws IllegalArgumentException
+  {
+    this(Util.createFeatureAsProperty(
+                parentFeature, 
+                propQName,
+                newFeatureQName));   
+  }
+  
   /**
    * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
    */
@@ -232,7 +269,5 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
   {
     return edges;
   }
-  
-  
   
 }

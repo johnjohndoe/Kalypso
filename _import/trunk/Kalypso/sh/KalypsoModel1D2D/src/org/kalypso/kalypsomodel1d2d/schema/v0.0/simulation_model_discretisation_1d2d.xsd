@@ -872,6 +872,31 @@
 						<xs:element 
 							ref="wb1d2d:fe1d2d_2DElement"
 							minOccurs="1" maxOccurs="unbounded"/>
+							
+					</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>	
+	</xs:complexType>
+	
+	<xs:element 
+		name="FE1D2D_2DComplexElement"
+		type="wb1d2d:FE1D2D_2DComplexElement"
+		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
+		
+	<xs:complexType name="FE1D2D_2DComplexElement">
+		<xs:annotation>
+			<xs:documentation>
+				a comlex element made of 2d element or continuity lines
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:FE1D2DComplexeElementType">
+					<xs:sequence>
+						<xs:element 
+							ref="wb1d2d:fe1d2d_2DElement"
+							minOccurs="1" maxOccurs="unbounded"/>
+							
 					</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>	

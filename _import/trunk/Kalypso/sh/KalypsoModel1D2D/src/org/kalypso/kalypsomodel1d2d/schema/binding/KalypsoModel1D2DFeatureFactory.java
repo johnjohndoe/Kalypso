@@ -7,7 +7,10 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
@@ -136,13 +139,22 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                                         Class cls) 
                                         throws IllegalArgumentException
             {
-                
-                return new FE1D2D_2DElement(feature);
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine) )
+                {
+                  return new FE1D2DContinuityLine(feature);     
+                }
+                else
+                {
+                  return new FE1D2D_2DElement(feature);
+                }
             }
         };
         cMap.put(IFE1D2DElement.class, cTor);
 		
-        //1d2d continuity line
+        //1d2d complex element
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -150,11 +162,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                                         Class cls) 
                                         throws IllegalArgumentException
             {
-                
-                return new FE1D2DContinuityLine(feature);
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE) )
+                {
+                  return 
+                    new FE1D2DComplexElement(
+                        feature,
+                        Kalypso1D2DSchemaConstants.WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE,
+                        null,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE,//container
+                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE//elements
+                        );     
+                }
+                else
+                {
+                  return new FE1D2D_2DElement(feature);
+                }
             }
         };
-        cMap.put(IFE1D2DContinuityLine.class, cTor);
+        cMap.put(IFE1D2DComplexElement.class, cTor);
         
 		return Collections.unmodifiableMap(cMap);
 	}

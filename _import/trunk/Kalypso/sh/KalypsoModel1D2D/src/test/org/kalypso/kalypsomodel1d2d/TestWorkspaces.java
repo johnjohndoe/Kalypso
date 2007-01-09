@@ -54,7 +54,9 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -75,41 +77,18 @@ public class TestWorkspaces
     
 	public static final URL URL_FE1D2DNODE;
 	public static final String REL_RES_FE1D2DNODE="data/test_fe1d2dnode.xml";
+    
+    public static final URL URL_FE1D2DEDGE;
+    public static final String REL_RES_FE1D2DEDGE="data/test_fe1d2dedge.xml";
 	
-//	public static final URL URL_POLYNOMIAL2D;
-//	public static final String REL_RES_POLYNOMIAL2D="data/polynomial2d.xml";
-//	
-//	
-//	public static final URL URL_MPCOV_ROUGHNESS_CORRECTION;
-//	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_pol1d.xml";
-//	
-//	public static final URL URL_MULTIPOINT;
-//	public static final String REL_RES_MULTIPOINT="data/multipoint.xml";
-//	
-//	
-//	public static final URL URL_FEATURERANGESET;
-//	public static final String REL_RES_FEATURERANGESET="data/feature_range_set.xml";
-//	
-//	public static final URL URL_ROUGHNESS_CLS;
-//	public static final String REL_RES_ROUGHNESS_CLS=
-//							"data/roughness_cls.xml";
-//	
-//	public static final URL URL_ROUGHNESS_CLS_COR;
-//	public static final String REL_RES_ROUGHNESS_CLS_COR=
-//							"data/roughness_cls_correction.xml";
-//	
-//	public static final URL URL_ROUGHNESS_CLS_COLLECTION;
-//	public static final String REL_RES_ROUGHNESS_CLS_COLLECTION=
-//							"data/roughness_cls_collection.xml";
-//	
-//	public static final URL URL_ROUGHNESS_POLYGON;
-//	public static final String REL_RES_ROUGHNESS_POLYGON=
-//							"data/roughness_polygon.xml";
-//	
-//	public static final URL URL_COL_ROUGHNESS_CLS_COR;
-//	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
-//							"data/collection_of_roughness_cls_correction.xml";
-//	
+    public static final URL URL_FE1D2D_QUADRI_ELE;
+    public static final String REL_RES_FE1D2D_QUADRI_ELE=
+                                    "data/test_fe1d2d_quadri_element.xml";
+    
+    public static final URL URL_FE1D2D_TRI_ELE;
+    public static final String REL_RES_FE1D2D_TRI_ELE=
+                          "data/test_fe1d2d_tri_element.xml";
+    
 	public static final QName GML_PROP_FEATURE_MEMBER= 
 						new QName(NS.GML3,"featureMember");
 	
@@ -130,25 +109,45 @@ public class TestWorkspaces
             urlMap.put(
                 REL_RES_FE1D2DNODE,
                 TestWorkspaces.class.getResource(REL_RES_FE1D2DNODE));
-			
+            
+            urlMap.put(
+                REL_RES_FE1D2DEDGE,
+                TestWorkspaces.class.getResource(REL_RES_FE1D2DEDGE));
+            
+            urlMap.put(
+                REL_RES_FE1D2D_QUADRI_ELE,
+                TestWorkspaces.class.getResource(
+                                    REL_RES_FE1D2D_QUADRI_ELE));
+            urlMap.put(
+                REL_RES_FE1D2D_TRI_ELE,
+                TestWorkspaces.class.getResource(
+                                    REL_RES_FE1D2D_TRI_ELE));
 		}
 		catch(Throwable th)
 		{
 			th.printStackTrace();
 			th1=th;
-			urlMap.clear();
-			
+			urlMap.clear();			
 		}
 		finally
 		{
 			EXCEPTION=th1;
 			URL_EMPTY_GML=urlMap.get(REL_RES_EMPTY_GML);
             URL_FE1D2DNODE=urlMap.get(REL_RES_FE1D2DNODE);
-			
+            URL_FE1D2DEDGE=urlMap.get(REL_RES_FE1D2DEDGE);
+            URL_FE1D2D_QUADRI_ELE=urlMap.get(REL_RES_FE1D2D_QUADRI_ELE);
+            URL_FE1D2D_TRI_ELE=urlMap.get(REL_RES_FE1D2D_TRI_ELE);
 		}
 	}
 	
-	
+	public static final CS_CoordinateSystem getGaussKrueger()
+    {
+      CS_CoordinateSystem cs= 
+        ConvenienceCSFactory.getInstance().getOGCCSByName( 
+                            TestWorkspaces.CS_KEY_GAUSS_KRUEGER );
+      return cs;
+        
+    }
 	
 	public static GMLWorkspace loadGMLWorkspace(
 							URL gmlURL,
