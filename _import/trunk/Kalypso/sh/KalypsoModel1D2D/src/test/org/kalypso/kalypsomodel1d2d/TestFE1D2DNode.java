@@ -21,6 +21,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -99,6 +100,9 @@ public class TestFE1D2DNode extends TestCase
                 Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
             assertNotNull( edge );
             assertEquals( 1, edges.size() );
+            
+            //test serial
+            
         }
         catch(Throwable th)
 		{
