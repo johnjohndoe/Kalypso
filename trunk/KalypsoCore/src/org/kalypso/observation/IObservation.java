@@ -63,19 +63,13 @@ public interface IObservation<T>
 
   /**
    * Returns the phenomenon the the observation.
-   * <p>
-   * TODO: for now, only string are supported. Later we should have a real phenomenon-class here.
-   * </p>
    */
-  public String getPhenomenon( );
+  public IPhenomenon getPhenomenon( );
 
   /**
    * Sets the phenomenon of the observation.
-   * <p>
-   * TODO: for now, only string are supported. Later we should have a real phenomenon-class here.
-   * </p>
    */
-  public void setPhenomenon( final String phenomenon );
+  public void setPhenomenon( final IPhenomenon phenomenon );
 
   public T getResult( );
 

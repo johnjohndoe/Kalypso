@@ -56,11 +56,14 @@ import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.IPhenomenon;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -72,6 +75,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author schlienger
@@ -119,9 +123,19 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String desc = (String) FeatureHelper.getFirstProperty( f, GML_DESCRIPTION );
     final List<MetadataObject> meta = (List<MetadataObject>) f.getProperty( GML_METADATA );
 
-    // TODO: only strings, no linked features are supported now
     final Object phenProp = f.getProperty( OM_OBSERVED_PROP );
-    final String phenomenon = phenProp instanceof String ? (String) phenProp : null;
+
+    final Feature phenFeature = FeatureHelper.getFeature( f.getWorkspace(), phenProp );
+    final IPhenomenon phenomenon;
+    if( phenFeature != null )
+    {
+      final String phenId = phenFeature instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) phenFeature).getHref() : phenFeature.getId();
+      final String phenName = NamedFeatureHelper.getName( phenFeature );
+      final String phenDesc = NamedFeatureHelper.getDescription( phenFeature );
+      phenomenon = new Phenomenon( phenId, phenName, phenDesc );
+    }
+    else
+      phenomenon = null;
 
     final TupleResult tupleResult = buildTupleResult( f );
 
@@ -273,7 +287,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final List<MetadataObject> mdList = source.getMetadataList();
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( GML_METADATA ), mdList ) );
 
-    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_OBSERVED_PROP ), source.getPhenomenon() ) );
+    // TODO: at the moment, only referenced phenomenons are supported
+    final IRelationType phenPt = (IRelationType) featureType.getProperty( OM_OBSERVED_PROP );
+    final IPhenomenon phenomenon = source.getPhenomenon();
+    final Object phenomenonRef;
+    if( phenomenon == null )
+      phenomenonRef = null;
+    else
+      phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt.getTargetFeatureType() );
+
+    changes.add( new FeatureChange( targetObsFeature, phenPt, phenomenonRef ) );
 
     final TupleResult result = source.getResult();
 
