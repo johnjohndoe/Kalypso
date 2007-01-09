@@ -930,4 +930,15 @@ public class FeatureHelper
 
     return null;
   }
+
+  public static Object createLinkToID( final String id, final Feature parentFeature, final IFeatureType ft )
+  {
+    if( id == null )
+      return null;
+    
+    if( id.startsWith( "#" ))
+      return id;
+    
+    return new XLinkedFeature_Impl( parentFeature, ft, id, "", "", "", "", "" );
+  }
 }

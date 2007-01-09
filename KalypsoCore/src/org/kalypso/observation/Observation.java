@@ -57,7 +57,7 @@ public class Observation<T> implements IObservation<T>
 
   private List<MetadataObject> m_md;
 
-  private String m_phenomenon;
+  private IPhenomenon m_phenomenon;
 
   public Observation( final String name, final String desc, final T result, final List<MetadataObject> md )
   {
@@ -134,7 +134,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.observation.IObservation#getPhenomenon()
    */
-  public String getPhenomenon( )
+  public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
   }
@@ -142,7 +142,7 @@ public class Observation<T> implements IObservation<T>
   /**
    * @see org.kalypso.observation.IObservation#setPhenomenon(java.lang.String)
    */
-  public void setPhenomenon( String phenomenon )
+  public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;
   }
