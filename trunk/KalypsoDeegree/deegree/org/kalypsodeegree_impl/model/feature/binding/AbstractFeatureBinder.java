@@ -42,6 +42,7 @@ package org.kalypsodeegree_impl.model.feature.binding;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -111,7 +112,6 @@ public class AbstractFeatureBinder
    * have the same id and live in the same workspace.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
-   * TODO: also implement hashCode
    */
   @Override
   public boolean equals( final Object other )
@@ -126,6 +126,15 @@ public class AbstractFeatureBinder
     }
 
     return false;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return new HashCodeBuilder().append( m_featureToBind.getId() ).append( m_featureToBind.getWorkspace() ).toHashCode();
   }
 
 }
