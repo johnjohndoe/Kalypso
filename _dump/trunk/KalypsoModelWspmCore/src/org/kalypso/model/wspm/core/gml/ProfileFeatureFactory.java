@@ -73,7 +73,9 @@ import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.IPhenomenon;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -142,13 +144,13 @@ public class ProfileFeatureFactory implements IWspmConstants
       //
       // Name + Description
       //
-      final String name = (String)profile.getProperty( IProfilConstants.PROFIL_PROPERTY_NAME );
+      final String name = (String) profile.getProperty( IProfilConstants.PROFIL_PROPERTY_NAME );
       final List<String> namelist = new ArrayList<String>( 1 );
-      namelist.add(  name  );
+      namelist.add( name );
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
-      final String description = (String)profile.getProperty( IProfilConstants.PROFIL_PROPERTY_KOMMENTAR );
+      final String description = (String) profile.getProperty( IProfilConstants.PROFIL_PROPERTY_KOMMENTAR );
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
-      
+
       //
       // Station
       //
@@ -246,7 +248,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
       // write the table into the main feature
       final List<MetadataObject> metadata = new ArrayList<MetadataObject>();
-      final Observation<TupleResult> tableObs = new Observation<TupleResult>( "Profil", "", result, metadata );
+      final Observation<TupleResult> tableObs = new Observation<TupleResult>( name, description, result, metadata );
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( tableObs, targetFeature );
       Collections.addAll( changes, obsChanges );
 
@@ -301,7 +303,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     final IObservation<TupleResult> observation = new Observation<TupleResult>( typ, "Bauwerk-Observation", result, metaList );
 
-    observation.setPhenomenon( typ );
+    observation.setPhenomenon( new Phenomenon( typ, null, null ) );
 
     return observation;
   }
@@ -493,11 +495,11 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final IObservation<TupleResult> buildingObs = ObservationFeatureFactory.toObservation( buildingFeature );
 
-    final String phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
+    final IPhenomenon phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
     if( phenomenon == null )
       return null;
 
-    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( phenomenon );
+    final IProfilBuilding building = ProfilBuildingFactory.createProfilBuilding( phenomenon.getID() );
 
     final TupleResult result = buildingObs.getResult();
     if( building == null || result == null )
