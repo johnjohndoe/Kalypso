@@ -24,7 +24,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger
  */
-public class FE2DElementEditWidget extends AbstractWidget
+public class CreateFE2DElementWidget extends AbstractWidget
 {
   private Point m_currentPoint = null;
 
@@ -36,7 +36,7 @@ public class FE2DElementEditWidget extends AbstractWidget
 
   private final QNameFeaturesProvider m_provider = new QNameFeaturesProvider( FE1D2DNode.QNAME_FE1D2DNode );
 
-  public FE2DElementEditWidget( )
+  public CreateFE2DElementWidget( )
   {
     super( "New FE-Element", "Creates a new FE-Element" );
   }
@@ -54,12 +54,12 @@ public class FE2DElementEditWidget extends AbstractWidget
 
     reinit();
   }
-  
-  private final void reinit()
+
+  private final void reinit( )
   {
     m_builder = null;
     m_nodeTheme = null;
-    
+
     // we must have the node and the element theme, one of them must be active
     // First node theme gets it
     // TODO: change that
@@ -120,7 +120,7 @@ public class FE2DElementEditWidget extends AbstractWidget
       if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
-        
+
         reinit();
       }
     }
@@ -131,6 +131,9 @@ public class FE2DElementEditWidget extends AbstractWidget
   }
 
   /**
+   * TODO: change to right-clicked: BUT!: at the moment the xontext menu is opened, so the framework must know wether
+   * this widget is editing something at the moment or not
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override

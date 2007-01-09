@@ -34,11 +34,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-public class FE1D2D_2DElement extends AbstractFeatureBinder
-              implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
-              
+public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
 {
-
   public final static QName QNAME_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement" );
 
   public static final QName QNAME_FE1D2DTriElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DTriElement" );
@@ -48,62 +45,40 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
   public final static QName QNAME_PROP_DIRECTEDEDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge" );
 
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
-  
+
   private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
-  
+
   public FE1D2D_2DElement( final Feature featureToBind )
   {
     super( featureToBind, QNAME_FE1D2D_2DElement );
     //
-    Object prop=featureToBind.getProperty(
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-   
-    if(prop==null)
+    Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+
+    if( prop == null )
     {
-      //create the property tha is still missing
-      containers= 
-        new FeatureWrapperCollection<IFE1D2DComplexElement>(
-                            featureToBind,
-                            Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement,
-                            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS,
-                            IFE1D2DComplexElement.class);
+      // create the property tha is still missing
+      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
     }
     else
     {
-      
-      //just wrapped the existing one
-      containers= 
-        new FeatureWrapperCollection<IFE1D2DComplexElement>(
-                            featureToBind,
-                            IFE1D2DComplexElement.class,//<IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-                            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS
-                            );
+      // just wrapped the existing one
+      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+      Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
-    
-    //edges
-    prop=featureToBind.getProperty(
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-   
-    if(prop==null)
+
+    // edges
+    prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+
+    if( prop == null )
     {
-      //create the property tha is still missing
-      edges= 
-        new FeatureWrapperCollection<IFE1D2DEdge>(
-                            featureToBind,
-                            Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement,
-                            Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE,
-                            IFE1D2DEdge.class);
+      // create the property that is still missing
+      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
     }
     else
     {
-      
-      //just wrapped the existing one
-      edges= 
-        new FeatureWrapperCollection<IFE1D2DEdge>(
-                            featureToBind,
-                            IFE1D2DEdge.class,//<IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-                            Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE
-                            );
+      // just wrapped the existing one
+      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+      Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -187,7 +162,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     {
       final FE1D2DEdge edge0 = edges[i];
       final FE1D2DEdge edge1 = edges[(i + 1) % edges.length];
-      
+
       final FE1D2DNode[] edge0Nodes = edge0.getNodesAsArray();
       final FE1D2DNode[] edge1Nodes = edge1.getNodesAsArray();
 
@@ -245,7 +220,6 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     return new FE1D2D_2DElement( edgeFeature );
   }
 
- 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
@@ -269,5 +243,5 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
   {
     return edges;
   }
-  
+
 }

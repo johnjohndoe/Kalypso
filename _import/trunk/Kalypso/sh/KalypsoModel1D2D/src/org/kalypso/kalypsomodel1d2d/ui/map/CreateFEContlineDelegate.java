@@ -8,8 +8,10 @@ import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActio
 /**
  * @author Gernot Belger
  */
-public class CreateFEElementDelegate extends AbstractGisMapEditorActionDelegate {
-	public CreateFEElementDelegate() {
-		super(new CreateFE2DElementWidget());
-	}
+public class CreateFEContlineDelegate extends AbstractGisMapEditorActionDelegate
+{
+  public CreateFEContlineDelegate( )
+  {
+    super( new CreateFEContlineWidget() );
+  }
 }

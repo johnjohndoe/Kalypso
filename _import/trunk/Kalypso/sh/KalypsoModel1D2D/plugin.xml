@@ -48,6 +48,13 @@
                toolbarPath="karte/edit"
                tooltip="Ein neues FE Element erzeugen">
 				</action>
+         <action
+               class="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
+               id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineDelegate"
+               label="Kontinuitätslinie definieren"
+               style="radio"
+               toolbarPath="karte/edit"
+               tooltip="eine neue Kontinuitätslinie definieren"/>
               </editorContribution>
      </extension>
      

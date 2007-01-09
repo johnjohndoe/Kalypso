@@ -25,92 +25,65 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class FE1D2DEdge extends AbstractFeatureBinder 
-        implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> 
+public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
-
   public final static QName QNAME_FE1D2DEdge = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DEdge" );
 
   public final static QName QNAME_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedNode" );
 
+  private static final QName QNAME_PROP_CURVE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+
   private final IFeatureWrapperCollection<IFE1D2DElement> containers;
+
   private final IFeatureWrapperCollection<IFE1D2DNode> nodes;
-  
+
   public FE1D2DEdge( final Feature featureToBind )
   {
     super( featureToBind, QNAME_FE1D2DEdge );
-    //containers
-    Object prop=featureToBind.getProperty(
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS);
-    if(prop==null)
+    // containers
+    Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    if( prop == null )
     {
-      //create the property tha is still missing
-      containers= 
-        new FeatureWrapperCollection<IFE1D2DElement>(
-                  featureToBind,
-                  Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE,
-                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS,
-                  IFE1D2DElement.class);
+      // create the property tha is still missing
+      containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
     }
     else
     {
-      
-      //just wrapped the existing one
-      containers= 
-        new FeatureWrapperCollection<IFE1D2DElement>(
-                            featureToBind,
-                            IFE1D2DElement.class,//<IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-                            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS);
+
+      // just wrapped the existing one
+      containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+      Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
     }
-    
-    
-    //nodes 
-    prop=featureToBind.getProperty(
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS);
-    if(prop==null)
+
+    // nodes
+    prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    if( prop == null )
     {
-      //create the property tha is still missing
-      nodes= 
-        new FeatureWrapperCollection<IFE1D2DNode>(
-                  featureToBind,
-                  Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE,
-                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE,
-                  IFE1D2DNode.class);
+      // create the property tha is still missing
+      nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
     }
     else
     {
-      
-      //just wrapped the existing one
-      nodes= 
-        new FeatureWrapperCollection<IFE1D2DNode>(
-                featureToBind,
-                IFE1D2DNode.class,
-                Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE);
+
+      // just wrapped the existing one
+      nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
     }
   }
-  
-  
-  
+
   /**
-   * This constructor creates {@link FE1D2DNode} based on a
-   * wb1d2d:FE1D2DNode feature which is created as child of the
-   * given parent feaure and linked to it by the property of the 
-   * type specified by the argument propQName.
+   * This constructor creates {@link FE1D2DNode} based on a wb1d2d:FE1D2DNode feature which is created as child of the
+   * given parent feaure and linked to it by the property of the type specified by the argument propQName.
    * 
-   * @param parentFeature the parent feature for the new wbr:Roughness class
-   * @param propQName  the Q-name of the linking property type
-   * @throws IllegalArgumentException if workspace is null
-   *  or the roughness collection is not part of the workspace
+   * @param parentFeature
+   *          the parent feature for the new wbr:Roughness class
+   * @param propQName
+   *          the Q-name of the linking property type
+   * @throws IllegalArgumentException
+   *           if workspace is null or the roughness collection is not part of the workspace
    */
-  public FE1D2DEdge(
-        Feature parentFeature,
-        QName propQName)
-        throws IllegalArgumentException
+  public FE1D2DEdge( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-    this(Util.createFeatureAsProperty(
-                parentFeature, 
-                propQName,
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE));   
+    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE ) );
   }
 
   /**
@@ -138,8 +111,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     return nodes;
   }
 
-  
-  
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
    */
@@ -151,7 +122,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   /* static helper functions */
   public GM_Curve recalculateEgdeGeometry( ) throws GM_Exception
   {
-
     final FE1D2DNode[] nodes = getNodesAsArray();
     final GM_Position[] poses = new GM_Position[nodes.length];
 
@@ -205,7 +175,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   {
     return getFeature();
   }
-  
-  
 
+  public GM_Curve getCurve()
+  {
+    return (GM_Curve) getFeature().getProperty( QNAME_PROP_CURVE );
+  }
+  
 }

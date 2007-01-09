@@ -45,6 +45,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -58,6 +60,8 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
   public final static QName QNAME_PROP_EDGES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dEdge" );
 
   public final static QName QNAME_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElement" );
+
+  private IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, QNAME_PROP_ELEMENTS );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
@@ -81,6 +85,11 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
     }
 
     return null;
+  }
+
+  public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )
+  {
+    return m_elements;
   }
 
 }

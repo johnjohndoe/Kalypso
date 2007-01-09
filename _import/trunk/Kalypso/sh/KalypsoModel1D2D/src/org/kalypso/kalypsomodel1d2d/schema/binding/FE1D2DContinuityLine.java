@@ -47,19 +47,14 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Patrice Congo
- *
  */
-public class FE1D2DContinuityLine 
-        extends FE1D2D_2DElement
-        implements IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>
-        
-            
+public class FE1D2DContinuityLine extends FE1D2D_2DElement implements IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>
 {
-
-  public FE1D2DContinuityLine( Feature featureToBind )
+  public FE1D2DContinuityLine( final Feature featureToBind )
   {
-    super(featureToBind);
+    super( featureToBind );
   }
+
   
   public FE1D2DContinuityLine( Feature pareFeature, QName propQName)
   {

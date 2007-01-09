@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Patrice Congo
@@ -48,5 +49,9 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode;
  */
 public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
 {
+  public GM_Point getPoint( );
 
+  public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( );
+  
+  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
 }
