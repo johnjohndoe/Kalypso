@@ -51,9 +51,6 @@ public class FeatureTypeVisitor implements FeatureVisitor
     return true;
   }
 
-  /**
-   * 
-   */
   public boolean matchesType( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
@@ -66,7 +63,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
       return true;
     if( m_acceptIfSubstituting )
     {
-      return m_typename.equals( f.getFeatureType().getSubstitutionGroupFT().getQName() );
+      return m_typename.equals( f.getFeatureType().getSubstitutionGroupFT().getQName().getLocalPart() );
     }
     return false;
   }
