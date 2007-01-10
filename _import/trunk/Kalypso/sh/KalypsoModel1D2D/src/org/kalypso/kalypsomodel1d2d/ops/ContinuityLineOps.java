@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
@@ -112,14 +111,14 @@ public class ContinuityLineOps
         else
         {
           final IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
-          final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element = (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>) elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
-          
-          final FeatureList edgesList = (FeatureList) element.getWrappedFeature().getProperty( FE1D2D_2DElement.QNAME_PROP_DIRECTEDEDGE );
+
+          final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = model.createContinuityLine();
+          final FeatureList edgesList = (FeatureList) contiLine.getWrappedFeature().getProperty( FE1D2D_2DElement.QNAME_PROP_DIRECTEDEDGE );
           
           for( final IFE1D2DEdge<IFE1D2DElement,IFE1D2DNode> edge : edgeList )
             edgesList.add( edge.getWrappedFeature().getId() );
           
-          return (IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>) element.getWrappedFeature().getAdapter( IFE1D2DContinuityLine.class );
+          return contiLine;
         }
       }
     }

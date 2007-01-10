@@ -576,6 +576,7 @@
 			<xs:extension 
 				base="wb1d2d:FE1D2D_2DElementType">
 					<xs:sequence>
+						<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
 						<xs:element 
 							ref="wb1d2d:fe1d2dDirectedEdge" minOccurs="3" maxOccurs="3"/>
 					</xs:sequence>
@@ -604,6 +605,7 @@
 			<xs:extension 
 				base="wb1d2d:FE1D2D_2DElementType">
 					<xs:sequence>
+					<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
 					<xs:element
 						ref="wb1d2d:fe1d2dDirectedEdge"
 						minOccurs="4" maxOccurs="4"/>
@@ -637,9 +639,7 @@
 		<xs:complexContent>
 			<xs:extension 
 				base="wb1d2d:FE1D2DElementType">
-				<xs:sequence>
-				<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
-				</xs:sequence>
+				<xs:sequence/>
 				</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
@@ -712,6 +712,7 @@
 			<xs:extension 
 				base="wb1d2d:FE1D2D_2DElementType">
 					<xs:sequence>
+					<xs:element name="geometry" type="gml:LineStringPropertyType"></xs:element>
 					<xs:element
 						ref="wb1d2d:fe1d2dDirectedEdge"
 						minOccurs="0" maxOccurs="unbounded"/>

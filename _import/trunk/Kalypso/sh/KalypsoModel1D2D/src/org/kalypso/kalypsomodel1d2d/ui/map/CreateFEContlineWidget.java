@@ -7,18 +7,24 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -99,41 +105,39 @@ public class CreateFEContlineWidget extends AbstractWidget
 
       // validate geometry: doppelte punkte
 
-      final FE1D2DDiscretisationModel model = findDiscretisationModel();
+      FE1D2DDiscretisationModel model = null;
+      CommandableWorkspace workspace = null;
 
-      /* final IFE1D2DContinuityLine<IFE1D2DComplexElement,IFE1D2DEdge> continuityLine = */ContinuityLineOps.contilineFromCurve( curve, model );
-      // TODO: add contiline to modell
+      final IKalypsoTheme theme = getMapPanel().getMapModell().getActiveTheme();
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+        final IFeatureType featureType = featureTheme.getFeatureType();
+        if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) || GMLSchemaUtilities.substitutes( featureType, FE1D2DEdge.QNAME_FE1D2DEdge )
+            || GMLSchemaUtilities.substitutes( featureType, FE1D2D_2DElement.QNAME_FE1D2D_2DElement ) )
+        {
+          final Feature parentFeature = featureTheme.getFeatureList().getParentFeature();
 
-      // TODO: validate against existing contilines?
+          model = new FE1D2DDiscretisationModel( parentFeature );
+          workspace = featureTheme.getWorkspace();
+        }
+      }
+      
+      final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
 
-      reinit();
+      final Feature parentFeature = model.getFeature();
+      final IRelationType rt = (IRelationType) parentFeature.getFeatureType().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+      final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, rt, -1, continuityLine.getWrappedFeature(), null, true );
+      workspace.postCommand( addElementCommand );
     }
     catch( final Exception e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-  }
-
-  /**
-   * we must have an active node, edge or element theme, one of them must be active
-   */
-  private FE1D2DDiscretisationModel findDiscretisationModel( )
-  {
-    final IKalypsoTheme theme = getMapPanel().getMapModell().getActiveTheme();
-    if( theme instanceof IKalypsoFeatureTheme )
+    finally
     {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-      final IFeatureType featureType = featureTheme.getFeatureType();
-      if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) || GMLSchemaUtilities.substitutes( featureType, FE1D2DEdge.QNAME_FE1D2DEdge )
-          || GMLSchemaUtilities.substitutes( featureType, FE1D2D_2DElement.QNAME_FE1D2D_2DElement ) )
-      {
-        final Feature parentFeature = featureTheme.getFeatureList().getParentFeature();
-
-        return new FE1D2DDiscretisationModel( parentFeature );
-      }
+      reinit();
     }
-
-    return null;
   }
 
   /**

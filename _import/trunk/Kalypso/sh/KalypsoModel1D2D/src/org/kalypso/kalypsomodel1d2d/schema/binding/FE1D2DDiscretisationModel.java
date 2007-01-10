@@ -44,6 +44,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -90,6 +92,14 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
   public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )
   {
     return m_elements;
+  }
+
+  public IFE1D2DContinuityLine<IFE1D2DComplexElement,IFE1D2DEdge> createContinuityLine( )
+  {
+    final Feature parentFeature = getFeature();
+    final IFeatureType contiType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+    final Feature contiFeature = parentFeature.getWorkspace().createFeature( parentFeature, contiType );
+    return new FE1D2DContinuityLine( contiFeature );
   }
 
 }

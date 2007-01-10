@@ -12,9 +12,9 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
@@ -149,8 +149,10 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
       edgeList.add( edge.getFeature().getId() );
   }
 
-  /* static helper functions */
-  public GM_Surface recalculateElementGeometry( ) throws GM_Exception
+  /**
+   * Recalculates the geometry of this element. Used by the corresponding property function.
+   */
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     final FE1D2DEdge[] edges = getEdgesAsArray();
 
