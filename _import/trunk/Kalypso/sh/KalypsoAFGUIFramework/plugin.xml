@@ -13,24 +13,6 @@
    </extension>
    
    <extension
-         id="org.kalypso.afgui.AFGUIApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.kalypso.afgui.AFGUIApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
-         id="KalypsoAFGUIFramework_product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.kalypso.afgui.AFGUIApplication"
-            name="GUI Framework Test"/>
-   </extension>
-   
-   
-   <!--extension
          point="org.eclipse.ui.perspectives">
       <perspective
             name="Framework Base Perspective"
@@ -73,7 +55,7 @@
             class="org.kalypso.afgui.views.ModelDataView"
             id="org.kalypso.afgui.views.ModelDataView"
             name="Model Data View"/>
-   </extension -->
+   </extension>
    
    <!-- Project extensions -->
    <!--extension

@@ -7,6 +7,7 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.kalypso.afgui.model.IWorkflow;
 
+
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	final static private Logger logger=

@@ -17,6 +17,7 @@ import org.kalypso.afgui.model.EActivityAction;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IWorkflow;
 
+
 /**
  * @author Patrice Congo
  *

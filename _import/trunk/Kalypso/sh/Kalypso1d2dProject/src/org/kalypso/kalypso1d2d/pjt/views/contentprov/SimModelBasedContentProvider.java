@@ -4,11 +4,12 @@
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.db.IWorkflowDB;
+import org.kalypso.afgui.model.EWorkflowProperty;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;

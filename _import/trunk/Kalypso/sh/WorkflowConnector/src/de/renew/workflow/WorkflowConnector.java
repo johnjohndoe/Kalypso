@@ -8,29 +8,24 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Vector;
 
-import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.event.WorkflowChangeEvent;
-import org.kalypso.afgui.model.event.WorkflowChangeEventListerner;
-
 import de.renew.access.LoginInfo;
 import de.renew.access.Manager;
 import de.renew.remote.RemoteServerRegistry;
 import de.renew.remote.SocketFactoryDeterminer;
 import de.renew.remote.RemoteServerRegistry.ServerDescriptor;
 import de.renew.util.ConcurrencyPreventer;
+import de.renew.workflow.event.IWorklistChangeListener;
 
 public class WorkflowConnector {
 	private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager";
 
 	private LoginInfo m_login;
 
-	private List<WorkflowChangeEventListerner> m_listenerCache;
+	private List<IWorklistChangeListener> m_listenerCache;
 
 	private AgendaChangeListener m_listenerProxy;
 
 	private Manager m_manager;
-
-	private IWorkflow m_workflow;
 
 	private Activity m_activity;
 
@@ -178,9 +173,8 @@ public class WorkflowConnector {
 				// Display.getDefault().asyncExec(new Runnable() {
 				// public void run() {
 				// try {
-				for (final WorkflowChangeEventListerner listener : m_listenerCache) {
-					listener.onWorkflowChanged(new WorkflowChangeEvent(
-							m_workflow));
+				for (final IWorklistChangeListener listener : m_listenerCache) {
+					listener.worklistChanged();
 				}
 				// } catch (final Exception e) {
 				// e.printStackTrace();
@@ -209,17 +203,17 @@ public class WorkflowConnector {
 		}
 	}
 
-	public void addAgendaChangeListener(
-			final WorkflowChangeEventListerner workflowChangeListener) {
+	public void addWorklistChangeListener(
+			final IWorklistChangeListener worklistChangeListener) {
 		if (m_listenerCache == null) {
-			m_listenerCache = new Vector<WorkflowChangeEventListerner>();
+			m_listenerCache = new Vector<IWorklistChangeListener>();
 		}
-		m_listenerCache.add(workflowChangeListener);
+		m_listenerCache.add(worklistChangeListener);
 	}
 
-	public void removeAgendaChangeListener(
-			final WorkflowChangeEventListerner workflowChangeListener) {
-		m_listenerCache.remove(workflowChangeListener);
+	public void removeWorklistChangeListener(
+			final IWorklistChangeListener worklistChangeListener) {
+		m_listenerCache.remove(worklistChangeListener);
 	}
 
 	/**

@@ -1,9 +1,8 @@
 package org.kalypso.afgui.model;
 
 /**
- * @author 
+ * @author
  */
-public interface IWorkflowConcept
-{
-	
+public interface IWorkflowConcept {
+
 }

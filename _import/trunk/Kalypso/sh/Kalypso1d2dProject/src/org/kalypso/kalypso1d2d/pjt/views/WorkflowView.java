@@ -17,9 +17,6 @@ import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.viz.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
-import org.kalypso.ogc.sensor.tableview.swing.actions.SetSelectedAction;
-
-import test.org.kalypso.afgui.TestRDFModel;
 
 /**
  * @author Patrice Congo

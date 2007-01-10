@@ -5,23 +5,9 @@ package test.org.kalypso.afgui;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.FormColors;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.impl.WorkflowImpl;
 import org.kalypso.afgui.viz.WorkflowControl;
-import org.kalypso.afgui.viz.WorkflowFigure;
 
-import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author pat_dev
@@ -29,9 +15,9 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class WorkflowFormTest
 {
-	static private Model model=TestRDFModel.getInstance().getShModel();
-	static IWorkflow workflow=
-		new WorkflowImpl(model.getResource(TestRDFModel.WORKFLOW_SH));
+//	static private Model model=TestRDFModel.getInstance().getShModel();
+//	static IWorkflow workflow=
+//		new WorkflowImpl(model.getResource(TestRDFModel.WORKFLOW_SH));
 //	
 //	static private Model model=TestRDFModel.getInstance().getWorkflowModel();
 //	static IWorkflow workflow=
@@ -117,11 +103,11 @@ public class WorkflowFormTest
 //						}
 //				});
 		
-		WorkflowControl wfc= new WorkflowControl(workflow);
-		wfc.createControl(shell);
-		shell.open();
-		while (!shell.isDisposed())
-			while (!d.readAndDispatch())
-				d.sleep();
+//		WorkflowControl wfc= new WorkflowControl(workflow);
+//		wfc.createControl(shell);
+//		shell.open();
+//		while (!shell.isDisposed())
+//			while (!d.readAndDispatch())
+//				d.sleep();
 	 }
 }
