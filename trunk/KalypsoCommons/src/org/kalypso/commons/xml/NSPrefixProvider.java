@@ -42,9 +42,7 @@ package org.kalypso.commons.xml;
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
@@ -92,15 +90,8 @@ public class NSPrefixProvider
 
   private NSPrefixProvider( )
   {
-    try
-    {
-      if( Platform.isRunning() )
-        m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
-    }
-    catch( final CoreException e )
-    {
-      KalypsoCommonsPlugin.getDefault().getLog().log( e.getStatus() );
-    }
+    if( Platform.isRunning() )
+      m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
   }
 
   /**
@@ -147,7 +138,7 @@ public class NSPrefixProvider
   {
     // TODO: remove parameter or use it
     namespaceUri.getClass();
-    
+
     // TODO better methodes to generate prefix
     switch( tryIndex )
     {
