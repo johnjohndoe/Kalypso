@@ -3,6 +3,7 @@
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import javax.naming.OperationNotSupportedException;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -252,14 +253,15 @@ public class RoughnessPolygon implements IRoughnessPolygon
 	
 	public void setPolygon(GM_Polygon polygon) 
 	{
-		Assert.throwIAEOnNull(
-				polygon, "Paramerter polynom must not be null");
-		feature.setProperty(
-				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
-				polygon);
+		throw new RuntimeException("Do not use it any more");
+//		Assert.throwIAEOnNull(
+//				polygon, "Paramerter polynom must not be null");
+//		feature.setProperty(
+//				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
+//				polygon);
 	}
 	
-	public void setPolygon(GM_Surface polygon) 
+	public void setSurface(GM_Surface polygon) 
 	{
 		Assert.throwIAEOnNull(
 				polygon, "Paramerter polynom must not be null");

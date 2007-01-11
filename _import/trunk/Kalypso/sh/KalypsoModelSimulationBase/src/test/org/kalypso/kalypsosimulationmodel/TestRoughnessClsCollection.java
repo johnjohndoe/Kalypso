@@ -44,7 +44,7 @@ public class TestRoughnessClsCollection extends TestCase
 		assertEquals("uri_r2", rcc.getRoughnessByURI("uri_r2").getURI());
 		List<IRoughnessCls> rList=rcc.selectRoughnessByName("r2");
 		assertEquals(1, rList.size());
-		System.out.println("LIST="+rList);
+		//System.out.println("LIST="+rList);
 		assertEquals("uri_r2", rList.get(0).getURI());
 		
 	}

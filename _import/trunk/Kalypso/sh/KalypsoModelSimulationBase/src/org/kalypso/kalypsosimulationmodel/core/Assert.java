@@ -2,6 +2,8 @@ package org.kalypso.kalypsosimulationmodel.core;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -36,6 +38,40 @@ public class Assert
 		}
 	}
 	
+	
+	/**
+	 * Assert the given object for null value.
+	 * This method throws concequently an illegal argument exception
+	 * if the passed object is null
+	 * 
+	 * @param obj the object to be asserted
+	 * @param message the exception message
+	 * @throws IllegalArgumentException if the passed object is null
+	 */
+	public static final void throwIAEOnFeaturePropNotList(
+								Feature feature,
+								QName propToTest,
+								String message)
+								throws IllegalArgumentException
+	{
+		IPropertyType type=
+			feature.getFeatureType().getProperty(propToTest);
+		if(!type.isList())
+		{
+			if(message==null)
+			{
+				StringBuffer buf= new StringBuffer();
+				buf.append("Feature does not have list property of the given name");
+				buf.append("\n\tFeature=");
+				buf.append(feature);
+				buf.append("\n\tProperty  QNAme=");
+				buf.append(propToTest);
+				message=buf.toString();
+			}
+			
+			throw new IllegalArgumentException(message);
+		}
+	}
 	
 	public static final String throwIAEOnNullOrEmpty(
 									String str)

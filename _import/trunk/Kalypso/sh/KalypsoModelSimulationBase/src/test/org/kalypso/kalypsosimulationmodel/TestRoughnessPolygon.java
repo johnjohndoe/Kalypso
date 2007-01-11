@@ -8,6 +8,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -63,12 +64,12 @@ public class TestRoughnessPolygon extends TestCase
 				ConvenienceCSFactory.getInstance().getOGCCSByName(
 									TestWorkspaces.CS_KEY_GAUSS_KRUEGER);
 			
-			GM_SurfacePatch pol1=
-				GeometryFactory.createGM_SurfacePatch(
-								exteriorRing, 
-								new  GM_Position[0][0], 
-								(GM_SurfaceInterpolation)null, 
-								CS_GAUSS_KRUEGER);
+//			GM_SurfacePatch pol1=
+//				GeometryFactory.createGM_SurfacePatch(
+//								exteriorRing, 
+//								new  GM_Position[0][0], 
+//								(GM_SurfaceInterpolation)null, 
+//								CS_GAUSS_KRUEGER);
 //				GM_Surface surface=
 //					GeometryFactory.createGM_Surface(pol1);
 			
@@ -80,14 +81,18 @@ public class TestRoughnessPolygon extends TestCase
 						CS_GAUSS_KRUEGER);
 			
 			
-			System.out.println("RP_PROPS=="+pol1.getClass()+
-					"\n "+pol1);
-			System.out.println("RP_PROPS=="+Arrays.asList(rp.getProperties()));
+//			System.out.println("RP_PROPS=="+pol1.getClass()+
+//					"\n "+pol1);
+//			System.out.println("RP_PROPS=="+Arrays.asList(rp.getProperties()));
 			
 			rp.setProperty(
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
-					pol1//surface
+					surface//pol1//surface
 					);
+			
+			rp.setProperty(
+					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_ID, 
+					"htpp://wwww.tuhh.de/wb/roughness_db/grass");
 			
 //			FeatureHelper.addProperty(
 //					rp,
@@ -122,8 +127,10 @@ public class TestRoughnessPolygon extends TestCase
 			fail(TestUtils.getStackTraceAsString(th));
 		}
 		Feature rFeature=workspace.getRootFeature();
+		FeatureList list=
+			(FeatureList)rFeature.getProperty(TestWorkspaces.GML_PROP_FEATURE_MEMBER);
 		RoughnessPolygon rp= 
-			new RoughnessPolygon(rFeature);
+			new RoughnessPolygon((Feature)list.get(0));
 		assertEquals(
 				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
 				rp.getRoughnessID());

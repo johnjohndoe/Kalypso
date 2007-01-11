@@ -12,6 +12,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -61,19 +62,24 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 		this.fwClass = fwClass;
 		this.featureCol = featureCol;
 		this.featureMemberProp = featureMemberProp;
-		if (featureMemberProp == null) {
-			this.featureList = (FeatureList) this.featureCol
-					.getProperty(GmlImitationsConsts.GML_PROP_FEATURE_MEMBER);
-		} else {
-			this.featureList = (FeatureList) this.featureCol
-					.getProperty(featureMemberProp);
-		}
+		this.featureList = 
+				(FeatureList) this.featureCol.getProperty(featureMemberProp);
+		
+			Assert.throwIAEOnNull(
+					this.featureList, 
+					"could not create the feature list:"+
+					"\n\tpropQNAme="+featureMemberProp);
+		Assert.throwIAEOnFeaturePropNotList(featureCol, featureMemberProp, null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public FeatureWrapperCollection(Feature parentFeature, QName childQName,
-			QName featureMemberProp, Class<FWCls> fwClass)
-			throws IllegalArgumentException {
+	public FeatureWrapperCollection(
+					Feature parentFeature, 
+					QName childQName,
+					QName featureMemberProp, 
+					Class<FWCls> fwClass)
+					throws IllegalArgumentException 
+	{
 		Assert.throwIAEOnNull(parentFeature,
 				"Parameter parentFeature must not be null");
 		Assert.throwIAEOnNull(childQName,
@@ -82,10 +88,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 		Assert.throwIAEOnNull(featureMemberProp,
 				"Parameter featureMemberProp must not be null");
 
-		try {
-			this.featureCol = FeatureHelper.addFeature(parentFeature,
-					featureMemberProp, childQName);
-		} catch (GMLSchemaException ex) {
+		try 
+		{
+			this.featureCol = 
+				FeatureHelper.addFeature(
+						parentFeature,
+						featureMemberProp, 
+						childQName);
+		} 
+		catch (GMLSchemaException ex) 
+		{
 
 			throw new IllegalArgumentException(
 					"Parent does not accept property of the specified type"
