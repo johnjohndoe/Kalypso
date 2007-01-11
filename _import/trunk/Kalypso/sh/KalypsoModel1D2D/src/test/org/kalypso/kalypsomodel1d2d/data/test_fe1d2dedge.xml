@@ -43,19 +43,19 @@
 		</wb1d2d:FE1D2DNode>			
 	</wb1d2d:fe1d2dMiddleNode>
 	<wb1d2d:fe1d2dEdgeContainer>
-		<wb1d2d:FE1D2DQuadriElement gml:id="QuadriElement">
+		<wb1d2d:FE1D2DPolyElement gml:id="QuadriElement">
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
-		</wb1d2d:FE1D2DQuadriElement>
+		</wb1d2d:FE1D2DPolyElement>
 	</wb1d2d:fe1d2dEdgeContainer>
 		<wb1d2d:fe1d2dEdgeContainer>
-		<wb1d2d:FE1D2DTriElement gml:id="FE1D2DTriElement">
+		<wb1d2d:FE1D2DPolyElement gml:id="FE1D2DTriElement">
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
 		   <wb1d2d:fe1d2dDirectedEdge xlink:href="#edge1"/>
-		</wb1d2d:FE1D2DTriElement>
+		</wb1d2d:FE1D2DPolyElement>
 	</wb1d2d:fe1d2dEdgeContainer>
 	<wb1d2d:fe1d2dEdgeContainer>
 		<wb1d2d:FE1D2DContinuityLine gml:id="ContinuityLine">

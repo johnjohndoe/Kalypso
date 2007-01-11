@@ -6,7 +6,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -36,21 +35,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
 {
-  public final static QName QNAME_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement" );
-
-  public static final QName QNAME_FE1D2DTriElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DTriElement" );
-
-  public static final QName QNAME_FE1D2DQuadriElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DQuadriElement" );
-
-  public final static QName QNAME_PROP_DIRECTEDEDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge" );
-
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
 
   private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
 
   public FE1D2D_2DElement( final Feature featureToBind )
   {
-    super( featureToBind, QNAME_FE1D2D_2DElement );
+    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
     //
     Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
@@ -119,7 +110,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
-    final List edgeList = (List) feature.getProperty( QNAME_PROP_DIRECTEDEDGE );
+    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
     for( int i = 0; i < edges.length; i++ )
@@ -141,7 +132,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   public void setEdges( final FE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
-    final List edgeList = (List) feature.getProperty( QNAME_PROP_DIRECTEDEDGE );
+    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     edgeList.clear();
 
@@ -206,18 +197,10 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
   }
 
-  public static FE1D2D_2DElement createTriElement( final FE1D2DDiscretisationModel discModel )
+  public static FE1D2D_2DElement createPolyElement( final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
-    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DTriElement );
-    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
-    return new FE1D2D_2DElement( edgeFeature );
-  }
-
-  public static FE1D2D_2DElement createQuadriElement( final FE1D2DDiscretisationModel discModel )
-  {
-    final Feature parentFeature = discModel.getFeature();
-    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DQuadriElement );
+    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
     final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
     return new FE1D2D_2DElement( edgeFeature );
   }

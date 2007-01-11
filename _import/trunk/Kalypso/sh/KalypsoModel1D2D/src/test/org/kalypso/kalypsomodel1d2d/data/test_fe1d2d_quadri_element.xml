@@ -1,4 +1,4 @@
-<wb1d2d:FE1D2DQuadriElement 
+<wb1d2d:FE1D2DPolyElement 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
@@ -81,4 +81,4 @@
 		</wb1d2d:FE1D2DEdge>	
    </wb1d2d:fe1d2dDirectedEdge>
    
-</wb1d2d:FE1D2DQuadriElement>
+</wb1d2d:FE1D2DPolyElement>

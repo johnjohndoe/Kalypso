@@ -41,26 +41,23 @@
 package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -77,57 +74,40 @@ public class ModelOps
     // never instatiate
   }
 
-  public static IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] routing( final FE1D2DNode startNode, final FE1D2DNode endNode )
+  public static IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] routing( final FE1D2DNode startNode, final FE1D2DNode endNode ) throws CoreException
   {
+    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
+
     final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> edgeList = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
 
     try
     {
-      final Point startPoint = (Point) JTSAdapter.export( startNode.getPoint() );
       final Point endPoint = (Point) JTSAdapter.export( endNode.getPoint() );
 
-      final LineString lineSegment = new GeometryFactory().createLineString( new Coordinate[] { startPoint.getCoordinate(), endPoint.getCoordinate() } );
+      final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( startNode.getFeature().getParent() );
+      final int maxNodeCount = model.getNodes().size();
 
       IFE1D2DNode lastFoundNode = startNode;
-      while( !lastFoundNode.equals( endNode ) )
+      int count = 0;
+      while( count < maxNodeCount && !lastFoundNode.equals( endNode ) )
       {
-        // alle benachbarten elemente des aktuellen knoten
-        final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = lastFoundNode.getElements();
+        count++; // Max number of iterations is the current node count
 
-        final Set<IFE1D2DNode<IFE1D2DEdge>> goodNodes = new HashSet<IFE1D2DNode<IFE1D2DEdge>>();
-
-        // alle deren kanten, welche das segment schneiden
-        for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
+        if( doTrace )
         {
-          final IFeatureWrapperCollection<IFE1D2DEdge> edges = element.getEdges();
-          for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
-          {
-            final GM_Curve curve = edge.getCurve();
-            final LineString edgeSegment = (LineString) JTSAdapter.export( curve );
-
-            if( lineSegment.intersects( edgeSegment ) )
-            {
-              // Handle special case: if the intersection lies exactly at the current point
-              // (always happens for the startPoint) ignore this edge
-              final Geometry geometry = lineSegment.intersection( edgeSegment );
-              final Coordinate[] coordinates = geometry.getCoordinates();
-              boolean isGood = true;
-              for( final Coordinate coordinate : coordinates )
-              {
-                final GM_Point point = lastFoundNode.getPoint();
-                final Point lastFoundPoint = (Point) JTSAdapter.export( point );
-                if( coordinate.equals2D( lastFoundPoint.getCoordinate() ) )
-                  isGood = false;
-              }
-
-              if( isGood )
-              {
-                for( final IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes() )
-                  goodNodes.add( node );
-              }
-            }
-          }
+          System.out.println( "START: Routing" );
+          System.out.println( "Current node: " + lastFoundNode.getWrappedFeature().getId() );
         }
+
+        // alle benachbarten elemente des aktuellen knoten
+        final IFE1D2DNode<IFE1D2DEdge>[] neighbourNodes = lastFoundNode.getNeighbours( );
+
+        if( neighbourNodes.length == 0 )
+        {
+          final IStatus status = StatusUtilities.createErrorStatus( "No good nodes found for node:" + lastFoundNode.getWrappedFeature().getId() );
+          throw new CoreException( status );
+        }
+        final List<IFE1D2DNode<IFE1D2DEdge>> neighbourNodeList = Arrays.asList( neighbourNodes );
 
         // find suitable edge
         IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> shortestFoundEdge = null;
@@ -136,6 +116,9 @@ public class ModelOps
         final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = lastFoundNode.getEdges();
         for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
         {
+          if( edgeList.contains( edge ) )
+            continue;
+
           // get opposite node (not me)
           final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
           if( nodes.size() == 2 )
@@ -146,11 +129,12 @@ public class ModelOps
             else
               oppositeNode = nodes.get( 0 );
 
-            if( goodNodes.contains( oppositeNode ) )
+            if( neighbourNodeList.contains( oppositeNode ) )
             {
-              // the current best edge is the shortest edge, which is connected to
-              // the current point, intersect the line segment and was not encountered yet
-              final double length = edge.getCurve().getLength();
+              // the current best edge is the one, whichs endpoint is nearest to the target, intersect the line segment
+              // and was not encountered yet
+              final Point oppositePoint = (Point) JTSAdapter.export( oppositeNode.getPoint() );
+              final double length = oppositePoint.distance( endPoint );
               if( length < minEdgeLength )
               {
                 shortestFoundEdge = edge;
@@ -174,21 +158,38 @@ public class ModelOps
               lastFoundNode = nodes.get( 0 );
           }
           else
-            throw new IllegalArgumentException( "Edge with nodeCount != 2 encountered." );
+          {
+            final IStatus status = StatusUtilities.createErrorStatus( "Edge with nodeCount != 2 encountered." );
+            throw new CoreException( status );
+          }
         }
         else
-          throw new IllegalArgumentException( "No elements found for node: " + lastFoundNode );
+        {
+          final IStatus status = StatusUtilities.createErrorStatus( "No shortest edge found for node: " + lastFoundNode.getWrappedFeature().getId() );
+          throw new CoreException( status );
+        }
+      }
+
+      if( count == maxNodeCount )
+      {
+        final IStatus status = StatusUtilities.createErrorStatus( "Routing failed, no path found." );
+        throw new CoreException( status );
       }
 
     }
     catch( final GM_Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      throw new CoreException( status );
+    }
+
+    if( doTrace )
+    {
+      System.out.println( "EndPoint reached: " + endNode.getWrappedFeature().getId() );
+      System.out.println( "FINISHED: Routing" );
     }
 
     return edgeList.toArray( new FE1D2DEdge[edgeList.size()] );
 
   }
-
 }

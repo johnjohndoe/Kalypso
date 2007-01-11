@@ -557,46 +557,17 @@
 	
 	
 	<!-- =================================================================
-			FE1D2DTriElement
+		FE1D2DPolyElement
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DTriElement"
-		type="wb1d2d:FE1D2DTriElementType"
+		name="FE1D2DPolyElement"
+		type="wb1d2d:FE1D2D_PolyElementType"
 		substitutionGroup="wb1d2d:FE1D2D_2DElement"/>
 	
-	<xs:complexType name="FE1D2DTriElementType">
+	<xs:complexType name="FE1D2D_PolyElementType">
 		<xs:annotation>
 			<xs:documentation>
-				An 2D fe element is defined by 3 edges.
-				singular edges cannot be used.
-				the edges must build a close kurve.				
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension 
-				base="wb1d2d:FE1D2D_2DElementType">
-					<xs:sequence>
-						<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
-						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge" minOccurs="3" maxOccurs="3"/>
-					</xs:sequence>
-				
-			</xs:extension>
-		</xs:complexContent>	
-	</xs:complexType>
-	
-	<!-- =================================================================
-		FE1D2DQuadriElement
-	================================================================== -->
-	<xs:element 
-		name="FE1D2DQuadriElement"
-		type="wb1d2d:FE1D2DQuadriElementType"
-		substitutionGroup="wb1d2d:FE1D2D_2DElement"/>
-	
-	<xs:complexType name="FE1D2DQuadriElementType">
-		<xs:annotation>
-			<xs:documentation>
-				An 2D fe element is defined by 4 edges.
+				An 2D fe element is defined by 3 or 4 edges.
 				singular edges cannot be used.
 				the edges must build a close kurve.				
 			</xs:documentation>
@@ -608,9 +579,8 @@
 					<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
 					<xs:element
 						ref="wb1d2d:fe1d2dDirectedEdge"
-						minOccurs="4" maxOccurs="4"/>
+						minOccurs="3" maxOccurs="4"/>
 					</xs:sequence>
-				
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>

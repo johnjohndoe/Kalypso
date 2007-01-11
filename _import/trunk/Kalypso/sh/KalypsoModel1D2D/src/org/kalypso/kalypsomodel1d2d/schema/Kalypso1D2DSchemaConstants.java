@@ -42,11 +42,8 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_FE1D2DContinuityLine = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DContinuityLine" );
       
-      public static final QName WB1D2D_F_FE1D2DTriElement = 
-              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DTriElement" );
-
-      public static final QName WB1D2D_MODEL1D2D_F_FE1D2DQuadriElement = 
-            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DQuadriElement" );
+      public static final QName WB1D2D_F_FE1D2DPolyElement = 
+            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DPolyElement" );
 
       public final static QName WB1D2D_PROP_DIRECTEDEDGE = 
           new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge" );

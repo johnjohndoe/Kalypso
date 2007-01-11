@@ -44,7 +44,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author congo
+ * @author Patrice Congo
  */
 public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
 {

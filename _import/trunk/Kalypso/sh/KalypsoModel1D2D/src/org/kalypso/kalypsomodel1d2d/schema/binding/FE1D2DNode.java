@@ -1,7 +1,9 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -114,10 +116,10 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     final FeatureList elementList = (FeatureList) model.getFeature().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
 
     // get all elements touching this node
-    final List touchingElements = elementList.query( this.getPoint().getPosition(), null );
+    final List touchingElements = elementList.query( getPoint().getPosition(), null );
 
-    final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new ArrayList<IFE1D2DElement<IFE1D2DComplexElement,IFE1D2DEdge>>();
-    
+    final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
+
     // filter all element which contain this node
     for( final Object object : touchingElements )
     {
@@ -135,7 +137,6 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       }
     }
 
-    
     final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] result = new IFE1D2DElement[foundElements.size()];
     for( int i = 0; i < foundElements.size(); i++ )
       result[i] = (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>) foundElements.get( i );
@@ -158,7 +159,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
 
     final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
-    
+
     // filter all element which contain this node
     for( final Object object : touchingEdges )
     {
@@ -167,7 +168,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       for( final IFE1D2DNode node : nodes )
       {
-        if( node.equals( this ))
+        if( node.equals( this ) )
         {
           foundEdges.add( edge );
           break;
@@ -175,12 +176,37 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       }
     }
 
-    
     final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
     for( int i = 0; i < foundEdges.size(); i++ )
       result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
 
     return result;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()
+   */
+  public IFE1D2DNode<IFE1D2DEdge>[] getNeighbours( )
+  {
+    final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = getElements();
+
+    final Set<IFE1D2DNode<IFE1D2DEdge>> neighbourNodes = new HashSet<IFE1D2DNode<IFE1D2DEdge>>();
+
+    // alle Nachbarknoten
+    for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
+    {
+      final IFeatureWrapperCollection<IFE1D2DEdge> edges = element.getEdges();
+      for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
+      {
+        for( final IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes() )
+        {
+          if( !equals( node ) )
+            neighbourNodes.add( node );
+        }
+      }
+    }
+
+    return neighbourNodes.toArray( new IFE1D2DNode[neighbourNodes.size()] );
   }
 
 }

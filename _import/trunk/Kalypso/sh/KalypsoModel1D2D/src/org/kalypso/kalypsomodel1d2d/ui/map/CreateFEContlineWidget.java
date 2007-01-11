@@ -3,6 +3,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -10,10 +14,10 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
@@ -114,7 +118,7 @@ public class CreateFEContlineWidget extends AbstractWidget
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = featureTheme.getFeatureType();
         if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) || GMLSchemaUtilities.substitutes( featureType, FE1D2DEdge.QNAME_FE1D2DEdge )
-            || GMLSchemaUtilities.substitutes( featureType, FE1D2D_2DElement.QNAME_FE1D2D_2DElement ) )
+            || GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement ) )
         {
           final Feature parentFeature = featureTheme.getFeatureList().getParentFeature();
 
@@ -122,7 +126,7 @@ public class CreateFEContlineWidget extends AbstractWidget
           workspace = featureTheme.getWorkspace();
         }
       }
-      
+
       final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
 
       final Feature parentFeature = model.getFeature();
@@ -133,6 +137,17 @@ public class CreateFEContlineWidget extends AbstractWidget
     catch( final Exception e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+
+      final Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActivePart().getSite().getShell();
+      shell.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          ErrorDialog.openError( shell, getName(), "Failure while creation of continuity line:", status );
+        }
+      } );
     }
     finally
     {

@@ -176,11 +176,7 @@ public class ElementGeometryBuilder
     }
 
     /* Build new element */
-    final FE1D2D_2DElement element;
-    if( edges.length == 3 )
-      element = FE1D2D_2DElement.createTriElement( discModel );
-    else
-      element = FE1D2D_2DElement.createQuadriElement( discModel );
+    final FE1D2D_2DElement element = FE1D2D_2DElement.createPolyElement( discModel );
 
     element.setEdges( edges );
 

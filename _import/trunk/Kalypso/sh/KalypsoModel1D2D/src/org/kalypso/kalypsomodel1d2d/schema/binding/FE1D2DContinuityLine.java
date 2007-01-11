@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -82,11 +83,19 @@ public class FE1D2DContinuityLine extends FE1D2D_2DElement implements IFE1D2DCon
     if( edges.length == 0 )
       return null;
 
-    final FE1D2DNode[] nodes = new FE1D2DNode[edges.length + 1];
-    for( int i = 0; i < edges.length; i++ )
+    final IFE1D2DNode[] nodes = new IFE1D2DNode[edges.length + 1];
+
+    if( edges.length == 1 )
+    {
+      final IFeatureWrapperCollection<IFE1D2DNode> edgeNodes = edges[0].getNodes();
+      nodes[0] = edgeNodes.get( 0 );
+      nodes[1] = edgeNodes.get( 1 );
+    }
+
+    for( int i = 0; i < edges.length - 1; i++ )
     {
       final FE1D2DEdge edge0 = edges[i];
-      final FE1D2DEdge edge1 = edges[(i + 1) % edges.length];
+      final FE1D2DEdge edge1 = edges[i + 1];
 
       final FE1D2DNode[] edge0Nodes = edge0.getNodesAsArray();
       final FE1D2DNode[] edge1Nodes = edge1.getNodesAsArray();
@@ -105,13 +114,20 @@ public class FE1D2DContinuityLine extends FE1D2D_2DElement implements IFE1D2DCon
         nodes[i] = edge0node1;
       else if( edge0node0.equals( edge1node1 ) )
         nodes[i] = edge0node1;
+      else
+        throw new IllegalStateException();
 
-      if( i == edges.length - 1 )
+      if( i == edges.length - 2 )
       {
-        if( nodes[i].equals( edge1node0 ) )
-          nodes[edges.length] = edge1node1;
+        if( nodes[i].equals( edge0node0 ) )
+          nodes[i + 1] = edge0node1;
         else
-          nodes[edges.length] = edge1node0;
+          nodes[i + 1] = edge0node0;
+
+        if( nodes[i + 1].equals( edge1node0 ) )
+          nodes[i + 2] = edge1node1;
+        else
+          nodes[i + 2] = edge1node0;
       }
     }
 

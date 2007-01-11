@@ -63,7 +63,13 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 
   public final static QName QNAME_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElement" );
 
+  public final static QName QNAME_PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNode" );
+
   private IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, QNAME_PROP_ELEMENTS );
+
+  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges  = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, QNAME_PROP_EDGES );
+
+  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes  = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
@@ -94,6 +100,16 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
     return m_elements;
   }
 
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( )
+  {
+    return m_nodes;
+  }
+  
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
+  {
+    return m_edges;
+  }
+  
   public IFE1D2DContinuityLine<IFE1D2DComplexElement,IFE1D2DEdge> createContinuityLine( )
   {
     final Feature parentFeature = getFeature();
