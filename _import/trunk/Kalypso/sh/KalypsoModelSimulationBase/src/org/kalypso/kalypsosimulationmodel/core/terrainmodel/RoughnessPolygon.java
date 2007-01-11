@@ -258,6 +258,16 @@ public class RoughnessPolygon implements IRoughnessPolygon
 				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
 				polygon);
 	}
+	
+	public void setPolygon(GM_Surface polygon) 
+	{
+		Assert.throwIAEOnNull(
+				polygon, "Paramerter polynom must not be null");
+		feature.setProperty(
+				KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
+				polygon);
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRougthnessID(java.lang.String)
