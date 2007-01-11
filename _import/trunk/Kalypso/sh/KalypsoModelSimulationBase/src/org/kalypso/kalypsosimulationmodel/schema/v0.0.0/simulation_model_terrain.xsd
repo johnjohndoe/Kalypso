@@ -13,6 +13,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:wspmprofile="org.kalypso.model.wspmprofile"
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 	
@@ -25,6 +26,10 @@
 	<xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+	<xs:import
+		namespace="org.kalypso.model.wspmprofile"
+		schemaLocation="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd"
 		/>
 	<!--xs:import
 		namespace="http://www.opengis.net/gml"
