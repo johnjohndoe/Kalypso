@@ -65,7 +65,7 @@ public final class GMLXPathSegment
   {
     final String id = feature.getId();
     if( id == null || id.length() < 1 )
-      throw new GMLXPathException( "canot buil gmlxpath for feature with invalid id" );
+      throw new GMLXPathException( "canot build gmlxpath for feature with invalid id" );
     else
       return new GMLXPathSegment[] { new GMLXPathSegment( feature ) };
   }

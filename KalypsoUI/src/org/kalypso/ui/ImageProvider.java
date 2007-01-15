@@ -56,7 +56,12 @@ public class ImageProvider
     WAIT_LOADING_OBJ( "icons/full/obj16/wait_loading.gif" ),
     FAILED_LOADING_OBJ( "icons/full/obj16/failed_loading.gif" ),
     
-    FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" );
+    FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" ),
+    
+    IMAGE_MAPVIEW_ZOOMIN("icons/map/zoomin.gif"),
+    IMAGE_MAPVIEW_ZOOMOUT("icons/map/zoomout.gif"),
+    IMAGE_MAPVIEW_PAN("icons/map/pan.gif"),
+    IMAGE_MAPVIEW_FULLEXTEND("icons/map/maximize2.gif");
 
     private final String m_imagePath;
 
@@ -88,16 +93,16 @@ public class ImageProvider
   // DEPRECATED: The image constants below are deprecated
   // Use the DESCRIPTOR enum above instead
   
-  public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = id( "icons/full/elcl16/remove.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_TOGGLESELECT = id( "icons/full/elcl16/kde_14_polyline.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_TOGGLESELECT = id( "icons/full/elcl16/kde_14_polyline.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
+  //public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
   public static final ImageDescriptor IMAGE_ZML_FILE = id( "icons/observation/zml-icon.gif" );
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY = id( "icons/repository/repository_rep.gif" );

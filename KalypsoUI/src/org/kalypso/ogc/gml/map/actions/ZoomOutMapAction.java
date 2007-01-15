@@ -45,6 +45,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -54,7 +55,7 @@ public class ZoomOutMapAction extends AbstractCommandAction
 {
   public ZoomOutMapAction( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    super( commandTarget, mapPanel, null, ImageProvider.IMAGE_MAPVIEW_ZOOMOUT, "Ausschnitt verkleinern" );
+    super( commandTarget, mapPanel, null, KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_MAPVIEW_ZOOMOUT ), "Ausschnitt verkleinern" );
   }
 
   /**
