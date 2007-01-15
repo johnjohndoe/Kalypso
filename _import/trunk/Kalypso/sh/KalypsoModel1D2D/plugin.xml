@@ -55,6 +55,15 @@
                style="radio"
                toolbarPath="karte/edit"
                tooltip="eine neue Kontinuitätslinie definieren"/>
+         <action
+               	class="xp.ActivateModelMapEditProtocolViewDelegate"
+               	id="xp.ActivateModelMapEditProtocolViewDelegate"
+               	label="1d 2d zeichen element activieren"
+               	style="radio"
+               	toolbarPath="karte/edit"
+				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
+               	tooltip="1d 2d zeichen element activieren"/>
+               
               </editorContribution>
      </extension>
      
@@ -106,4 +115,14 @@
                  tooltip="ein WSPM Modell importieren"/>
         </objectContribution>
      </extension>
+     <extension
+         name="Workflow Views"
+         point="org.eclipse.ui.views">
+	      <view
+	            allowMultiple="false"
+	            class="xp.ModelMapEditProtocolView"
+	            id="xp.ModelMapEditProtocolView"
+	            name="Model Map Edit Protocol View "/>
+	  </extension>
+	
 </plugin>

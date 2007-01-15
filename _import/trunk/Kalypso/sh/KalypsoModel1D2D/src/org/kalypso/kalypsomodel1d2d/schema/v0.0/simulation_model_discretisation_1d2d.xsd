@@ -433,7 +433,8 @@
 				base="simBase:FEAbstractElementType">
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:fe1d2dElementContainer"/>
+						ref="wb1d2d:fe1d2dElementContainer"
+						minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 			

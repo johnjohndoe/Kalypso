@@ -43,18 +43,28 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
     //
-    Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    Object prop = 
+        featureToBind.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     if( prop == null )
     {
       // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
+      containers = 
+          new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+                featureToBind, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, 
+                IFE1D2DComplexElement.class );
     }
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      containers = 
+        new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+                featureToBind, 
+                IFE1D2DComplexElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
 
     // edges
