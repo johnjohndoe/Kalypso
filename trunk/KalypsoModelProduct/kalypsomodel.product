@@ -40,7 +40,6 @@
    <intro introId="org.kalypso.model.product.introID"/>
 
    <plugins>
-      <plugin id="KalypsoModel1D2D"/>
       <plugin id="KalypsoModelSimulationBase"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="de.belger.swtchart.core"/>
@@ -146,6 +145,7 @@
       <plugin id="org.kalypso.model.wspm.tuhh.schema"/>
       <plugin id="org.kalypso.model.wspm.tuhh.ui"/>
       <plugin id="org.kalypso.model.wspm.ui"/>
+      <plugin id="org.kalypso.model1d2d"/>
       <plugin id="org.kalypso.optimize"/>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
