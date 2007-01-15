@@ -1,7 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -27,7 +26,7 @@ public interface IRoughnessPolygon extends IFeatureWrapper
 	 * 
 	 * @throws IllegalArgumentException if id is null or empty
 	 */
-	public void setRougthnessID(String id)
+	public void setRoughnessID(String id)
 				throws IllegalArgumentException;
 	
 	/**

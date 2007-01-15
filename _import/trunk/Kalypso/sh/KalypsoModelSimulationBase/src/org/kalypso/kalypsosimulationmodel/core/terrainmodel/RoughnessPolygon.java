@@ -3,7 +3,6 @@
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import javax.naming.OperationNotSupportedException;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -274,7 +273,7 @@ public class RoughnessPolygon implements IRoughnessPolygon
 	/* (non-Javadoc)
 	 * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRougthnessID(java.lang.String)
 	 */
-	public void setRougthnessID(
+	public void setRoughnessID(
 						String id) 
 						throws IllegalArgumentException 
 	{

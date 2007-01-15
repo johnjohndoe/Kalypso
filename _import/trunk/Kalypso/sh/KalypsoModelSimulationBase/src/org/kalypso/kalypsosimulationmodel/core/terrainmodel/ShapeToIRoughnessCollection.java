@@ -1,18 +1,19 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -27,182 +28,206 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public class ShapeToIRoughnessCollection 
+public class ShapeToIRoughnessCollection extends Job
 {	
-	/**
-	 * Utility for fetching GML schema from global schema catalog
-	 * 
-	 * @param schemaNamespace - schema to be fetched
-	 * @param version - version of GML schema; if this parameter is <code>null</code>, default value "3.1" is used 
-	 * @return GMLschema object, or <code>null</code> in case of exception
-	 * 
-	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
-	 */
-	private static GMLSchema getGMLSchema( String schemaNamespace, String version )
+	URL 				m_inputFileURL;
+	URL 				m_outputFileURL;
+	CS_CoordinateSystem m_shapeCS;
+	String 				m_shapeProperty;
+	
+	public ShapeToIRoughnessCollection( String name, URL inputFileURL, URL outputFileURL, CS_CoordinateSystem shapeCS, String shapeProperty )
 	{
-		final String ver = (version!=null)?version:"3.1";
-		try {
-			return KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog().getSchema( schemaNamespace, ver );
-		} catch (InvocationTargetException e) {
-			//e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		super(name);
+		m_inputFileURL = inputFileURL;
+		m_outputFileURL = outputFileURL;
+		m_shapeCS = shapeCS;
+		m_shapeProperty = shapeProperty;
 	}
 	
+
+	@Override
+	protected IStatus run(IProgressMonitor monitor) {
+		try {
+			transform(monitor, m_inputFileURL, m_shapeCS, m_shapeProperty, m_outputFileURL);
+		} catch (GmlSerializeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Status.OK_STATUS;
+	}
+	
+//	/**
+//	 * Utility for fetching GML schema from global schema catalog
+//	 * 
+//	 * @param schemaNamespace - schema to be fetched
+//	 * @param version - version of GML schema; if this parameter is <code>null</code>, default value "3.1" is used 
+//	 * @return GMLschema object, or <code>null</code> in case of exception
+//	 * 
+//	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+//	 */
+//	private static GMLSchema getGMLSchema( String schemaNamespace, String version )
+//	{
+//		final String ver = (version!=null)?version:"3.1";
+//		try {
+//			return KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog().getSchema( schemaNamespace, ver );
+//		} catch (InvocationTargetException e) {
+//			//e.printStackTrace();
+//			return null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+//	
+//	/**
+//	 * <b><u>DO NOT USE THIS FUNCTION, CREATED FOR TEST PURPOSE ONLY !!!</u></b><br><br>
+//	 * 
+//	 * Utility function for creating IRoughnessPolygonCollection from ArcView shape data
+//	 * 
+//	 * @param inputFileURL - URL of input SHP file
+//	 * @param sourceCrs - coordinate sistem used by input SHP file
+//	 * @param shpCustomProperty - (roughness) property to read from SHP data
+//	 * @throws GmlSerializeException - if input file cannot be deserialized
+//	 *  
+//	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+//	 */
+//	@Deprecated
+//	private static List<IRoughnessPolygon> transform2List( URL inputFileURL, CS_CoordinateSystem sourceCrs, String shpCustomProperty) throws GmlSerializeException
+//	{
+//		final GMLWorkspace 	workSpace 	= ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
+//		GMLSchema schema = null;
+//		schema = getGMLSchema(UrlCatalogModelSimulationBase.SIM_MODEL_NS, null);
+//
+//		QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+//		QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
+//		QName shpCustomPropertyName = new QName( "namespace", shpCustomProperty ); //$NON-NLS-1$
+//		
+//		final IFeatureType rootFT = schema.getFeatureType(new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayerPolygonCollection"));
+//		final IFeatureType polygonFT = schema.getFeatureType(new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon"));
+//		
+//		Feature rootFeature = FeatureFactory.createFeature( null, rootFT.getQName() + "0", rootFT, true ); //$NON-NLS-1$
+//		//rootFeature.setProperty(featureMemberProp, FeatureFactory.createFeatureList(rootFeature, ((IRelationType)polygonFT)));
+//		
+//		List<IRoughnessPolygon> list = new LinkedList<IRoughnessPolygon>();
+//		
+//		Feature shapeRootFeature = workSpace.getRootFeature();
+//		List featureList = (List) shapeRootFeature.getProperty( shpFeatureName );
+//		for( int i = 0; i < featureList.size(); i++ )
+//		{
+//			final Feature polygonFeature = FeatureFactory.createFeature( rootFeature, polygonFT.getQName() + String.valueOf(i), polygonFT, true ); //$NON-NLS-1$
+//			RoughnessPolygon roughnessPolygon = new RoughnessPolygon(polygonFeature);
+//			final Feature feat = (Feature) featureList.get( i );
+//			final String propertyValue = (String) feat.getProperty( shpCustomPropertyName );
+//			final GM_Surface gm_Surface = (GM_Surface) feat.getProperty( shpGeomPropertyName );
+//
+//			roughnessPolygon.setSurface(gm_Surface);
+//			roughnessPolygon.setRoughnessID(propertyValue);
+//			
+//			list.add(roughnessPolygon);
+//		}
+//		return list;
+//	}
+
 	/**
-	 * Utility function for creating IRoughnessPolygonCollection from ArcView shape data
+	 * Reads (ArcView) roughness shape data and creates corresponding GML output. Output is created based on <CODE>http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase</CODE> namespace
 	 * 
 	 * @param inputFileURL - URL of input SHP file
-	 * @param sourceCrs - coordinate sistem used by input SHP file
+	 * @param sourceCrs - coordinate sistem used by input SHP file; if omitted, default value is Gauss-Krueger (EPSG:31467)
 	 * @param shpCustomProperty - (roughness) property to read from SHP data
-	 * @throws GmlSerializeException - if input file cannot be deserialized
+	 * @param outputFileURL - URL of output GML file
+	 * @throws GmlSerializeException - if input shape file cannot be deserialized 
+	 * @throws InvocationTargetException - if target workspace cannot be created
+	 * @throws IOException - if output file cannot be created/opened for writing
 	 *  
 	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
 	 */
-	public static List<IRoughnessPolygon> transform2List( URL inputFileURL, CS_CoordinateSystem sourceCrs, String shpCustomProperty) throws GmlSerializeException
+	public static void transform(URL inputFileURL, CS_CoordinateSystem sourceCrs, String shpCustomProperty, URL outputFileURL) throws GmlSerializeException, InvocationTargetException, IOException
 	{
-		final GMLWorkspace 	workSpace 	= ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
-		GMLSchema schema = null;
-		schema = getGMLSchema(UrlCatalogModelSimulationBase.SIM_MODEL_NS, null);
-
 		QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpCustomPropertyName = new QName( "namespace", shpCustomProperty ); //$NON-NLS-1$
 		
-		final IFeatureType rootFT = schema.getFeatureType(new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayerPolygonCollection"));
-		final IFeatureType polygonFT = schema.getFeatureType(new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon"));
+		if(sourceCrs == null) sourceCrs = KalypsoModelSimulationBaseConsts.CS_GAUSS_KRUEGER;
+//		sourceCrs = ConvenienceCSFactory.getInstance().getOGCCSByName("EPSG:31469");
 		
-		Feature rootFeature = FeatureFactory.createFeature( null, rootFT.getQName() + "0", rootFT, true ); //$NON-NLS-1$
-		//rootFeature.setProperty(featureMemberProp, FeatureFactory.createFeatureList(rootFeature, ((IRelationType)polygonFT)));
-		
-		List<IRoughnessPolygon> list = new LinkedList<IRoughnessPolygon>();
-		
-		Feature shapeRootFeature = workSpace.getRootFeature();
-		List featureList = (List) shapeRootFeature.getProperty( shpFeatureName );
-		for( int i = 0; i < featureList.size(); i++ )
-		{
-			final Feature polygonFeature = FeatureFactory.createFeature( rootFeature, polygonFT.getQName() + String.valueOf(i), polygonFT, true ); //$NON-NLS-1$
-			RoughnessPolygon roughnessPolygon = new RoughnessPolygon(polygonFeature);
-			final Feature feat = (Feature) featureList.get( i );
-			final String propertyValue = (String) feat.getProperty( shpCustomPropertyName );
-			final GM_Surface gm_Surface = (GM_Surface) feat.getProperty( shpGeomPropertyName );
+		final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
+		Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
+		List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
 
+		final GMLWorkspace rpColWorkspace = FeatureFactory.createGMLWorkspace(KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION, outputFileURL, GmlSerializer.DEFAULT_FACTORY);
+		RoughnessPolygonCollection roughnessPolygonCollection = new RoughnessPolygonCollection(rpColWorkspace.getRootFeature(), IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON);
+
+		IRoughnessPolygon roughnessPolygon = null;
+		Feature shapeFeature = null;
+		
+		for( int i = 0; i < shapeFeatureList.size(); i++ )
+		{
+			roughnessPolygon = roughnessPolygonCollection.addNew(KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON);
+			shapeFeature = (Feature) shapeFeatureList.get( i );
+			final String propertyValue = (String) shapeFeature.getProperty( shpCustomPropertyName );
+			final GM_Surface gm_Surface = (GM_Surface) shapeFeature.getProperty( shpGeomPropertyName );
 			roughnessPolygon.setSurface(gm_Surface);
-			roughnessPolygon.setRougthnessID(propertyValue);
-			
-			list.add(roughnessPolygon);
+			roughnessPolygon.setRoughnessID(propertyValue);
 		}
-		return list;
+		FileWriter writer = new FileWriter(outputFileURL.getPath());
+		GmlSerializer.serializeWorkspace(writer, rpColWorkspace);
+		writer.close();
 	}
 
 	/**
-	 * Utility function for creating IRoughnessPolygonCollection from ArcView shape data
+	 * Reads (ArcView) roughness shape data and creates corresponding GML output. Output is created based on <CODE>http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase</CODE> namespace
 	 * 
 	 * @param inputFileURL - URL of input SHP file
-	 * @param sourceCrs - coordinate sistem used by input SHP file
+	 * @param sourceCrs - coordinate sistem used by input SHP file; if omitted, default value is Gauss-Krueger (EPSG:31467)
 	 * @param shpCustomProperty - (roughness) property to read from SHP data
+	 * @param outputFileURL - URL of output GML file
+	 * @throws GmlSerializeException - if input shape file cannot be deserialized 
+	 * @throws InvocationTargetException - if target workspace cannot be created
+	 * @throws IOException - if output file cannot be created/opened for writing
+	 *  
 	 * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
-	 * @throws Exception 
 	 */
-	public static IRoughnessPolygonCollection transform( 
-												URL inputFileURL, 
-												URL outputFile,
-												CS_CoordinateSystem sourceCrs, 
-												String shpCustomProperty
-												) 
-												throws Exception
+	public void transform(IProgressMonitor monitor, URL inputFileURL, CS_CoordinateSystem sourceCrs, String shpCustomProperty, URL outputFileURL) throws GmlSerializeException, InvocationTargetException, IOException
 	{
-//		List list = transform2List(inputFileURL, sourceCrs, shpCustomProperty);
-		
-		final GMLWorkspace 	workSpace 	= 
-				ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
-		GMLSchema schema = null;
-		schema = getGMLSchema(UrlCatalogModelSimulationBase.SIM_MODEL_NS, null);
-
+	    int totalWork = 100;
+	    monitor.beginTask( "Rintam...", totalWork ); //$NON-NLS-1$
 		QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpCustomPropertyName = new QName( "namespace", shpCustomProperty ); //$NON-NLS-1$
 		
-		QName featureMemberProp = new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember");
+		if(sourceCrs == null) sourceCrs = KalypsoModelSimulationBaseConsts.CS_GAUSS_KRUEGER;
+//		sourceCrs = ConvenienceCSFactory.getInstance().getOGCCSByName("EPSG:31469");
+		
+		final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize(FileUtilities.nameWithoutExtension(inputFileURL.getPath()), sourceCrs);
+	      monitor.subTask( "subtask" ); //$NON-NLS-1$ //$NON-NLS-2$
+	      monitor.worked( 10 );
+		Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
+		List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
 
-		final IFeatureType rootFT = 
-				schema.getFeatureType(
-						new QName(
-							UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
-							"RoughnessLayerPolygonCollection"));
-		final IFeatureType polygonFT = schema.getFeatureType(new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon"));
-		
-		GMLWorkspace rpColWorkspace=
-				FeatureFactory.createGMLWorkspace(
-						KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION,
-						outputFile, 
-						GmlSerializer.DEFAULT_FACTORY);
-		//created automaticaly
-//		Feature rootFeature = 
-//			FeatureFactory.createFeature(
-//						rpColWorkspace, 
-//						rootFT.getQName() + "0", 
-//						rootFT, 
-//						true ); //$NON-NLS-1$
-		
-//		rootFeature.setProperty(featureMemberProp, FeatureFactory.createFeatureList(rootFeature, ((IRelationType)polygonFT)));
-		
-		
-		
-		
-		Feature rooFeature=
-			rpColWorkspace.getRootFeature();
-		
-		RoughnessPolygonCollection roughnessPolygonCollection = 
-							new RoughnessPolygonCollection(
-									rpColWorkspace.getRootFeature(), 
-									IRoughnessPolygon.class, 
-									KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON);
+		final GMLWorkspace rpColWorkspace = FeatureFactory.createGMLWorkspace(KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION, outputFileURL, GmlSerializer.DEFAULT_FACTORY);
+		RoughnessPolygonCollection roughnessPolygonCollection = new RoughnessPolygonCollection(rpColWorkspace.getRootFeature(), IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON);
 
-		Feature shapeRootFeature = workSpace.getRootFeature();
-		List featureList = (List) shapeRootFeature.getProperty( shpFeatureName );
-		IRoughnessPolygon roughnessPolygon;
+		IRoughnessPolygon roughnessPolygon = null;
+		Feature shapeFeature = null;
 		
-		for( int i = 0; i < featureList.size(); i++ )
+		for( int i = 0; i < shapeFeatureList.size(); i++ )
 		{
-			roughnessPolygon=
-				roughnessPolygonCollection.addNew(
-									KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON);
-//			final Feature polygonFeature = FeatureFactory.createFeature( rootFeature, polygonFT.getQName() + String.valueOf(i), polygonFT, true ); //$NON-NLS-1$
-//			RoughnessPolygon roughnessPolygon = new RoughnessPolygon(polygonFeature);
-			final Feature feat = (Feature) featureList.get( i );
-			final String propertyValue = (String) feat.getProperty( shpCustomPropertyName );
-			final GM_Surface gm_Surface = (GM_Surface) feat.getProperty( shpGeomPropertyName );
-
+			roughnessPolygon = roughnessPolygonCollection.addNew(KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON);
+			shapeFeature = (Feature) shapeFeatureList.get( i );
+			final String propertyValue = (String) shapeFeature.getProperty( shpCustomPropertyName );
+			final GM_Surface gm_Surface = (GM_Surface) shapeFeature.getProperty( shpGeomPropertyName );
 			roughnessPolygon.setSurface(gm_Surface);
-			roughnessPolygon.setRougthnessID(propertyValue);
-			
-			//roughnessPolygonCollection.add(roughnessPolygon);
+			roughnessPolygon.setRoughnessID(propertyValue);
 		}
-		return roughnessPolygonCollection;
-	}
-	
-	/**
-	 * 
-	 * @param inputFileURL the shape input file
-	 * @param targetWorkspace -- the target workspace containing an empty root
-	 * 				feature collection of type simBase:RoughnessLayerPolygon
-	 * @param sourceCrs
-	 * 			
-	 * @param shpCustomProperty
-	 * 
-	 * @return
-	 */
-	public static IRoughnessPolygonCollection transform( 
-											URL inputFileURL, 
-											GMLWorkspace targetWorkspace,
-											CS_CoordinateSystem sourceCrs, 
-											String shpCustomProperty
-											)
-	{
-		return  null;
+		FileWriter writer = new FileWriter(outputFileURL.getPath());
+		GmlSerializer.serializeWorkspace(writer, rpColWorkspace);
+		writer.close();
+	    monitor.done();
 	}
 }

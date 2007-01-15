@@ -2,13 +2,15 @@ package org.kalypso.kalypsosimulationmodel.schema;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
-
-
-
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 public class KalypsoModelSimulationBaseConsts
 {
+	public static final String STRING_GAUSS_KRUEGER = "EPSG:31467";
+	
+	public static final CS_CoordinateSystem CS_GAUSS_KRUEGER = ConvenienceCSFactory.getInstance().getOGCCSByName(STRING_GAUSS_KRUEGER);
+	
 	public static final QName SIM_BASE_PLYNOMIAL1D=
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
