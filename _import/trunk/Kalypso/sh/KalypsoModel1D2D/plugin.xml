@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="mapEditStrategy" name="Map Edit Strategy" schema="schema/mapEditSpecification.exsd"/>
+   <extension-point id="mapEditStrategySet" name="Map edit Strategy Set" schema="schema/mapEditSpecificationSet.exsd"/>
      <extension
            point="org.kalypso.simulation.core.simulation">
         <simulation
@@ -120,9 +122,12 @@
          point="org.eclipse.ui.views">
 	      <view
 	            allowMultiple="false"
-	            class="xp.ModelMapEditProtocolView"
+	            class="xp.ModelMapEditStrategyView"
 	            id="xp.ModelMapEditProtocolView"
 	            name="Model Map Edit Protocol View "/>
 	  </extension>
+     <extension
+           point="org.kalypso.model1d2d.mapEditStrategy">
+     </extension>
 	
 </plugin>

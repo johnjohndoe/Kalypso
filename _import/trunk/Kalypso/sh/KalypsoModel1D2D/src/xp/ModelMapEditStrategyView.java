@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -48,11 +50,26 @@ import org.eclipse.ui.part.ViewPart;
  * 
  * @author Patrice Congo
  */
-public class ModelMapEditProtocolView extends ViewPart
+public class ModelMapEditStrategyView extends ViewPart
 {
+  public static enum ACTIVATION_OUTCOME
+  {
+    /**
+     * Return this to signal that activation was succesful
+     */
+    OK,
+    /**
+     * Return this to signal that activation causes an exception
+     */
+    EXCEPTION_THOWN
+  }
+  
   public static final String ID= "xp.ModelMapEditProtocolView";
   
-  public ModelMapEditProtocolView( )
+  private Composite rootPanel;
+  
+  
+  public ModelMapEditStrategyView( )
   {
     
   }
@@ -64,6 +81,8 @@ public class ModelMapEditProtocolView extends ViewPart
   @Override
   public void createPartControl( Composite parent )
   {
+    parent.setLayout( new FillLayout() );
+    rootPanel= new Composite(parent, SWT.FILL);
     
   }
 
@@ -76,4 +95,38 @@ public class ModelMapEditProtocolView extends ViewPart
     
   }
 
+  
+  
+  /**
+   * Activates the strategy  or a trategy set specified by the 
+   * given ids.
+   * Meaningfull constelation of strategy set and strategy are the
+   * following:
+   * <ul>
+   *    <li/>strategySetID is non null and exists
+   *        <ul>
+   *            <li/>strategyID is non null and exists than the
+   *                it is set is selected and the strategy selected
+   *            <li/>strategy is null than the choice is leave to the
+   *                strategy set
+   *        <ul>
+   *    <li/>strategySetId is null
+   *        <ul>
+   *            <li/> the strategy set is non null and exists then is 
+   *            shown
+   *        <ul>
+   * <ul>
+   * All others will raise an illegal argument exception
+   * @param strategySetID the id of the strategy set to be shown
+   * @param strategyID the id of the strategy to be shown 
+   */
+  public ACTIVATION_OUTCOME activate(
+                    String strategySetID, 
+                    String strategyID)
+                    throws IllegalArgumentException
+  {
+    return null;
+  }
+  
+  
 }

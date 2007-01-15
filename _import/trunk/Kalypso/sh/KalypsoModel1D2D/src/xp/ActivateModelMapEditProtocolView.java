@@ -62,7 +62,7 @@ public class ActivateModelMapEditProtocolView extends AbstractWidget
   public static final String TOOL_TIP="1d 2d zeichen toobal activieren";
   private static final Logger logger= 
         Logger.getLogger( ActivateModelMapEditProtocolView.class );
-  private ModelMapEditProtocolView protoView;
+  private ModelMapEditStrategyView protoView;
   public ActivateModelMapEditProtocolView( )
   {
     super(NAME,TOOL_TIP);
@@ -98,8 +98,8 @@ public class ActivateModelMapEditProtocolView extends AbstractWidget
 //TODO does not work because of AbstractWidget.activate() which register again
 //      page.showView(ModelMapEditProtocolView.ID);
       protoView=
-        (ModelMapEditProtocolView)page.showView( 
-                              ModelMapEditProtocolView.ID, 
+        (ModelMapEditStrategyView)page.showView( 
+                              ModelMapEditStrategyView.ID, 
                               null,//ModelMapEditProtocolView.ID, 
                               IWorkbenchPage.VIEW_VISIBLE );
     }

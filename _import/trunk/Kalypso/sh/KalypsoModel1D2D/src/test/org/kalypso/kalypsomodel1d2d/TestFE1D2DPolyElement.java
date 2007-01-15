@@ -17,7 +17,7 @@ import test.org.kalypso.kalypsosimulationmodel.TestUtils;
  * 
  * @author Patrice Congo
  */
-public class TestFE1D2DPolyiElement extends TestCase
+public class TestFE1D2DPolyElement extends TestCase
 {
   public void testWorkspaceLoad( )
   {
