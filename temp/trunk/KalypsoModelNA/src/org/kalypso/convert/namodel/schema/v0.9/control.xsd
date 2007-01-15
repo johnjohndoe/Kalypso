@@ -226,6 +226,7 @@
 			<enumeration value="v2.0.6"/>
 			<enumeration value="neueste"/>
 			<enumeration value="latest"/>
+			<enumeration value="test"/>
 		</restriction>
 	</simpleType>
 </schema>
