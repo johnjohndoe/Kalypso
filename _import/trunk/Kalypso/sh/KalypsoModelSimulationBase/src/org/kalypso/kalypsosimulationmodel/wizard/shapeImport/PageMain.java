@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * 
@@ -35,6 +37,7 @@ public class PageMain extends WizardPage implements Listener
 
 	// widgets on this page 
 	Combo cmb_ShapeProperty;
+	Combo cmb_CoordinateSystem;
 	Text txt_InputFile;
 	Text txt_OutputFile;
 	Button btn_inputFileBrowse;
@@ -47,12 +50,12 @@ public class PageMain extends WizardPage implements Listener
 	 * Constructor for main page
 	 */
 	public PageMain(IWorkbench workbench, IStructuredSelection selection) {
-		super("Page1");
-		setTitle("Transform wizard");
-		setDescription("Select import and export file");
+		super(Messages.getString("PageMain.0")); //$NON-NLS-1$
+		setTitle(Messages.getString("PageMain.1")); //$NON-NLS-1$
+		setDescription(Messages.getString("PageMain.2")); //$NON-NLS-1$
 		this.workbench = workbench;
 		this.selection = selection;
-		msg_StatusLine = new Status(IStatus.OK, "not_used", 0, "", null);
+		msg_StatusLine = new Status(IStatus.OK, "not_used", 0, "", null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -74,7 +77,7 @@ public class PageMain extends WizardPage implements Listener
 		// create a GridData for it to set the alignment and define how much space it will occupy		
 
 		// Input shape file
-		new Label (composite, SWT.NONE).setText("Input shp file:");				
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.5"));				 //$NON-NLS-1$
 		txt_InputFile = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
@@ -82,7 +85,7 @@ public class PageMain extends WizardPage implements Listener
 		//gd.horizontalSpan = ncol - 1;
 		txt_InputFile.setLayoutData(gd);
 		btn_inputFileBrowse = new Button(composite, SWT.PUSH);
-		btn_inputFileBrowse.setText("Browse...");
+		btn_inputFileBrowse.setText(Messages.getString("PageMain.6")); //$NON-NLS-1$
 		gd = new GridData(GridData.END);
 		//gd.horizontalSpan = ncol;
 		btn_inputFileBrowse.setLayoutData(gd);
@@ -90,24 +93,39 @@ public class PageMain extends WizardPage implements Listener
 		//createLine(composite, ncol);
 
 		// Roughness parameter combo box
-		new Label (composite, SWT.NONE).setText("Roughness parameter:");						
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.7"));						 //$NON-NLS-1$
 		cmb_ShapeProperty = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
-		gd.horizontalAlignment = GridData.BEGINNING;
-		gd.widthHint = 40;
+		gd.horizontalAlignment = GridData.FILL;
+		gd.widthHint = 75;
 		cmb_ShapeProperty.setEnabled(false);
 		cmb_ShapeProperty.setLayoutData(gd);
+		
+		createLine(composite, ncol);
+
+		// Coordinate system combo box
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.8"));						 //$NON-NLS-1$
+		cmb_CoordinateSystem = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		cmb_CoordinateSystem.setItems(( new ConvenienceCSFactoryFull() ).getKnownCS());
+		final int index_GausKrueger = cmb_CoordinateSystem.indexOf(KalypsoModelSimulationBaseConsts.STRING_GAUSS_KRUEGER);
+		cmb_CoordinateSystem.select(index_GausKrueger > -1 ? index_GausKrueger : 0);
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.widthHint = 75;
+		cmb_CoordinateSystem.setEnabled(true);
+		cmb_CoordinateSystem.setLayoutData(gd);
+		
 		createLine(composite, ncol);
 
 		// Output gml file
-		new Label (composite, SWT.NONE).setText("Output gml file:");				
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.9"));				 //$NON-NLS-1$
 		txt_OutputFile = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		//gd.horizontalSpan = ncol - 1;
 		txt_OutputFile.setLayoutData(gd);
 		btn_outputFileBrowse = new Button(composite, SWT.PUSH);
-		btn_outputFileBrowse.setText("Browse...");
+		btn_outputFileBrowse.setText(Messages.getString("PageMain.10")); //$NON-NLS-1$
 		gd = new GridData(GridData.END);
 		//gd.horizontalSpan = ncol;
 		btn_outputFileBrowse.setLayoutData(gd);
@@ -136,11 +154,15 @@ public class PageMain extends WizardPage implements Listener
 	 */
 	public void handleEvent(Event event) {
 		// Initialize a variable with the no error status
-		Status status = new Status(IStatus.OK, "not_used", 0, "", null);
+		Status status = new Status(IStatus.OK, "not_used", 0, "", null); //$NON-NLS-1$ //$NON-NLS-2$
 		msg_StatusLine = status;
 		if(event.widget == btn_inputFileBrowse)
 		{
-			txt_InputFile.setText(getFilenameFromDialog(null, new String[] { "*.shp" } ));
+			txt_InputFile.setText(getFilenameFromDialog(null, new String[] { "*.shp" }, null )); //$NON-NLS-1$
+		}
+		if(event.widget == btn_outputFileBrowse)
+		{
+			txt_OutputFile.setText(getFilenameFromDialog(null, null, null )); //$NON-NLS-1$
 		}
 		if(event.widget == txt_InputFile)
 		{
@@ -159,7 +181,7 @@ public class PageMain extends WizardPage implements Listener
 						cmb_ShapeProperty.setEnabled(true);
 						if(!isTextNonEmpty(txt_OutputFile))
 						{
-							txt_OutputFile.setText(FileUtilities.nameWithoutExtension(txt_InputFile.getText()) + ".gml");
+							txt_OutputFile.setText(FileUtilities.nameWithoutExtension(txt_InputFile.getText()) + ".gml"); //$NON-NLS-1$
 						}
 					}
 					else
@@ -173,10 +195,10 @@ public class PageMain extends WizardPage implements Listener
 				}
 			}
 			catch(Exception e){
-				StringBuffer sb = new StringBuffer("Cannot read file ");
+				StringBuffer sb = new StringBuffer(Messages.getString("PageMain.15")); //$NON-NLS-1$
 				sb.append(txt_InputFile.getText().substring(txt_InputFile.getText().lastIndexOf(File.separator)+1));
-				sb.append("\nHint: dbf/shx missing, irregular shp file, read access denied?");
-				status = new Status(IStatus.ERROR, "not_used", 0, sb.toString(), null);        
+				sb.append("\n").append(Messages.getString("PageMain.17")); //$NON-NLS-1$ //$NON-NLS-2$
+				status = new Status(IStatus.ERROR, "not_used", 0, sb.toString(), null);         //$NON-NLS-1$
 				msg_StatusLine = status;
 				e.printStackTrace();
 			}
@@ -184,9 +206,9 @@ public class PageMain extends WizardPage implements Listener
 		// If the event is triggered by the destination or departure fields
 		// set the corresponding status variable to the right value
 		if ((event.widget == txt_InputFile) || (event.widget == txt_OutputFile)) {
-			if (txt_InputFile.getText().equals(txt_OutputFile.getText()) && !"".equals(txt_InputFile.getText()))
-				status = new Status(IStatus.ERROR, "not_used", 0, 
-						"Departure and destination cannot be the same", null);        
+			if (txt_InputFile.getText().equals(txt_OutputFile.getText()) && !"".equals(txt_InputFile.getText())) //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, "not_used", 0,  //$NON-NLS-1$
+						Messages.getString("PageMain.21"), null);         //$NON-NLS-1$
 			msg_StatusLine = status;
 		}
 
@@ -195,10 +217,12 @@ public class PageMain extends WizardPage implements Listener
 		getWizard().getContainer().updateButtons();
 	}
 	
-	  String getFilenameFromDialog( File selectedFile, String[] filterExtensions )
+	  String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
 	  {
 	    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
 	    dialog.setFilterExtensions( filterExtensions );
+	    if(path != null)
+	    	dialog.setFilterPath(path);
 	    if( selectedFile != null )
 	    {
 	      dialog.setFileName( selectedFile.getName() );
@@ -265,6 +289,7 @@ public class PageMain extends WizardPage implements Listener
 			wizard.model.inputFile = txt_InputFile.getText();
 			wizard.model.outputFile = txt_OutputFile.getText();
 			wizard.model.shapeProperty = cmb_ShapeProperty.getText();
+			wizard.model.coordinateSystem = cmb_CoordinateSystem.getText();
 		}
 		return canFlip;
 	}	
