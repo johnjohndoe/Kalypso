@@ -46,6 +46,7 @@ import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -55,7 +56,7 @@ public class FullExtentMapAction extends AbstractCommandAction
 {
   public FullExtentMapAction( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    super( commandTarget, mapPanel, null, ImageProvider.IMAGE_MAPVIEW_FULLEXTENT, "Maximalen Ausschnitt darstellen" );
+    super( commandTarget, mapPanel, null, KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_MAPVIEW_FULLEXTEND ), "Maximalen Ausschnitt darstellen" );
   }
 
   /**
