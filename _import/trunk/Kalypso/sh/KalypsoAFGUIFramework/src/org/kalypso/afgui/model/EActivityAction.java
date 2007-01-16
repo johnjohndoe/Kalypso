@@ -5,11 +5,11 @@ package org.kalypso.afgui.model;
 
 /**
  * Action the user can invoque on an activity
- * 
  * @author Patrice Congo
- * 
+ *
  */
-public enum EActivityAction {
+public enum EActivityAction
+{
 	/**
 	 * Do the activity
 	 */
@@ -39,10 +39,10 @@ public enum EActivityAction {
 	 */
 	SHOW_DATA,
 	/**
-	 * Show Root Activity
+	 * Show Root Activity 
 	 */
 	TOP,
-
+	
 	RELOAD;
 
 }

@@ -15,8 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.junit4,
  org.apache.jakarta_log4j,
  org.eclipse.ui.forms,
- org.kalypso.ui.addlayer,
- WorkflowConnectorPlugin
+ org.kalypso.ui.addlayer
 Eclipse-LazyStart: true 
 Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
  lib/jena_2_3/arq.jar,
@@ -33,5 +32,10 @@ Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
 Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.db,
  org.kalypso.afgui.model,
+ org.kalypso.afgui.model.events,
+ org.kalypso.afgui.model.exception,
+ org.kalypso.afgui.model.impl,
+ org.kalypso.afgui.schema,
  org.kalypso.afgui.views,
- org.kalypso.afgui.viz
+ org.kalypso.afgui.viz,
+ test.org.kalypso.afgui

@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY wbs 'http://www.tu-harburg.de/wb/kalypso/schema/workflow#'>
+	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+	
+	<!-- =================================================================
+		WorkflowRsource
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowPart">
+		<rdfs:label>Workflow Concept</rdfs:label>
+		<rdfs:comment>
+			Represents the base concept in a workflow. 
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>
+	
+	<!-- =================================================================
+		WorkflowOrganisationResource
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowOrganisationResource">
+		<rdfs:label>Workflow Organisation Resource</rdfs:label>
+		<rdfs:comment>
+			Resource in the workflow system used to organized tasks. 
+		</rdfs:comment>
+		<rdfs:subClassOf 
+			rdf:resource="&rdf;Seq"/>
+	</rdfs:Class>
+	
+	<!-- =================================================================
+		WorkflowOrganisationResource
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;Phase">
+		<rdfs:label>Workflow Organisation Resource</rdfs:label>
+		<rdfs:comment>
+			use to organised task groups in phases. 
+		</rdfs:comment>
+		<rdfs:subClassOf 
+			rdf:resource="&rdfs;WorkflowOrganisationResource"/>
+	</rdfs:Class>
+	
+	<!--==================================================================
+		Defines an activity, which represents a piece of work
+		which can be divided in tasks. 
+	===================================================================-->
+	<rdfs:Class 
+		rdf:about="&wbs;Activity">
+		<rdfs:label>Activity</rdfs:label>
+		<rdfs:comment>
+			Defines an activity, which represents a piece of work. 
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;WorkflowPart"/>
+	</rdfs:Class>
+	
+	<rdfs:Class 
+		rdf:about="&wbs;ActivitySeq">
+		<rdfs:label>Activity</rdfs:label>
+		<rdfs:comment>
+			Defines an activity, which represents a piece of work. 
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+	</rdfs:Class>
+	
+	<rdfs:Class 
+		rdf:about="&wbs;TaskSeq">
+		<rdfs:label>Task sequence</rdfs:label>
+		<rdfs:comment>
+			Task sequence
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+	</rdfs:Class>
+	
+	<!--==================================================================
+		Defines an activity, which represents a piece of work
+		which can be divided in tasks. 
+	===================================================================-->
+	<rdfs:Class 
+		rdf:about="&wbs;Task">
+		<rdfs:label>Task</rdfs:label>
+		<rdfs:comment>
+			A piece of work to be done
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;WorkflowPart"/>
+	</rdfs:Class>
+	
+	
+	<rdfs:Class 
+		rdf:about="&wbs;TaskGroup">
+		<rdfs:label>Task</rdfs:label>
+		<rdfs:comment>
+			A piece of work to be done
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;WorkflowPart"/>
+	</rdfs:Class>
+	
+	<rdfs:Class 
+		rdf:about="&wbs;TaskGroupSeq">
+		<rdfs:label>Task group sequence</rdfs:label>
+		<rdfs:comment>
+			Task group sequence
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+	</rdfs:Class>
+	
+	
+	
+	<rdfs:Class 
+		rdf:about="&wbs;SubTaskGroup">
+		<rdfs:label>Task</rdfs:label>
+		<rdfs:comment>
+			Groups tasks
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;WorkflowPart"/>
+	</rdfs:Class>
+	
+	<rdfs:Class 
+		rdf:about="&wbs;SubTaskGroupSeq">
+		<rdfs:label>Task sequence</rdfs:label>
+		<rdfs:comment>
+			Task sequence
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+	</rdfs:Class>
+	
+	<rdf:Property rdf:about="&wbs;hasSubTaskGroups">
+		<rdfs:label>Has Sub-Task groups</rdfs:label>
+		<rdfs:comment>
+			assotiates a task group to a sequence of Sub task groups
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;TaskGroup"/>
+		<rdfs:range  rdf:resource="&wbs;SubTaskGroupSeq"/>		
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;hasTaskGroups">
+		<rdfs:label>Has task groups</rdfs:label>
+		<rdfs:comment>
+			Assotiates a task group to a sequence of Sub task groups
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Phase"/>
+		<rdfs:range  rdf:resource="&wbs;TaskGroupSeq"/>		
+	</rdf:Property>
+	
+	
+	<!--==================================================================
+	Defines a workflow to fullfill a certain goal.
+    A workflow is  made of activitites and can be organised 
+    in phases
+	===================================================================-->
+	<!-- rdfs:Class 
+		rdf:about="&wbs;Workflow">
+		<rdfs:label xml:lang="en">Workflow</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Defines a workflow to fullfill a certain goal.
+    		A workflow is  made of activitites and can be organised 
+    		in phases
+    		
+    		A workflow is logical arragement of activities in the way the user 
+    		wants or needs to apply the activities.
+    		Activities are structured in the 
+    		following sequence:
+    			1)Working phase (e.g. preprocessing of 1d2d model)
+    			2)Task groupes which is the arrangement of all activities which can be grouped 
+    			under one top item (e.g. Grid generation)
+    			All task groupes which are defined in one phase should be 
+    			in one menu
+    			3)A task 
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&wbs;Activity"/>		
+	</rdfs:Class -->
+	
+	<!-- =================================================================
+					Phase
+	================================================================== -->
+	<!--rdfs:Class 
+		rdf:about="&wbs;Phase">
+		<rdfs:subClassOf rdf:resource="&rdf;Seq"/>
+		<rdfs:label xml:lang="en">Phase</rdfs:label>
+		<rdfs:comment>
+			Represents a phase of work in a workflow. A phase is basically
+			an ordered sequence of Activities
+		</rdfs:comment>
+	</rdfs:Class -->	
+	
+	
+	<!-- =================================================================
+					Help
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;Help" 
+		rdfs:label="Help">
+		<rdfs:label>Help</rdfs:label>
+		<rdfs:comment>
+			Help resource for activities, workflow and tasks
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>	
+	
+	<!-- =================================================================
+		DataModel
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowData">
+		<rdfs:label>Data Model</rdfs:label>
+		<rdfs:comment>Data Model</rdfs:comment>
+		
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+	</rdfs:Class>
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<rdf:Property rdf:about="&wbs;hasType">
+		<rdfs:label>Resource Type</rdfs:label>
+		<rdfs:comment>
+			The type of the resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
+		<rdfs:range rdf:resource="xsd:anyURI"/>		
+	</rdf:Property>
+	
+	<rdf:Property rdf:about="&wbs;hasLocation">
+		<rdfs:label>Resource Type</rdfs:label>
+		<rdfs:comment>
+			The type of the resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
+		<rdfs:range rdf:resource="xsd:anyURI"/>		
+	</rdf:Property>
+	
+	<rdf:Property rdf:about="&wbs;worksOn">
+		<rdfs:label>works on</rdfs:label>
+		<rdfs:comment>
+			Associates to a workflow part to the data it works on
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPart"/>
+		<rdfs:range  rdf:resource="&wbs;WorkflowData"/>		
+	</rdf:Property>
+	
+	<rdf:Property rdf:about="&wbs;contains">
+		<rdfs:label>works on</rdfs:label>
+		<rdfs:comment>
+			Associates to a workflow part to the data it works on
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
+		<rdfs:range  rdf:resource="&wbs;WorkflowData"/>		
+	</rdf:Property>
+	
+	<rdf:Property rdf:about="&wbs;isDerivedFrom">
+		<rdfs:label>works on</rdfs:label>
+		<rdfs:comment>
+			Associates to a workflow part to the data it works on
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
+		<rdfs:range  rdf:resource="&wbs;WorkflowData"/>		
+	</rdf:Property>
+	
+	<!-- =================================================================
+	
+	================================================================== -->
+	<rdf:Property rdf:about="&wbs;hasActivity" rdfs:label="hasActivity">
+		<rdfs:comment>Associates an activity to a workflow</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Workflow"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;hasActivities">
+		<rdfs:label>Has Activities</rdfs:label>
+		<rdfs:comment>Associates an activity to a workflow parts</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPart"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+		isRoot
+	================================================================== -->
+	<rdf:Property rdf:about="&wbs;isRoot" rdfs:label="isRoot">
+		<rdfs:comment>Define a condition for a filter</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;ActivitySpec"/>
+		<rdfs:range rdf:resource="xsd:boolean"/>
+	</rdf:Property>
+	
+	
+	<!-- =================================================================
+		partOf
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;partOf">
+		<rdfs:label>partOf</rdfs:label>
+		<rdfs:comment>Associates an activity to a containing one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+				dependsOn
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;dependsOn" 
+		rdfs:label="Depends On">
+		<rdfs:comment>Associates an activity to a depending one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+	</rdf:Property>	
+	
+	<!-- =================================================================
+				followsOn
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;followsOn" 
+		rdfs:label="Depends On">
+		<rdfs:comment>Associates an activity to a depending one</rdfs:comment>
+		<rdfs:range rdf:resource="&wbs;Activity"/>
+	</rdf:Property>	
+	
+	<!-- =================================================================
+		ExeState xml type
+	================================================================== -->
+	<!--xsd:simpleType name="ExeState">
+		<xsd:comment>
+			Represents the execution state a activity has. 
+			3 values are possible: not started, on going and done
+		</xsd:comment>
+	  	<xsd:restriction base="xsd:string">
+	  		<xsd:enumeration value="NOT_STARTED" />
+	  		<xsd:enumeration value="ON_GOING" />
+	  		<xsd:enumeration value="DONE" />
+	  	</xsd:restriction>  	
+  </xsd:simpleType-->
+  
+  <!-- ===================================================================
+  	hasName
+  ==================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasName" 
+		rdfs:label="Has Name">	
+		<rdfs:comment>A name of an activity or workflow</rdfs:comment>
+		<rdfs:subPropertyOf rdf:resource="&rdfs;label"/>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Workflow"/>
+		<rdfs:domain rdf:resource="&wbs;WorkflowOrganisationResource"/>
+		<rdfs:domain rdf:resource="&wbs;WorkflowData"/>
+		<rdfs:range rdf:resource="xsd:string"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			hasHelp
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasHelp">	
+		<rdfs:label>Has Help</rdfs:label>
+		<rdfs:comment>
+			Associate an help resource to an activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:domain rdf:resource="&wbs;Phase"/>
+		
+		<rdfs:range rdf:resource="xsd:string"/>
+		<rdfs:range rdf:resource="&wbs;Help"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			hasTask
+	================================================================== -->
+	<rdf:Property 
+		rdf:about="&wbs;hasTask">	
+		<rdfs:label>Has Task</rdfs:label>
+		<rdfs:comment>
+			Associates a task to an activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Activity"/>
+		<rdfs:range rdf:resource="&wbs;Task"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+			nextPhase
+	 ==================================================================-->
+	<rdf:Property 
+		rdf:about="&wbs;nextPhase">	
+		<rdfs:label>Has Task</rdfs:label>
+		<rdfs:comment>
+			Associates a phase with the following phase
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;Phase"/>
+		<rdfs:range rdf:resource="&wbs;Phase"/>
+	</rdf:Property>
+	
+	
+	<!-- *****************************************************************
+	**************************RUNTIME STATUS******************************
+	<wbs:WorkflowStatus rdf:resource="&wbs;simulationModel1_WFS">
+		<wbs:associatedModelResource rdf:resource="&wbs;resourceURI"/>
+		<wbs:executedWorkflow rdf:resource="&wbs;SimulationModelWF"/>
+		<wbs:activePhase rdf:resource="&wbs;Phase1"/>
+		<wbs:activeTaskGroup rdf:resource="&wbs;TaskGroup1"/>
+		<wbs:activeSubTaskGroup rdf:reource="&wbs;ActSubTaskGroup"/>
+		<wbs:activeActiveTask rdf:resource="&wbs;ActTask"/>
+		<wbs:activityStates>
+			<rdf:Seq>
+				
+			</rdf:Seq>
+		</wbs:activityStates>
+	</wbs:WorkflowStatus>
+	****************************************************************** -->
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowStatus">
+		<rdfs:label xml:lang="en">Workflow</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Represents the runtime status of a workflow
+		</rdfs:comment>
+		<rdfs:subClassOf rdf:resource="&rdfs;Resource"/>		
+	</rdfs:Class>
+	
+	<!-- =================================================================
+			associatedModelResource
+	 ==================================================================-->
+	<rdf:Property 
+		rdf:about="&wbs;associatedModelResource">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="xs:anyURI"/>
+	</rdf:Property>
+	
+	
+	
+	<rdf:Property 
+		rdf:about="&wbs;activityStates">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowStatus"/>
+		<rdfs:range rdf:resource="&wbs;Actvivity"/>
+	</rdf:Property>
+	
+	<!-- =================================================================
+		<wbs:ActivityStatus rdf:resource="&wbs;simulationModel1_AS">
+		<wbs:associatedActivity 
+			rdf:resource="&wbs;HydrographViz"/>
+		<wbs:hasState
+			rdf:resource=""/>
+		</wbs:ActivityStatus>
+	================================================================== -->
+	<rdfs:Class 
+		rdf:about="&wbs;RTContext">
+		<rdfs:label xml:lang="en">Workflow Runtime Context</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Workflow Runtime Context
+		</rdfs:comment>
+		<rdfs:subClassOf 
+			rdf:resource="&rdfs;Resource"/>		
+	</rdfs:Class>
+	
+	<rdfs:Class 
+		rdf:about="&wbs;WorkflowPartRTContext">
+		<rdfs:label xml:lang="en">Task Context</rdfs:label>
+		<rdfs:comment xml:lang="en">
+			Tast Context
+		</rdfs:comment>
+		<rdfs:subClassOf 
+			rdf:resource="&rdfs;RTContext"/>		
+	</rdfs:Class>
+	
+	<rdf:Property 
+		rdf:about="&wbs;executingWorkflowPart">	
+		<rdfs:label>executed activity</rdfs:label>
+		<rdfs:comment>
+			Executed Activity
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPartRTContext"/>
+		<rdfs:range rdf:resource="&wbs;WorkflowPart"/>
+	</rdf:Property>
+	<rdf:Property 
+		rdf:about="&wbs;processedResource">	
+		<rdfs:label>Associated model resource</rdfs:label>
+		<rdfs:comment>
+			Associated model resource
+		</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPartRTContext"/>		
+		<rdfs:range rdf:resource="&wbs;WorkflowData"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;exeState">
+		<rdfs:label xml:lang="en">Execution State</rdfs:label>
+		<rdfs:comment xml:lang="en">A resource representing the status </rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPartRTContext"/>
+		<rdfs:range rdf:resource="xsd:string"/>
+	</rdf:Property>
+	
+	<rdf:Property 
+		rdf:about="&wbs;hasSubRTContext">
+		<rdfs:label xml:lang="en">Has Sub Runtime Context</rdfs:label>
+		<rdfs:comment xml:lang="en">Has Sub Runtime Context</rdfs:comment>
+		<rdfs:domain rdf:resource="&wbs;WorkflowPartRTContext"/>
+		<rdfs:range rdf:resource="&wbs;WorkflowPartRTContext"/>
+	</rdf:Property>
+	
+</rdf:RDF>

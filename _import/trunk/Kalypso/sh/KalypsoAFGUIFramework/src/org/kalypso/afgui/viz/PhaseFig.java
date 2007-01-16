@@ -1,12 +1,20 @@
 package org.kalypso.afgui.viz;
 
+import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.ButtonBorder;
 import org.eclipse.draw2d.Clickable;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.RoundedRectangle;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;
-import org.kalypso.afgui.model.ITask;
-
+import org.kalypso.afgui.model.IActivity;
+import org.kalypso.afgui.model.IPhase;
+import org.kalypso.afgui.model.impl.Activity;
 
 /**
  * Used to draw a phase as a rounded rectangle
@@ -18,9 +26,9 @@ public class PhaseFig extends Clickable//RoundedRectangle
 {
 	public static Color color = new Color(null,255,255,106);
 	
-	final private ITask phase;
+	final private IPhase phase;
 	
-	public PhaseFig(ITask phase)
+	public PhaseFig(IPhase phase)
 	{
 		super(new Label(phase.getName()), Clickable.STYLE_BUTTON);
 		Label label= new Label(phase.getName());
@@ -46,7 +54,7 @@ public class PhaseFig extends Clickable//RoundedRectangle
 	 * Return the phase which is beeing represented
 	 * @return
 	 */
-	public ITask getPhase()
+	public IPhase getPhase()
 	{
 		return phase;
 	}

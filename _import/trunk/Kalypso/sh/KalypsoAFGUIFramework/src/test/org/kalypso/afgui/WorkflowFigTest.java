@@ -1,19 +1,42 @@
 package test.org.kalypso.afgui;
 
+import javax.swing.plaf.basic.BasicSliderUI.ScrollListener;
+
+import org.eclipse.draw2d.Button;
+import org.eclipse.draw2d.ChopboxAnchor;
+import org.eclipse.draw2d.ConnectionEndpointLocator;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.PolygonDecoration;
+import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.ScrollBarLayout;
 import org.eclipse.draw2d.ScrollPane;
+import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.model.IWorkflow;
+import org.kalypso.afgui.model.impl.WorkflowImpl;
 import org.kalypso.afgui.viz.WorkflowFigure;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.vocabulary.RDFTest;
 
 public class WorkflowFigTest
 {
-//	static private Model model=TestRDFModel.getInstance().getShModel();
-//	static IWorkflow workflow=
-//		new WorkflowImpl(model.getResource(TestRDFModel.WORKFLOW_SH));
+	static private Model model=TestRDFModel.getInstance().getShModel();
+	static IWorkflow workflow=
+		new WorkflowImpl(model.getResource(TestRDFModel.WORKFLOW_SH));
 		
 	public static void main(String args[]){
 		Display d = new Display();
@@ -80,25 +103,25 @@ public class WorkflowFigTest
 		
 		
 		
-//		WorkflowFigure wfFig=
-//			new WorkflowFigure(workflow);
+		WorkflowFigure wfFig=
+			new WorkflowFigure(workflow);
 //		contentsLayout.setConstraint(wfFig, new Rectangle(200, 200, -1, -1));
 		//contents.add( wfFig	);
 //		lws.setContents(contents);//contents);
 		
 //		lws.setContents(wfFig);
-//		ScrollPane sp=new ScrollPane();
-//		sp.setContents(wfFig);
-//		lws.setContents(sp);
-//		shell.open();
+		ScrollPane sp=new ScrollPane();
+		sp.setContents(wfFig);
+		lws.setContents(sp);
+		shell.open();
 //		Button b6=new Button("B6");
 //		wfFig.add(b6);
 //		b6.setEnabled(false);
 
 		
 
-//		while (!shell.isDisposed())
-//			while (!d.readAndDispatch())
-//				d.sleep();
+		while (!shell.isDisposed())
+			while (!d.readAndDispatch())
+				d.sleep();
 	 }
 }
