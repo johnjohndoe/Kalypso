@@ -42,7 +42,6 @@
    <extension
          point="org.kalypso.model.wspm.core.profilBuilding">
       <building
-            caption="Brücke"
             class="org.kalypso.model.wspm.core.profil.impl.buildings.building.BuildingBruecke"
             id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"
             label="Brücke">
@@ -60,7 +59,6 @@
                valueClassName="Double"/>
       </building>
       <building
-            caption="Wehr"
             id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR"
             label="Wehr">
          <parameter

@@ -130,6 +130,7 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
+  @SuppressWarnings("unchecked")
   public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
@@ -168,9 +169,10 @@ public class ProfileFeatureFactory implements IWspmConstants
       if( recordDefinition == null )
       {
         final GMLWorkspace workspace = targetFeature.getWorkspace();
-        final Feature rd = workspace.createFeature( targetFeature, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
+        final IRelationType rdParentRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+        final Feature rd = workspace.createFeature( targetFeature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
 
-        changes.add( new FeatureChange( targetFeature, featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION ), rd ) );
+        changes.add( new FeatureChange( targetFeature, rdParentRelation, rd ) );
       }
 
       //
@@ -263,7 +265,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       {
         final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
         final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
-        final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingType );
+        final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
+        final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingParentRelation, buildingType );
         buildingList.add( buildingFeature );
         final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );

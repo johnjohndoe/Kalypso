@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
@@ -158,7 +159,8 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
       final GMLWorkspace workspace = m_calcFeature.getWorkspace();
       final IGMLSchema schema = workspace.getGMLSchema();
       final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM, "CalcCreation" ) );
-      calcCreationFeature = workspace.createFeature( m_calcFeature, featureType );
+      final IRelationType parentRelation = (IRelationType) m_calcFeature.getFeatureType().getProperty( qname );
+      calcCreationFeature = workspace.createFeature( m_calcFeature, parentRelation, featureType );
       m_calcFeature.setProperty( qname, calcCreationFeature );
     }
 

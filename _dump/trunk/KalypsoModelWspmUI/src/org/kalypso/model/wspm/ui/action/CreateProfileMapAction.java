@@ -33,7 +33,6 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class CreateProfileMapAction extends ActionDelegate
 {
@@ -114,7 +113,7 @@ public class CreateProfileMapAction extends ActionDelegate
       return;
     
     final Feature profileFeature = profile.getFeature();
-    final IRelationType rt = FeatureHelper.findParentRelation( profileFeature );
+    final IRelationType rt = profileFeature.getParentRelation();
     if( rt != null )
       selectedProfiles.put( profileFeature.getParent(), rt );
   }

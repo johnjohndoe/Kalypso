@@ -170,12 +170,13 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
           // REMARK: create the point before the marker because we may have an exception
           final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( point );
 
-          final TuhhMarker marker = createMarker();
+          final TuhhMarker marker = createMarker( list );
+          list.add( marker.getFeature() );
+
           marker.setName( typ );
           marker.setType( typ );
           marker.setLocation( location );
 
-          list.add( marker.getFeature() );
         }
         catch( final Exception e )
         {
@@ -186,13 +187,14 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     }
   }
 
-  private TuhhMarker createMarker( )
+  private TuhhMarker createMarker( final FeatureList markerList )
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
 
-    final IFeatureType markerFT = workspace.getGMLSchema().getFeatureType( TuhhMarker.QNAME_MARKER );
-    final Feature markerFeature = workspace.createFeature( feature, markerFT );
+    final IRelationType markerRelation = markerList.getParentFeatureTypeProperty();
+    final IFeatureType markerFT = markerRelation.getTargetFeatureType();
+    final Feature markerFeature = workspace.createFeature( feature, markerRelation, markerFT );
 
     return new TuhhMarker( markerFeature );
   }

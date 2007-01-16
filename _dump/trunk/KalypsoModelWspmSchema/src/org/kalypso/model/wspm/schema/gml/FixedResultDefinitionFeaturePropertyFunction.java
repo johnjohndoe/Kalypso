@@ -50,7 +50,9 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -87,7 +89,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    return getConstValue( feature );
+    return getConstValue( feature, (IRelationType) pt );
   }
 
   /**
@@ -96,7 +98,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    return getConstValue( feature );
+    return getConstValue( feature, (IRelationType) pt );
   }
 
   @SuppressWarnings("unchecked")
@@ -110,7 +112,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
    *   &lt;/swe:RecordDefinition&gt;
    * </pre>
    */
-  private Object getConstValue( final Feature parent )
+  private Object getConstValue( final Feature parent, final IRelationType parentRelation )
   {
     final String id = parent.getId() + "_fixedResultDefinitionId";
 
@@ -118,11 +120,11 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     final IFeatureType featureType = schema.getFeatureType( QNAME_RECORD_DEFINITION );
     final IFeatureType recordSchemaType = schema.getFeatureType( QNAME_RECORD_RECORDSCHEMA );
 
-    final Feature feature = FeatureFactory.createFeature( parent, id, featureType, true, 0 );
-    final List components = (List) feature.getProperty( QNAME_RECORD_COMPONENT );
+    final Feature feature = FeatureFactory.createFeature( parent, parentRelation, id, featureType, true, 0 );
+    final FeatureList components = (FeatureList) feature.getProperty( QNAME_RECORD_COMPONENT );
 
     for( final String href : m_compHrefs )
-      components.add( new XLinkedFeature_Impl( parent, recordSchemaType, href, "", "", "", "", "" ) );
+      components.add( new XLinkedFeature_Impl( components.getParentFeature(), components.getParentFeatureTypeProperty(), recordSchemaType, href, "", "", "", "", "" ) );
 
     return feature;
   }
