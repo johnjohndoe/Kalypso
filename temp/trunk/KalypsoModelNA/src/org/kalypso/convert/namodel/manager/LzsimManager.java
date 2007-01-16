@@ -127,7 +127,7 @@ public class LzsimManager
       // iterate over catchments / lzsim-files
       for( final Feature feature : CatchmentFEs )
       {
-        final Feature lzCatchmentFE = lzWorkspace.createFeature( lzRootFE, lzCatchmentFT );
+        final Feature lzCatchmentFE = lzWorkspace.createFeature( lzRootFE, lzCatchmentMemberRT, lzCatchmentFT );
         lzWorkspace.addFeatureAsComposition( lzRootFE, lzCatchmentMemberRT, 0, lzCatchmentFE );
         lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), feature.getId() );
 
@@ -164,7 +164,7 @@ public class LzsimManager
               break;
             case STATUS_READ_BODF:
             {
-              final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT.getTargetFeatureType() );
+              final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT, lzinitHydMemberRT.getTargetFeatureType() );
               lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
               final String[] strings = line.split( " " );
               final int pos = Integer.parseInt( strings[0] ) - 1;
@@ -220,7 +220,7 @@ public class LzsimManager
         {
           continue;
         }
-        final Feature lzChannelFE = lzWorkspace.createFeature( lzRootFE, lzChannelFT );
+        final Feature lzChannelFE = lzWorkspace.createFeature( lzRootFE, lzChannelMemberRT, lzChannelFT );
         lzWorkspace.addFeatureAsComposition( lzRootFE, lzChannelMemberRT, 0, lzChannelFE );
         lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), feature.getId() );
         lzChannelFE.setProperty( new QName( "http://www.opengis.net/gml", "name" ), Integer.toString(asciiID) );

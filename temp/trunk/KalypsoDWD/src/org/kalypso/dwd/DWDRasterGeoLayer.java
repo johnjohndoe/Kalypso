@@ -134,14 +134,14 @@ public class DWDRasterGeoLayer
     final GMLSchema schema = schemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String) null );
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
-    final Feature rootFE = FeatureFactory.createFeature( null, "main", layerFT, true );
+    final Feature rootFE = FeatureFactory.createFeature( null, null, "main", layerFT, true );
     m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null, null, null );
 
     IRelationType cellMemeberPT = (IRelationType) layerFT.getProperty( PROP_CELLMEMBER );
     // create all feature with point geom property
     for( int pos = 0, size = m_xRaster.size(); pos < size; pos++ )
     {
-      Feature feature = createFeature( rootFE, pos );
+      Feature feature = createFeature( rootFE, cellMemeberPT, pos );
       m_workspace.addFeatureAsComposition( rootFE, cellMemeberPT, 0, feature );
     }
     m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
@@ -153,9 +153,9 @@ public class DWDRasterGeoLayer
     m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  private Feature createFeature( Feature parent, int pos ) throws Exception
+  private Feature createFeature( final Feature parent, final IRelationType parentRelation, final int pos ) throws Exception
   {
-    final Feature feature = FeatureFactory.createFeature( parent, Integer.toString( pos ), m_positionFeature, true );
+    final Feature feature = FeatureFactory.createFeature( parent, parentRelation, Integer.toString( pos ), m_positionFeature, true );
     GM_Object point = createGeometryPoint( pos );
     feature.setProperty( GEO_PROP_POINT, point );
     feature.setProperty( POS_PROP, new Integer( pos ) );

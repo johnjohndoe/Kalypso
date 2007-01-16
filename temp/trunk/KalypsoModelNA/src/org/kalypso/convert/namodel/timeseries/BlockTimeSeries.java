@@ -270,7 +270,7 @@ public class BlockTimeSeries
       while( it.hasNext() )
       {
         Object dateKey = it.next();
-        Object value = (String) map.get( dateKey );
+        Object value = map.get( dateKey );
         line = dateFormat.format( (Date) dateKey ) + " " + value;
         writeln( writer, line );
       }

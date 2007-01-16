@@ -202,8 +202,8 @@ public class NaModelInnerCalcJob implements ISimulation
       // }
       // catch( IOException e )
       // {
-      //        e.printStackTrace();
-      //      }
+      // e.printStackTrace();
+      // }
       h = new StreamHandler( new FileOutputStream( loggerFile ), f );
       logger.addHandler( h );
       h.flush();
@@ -727,7 +727,7 @@ public class NaModelInnerCalcJob implements ISimulation
         final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
         for( int j = 0; j < channelFEs.length; j++ )
         {
-          final Feature newEndNodeFE = workspace.createFeature( channelFEs[j], nodeFT );
+          final Feature newEndNodeFE = workspace.createFeature( channelFEs[j], downStreamNodeMemberRT, nodeFT );
           workspace.setFeatureAsComposition( channelFEs[j], downStreamNodeMemberRT, newEndNodeFE, true );
         }
         // add as zufluss
@@ -829,11 +829,11 @@ public class NaModelInnerCalcJob implements ISimulation
     final Feature nodeColFE = workspace.getFeatures( workspace.getFeatureType( "NodeCollection" ) )[0];
 
     // add to collections:
-    final Feature newChannelFE1 = workspace.createFeature( channelColFE, vChannelFT );
+    final Feature newChannelFE1 = workspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
     workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE1 );
-    final Feature newChannelFE3 = workspace.createFeature( channelColFE, vChannelFT );
+    final Feature newChannelFE3 = workspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
     workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
-    final Feature newNodeFE2 = workspace.createFeature( nodeColFE, nodeFT );
+    final Feature newNodeFE2 = workspace.createFeature( nodeColFE, nodeMemberRT, nodeFT );
     workspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
     final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
 
@@ -870,7 +870,7 @@ public class NaModelInnerCalcJob implements ISimulation
         continue;
       final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
       final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
-      final Feature newChannelFE = workspace.createFeature( catchmentFE, vChannelFT );
+      final Feature newChannelFE = workspace.createFeature( catchmentFE, entwaesserungsStrangMemberRT, vChannelFT );
       // set new relation: catchment -> new V-channel
       try
       {
@@ -1457,8 +1457,13 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     try
     {
-      GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
-      GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" );
+      // @JESSICA: naFortranworkspace is currently null, bceause it is no valid gml!
+      // The next line prevents termination of the calc job
+      if( naFortranLogWorkspace != null )
+      {
+        GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
+        GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" );
+      }
     }
     catch( IOException e1 )
     {
@@ -1504,8 +1509,8 @@ public class NaModelInnerCalcJob implements ISimulation
       // }
       // catch( IOException e )
       // {
-      //        e.printStackTrace();
-      //      }
+      // e.printStackTrace();
+      // }
 
       resultEater.addResult( NaModelConstants.LOG_INFO_ID, loggerFile );
     }
