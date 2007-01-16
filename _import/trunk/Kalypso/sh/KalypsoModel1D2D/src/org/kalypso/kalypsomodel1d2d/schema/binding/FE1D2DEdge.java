@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -33,9 +34,9 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   private static final QName QNAME_PROP_CURVE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
-  private final IFeatureWrapperCollection<IFE1D2DElement> containers;
+  private final IFeatureWrapperCollection<IFE1D2DElement> m_containers;
 
-  private final IFeatureWrapperCollection<IFE1D2DNode> nodes;
+  private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes;
 
   public FE1D2DEdge( final Feature featureToBind )
   {
@@ -45,13 +46,13 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     if( prop == null )
     {
       // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
     }
     else
     {
 
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
       Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
     }
 
@@ -60,13 +61,13 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     if( prop == null )
     {
       // create the property tha is still missing
-      nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
     }
     else
     {
 
       // just wrapped the existing one
-      nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
     }
   }
 
@@ -116,7 +117,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( )
   {
-    return nodes;
+    return m_nodes;
   }
 
   /* static helper functions */
@@ -145,8 +146,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public static FE1D2DEdge createEdge( final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
-    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DEdge );
-    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+    final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_EDGES );
+    final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( QNAME_FE1D2DEdge );
+    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentEdgeProperty, edgeType );
     return new FE1D2DEdge( edgeFeature );
   }
 
@@ -165,7 +168,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public IFeatureWrapperCollection<IFE1D2DElement> getContainers( )
   {
-    return containers;
+    return m_containers;
   }
 
   /**

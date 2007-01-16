@@ -44,7 +44,7 @@ import java.util.Vector;
 
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
@@ -68,7 +68,7 @@ public class RasterTools
    * @param grid2
    * @return resultGrid Grid with only cellValues 0 or 1
    */
-  public static RectifiedGridCoverage substractGrids( RectifiedGridCoverage grid1, RectifiedGridCoverage grid2 )
+  public static RectifiedGridCoverage2 substractGrids( RectifiedGridCoverage2 grid1, RectifiedGridCoverage2 grid2 )
       throws Exception
   {
     // control Geometries
@@ -105,7 +105,7 @@ public class RasterTools
       resultRangeSetData.addElement( result_rowData );
     }//for i (Zeilen)
     RangeSet resultRangeSet = new RangeSet( resultRangeSetData, null );
-    return new RectifiedGridCoverage( resultGridDomain, resultRangeSet );
+    return new RectifiedGridCoverage2( resultGridDomain, resultRangeSet );
   }
 
 }

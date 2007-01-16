@@ -58,9 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author doemming
- * 
- * here are moethodes used for preparing the modell
+ * @author doemming here are moethodes used for preparing the modell
  */
 public class WeisseElsterUpdateModelTest extends TestCase
 {
@@ -71,13 +69,13 @@ public class WeisseElsterUpdateModelTest extends TestCase
    * @see junit.framework.TestCase#setUp()
    */
   @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     KalypsoTest.init();
     m_zmlLinkFac = new ObjectFactory();
   }
 
-  public void testUpdateGMLTemperaturLinks() throws Exception
+  public void testUpdateGMLTemperaturLinks( ) throws Exception
   {
     final URL inputModel = getClass().getResource( "resources/modell.gml" );
     final File outputFile = new File( "C:\\TMP\\modell.gml" );
@@ -121,14 +119,14 @@ public class WeisseElsterUpdateModelTest extends TestCase
       final Object geoValue = modelFeature.getProperty( "Ort" );
 
       // createFeature
-      final Feature mapFeature = mapWorkspace.createFeature(mapRootFeature, mapFT );
-      final IRelationType linkFT = (IRelationType) mapRootFeature.getFeatureType().getProperty("mappingMember");
-      mapWorkspace.addFeatureAsComposition(mapRootFeature, linkFT,0, mapFeature);
-      //set props
-      mapFeature.setProperty(  "name", nameValue );
-      mapFeature.setProperty(  "polygon", geoValue );
-      mapFeature.setProperty(  "inObservationLink", srcLink );
-      mapFeature.setProperty(  "outObservationLink", targetLink );
+      final IRelationType linkFT = (IRelationType) mapRootFeature.getFeatureType().getProperty( "mappingMember" );
+      final Feature mapFeature = mapWorkspace.createFeature( mapRootFeature, linkFT, mapFT );
+      mapWorkspace.addFeatureAsComposition( mapRootFeature, linkFT, 0, mapFeature );
+      // set props
+      mapFeature.setProperty( "name", nameValue );
+      mapFeature.setProperty( "polygon", geoValue );
+      mapFeature.setProperty( "inObservationLink", srcLink );
+      mapFeature.setProperty( "outObservationLink", targetLink );
     }
 
     final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( outputFile ), "UTF-8" );

@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -67,9 +68,9 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 
   private IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, QNAME_PROP_ELEMENTS );
 
-  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges  = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, QNAME_PROP_EDGES );
+  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, QNAME_PROP_EDGES );
 
-  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes  = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
+  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
@@ -104,17 +105,20 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
   {
     return m_nodes;
   }
-  
+
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
   {
     return m_edges;
   }
-  
-  public IFE1D2DContinuityLine<IFE1D2DComplexElement,IFE1D2DEdge> createContinuityLine( )
+
+  public IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> createContinuityLine( )
   {
     final Feature parentFeature = getFeature();
-    final IFeatureType contiType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
-    final Feature contiFeature = parentFeature.getWorkspace().createFeature( parentFeature, contiType );
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+    final IRelationType rt = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+
+    final IFeatureType contiType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+    final Feature contiFeature = parentFeature.getWorkspace().createFeature( parentFeature, rt, contiType );
     return new FE1D2DContinuityLine( contiFeature );
   }
 

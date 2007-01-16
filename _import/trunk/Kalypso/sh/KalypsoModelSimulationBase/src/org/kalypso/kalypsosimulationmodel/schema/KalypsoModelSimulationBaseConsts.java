@@ -16,6 +16,11 @@ public class KalypsoModelSimulationBaseConsts
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
 				"Polynomial1D");
 	
+	public static final QName SIM_BASE_PROP_POLYNOMIAL1D = 
+		new QName(
+				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
+		"polynomial1D");
+
 	public static final QName SIM_BASE_PROP_ORDER=
 			new QName(
 					UrlCatalogModelSimulationBase.SIM_MODEL_NS,
@@ -75,7 +80,8 @@ public class KalypsoModelSimulationBaseConsts
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
 				"Polynomial2D");
-	
+
+	// TODO: What for??
 	static
 	{
 	

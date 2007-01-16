@@ -202,10 +202,10 @@ public class MeasuresHelper
       /** generate new rhb feature and set properties for new storage channel contineously */
       final Feature channelColFe = storageChannelList.getParentFeature();
       final Feature rhbFE = (Feature) storageChannelList.iterator().next();
-      final Feature newRhbFe = modelworkspace.createFeature( channelColFe, rhbFE.getFeatureType() );
-      /** Add new storage channel to the channel collection */
       final IFeatureType channelCollectionFT = channelColFe.getFeatureType();
-      IRelationType linkChannelCollectionChannelMember = (IRelationType) channelCollectionFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CHANNEL_MEMBER_PROP ) );
+      final IRelationType linkChannelCollectionChannelMember = (IRelationType) channelCollectionFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.CHANNEL_MEMBER_PROP ) );
+      final Feature newRhbFe = modelworkspace.createFeature( channelColFe, linkChannelCollectionChannelMember, rhbFE.getFeatureType() );
+      /** Add new storage channel to the channel collection */
       modelworkspace.addFeatureAsComposition( channelColFe, linkChannelCollectionChannelMember, storageChannelList.size() + 1, newRhbFe );
       // generate water stage/volume to discharge relationship for the new storage channel. The basis is the law of
       // toricelli and set all properties from the measure file.
@@ -234,7 +234,7 @@ public class MeasuresHelper
         modelworkspace.removeLinkedAsAggregationFeature( catchment, catchmentChannelLink, originalDischargChannel.getId() );
         // create new vChannel
         final IFeatureType vChannelFt = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.V_CHANNEL_ELEMENT_FT ) );
-        final Feature vChannelFE = modelworkspace.createFeature( channelColFe, vChannelFt );
+        final Feature vChannelFE = modelworkspace.createFeature( channelColFe, linkChannelCollectionChannelMember, vChannelFt );
         modelworkspace.addFeatureAsComposition( channelColFe, linkChannelCollectionChannelMember, 0, vChannelFE );
         // oldCatchment -> newVChannel ( add new link )
         modelworkspace.addFeatureAsAggregation( catchment, catchmentChannelLink, 0, vChannelFE.getId() );
@@ -339,7 +339,7 @@ public class MeasuresHelper
     final IRelationType linkNodeToNodeCol = (IRelationType) nodeColFT.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_MEMBER_PROP ) );
     final Feature nodeColFE = (Feature) modelworkspace.getFeatureFromPath( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
     final IFeatureType nodeFT = rrmSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.NODE_ELEMENT_FT ) );
-    final Feature newNodeFe = modelworkspace.createFeature( nodeColFE, nodeFT );
+    final Feature newNodeFe = modelworkspace.createFeature( nodeColFE, linkNodeToNodeCol, nodeFT );
     modelworkspace.addFeatureAsComposition( nodeColFE, linkNodeToNodeCol, 0, newNodeFe );
     newNodeFe.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.GENERATE_RESULT_PROP ), new Boolean( generateResults ) );
     return newNodeFe;
@@ -495,7 +495,7 @@ public class MeasuresHelper
         final IFeatureType rootFT = hydroRootFeature.getFeatureType();
         final IRelationType linkPropHydro = (IRelationType) rootFT.getProperty( new QName( NaModelConstants.NS_NAHYDROTOP, NaModelConstants.HYDRO_MEMBER ) );
         final IFeatureType hydroFT = hydrotopWorkspace.getFeatureTypeFromPath( NaModelConstants.HYDRO_MEMBER );
-        newHydroFE = hydrotopWorkspace.createFeature( hydroRootFeature, hydroFT );
+        newHydroFE = hydrotopWorkspace.createFeature( hydroRootFeature, linkPropHydro, hydroFT );
         hydrotopWorkspace.addFeatureAsComposition( hydroRootFeature, linkPropHydro, 0, newHydroFE );
         // copy all propterties from the intersected hydrotop to the newly created hydrotop
         FeatureHelper.copyNoRelationPropterty( hydroFE, newHydroFE );
@@ -568,11 +568,11 @@ public class MeasuresHelper
       if( hydFEId.equals( hydIniFEId ) )
       {
         final Feature catchementIniFE = hydIniFE.getParent();
-        final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, hydIniFT );
+        final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
+        final Feature newHydIniFE = initValuesWorkspace.createFeature( catchementIniFE, linkCatchmentHydIni, hydIniFT );
         FeatureHelper.copyNoRelationPropterty( hydIniFE, newHydIniFE );
         newHydIniFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_HYD_FEATUREID_PROP ), newHydroFE.getId() );
         newHydIniFE.setProperty( new QName( NS.GML3, NaModelConstants.GML_FEATURE_DESCRIPTION_PROP ), "automatically generated inital value for hydrotopID=" + newHydroFE.getId() );
-        final IRelationType linkCatchmentHydIni = (IRelationType) catchementIniFE.getFeatureType().getProperty( new QName( NaModelConstants.NS_INIVALUES, NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP ) );
         initValuesWorkspace.addFeatureAsComposition( catchementIniFE, linkCatchmentHydIni, 0, newHydIniFE );
         // there is only one match for hydIni.featureID to hydroFE.getId() -> leave the loop now
         foundMatch = true;
@@ -730,8 +730,8 @@ public class MeasuresHelper
       if( swaleTrenchCollection == null )
       {
         final IFeatureType swaleTrenchColFt = naModelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_FT ) );
-        swaleTrenchCollection = naModelWorkspace.createFeature( naModelRoot, swaleTrenchColFt );
         final IRelationType linkPropertyCol = (IRelationType) naModelRootFt.getProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_COLLECTION_MEMBER_PROP ) );
+        swaleTrenchCollection = naModelWorkspace.createFeature( naModelRoot, linkPropertyCol, swaleTrenchColFt );
         naModelWorkspace.addFeatureAsComposition( naModelRoot, linkPropertyCol, 0, swaleTrenchCollection );
       }
       // get the necessary featureTypes and proptertyTypes for the swale and trench element
@@ -777,7 +777,7 @@ public class MeasuresHelper
               // get set properties from the measure element to transfer them to the newly create model element
               final Double diameter = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_DIAMETER ), 250 );
               final Double width = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_WIDTH ), 1.50 );
-              final Feature swaleTrenchFE = naModelWorkspace.createFeature( swaleTrenchCollection, mrsFt );
+              final Feature swaleTrenchFE = naModelWorkspace.createFeature( swaleTrenchCollection, linkPropertyStMemeber, mrsFt );
               swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_DIAMETER_PIPE_PROP ), diameter );
               swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_WIDTH_PROP ), width );
               swaleTrenchFE.setProperty( new QName( NaModelConstants.NS_NAMODELL, NaModelConstants.MRS_GEOM_PROP ), mrsSubMeasure );

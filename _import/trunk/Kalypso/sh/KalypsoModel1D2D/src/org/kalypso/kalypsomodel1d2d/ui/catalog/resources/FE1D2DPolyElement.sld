@@ -12,7 +12,7 @@
 		<Title>FE1D2DPolyElement</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
-		<MaxScaleDenominator>2000.0</MaxScaleDenominator>
+		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<PolygonSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>geometry</ogc:PropertyName>
@@ -25,7 +25,7 @@
 				<CssParameter name="stroke">#000000</CssParameter>
 				<CssParameter name="stroke-width">1.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
-				<CssParameter name="stroke-opacity">0.0</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
 			</Stroke>
 		</PolygonSymbolizer>

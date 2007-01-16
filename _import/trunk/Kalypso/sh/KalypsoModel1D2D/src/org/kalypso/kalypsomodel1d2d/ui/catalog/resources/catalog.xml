@@ -5,10 +5,7 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DNode:sld:default" uri="FE1D2DNode.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DEdge:sld:default" uri="FE1D2DEdge.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DContinuityLine:sld:default" uri="FE1D2DContinuityLine.sld" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DTriElement:sld:default" uri="FE1D2DTriElement.sld" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DQuadriElement:sld:default" uri="FE1D2DQuadriElement.sld" />
-	<catalog:system 
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DPolyElement:sld:default" 
-		uri="FE1D2DPolyElement.sld" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:FE1D2DPolyElement:sld:default" uri="FE1D2DPolyElement.sld" />
+
 </catalog:catalog>
 

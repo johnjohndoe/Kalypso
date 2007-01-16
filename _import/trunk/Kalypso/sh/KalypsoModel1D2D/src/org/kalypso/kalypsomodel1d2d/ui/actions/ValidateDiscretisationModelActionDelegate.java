@@ -40,12 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.actions;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.ogc.gml.util.ResourceFeatureMarkerCollector;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector;
+import org.kalypsodeegree_impl.model.feature.validation.FeatureValidator;
 
 /**
  * @author Gernot Belger
@@ -75,19 +85,38 @@ public class ValidateDiscretisationModelActionDelegate implements IObjectActionD
   {
     final Feature modelFeature = (Feature) m_selection.getFirstElement();
 
-    // try
-    // {
-    // TODO: call generel validation framework
+    final String editorId = editorIdFromPart();
+    final IResource gmlfile = gmlfileFromPart();
 
-    // new FE1D2DDiscretisationModel( modelFeature ).validate();
-    // }
-    // catch( final CoreException ce )
-    // {
-    // final IStatus status = ce.getStatus();
-    //      
-    // KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    // ErrorDialog.openError( m_targetPart.getSite().getShell(), m_action.getText(), "Validation failed", status );
-    // }
+    final IFeatureMarkerCollector collector = new ResourceFeatureMarkerCollector( gmlfile, editorId );
+
+    final FeatureValidator validator = new FeatureValidator( collector );
+    try
+    {
+      validator.validateFeature( modelFeature );
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( m_targetPart.getSite().getShell(), m_action.getText(), "Validation failed", status );
+    }
+  }
+
+  private IResource gmlfileFromPart( )
+  {
+    if( m_targetPart != null )
+      return (IResource) m_targetPart.getAdapter( IFile.class );
+
+    return null;
+  }
+
+  private String editorIdFromPart( )
+  {
+    if( m_targetPart instanceof IEditorPart )
+      ((IEditorPart) m_targetPart).getSite().getId();
+
+    return null;
   }
 
   /**

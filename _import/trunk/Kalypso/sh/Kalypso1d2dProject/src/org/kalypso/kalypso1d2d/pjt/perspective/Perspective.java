@@ -4,9 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
-import org.kalypso.kalypso1d2d.pjt.views.ActivitiesView;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
-import org.kalypso.kalypso1d2d.pjt.views.TasksView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 
 

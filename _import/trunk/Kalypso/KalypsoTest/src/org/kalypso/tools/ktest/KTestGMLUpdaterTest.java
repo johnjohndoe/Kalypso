@@ -83,7 +83,7 @@ public class KTestGMLUpdaterTest extends TestCase
   {
     KalypsoTest.init();
   }
-  
+
   /**
    * @see junit.framework.TestCase#tearDown()
    */
@@ -102,7 +102,7 @@ public class KTestGMLUpdaterTest extends TestCase
   private void weisseElster( ) throws Exception
   {
     final String resourceBase = "resources/weisseElster/";
-    
+
     // REMARK: please do never use system specific pathes for tests!
     final File outDir = FileUtilities.createNewTempDir( "update_k_test" );
 
@@ -194,7 +194,8 @@ public class KTestGMLUpdaterTest extends TestCase
 
           final TimeseriesLinkType psiEcht = (TimeseriesLinkType) CloneUtilities.clone( berechnet, JC );
           psiEcht.setHref( psiIDEcht );
-          final Feature mapFeature = mappingWorkspace.createFeature(mapColFE, mappingFT );
+          final IRelationType linkPT = (IRelationType) mapColFE.getFeatureType().getProperty( "mappingMember" );
+          final Feature mapFeature = mappingWorkspace.createFeature( mapColFE, linkPT, mappingFT );
           mapFeature.setProperty( "name", pegelName );
           mapFeature.setProperty( "point", point );
           mapFeature.setProperty( "local1", gemessen );
@@ -212,7 +213,6 @@ public class KTestGMLUpdaterTest extends TestCase
           mapFeature.setProperty( "remote7", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIDDLE ) );
           mapFeature.setProperty( "remote8", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MIN ) );
           mapFeature.setProperty( "remote9", createTSLinkForTrackRemote( createTSLinkForKTest( psiEcht ), TRACK_MAX ) );
-          IRelationType linkPT= (IRelationType) mapColFE.getFeatureType().getProperty("mappingMember");
           mappingWorkspace.addFeatureAsComposition( mapColFE, linkPT, 0, mapFeature );
           System.out.println( "... done" );
           break;
@@ -322,7 +322,7 @@ public class KTestGMLUpdaterTest extends TestCase
     if( real == null || !(real instanceof TimeseriesLinkType) )
       return;
     final TimeseriesLinkType newLink = createTSLinkForKTest( (TimeseriesLinkType) real );
-    feature.setProperty(  testProp, newLink );
+    feature.setProperty( testProp, newLink );
   }
 
   private TimeseriesLinkType createTSLinkForKTest( final TimeseriesLinkType linkEcht ) throws JAXBException

@@ -85,8 +85,9 @@ public class CreateFeatureWidget extends AbstractWidget
 
         final FeatureList featureList = m_theme.getFeatureList();
         final Feature parentFeature = featureList.getParentFeature();
+        final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
         final IFeatureType featureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-        m_newFeature = parentFeature.getWorkspace().createFeature( parentFeature, featureType );
+        m_newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, featureType );
 
         initBuilder( geomProperties );
         return;

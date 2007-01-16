@@ -4,13 +4,10 @@
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.model.IWorkflowData;
-import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 /**

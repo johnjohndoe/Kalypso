@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -210,8 +211,10 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   public static FE1D2D_2DElement createPolyElement( final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
-    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
-    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+    final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+    final IFeatureType polyType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
+    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, polyType );
     return new FE1D2D_2DElement( edgeFeature );
   }
 

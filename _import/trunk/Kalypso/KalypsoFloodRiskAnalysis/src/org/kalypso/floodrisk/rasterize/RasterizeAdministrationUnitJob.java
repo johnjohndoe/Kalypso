@@ -57,7 +57,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
@@ -118,10 +118,10 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       //baseRaster
       URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
+      RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
       monitor.setMessage( Messages.getString("rasterize.RasterizeAdministrationUnitJob.Calculating") ); //$NON-NLS-1$
-      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, administrationUnitTypeList,
+      RectifiedGridCoverage2 resultGrid = VectorToGridConverter.toGrid( featureList, administrationUnitTypeList,
           baseRaster, monitor );
 
       SimulationDataPath outputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap().get(

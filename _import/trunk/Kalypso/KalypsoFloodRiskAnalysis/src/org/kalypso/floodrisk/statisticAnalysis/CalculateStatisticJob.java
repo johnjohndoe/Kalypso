@@ -55,7 +55,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 
 /**
  * CalculateStatisticJob
@@ -99,14 +99,14 @@ public class CalculateStatisticJob implements ISimulation
       // damageRaster
       monitor.setMessage( Messages.getString("statisticAnalysis.CalculateStatisticJob.LoadingInputData") ); //$NON-NLS-1$
       URL damageRasterGML = (URL) inputProvider.getInputForID( DamageRasterID );
-      RectifiedGridCoverage damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
+      RectifiedGridCoverage2 damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
 
       // landuseRaster
       URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
-      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage2 landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       // administrationUnitRaster
-      RectifiedGridCoverage administrationUnitRaster = null;
+      RectifiedGridCoverage2 administrationUnitRaster = null;
       if( inputProvider.getInputForID( AdministrationUnitRasterDataID ) != null )
       {
         URL administrationUnitRasterGML = (URL) inputProvider.getInputForID( AdministrationUnitRasterDataID );
@@ -127,7 +127,7 @@ public class CalculateStatisticJob implements ISimulation
       {
         // templateRaster
         URL templateRasterGML = (URL) inputProvider.getInputForID( TemplateRasterID );
-        RectifiedGridCoverage templateRaster = rasterDataModel.getRectifiedGridCoverage( templateRasterGML );
+        RectifiedGridCoverage2 templateRaster = rasterDataModel.getRectifiedGridCoverage( templateRasterGML );
         if( administrationUnitRaster != null )
           statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster, administrationUnitRaster, templateRaster );
         else

@@ -92,7 +92,6 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.w3c.dom.Document;
 
@@ -141,10 +140,10 @@ public class CalculateDamageJob implements ISimulation
       //landuseRaster
       monitor.setMessage( Messages.getString("damageAnalysis.CalculateDamageJob.LoadingInputData") ); //$NON-NLS-1$
       URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
-      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage2 landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       //administrationUnitRaster
-      RectifiedGridCoverage administrationUnitRaster = null;
+      RectifiedGridCoverage2 administrationUnitRaster = null;
       if( inputProvider.getInputForID( AdministrationUnitRasterDataID ) != null )
       {
         URL administrationUnitRasterGML = (URL) inputProvider.getInputForID( AdministrationUnitRasterDataID );
@@ -236,7 +235,7 @@ public class CalculateDamageJob implements ISimulation
     String annualityPropertyName = "Annuality"; //$NON-NLS-1$
     String waterlevelDataURLPropertyName = "WaterlevelRasterData"; //$NON-NLS-1$
 
-    TreeMap<Double, RectifiedGridCoverage> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage>();
+    TreeMap<Double, RectifiedGridCoverage2> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage2>();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML, null );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
@@ -248,7 +247,7 @@ public class CalculateDamageJob implements ISimulation
       double annuality = ( (Double)waterlevelFeature.getProperty( annualityPropertyName ) ).doubleValue();
       IFile resourceFile = (IFile)waterlevelFeature.getProperty( waterlevelDataURLPropertyName );
       System.out.println( ResourceUtilities.createURL( resourceFile ) );
-      RectifiedGridCoverage grid = rasterDataModel
+      RectifiedGridCoverage2 grid = rasterDataModel
           .getRectifiedGridCoverage( ResourceUtilities.createURL( resourceFile ) );
       double p = 1 / annuality;
       waterlevelGrids.put( new Double( p ), grid );
@@ -275,7 +274,7 @@ public class CalculateDamageJob implements ISimulation
       Double key = (Double)keys[i];
       double annuality = 1 / key.doubleValue();
       File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-      RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids.get( key );
+      RectifiedGridCoverage2 damageGrid = (RectifiedGridCoverage2)damageGrids.get( key );
       rasterDataModel.exportToGML( damageFile, damageGrid );
       //style
       File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" ); //$NON-NLS-1$
@@ -288,7 +287,7 @@ public class CalculateDamageJob implements ISimulation
       {
         Double nextKey = (Double)keys[i + 1];
         double deltaP = nextKey.doubleValue() - key.doubleValue();
-        RectifiedGridCoverage tempGrid = (RectifiedGridCoverage)tempGrids.get( i );
+        RectifiedGridCoverage2 tempGrid = (RectifiedGridCoverage2)tempGrids.get( i );
         File tempGridFile = new File( damageResultDir, "tempGrid_deltaP" //$NON-NLS-1$
             + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" ); //$NON-NLS-1$
         rasterDataModel.exportToGML( tempGridFile, tempGrid );
@@ -309,7 +308,7 @@ public class CalculateDamageJob implements ISimulation
    * @throws Exception
    *  
    */
-  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color,
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage2 grid, Color color,
       int numOfCategories ) throws Exception
   {
     TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();

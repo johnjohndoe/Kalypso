@@ -57,12 +57,14 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -85,7 +87,7 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid ) throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid ) throws Exception
   {
     Hashtable<Integer, Vector<Double>> statistics = null;
     // control Geometries
@@ -167,7 +169,7 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
   {
     Hashtable<Integer, Vector<Double>> statistics = null;
     // control Geometries
@@ -276,11 +278,12 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum"; //$NON-NLS-1$
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
+    Feature rootFeature = FeatureFactory.createFeature( null, null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
     // create Collection
     final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-    final Feature collection = FeatureFactory.createFeature( rootFeature, "Collection0", collFT, true ); //$NON-NLS-1$
-    FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
+    final IRelationType collectionRelation = (IRelationType) rootFT.getProperty( collectionPropertyName );
+    final Feature collection = FeatureFactory.createFeature( rootFeature, collectionRelation, "Collection0", collFT, true ); //$NON-NLS-1$
+    FeatureHelper.addProperty( rootFeature, collectionRelation, collection );
     // create landuseFeatures
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -303,7 +306,7 @@ public class StatisticAnalysis
         }
       }
       Object[] properties = { "", "", null, landuse, min, max, sum }; //$NON-NLS-1$ //$NON-NLS-2$
-      Feature landuseFeature = FeatureFactory.createFeature( null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
+      Feature landuseFeature = FeatureFactory.createFeature( null, null, "Landuse" + landuseTypeList.get( landuse ), schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
       FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
 
       int mode = BigDecimal.ROUND_HALF_EVEN;
@@ -336,7 +339,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid ) throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid ) throws Exception
   {
     Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
     // control Geometries
@@ -435,7 +438,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid, RectifiedGridCoverage templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
   {
     Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
     // control Geometries
@@ -567,7 +570,7 @@ public class StatisticAnalysis
     String overallSumProperty = "OverallSum"; //$NON-NLS-1$
     // create rootFeature: StatisticData
     final IFeatureType rootFT = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
+    Feature rootFeature = FeatureFactory.createFeature( null, null, "StatisticData0", rootFT, true ); //$NON-NLS-1$
 
     double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
@@ -593,9 +596,10 @@ public class StatisticAnalysis
       }
       // create Collection
       final IFeatureType collFT = schema.getFeatureType( collectionFeatureName );
-      Feature collection = FeatureFactory.createFeature( rootFeature, "Collection" + numOfCol, collFT, true ); 
+      final IRelationType collectionRelation = (IRelationType) rootFT.getProperty( collectionPropertyName );
+      Feature collection = FeatureFactory.createFeature( rootFeature, collectionRelation, "Collection" + numOfCol, collFT, true ); 
       FeatureHelper.addProperty( collection, collFT.getProperty( namePropertyName ), adminUnit );
-      FeatureHelper.addProperty( rootFeature, rootFT.getProperty( collectionPropertyName ), collection );
+      FeatureHelper.addProperty( rootFeature, collectionRelation, collection );
 
       System.out.println( adminUnit + ": " ); //$NON-NLS-1$
       // create landuse-features
@@ -619,9 +623,10 @@ public class StatisticAnalysis
           }
         }
         Object[] properties = { "", "", null, landuse, min, max, sum }; //$NON-NLS-1$ //$NON-NLS-2$
-        Feature landuseFeature = FeatureFactory.createFeature( collection, "Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
+        final IRelationType landuseRelation = (IRelationType) collFT.getProperty( landusePropertyName );
+        final Feature landuseFeature = FeatureFactory.createFeature( collection, landuseRelation, "Landuse" + numOfFeat, schema.getFeatureType( landuseFeatureName ), properties ); //$NON-NLS-1$
         numOfFeat = numOfFeat + 1;
-        FeatureHelper.addProperty( collection, collFT.getProperty( landusePropertyName ), landuseFeature );
+        FeatureHelper.addProperty( collection, landuseRelation, landuseFeature );
         int mode = BigDecimal.ROUND_HALF_EVEN;
         System.out.println( landuse + ": "+Messages.getString("statisticAnalysis.StatisticAnalysis.Sum")+"=" + Number.round( sum.doubleValue(), 2, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MinValue")+"=" + Number.round( min.doubleValue(), 4, mode ) + ", "+Messages.getString("statisticAnalysis.StatisticAnalysis.MaxValue")+"=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
             + Number.round( max.doubleValue(), 4, mode ) );

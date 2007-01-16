@@ -52,6 +52,8 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
       return null;
     }
+    
+//    return currentValue;
   }
 
   /**
@@ -60,9 +62,8 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-
-    // TODO: change underlying node geometry
-    return null;
+    // TODO: change underlying node geometry?
+    return valueToSet;
   }
 
 }

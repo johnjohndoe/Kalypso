@@ -40,20 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.actions;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger

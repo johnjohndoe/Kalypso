@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -83,8 +84,10 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   public static FE1D2DNode createNode( final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
-    final IFeatureType nodeType = parentFeature.getFeatureType().getGMLSchema().getFeatureType( QNAME_FE1D2DNode );
-    final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, nodeType );
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_NODES );
+    final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( QNAME_FE1D2DNode );
+    final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentNodeProperty, nodeType );
     return new FE1D2DNode( nodeFeature );
   }
 

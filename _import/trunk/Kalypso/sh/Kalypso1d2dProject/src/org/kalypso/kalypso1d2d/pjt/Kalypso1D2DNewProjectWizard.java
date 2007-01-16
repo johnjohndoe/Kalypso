@@ -1,7 +1,5 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

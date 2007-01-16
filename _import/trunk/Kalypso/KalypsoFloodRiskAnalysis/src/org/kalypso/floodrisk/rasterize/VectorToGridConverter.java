@@ -44,6 +44,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import ogc31.www.opengis.net.gml.RangeSetType;
+
 import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.Feature;
@@ -51,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -87,7 +88,7 @@ public class VectorToGridConverter
     Vector<Vector<Double>> newRangeSetData = new Vector<Vector<Double>>();
     
     // ovde treba da iscitam fajl
-    RangeSet rangeSet = baseGrid.getRangeSet();
+    RangeSetType rangeSet = baseGrid.getRangeSet();
     Vector rangeSetData = baseGrid.getRangeSet().getRangeSetData();
     
     for( int i = 0; i < rangeSetData.size(); i++ )

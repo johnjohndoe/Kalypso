@@ -3,11 +3,11 @@
  */
 package org.kalypso.kalypsosimulationmodel.util.math;
 
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.Arrays;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -33,9 +33,15 @@ public class Polynomial1D implements IPolynomial1D
 		IFeatureType featureType=
 			workWorkspace.getGMLSchema().getFeatureType(
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PLYNOMIAL1D);
+		
+		final IFeatureType parentFT = workWorkspace.getRootFeature().getFeatureType();
+		
+		// TODO: @Patrice: this is probably not always the case, so better provide parent instead of workspace as parameter
+		final IRelationType parentRelation = (IRelationType) parentFT.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_POLYNOMIAL1D );
+		
 		this.polFeature=
 			FeatureFactory.createFeature(
-					workWorkspace.getRootFeature(),//parent, 
+					workWorkspace.getRootFeature(),parentRelation, 
 					"Polynom1d"+System.currentTimeMillis(),//TODO better ids , random? 
 					featureType, 
 					true);

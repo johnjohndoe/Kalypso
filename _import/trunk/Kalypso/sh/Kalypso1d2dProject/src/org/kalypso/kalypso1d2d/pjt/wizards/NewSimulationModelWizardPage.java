@@ -4,10 +4,7 @@
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.views.framelist.UpAction;
 import org.kalypso.afgui.model.IWorkflowData;
 
 /**

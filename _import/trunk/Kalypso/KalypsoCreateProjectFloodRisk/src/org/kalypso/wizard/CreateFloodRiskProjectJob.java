@@ -453,8 +453,8 @@ public class CreateFloodRiskProjectJob extends Job
 
     final IFeatureType[] types = schema.getAllFeatureTypes();
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
-    Feature rootFeature = FeatureFactory.createFeature( null, rootFeatureTypeName + "0", rootFeatureType, true ); //$NON-NLS-1$
-    IPropertyType ftp_feature = rootFeatureType.getProperty( featureTypePropertyName );
+    Feature rootFeature = FeatureFactory.createFeature( null, null, rootFeatureTypeName + "0", rootFeatureType, true ); //$NON-NLS-1$
+    final IRelationType ftp_feature = (IRelationType) rootFeatureType.getProperty( featureTypePropertyName );
     Feature shapeRootFeature = m_landuseShapeWS.getRootFeature();
     List featureList = (List) shapeRootFeature.getProperty( shapeFeatureTypePropertyName );
     for( int i = 0; i < featureList.size(); i++ )
@@ -466,7 +466,7 @@ public class CreateFloodRiskProjectJob extends Job
         m_landuseTypeSet.add( propertyValue );
       }
       Object[] properties = new Object[] { null, null, null, null, null, (GM_Object) feat.getProperty( shapeGeomPropertyName ), propertyValue };
-      final Feature feature = FeatureFactory.createFeature( rootFeature, "Feature" + i, ((IRelationType) ftp_feature).getTargetFeatureType(), properties ); //$NON-NLS-1$
+      final Feature feature = FeatureFactory.createFeature( rootFeature, ftp_feature, "Feature" + i, ftp_feature.getTargetFeatureType(), properties ); //$NON-NLS-1$
       FeatureHelper.addProperty( rootFeature, ftp_feature, feature );
     }
     final GMLWorkspace workspace = new GMLWorkspace_Impl( schema, types, rootFeature, landuseDataGML.toURL(), "", null ); //$NON-NLS-1$
@@ -504,7 +504,7 @@ public class CreateFloodRiskProjectJob extends Job
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogFloodRisk.NS_CONTEXTMODEL, (String) null );
     IFeatureType ftLanduse = schema.getFeatureType( landuseFeatureType );
     IFeatureType ftLanduseCollection = schema.getFeatureType( landuseCollectionType );
-    final IPropertyType featureProperty = ftLanduse.getProperty( propertyName );
+    final IRelationType featureProperty = (IRelationType) ftLanduse.getProperty( propertyName );
     Feature rootFeature = contextModel.getRootFeature();
     Feature parentFeature = (Feature) rootFeature.getProperty( parentFeatureName );
     IRelationType featurePropertyName = (IRelationType) ftLanduseCollection.getProperty( propertyLanduseMember );
@@ -526,11 +526,11 @@ public class CreateFloodRiskProjectJob extends Job
     {
       landusePropertyName = (String) it.next();
       // contextModel
-      landuseFeature = contextModel.createFeature( parentFeature, ftLanduse );
+      landuseFeature = contextModel.createFeature( parentFeature, featureProperty, ftLanduse );
       landuseFeature.setProperty( featureProperty, landusePropertyName );
       contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
       // riskContextModel
-      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, ftLanduseRisk );
+      Feature landuseFeature_risk = riskContextModel.createFeature( parentFeature_risk, featurePropertyNameRisk, ftLanduseRisk );
       landuseFeature_risk.setProperty( featurePropertyRisk, landusePropertyName );
       riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyNameRisk, 0, landuseFeature_risk );
     }
@@ -733,7 +733,7 @@ public class CreateFloodRiskProjectJob extends Job
     QName rootFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelData" ); //$NON-NLS-1$
     QName rootFeatureProp = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "WaterlevelMember" ); //$NON-NLS-1$
     IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
-    Feature rootFeature = FeatureFactory.createFeature( null, "WaterlevelData0", rootFeatureType, true ); //$NON-NLS-1$
+    Feature rootFeature = FeatureFactory.createFeature( null, null, "WaterlevelData0", rootFeatureType, true ); //$NON-NLS-1$
     final IRelationType waterlevelMember = (IRelationType) rootFeatureType.getProperty( rootFeatureProp );
     // create waterlevelFeature(s)
     QName waterlevelFeatureName = new QName( UrlCatalogFloodRisk.NS_WATERLEVELDATA, "Waterlevel" ); //$NON-NLS-1$
@@ -743,7 +743,7 @@ public class CreateFloodRiskProjectJob extends Job
     int identifier = 0;
     for( int i = 0; i < targetFiles.size(); i++ )
     {
-      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelFeatureName.getLocalPart() + identifier, waterlevelFeatureType, true );
+      final Feature waterlevelFeature = FeatureFactory.createFeature( rootFeature, waterlevelMember, waterlevelFeatureName.getLocalPart() + identifier, waterlevelFeatureType, true );
       IFile waterlevelFile = ResourceUtilities.findFileFromURL( ((File) targetFiles.get( i )).toURL() );
       waterlevelFeature.setProperty( featureProperty, waterlevelFile.getLocationURI().toASCIIString() );
       FeatureHelper.addProperty( rootFeature, waterlevelMember, waterlevelFeature );

@@ -100,7 +100,8 @@
                  tooltip="validiert das Modell"/>
            <menu
                  id="KalypsoModel1D2D.discModelImport"
-                 label="Import"/>
+                 label="Import"
+                 path="additions"/>
            <action
                  class="org.kalypso.kalypsomodel1d2d.ui.actions.ImportBCE2DActionDelegate"
                  id="KalypsoModel1D2D.action2"

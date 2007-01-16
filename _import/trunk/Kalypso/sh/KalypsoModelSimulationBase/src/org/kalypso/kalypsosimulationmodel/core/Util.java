@@ -4,7 +4,6 @@ package org.kalypso.kalypsosimulationmodel.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -12,11 +11,11 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Holds utility methods
@@ -129,8 +128,9 @@ public class Util
 	    final Feature parentFeature = list.getParentFeature();
 	    final GMLWorkspace workspace = parentFeature.getWorkspace();
 	
-	    final IFeatureType targetFeatureType = 
-	    	list.getParentFeatureTypeProperty().getTargetFeatureType();
+	    final IRelationType parentRelation = list.getParentFeatureTypeProperty();
+		final IFeatureType targetFeatureType = 
+	    	parentRelation.getTargetFeatureType();
 	
 	    final IFeatureType newFeatureType;
 	    if( newFeatureName == null )
@@ -155,7 +155,7 @@ public class Util
 	    }
 	    
 	    final Feature newFeature = 
-	    		workspace.createFeature( parentFeature, newFeatureType );
+	    		workspace.createFeature( parentFeature, parentRelation, newFeatureType );
 	
 	    return newFeature;
 	  }
