@@ -52,8 +52,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -110,13 +112,14 @@ public class GmlLoader extends AbstractLoader
   @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
+    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
+
     try
     {
       monitor.beginTask( "GML laden", 1000 );
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-//      final IFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
       final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
 
@@ -124,13 +127,24 @@ public class GmlLoader extends AbstractLoader
 
       workspace.addCommandManagerListener( m_commandManagerListener );
 
+      TimeLogger perfLogger = null;
+      if( doTrace )
+        perfLogger = new TimeLogger( "Start transforming gml workspace" );
+      
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       if( gmlFile != null )
         addResource( gmlFile, workspace );
 
+      if( perfLogger != null )
+      {
+        perfLogger.takeInterimTime();
+        perfLogger.printCurrentTotal( "Finished transforming gml workspace in: " );
+      }
+      
       return workspace;
     }
     catch( final LoaderException le )

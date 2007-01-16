@@ -257,18 +257,18 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getSchemaLocationString();
   }
 
-  public Feature createFeature( final Feature parent, final IFeatureType type )
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type )
   {
-    return m_workspace.createFeature( parent, type );
+    return m_workspace.createFeature( parent, parentRelation, type );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.feature.IFeatureType, int)
    */
-  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth )
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth )
   {
-    return m_workspace.createFeature( parent, type, depth );
+    return m_workspace.createFeature( parent, parentRelation, type, depth );
   }
 
   /**

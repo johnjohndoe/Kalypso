@@ -321,6 +321,8 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * IMPORTANT: this operation is slow (as in ArrayList).
+   * 
    * @see java.util.List#contains(java.lang.Object)
    */
   public boolean contains( Object o )

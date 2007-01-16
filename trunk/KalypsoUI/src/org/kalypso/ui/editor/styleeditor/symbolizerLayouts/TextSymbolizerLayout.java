@@ -314,7 +314,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       } );
 
-      SliderPanel rotationPanel = rotationPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, pointPlacement.getRotation( null ) * 180 );
+      SliderPanel rotationPanel = new SliderPanel( fontGroup, MessageBundle.STYLE_EDITOR_ROTATION, 0, 360, 15, SliderPanel.INTEGER, pointPlacement.getRotation( null ) * 180 );
       rotationPanel.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )

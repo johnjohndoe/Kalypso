@@ -81,7 +81,7 @@ public class CopyObservationMappingHelper
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
     final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
-    final Feature rootFE = FeatureFactory.createFeature( null, "1", mapColFT, true );
+    final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
     return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null, null );
   }
 
@@ -100,12 +100,13 @@ public class CopyObservationMappingHelper
 
     final IFeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
     final Feature rootFeature = workspace.getRootFeature();
-    final Feature mapFE = workspace.createFeature( rootFeature, mapFT );
+
     // in
+    final IRelationType parentRelation = (IRelationType) mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
+    final Feature mapFE = workspace.createFeature( rootFeature, parentRelation, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     inLink.setHref( inHref );
-    final IPropertyType pt = FeatureHelper.getPT( mapFE, CopyObservationMappingHelper.RESULT_TS_IN_PROP );
-    mapFE.setProperty( pt, inLink );
+    mapFE.setProperty( parentRelation, inLink );
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();

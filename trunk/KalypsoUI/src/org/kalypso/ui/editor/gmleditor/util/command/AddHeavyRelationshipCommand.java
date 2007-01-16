@@ -96,7 +96,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   public void process( ) throws Exception
   {
     // create relation feature
-    m_newFeature = m_workspace.createFeature( m_srcFE, m_bodyFT );
+    m_newFeature = m_workspace.createFeature( m_srcFE, m_linkFT1, m_bodyFT );
     // create first link
     m_workspace.addFeatureAsComposition( m_srcFE, m_linkFT1, 0, m_newFeature );
     // create second link

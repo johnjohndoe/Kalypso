@@ -294,7 +294,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( phenomenon == null )
       phenomenonRef = null;
     else
-      phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt.getTargetFeatureType() );
+      phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
 
     changes.add( new FeatureChange( targetObsFeature, phenPt, phenomenonRef ) );
 
@@ -302,8 +302,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IComponent[] components = result.getComponents();
 
-    final Feature rd = buildRecordDefinition( targetObsFeature, components );
-    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_RESULTDEFINITION ), rd ) );
+    final IRelationType targetObsFeatureRelation = (IRelationType) featureType.getProperty( OM_RESULTDEFINITION );
+    final Feature rd = buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components );
+    changes.add( new FeatureChange( targetObsFeature, targetObsFeatureRelation, rd ) );
 
     final String strResult = serializeResultAsString( result );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( OM_RESULT ), strResult ) );
@@ -317,17 +318,17 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
-  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IComponent[] components )
+  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
     // set resultDefinition property, create RecordDefinition feature
-    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, schema.getFeatureType( SWE_RECORDDEFINITIONTYPE ) );
-
+    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, targetObsFeatureRelation, schema.getFeatureType( SWE_RECORDDEFINITIONTYPE ) );
+    final IRelationType itemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( SWE_COMPONENT );
     // for each component, set a component property, create a feature: ItemDefinition
     for( final IComponent comp : components )
     {
-      final Feature featureItemDef = itemDefinitionFromComponent( targetObsFeature, schema, comp );
+      final Feature featureItemDef = itemDefinitionFromComponent( featureRD, itemDefRelation, schema, comp );
 
       FeatureHelper.addProperty( featureRD, SWE_COMPONENT, featureItemDef );
     }
@@ -335,7 +336,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return featureRD;
   }
 
-  private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IGMLSchema schema, final IComponent comp )
+  private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IRelationType itemDefinitionRelation, final IGMLSchema schema, final IComponent comp )
   {
     if( comp instanceof FeatureComponent )
     {
@@ -347,13 +348,15 @@ public class ObservationFeatureFactory implements IAdapterFactory
       return itemDef;
     }
 
-    final Feature itemDefinition = recordDefinition.getWorkspace().createFeature( recordDefinition, schema.getFeatureType( SWE_ITEMDEFINITION ) );
+    final Feature itemDefinition = recordDefinition.getWorkspace().createFeature( recordDefinition, itemDefinitionRelation, schema.getFeatureType( SWE_ITEMDEFINITION ) );
 
     /* Phenomenon */
-    final Feature featurePhenomenon = recordDefinition.getWorkspace().createFeature( recordDefinition, schema.getFeatureType( SWE_PHENOMENONTYPE ) );
+    final IFeatureType phenomenFT = schema.getFeatureType( SWE_PHENOMENONTYPE );
+    final IRelationType phenomenonRelation = (IRelationType) phenomenFT.getProperty( SWE_PROPERTY );
+    final Feature featurePhenomenon = recordDefinition.getWorkspace().createFeature( itemDefinition, phenomenonRelation, phenomenFT );
     FeatureHelper.addProperty( featurePhenomenon, GML_NAME, comp.getName() );
     featurePhenomenon.setProperty( GML_DESCRIPTION, comp.getDescription() );
-    itemDefinition.setProperty( SWE_PROPERTY, featurePhenomenon );
+    itemDefinition.setProperty( phenomenonRelation, featurePhenomenon );
 
     /* Representation type */
     final RepresentationType rt = createRepresentationType( comp );
@@ -464,17 +467,20 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
     final IFeatureType featureType = schema.getFeatureType( SWE_ITEMDEFINITION );
 
-    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, featureType, dictUrn, null, null, null, null, null );
+    final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( SWE_COMPONENT );
+    
+    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
     return new FeatureComponent( itemDef );
   }
 
   private static Feature getOrCreateRecordDefinition( final Feature obsFeature )
   {
+    final IRelationType resultRelation = (IRelationType) obsFeature.getFeatureType().getProperty( OM_RESULTDEFINITION );
     final Feature recordDefinition = FeatureHelper.resolveLink( obsFeature, OM_RESULTDEFINITION );
     /* Make sure there is always a record definition */
     if( recordDefinition == null )
     {
-      final Feature rd = buildRecordDefinition( obsFeature, new IComponent[] {} );
+      final Feature rd = buildRecordDefinition( obsFeature, resultRelation, new IComponent[] {} );
       obsFeature.setProperty( OM_RESULTDEFINITION, rd );
       return rd;
     }

@@ -141,7 +141,7 @@ public class AddFeatureCommand implements ICommand
   {
     if( m_newFeature == null )
     {
-      m_newFeature = m_workspace.createFeature( m_parentFeature, m_type, m_depth );
+      m_newFeature = m_workspace.createFeature( m_parentFeature, m_propName, m_type, m_depth );
 
       if( m_props != null )
       {

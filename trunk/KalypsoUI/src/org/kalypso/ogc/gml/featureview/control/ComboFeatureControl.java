@@ -313,7 +313,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
         else
         {
           final String href = uri + "#" + feature.getId();
-          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, targetFeatureType, href, "", "", "", "", "" );
+          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" );
           foundFeatures.add( linkedFeature );
         }
       }

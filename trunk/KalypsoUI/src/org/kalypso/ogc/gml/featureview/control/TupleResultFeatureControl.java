@@ -53,6 +53,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -256,43 +257,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
     fireChanges( true );
-    // fireModified();
   }
 
-  /** Should we forward events from the cell-editors here? */
-  // private void fireModified( )
-  // {
-  // final Event event = new Event();
-  // event.display = m_viewer.getTable().getDisplay();
-  // event.item = m_viewer.getTable();
-  //
-  // final ModifyEvent modifyEvent = new ModifyEvent( event );
-  //
-  // for( final ModifyListener l : m_listener )
-  // {
-  // try
-  // {
-  // l.modifyText( modifyEvent );
-  // }
-  // catch( final Throwable e )
-  // {
-  // final IStatus status = StatusUtilities.statusFromThrowable( e );
-  // KalypsoGisPlugin.getDefault().getLog().log( status );
-  // }
-  // }
-  // }
-  
-  
   private void fireChanges( final boolean definitionChanged )
   {
     final Feature obsFeature = getFeature();
-
-    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, m_tupleResult.getComponents() );
-
     final IFeatureType obsFT = obsFeature.getFeatureType();
-
-    final IPropertyType resultDefPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+    final IRelationType resultDefPT = (IRelationType) obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final IPropertyType resultPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULT );
+
+    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultDefPT, m_tupleResult.getComponents() );
 
     final String strResult = ObservationFeatureFactory.serializeResultAsString( m_tupleResult );
 

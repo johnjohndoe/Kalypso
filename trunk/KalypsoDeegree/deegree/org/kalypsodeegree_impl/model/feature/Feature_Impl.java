@@ -28,11 +28,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class Feature_Impl extends AbstractFeature implements Feature
 {
-  private Object m_parent = null;
-
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
-
-  private GM_Envelope m_envelope = INVALID_ENV;
 
   /**
    * all property-values are stored here in sequencial order (as defined in applicationschema) properties with
@@ -45,12 +41,19 @@ public class Feature_Impl extends AbstractFeature implements Feature
 
   private final String m_id;
 
-  protected Feature_Impl( final Object parent, final IFeatureType ft, final String id, final Object[] propValues )
+  private Object m_parent = null;
+
+  private IRelationType m_parentRelation;
+
+  private GM_Envelope m_envelope = INVALID_ENV;
+  
+  protected Feature_Impl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
 
     m_parent = parent;
+    m_parentRelation = parentRelation;
     m_featureType = ft;
     m_id = id;
     m_properties = propValues;
@@ -236,7 +239,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
       if( parent == null )
         return;
 
-      final IRelationType rt = FeatureHelper.findParentRelation( this );
+      final IRelationType rt = getParentRelation();
       if( rt != null && rt.isList() )
       {
         final FeatureList list = (FeatureList) parent.getProperty( rt );
@@ -305,11 +308,19 @@ public class Feature_Impl extends AbstractFeature implements Feature
       return (Feature) m_parent;
     return null;
   }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
+   */
+  public IRelationType getParentRelation( )
+  {
+    return m_parentRelation;
+  }
 
   /**
    * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
    */
-  public void setWorkspace( GMLWorkspace workspace )
+  public void setWorkspace( final GMLWorkspace workspace )
   {
     if( m_parent == null || m_parent == workspace )
       m_parent = workspace;

@@ -105,7 +105,7 @@ public interface GMLWorkspace extends ModellEventProvider
    * Generates a unique id througout this workspace.
    * </p>
    */
-  public Feature createFeature( final Feature parent, final IFeatureType type );
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type );
 
   /**
    * Creates a feature an puts it into this workspace. Also create subfeatures where apropriate.
@@ -117,11 +117,14 @@ public interface GMLWorkspace extends ModellEventProvider
    *          Number of levels of subfeatures which shall be created. -1 means infinite, 0 means none (only normal
    *          properties are filled with default values).
    */
-  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth );
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth );
 
   public Feature getParentFeature( final Feature toFindParentFrom );
 
   /**
+   * TODO: commont TODO: we should replace this method by: createAsComposition! First, it is always used as such (that i
+   * sfirst created, that this method is called).; Second: a featuree hsould never live without workspace
+   * 
    * @param pos
    *          Position at which the new element is inserted into the list. If -1, the new element is added to the end of
    *          the list.
@@ -141,18 +144,18 @@ public interface GMLWorkspace extends ModellEventProvider
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, final IRelationType linkProperty, String childFeatureID );
+  public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType linkProperty, String childFeatureID );
 
   /**
    * removes a related feature from the parent. Works only if the child is a composition <br>
    * <i>and the relation is not linked </i>
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, final IRelationType linkProperty, Feature childFeature );
+  public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType linkProperty, Feature childFeature );
 
   /**
    * return true if these feature are related
    */
-  public boolean isExistingRelation( Feature f1, Feature f2, final IRelationType linkProperty );
+  public boolean isExistingRelation( final Feature f1, final Feature f2, final IRelationType linkProperty );
 
   /**
    * @param parent

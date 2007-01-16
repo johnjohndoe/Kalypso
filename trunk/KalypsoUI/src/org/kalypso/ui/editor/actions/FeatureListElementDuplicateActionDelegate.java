@@ -92,7 +92,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
     if( m_selectedFeature == null )
       return;
 
-    final IRelationType rt = FeatureHelper.findParentRelation( m_selectedFeature );
+    final IRelationType rt = m_selectedFeature.getParentRelation();
     if( rt != null )
     {
       final Feature parent = m_selectedFeature.getParent();
@@ -141,7 +141,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
       m_selectedFeature = FeatureSelectionHelper.getFirstFeature( m_selection );
       m_workspace = m_selection.getWorkspace( m_selectedFeature );
 
-      final IRelationType rt = FeatureHelper.findParentRelation( m_selectedFeature );
+      final IRelationType rt = m_selectedFeature.getParentRelation(  );
       if( rt != null )
       {
         final List list = (List) m_selectedFeature.getParent().getProperty( rt );

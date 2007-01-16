@@ -192,7 +192,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       {
         try
         {
-          m_featureParser.createFeature( null, localUri, localName, atts );
+          m_featureParser.createFeature( null, null, localUri, localName, atts );
         }
         catch( final GMLException e )
         {
@@ -207,7 +207,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       case START_PROPERTY_END_FEATURE:
       {
         final Feature feature = m_featureParser.getCurrentFeature();
-        m_propParser.createProperty( feature, localUri, localName, atts );
+        m_propParser.createProperty( feature, localUri, localName );
 
         final IPropertyType pt = m_propParser.getCurrentPropertyType();
         // final Feature parentFE = m_featureParser.getCurrentFeature();
@@ -241,7 +241,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
             }
             else
             {
-              final Feature childFeature = new XLinkedFeature_Impl( feature, rt.getTargetFeatureType(), href, role, arcrole, title, show, actuate );
+              final Feature childFeature = new XLinkedFeature_Impl( feature, rt, rt.getTargetFeatureType(), href, role, arcrole, title, show, actuate );
               FeatureHelper.addChild( feature, rt, childFeature );
             }
           }
@@ -267,7 +267,7 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         {
           try
           {
-            m_featureParser.createFeature( parentFE, localUri, localName, atts );
+            m_featureParser.createFeature( parentFE, (IRelationType) pt, localUri, localName, atts );
           }
           catch( final GMLException e )
           {
@@ -279,7 +279,10 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
           m_status = START_PROPERTY_END_FEATURE;
         }
         else
-          throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qName ); // they sould not be
+          throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qName ); // they
+                                                                                                                    // sould
+                                                                                                                    // not
+                                                                                                                    // be
         // parsed here
         // else
         // m_propParser.setContent( parentFE, (IValuePropertyType) pt, uri,
@@ -506,7 +509,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
       return;
     }
 
-    final Feature feature = m_featureParser.getCurrentFeature();
     switch( m_status )
     {
       case FIRST_FEATURE:
@@ -520,7 +522,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         for( int i = start; i < length; i++ )
           buffer.append( ch[i] );
 
-        m_propParser.setContent( feature, buffer.toString() );
         break;
       default:
         break;

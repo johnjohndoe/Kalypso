@@ -31,7 +31,7 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
   {
     final GMLSchema schema = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog().getSchema( NS.GML3, "3.1" );
     final IFeatureType featureType = schema.getFeatureType( QNAME_RECTIFIED_GRID_COVERAGE );
-    final Feature feature = FeatureFactory.createFeature( null, null, featureType, true );
+    final Feature feature = FeatureFactory.createFeature( null, null, null, featureType, true );
     return new RectifiedGridCoverage2( feature );
   }
 

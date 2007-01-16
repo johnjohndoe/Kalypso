@@ -90,7 +90,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
           else
           // composition
           {
-            final Feature childFEClone = m_workspace.createFeature( parentFEClone, childFEOriginal.getFeatureType() );
+            final Feature childFEClone = m_workspace.createFeature( parentFEClone, linkPT, childFEOriginal.getFeatureType() );
             try
             {
               m_workspace.addFeatureAsComposition( parentFEClone, linkPT, j, childFEClone );

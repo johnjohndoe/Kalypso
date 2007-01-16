@@ -177,7 +177,7 @@ public class ShapeSerializer
           data[datacount++] = kalypsoFeature.getProperty( (String) entry.getValue() );
         }
 
-        final Feature feature = FeatureFactory.createFeature( null, "" + i, shapeFeatureType, data );
+        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
 
         shapeFeatures.add( feature );
       }
@@ -202,16 +202,17 @@ public class ShapeSerializer
     {
       sf = new ShapeFile( fileBase );
       final IFeatureType featureType = sf.getFeatureType();
-
+      
       final Feature rootFeature = createShapeRootFeature( featureType );
-      final List<Feature> list = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
+      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
+      final List<Feature> list = (List<Feature>) rootFeature.getProperty( listRelation );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
       // Anpassung hier:
       final int count = sf.getRecordNum();
       for( int i = 0; i < count; i++ )
       {
-        final Feature fe = sf.getFeatureByRecNo( rootFeature, i + 1, true );
+        final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
           list.add( fe );
@@ -248,7 +249,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
 
-    return FeatureFactory.createFeature( null, "root", collectionFT, true );
+    return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
   }
 
   /** REMARK: we return a simple collection of features with no parent. Better we would return a GMLWorkspace. */
@@ -265,7 +266,7 @@ public class ShapeSerializer
       final Collection<Feature> features = new ArrayList<Feature>( recordNum );
       for( int i = 0; i < recordNum; i++ )
       {
-        final Feature feature = dbf.getFRow( null, i + 1, true );
+        final Feature feature = dbf.getFRow( null, null, i + 1, true );
         features.add( feature );
       }
 

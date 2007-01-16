@@ -80,7 +80,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
     final Feature newFeature;
     if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
-      newFeature = FeatureFactory.createFeature( m_list.getParentFeature(), fid, m_featureType, true );
+      newFeature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), fid, m_featureType, true );
     else if( "change".equals( m_handleExisting ) )
       newFeature = existingFeature;
     else if( "nothing".equals( m_handleExisting ) )

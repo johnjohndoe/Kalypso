@@ -16,6 +16,7 @@ import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -62,30 +63,22 @@ public final class CsvFeatureReader
     final List<Feature> list = new ArrayList<Feature>();
 
     final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
-    // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
-    // HashMap() );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
 
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
-    loadCSVIntoList( rootFeature, ft, list, reader, comment, delemiter, lineskip );
+    final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    loadCSVIntoList( rootFeature, memberRelation, ft, list, reader, comment, delemiter, lineskip );
 
-    // featurelist erzeugen
-    // final List flist = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    // flist.addAll( list );
-
+    // TODO: nothing is done with the list of feature, is this correct???
+    
     final GMLSchema schema = null;
     final URL context = null;
     final String schemaLocation = null;
     return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, schemaLocation, null );
   }
 
-  private void loadCSVIntoList( Feature parent, IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  private void loadCSVIntoList( final Feature parent, final IRelationType parentRelation, final IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    // final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
-    // // final IFeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new
-    // // HashMap() );
-    // final IFeatureType featureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
-
     final LineNumberReader lnr = new LineNumberReader( reader );
     int skippedlines = 0;
     while( lnr.ready() )
@@ -103,12 +96,12 @@ public final class CsvFeatureReader
         continue;
 
       final String[] tokens = line.split( delemiter );
-      list.add( createFeatureFromTokens( parent, "" + lnr.getLineNumber(), tokens, ft ) );
+      list.add( createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ) );
     }
     return;
   }
 
-  private Feature createFeatureFromTokens( Feature parent, final String index, final String[] tokens, final IFeatureType featureType ) throws CsvException
+  private Feature createFeatureFromTokens( final Feature parent, final IRelationType parentRelation, final String index, final String[] tokens, final IFeatureType featureType ) throws CsvException
   {
     final IPropertyType[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
@@ -131,7 +124,7 @@ public final class CsvFeatureReader
       data[i] = parseColumns( vpt, info.format, info.columns, tokens, info.ignoreFormatExceptions );
     }
 
-    return FeatureFactory.createFeature( parent, index, featureType, data );
+    return FeatureFactory.createFeature( parent, parentRelation, index, featureType, data );
   }
 
   private static Object parseColumns( final IValuePropertyType vpt, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException

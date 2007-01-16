@@ -74,6 +74,7 @@ import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
@@ -629,7 +630,7 @@ public class DBaseFile
    * @param allowNull
    *          if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
-  public Feature getFRow( Feature parent, int rowNo, boolean allowNull ) throws DBaseException
+  public Feature getFRow( final Feature parent, final IRelationType parentRelation, final int rowNo, final boolean allowNull ) throws DBaseException
   {
     goTop();
 
@@ -719,9 +720,8 @@ public class DBaseFile
         fp[i] = allowNull ? null : "";
       }
     }
-    // final String prefix = featureType.getQName().getLocalPart();
 
-    return FeatureFactory.createFeature( parent, m_prefix + rowNo, m_featureType, fp );
+    return FeatureFactory.createFeature( parent, parentRelation, m_prefix + rowNo, m_featureType, fp );
   }
 
   /**

@@ -125,7 +125,10 @@ public class FeatureHelper
 
   private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { TR_FEATUREID, TR_PROPERTYVALUE, TR_LISTPROPERTYVALUE } );
 
-  public static IPropertyType getPT( Feature feature, String propName )
+  /**
+   * @deprecated Do not use strings as property names. Use {@link IFeatureType#getProperty(QName)} instead.
+   */
+  public static IPropertyType getPT( final Feature feature, final String propName )
   {
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
 
@@ -261,8 +264,9 @@ public class FeatureHelper
   {
     final IFeatureType featureType = feature.getFeatureType();
     final Feature parent = feature.getParent();
+    final IRelationType parentRelation = feature.getParentRelation();
 
-    final Feature newFeature = feature.getWorkspace().createFeature( parent, featureType );
+    final Feature newFeature = feature.getWorkspace().createFeature( parent, parentRelation, featureType );
 
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
@@ -635,7 +639,8 @@ public class FeatureHelper
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IFeatureType targetFeatureType = list.getParentFeatureTypeProperty().getTargetFeatureType();
+    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
+    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
     if( newFeatureName == null )
@@ -646,7 +651,7 @@ public class FeatureHelper
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
-    final Feature newFeature = workspace.createFeature( parentFeature, newFeatureType );
+    final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
 
     list.add( newFeature );
     return newFeature;
@@ -776,7 +781,7 @@ public class FeatureHelper
 
     // neues machen
     final GMLWorkspace workspace = parent.getWorkspace();
-    final Feature newSubFeature = workspace.createFeature( parent, targetFeatureType );
+    final Feature newSubFeature = workspace.createFeature( parent, rt, targetFeatureType );
     parent.setProperty( propertyName, newSubFeature );
     return newSubFeature;
   }
@@ -888,50 +893,7 @@ public class FeatureHelper
     return featureMap;
   }
 
-  /**
-   * This methods finds the {@link IRelationType} of its parent, which contains the given feature.
-   * <p>
-   * Example: Feature A has a property 'child' which is a relation and contains feature b. So
-   * {@link #findParentRelation(b)} returns the relation type 'child'. TODO: this is quite time consuming and has
-   * conflicts with the function properties. Each feature just should know which is its parent property!
-   * 
-   * @return <code>null</code> if the feature has no parent or no property of its parent contains this feature.
-   * @throws NullPointerException
-   *           If the given <code>feature</code> is null
-   */
-  public static IRelationType findParentRelation( final Feature feature )
-  {
-    final Feature parent = feature.getParent();
-    if( parent == null )
-      return null;
-
-    final IFeatureType featureType = parent.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
-    for( final IPropertyType type : properties )
-    {
-      if( type instanceof IRelationType )
-      {
-        final IRelationType rt = (IRelationType) type;
-        if( type.isList() )
-        {
-          final FeatureList list = (FeatureList) parent.getProperty( rt );
-          if( list.contains( feature ) )
-            return rt;
-        }
-        else
-        {
-          final Object property = parent.getProperty( rt );
-          // REMARK: we directly test if it is the feature; linking to the feature is not enough
-          if( property == feature )
-            return rt;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  public static Object createLinkToID( final String id, final Feature parentFeature, final IFeatureType ft )
+  public static Object createLinkToID( final String id, final Feature parentFeature, final IRelationType parentRelation, final IFeatureType ft )
   {
     if( id == null )
       return null;
@@ -939,6 +901,6 @@ public class FeatureHelper
     if( id.startsWith( "#" ))
       return id;
     
-    return new XLinkedFeature_Impl( parentFeature, ft, id, "", "", "", "", "" );
+    return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
 }

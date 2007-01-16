@@ -62,7 +62,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -133,7 +132,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
     if( m_selectedFeature == null )
       return;
 
-    final IRelationType rt = FeatureHelper.findParentRelation( m_selectedFeature );
+    final IRelationType rt = m_selectedFeature.getParentRelation();
     if( rt != null )
     {
       final List list = (List) m_selectedFeature.getParent().getProperty( rt );
@@ -184,7 +183,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
       m_workspace.addModellListener( this );
       // it is always a Feature (objectcontribution)
 
-      final IRelationType rt = FeatureHelper.findParentRelation( m_selectedFeature );
+      final IRelationType rt = m_selectedFeature.getParentRelation();
       if( rt != null )
       {
         final List list = (List) m_selectedFeature.getParent().getProperty( rt );

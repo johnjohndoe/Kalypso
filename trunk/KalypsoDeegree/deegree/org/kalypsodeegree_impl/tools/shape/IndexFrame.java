@@ -76,6 +76,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       this.frame = frame;
     }
 
+    @Override
     public void run( )
     {
       Container container = getContentPane();
@@ -124,7 +125,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           for( int i = 1; i < features + 1; i++ )
           {
-            Feature feature = shapeFile.getFeatureByRecNo( null, i );
+            Feature feature = shapeFile.getFeatureByRecNo( null, null, i );
 
             if( geometry )
             {
