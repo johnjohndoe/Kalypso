@@ -1,22 +1,25 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.WorkflowDB;
-import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.afgui.model.WorkflowSystem;
+import org.kalypso.afgui.model.IWorkflowSystem; 
+import org.kalypso.afgui.model.impl.WorkflowSystem;
 
 import test.org.kalypso.kalypso1d2d.pjt.TestData;
 
@@ -148,7 +151,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 		{
 			workflowDB=
 				new WorkflowDB(
-						metaDataFolder.getFile(WORKFLOW_DATA_DESC).getRawLocation().toFile());
+						metaDataFolder.getFile(WORKFLOW_DATA_DESC));
 			workflowSystem=
 				new WorkflowSystem(
 						metaDataFolder.getFile(WORKFLOW_DESC).getRawLocationURI().toURL());
