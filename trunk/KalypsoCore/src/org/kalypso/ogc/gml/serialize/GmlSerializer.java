@@ -76,7 +76,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -236,6 +238,12 @@ public final class GmlSerializer
 
   private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
   {
+    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
+    
+    TimeLogger perfLogger = null;
+    if( doTrace )
+      perfLogger = new TimeLogger( "Start loading gml workspace" );
+
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
 
@@ -254,6 +262,13 @@ public final class GmlSerializer
     final String schemaLocationString = contentHandler.getSchemaLocationString();
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocationString, providerFactory );
+    
+    if( perfLogger != null )
+    {
+      perfLogger.takeInterimTime();
+      perfLogger.printCurrentTotal( "Finished loading gml workspace in: " );
+    }
+    
     return workspace;
   }
 
@@ -307,7 +322,18 @@ public final class GmlSerializer
     monitor.beginTask( "Creating gml file", 2 );
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName, providerFactory );
+    
+    URL context = null;
+    try
+    {
+      context = targetFile.getLocationURI().toURL();
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureQName, context, providerFactory );
 
     // introduce further schemata into workspace
     final IGMLSchema schema = workspace.getGMLSchema();
