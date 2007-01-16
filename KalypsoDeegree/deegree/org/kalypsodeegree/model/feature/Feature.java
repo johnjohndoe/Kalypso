@@ -4,6 +4,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 
 /**
@@ -19,8 +20,18 @@ public interface Feature extends DeegreeFeature, IAdaptable
 {
   public GMLWorkspace getWorkspace( );
 
+  /**
+   * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
+   * @see #getParentRelation()
+   */
   public Feature getParent( );
 
+  /**
+   * Returns the {@link IRelationType} where this feature resides inside its parent feature.
+   * @see #getParent()
+   */
+  public IRelationType getParentRelation();
+  
   public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
 
   public void setProperty( final IPropertyType propertyType, final Object value );

@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
@@ -66,11 +67,14 @@ import org.kalypso.loader.LoaderException;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
- * @author dömming,belger
+ * @author Andreas von Dömming
+ * @author Gernot Belger
  */
 public class ResourcePool
 {
-  private final static Logger m_logger = Logger.getLogger( ResourcePool.class.getName() );
+  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) );
+
+  private final static Logger LOGGER = Logger.getLogger( ResourcePool.class.getName() );
 
   private final ILoaderFactory m_factory;
 
@@ -127,7 +131,7 @@ public class ResourcePool
           e.printStackTrace();
           e.getMessage();
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
-          m_logger.throwing( getClass().getName(), "addPoolListener", iae );
+          LOGGER.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
         }
       }
@@ -152,7 +156,8 @@ public class ResourcePool
         final KeyInfo info = (KeyInfo) entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
-          m_logger.info( "Releasing key (no more listeners): " + key );
+          if( DO_LOG )
+            LOGGER.info( "Releasing key (no more listeners): " + key );
 
           iter.remove();
 

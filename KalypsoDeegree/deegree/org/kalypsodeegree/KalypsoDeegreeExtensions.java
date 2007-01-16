@@ -43,8 +43,10 @@ package org.kalypsodeegree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -55,7 +57,11 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
+import org.kalypsodeegree.model.feature.validation.IFeatureRule;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
@@ -69,7 +75,11 @@ public class KalypsoDeegreeExtensions
 
   private final static String LISTENER_EXTENSION_POINT = "org.kalypso.deegree.gmlWorkspaceListener";
 
+  private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
+
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
+
+  private static Map<QName, List<IFeatureRule>> THE_RULES = null;
 
   private static Map<QName, IGmlWorkspaceListener[]> QNAME_LISTENERS = null;
 
@@ -177,4 +187,72 @@ public class KalypsoDeegreeExtensions
 
     return listeners;
   }
+
+  public static IFeatureRule[] getFeatureRules( final Feature feature )
+  {
+    final Map<QName, List<IFeatureRule>> rules = getFeatureRules();
+
+    final IFeatureType featureType = feature.getFeatureType();
+    final IFeatureType[] substituteFeatureTypes = GMLSchemaUtilities.getSubstituts( featureType, featureType.getGMLSchema(), true, true );
+
+    final Set<IFeatureRule> result = new HashSet<IFeatureRule>();
+    for( final IFeatureType type : substituteFeatureTypes )
+    {
+      final List<IFeatureRule> list = rules.get( type );
+      if( list != null )
+        result.addAll( list );
+    }
+
+    final List<IFeatureRule> commonRules = rules.get( null );
+    if( commonRules != null )
+      result.addAll( commonRules );
+
+    return result.toArray( new IFeatureRule[result.size()] );
+  }
+
+  private synchronized static Map<QName, List<IFeatureRule>> getFeatureRules( )
+  {
+    if( THE_RULES != null )
+      return THE_RULES;
+
+    THE_RULES = new HashMap<QName, List<IFeatureRule>>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( RULES_EXTENSION_POINT );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
+    {
+      try
+      {
+        final IFeatureRule rule = (IFeatureRule) element.createExecutableExtension( "class" );
+        final QName[] names = rule.getQNames();
+        if( names == null )
+          addRule( rule, null );
+        else
+        {
+          for( final QName name : names )
+            addRule( rule, name );
+        }
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        e.printStackTrace();
+        KalypsoDeegreePlugin.getDefault().getLog().log( status );
+      }
+    }
+
+    return THE_RULES;
+  }
+
+  private static void addRule( final IFeatureRule rule, final QName name )
+  {
+    if( !THE_RULES.containsKey( name ) )
+      THE_RULES.put( name, new ArrayList<IFeatureRule>() );
+
+    final List<IFeatureRule> nameList = THE_RULES.get( name );
+    nameList.add( rule );
+  }
+
 }

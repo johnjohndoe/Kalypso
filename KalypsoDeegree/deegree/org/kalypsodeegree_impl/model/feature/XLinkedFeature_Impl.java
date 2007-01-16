@@ -7,6 +7,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
@@ -30,6 +31,8 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 {
   private final Feature m_parentFeature;
 
+  private final IRelationType m_parentRelation;
+
   private final String m_uri;
 
   private final String m_featureId;
@@ -50,9 +53,11 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
 
   private IFeatureType m_featureType;
 
-  public XLinkedFeature_Impl( final Feature parentFeature, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
+
+  public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     m_parentFeature = parentFeature;
+    m_parentRelation = parentRelation;
     m_basicFeatureType = featureType;
     m_role = role;
     m_arcrole = arcrole;
@@ -314,5 +319,13 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   public int hashCode( )
   {
     return new HashCodeBuilder().append( m_uri ).append( m_featureId ).toHashCode();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
+   */
+  public IRelationType getParentRelation( )
+  {
+    return m_parentRelation;
   }
 }

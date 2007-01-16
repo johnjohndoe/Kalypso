@@ -48,7 +48,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This factory creates {@link GmlWorkspaceDelta}s.
@@ -136,7 +135,7 @@ public class GmlWorkspaceDeltaFactory
       propertyMap.put( property, newDelta );
 
       final Feature parent = feature.getParent();
-      final IPropertyType parentProperty = FeatureHelper.findParentRelation( feature );
+      final IPropertyType parentProperty = feature.getParentRelation();
       final GmlWorkspaceDelta parentDelta = findParentDelta( parent, parentProperty );
       parentDelta.addChild( newDelta );
 

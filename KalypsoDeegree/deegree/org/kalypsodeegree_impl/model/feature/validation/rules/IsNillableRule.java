@@ -38,72 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for the MinExclusiveRestriction.
+ * This class is a rule for IsNillable.
  * 
  * @author albert
  */
-public class MinExclusiveRule implements IRule
+public class IsNillableRule implements IRule
 {
-  /**
-   * This variable stores a value, that should be checked against. This is a minimum exclusive value.
-   */
-  public Number m_checkagainst;
+  private boolean m_isNillable;
 
-  public MinExclusiveRule( Number checkagainst )
+  private int m_minOccurs;
+
+  public IsNillableRule( boolean isNillable, int minOccurs )
   {
     super();
-    m_checkagainst = checkagainst;
+    m_isNillable = isNillable;
+    m_minOccurs = minOccurs;
   }
 
   /**
-   * RULE : MinExclusiveRestriction
+   * RULE : IsNillable
    * 
-   * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
+   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss größer " + m_checkagainst.toString() + " sein.", null );
+    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "IsNillableRule: Validation OK.", null );
 
-    /* If the object does not exist or is no number, return true. */
-    if( (object == null) || (!(object instanceof Number)) )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinExclusiveRule: Validation OK (null).", null );
-
-    /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
-    Number number = (Number) object;
-
-    if( number.floatValue() > m_checkagainst.floatValue() )
+    if( m_isNillable == false && m_minOccurs > 0 && object == null )
     {
-      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinExclusiveRule: Validation OK.", null );
+      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck darf nicht leer sein.", null );
     }
 
     return status;
   }
 
-  /**
-   * This function sets the parameter to check against.
-   * 
-   * @param checkagainst
-   *          The min value.
-   */
-  public void setCheckParameter( Number checkagainst )
+  public boolean isNillable( )
   {
-    m_checkagainst = checkagainst;
+    return m_isNillable;
   }
 
-  /**
-   * This function returns the parameter, against which is checked.
-   * 
-   * @return The min value.
-   */
-  public Number getCheckParameter( )
+  public void setNillable( boolean isNillable )
   {
-    return m_checkagainst;
+    m_isNillable = isNillable;
   }
+
+  public int getMinOccurs( )
+  {
+    return m_minOccurs;
+  }
+
+  public void setMinOccurs( int minOccurs )
+  {
+    m_minOccurs = minOccurs;
+  }
+
 }

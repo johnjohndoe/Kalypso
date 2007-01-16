@@ -74,7 +74,7 @@ public class PropertyParser
     factory.setNamespaceAware( true );
   }
 
-  public void createProperty( final Feature feature, final String uri, final String localName, final Attributes atts )
+  public void createProperty( final Feature feature, final String uri, final String localName )
   {
     final IFeatureType featureType = feature.getFeatureType();
     final QName propQName = new QName( uri, localName );
@@ -88,15 +88,6 @@ public class PropertyParser
     if( m_stackPT.empty() )
       return null;
     return m_stackPT.peek();
-  }
-
-  public void setContent( final Feature feature, final String content )
-  {
-    return;
-    // final IValuePropertyType vpt = (IValuePropertyType)
-    // getCurrentPropertyType();
-    // final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)
-    // vpt.getTypeHandler();
   }
 
   public void setContent( final Feature parentFE, final IValuePropertyType pt, final XMLReader xmlReader, final String uri, final String localName, final String qName, Attributes atts )
@@ -115,6 +106,7 @@ public class PropertyParser
     // TODO: check if there is a better way, instead of creating a new instance each time we parse a property
     final UnMarshallResultEater resultEater = new UnMarshallResultEater()
     {
+      @SuppressWarnings("unchecked")
       public void eat( final Object value ) throws GMLSchemaException
       {
         xmlReader.setContentHandler( orgCH );

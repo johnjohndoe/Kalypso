@@ -53,9 +53,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.util.IRule;
-import org.kalypso.ogc.gml.util.RuleFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.validation.rules.IRule;
+import org.kalypsodeegree_impl.model.feature.validation.rules.RuleFactory;
 
 /**
  * @author albert This class controls the ValidatorLabel and its behavior.

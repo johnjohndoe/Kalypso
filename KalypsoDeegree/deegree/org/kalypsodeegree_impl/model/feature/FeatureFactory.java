@@ -112,17 +112,17 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final Object[] properties )
+  public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
-    return new Feature_Impl( parent, featureType, id, properties );
+    return new Feature_Impl( parent, parentRelation, featureType, id, properties );
   }
 
   /**
    * Same as {@link #createFeature(Feature, String, IFeatureType, boolean, false)}.
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
+  public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults )
   {
-    return createFeature( parent, id, featureType, initializeWithDefaults, 0 );
+    return createFeature( parent, parentRelation, id, featureType, initializeWithDefaults, 0 );
   }
 
   /**
@@ -132,14 +132,14 @@ public class FeatureFactory
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
-  public static Feature createFeature( final Feature parent, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
+  public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
     if( featureType == null )
       throw new IllegalArgumentException( "must provide a featuretype" );
 
     final IPropertyType[] ftp = featureType.getProperties();
 
-    final Feature feature = new Feature_Impl( parent, featureType, id, new Object[ftp.length] );
+    final Feature feature = new Feature_Impl( parent, parentRelation, featureType, id, new Object[ftp.length] );
 
     // TODO: shouldn't we move this to the Feature_Impl constructor?
     for( final IPropertyType pt : ftp )
@@ -229,7 +229,7 @@ public class FeatureFactory
         return null;
 
       final int subDepth = depth == -1 ? -1 : depth - 1;
-      return workspace.createFeature( feature, rt.getTargetFeatureType(), subDepth );
+      return workspace.createFeature( feature, rt, rt.getTargetFeatureType(), subDepth );
     }
 
     return null;
@@ -321,7 +321,7 @@ public class FeatureFactory
   {
     final IGMLSchema schema = rootFeatureType.getGMLSchema();
     final String schemaLocation = null;
-    final Feature rootFeature = FeatureFactory.createFeature( null, "root", rootFeatureType, true );
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, "root", rootFeatureType, true );
     return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory );
   }
 }

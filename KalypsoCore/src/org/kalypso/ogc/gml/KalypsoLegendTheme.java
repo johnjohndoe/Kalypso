@@ -267,7 +267,7 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
     g.fillRect( 0, 0, width, height );
     // test
     g.clipRect( 0, 0, width, height );
-    final Feature feature = FeatureFactory.createFeature( null, "legende", ft, false );
+    final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
     DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style }, null );
     for( int i = 0; i < des.length; i++ )

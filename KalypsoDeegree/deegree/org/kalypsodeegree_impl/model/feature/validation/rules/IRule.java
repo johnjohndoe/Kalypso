@@ -38,65 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for IsNillable.
+ * This class represents the interface for a rule.
  * 
  * @author albert
  */
-public class IsNillableRule implements IRule
+public interface IRule
 {
-  private boolean m_isNillable;
-
-  private int m_minOccurs;
-
-  public IsNillableRule( boolean isNillable, int minOccurs )
-  {
-    super();
-    m_isNillable = isNillable;
-    m_minOccurs = minOccurs;
-  }
-
   /**
-   * RULE : IsNillable
+   * A function, that implements the code, that checks a object against a specific rule.
    * 
-   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
+   * @param object
+   *          The object, that should be checked.
+   * @return The status of the rule.
    */
-  public IStatus isValid( Object object )
-  {
-    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "IsNillableRule: Validation OK.", null );
-
-    if( m_isNillable == false && m_minOccurs > 0 && object == null )
-    {
-      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck darf nicht leer sein.", null );
-    }
-
-    return status;
-  }
-
-  public boolean isNillable( )
-  {
-    return m_isNillable;
-  }
-
-  public void setNillable( boolean isNillable )
-  {
-    m_isNillable = isNillable;
-  }
-
-  public int getMinOccurs( )
-  {
-    return m_minOccurs;
-  }
-
-  public void setMinOccurs( int minOccurs )
-  {
-    m_minOccurs = minOccurs;
-  }
-
+  public IStatus isValid( final Object object );
 }

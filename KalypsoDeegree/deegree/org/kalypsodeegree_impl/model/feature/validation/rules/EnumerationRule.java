@@ -38,92 +38,89 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for the MaxLengthRestriction.
+ * This class is a rule for the EnumerationRestriction.
  * 
  * @author albert
  */
-public class MaxLengthRule implements IRule
+public class EnumerationRule implements IRule
 {
   /**
-   * This variable stores the max-length value.
+   * This variable stores the list of allowed values in a enumeration.
    */
-  private int m_max;
+  private Object[] m_enums;
 
-  public MaxLengthRule( int max )
+  /**
+   * This variable stores the list of allowed values in a enumeration.
+   */
+  private Object[] m_labels;
+
+  public EnumerationRule( Object[] enums, Object[] labels )
   {
     super();
-    m_max = max;
+    m_enums = enums;
+    m_labels = labels;
   }
 
   /**
-   * RULE : MaxLengthRestriction
+   * RULE : EnumerationRestriction
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette darf höchstens " + Integer.toString( m_max ) + " Zeichen lang sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK (null).", null );
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK (null).", null );
 
-    /* The object given should be a char[] or a String. */
-    if( object instanceof char[] )
+    for( int i = 0; i < m_enums.length; i++ )
     {
-      char[] text = (char[]) object;
-
-      if( text.length <= m_max )
+      if( object.equals( m_enums[i] ) )
       {
-        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
-        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK. ", null );
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK.", null );
       }
-    }
-    else if( object instanceof String )
-    {
-      String text = (String) object;
-
-      if( text.length() <= m_max )
-      {
-        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
-        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK.", null );
-      }
-    }
-    else
-    {
-      /* If it is no char[] or String, return true. */
-      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK.", null );
     }
 
     return status;
   }
 
   /**
-   * This function gets the maximum allowed length.
+   * This function returns the list of allowed values for a enumeration.
    * 
-   * @return The maximum.
+   * @return Allowed values for a enumeration.
    */
-  public int getMax( )
+  public Object[] getEnums( )
   {
-    return m_max;
+    return m_enums;
   }
 
   /**
-   * This function sets the maximum allowed length.
+   * This function sets the list of allowed values for a enumeration.
    * 
-   * @param min
-   *          The maximum.
+   * @param enums
+   *          Allowed values for a enumeration.
    */
-  public void setMax( int max )
+  public void setEnums( String[] enums )
   {
-    m_max = max;
+    m_enums = enums;
+  }
+
+  public Object[] getLabels( )
+  {
+    return m_labels;
+  }
+
+  public void setLabels( Object[] labels )
+  {
+    m_labels = labels;
   }
 
 }

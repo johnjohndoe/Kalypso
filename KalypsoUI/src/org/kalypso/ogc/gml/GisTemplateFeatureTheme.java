@@ -273,9 +273,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    if( m_disposed ) // if disposed, do not register any more objects at the pool
-      LOGGER.info( "Theme already disposed: " + this ); //$NON-NLS-1$
-    LOGGER.info( "Object loaded: " + key + "   -  Object: " + newValue ); //$NON-NLS-1$ //$NON-NLS-2$
+    // if( m_disposed ) // if disposed, do not register any more objects at the pool
+    // LOGGER.info( "Theme already disposed: " + this ); //$NON-NLS-1$
+    // LOGGER.info( "Object loaded: " + key + " - Object: " + newValue ); //$NON-NLS-1$ //$NON-NLS-2$
     try
     {
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )

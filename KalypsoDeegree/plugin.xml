@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="functionProperty" name="functionProperty" schema="schema/functionProperty.exsd"/>
    <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
+   <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
 
      <extension
          id="org.kalypso.deegree.catalog"
@@ -36,6 +37,14 @@
               class="org.kalypsodeegree_impl.model.feature.function.ValuesEqualsFeaturePropertyFunction"
               id="org.kalypso.gmlschema.functionProperty.valueEquals"
               name="Value Equals"/>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureRule">
+        <rule
+              class="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              description="This rule validates, if the feature fullfils the restrictions of its gml application schema."
+              id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              name="Schema restrictions Rule"/>
      </extension>
 
 </plugin>

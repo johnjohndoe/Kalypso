@@ -129,7 +129,7 @@ public class FeatureviewDialog extends Dialog
       @Override
       protected Control createContents( final Composite scrollParent, final int style )
       {
-        return (Composite) featureComposite.createControl( scrollParent, style );
+        return featureComposite.createControl( scrollParent, style );
       }
     };
     creator.createControl( panel, SWT.V_SCROLL, SWT.NONE );

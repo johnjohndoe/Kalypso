@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.actionfilters;
 import org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A filter on {@link org.kalypsodeegree.model.feature.Feature} objects.
@@ -73,7 +72,7 @@ public class FeatureListElementActionFilter implements IActionFilterEx
     {
       final boolean isListElement = Boolean.parseBoolean( value );
 
-      final IRelationType rt = FeatureHelper.findParentRelation( f );
+      final IRelationType rt = f.getParentRelation();
       if( isListElement )
         return rt != null && rt.isList();
       else

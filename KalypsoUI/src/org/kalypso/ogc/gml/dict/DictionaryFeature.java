@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -105,7 +106,7 @@ public class DictionaryFeature implements Feature
   {
     return m_feature.getFeatureType();
   }
-
+  
   /**
    * @see org.kalypsodeegree.model.feature.DeegreeFeature#getGeometryProperties()
    */
@@ -128,6 +129,14 @@ public class DictionaryFeature implements Feature
   public Feature getParent( )
   {
     return m_feature.getParent();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
+   */
+  public IRelationType getParentRelation( )
+  {
+    return m_feature.getParentRelation();
   }
 
   /**

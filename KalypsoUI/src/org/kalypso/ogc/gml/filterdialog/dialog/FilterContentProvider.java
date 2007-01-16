@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -172,7 +171,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (StructuredViewer) viewer;
+    m_viewer = viewer;
     if( oldInput != newInput )
     {
       if( oldInput != null )

@@ -71,6 +71,7 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -317,9 +318,9 @@ public class ShapeFile
   /**
    * Same as {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
    */
-  public Feature getFeatureByRecNo( Feature parent, int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
   {
-    return getFeatureByRecNo( parent, RecNo, false );
+    return getFeatureByRecNo( parent, parentRelation, RecNo, false );
   }
 
   /**
@@ -329,14 +330,14 @@ public class ShapeFile
    * @param allowNull
    *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
-  public Feature getFeatureByRecNo( Feature parent, int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
-    final Feature feature = m_dbf.getFRow( parent, RecNo, allowNull );
+    final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
     final IPropertyType pt = feature.getFeatureType().getProperty( "GEOM" );
     feature.setProperty( pt, geo );
@@ -743,7 +744,7 @@ public class ShapeFile
   {
     Debug.debugMethodBegin( this, "writeShape" );
 
-    if( features.length ==  0 )
+    if( features.length == 0 )
       throw new Exception( "Can't write an empty shape." );
 
     int nbyte = 0;

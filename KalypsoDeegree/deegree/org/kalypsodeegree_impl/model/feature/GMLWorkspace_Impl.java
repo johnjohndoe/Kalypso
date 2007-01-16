@@ -500,9 +500,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public Feature createFeature( final Feature parent, final IFeatureType type )
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type )
   {
-    return createFeature( parent, type, 0 );
+    return createFeature( parent, parentRelation, type, 0 );
   }
 
   /**
@@ -510,7 +510,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public Feature createFeature( final Feature parent, final IFeatureType type, final int depth )
+  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth )
   {
     if( type.isAbstract() )
     {
@@ -521,7 +521,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
-    final Feature newFeature = FeatureFactory.createFeature( parent, newId, type, true, depth );
+    final Feature newFeature = FeatureFactory.createFeature( parent, parentRelation, newId, type, true, depth );
     // TODO: because we nowadys do recurse, another feature might be created meanwhile
     // so there is a chance, that an id is used twice
     m_indexMap.put( newId, newFeature );

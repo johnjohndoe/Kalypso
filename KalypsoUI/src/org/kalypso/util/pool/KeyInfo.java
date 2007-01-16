@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -57,6 +58,8 @@ import org.kalypso.loader.LoaderException;
 
 public final class KeyInfo extends Job implements ILoaderListener
 {
+  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) );
+
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
 
   private final Collection<IPoolListener> m_listeners = Collections.synchronizedSet( new HashSet<IPoolListener>() );
@@ -126,7 +129,8 @@ public final class KeyInfo extends Job implements ILoaderListener
     {
       if( m_object == object )
       {
-        LOGGER.info( "Object " + object + " invalid for key: " + m_key );
+        if( DO_LOG )
+          LOGGER.info( "Object " + object + " invalid for key: " + m_key );
 
         m_loader.release( m_object );
         m_object = null;
@@ -187,7 +191,8 @@ public final class KeyInfo extends Job implements ILoaderListener
       final String location = m_key.getLocation();
       try
       {
-        LOGGER.info( "Loading object for key: " + m_key );
+        if( DO_LOG )
+          LOGGER.info( "Loading object for key: " + m_key );
         m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
       catch( final Throwable e )

@@ -151,7 +151,7 @@ public class URLActionAddGeometry extends AbstractURLAction
         newFT = relationType.getTargetFeatureType();
       }
 
-      final Feature newFeature = workspace.createFeature( targetParentFE, newFT );
+      final Feature newFeature = workspace.createFeature( targetParentFE, relationType, newFT );
       workspace.addFeatureAsComposition( targetParentFE, relationType, 0, newFeature );
 
       // find relation where to place new feature

@@ -165,10 +165,10 @@ final public class GeoTransformer
   {
     CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( geo.getCoordinateSystem() );
 
-    ConvenienceTransformFactory ctf = null;
-    ctf = ConvenienceTransformFactory.getInstance();
     if( cs == null || cs.equals( m_targetCS ) )
       return geo;
+
+    final ConvenienceTransformFactory ctf = ConvenienceTransformFactory.getInstance();
     MathTransform trans = ctf.getTransform( cs, m_targetCS );
 
     if( geo instanceof GM_Point )

@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.xml.sax.Attributes;
@@ -68,7 +69,7 @@ public class FeatureParser
    * @param parent
    *          feature or workspace
    */
-  public void createFeature( Object parent, String uri, String localName, Attributes atts ) throws GMLException
+  public void createFeature( final Object parent, final IRelationType parentRelation, final String uri, final String localName, final Attributes atts ) throws GMLException
   {
     final QName qNameFT = new QName( uri, localName );
     final IFeatureType featureType = m_provider.getFeatureType( qNameFT );
@@ -94,7 +95,7 @@ public class FeatureParser
     else
       fid = null; // TODO the ID must be generated AFTER the other elements have been generated, so that it does not
     // conflict with other ids
-    final Feature feature = FeatureFactory.createFeature( (Feature) parent, fid, featureType, false );
+    final Feature feature = FeatureFactory.createFeature( (Feature) parent, parentRelation, fid, featureType, false );
     // System.out.println( " | created Feature " + fid + " " + featureType.getQName() );
     m_stackFE.push( feature );
   }

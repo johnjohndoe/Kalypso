@@ -38,89 +38,72 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for the EnumerationRestriction.
+ * This class is a rule for the MinInclusiveRestriction.
  * 
  * @author albert
  */
-public class EnumerationRule implements IRule
+public class MinInclusiveRule implements IRule
 {
   /**
-   * This variable stores the list of allowed values in a enumeration.
+   * This variable stores a value, that should be checked against. This is a minimum inclusive value.
    */
-  private Object[] m_enums;
+  public Number m_checkagainst;
 
-  /**
-   * This variable stores the list of allowed values in a enumeration.
-   */
-  private Object[] m_labels;
-
-  public EnumerationRule( Object[] enums, Object[] labels )
+  public MinInclusiveRule( Number checkagainst )
   {
     super();
-    m_enums = enums;
-    m_labels = labels;
+    m_checkagainst = checkagainst;
   }
 
   /**
-   * RULE : EnumerationRestriction
+   * RULE : MinInclusiveRestriction
    * 
-   * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
+   * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss größer oder gleich " + m_checkagainst.toString() + " sein.", null );
 
-    /* If the object does not exist, return true. */
-    if( object == null )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK (null).", null );
+    /* If the object does not exist or is no number, return true. */
+    if( (object == null) || (!(object instanceof Number)) )
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK (null).", null );
 
-    for( int i = 0; i < m_enums.length; i++ )
+    /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
+    Number number = (Number) object;
+
+    if( number.floatValue() >= m_checkagainst.floatValue() )
     {
-      if( object.equals( m_enums[i] ) )
-      {
-        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK.", null );
-      }
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK.", null );
     }
 
     return status;
   }
 
   /**
-   * This function returns the list of allowed values for a enumeration.
+   * This function sets the parameter to check against.
    * 
-   * @return Allowed values for a enumeration.
+   * @param checkagainst
+   *          The min value.
    */
-  public Object[] getEnums( )
+  public void setCheckParameter( Number checkagainst )
   {
-    return m_enums;
+    m_checkagainst = checkagainst;
   }
 
   /**
-   * This function sets the list of allowed values for a enumeration.
+   * This function returns the parameter, against which is checked.
    * 
-   * @param enums
-   *          Allowed values for a enumeration.
+   * @return The min value.
    */
-  public void setEnums( String[] enums )
+  public Number getCheckParameter( )
   {
-    m_enums = enums;
+    return m_checkagainst;
   }
-
-  public Object[] getLabels( )
-  {
-    return m_labels;
-  }
-
-  public void setLabels( Object[] labels )
-  {
-    m_labels = labels;
-  }
-
 }

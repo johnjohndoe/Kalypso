@@ -38,91 +38,92 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for the MinLengthRestriction.
+ * This class is a rule for the MaxLengthRestriction.
  * 
  * @author albert
  */
-public class MinLengthRule implements IRule
+public class MaxLengthRule implements IRule
 {
   /**
-   * This variable stores the min-length value.
+   * This variable stores the max-length value.
    */
-  private int m_min;
+  private int m_max;
 
-  public MinLengthRule( int min )
+  public MaxLengthRule( int max )
   {
     super();
-    m_min = min;
+    m_max = max;
   }
 
   /**
-   * RULE : MinLengthRestriction
+   * RULE : MaxLengthRestriction
    * 
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette muß mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette darf höchstens " + Integer.toString( m_max ) + " Zeichen lang sein.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK (null).", null );
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK (null).", null );
 
     /* The object given should be a char[] or a String. */
     if( object instanceof char[] )
     {
       char[] text = (char[]) object;
 
-      if( text.length >= m_min )
+      if( text.length <= m_max )
       {
-        /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
+        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK. ", null );
       }
     }
     else if( object instanceof String )
     {
       String text = (String) object;
 
-      if( text.length() >= m_min )
+      if( text.length() <= m_max )
       {
-        /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
+        /* The text is smaller or equal then the allowed maximum. Everything is ok. */
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK.", null );
       }
     }
     else
     {
       /* If it is no char[] or String, return true. */
-      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxLengthRule: Validation OK.", null );
     }
 
     return status;
   }
 
   /**
-   * This function gets the minimum allowed length.
+   * This function gets the maximum allowed length.
    * 
-   * @return The minimum.
+   * @return The maximum.
    */
-  public int getMin( )
+  public int getMax( )
   {
-    return m_min;
+    return m_max;
   }
 
   /**
-   * This function sets the minimum allowed length.
+   * This function sets the maximum allowed length.
    * 
    * @param min
-   *          The minimum.
+   *          The maximum.
    */
-  public void setMin( int min )
+  public void setMax( int max )
   {
-    m_min = min;
+    m_max = max;
   }
+
 }

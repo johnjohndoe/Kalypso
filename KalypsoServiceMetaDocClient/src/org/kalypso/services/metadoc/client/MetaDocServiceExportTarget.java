@@ -312,7 +312,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final IValuePropertyType[] ftps = ftpColl.toArray( new IValuePropertyType[ftpColl.size()] );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "unknown", "docbean" ), ftps );
 
-    final Feature newFeature = FeatureFactory.createFeature( null, "0", ft, false );
+    final Feature newFeature = FeatureFactory.createFeature( null, null, "0", ft, false );
     FeatureHelper.setProperties( newFeature, fpColl );
     return newFeature;
   }

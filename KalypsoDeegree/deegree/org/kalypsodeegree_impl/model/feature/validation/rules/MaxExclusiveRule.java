@@ -38,49 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.util;
+package org.kalypsodeegree_impl.model.feature.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This class is a rule for the MinInclusiveRestriction.
+ * This class is a rule for the MaxExclusiveRestriction.
  * 
  * @author albert
  */
-public class MinInclusiveRule implements IRule
+public class MaxExclusiveRule implements IRule
 {
   /**
-   * This variable stores a value, that should be checked against. This is a minimum inclusive value.
+   * This variable stores a value, that should be checked against. This is a maximum exclusive value.
    */
   public Number m_checkagainst;
 
-  public MinInclusiveRule( Number checkagainst )
+  public MaxExclusiveRule( Number checkagainst )
   {
     super();
     m_checkagainst = checkagainst;
   }
 
   /**
-   * RULE : MinInclusiveRestriction
+   * RULE : MaxExclusiveRestriction
    * 
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
   public IStatus isValid( Object object )
   {
-    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss größer oder gleich " + m_checkagainst.toString() + " sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss kleiner " + m_checkagainst.toString() + " sein.", null );
 
     /* If the object does not exist or is no number, return true. */
     if( (object == null) || (!(object instanceof Number)) )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK (null).", null );
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxExclusiveRule: Validation OK (null).", null );
 
-    /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
+    /* Cast in a number. It must be one, because a restriction for a maximum could only work with numbers. */
     Number number = (Number) object;
 
-    if( number.floatValue() >= m_checkagainst.floatValue() )
+    if( number.floatValue() < m_checkagainst.floatValue() )
     {
-      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK.", null );
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MaxExclusiveRule: Validation OK.", null );
     }
 
     return status;
@@ -90,7 +90,7 @@ public class MinInclusiveRule implements IRule
    * This function sets the parameter to check against.
    * 
    * @param checkagainst
-   *          The min value.
+   *          The max value.
    */
   public void setCheckParameter( Number checkagainst )
   {
@@ -100,7 +100,7 @@ public class MinInclusiveRule implements IRule
   /**
    * This function returns the parameter, against which is checked.
    * 
-   * @return The min value.
+   * @return The max value.
    */
   public Number getCheckParameter( )
   {
