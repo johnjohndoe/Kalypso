@@ -59,7 +59,6 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -67,7 +66,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.xml.sax.InputSource;
 
 /**
@@ -150,6 +148,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final Runnable m_objectLoadedCallback;
 
+  private ISelection m_lastSelection;
+
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
@@ -161,7 +161,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   }
 
   /**
-   * @param objectLoadedCallback We be called each time after the tree-object was loaded
+   * @param objectLoadedCallback
+   *          We be called each time after the tree-object was loaded
    */
   public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager, final Runnable objectLoadedCallback )
   {
@@ -217,13 +218,16 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( input instanceof CommandableWorkspace )
     {
       final CommandableWorkspace workspace = (CommandableWorkspace) input;
-
-      // remove all features of my workspace from the selection manager
-      // TODO: why not just take the current selection?
-      // or have a setSelection method on the manager?
-      final CollectorVisitor visitor = new CollectorVisitor();
-      workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      final Feature[] toRemove = visitor.getResults( true );
+      
+      Feature[] toRemove;
+      if( m_lastSelection != null )
+      {
+        toRemove = filterSelectedFeatures( m_lastSelection );
+      }
+      else
+      {
+        toRemove = new Feature[] {};
+      }
 
       final EasyFeatureWrapper[] toAdd = new EasyFeatureWrapper[features.length];
       for( int i = 0; i < toAdd.length; i++ )
@@ -239,6 +243,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       fireSelectionChanged();
     }
+
+    m_lastSelection = selection;
   }
 
   protected Feature[] filterSelectedFeatures( final ISelection selection )
@@ -462,7 +468,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       if( m_objectLoadedCallback != null )
         m_objectLoadedCallback.run();
-      
+
       if( m_workspace != null )
         display.asyncExec( new Runnable()
         {
@@ -513,13 +519,13 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       monitor.done();
     }
   }
-  
+
   public void setInput( final Gistreeview treeview, final URL context )
   {
     // TODO: handle case where this method is called several times:
     // - unhook pool-listener
     // - handle root-path differently
-    
+
     m_gisTreeview = treeview;
 
     final LayerType input = m_gisTreeview.getInput();
@@ -637,7 +643,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) getTreeViewer().getContentProvider();
       if( contentProvider == null )
         return null;
-      
+
       return contentProvider.getParentFeatureProperty( feature );
     }
 
