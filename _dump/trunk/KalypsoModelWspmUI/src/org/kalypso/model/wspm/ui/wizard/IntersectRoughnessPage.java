@@ -256,7 +256,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   public IPropertyType getPolygoneValueProperty( )
   {
-    return m_themeGroup.getProperty( m_geoPd );
+    return m_themeGroup.getProperty( m_valuePd );
   }
 
   public IPath getAssignmentPath( )

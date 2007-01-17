@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="CP1252" standalone="yes"?>
 <Configuration xmlns="http://www.ksp.org/chart/configuration" >
     <Chart name="ls">
         <title>Spiegellinien-Längsschnitt</title>
@@ -10,7 +10,7 @@
         </layers>
     </Chart>
     <Layer name="wsp">
-        <title></title>
+        <title>Wasserspiegel</title>
         <description></description>
         <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
 		<axes>
@@ -28,7 +28,7 @@
 		</parameters>
     </Layer>
     <Layer name="runoff">
-        <title></title>
+        <title>Abfluss</title>
         <description></description>
         <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
 		<axes>
@@ -46,7 +46,7 @@
 		</parameters>
     </Layer>
     <Layer name="soil">
-        <title></title>
+        <title>Sohlhöhe</title>
         <description></description>
         <provider id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider" />
 		<axes>
@@ -65,7 +65,7 @@
     </Layer>
 
     <Axis name="Station_Axis">
-    	<label>Station</label>
+    	<label>Station [km]</label>
     	<provider id="org.kalypso.axisprovider.Number" />
     	<direction>POSITIVE</direction>
     	<position>BOTTOM</position>
@@ -73,7 +73,7 @@
     	<maxVal>100.0</maxVal>
     </Axis>
     <Axis name="NN_Axis">
-    	<label>NN+m</label>
+    	<label>Höhe [NN+m]</label>
     	<provider id="org.kalypso.axisprovider.Number" />
     	<direction>POSITIVE</direction>
     	<position>LEFT</position>
@@ -81,7 +81,7 @@
     	<maxVal>10.0</maxVal>
     </Axis>
     <Axis name="M3S_Axis">
-    	<label>m³/s</label>
+    	<label>Abfluss [m³/s]</label>
     	<provider id="org.kalypso.axisprovider.Number" />
     	<direction>POSITIVE</direction>
     	<position>RIGHT</position>
