@@ -156,7 +156,10 @@ public class ProfileFeatureFactory implements IWspmConstants
       // Station
       //
       final double station = profile.getStation();
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) ) );
+      if( Double.isNaN( station ) || Double.isInfinite( station ) )
+        changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), null ) );
+      else
+        changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) ) );
 
       //
       // Type

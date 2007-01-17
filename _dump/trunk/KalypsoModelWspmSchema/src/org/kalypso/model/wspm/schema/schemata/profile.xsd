@@ -56,7 +56,7 @@
 							<documentation xml:lang="en">The profile stationing, important for editing cross sections.</documentation>
 						</annotation>
 					</element>
-					<element name="type" type="string" minOccurs="0" maxOccurs="1" default="org.kalypso.model.wspm.tuhh.profiletype">
+					<element name="type" type="string" minOccurs="1" maxOccurs="1" default="org.kalypso.model.wspm.tuhh.profiletype">
 						<annotation>
 							<documentation xml:lang="de">Der Profiltype, bestimmt wie das Profil dargestellt oder validiert wird.</documentation>
 							<documentation xml:lang="en">The profile type, determines how the profile is shown or validated.</documentation>

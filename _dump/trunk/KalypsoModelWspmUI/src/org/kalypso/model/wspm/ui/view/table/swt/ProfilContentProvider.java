@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -164,12 +165,10 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
         if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers/table" ) ) )
         {
           final String message = marker.getAttribute( IMarker.MESSAGE, null );
-          
+
           final String debugMsg = String.format( "Found resource marker: message=%s, pointPos=%d", message, pointPos );
           System.out.println( debugMsg );
         }
-        
-        final IProfilPoint point = m_pem.getProfil().getPoints().get( pointPos );
 
         if( m_markerIndex.containsKey( pointPos ) )
         {
@@ -180,7 +179,13 @@ public class ProfilContentProvider implements IStructuredContentProvider, IResou
         {
           final ArrayList<IMarker> markerList = new ArrayList<IMarker>();
           markerList.add( marker );
-          m_markerIndex.put( point, markerList );
+
+          final LinkedList<IProfilPoint> points = m_pem.getProfil().getPoints();
+          if( pointPos < points.size() - 1 )
+          {
+            final IProfilPoint point = points.get( pointPos );
+            m_markerIndex.put( point, markerList );
+          }
         }
       }
     }

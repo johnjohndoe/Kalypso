@@ -242,7 +242,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
             final int left = (int) getDomainRange().logical2screen( leftvalue );
             gc.drawLine( left, top + dev.getTopOffset(), left, bottom );
           }
-          if( dev.isClosed() )
+          if( deviders.length > 1 && dev.isClosed() )
           {
             final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );
             final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( POINT_PROPERTY.BREITE ) );

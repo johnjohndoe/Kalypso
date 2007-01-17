@@ -86,7 +86,7 @@ public class WspmTuhhCalcJob implements ISimulation
   public static final String WSPMTUHH_CODEPAGE = "Cp1252";
 
   // Timeout beim Rechnen([ms])
-  public static final int PROCESS_TIMEOUT = 600000;
+  public static final int PROCESS_TIMEOUT = 10 * 60 * 1000;
 
   public static final String MESS_BERECHNUNG_ABGEBROCHEN = "Modell: Berechnung abgebrochen";
 
@@ -101,7 +101,15 @@ public class WspmTuhhCalcJob implements ISimulation
    */
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final long lTimeout = PROCESS_TIMEOUT;
+    final long lTimeout;
+    if( inputProvider.hasID( "TIMEOUT" ) )
+    {
+      final Integer timeoutMins = (Integer) inputProvider.getInputForID( "TIMEOUT" );
+      lTimeout = timeoutMins == null ? PROCESS_TIMEOUT : timeoutMins.intValue() * 60 * 1000;
+    }
+    else
+      lTimeout = PROCESS_TIMEOUT;
+
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
     final String epsThinning = (String) inputProvider.getInputForID( "EPS_THINNING" );
