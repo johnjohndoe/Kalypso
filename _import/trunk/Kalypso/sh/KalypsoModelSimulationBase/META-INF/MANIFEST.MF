@@ -14,7 +14,8 @@ Require-Bundle:
  org.kalypso.simulation.core,
  org.apache.jakarta_log4j,
  org.kalypso.contribs.ogc31,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
 Export-Package: org.kalypso.kalypsosimulationmodel.core.terrainmodel,
  org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
