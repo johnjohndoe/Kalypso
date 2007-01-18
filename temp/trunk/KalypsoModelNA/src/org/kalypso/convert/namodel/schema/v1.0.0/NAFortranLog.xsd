@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
 <schema xmlns:naLog="http://www.tuhh.de/NAFortranLog" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/NAFortranLog" elementFormDefault="qualified" version="1.0">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="F:\KalypsoEntwicklung\head-workspace\KalypsoDeegree\deegree\org\kalypsodeegree_impl\gml\schema\schemata\gml2_2002\feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<element name="LogMessage" type="naLog:LogType"/>
 	<complexType name="LogType">
 		<complexContent>
