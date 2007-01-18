@@ -72,25 +72,25 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
   public void onModellChange( final ModellEvent modellEvent )
   {
     // TODO: this takes much too long time at the moment
-//    if( modellEvent instanceof FeaturesChangedModellEvent )
-//    {
-//      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-//      final Feature[] features = fcme.getFeatures();
-//      for( final Feature f : features )
-//      {
-//        if( GMLSchemaUtilities.substitutes( f.getFeatureType(), WspmProfile.QNAME_PROFILE ) )
-//          recreateLists( f.getWorkspace() );
-//      }
-//    }
-//    else if( modellEvent instanceof FeatureStructureChangeModellEvent )
-//    {
-//      final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
-//      final Feature[] parentFeatures = fscme.getParentFeatures();
-//      for( int i = 0; i < parentFeatures.length; i++ )
-//      {
-//        // can't do it, must know if a profile was added or not
-//      }
-//    }
+    // if( modellEvent instanceof FeaturesChangedModellEvent )
+    // {
+    // final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
+    // final Feature[] features = fcme.getFeatures();
+    // for( final Feature f : features )
+    // {
+    // if( GMLSchemaUtilities.substitutes( f.getFeatureType(), WspmProfile.QNAME_PROFILE ) )
+    // recreateLists( f.getWorkspace() );
+    // }
+    // }
+    // else if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    // {
+    // final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
+    // final Feature[] parentFeatures = fscme.getParentFeatures();
+    // for( int i = 0; i < parentFeatures.length; i++ )
+    // {
+    // // can't do it, must know if a profile was added or not
+    // }
+    // }
   }
 
   /** First try: we recreate ALL list everytime ONE profile changes. */
@@ -108,7 +108,7 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
         final TuhhReach tuhhReach = new TuhhReach( reachFeatures[i] );
         tuhhReach.recreateMarkerList();
       }
-      
+      // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed features
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
   }
