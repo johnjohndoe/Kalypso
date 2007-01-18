@@ -13,13 +13,14 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class SplitSort implements FeatureList
 {
-  private static final IEnvelopeProvider DEFAULT_ENV_PROVIDER = new IEnvelopeProvider()
+  private final IEnvelopeProvider DEFAULT_ENV_PROVIDER = new IEnvelopeProvider()
   {
     public GM_Envelope getEnvelope( final Object object )
     {
@@ -31,8 +32,13 @@ public class SplitSort implements FeatureList
       else if( object instanceof Feature )
       {
         final Feature fe = (Feature) object;
-        GM_Envelope env = fe.getEnvelope();
-        return env;
+        return fe.getEnvelope();
+      }
+      else if( object instanceof String )
+      {
+        final GMLWorkspace workspace = getParentFeature().getWorkspace();
+        final Feature fe = workspace.getFeature( (String) object );
+        return fe.getEnvelope();
       }
 
       return null;
@@ -75,6 +81,12 @@ public class SplitSort implements FeatureList
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;
+    
+    if( parentFeature == null )
+    {
+      System.out.println( "vfbr" );
+    }
+    
     m_parentFeatureTypeProperty = parentFTP;
 
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
