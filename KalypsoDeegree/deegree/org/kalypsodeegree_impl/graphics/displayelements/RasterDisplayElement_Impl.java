@@ -101,6 +101,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author N. Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements RasterDisplayElement, Serializable
 {

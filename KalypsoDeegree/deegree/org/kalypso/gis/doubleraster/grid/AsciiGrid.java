@@ -59,6 +59,13 @@ public class AsciiGrid implements DoubleGrid
   // none is representing no data value
   private final double none = -9999.0; //Double.NaN;
   
+  public AsciiGrid()
+  {
+    m_sizeX = 0;
+    m_sizeY = 0;
+    m_grid = new double[m_sizeY][m_sizeX];
+  }
+  
   public AsciiGrid( final URL asciiFileURL  )
   {
     BufferedReader br = null;
