@@ -55,6 +55,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor;
 
 /**
+ * TODO: please comment
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
@@ -215,7 +216,7 @@ public class ModifyFeatureCommand implements ICommand
     }
     // }
     FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
-    final Feature[] fs =  (Feature[]) list.toArray( new Feature[list.size()] );
+    final Feature[] fs = (Feature[]) list.toArray( new Feature[list.size()] );
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, fs ) );
     //    
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetFEs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );

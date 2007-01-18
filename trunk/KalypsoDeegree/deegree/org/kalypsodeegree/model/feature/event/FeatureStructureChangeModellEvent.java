@@ -44,7 +44,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
  * @author doemming
  */
 public class FeatureStructureChangeModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
@@ -52,6 +51,8 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
   private final GMLWorkspace m_workspace;
 
   private final Feature[] m_parentFeature;
+
+  private final Feature[] m_changedFeature;
 
   public static final int STRUCTURE_CHANGE_ADD = 1;
 
@@ -61,33 +62,60 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
 
   private final int m_changeType;
 
-  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature parentFeature,
-      final int changeType )
+  /**
+   * deprecated because changed features should be handed over
+   */
+  @Deprecated
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature parentFeature, final int changeType )
   {
-    this( workspace, new Feature[]
-    { parentFeature }, changeType );
+    this( workspace, new Feature[] { parentFeature }, changeType );
   }
 
-  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature[] parentFeature,
-      final int changeType )
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature parentFeature, final Feature[] changedFeature, final int changeType )
+  {
+    this( workspace, new Feature[] { parentFeature }, changedFeature, changeType );
+  }
+
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature parentFeature, final Feature changedFeature, final int changeType )
+  {
+    this( workspace, new Feature[] { parentFeature }, new Feature[] { changedFeature }, changeType );
+  }
+
+  /**
+   * deprecated because changed features should be handed over
+   */
+  @Deprecated
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature[] parentFeature, final int changeType )
+  {
+    this( workspace, parentFeature, null, changeType );
+
+  }
+
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature[] parentFeature, final Feature[] changedFeature, final int changeType )
   {
     super( workspace, FEATURE_CHANGE );
     m_workspace = workspace;
     m_parentFeature = parentFeature;
+    m_changedFeature = changedFeature;
     m_changeType = changeType;
   }
 
-  public Feature[] getParentFeatures()
+  public Feature[] getParentFeatures( )
   {
     return m_parentFeature;
   }
 
-  public GMLWorkspace getGMLWorkspace()
+  public Feature[] getChangedFeatures( )
+  {
+    return m_changedFeature;
+  }
+
+  public GMLWorkspace getGMLWorkspace( )
   {
     return m_workspace;
   }
 
-  public int getChangeType()
+  public int getChangeType( )
   {
     return m_changeType;
   }

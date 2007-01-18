@@ -72,7 +72,7 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -80,18 +80,18 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     m_workspace.addFeatureAsAggregation( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
-    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
@@ -99,21 +99,21 @@ public class AddRelationCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     if( m_linkFeature == null )
       return;
 
     m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_propName, m_linkFeature.getId() );
-    final Feature parentFE= m_workspace.getParentFeature(m_srcFE);
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, m_linkFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return null;
   }

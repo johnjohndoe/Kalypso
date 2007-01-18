@@ -118,6 +118,8 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkName1, m_bodyFE.getId() );
     final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: hand over changed feature 
+    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
@@ -148,6 +150,8 @@ public class RemoveHeavyRelationCommand implements ICommand
     // m_workspace, m_bodyFE,
     // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: hand over changed feature 
+    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 

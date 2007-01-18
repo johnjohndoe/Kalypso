@@ -102,6 +102,8 @@ public class AddHeavyRelationshipCommand implements ICommand
     // create second link
     m_workspace.addFeatureAsAggregation( m_newFeature, m_linkFT2, 0, m_targetFE.getId() );
     final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: hand over changed feature 
+    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
@@ -126,6 +128,8 @@ public class AddHeavyRelationshipCommand implements ICommand
     // remove relation feature and also first link
     m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
     final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
+    // TODO: hand over changed feature 
+    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
