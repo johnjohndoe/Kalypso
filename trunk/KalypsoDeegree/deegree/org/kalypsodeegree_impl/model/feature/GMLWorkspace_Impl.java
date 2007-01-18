@@ -565,6 +565,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( prop instanceof List )
     {
       final List list = (List) prop;
+      // when pos = -1 -> append to end of the list
       if( pos == -1 )
         list.add( newFeature );
       else
@@ -621,7 +622,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       int maxOccurs = linkProp.getMaxOccurs();
       final List list = (List) srcFE.getProperty( linkProp );
       if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-        list.add( pos, featureID );
+        // when pos = -1 -> append to end of the list
+        if( pos == -1 )
+        {
+          list.add( featureID );
+        }
+        else
+        {
+          list.add( pos, featureID );
+        }
       else
         throw new Exception( "New Feature violates maxOccurs" );
     }
