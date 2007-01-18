@@ -2349,7 +2349,10 @@
             (<guimenuitem>aktualisieren</guimenuitem>).</para>
 
             <para>- Ggf. Ausschluss kritischer Profile aus der
-            Kalinin-Miljukov Berechnung.</para>
+            Kalinin-Miljukov Berechnung. Hinweis: Es werden automatisch
+            Profile ausgeschlossen, welche weniger als 6 Wertepaare (Abflüsse)
+            aufweisen und nicht mindestens drei Abflüsse unter dem bordvollen
+            Abfluss liegen.</para>
           </listitem>
 
           <listitem>
@@ -3325,6 +3328,13 @@
       durchgeführt, so dass die Arbeit am Arbeitsplatzrechner weiter
       durchgeführt werden kann. Ist kein Server vorhanden, so werden die
       Berechnungen auf dem lokalen Rechner durchgeführt.</para>
+
+      <para>Evtl. Fehler und Warnungen etc., welche bei der Berechnung
+      aufgetreten sind, werden vornehmlich in der Rechenvariante unter dem
+      Ordner Logs im File <guimenu>error.txt</guimenu> abgelegt. Ist die
+      Ansicht <guimenu>Kalypso Log Ansicht</guimenu> bei der Selektion der
+      Datei error.txt geöffnet, so werden die Fehler in dieser Ansicht
+      angezeigt.</para>
 
       <section>
         <title>Ergebnismanagement/ Ergebnisvisualisierung</title>
