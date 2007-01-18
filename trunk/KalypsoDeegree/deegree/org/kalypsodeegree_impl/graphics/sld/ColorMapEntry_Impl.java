@@ -68,6 +68,7 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * @author N. Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class ColorMapEntry_Impl implements ColorMapEntry
 {

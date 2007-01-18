@@ -44,10 +44,10 @@ import org.w3c.dom.Node;
 
 /**
  * ResourceFileTypeHandler
- * <p>
- * created by
  * 
- * @author Nadja Peiler (16.06.2005)
+ * @author Nadja Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * <br>16.06.2005
  */
 public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {

@@ -42,12 +42,12 @@ public class RectifiedGridCoverage2 extends AbstractFeatureBinder
     coverage.setRangeSet( rangeSet );
     return coverage;
   }
-  
+
   public RectifiedGridCoverage2( final Feature feature )
   {
     super( feature, QNAME_RECTIFIED_GRID_COVERAGE );
   }
-  
+
   public static String getNameStatic( )
   {
     return "RectifiedGridCoverage2";

@@ -512,7 +512,17 @@ public class FileUtilities
   public static String nameFromPath( final String path )
   {
     final int lastIndexOfSlash = path.lastIndexOf( '/' );
-    final int lastIndexOfBackslash = path.lastIndexOf( '/' );
+    
+    /**
+     * Bug fixed by Dejan, 18.01.2007
+     * It was
+     * final int lastIndexOfBackslash = path.lastIndexOf( '\\' );
+     * i.e. the same value as lastIndexOfSlash, so it was not working for backslashes
+     * 
+     * TODO: consider using java.io.File.separatorChar instead of slash & backslash
+     */
+    final int lastIndexOfBackslash = path.lastIndexOf( '\\' );
+    
     final int lastIndexOf = Math.max( lastIndexOfSlash, lastIndexOfBackslash );
 
     if( lastIndexOf == -1 )

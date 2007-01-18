@@ -64,6 +64,7 @@ import java.awt.Color;
 
 /**
  * @author N. Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public interface ColorMapEntry
 {
