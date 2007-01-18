@@ -67,6 +67,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
@@ -153,6 +154,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     else
     {
+      // TODO: do not do this, feature list without parent will lead to NPEs elsewhere!!!
       fl = new SplitSort( null, null );
       ft = null;
       // throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
@@ -173,7 +175,15 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final FeatureList featureList = getFeatureList();
     final List<Feature> globalSelectedFeatures = m_selectionManager.toList();
     final List featuresFilter = new ArrayList( featureList.size() );
-    featuresFilter.addAll( featureList );
+
+    // Resolve linked features
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    for( final Object o : featureList )
+    {
+      final Feature feature = FeatureHelper.getFeature( workspace, o );
+      featuresFilter.add( feature );
+    }
+
     if( selected )
       featuresFilter.retainAll( globalSelectedFeatures );
     else
@@ -212,18 +222,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace == null || ( changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() ) )
+      if( m_workspace == null || (changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace()) )
         return; // not my workspace
-      
+
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
         final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
-        
+
         // TODO: BOTH ways (if and else) are mayor performance bugs.
         // we MUST first determine if we zhave to restyle at all that is, if this modell event
         // did change any features belonging to me
-        
+
         // optimize: i think it is faster to restyle all than to find and
         // exchange so many display elements
         if( features.length > m_featureList.size() / 5 )
@@ -441,6 +451,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         {
           if( next instanceof Feature )
             addDisplayElements( (Feature) next );
+
+          if( next instanceof String )
+          {
+            GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
+            Feature feature = FeatureHelper.getFeature( workspace, next );
+            addDisplayElements( feature );
+          }
         }
       }
     }

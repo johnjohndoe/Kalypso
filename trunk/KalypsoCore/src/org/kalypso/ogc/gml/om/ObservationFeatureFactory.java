@@ -352,7 +352,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     /* Phenomenon */
     final IFeatureType phenomenFT = schema.getFeatureType( SWE_PHENOMENONTYPE );
-    final IRelationType phenomenonRelation = (IRelationType) phenomenFT.getProperty( SWE_PROPERTY );
+    final IRelationType phenomenonRelation = (IRelationType) itemDefinition.getFeatureType().getProperty( SWE_PROPERTY );
     final Feature featurePhenomenon = recordDefinition.getWorkspace().createFeature( itemDefinition, phenomenonRelation, phenomenFT );
     FeatureHelper.addProperty( featurePhenomenon, GML_NAME, comp.getName() );
     featurePhenomenon.setProperty( GML_DESCRIPTION, comp.getDescription() );
