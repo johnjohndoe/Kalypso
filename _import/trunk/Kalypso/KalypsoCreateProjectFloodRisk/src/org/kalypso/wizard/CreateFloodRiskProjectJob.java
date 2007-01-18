@@ -149,7 +149,8 @@ import org.w3c.dom.Document;
 /**
  * Job for creating a floodrisk project
  * 
- * @author Nadja Peiler, Dejan Antanaskovic
+ * @author Nadja Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class CreateFloodRiskProjectJob extends Job
 {

@@ -52,8 +52,6 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 {
-  public static final String NS_XML                         = "http://www.w3.org/2001/XMLSchema";
-  public static final String NS_GML                         = "http://www.opengis.net/gml";
   public static final String NS_CONTEXTMODEL                = "http://www.tuhh.de/floodrisk/contextModel";
   public static final String NS_RISKCONTEXTMODEL            = "http://www.tuhh.de/floodrisk/riskContextModel";
   //public static final String NS_RASTERDATAMODEL             = "http://www.tuhh.de/floodrisk/rasterData";
@@ -62,15 +60,13 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
   public static final String NS_WATERLEVELDATA              = "http://www.tuhh.de/floodrisk/waterlevelData";
   public static final String NS_STATISTICDATA               = "http://www.tuhh.de/floodrisk/statisticData";
 
-  public static final String PREFIX_XML                     = "xs:";
-  public static final String PREFIX_GML                     = "gml:";
-  public static final String PREFIX_CONTEXTMODEL            = "risk_cm:";
-  public static final String PREFIX_RISKCONTEXTMODEL        = "risk_rcm:";
+  public static final String PREFIX_CONTEXTMODEL            = "risk_cm";
+  public static final String PREFIX_RISKCONTEXTMODEL        = "risk_rcm";
   //public static final String PREFIX_RASTERDATAMODEL         = "risk_rd:";
-  public static final String PREFIX_VECTORDATAMODEL         = "risk_vd:";
+  public static final String PREFIX_VECTORDATAMODEL         = "risk_vd";
   //public static final String PREFIX_RECTIFIEDGRIDCOVERAGE   = "risk_rgc:";
-  public static final String PREFIX_WATERLEVELDATA          = "risk_wld:";
-  public static final String PREFIX_STATISTICDATA           = "risk_sd:";
+  public static final String PREFIX_WATERLEVELDATA          = "risk_wld";
+  public static final String PREFIX_STATISTICDATA           = "risk_sd";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -85,6 +81,12 @@ public class UrlCatalogFloodRisk extends AbstractUrlCatalog
     //catalog.put( NS_RECTIFIEDGRIDCOVERAGE,  myClass.getResource( "rectifiedGridCoverage.xsd" ) );
     catalog.put( NS_WATERLEVELDATA,         myClass.getResource( "WaterlevelData.xsd" ) );
     catalog.put( NS_STATISTICDATA,          myClass.getResource( "StatisticData.xsd" ) );
+    
+    prefixes.put( NS_CONTEXTMODEL,      PREFIX_CONTEXTMODEL );
+    prefixes.put( NS_RISKCONTEXTMODEL,  PREFIX_RISKCONTEXTMODEL );
+    prefixes.put( NS_VECTORDATAMODEL,   PREFIX_VECTORDATAMODEL );
+    prefixes.put( NS_WATERLEVELDATA,    PREFIX_WATERLEVELDATA );
+    prefixes.put( NS_STATISTICDATA,     PREFIX_STATISTICDATA );
   }
 
 }

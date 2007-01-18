@@ -78,13 +78,10 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
- * SelectWaterlevelWizardPage
- * <p>
- * Select: waterlevel files (ascii) and coordinate system
+ * Page for selecting waterlevel files (ArcView ascii raster format) and coordinate system
  * 
- * created by
- * 
- * @author Nadja Peiler (19.06.2005)
+ * @author Nadja Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 
 public class SelectWaterlevelWizardPage extends WizardPage

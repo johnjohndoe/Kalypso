@@ -55,13 +55,11 @@ import org.kalypso.ui.ImageProvider;
 
 /**
  * 
- * KalypsoFloodRiskProjectWizard
- * <p>
  * Wizard for creating a floodrisk project
+
  * 
- * created by
- * 
- * @author Nadja Peiler (19.06.2005)
+ * @author Nadja Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 {

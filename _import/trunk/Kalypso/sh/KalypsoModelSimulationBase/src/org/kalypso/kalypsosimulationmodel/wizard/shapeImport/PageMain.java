@@ -2,10 +2,14 @@ package org.kalypso.kalypsosimulationmodel.wizard.shapeImport;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -15,10 +19,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.dialogs.WizardResourceImportPage;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
@@ -29,19 +34,17 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  *
  */
-public class PageMain extends WizardPage implements Listener
+public class PageMain extends WizardResourceImportPage implements Listener
 {
-
-	IWorkbench workbench;
 	IStructuredSelection selection;
 
 	// widgets on this page 
 	Combo cmb_ShapeProperty;
 	Combo cmb_CoordinateSystem;
 	Text txt_InputFile;
-	Text txt_OutputFile;
 	Button btn_inputFileBrowse;
-	Button btn_outputFileBrowse;
+	Text txt_OutputFile;
+	Text txt_Description;
 
 	// status variable for the possible errors on this page
 	IStatus msg_StatusLine;
@@ -49,20 +52,21 @@ public class PageMain extends WizardPage implements Listener
 	/**
 	 * Constructor for main page
 	 */
-	public PageMain(IWorkbench workbench, IStructuredSelection selection) {
-		super(Messages.getString("PageMain.0")); //$NON-NLS-1$
+	public PageMain( final IStructuredSelection selection )
+	{
+		this( Messages.getString("PageMain.0"), selection );//$NON-NLS-1$
+	}
+
+	protected PageMain( final String name, final IStructuredSelection selection ) {
+		super(name, selection); //$NON-NLS-1$
 		setTitle(Messages.getString("PageMain.1")); //$NON-NLS-1$
 		setDescription(Messages.getString("PageMain.2")); //$NON-NLS-1$
-		this.workbench = workbench;
 		this.selection = selection;
 		msg_StatusLine = new Status(IStatus.OK, "not_used", 0, "", null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	/**
-	 * @see IDialogPage#createControl(Composite)
-	 */
-	public void createControl(Composite parent) {
-
+	@Override
+	public void createSourceGroup(Composite parent) {
 		// create the composite to hold the widgets
 		GridData gd;
 		Composite composite =  new Composite(parent, SWT.NULL);
@@ -72,12 +76,10 @@ public class PageMain extends WizardPage implements Listener
 		int ncol = 3;
 		gl.numColumns = ncol;
 		composite.setLayout(gl);
-
-		// create the widgets. If the appearance of the widget is different from the default, 
-		// create a GridData for it to set the alignment and define how much space it will occupy		
+		composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
 
 		// Input shape file
-		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.5"));				 //$NON-NLS-1$
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.5"));	//$NON-NLS-1$
 		txt_InputFile = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
@@ -93,7 +95,7 @@ public class PageMain extends WizardPage implements Listener
 		//createLine(composite, ncol);
 
 		// Roughness parameter combo box
-		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.7"));						 //$NON-NLS-1$
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.7"));	//$NON-NLS-1$
 		cmb_ShapeProperty = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
@@ -104,7 +106,7 @@ public class PageMain extends WizardPage implements Listener
 		createLine(composite, ncol);
 
 		// Coordinate system combo box
-		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.8"));						 //$NON-NLS-1$
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.8"));	//$NON-NLS-1$
 		cmb_CoordinateSystem = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		cmb_CoordinateSystem.setItems(( new ConvenienceCSFactoryFull() ).getKnownCS());
 		final int index_GausKrueger = cmb_CoordinateSystem.indexOf(KalypsoModelSimulationBaseConsts.STRING_GAUSS_KRUEGER);
@@ -117,34 +119,52 @@ public class PageMain extends WizardPage implements Listener
 		
 		createLine(composite, ncol);
 
-		// Output gml file
-		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.9"));				 //$NON-NLS-1$
-		txt_OutputFile = new Text(composite, SWT.BORDER);
-		gd = new GridData();
-		gd.horizontalAlignment = GridData.FILL;
-		//gd.horizontalSpan = ncol - 1;
-		txt_OutputFile.setLayoutData(gd);
-		btn_outputFileBrowse = new Button(composite, SWT.PUSH);
-		btn_outputFileBrowse.setText(Messages.getString("PageMain.10")); //$NON-NLS-1$
-		gd = new GridData(GridData.END);
-		//gd.horizontalSpan = ncol;
-		btn_outputFileBrowse.setLayoutData(gd);
-		createLine(composite, ncol);
-
-
 		// set the composite as the control for this page
 		setControl(composite);		
 		addListeners();
+	}
+
+	public void createOptionsGroupButtons(Group optionsGroup) {
+		
+		// create the composite to hold the widgets
+		GridData gd;
+		Composite composite =  new Composite(optionsGroup, SWT.NULL);
+
+		GridLayout gl = new GridLayout();
+		int ncol = 2;
+		gl.numColumns = ncol;
+		composite.setLayout(gl);
+		composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
+
+		// Output file name
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.19"));	//$NON-NLS-1$
+		txt_OutputFile = new Text(composite, SWT.BORDER);
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		//gd.horizontalSpan = ncol - 1;
+		txt_OutputFile.setLayoutData(gd);
+
+		// Description
+		new Label (composite, SWT.NONE).setText(Messages.getString("PageMain.18"));	//$NON-NLS-1$
+		txt_Description = new Text(composite, SWT.BORDER);
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		//gd.horizontalSpan = ncol - 1;
+		txt_Description.setLayoutData(gd);
+		
+		// Create gmt (Karte) file
+		
+
+		setControl(composite);		
 	}
 
 	private void addListeners()
 	{
 		btn_inputFileBrowse.addListener(SWT.MouseDown, this);
 		btn_inputFileBrowse.addListener(SWT.KeyDown, this);
-		btn_outputFileBrowse.addListener(SWT.MouseDown, this);
-		btn_outputFileBrowse.addListener(SWT.KeyDown, this);
 		txt_InputFile.addListener(SWT.Modify, this);
-		txt_OutputFile.addListener(SWT.Modify, this);
 		cmb_ShapeProperty.addListener(SWT.Selection, this);
 	}
 
@@ -160,11 +180,7 @@ public class PageMain extends WizardPage implements Listener
 		{
 			txt_InputFile.setText(getFilenameFromDialog(null, new String[] { "*.shp" }, null )); //$NON-NLS-1$
 		}
-		if(event.widget == btn_outputFileBrowse)
-		{
-			txt_OutputFile.setText(getFilenameFromDialog(null, null, null )); //$NON-NLS-1$
-		}
-		if(event.widget == txt_InputFile)
+		else if(event.widget == txt_InputFile)
 		{
 			try
 			{
@@ -180,9 +196,7 @@ public class PageMain extends WizardPage implements Listener
 						cmb_ShapeProperty.select(0);
 						cmb_ShapeProperty.setEnabled(true);
 						if(!isTextNonEmpty(txt_OutputFile))
-						{
-							txt_OutputFile.setText(FileUtilities.nameWithoutExtension(txt_InputFile.getText()) + ".gml"); //$NON-NLS-1$
-						}
+							txt_OutputFile.setText(FileUtilities.nameWithoutExtension(FileUtilities.nameFromPath(txt_InputFile.getText())) + ".gml"); //$NON-NLS-1$
 					}
 					else
 					{
@@ -203,14 +217,8 @@ public class PageMain extends WizardPage implements Listener
 				e.printStackTrace();
 			}
 		}
-		// If the event is triggered by the destination or departure fields
-		// set the corresponding status variable to the right value
-		if ((event.widget == txt_InputFile) || (event.widget == txt_OutputFile)) {
-			if (txt_InputFile.getText().equals(txt_OutputFile.getText()) && !"".equals(txt_InputFile.getText())) //$NON-NLS-1$
-				status = new Status(IStatus.ERROR, "not_used", 0,  //$NON-NLS-1$
-						Messages.getString("PageMain.21"), null);         //$NON-NLS-1$
-			msg_StatusLine = status;
-		}
+		else
+			super.handleEvent(event);
 
 		// Show the most serious error
 		applyToStatusLine(msg_StatusLine);
@@ -265,7 +273,7 @@ public class PageMain extends WizardPage implements Listener
 		}
 	}	
 
-	private static boolean isTextNonEmpty(Text t)
+	protected boolean isTextNonEmpty(Text t)
 	{
 		String s = t.getText();
 		if ((s!=null) && (s.trim().length() >0)) return true;
@@ -282,16 +290,37 @@ public class PageMain extends WizardPage implements Listener
 
 	@Override
 	public boolean canFlipToNextPage() {
-		boolean canFlip = cmb_ShapeProperty.isEnabled() && isTextNonEmpty(txt_OutputFile);
-		if(canFlip)
-		{
-			ImportWizard wizard = (ImportWizard)getWizard();
-			wizard.model.inputFile = txt_InputFile.getText();
-			wizard.model.outputFile = txt_OutputFile.getText();
-			wizard.model.shapeProperty = cmb_ShapeProperty.getText();
-			wizard.model.coordinateSystem = cmb_CoordinateSystem.getText();
-		}
-		return canFlip;
+		// return false, because there is just one page
+		return false;
+	}
+
+	public IContainer getTargetContainer( )
+	{
+		final IPath path = super.getResourcePath();
+
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		if( path.segmentCount() == 1 )
+			return root.getProject( path.segment( 0 ) );
+
+		return root.getFolder( path );
+	}
+
+	public String getResourceAbsolutePath( )
+	{
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + super.getResourcePath().toOSString();
+	}
+
+	@Override
+	protected ITreeContentProvider getFileProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ITreeContentProvider getFolderProvider() {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }
 

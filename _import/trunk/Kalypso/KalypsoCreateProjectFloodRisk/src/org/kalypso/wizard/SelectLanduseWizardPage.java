@@ -76,14 +76,11 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
- * SelectLanduseWizardPage
- * <p>
  * Select: shape file (landuse), coordinate system, name of property to raster and selection automatically create
  * landuseCollection
  * 
- * created by
- * 
- * @author Nadja Peiler (19.06.2005)
+ * @author Nadja Peiler
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 
 public class SelectLanduseWizardPage extends WizardPage implements FocusListener
