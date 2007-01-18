@@ -41,8 +41,16 @@
 package xp;
 
 
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -50,13 +58,21 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
+
+/*TODO 
+ * have a look aber IWidgetWithOption and it showing view why
+ * not use that
+ */ 
 /**
  * Activates the model map edit protocol view
  * 
  * @author Patrice Congo
  */
-public class ActivateModelMapEditProtocolView extends AbstractWidget
+public class ActivateModelMapEditProtocolView 
+                extends AbstractWidget
+                implements IWidgetWithOptions
 {
   public static final String NAME="activate_1d_2d_draw_panel";
   public static final String TOOL_TIP="1d 2d zeichen toobal activieren";
@@ -86,27 +102,27 @@ public class ActivateModelMapEditProtocolView extends AbstractWidget
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     logger.info( "activate" );
-    //PlatformUI.getWorkbench().getService( Object.class );
-    IWorkbench workbench= PlatformUI.getWorkbench();
-//    ModelMapEditProtocolView protoView=
-//      (ModelMapEditProtocolView)
-//          workbench.getViewRegistry().find(ModelMapEditProtocolView.ID);
-    IWorkbenchPage page=
-        workbench.getActiveWorkbenchWindow().getActivePage();
-    try
-    {
-//TODO does not work because of AbstractWidget.activate() which register again
-//      page.showView(ModelMapEditProtocolView.ID);
-      protoView=
-        (ModelMapEditStrategyView)page.showView( 
-                              ModelMapEditStrategyView.ID, 
-                              null,//ModelMapEditProtocolView.ID, 
-                              IWorkbenchPage.VIEW_VISIBLE );
-    }
-    catch( PartInitException e )
-    {
-      logger.error( "Could not open protocol view", e);
-    }
+//    //PlatformUI.getWorkbench().getService( Object.class );
+//    IWorkbench workbench= PlatformUI.getWorkbench();
+////    ModelMapEditProtocolView protoView=
+////      (ModelMapEditProtocolView)
+////          workbench.getViewRegistry().find(ModelMapEditProtocolView.ID);
+//    IWorkbenchPage page=
+//        workbench.getActiveWorkbenchWindow().getActivePage();
+//    try
+//    {
+////TODO does not work because of AbstractWidget.activate() which register again
+////      page.showView(ModelMapEditProtocolView.ID);
+//      protoView=
+//        (ModelMapEditStrategyView)page.showView( 
+//                              ModelMapEditStrategyView.ID, 
+//                              null,//ModelMapEditProtocolView.ID, 
+//                              IWorkbenchPage.VIEW_VISIBLE );
+//    }
+//    catch( PartInitException e )
+//    {
+//      logger.error( "Could not open protocol view", e);
+//    }
     
     super.activate(commandPoster, mapPanel);
   }
@@ -124,5 +140,57 @@ public class ActivateModelMapEditProtocolView extends AbstractWidget
     page.hideView( protoView);
     logger.info( "finish" );
     super.finish();
+  }
+  private Label label;
+  //private Text textField;
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  public void createControl( Composite parent )
+  {
+    parent.setLayout( new GridLayout() );
+     label=new Label(parent, SWT.NONE);
+     label.setText( "DADADADDA" );
+//     textField=new Text(parent,SWT.NONE);
+//     textField.setText( "TTTTTTTTTTTTTTTTTTTTTTTTTTT" );
+  }
+  
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
+   */
+  public void disposeControl( )
+  {
+    if(label==null)
+    {
+      return;
+    }
+    if(!label.isDisposed())
+    {
+      label.dispose();
+    }
+  }
+  
+  private static final void doDispose(Control control)
+  {
+    if(control==null)
+    {
+      return;
+    }
+    if(control.isDisposed())
+    {
+      return;
+    }
+    control.dispose();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( ISelection selection )
+  {
+//    textField.setText( selection.toString() );
+    System.out.println(selection);
+    super.setSelection(selection);
   }
 }
