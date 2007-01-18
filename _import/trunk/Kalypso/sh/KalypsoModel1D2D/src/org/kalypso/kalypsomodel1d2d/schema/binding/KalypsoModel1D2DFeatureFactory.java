@@ -165,14 +165,14 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
               QName featureQName=feature.getFeatureType().getQName();
               
                 if(featureQName.equals( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE) )
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D) )
                 {
                   return 
                     new FE1D2DComplexElement(
                         feature,
-                        Kalypso1D2DSchemaConstants.WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE,
+                        Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D,
                         null,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE,//container
-                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_FE1D2D_2D_ELE//elements
+                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D//elements
                         );     
                 }
                 else

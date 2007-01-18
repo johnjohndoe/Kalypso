@@ -70,9 +70,13 @@ public class NodeOps
   /**
    * Finds the nearest node to the given position.
    */
-  public static FE1D2DNode findNode( final GM_Point point, final FE1D2DDiscretisationModel model )
+  public static FE1D2DNode findNode( 
+                      final GM_Point point, 
+                      final FE1D2DDiscretisationModel model )
   {
-    final FeatureList elementList = (FeatureList) model.getFeature().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+    final FeatureList elementList = 
+          (FeatureList) model.getFeature().getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
     final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element

@@ -24,34 +24,48 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE1D2DEdge>
 {
-  public final static QName QNAME_FE1D2DNode = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DNode" );
+  //public final static QName QNAME_FE1D2DNode = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DNode" );
 
-  public final static QName QNAME_PROP_POINT = new QName( NS.GML3, "pointProperty" );
+//  public final static QName QNAME_PROP_POINT = new QName( NS.GML3, "pointProperty" );
 
-  public final static QName QNAME_PROP_NODE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNodeContainer" );
+//  public final static QName QNAME_PROP_NODE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNodeContainer" );
 
   // TODO check remove of discretisation model
   // private final FE1D2DDiscretisationModel m_discretisationModel;
   private final FeatureWrapperCollection<IFE1D2DEdge> containers;
-
+  
+ 
+  
   public FE1D2DNode( final Feature featureToBind )
   {
-    super( featureToBind, QNAME_FE1D2DNode );
+    super( 
+          featureToBind, 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE );
 
     // m_discretisationModel = new FE1D2DDiscretisationModel( getFeature().getParent() );
     //
-    Object prop = featureToBind.getProperty( QNAME_PROP_NODE_CONTAINERS );
+    Object prop = featureToBind.getProperty( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS
+                    /*QNAME_PROP_NODE_CONTAINERS*/ );
 
     if( prop == null )
     {
       // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE, QNAME_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
+      containers = 
+            new FeatureWrapperCollection<IFE1D2DEdge>( 
+                featureToBind, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE, 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS/*QNAME_PROP_NODE_CONTAINERS*/, 
+                IFE1D2DEdge.class );
     }
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      QNAME_PROP_NODE_CONTAINERS );
+      containers = 
+            new FeatureWrapperCollection<IFE1D2DEdge>( 
+                featureToBind, 
+                IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS/*QNAME_PROP_NODE_CONTAINERS*/ );
     }
   }
 
@@ -66,19 +80,42 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    * @throws IllegalArgumentException
    *           if workspace is null or the roughness collection is not part of the workspace
    */
-  public FE1D2DNode( Feature parentFeature, QName propQName ) throws IllegalArgumentException
+  public FE1D2DNode( 
+              Feature parentFeature, 
+              QName propQName ) 
+              throws IllegalArgumentException
   {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE ) );
+    this( 
+        Util.createFeatureAsProperty( 
+                  parentFeature, 
+                  propQName, 
+                  Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE ) );
   }
+  
+  //TODO implements this constructor
+//  /**
+//   * Creates a feature with this gml id.
+//   * This 
+//   */
+//  public FE1D2DNode(
+//            Feature parentFeature,
+//            QName propQName,
+//            String gmlID)
+//  {
+//    
+//  }
 
   public GM_Point getPoint( )
   {
-    return (GM_Point) getFeature().getProperty( QNAME_PROP_POINT );
+    return (GM_Point) getFeature().getProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT/*QNAME_PROP_POINT*/ );
   }
 
   public void setPoint( final GM_Point point )
   {
-    getFeature().setProperty( QNAME_PROP_POINT, point );
+    getFeature().setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT/*QNAME_PROP_POINT*/, 
+        point );
   }
 
   public static FE1D2DNode createNode( final FE1D2DDiscretisationModel discModel )
@@ -86,8 +123,12 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_NODES );
-    final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( QNAME_FE1D2DNode );
-    final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentNodeProperty, nodeType );
+    final IFeatureType nodeType = 
+      parentFT.getGMLSchema().getFeatureType( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE  );
+    final Feature nodeFeature = 
+      parentFeature.getWorkspace().createFeature( 
+              parentFeature, parentNodeProperty, nodeType );
     return new FE1D2DNode( nodeFeature );
   }
 
@@ -116,12 +157,16 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     // the containers.
 
     final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
-    final FeatureList elementList = (FeatureList) model.getFeature().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+    final FeatureList elementList = 
+          (FeatureList) model.getFeature().getProperty( 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
     // get all elements touching this node
-    final List touchingElements = elementList.query( getPoint().getPosition(), null );
+    final List touchingElements = 
+        elementList.query( getPoint().getPosition(), null );
 
-    final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
+    final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = 
+                new ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
 
     // filter all element which contain this node
     for( final Object object : touchingElements )
@@ -156,7 +201,9 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     // the containers.
 
     final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
-    final FeatureList edgeList = (FeatureList) model.getFeature().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_EDGES );
+    final FeatureList edgeList = 
+          (FeatureList) model.getFeature().getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
 
     // get all elements touching this node
     final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );

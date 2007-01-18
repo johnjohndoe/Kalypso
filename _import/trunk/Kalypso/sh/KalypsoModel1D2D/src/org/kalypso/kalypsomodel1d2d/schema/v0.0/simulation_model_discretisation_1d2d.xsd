@@ -35,14 +35,14 @@
 		Definition discretisation Model property 
 	===================================================================-->
 	<xs:element 
-		name="fe1D2DDiscretisationModel" 
+		name="discretisationModel" 
 		type="wb1d2d:DiscretisationModel1D2DPropertyType"/>
 		 
 	<xs:complexType name="DiscretisationModel1D2DPropertyType">
 		<!--xs:complexContent>
 			<xs:restriction base="simBase:FEDiscretisationModelPropertyType"-->
 				<xs:sequence>
-						<xs:element ref="wb1d2d:FE1D2DDiscretisationModel"/>
+						<xs:element ref="wb1d2d:DiscretisationModel"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			<!--/xs:restriction>
@@ -53,25 +53,25 @@
 	FE1D2DDiscretisationModel 
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DDiscretisationModel"
-		type="wb1d2d:FE1D2DDiscretisationModelType"
+		name="DiscretisationModel"
+		type="wb1d2d:DiscretisationModelType"
 		substitutionGroup="simBase:FEDiscretisationModel"/>		
 	
-	<xs:complexType name="FE1D2DDiscretisationModelType">
+	<xs:complexType name="DiscretisationModelType">
 		<xs:complexContent>
 			<xs:restriction base="simBase:FEDiscretisationModelType">
 				<xs:sequence>					
 					<xs:element 
-						ref="wb1d2d:fe1d2dComplexElement"
+						ref="wb1d2d:complexElement"
 						minOccurs="1" maxOccurs="unbounded"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dElement"
+						ref="wb1d2d:element"
 						minOccurs="1" maxOccurs="unbounded"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dEdge"
+						ref="wb1d2d:edge"
 						minOccurs="1" maxOccurs="unbounded"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dNode"
+						ref="wb1d2d:node"
 						minOccurs="1" maxOccurs="unbounded"/>	
 					<xs:element
 						ref="simBase:elementDisablingSpec"
@@ -85,8 +85,8 @@
 		FE1D2DNode 
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DNode"
-		type="wb1d2d:FE1D2DNodeType"
+		name="Node"
+		type="wb1d2d:NodeType"
 		substitutionGroup="simBase:_FENode"
 		>
 		<xs:annotation>
@@ -97,7 +97,7 @@
 	</xs:element>
 	
 	<xs:complexType 
-		name="FE1D2DNodeType">
+		name="NodeType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				The type for finite elements node in 1d 2d finit element 
@@ -112,7 +112,7 @@
 						ref="gml:pointProperty" 
 						minOccurs="1" maxOccurs="1"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dNodeContainer"
+						ref="wb1d2d:nodeContainer"
 						minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -123,17 +123,17 @@
 		MiddleNode property
 	================================================================== -->
 	<xs:element 
-		name="fe1d2dMiddleNode"
-		type="wb1d2d:FE1D2DMiddleNodePropertyType"/>
+		name="middleNode"
+		type="wb1d2d:MiddleNodePropertyType"/>
 		
 	<xs:complexType 
-		name="FE1D2DMiddleNodePropertyType">
+		name="MiddleNodePropertyType">
 		<!--xs:complexContent>
 			<xs:restriction 
 					base="simBase:FEDirectedNodePropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DNode"
+						ref="wb1d2d:Node"
 						minOccurs="1"	maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attribute 
@@ -147,13 +147,13 @@
 		Directed node property
 	================================================================== -->
 	<xs:element 
-		name="fe1d2dDirectedNode"
-		type="wb1d2d:FE1D2DDirectedNodePropertyType"></xs:element>
+		name="directedNode"
+		type="wb1d2d:DirectedNodePropertyType"></xs:element>
 	<xs:complexType 
-		name="FE1D2DDirectedNodePropertyType">
+		name="DirectedNodePropertyType">
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DNode"
+						ref="wb1d2d:Node"
 						minOccurs="1"	maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attribute name="orientation" type="gml:SignType" default="+"/>
@@ -164,13 +164,13 @@
 		Fe1D2dEdge 
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DEdge"
-		type="wb1d2d:FE1D2DEdgeType"
+		name="Edge"
+		type="wb1d2d:EdgeType"
 		substitutionGroup="simBase:_FEEdge">
 	</xs:element>
 	
 	<xs:complexType 
-		name="FE1D2DEdgeType">
+		name="EdgeType">
 		<xs:annotation>
 			<xs:documentation>
 				Edge in a finite element network.
@@ -193,14 +193,14 @@
 				<xs:sequence>	
 					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
 					<xs:element 
-						ref="wb1d2d:fe1d2dDirectedNode"
+						ref="wb1d2d:directedNode"
 						minOccurs="2" 
 						maxOccurs="2"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dMiddleNode"
+						ref="wb1d2d:middleNode"
 						minOccurs="0" maxOccurs="1"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dEdgeContainer"
+						ref="wb1d2d:edgeContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
 					<!--xs:element
 						name="container"
@@ -214,7 +214,7 @@
 			Singular edge
 	 ======================================================================-->
 	<xs:complexType 
-		name="FE1D2DSingularEdgeType">
+		name="SingularEdgeType">
 		<xs:annotation>
 			<xs:documentation>
 				A singular edge is an edge with the same starting stopping and 
@@ -223,10 +223,10 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:restriction 
-				base="wb1d2d:FE1D2DEdgeType"> <!--simBase:FEAbstractEdgeType"-->
+				base="wb1d2d:EdgeType"> <!--simBase:FEAbstractEdgeType"-->
 				<xs:sequence>	
 					<xs:element
-						ref="wb1d2d:fe1d2dDirectedEdge" 
+						ref="wb1d2d:directedEdge" 
 						minOccurs="1" maxOccurs="1">
 						<xs:annotation>
 							<xs:documentation>
@@ -235,7 +235,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element
-						ref="wb1d2d:fe1d2dEdgeContainer"/>
+						ref="wb1d2d:edgeContainer"/>
 					<!--xs:element
 						name="container"
 						type="wb1d2d:FE1D2DEdgeContainerPropertyType"/ -->
@@ -248,9 +248,9 @@
 		DirectedEdge property type
 	===================================================================-->
 	<xs:element
-		name="fe1d2dDirectedEdge"
-		type="wb1d2d:FE1D2DDirectedEdgePropertyType"/>
-	<xs:complexType name="FE1D2DDirectedEdgePropertyType">
+		name="directedEdge"
+		type="wb1d2d:DirectedEdgePropertyType"/>
+	<xs:complexType name="DirectedEdgePropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				A directed nod holds a reference to an edge and 
@@ -273,16 +273,16 @@
 		Node property type 
 	================================================================== -->
 	<xs:element 
-		name="fe1d2dNode"
-		type="wb1d2d:FE1D2DNodePropertyType"/>
+		name="node"
+		type="wb1d2d:NodePropertyType"/>
 	<xs:complexType 
-		name="FE1D2DNodePropertyType">
+		name="NodePropertyType">
 		<!--xs:complexContent>
 			<xs:restriction 
 				base="simBase:FENodePropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DNode"
+						ref="wb1d2d:Node"
 						 minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -294,17 +294,17 @@
 		element property type
 	================================================================= -->
 	<xs:element 
-		name="fe1d2dElement"
-		type="wb1d2d:FE1D2DElementPropertyType"/> 
+		name="element"
+		type="wb1d2d:ElementPropertyType"/> 
 	
 	<xs:complexType 
-		name="FE1D2DElementPropertyType">
+		name="ElementPropertyType">
 		<!--xs:complexContent>
 			<xs:restriction 
 				base="simBase:FEElementPropertyType"--> 
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DElement"
+						ref="wb1d2d:Element"
 						 minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -316,10 +316,10 @@
 		edge property type
 	====================================================================-->	
 	<xs:element 
-		name="fe1d2dEdge"
-		type="wb1d2d:FE1D2DEdgePropertyType"/>
+		name="edge"
+		type="wb1d2d:EdgePropertyType"/>
 		
-	<xs:complexType name="FE1D2DEdgePropertyType">
+	<xs:complexType name="EdgePropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				
@@ -330,7 +330,7 @@
 				base="simBase:FEEdgesPropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DEdge"
+						ref="wb1d2d:Edge"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -344,7 +344,7 @@
 					the a finite element network
 	====================================================================== -->
 	<xs:complexType 
-		name="FE1D2DAbstractElementType"
+		name="AbstractElementType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -363,11 +363,11 @@
 			FEComplexElementsPropertyType
 	================================================================= -->
 	<xs:element 
-		name="fe1d2dComplexElement"
-		type="wb1d2d:FE1D2DComplexElementPropertyType"
+		name="complexElement"
+		type="wb1d2d:ComplexElementPropertyType"
 		/>
 	
-	<xs:complexType name="FE1D2DComplexElementPropertyType">
+	<xs:complexType name="ComplexElementPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				Property type for defining complex elements
@@ -378,7 +378,7 @@
 						base="simBase:FEComplexElementPropertyType"-->
 				<xs:sequence> 
 					<xs:element 
-						ref="wb1d2d:FE1D2DComplexElement"
+						ref="wb1d2d:ComplexElement"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -390,12 +390,12 @@
 		FE1D2DComplexElement
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DComplexElement"
-		type="wb1d2d:FE1D2DComplexeElementType"
+		name="ComplexElement"
+		type="wb1d2d:ComplexElementType"
 		substitutionGroup="simBase:_FEComplexElement"/>
 		
 	<xs:complexType 
-		name="FE1D2DComplexeElementType"
+		name="ComplexElementType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -415,13 +415,13 @@
 		FE1D2DElementType
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DElement"
-		type="wb1d2d:FE1D2DElementType"
+		name="Element"
+		type="wb1d2d:ElementType"
 		substitutionGroup="simBase:_FEElement"
 		abstract="true"/>
 	
 	<xs:complexType 
-		name="FE1D2DElementType"
+		name="ElementType"
 		abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -433,7 +433,7 @@
 				base="simBase:FEAbstractElementType">
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:fe1d2dElementContainer"
+						ref="wb1d2d:elementContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -446,16 +446,16 @@
 		1d element property 
 	================================================================== -->
 	<xs:element 
-		name="fe1d2d_1DElement"
-		type="wb1d2d:FE1D2D_1DElementPropertyType"/>
+		name="element1D"
+		type="wb1d2d:Element1DPropertyType"/>
 		
-	<xs:complexType name="FE1D2D_1DElementPropertyType">
+	<xs:complexType name="Element1DPropertyType">
 		<!-- xs:complexContent>
 			<xs:restriction 
 				base="simBase:FEComplexElementPropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2D_1DElement"
+						ref="wb1d2d:element1D"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -467,12 +467,12 @@
 			FE1D2D_1DElement
 	================================================================== -->
 	<xs:element 
-		name="FE1D2D_1DElement"
-		type="wb1d2d:FE1D2D_1DElementType"
-		substitutionGroup="wb1d2d:FE1D2DElement"
+		name="Element1D"
+		type="wb1d2d:Element1DType"
+		substitutionGroup="wb1d2d:Element"
 		/>
 		
-	<xs:complexType name="FE1D2D_1DElementType">
+	<xs:complexType name="Element1DType">
 		<xs:annotation>
 			<xs:documentation>
 				Basic 1D elements in a finite element network.
@@ -481,10 +481,10 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DElementType">
+				base="wb1d2d:ElementType">
 				<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"
+							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
@@ -539,16 +539,16 @@
 		2d element property 
 	================================================================== -->
 	<xs:element 
-		name="fe1d2d_2DElement"
-		type="wb1d2d:FE1D2D_2DElementPropertyType"/>
+		name="element2D"
+		type="wb1d2d:Element2DPropertyType"/>
 		
-	<xs:complexType name="FE1D2D_2DElementPropertyType">
+	<xs:complexType name="Element2DPropertyType">
 		<!-- xs:complexContent>
 			<xs:restriction 
 				base="simBase:FEComplexElementPropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2D_2DElement"
+						ref="wb1d2d:Element2D"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -561,11 +561,11 @@
 		FE1D2DPolyElement
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DPolyElement"
-		type="wb1d2d:FE1D2D_PolyElementType"
-		substitutionGroup="wb1d2d:FE1D2D_2DElement"/>
+		name="PolyElement"
+		type="wb1d2d:PolyElementType"
+		substitutionGroup="wb1d2d:Element2D"/>
 	
-	<xs:complexType name="FE1D2D_PolyElementType">
+	<xs:complexType name="PolyElementType">
 		<xs:annotation>
 			<xs:documentation>
 				An 2D fe element is defined by 3 or 4 edges.
@@ -575,11 +575,13 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2D_2DElementType">
+				base="wb1d2d:Element2DType">
 					<xs:sequence>
-					<xs:element name="geometry" type="gml:PolygonPropertyType"></xs:element>
+					<xs:element 
+						name="geometry" 
+						type="gml:PolygonPropertyType"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dDirectedEdge"
+						ref="wb1d2d:directedEdge"
 						minOccurs="3" maxOccurs="4"/>
 					</xs:sequence>
 			</xs:extension>
@@ -590,11 +592,11 @@
 			FE1D2D_2DElement
 	==================================================================-->
 	<xs:element
-		name="FE1D2D_2DElement"
-		type="wb1d2d:FE1D2D_2DElementType"
-		substitutionGroup="wb1d2d:FE1D2DElement"/>
+		name="Element2D"
+		type="wb1d2d:Element2DType"
+		substitutionGroup="wb1d2d:Element"/>
 	
-	<xs:complexType name="FE1D2D_2DElementType">
+	<xs:complexType name="Element2DType">
 		<xs:annotation>
 			<xs:documentation>
 				An 2D fe element is defined by 4 edges.
@@ -609,7 +611,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DElementType">
+				base="wb1d2d:ElementType">
 				<xs:sequence/>
 				</xs:extension>
 		</xs:complexContent>	
@@ -668,11 +670,11 @@
 		</xs:complexContent>	
 	</xs:complexType-->
 	<xs:element 
-		name="FE1D2DContinuityLine"
-		type="wb1d2d:FE1D2DContinuityLineType"
-		substitutionGroup="wb1d2d:FE1D2D_2DElement"/>
+		name="ContinuityLine"
+		type="wb1d2d:ContinuityLineType"
+		substitutionGroup="wb1d2d:Element2D"/>
 	
-	<xs:complexType name="FE1D2DContinuityLineType">
+	<xs:complexType name="ContinuityLineType">
 		<xs:annotation>
 			<xs:documentation>
 				An 2D fe continuity line element 
@@ -681,11 +683,13 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2D_2DElementType">
+				base="wb1d2d:Element2DType">
 					<xs:sequence>
-					<xs:element name="geometry" type="gml:LineStringPropertyType"></xs:element>
+					<xs:element 
+						name="geometry" 
+						type="gml:LineStringPropertyType"/>
 					<xs:element
-						ref="wb1d2d:fe1d2dDirectedEdge"
+						ref="wb1d2d:directedEdge"
 						minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 				
@@ -697,10 +701,10 @@
 		FE1D2DJunction1D2D
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DJunction1D2D"
-		type="wb1d2d:FE1D2DJunctionType"
+		name="Junction1D2D"
+		type="wb1d2d:JunctionType"
 		substitutionGroup="simBase:_FEElement"/>
-	<xs:complexType name="FE1D2DJunctionType">
+	<xs:complexType name="JunctionType">
 		<xs:annotation>
 			<xs:documentation>
 				A 1D 2D junction. It is a curve element made of edges.
@@ -714,7 +718,7 @@
 				base="simBase:FEAbstractElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"
+							ref="wb1d2d:directedEdge"
 							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
@@ -749,10 +753,10 @@
 	</xs:complexType-->
 	
 	<xs:element 
-		name="FE1D2DBridge"
-		type="wb1d2d:FE1D2DBridgeType"
+		name="Bridge"
+		type="wb1d2d:BridgeType"
 		substitutionGroup="simBase:_FEComplexElement"/>
-	<xs:complexType name="FE1D2DBridgeType">
+	<xs:complexType name="BridgeType">
 		<xs:annotation>
 			<xs:documentation>
 			</xs:documentation>
@@ -765,7 +769,7 @@
 							ref="wb1d2d:fe1d2dDirectedEdge"
 							minOccurs="1" maxOccurs="unbounded"/ -->
 						<xs:element
-							ref="wb1d2d:fe1d2d_1DElement"
+							ref="wb1d2d:element1D"
 							minOccurs="1" maxOccurs="1"/>
 						<xs:element
 							name="shape"
@@ -780,20 +784,21 @@
 				FE1D2D_1DRiverChannel
 	================================================================== -->
 	<xs:element 
-		name="FE1D2D_1DRiverChannel"
-		type="wb1d2d:FE1D2D_1DRiverChannelType"
-		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
-	<xs:complexType name="FE1D2D_1DRiverChannelType">
+		name="RiverChannel1D"
+		type="wb1d2d:RiverChannel1DType"
+		substitutionGroup="wb1d2d:ComplexElement"/>
+	<xs:complexType 
+		name="RiverChannel1DType">
 		<xs:annotation>
 			<xs:documentation>
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DComplexeElementType">
+				base="wb1d2d:ComplexElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2d_1DElement"
+							ref="wb1d2d:element1D"
 							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
@@ -804,20 +809,20 @@
 				Main Channel
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DMainChannel"
-		type="wb1d2d:FE1D2DMainChannelType"
-		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
-	<xs:complexType name="FE1D2DMainChannelType">
+		name="MainChannel"
+		type="wb1d2d:MainChannelType"
+		substitutionGroup="wb1d2d:ComplexElement"/>
+	<xs:complexType name="MainChannelType">
 		<xs:annotation>
 			<xs:documentation>
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DComplexeElementType">
+				base="wb1d2d:ComplexElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2d_2DElement"
+							ref="wb1d2d:element2D"
 							minOccurs="1" maxOccurs="unbounded"/>
 					</xs:sequence>
 			</xs:extension>
@@ -829,20 +834,20 @@
 				Channel Foreland
 	================================================================== -->
 	<xs:element 
-		name="FE1D2DMainForeland"
-		type="wb1d2d:FE1D2DChannelForelandType"
-		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
-	<xs:complexType name="FE1D2DChannelForelandType">
+		name="MainForeland"
+		type="wb1d2d:ChannelForelandType"
+		substitutionGroup="wb1d2d:ComplexElement"/>
+	<xs:complexType name="ChannelForelandType">
 		<xs:annotation>
 			<xs:documentation>
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DComplexeElementType">
+				base="wb1d2d:ComplexElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2d_2DElement"
+							ref="wb1d2d:element2D"
 							minOccurs="1" maxOccurs="unbounded"/>
 							
 					</xs:sequence>
@@ -851,11 +856,11 @@
 	</xs:complexType>
 	
 	<xs:element 
-		name="FE1D2D_2DComplexElement"
-		type="wb1d2d:FE1D2D_2DComplexElement"
-		substitutionGroup="wb1d2d:FE1D2DComplexElement"/>
+		name="ComplexElement2D"
+		type="wb1d2d:ComplexElement2D"
+		substitutionGroup="wb1d2d:ComplexElement"/>
 		
-	<xs:complexType name="FE1D2D_2DComplexElement">
+	<xs:complexType name="ComplexElement2D">
 		<xs:annotation>
 			<xs:documentation>
 				a comlex element made of 2d element or continuity lines
@@ -863,10 +868,10 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="wb1d2d:FE1D2DComplexeElementType">
+				base="wb1d2d:ComplexElementType">
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:fe1d2d_2DElement"
+							ref="wb1d2d:element2D"
 							minOccurs="1" maxOccurs="unbounded"/>
 							
 					</xs:sequence>
@@ -878,10 +883,10 @@
 	<!-- =================================================================
 			fe12dEdgeContainer property 
 	===================================================================-->
-	<xs:element name="fe1d2dEdgeContainer"
-		type="wb1d2d:FE1D2DEdgeContainerPropertyType">
+	<xs:element name="edgeContainer"
+		type="wb1d2d:EdgeContainerPropertyType">
 	</xs:element>
-	<xs:complexType name="FE1D2DEdgeContainerPropertyType"> 
+	<xs:complexType name="EdgeContainerPropertyType"> 
 		<xs:annotation>
 			<xs:documentation>
 				Associates elements to the element the contains, edges
@@ -892,7 +897,7 @@
 				base="simBase:FEEdgeContainerPropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2D_1DElement" 
+						ref="wb1d2d:Element" 
 						minOccurs="0" 
 						maxOccurs="1"/>
 				</xs:sequence>
@@ -905,10 +910,10 @@
 			fe12dNodeContainer property 
 	===================================================================-->
 	<xs:element 
-		name="fe1d2dNodeContainer"
-		type="wb1d2d:FE1D2DNodeContainerPropertyType"/>  
+		name="nodeContainer"
+		type="wb1d2d:NodeContainerPropertyType"/>  
 	<xs:complexType 
-		name="FE1D2DNodeContainerPropertyType">
+		name="NodeContainerPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				Associates node to egde elements containing it.
@@ -919,7 +924,7 @@
 				base="simBase:FENodeContainerPropertyType"--> 
 					<xs:sequence>
 						<xs:element 
-							ref="wb1d2d:FE1D2DEdge"
+							ref="wb1d2d:Edge"
 							minOccurs="0" maxOccurs="1"/>
 					</xs:sequence>
 					<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -931,11 +936,11 @@
 		fe1d2dElement Container property
 	================================================================== -->
 	<xs:element 
-		name="fe1d2dElementContainer"
-		type="wb1d2d:FE1D2DElementContainerPropertyType"/>
+		name="elementContainer"
+		type="wb1d2d:ElementContainerPropertyType"/>
 	
 	<xs:complexType 
-		name="FE1D2DElementContainerPropertyType">
+		name="ElementContainerPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				Associates an element to the complex element containing it
@@ -946,7 +951,7 @@
 				base="simBase:FEElementContainerPropertyType"-->
 				<xs:sequence>
 					<xs:element 
-						ref="wb1d2d:FE1D2DComplexElement"
+						ref="wb1d2d:ComplexElement"
 						minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>

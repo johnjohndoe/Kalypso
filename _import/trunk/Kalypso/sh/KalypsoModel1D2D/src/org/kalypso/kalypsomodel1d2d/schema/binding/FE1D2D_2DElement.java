@@ -212,9 +212,18 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
-    final IFeatureType polyType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
-    final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, polyType );
+    final IRelationType parentElementProperty = 
+            (IRelationType) parentFT.getProperty( 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    
+    final IFeatureType polyType = 
+          parentFT.getGMLSchema().getFeatureType( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
+    
+    final Feature edgeFeature = 
+          parentFeature.getWorkspace().createFeature( 
+                  parentFeature, parentElementProperty, polyType );
+    
     return new FE1D2D_2DElement( edgeFeature );
   }
 

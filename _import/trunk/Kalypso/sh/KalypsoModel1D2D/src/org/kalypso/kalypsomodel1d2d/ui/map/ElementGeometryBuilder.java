@@ -49,6 +49,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
@@ -123,8 +124,14 @@ public class ElementGeometryBuilder
     final Feature parentFeature = featureList.getParentFeature();
     final IFeatureType parentType = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+    final IRelationType parentEdgeProperty = 
+          (IRelationType) parentType.getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES
+              /*FE1D2DDiscretisationModel.QNAME_PROP_EDGES*/ );
+    final IRelationType parentElementProperty = 
+        (IRelationType) parentType.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS
+            /*FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS*/ );
 
     /* Initialize elements needed for edges and elements */
     final FE1D2DDiscretisationModel discModel = new FE1D2DDiscretisationModel( parentFeature );

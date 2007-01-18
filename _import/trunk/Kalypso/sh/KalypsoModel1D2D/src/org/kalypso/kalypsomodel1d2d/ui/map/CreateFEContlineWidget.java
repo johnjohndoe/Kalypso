@@ -117,8 +117,17 @@ public class CreateFEContlineWidget extends AbstractWidget
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = featureTheme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) || GMLSchemaUtilities.substitutes( featureType, FE1D2DEdge.QNAME_FE1D2DEdge )
-            || GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement ) )
+        if( GMLSchemaUtilities.substitutes( 
+                    featureType, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                        /*FE1D2DNode.QNAME_FE1D2DNode*/ ) || 
+            GMLSchemaUtilities.substitutes( 
+                    featureType, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE
+                    /*FE1D2DEdge.QNAME_FE1D2DEdge*/ )|| 
+            GMLSchemaUtilities.substitutes( 
+                    featureType, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement ) )
         {
           final Feature parentFeature = featureTheme.getFeatureList().getParentFeature();
 
@@ -130,7 +139,10 @@ public class CreateFEContlineWidget extends AbstractWidget
       final IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = ContinuityLineOps.contilineFromCurve( curve, model );
 
       final Feature parentFeature = model.getFeature();
-      final IRelationType rt = (IRelationType) parentFeature.getFeatureType().getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+      final IRelationType rt = 
+          (IRelationType) parentFeature.getFeatureType().getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS
+              /*FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS*/ );
       final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, rt, -1, continuityLine.getWrappedFeature(), null, true );
       workspace.postCommand( addElementCommand );
     }

@@ -58,28 +58,46 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 {
-  public final static QName QNAME_FE1D2DDiscretisationModel = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DDiscretisationModel" );
+//  public final static QName QNAME_FE1D2DDiscretisationModel = 
+//        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" );
 
-  public final static QName QNAME_PROP_EDGES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dEdge" );
+//  public final static QName QNAME_PROP_EDGES = 
+//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" );
 
-  public final static QName QNAME_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElement" );
+//  public final static QName QNAME_PROP_ELEMENTS = 
+//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" );
 
-  public final static QName QNAME_PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNode" );
+  public final static QName QNAME_PROP_NODES = 
+          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
 
-  private IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, QNAME_PROP_ELEMENTS );
+  private IFeatureWrapperCollection<IFE1D2DElement> m_elements = 
+            new FeatureWrapperCollection<IFE1D2DElement>( 
+                    getFeature(), 
+                    IFE1D2DElement.class, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
-  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, QNAME_PROP_EDGES );
+  private IFeatureWrapperCollection<IFE1D2DEdge> m_edges = 
+            new FeatureWrapperCollection<IFE1D2DEdge>( 
+                  getFeature(), 
+                  IFE1D2DEdge.class, 
+                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
 
-  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
+  private IFeatureWrapperCollection<IFE1D2DNode> m_nodes = 
+            new FeatureWrapperCollection<IFE1D2DNode>( 
+                getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
-    super( featureToBind, QNAME_FE1D2DDiscretisationModel );
+    super( 
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel);
   }
 
   public FE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
   {
-    final List edgeList = (List) getFeature().getProperty( QNAME_PROP_EDGES );
+    final List edgeList = 
+        (List) getFeature().getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
     // TODO: brute force search, check if this scales good with big models
     for( final Object object : edgeList )
     {
@@ -115,10 +133,16 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
   {
     final Feature parentFeature = getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType rt = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS );
+    final IRelationType rt = 
+        (IRelationType) parentFT.getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
-    final IFeatureType contiType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
-    final Feature contiFeature = parentFeature.getWorkspace().createFeature( parentFeature, rt, contiType );
+    final IFeatureType contiType = 
+          parentFT.getGMLSchema().getFeatureType( 
+              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+    final Feature contiFeature = 
+              parentFeature.getWorkspace().createFeature( 
+                                    parentFeature, rt, contiType );
     return new FE1D2DContinuityLine( contiFeature );
   }
 

@@ -14,65 +14,93 @@ public class Kalypso1D2DSchemaConstants
 			new QName(UrlCatalog1D2D.MODEL_1D2D_NS,"SimulationModelType1D2D");
 ////fem
 	  public final static QName WB1D2D_F_FE1D2DNODE = 
-            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DNode" );
+            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" );
 
       public final static QName WB1D2D_PROP_POINT = 
              new QName( NS.GML3, "pointProperty" );
       
       public final static QName WB1D2D_F_FE1D2DEDGE = 
-              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DEdge" );
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
 
       public final static QName WB1D2D_PROP_DIRECTEDNODE = 
                             new QName( 
                                     UrlCatalog1D2D.MODEL_1D2D_NS, 
-                                    "fe1d2dDirectedNode" );
+                                    "directedNode" );
       public final static QName WB1D2D_PROP_EDGE_CONTAINERS=
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dEdgeContainer");
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer");
     
       public final static QName WB1D2D_PROP_ELEMENT_CONTAINERS=
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dElementContainer");
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "elementContainer");
     
       
       public final static QName WB1D2D_PROP_NODE_CONTAINERS=
-          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNodeContainer" );
+          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "nodeContainer" );
       
       public final static QName WB1D2D_F_FE1D2D_2DElement = 
-              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DElement" );
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 
       public final static QName WB1D2D_F_FE1D2DContinuityLine = 
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DContinuityLine" );
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine" );
       
       public static final QName WB1D2D_F_FE1D2DPolyElement = 
-            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DPolyElement" );
+            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );
 
       public final static QName WB1D2D_PROP_DIRECTEDEDGE = 
-          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedEdge" );
+          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedEdge" );
+      
       public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = 
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS,"wb1d2d:fe1d2dMiddleNode");
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS,"wb1d2d:middleNode");
         
       public final static QName WB1D2D_PROP_FE1D2DEDGE_CONTAINER= 
-        new QName(UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:fe1d2dEdgeContainer");
+        new QName(UrlCatalog1D2D.MODEL_1D2D_NS, "wb1d2d:edgeContainer");
       
       
-      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_COMPLEX_ELE = 
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DComplexElement" );
+      public static final QName WB1D2D_F_COMPLEX_ELE = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement" );
       
-      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_2D_COMPLEX_ELE = 
-        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2D_2DComplexElement" );
+      public static final QName WB1D2D_F_COMPLEX_ELE_2D = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
       
-      public static final QName WB1D2D_MODEL1D2D_F_FE1D2D_MAIN_RIVER_CHANNEL = 
+      public static final QName WB1D2D_F_MAIN_RIVER_CHANNEL = 
         new QName( 
               UrlCatalog1D2D.MODEL_1D2D_NS, 
-              "FE1D2DMainChannel" );
+              "MainChannel" );
       
-      public final static QName WB1D2D_PROP_FE1D2DCOMPLEX_ELE_CONTAINER= 
+      public final static QName WB1D2D_PROP_COMPLEX_ELE_CONTAINER= 
         new QName(
                   UrlCatalog1D2D.MODEL_1D2D_NS, 
-                  "wb1d2d:fe1d2dComplexElementContainer");
-      public final static QName WB1D2D_PROP_FE1D2D_2D_ELE= 
+                  "wb1d2d:complexElementContainer");
+      
+      public final static QName WB1D2D_PROP_ELE_2D= 
         new QName(
                   UrlCatalog1D2D.MODEL_1D2D_NS, 
-                  "wb1d2d:fe1d2d_2DElement");
+                  "wb1d2d:element2D");
       //fe1d2d_2DElement
+      /////////////////////////////////////////////////////////////////
+      public final static QName WB1D2D_F_DiscretisationModel = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" );
+
+      /**
+       * QName for a property linking a feature to an edge.
+       * Use for example in DiscretisationModel feature
+       */
+      public final static QName WB1D2D_PROP_EDGES = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" );
+    
+      /**
+       * QName for a property linking a feature to an element.
+       * Use for example in DiscretisationModel feature
+       */
+      public final static QName WB1D2D_PROP_ELEMENTS = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" );
+    
+      /**
+       * QName for a property linking a feature to a node.
+       * Use for example in DiscretisationModel feature
+       */
+      public final static QName WB1D2D_PROP_NODES = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
       
+      public static final QName WB1D2D_PROP_CURVE = 
+               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 }

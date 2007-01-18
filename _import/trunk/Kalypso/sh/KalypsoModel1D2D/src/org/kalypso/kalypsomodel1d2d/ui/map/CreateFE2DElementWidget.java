@@ -10,6 +10,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -34,7 +35,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   private final int m_radius = 20;
 
-  private final QNameFeaturesProvider m_provider = new QNameFeaturesProvider( FE1D2DNode.QNAME_FE1D2DNode );
+  private final QNameFeaturesProvider m_provider = 
+            new QNameFeaturesProvider( 
+                 Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                 /*FE1D2DNode.QNAME_FE1D2DNode*/ );
 
   public CreateFE2DElementWidget( )
   {
@@ -70,7 +74,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
       {
         final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = ftheme.getFeatureType();
-        if( GMLSchemaUtilities.substitutes( featureType, FE1D2DNode.QNAME_FE1D2DNode ) )
+        if( GMLSchemaUtilities.substitutes( 
+                    featureType, 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                    /*FE1D2DNode.QNAME_FE1D2DNode*/ ) )
         {
           m_nodeTheme = ftheme;
           m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
