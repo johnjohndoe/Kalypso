@@ -576,8 +576,9 @@ public class KMUpdateWizardPage extends WizardPage
     final File[] files = list.toArray( new File[list.size()] );
 
     final ProfileDataSet profileSet = ProfileFactory.createProfileSet( files, kmStart, kmEnd );
+    // TODO:make it more general - not reduced to 5
     int max = 5;
-    final AbstractKMValue[] values = profileSet.getKMValues( max );
+    final AbstractKMValue[] values = profileSet.getKMValues( );
     final Feature[] kmParameter = m_workspace.resolveLinks( feature, kmRT );
 
     result.add( new FeatureChange( feature, kmKMStartPT, km.getKmStart() ) );

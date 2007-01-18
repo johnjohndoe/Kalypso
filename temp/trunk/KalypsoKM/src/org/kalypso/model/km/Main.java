@@ -50,7 +50,7 @@ public class Main
 			System.out.println();
 			final ProfileDataSet pSet = ProfileFactory.createProfileSet(path,
 					kmStart, kmEnd);
-			final AbstractKMValue[] kmValues = pSet.getKMValues(nkm);
+			final AbstractKMValue[] kmValues = pSet.getKMValues();
 			System.out.println("Ergebnis:");
 			for (int i = 0; i < kmValues.length; i++)
 			{
