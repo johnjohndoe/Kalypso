@@ -154,7 +154,7 @@ public class AddFeatureCommand implements ICommand
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
 
     if( m_doFireEvents )
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true )
       m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
@@ -184,7 +184,7 @@ public class AddFeatureCommand implements ICommand
     else
       m_parentFeature.setProperty( m_propName, null );
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
