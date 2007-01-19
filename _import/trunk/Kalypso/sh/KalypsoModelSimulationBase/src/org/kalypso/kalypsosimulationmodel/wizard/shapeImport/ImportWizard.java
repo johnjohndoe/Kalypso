@@ -47,20 +47,19 @@ public class ImportWizard extends Wizard implements INewWizard {
 	public boolean canFinish()
 	{
 		wizardCompleted = pageMain.cmb_ShapeProperty.isEnabled() && pageMain.isTextNonEmpty(pageMain.txt_OutputFile);
-		if(wizardCompleted)
-		{
-			m_data.inputFile = pageMain.txt_InputFile.getText();
-			m_data.outputFile = pageMain.getResourceAbsolutePath() + File.separator + pageMain.txt_OutputFile.getText();
-			m_data.shapeProperty = pageMain.cmb_ShapeProperty.getText();
-			m_data.coordinateSystem = pageMain.cmb_CoordinateSystem.getText();
-			m_data.description = pageMain.txt_Description.getText();
-			m_data.project = pageMain.getTargetContainer().getProject();
-		}
 		return wizardCompleted;
 	}
 	
 	public boolean performFinish() 
 	{
+		m_data.setInputFile(pageMain.txt_InputFile.getText());
+		m_data.setOutputFile(pageMain.getResourceAbsolutePath() + File.separator + pageMain.txt_OutputFile.getText());
+		m_data.setShapeProperty(pageMain.cmb_ShapeProperty.getText());
+		m_data.setCoordinateSystem(pageMain.cmb_CoordinateSystem.getText());
+		m_data.setDescription(pageMain.txt_Description.getText());
+		m_data.setProject(pageMain.getTargetContainer().getProject());
+		m_data.setCreateMap(pageMain.btn_CheckBox_CreateGMT.getSelection());
+		m_data.setOutputDirectory(pageMain.getResourceRelativePath());
 		final Job job = new ShapeToIRoughnessCollection( Messages.getString("ImportWizard.0"), m_data); //$NON-NLS-1$
 	    job.setUser( true );
 	    job.schedule();

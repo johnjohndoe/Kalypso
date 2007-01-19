@@ -45,6 +45,7 @@ public class PageMain extends WizardResourceImportPage implements Listener
 	Button btn_inputFileBrowse;
 	Text txt_OutputFile;
 	Text txt_Description;
+	Button btn_CheckBox_CreateGMT;
 
 	// status variable for the possible errors on this page
 	IStatus msg_StatusLine;
@@ -91,7 +92,6 @@ public class PageMain extends WizardResourceImportPage implements Listener
 		gd = new GridData(GridData.END);
 		//gd.horizontalSpan = ncol;
 		btn_inputFileBrowse.setLayoutData(gd);
-		btn_inputFileBrowse.setSelection(true);
 		//createLine(composite, ncol);
 
 		// Roughness parameter combo box
@@ -154,8 +154,15 @@ public class PageMain extends WizardResourceImportPage implements Listener
 		//gd.horizontalSpan = ncol - 1;
 		txt_Description.setLayoutData(gd);
 		
+		createLine(composite, ncol);
+
 		// Create gmt (Karte) file
-		
+		btn_CheckBox_CreateGMT = new Button(composite, SWT.CHECK);
+		btn_CheckBox_CreateGMT.setText(Messages.getString("PageMain.20")); //$NON-NLS-1$
+		gd = new GridData(GridData.BEGINNING);
+		//gd.horizontalSpan = ncol;
+		btn_CheckBox_CreateGMT.setLayoutData(gd);
+		btn_CheckBox_CreateGMT.setSelection(true);
 
 		setControl(composite);		
 	}
@@ -309,6 +316,11 @@ public class PageMain extends WizardResourceImportPage implements Listener
 	public String getResourceAbsolutePath( )
 	{
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + super.getResourcePath().toOSString();
+	}
+
+	public String getResourceRelativePath( )
+	{
+		return super.getResourcePath().toOSString();
 	}
 
 	@Override

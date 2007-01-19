@@ -19,16 +19,16 @@ public class ShpTest extends TestCase {
 //		URL outputFileURL = new URL("file:D:/Eclipse/TESTS_RESULTS/shapeConverter.gml");
 		URL outputFileURL = new URL("file:D:/Eclipse/TESTS_RESULTS/rauheitstest.gml");
 		
-		try {
-//			List list = ShapeToIRoughnessCollection.transform2List(inputFileURL, cs, "LANDUSE");
-			ShapeToIRoughnessCollection.transform(inputFileURL, null, "RAUHEITSKL", outputFileURL);
-		} catch (GmlSerializeException e) {
-			fail(TestUtils.getStackTraceAsString(e));
-		} catch (InvocationTargetException e) {
-			fail(TestUtils.getStackTraceAsString(e));
-		} catch (IOException e) {
-			fail(TestUtils.getStackTraceAsString(e));
-		}
+//		try {
+////			List list = ShapeToIRoughnessCollection.transform2List(inputFileURL, cs, "LANDUSE");
+//			ShapeToIRoughnessCollection.transform(inputFileURL, null, "RAUHEITSKL", outputFileURL);
+//		} catch (GmlSerializeException e) {
+//			fail(TestUtils.getStackTraceAsString(e));
+//		} catch (InvocationTargetException e) {
+//			fail(TestUtils.getStackTraceAsString(e));
+//		} catch (IOException e) {
+//			fail(TestUtils.getStackTraceAsString(e));
+//		}
 	}
 
 }
