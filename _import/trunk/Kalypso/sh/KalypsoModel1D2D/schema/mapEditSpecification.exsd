@@ -12,6 +12,10 @@
 
    <element name="extension">
       <complexType>
+         <sequence>
+            <element ref="editStrategy"/>
+            <element ref="editStrategySet"/>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -40,6 +44,12 @@
    </element>
 
    <element name="editStrategy">
+      <annotation>
+         <documentation>
+            Provides the strategy for editing a map. Strategies are typicaly use as
+part of composite more complex editing tool or to provides variants for the same editing mechanism
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>

@@ -92,5 +92,14 @@ public class IllegalFeatureState extends Exception
 		return propValue;
 	}
 	
+	/**
+	 * To get the feature with the illegal state
+	 * 
+	 * @return the feature feature with the illegal state
+	 */
+	public Feature getFeature()
+	{
+		return feature;
+	}
 	
 }

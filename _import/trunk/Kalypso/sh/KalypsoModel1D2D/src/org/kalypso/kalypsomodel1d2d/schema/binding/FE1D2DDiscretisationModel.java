@@ -67,8 +67,8 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 //  public final static QName QNAME_PROP_ELEMENTS = 
 //          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" );
 
-  public final static QName QNAME_PROP_NODES = 
-          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
+//  public final static QName QNAME_PROP_NODES = 
+//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
 
   private IFeatureWrapperCollection<IFE1D2DElement> m_elements = 
             new FeatureWrapperCollection<IFE1D2DElement>( 
@@ -84,7 +84,10 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 
   private IFeatureWrapperCollection<IFE1D2DNode> m_nodes = 
             new FeatureWrapperCollection<IFE1D2DNode>( 
-                getFeature(), IFE1D2DNode.class, QNAME_PROP_NODES );
+                      getFeature(), 
+                      IFE1D2DNode.class, 
+                      Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES
+                      /*QNAME_PROP_NODES*/ );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {

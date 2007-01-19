@@ -122,7 +122,10 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   {
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( FE1D2DDiscretisationModel.QNAME_PROP_NODES );
+    final IRelationType parentNodeProperty = 
+            (IRelationType) parentFT.getProperty( 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES
+                /*FE1D2DDiscretisationModel.QNAME_PROP_NODES*/ );
     final IFeatureType nodeType = 
       parentFT.getGMLSchema().getFeatureType( 
               Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE  );

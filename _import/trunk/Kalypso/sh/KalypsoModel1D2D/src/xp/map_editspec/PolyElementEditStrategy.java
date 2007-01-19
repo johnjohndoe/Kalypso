@@ -155,7 +155,7 @@ public class PolyElementEditStrategy
   {
     return null;
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
    */

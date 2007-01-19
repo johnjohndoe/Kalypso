@@ -79,8 +79,11 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     else
     {
       // just wrapped the existing one
-      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      edges = 
+        new FeatureWrapperCollection<IFE1D2DEdge>( 
+                  featureToBind, 
+                  IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -121,7 +124,9 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
-    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final List edgeList = 
+        (List) feature.getProperty( 
+                Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
     for( int i = 0; i < edges.length; i++ )
