@@ -38,5 +38,11 @@
         <gft:label visible="false" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
+        <gft:label text="Bild" visible="true" tooltip="" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:image property="gml:description" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:image>
     </gft:featureview>
 
