@@ -89,6 +89,7 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GeometryLabelType;
 import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.Image;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
@@ -440,6 +441,19 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       addFeatureControl( rfc );
 
+      return control;
+    }
+    else if( controlType instanceof Image )
+    {
+      final Image imageType = (Image) controlType;
+      
+      final ImageFeatureControl ifc = new ImageFeatureControl( feature, ftp );
+      
+      final int imgStyle = SWTUtilities.createStyleFromString( imageType.getStyle() );
+      final Control control = ifc.createControl( parent, imgStyle );
+      
+      addFeatureControl( ifc );
+      
       return control;
     }
     else if( controlType instanceof SubcompositeType )
