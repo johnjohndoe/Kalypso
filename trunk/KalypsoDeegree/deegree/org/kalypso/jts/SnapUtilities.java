@@ -83,7 +83,7 @@ public class SnapUtilities
   }
 
   /**
-   * Returns an GM_Point snapped to the line.
+   * Returns an Point snapped to the line.
    */
   public static Point snapLine( LineString geometryJTS, Geometry pointBuffer, SNAP_TYPE type )
   {
