@@ -23,6 +23,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -39,6 +40,9 @@ public class ShapeToIRoughnessCollection extends Job
 {	
 	DataContainer		m_data;
 	GMLWorkspace		m_Workspace;
+	FeaturePath			m_FeaturePath;
+	IFeatureType		m_FeatureType;
+	ExtentType			m_ExtentType;
 	
 	public ShapeToIRoughnessCollection( String name, DataContainer data )
 	{
@@ -70,7 +74,13 @@ public class ShapeToIRoughnessCollection extends Job
 	 */
 	public void transform(IProgressMonitor monitor) throws GmlSerializeException, InvocationTargetException, IOException
 	{
-	    monitor.beginTask( "Converting...", 100 ); //$NON-NLS-1$
+	    // extent boundaries
+		double 	top = Double.MIN_VALUE, 
+				right = Double.MIN_VALUE, 
+				bottom = Double.MAX_VALUE, 
+				left = Double.MAX_VALUE;
+		
+		monitor.beginTask( "Converting...", 100 ); //$NON-NLS-1$
 		QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
 		QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
@@ -99,16 +109,32 @@ public class ShapeToIRoughnessCollection extends Job
 			final GM_Surface gm_Surface = (GM_Surface) shapeFeature.getProperty( shpGeomPropertyName );
 			roughnessPolygon.setSurface(gm_Surface);
 			roughnessPolygon.setRoughnessID(propertyValue);
+			if(right < gm_Surface.getEnvelope().getMax().getX())
+				right = gm_Surface.getEnvelope().getMax().getX();
+			if(left > gm_Surface.getEnvelope().getMin().getX())
+				left = gm_Surface.getEnvelope().getMin().getX();
+			if(top < gm_Surface.getEnvelope().getMax().getY())
+				top = gm_Surface.getEnvelope().getMax().getY();
+			if(bottom > gm_Surface.getEnvelope().getMin().getY())
+				bottom = gm_Surface.getEnvelope().getMin().getY();
 		}
-//		Feature f = roughnessPolygon.getWrappedFeature();
-//		QName q1 = f.getFeatureType().getQName();
-//		String s = f.getParentRelation().toString();
-//		QName q2 = f.getParentRelation().getQName();
-//		final FeaturePath featurePathToParent = new FeaturePath( f );
-//	      final FeaturePath featurePath = new FeaturePath( featurePathToParent, q2.getLocalPart()+"[RoughnessPolygon]" );
-//		m_Workspace.getParentFeature(f);
-		monitor.subTask("Serializing workspace...");
-//		IFeatureType ft = f.getFeatureType();
+		
+		// Setting class values used by createMap function
+		final Feature feature = roughnessPolygon.getWrappedFeature();
+        final String typeName = "[" + feature.getFeatureType().getQName().getLocalPart() + "]";
+        final String memberName = feature.getParentRelation().getQName().getLocalPart() + typeName;
+        final FeaturePath featurePathToParent = new FeaturePath( feature.getParent() );
+        m_FeatureType = feature.getFeatureType();
+        m_FeaturePath = new FeaturePath( featurePathToParent, memberName );
+        m_ExtentType = new ExtentType();
+        m_ExtentType.setBottom(bottom);
+        m_ExtentType.setTop(top);
+        m_ExtentType.setLeft(left);
+        m_ExtentType.setRight(right);
+        m_ExtentType.setSrs(m_data.getCoordinateSystem(true).getName());
+        ////
+        
+//		monitor.subTask("Serializing workspace...");
 		monitor.worked( 60 );
 		FileWriter writer = new FileWriter(m_data.getOutputFile());
 		GmlSerializer.serializeWorkspace(writer, m_Workspace);
@@ -119,6 +145,7 @@ public class ShapeToIRoughnessCollection extends Job
 	public void createMap() throws IOException, JAXBException {
 		FileWriter writer = new FileWriter(m_data.getMapFileURL().getPath());
 	    final Gismapview gismapview = GisTemplateHelper.emptyGisView();
+	    gismapview.setExtent(m_ExtentType);
 	    Layers layers = gismapview.getLayers();
 	    StyledLayerType element = new StyledLayerType();
 	    element.setId("layer_1");
@@ -126,11 +153,17 @@ public class ShapeToIRoughnessCollection extends Job
 	    element.setType("simple");
 	    element.setName("Roughness");
 	    element.setActuate("onRequest");
-	    element.setFeaturePath( "" );
+	    element.setFeaturePath( m_FeaturePath.toString() );
 	    element.setHref( m_data.getOutputFileRelativePath() );
 	    element.setVisible(true);
+	    
+//	    final List<Style> styleList = element.getStyle();
+//	    final Style style = KalypsoGisPlugin.getDefaultStyleFactory().createDefaultStyle("Stil", null);
+//	    //.createUserStyle( m_FeatureType, " - stil -"); //$NON-NLS-1$;
+//	    styleList.add( style );
+//	    
 	    layers.getLayer().add(0, element);
 	    GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" );
-	    
+	    writer.close();
 	}
 }

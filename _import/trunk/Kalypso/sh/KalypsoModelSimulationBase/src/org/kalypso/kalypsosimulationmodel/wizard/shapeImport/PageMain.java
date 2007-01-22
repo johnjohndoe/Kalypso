@@ -320,7 +320,7 @@ public class PageMain extends WizardResourceImportPage implements Listener
 
 	public String getResourceRelativePath( )
 	{
-		return super.getResourcePath().toOSString();
+		return super.getResourcePath().removeFirstSegments(1).addTrailingSeparator().toOSString();
 	}
 
 	@Override
