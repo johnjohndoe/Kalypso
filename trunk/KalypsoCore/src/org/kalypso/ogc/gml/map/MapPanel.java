@@ -96,6 +96,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider, ISelectionProvider
 {
+  // TODO: put this concept into a separate class, in preference an extra map layer
   public List<PointOfinterest> m_pointofInterests = new ArrayList<PointOfinterest>();
 
   public static final int MODE_SELECT = 0;
@@ -171,7 +172,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
-  private ArrayList<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
+  private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
   private String m_message = "";
 
@@ -292,6 +293,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final GeoTransform projection = getProjection();
         final GM_Envelope boundingBox = getBoundingBox();
+        // TODO: have a look at the #createImage methods
         m_mapImage = MapModellHelper.createImageFromModell( projection, boundingBox, clipBounds, getWidth(), getHeight(), model );
         if( m_mapImage == null )
           setValidMap( false );
