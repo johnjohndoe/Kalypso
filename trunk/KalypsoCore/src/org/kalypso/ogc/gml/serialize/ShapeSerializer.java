@@ -74,6 +74,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * Helper-Klasse zum lesen und schreiben von GML
  * 
+ * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
+ * 
  * @author gernot
  */
 public class ShapeSerializer
