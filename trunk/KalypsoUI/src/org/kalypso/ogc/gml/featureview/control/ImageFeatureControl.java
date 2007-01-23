@@ -47,6 +47,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -132,7 +133,10 @@ public class ImageFeatureControl extends AbstractFeatureControl
     if( feature == null || pt == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), QNAME_STRING ) )
       imgPath = null;
     else
-      imgPath = (String) feature.getProperty( pt );
+    {
+      final Object uriString = feature.getProperty( pt );
+      imgPath = uriString == null ? "" : (String) uriString;
+    }
 
     String problemMessage = null;
     Image image = null;
@@ -140,6 +144,8 @@ public class ImageFeatureControl extends AbstractFeatureControl
 
     if( imgPath == null )
       problemMessage = "No image path found at property: " + pt;
+    else if( imgPath.length() == 0 )
+      problemMessage = "";
     else
     {
       final GMLWorkspace workspace = feature.getWorkspace();
@@ -152,7 +158,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
         if( image == null )
           problemMessage = "Unable to load image at: " + url.toExternalForm();
         else
-          tooltip = imgPath;
+          tooltip = url.toExternalForm();
       }
       catch( final MalformedURLException e )
       {
@@ -173,6 +179,26 @@ public class ImageFeatureControl extends AbstractFeatureControl
       m_label.setImage( image );
       m_label.setToolTipText( tooltip );
     }
+
+    layoutScrolledParent( m_label );
   }
 
+  public static void layoutScrolledParent( final Control control )
+  {
+    if( control == null )
+      return;
+
+    final Composite parent = control.getParent();
+    if( parent == null )
+      return;
+
+    if( parent instanceof ScrolledComposite )
+    {
+      parent.layout();
+      return;
+    }
+
+    parent.layout();
+    layoutScrolledParent( parent );
+  }
 }

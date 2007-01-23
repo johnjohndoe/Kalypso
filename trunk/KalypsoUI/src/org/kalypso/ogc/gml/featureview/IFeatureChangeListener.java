@@ -45,11 +45,11 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IFeatureChangeListener
 {
   public void featureChanged( final FeatureChange change );
   
-  public void openFeatureRequested( final Feature feature, final IPropertyType m_ftp );
+  public void openFeatureRequested( final Feature feature, final IPropertyType pt );
 }

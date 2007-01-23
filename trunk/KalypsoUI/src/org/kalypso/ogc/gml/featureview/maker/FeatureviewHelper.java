@@ -42,17 +42,15 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
-import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -60,11 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureviewHelper implements IFeatureviewFactory
 {
-  public static final ObjectFactory FACTORY = new ObjectFactory();
-
   public static final int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
-
-  public static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private boolean m_showTables = true;
 
@@ -109,19 +103,19 @@ public class FeatureviewHelper implements IFeatureviewFactory
    */
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
-    final FeatureviewType featureview = FACTORY.createFeatureviewType();
+    final FeatureviewType featureview = TemplateUtilitites.OF_FEATUREVIEW.createFeatureviewType();
     featureview.setTypename( featureType.getQName() );
     featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    final GridLayout gridLayout = FACTORY.createGridLayout();
+    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 4 );
-    featureview.setLayout( FACTORY.createGridLayout( gridLayout ) );
-    final GridDataType griddata = FACTORY.createGridDataType();
+    featureview.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
+    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
     griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    featureview.setLayoutData( FACTORY.createGridData( griddata ) );
+    featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
 
     // REMARK: it is importent that the maker is re-created each time. as the makers sometimes
     // do store state information

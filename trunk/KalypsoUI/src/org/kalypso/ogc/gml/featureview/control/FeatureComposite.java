@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -86,6 +87,7 @@ import org.kalypso.template.featureview.ColorLabelType;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.Extensioncontrol;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GeometryLabelType;
 import org.kalypso.template.featureview.GridDataType;
@@ -101,7 +103,9 @@ import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
+import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -250,9 +254,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       }
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
-      {
         createControl( composite, SWT.NONE, element.getValue() );
-      }
 
       return composite;
     }
@@ -455,6 +457,31 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       addFeatureControl( ifc );
       
       return control;
+    }
+    else if( controlType instanceof Extensioncontrol )
+    {
+      final Extensioncontrol extControl = (Extensioncontrol) controlType;
+      final String extensionId = extControl.getExtensionId();
+      final int controlStyle = SWTUtilities.createStyleFromString( extControl.getStyle() );
+      final List<Param> param = extControl.getParam();
+      final Properties parameters = new Properties();
+      for( final Param controlParam : param )
+        parameters.setProperty( controlParam.getName(), controlParam.getValue() );
+
+      final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
+      final IFeatureControl fc = controlFactory == null ? null : controlFactory.createFeatureControl( feature, ftp, parameters );
+      if( fc == null )
+      {
+        final Label label = new Label( parent, SWT.NONE );
+        label.setText( "Error: failed to create extension-control for id: " + extensionId );
+        return label;
+      }
+      else
+      {
+        final Control control = fc.createControl( parent, controlStyle );
+        addFeatureControl( fc );
+        return control;
+      }
     }
     else if( controlType instanceof SubcompositeType )
     {

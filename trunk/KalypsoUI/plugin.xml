@@ -3,8 +3,8 @@
 <plugin>
 	<extension-point id="mapviewaction" name="mapviewaction"
 		schema="schema/org.kalypso.ui.mapview.action.exsd" />
-	<extension-point id="calculationService" name="calculationService"
-		schema="schema/org.kalypso.services.calculation.exsd" />
+   	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd"/>
+
 
 	<extension id="preferences" name="preferences"
 		point="org.eclipse.core.runtime.preferences">

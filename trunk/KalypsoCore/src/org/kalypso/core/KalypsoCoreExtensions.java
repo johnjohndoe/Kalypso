@@ -74,7 +74,7 @@ public class KalypsoCoreExtensions
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
 
   /* extension-point 'componentHandler' */
-  
+
   private final static String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler";
 
   private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
@@ -148,16 +148,15 @@ public class KalypsoCoreExtensions
       }
     }
   }
-  
+
   /**
-   * @reuturn The handler whichs id-attribute equals the given id. Null if no such handler was found.
+   * @return The handler whichs id-attribute equals the given id. Null if no such handler was found.
    */
   public static IComponentHandler findComponentHandler( final String id )
   {
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
     if( THE_COMPONENT_MAP == null )
     {
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( COMPONENT_HANDLER_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_COMPONENT_MAP = new HashMap<String, IComponentHandler>( configurationElements.length );

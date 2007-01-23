@@ -59,14 +59,12 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
 
   public NotImplementedFeatureDialog( String userInfoMessage, String cellInfoMessage )
   {
-    super();
     m_userInfoMessage = userInfoMessage;
     m_cellInfoMessage = cellInfoMessage;
   }
 
   public NotImplementedFeatureDialog()
   {
-    super();
     m_userInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
     m_cellInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable"); //$NON-NLS-1$
   }

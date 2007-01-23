@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -124,7 +124,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     for( int i = 0; i < listeners.length; i++ )
     {
       final IFeatureChangeListener listener = listeners[i];
-      Platform.run( new SafeRunnable()
+      SafeRunner.run( new SafeRunnable()
       {
         public void run() throws Exception
         {
@@ -140,7 +140,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     for( int i = 0; i < listeners.length; i++ )
     {
       final IFeatureChangeListener listener = listeners[i];
-      Platform.run( new SafeRunnable()
+      SafeRunner.run( new SafeRunnable()
       {
         public void run() throws Exception
         {

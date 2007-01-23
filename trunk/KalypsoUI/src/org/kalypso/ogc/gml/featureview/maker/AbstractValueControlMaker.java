@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -80,11 +81,11 @@ public abstract class AbstractValueControlMaker implements IControlMaker
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
   {
     /* Create the 'real' control */
-    final GridDataType griddata = FeatureviewHelper.FACTORY.createGridDataType();
+    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     final JAXBElement< ? extends ControlType> controlElement = createControlType( feature, ft, ftp, griddata );
     if( controlElement == null )
       return false;
-    final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
+    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata );
     controlElement.getValue().setLayoutData( jaxbgriddata );
 
     /* Some common values i need */
@@ -98,20 +99,20 @@ public abstract class AbstractValueControlMaker implements IControlMaker
 
     /* Add a label */
     {
-      final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
+      final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
       label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
       label.setText( text );
       label.setTooltip( tooltip );
       label.setVisible( true );
 
-      final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
+      final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       labelGridData.setVerticalAlignment( getLabelVerticalAlignment() );
-      label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
+      label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
 
-      controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
+      controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
       cellCount++;
     }
 
@@ -135,22 +136,22 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     final int numColumns = gridLayout.getNumColumns() - 1;
     for( int i = cellCount; i < numColumns; i++ )
     {
-      final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
+      final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
       label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
       label.setVisible( false );
 
-      final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
+      final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
+      label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
 
-      controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
+      controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
     }
 
     /* If a validator is needed, it is added here. */
     if( m_addValidator )
     {
-      final ValidatorLabelType validatorLabel = FeatureviewHelper.FACTORY.createValidatorLabelType();
+      final ValidatorLabelType validatorLabel = TemplateUtilitites.OF_FEATUREVIEW.createValidatorLabelType();
       validatorLabel.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
       validatorLabel.setVisible( true );
@@ -159,25 +160,25 @@ public abstract class AbstractValueControlMaker implements IControlMaker
         System.out.println( "Invalid validator label for feature type property: " + ftp );
       validatorLabel.setProperty( property );
 
-      final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
+      final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      validatorLabel.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
-      controlList.add( FeatureviewHelper.FACTORY.createValidatorlabel( validatorLabel ) );
+      validatorLabel.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
+      controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createValidatorlabel( validatorLabel ) );
     }
     else
     {
       /* Empty label. */
-      final LabelType label = FeatureviewHelper.FACTORY.createLabelType();
+      final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
       label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
       label.setVisible( false );
 
-      final GridDataType labelGridData = FeatureviewHelper.FACTORY.createGridDataType();
+      final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      label.setLayoutData( FeatureviewHelper.FACTORY.createGridData( labelGridData ) );
+      label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
 
-      controlList.add( FeatureviewHelper.FACTORY.createLabel( label ) );
+      controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
     }
 
     return true;

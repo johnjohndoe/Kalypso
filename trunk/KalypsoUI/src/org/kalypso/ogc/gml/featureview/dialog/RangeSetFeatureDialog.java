@@ -1,22 +1,3 @@
-package org.kalypso.ogc.gml.featureview.dialog;
-
-import java.util.Collection;
-
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -56,7 +37,24 @@ import org.kalypsodeegree_impl.model.cv.RangeSet;
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
  *   
- *  ---------------------------------------------------------------------------*/
+ *  ---------------------------------------------------------------------------*/package org.kalypso.ogc.gml.featureview.dialog;
+
+import java.util.Collection;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
 
 public class RangeSetFeatureDialog implements IFeatureDialog
 {
@@ -86,20 +84,20 @@ public class RangeSetFeatureDialog implements IFeatureDialog
    */
   public void collectChanges( final Collection<FeatureChange> c )
   {
-  //  no changes allowed
+    // no changes allowed
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel()
+  public String getLabel( )
   {
     return "..."; //$NON-NLS-1$
   }
 
-  public RangeSet getRangeSet()
+  public RangeSet getRangeSet( )
   {
-    return (RangeSet)m_feature.getProperty( m_ftp.getName() );
+    return (RangeSet) m_feature.getProperty( m_ftp.getName() );
   }
 
   class RangeSetDialog extends Dialog
@@ -114,10 +112,9 @@ public class RangeSetFeatureDialog implements IFeatureDialog
     @Override
     protected Control createDialogArea( final Composite parent )
     {
-      getShell().setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.properties") ); //$NON-NLS-1$
+      getShell().setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.properties" ) ); //$NON-NLS-1$
 
-      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL
-          | SWT.BORDER );
+      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
       GridData gridData = new GridData( GridData.FILL_BOTH );
       gridData.grabExcessHorizontalSpace = true;
@@ -142,17 +139,17 @@ public class RangeSetFeatureDialog implements IFeatureDialog
       RangeSet rangeSet = getRangeSet();
 
       Label minLabel = new Label( mainComposite, SWT.NONE );
-      minLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.min") ); //$NON-NLS-1$
+      minLabel.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.min" ) ); //$NON-NLS-1$
       Label minValueLabel = new Label( mainComposite, SWT.NONE );
       minValueLabel.setText( rangeSet.getMinValue() + "" ); //$NON-NLS-1$
 
       Label maxLabel = new Label( mainComposite, SWT.NONE );
-      maxLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.max") ); //$NON-NLS-1$
+      maxLabel.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.max" ) ); //$NON-NLS-1$
       Label maxValueLabel = new Label( mainComposite, SWT.NONE );
       maxValueLabel.setText( rangeSet.getMaxValue() + "" ); //$NON-NLS-1$
 
       Label fileLabel = new Label( mainComposite, SWT.NONE );
-      fileLabel.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.file") ); //$NON-NLS-1$
+      fileLabel.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog.file" ) ); //$NON-NLS-1$
       Label filePathLabel = new Label( mainComposite, SWT.NONE );
       filePathLabel.setText( rangeSet.getRangeSetDataFile() );
 

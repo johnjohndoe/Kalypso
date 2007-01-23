@@ -78,6 +78,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
   private boolean m_showok;
 
   /* This creates the images once for the ValidatorFeature once, cause they are not disposed at this time. */
+  // TODO: use Plugin-Imageprovider to handle life-cycle of images!
   private static Image image_ok;
 
   private static Image image_warning;
@@ -106,7 +107,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
    * @param showok
    *          Determines, if a status (image and text) should be shown, if everything ist ok.
    */
-  public ValidatorFeatureControl( final Feature feature, final IPropertyType ftp, boolean showok )
+  public ValidatorFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showok )
   {
     super( feature, ftp );
 

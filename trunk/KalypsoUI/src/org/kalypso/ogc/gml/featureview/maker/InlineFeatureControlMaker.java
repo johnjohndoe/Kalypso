@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.adapter.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -78,12 +79,12 @@ public class InlineFeatureControlMaker implements IControlMaker
     if( !(value instanceof Feature) )
       return false;
 
-    final SubcompositeType compo = FeatureviewHelper.FACTORY.createSubcompositeType();
+    final SubcompositeType compo = TemplateUtilitites.OF_FEATUREVIEW.createSubcompositeType();
     compo.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     compo.setProperty( ftp.getQName() );
 
-    final GridDataType griddata = FeatureviewHelper.FACTORY.createGridDataType();
-    final JAXBElement<GridDataType> jaxbgriddata = FeatureviewHelper.FACTORY.createGridData( griddata );
+    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata );
 
     griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
@@ -93,9 +94,9 @@ public class InlineFeatureControlMaker implements IControlMaker
 
     compo.setLayoutData( jaxbgriddata );
 
-    final Group group = FeatureviewHelper.FACTORY.createGroup();
+    final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
 
-    final GridDataType groupdata = FeatureviewHelper.FACTORY.createGridDataType();
+    final GridDataType groupdata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     groupdata.setGrabExcessHorizontalSpace( true );
     groupdata.setGrabExcessVerticalSpace( true );
     groupdata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
@@ -106,18 +107,18 @@ public class InlineFeatureControlMaker implements IControlMaker
     final String text = annotation == null ? ftp.getQName().getLocalPart() : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
-    group.setLayoutData( FeatureviewHelper.FACTORY.createGridData( groupdata ) );
+    group.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( groupdata ) );
     group.setText( text );
     group.setTooltip( tooltip );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-    final GridLayout gridLayout = FeatureviewHelper.FACTORY.createGridLayout();
+    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 2 );
-    group.setLayout( FeatureviewHelper.FACTORY.createGridLayout( gridLayout ) );
+    group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
 
-    group.getControl().add( FeatureviewHelper.FACTORY.createSubcomposite( compo ) );
+    group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createSubcomposite( compo ) );
 
-    controlList.add( FeatureviewHelper.FACTORY.createGroup( group ) );
+    controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createGroup( group ) );
 
     return true;
   }
