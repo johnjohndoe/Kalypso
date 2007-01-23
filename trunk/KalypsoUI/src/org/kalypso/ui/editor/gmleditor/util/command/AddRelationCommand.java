@@ -83,9 +83,7 @@ public class AddRelationCommand implements ICommand
   public void process( ) throws Exception
   {
     m_workspace.addFeatureAsAggregation( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -105,9 +103,7 @@ public class AddRelationCommand implements ICommand
       return;
 
     m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_propName, m_linkFeature.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, m_linkFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_linkFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**

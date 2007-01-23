@@ -105,6 +105,10 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
     return m_parentFeature;
   }
 
+  /**
+   * Even if feature links in lists are added real features are returned. This has to be differentiated while catching
+   * events.
+   */
   public Feature[] getChangedFeatures( )
   {
     return m_changedFeature;

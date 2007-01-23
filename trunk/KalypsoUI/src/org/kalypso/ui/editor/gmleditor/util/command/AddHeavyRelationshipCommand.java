@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /*
  * class AddHeavyRelationshipCommand created by @author doemming (19.04.2005)
@@ -99,12 +100,10 @@ public class AddHeavyRelationshipCommand implements ICommand
     m_newFeature = m_workspace.createFeature( m_srcFE, m_linkFT1, m_bodyFT );
     // create first link
     m_workspace.addFeatureAsComposition( m_srcFE, m_linkFT1, 0, m_newFeature );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // create second link
     m_workspace.addFeatureAsAggregation( m_newFeature, m_linkFT2, 0, m_targetFE.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -122,15 +121,20 @@ public class AddHeavyRelationshipCommand implements ICommand
   {
     // remove second link
     if( m_linkFT2.isList() )
+    {
       ((List) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    }
     else
+    {
       m_newFeature.setProperty( m_linkFT2, null );
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_newFeature } ) );
+
+    }
+
     // remove relation feature and also first link
     m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
