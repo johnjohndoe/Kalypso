@@ -74,7 +74,7 @@ public class JTSUtilities
    *          The points of the line will be checked with this geometry.
    * @return The first point of the line, which lies in the second geometry.
    */
-  public static com.vividsolutions.jts.geom.Point linePointInGeometry( LineString line, Geometry geometry_2nd )
+  public static Point linePointInGeometry( LineString line, Geometry geometry_2nd )
   {
     int numPoints = line.getNumPoints();
 
@@ -243,14 +243,12 @@ public class JTSUtilities
         points.add( pointN );
 
       /* Build a line with the two points to check the flag. */
-      Coordinate[] coordinates = new Coordinate[] { new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) };
-      GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
-      LineString testLine = factory.createLineString( coordinates );
+      LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-      if( testLine.intersects( start ) )
+      if( testLine.distance( start.getCoordinate() ) < 10E-08 )
         add = true;
 
-      if( testLine.intersects( end ) )
+      if( testLine.distance( end.getCoordinate() ) < 10E-08 )
       {
         add = false;
         break;
@@ -277,9 +275,9 @@ public class JTSUtilities
    * @param line
    *          The original MultiLineString.
    * @param start
-   *          The start point of the new line (it has to be one point one the original MultiLineString).
+   *          The start point of the new line (it has to be one point on the original MultiLineString).
    * @param end
-   *          The end point of the new line (it has to be one point one the original MultiLineString).
+   *          The end point of the new line (it has to be one point on the original MultiLineString).
    */
   private static LineString createLineSegmentFromMultiLine( MultiLineString line, Point start, Point end )
   {
@@ -290,8 +288,13 @@ public class JTSUtilities
 
     points.add( start );
 
+    System.out.println( "Start: " + start );
+    System.out.println( "Distance start - line: " + start.distance( line ) );
+    System.out.println( "End: " + end );
+    System.out.println( "Distance end - line: " + end.distance( line ) );
     for( int i = 0; i < line.getNumGeometries(); i++ )
     {
+      System.out.println( "New LineString!" );
       LineString lineN = (LineString) line.getGeometryN( i );
 
       for( int j = 0; j < lineN.getNumPoints() - 1; j++ )
@@ -303,15 +306,14 @@ public class JTSUtilities
           points.add( pointN );
 
         /* Build a line with the two points to check the flag. */
-        Coordinate[] coordinates = new Coordinate[] { new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) };
-        GeometryFactory factory = new GeometryFactory( lineN.getPrecisionModel(), lineN.getSRID() );
+        final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+        System.out.println( "Start-Punkt:" + testLine.distance( start.getCoordinate() ) );
+        System.out.println( "End-Punkt:" + testLine.distance( end.getCoordinate() ) );
 
-        LineString testLine = factory.createLineString( coordinates );
-
-        if( testLine.intersects( start ) )
+        if( testLine.distance( start.getCoordinate() ) < 10E-08 )
           add = true;
 
-        if( testLine.intersects( end ) )
+        if( testLine.distance( end.getCoordinate() ) < 10E-08 )
         {
           add = false;
           endPointFound = true;
