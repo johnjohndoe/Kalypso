@@ -61,6 +61,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
@@ -105,33 +106,40 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     };
   }
 
-  public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType ftp, final IFeatureChangeListener listener )
+  public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType pt, final IFeatureChangeListener listener )
   {
-    // final String typename = ftp.getType();
-    if( ftp instanceof IValuePropertyType )
+    if( pt instanceof IValuePropertyType )
     {
       final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-      final IGuiTypeHandler handler = typeRegistry.getTypeHandlerFor( ftp );
+      final IGuiTypeHandler handler = typeRegistry.getTypeHandlerFor( pt );
       if( handler != null )
-        return handler.createFeatureDialog( feature, ftp );
+        return handler.createFeatureDialog( feature, pt );
     }
 
     // TODO: make gui type handler for this?
-    if( ftp instanceof IRelationType )
+    if( pt instanceof IRelationType )
     {
-      if( ftp.isList() )
+      final IRelationType rt = (IRelationType) pt;
+      if( rt.isList() )
       {
         // it is a list of features or links to features or mixed
         // return new FeatureDialog( workspace, feature, ftp, selectionManager );
-        return new JumpToFeatureDialog( listener, feature, ftp );
+        return new JumpToFeatureDialog( listener, feature, pt );
       }
+      
       // it is not a list
-      final Object property = feature.getProperty( ftp );
+      final Object property = feature.getProperty( pt );
       final Feature linkedFeature;
+
+      if( property == null )
+        return new CreateFeaturePropertyDialog( listener, feature, rt );
+      
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
         if( ((String) property).length() < 1 )
-          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
+          return new CreateFeaturePropertyDialog( listener, feature, rt );
+//          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"), Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$ //$NON-NLS-2$
+        
         final GMLWorkspace workspace = feature.getWorkspace();
         linkedFeature = workspace.getFeature( (String) property );
       }

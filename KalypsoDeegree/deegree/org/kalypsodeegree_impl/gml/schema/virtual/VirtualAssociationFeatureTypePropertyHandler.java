@@ -1,9 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,13 +38,19 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+
+
+/**
+ * @author doemming
+ */
 public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
 {
 
-  /*
-   * @author doemming
-   */
   public VirtualAssociationFeatureTypePropertyHandler( )
   {
     super();

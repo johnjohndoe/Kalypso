@@ -69,5 +69,46 @@
 			<pattern value="^#[0-9a-fA-F]{6}"></pattern>
 		</restriction>
 	</simpleType>
+	
+	<!-- Image -->
+	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Bild</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>Referenz auf eine bilddatei</tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Image</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>Reference to an image file</tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<complexType name="ImageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="uri" type="anyURI" nillable="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>URL</label>
+								<tooltip>Speicherort des Bildes (relative Pfade möglich)</tooltip>
+								<description>Speicherort des Bildes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>URL</label>
+								<tooltip>Image location (relative pathes possible)</tooltip>
+								<description>Image location</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 </schema>
   

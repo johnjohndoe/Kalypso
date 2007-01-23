@@ -38,44 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.maker;
+package org.kalypso.ogc.gml.featureview.control;
 
-import javax.xml.bind.JAXBElement;
+import java.util.Properties;
 
-import org.kalypso.core.jaxb.TemplateUtilitites;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.GridDataType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Displays a simple button to edit the property.
- * 
  * @author Gernot Belger
  */
-public class ButtonControlMaker extends AbstractValueControlMaker
+public interface IFeatureviewControlFactory
 {
-  public ButtonControlMaker( final boolean addValidator )
-  {
-    super( addValidator );
-  }
-
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
+   * Create the feature control.
+   * 
+   * @param feature
+   *          The feature to create the control for. May be <code>null</code>.
+   * @param pt
+   *          The property type to create the control for. May not be <code>null</code>.
+   * @param arguments
+   *          Arbitrary properties to configure this control. Used taken from the xml-file.
    */
-  @Override
-  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
-  {
-    final Button button = TemplateUtilitites.OF_FEATUREVIEW.createButton();
-    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
-    button.setProperty( fpt.getQName() );
-
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-    griddata.setHorizontalSpan( 2 );
-
-    return TemplateUtilitites.OF_FEATUREVIEW.createButton( button );
-  }
-
+  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments );
 }

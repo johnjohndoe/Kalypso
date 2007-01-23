@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -82,7 +83,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
 
     final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( vpt.getValueQName() );
 
-    final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, FeatureviewHelper.FACTORY );
+    final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilitites.OF_FEATUREVIEW );
 
     final ControlType type = controlElement.getValue();
 

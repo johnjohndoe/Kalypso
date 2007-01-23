@@ -43,11 +43,14 @@ package org.kalypso.core.jaxb;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -70,12 +73,12 @@ public class TemplateUtilitites
 
   private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
 
+  private final static Map<String, Schema> SCHEMA_MAP = new HashMap<String, Schema>();
+
   /* GisMapView */
   public static final JAXBContext JC_GISMAPVIEW = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
-
-  private static Schema SH_GISMAPVIEW = null;
 
   /* GisTableView */
   public static final JAXBContext JC_GISTABLEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistableview.ObjectFactory.class );
@@ -86,21 +89,39 @@ public class TemplateUtilitites
   /* Types */
   public static final org.kalypso.template.types.ObjectFactory OF_TYPES = new org.kalypso.template.types.ObjectFactory();
 
+  /* Featureview */
+  public static final org.kalypso.template.featureview.ObjectFactory OF_FEATUREVIEW = new org.kalypso.template.featureview.ObjectFactory();
+  
+  public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
+  
   private TemplateUtilitites( )
   {
-    // do not instantiat, eversthing is static
+    // do not instantiat, everything is static
   }
 
+  public static Schema getFeatureviewSchema( )
+  {
+    return getTemplateSchema( "featureview.xsd" );
+  }
+  
   public static synchronized Schema getGismapviewSchema( )
   {
-    if( SH_GISMAPVIEW == null )
+    return getTemplateSchema( "gismapview.xsd" );
+  }
+  
+  private static synchronized Schema getTemplateSchema(final String schemaFilename )
+  {
+    if( !SCHEMA_MAP.containsKey( schemaFilename ))
     {
-      final URL schemaUrl = PluginUtilities.findResource( KalypsoCorePlugin.getID(), SCHEMA_PATH + "gismapview.xsd" );
+      final URL schemaUrl = PluginUtilities.findResource( KalypsoCorePlugin.getID(), SCHEMA_PATH + schemaFilename );
 
       try
       {
         if( schemaUrl != null )
-          SH_GISMAPVIEW = SCHEMA_FACTORY.newSchema( schemaUrl );
+        {
+          final Schema schema = SCHEMA_FACTORY.newSchema( schemaUrl );
+          SCHEMA_MAP.put( schemaFilename, schema );
+        }
       }
       catch( final SAXException e )
       {
@@ -108,7 +129,7 @@ public class TemplateUtilitites
       }
     }
 
-    return SH_GISMAPVIEW;
+    return SCHEMA_MAP.get( schemaFilename );
   }
 
   public static Marshaller createGismapviewMarshaller( final String encoding ) throws JAXBException, PropertyException
@@ -125,4 +146,13 @@ public class TemplateUtilitites
     return marshaller;
   }
 
+  public static Unmarshaller createFeatureviewUnmarshaller( ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
+    
+    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/featureview" ) ) )
+      unmarshaller.setSchema( TemplateUtilitites.getFeatureviewSchema() );
+
+    return unmarshaller;
+  }
 }
