@@ -38,6 +38,9 @@
      <!-- {org.kalypso.model.wspm}reachMember -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:reachMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif" />
     
-    
+    <!-- org.kalypso.gml.common.Image -->
+    <!-- TODO: move to gml-ui plug-in or similar -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.gml.common:Image:featureview:default" uri="org.kalypso.gml.common.Image.gft" />
+ 
 </catalog:catalog>
 

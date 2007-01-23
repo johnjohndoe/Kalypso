@@ -397,7 +397,7 @@ public class WspWinImporter
         final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
         final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
 
-        reach.createProfileSegment( fromProf, bean.getStationFrom(), bean.getDistanceVL(), bean.getDistanceHF(), bean.getDistanceVR() );
+        reach.createProfileSegment( fromProf, bean.getStationFrom() );
 
         if( bean == segmentBeans[segmentBeans.length - 1] )
         {
@@ -405,7 +405,7 @@ public class WspWinImporter
           final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
           final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
 
-          reach.createProfileSegment( toProf, bean.getStationTo(), 0.0, 0.0, 0.0 );
+          reach.createProfileSegment( toProf, bean.getStationTo() );
         }
       }
       catch( final Exception e )

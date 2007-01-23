@@ -62,7 +62,10 @@ public class WspmWaterBody implements IWspmConstants
 
   public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" );
 
+  public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" );
+
   private final Feature m_water;
+
 
   public WspmWaterBody( final Feature water )
   {
@@ -99,7 +102,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public WspmProfile createNewProfile( ) throws GMLSchemaException
   {
-    final Feature profile = FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "profileMember" ), new QName( NS_WSPMPROF, "Profile" ) );
+    final Feature profile = FeatureHelper.addFeature( m_water, QNAME_PROP_PROFILEMEMBER, new QName( NS_WSPMPROF, "Profile" ) );
 
     return new WspmProfile( profile );
   }
@@ -146,5 +149,4 @@ public class WspmWaterBody implements IWspmConstants
 
     return reachList.toArray( new WspmReach[reachList.size()] );
   }
-
 }

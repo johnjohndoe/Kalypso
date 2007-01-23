@@ -79,6 +79,8 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" );
 
+  public static final QName QNAME_PROP_REACHSEGMENTMEMBER = new QName( NS_WSPM_TUHH, "reachSegmentMember" );
+
   public TuhhReach( final Feature reach )
   {
     super( reach, QNAME_TUHH_REACH );
@@ -87,23 +89,27 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   /**
    * Creates and adds a new profile segment to this reach.
    */
-  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station, @SuppressWarnings("unused")
-  final double distanceL, @SuppressWarnings("unused")
-  final double distanceM, @SuppressWarnings("unused")
-  final double distanceR ) throws GMLSchemaException
+  public TuhhReachProfileSegment createProfileSegment( final WspmProfile profileReference, final double station )
   {
-    final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM_TUHH, "reachSegmentMember" ), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
+    try
+    {
+      final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
+      final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
 
-    final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
+      // set default values
+      tuhhProfilesegment.setProfileMember( profileReference );
+      tuhhProfilesegment.setStation( station );
 
-    // set default values
-    tuhhProfilesegment.setProfileMember( profileReference );
-    tuhhProfilesegment.setStation( station );
-    // tuhhProfilesegment.setDistanceL( distanceL );
-    // tuhhProfilesegment.setDistanceM( distanceM );
-    // tuhhProfilesegment.setDistanceR( distanceR );
+      return tuhhProfilesegment;
+    }
+    catch( final GMLSchemaException e )
+    {
+      // should never happen
+      e.printStackTrace();
 
-    return tuhhProfilesegment;
+      return null;
+    }
+
   }
 
   public TuhhReachProfileSegment[] getReachProfileSegments( )
@@ -140,7 +146,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   protected FeatureList getReachSegmentList( )
   {
-    return (FeatureList) getFeature().getProperty( new QName( NS_WSPM_TUHH, "reachSegmentMember" ) );
+    return (FeatureList) getFeature().getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
   }
 
   public void recreateMarkerList( )

@@ -12,7 +12,9 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif"/>
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.properties"/>
 
-    <!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+    <!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif"/>
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:featureview:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.properties" />
 </catalog:catalog>
 

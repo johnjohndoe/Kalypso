@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
+	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
 	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+	<import namespace="org.kalypso.gml.common"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
@@ -58,7 +59,7 @@
 					</element>
 					<element name="type" type="string" minOccurs="1" maxOccurs="1" default="org.kalypso.model.wspm.tuhh.profiletype">
 						<annotation>
-							<documentation xml:lang="de">Der Profiltype, bestimmt wie das Profil dargestellt oder validiert wird.</documentation>
+							<documentation xml:lang="de">Der Profiltyp, bestimmt wie das Profil dargestellt oder validiert wird.</documentation>
 							<documentation xml:lang="en">The profile type, determines how the profile is shown or validated.</documentation>
 						</annotation>
 					</element>
@@ -84,13 +85,23 @@
 						</annotation>
 					</element>
 					<element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="imageMember" type="prof:imageFeaturePropertyType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	
+	<!-- 
+	 -->
+	<complexType name="imageFeaturePropertyType">
+		<sequence>
+			<element ref="common:Image"/>
+		</sequence>
+	</complexType>
+	
 	<!--  
 	-->
-	<element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType" substitutionGroup="gml:featureMember">
+	<element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Verlustbeiwerte</label>
@@ -124,13 +135,9 @@
 	_________________________________________________________________________________________	
 	-->
 	<complexType name="localEnergyLossPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="prof:LocalEnergyLoss"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="prof:LocalEnergyLoss"/>
+		</sequence>
 	</complexType>
 	<complexType name="LocalEnergyLossType">
 		<complexContent>
