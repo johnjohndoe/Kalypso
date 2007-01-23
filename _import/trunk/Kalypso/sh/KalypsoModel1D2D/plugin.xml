@@ -57,15 +57,23 @@
                style="radio"
                toolbarPath="karte/edit"
                tooltip="eine neue Kontinuitätslinie definieren"/>
-         <action
+         <!--action
                	class="xp.ActivateModelMapEditProtocolViewDelegate"
                	id="xp.ActivateModelMapEditProtocolViewDelegate"
                	label="1d 2d zeichen element activieren"
                	style="radio"
                	toolbarPath="karte/edit"
 				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
+               	tooltip="1d 2d zeichen element activieren"/-->
+        <action
+               	class="xp.CreateGridDelegate"
+               	id="xp.CreateGridDelegate"
+               	label="builde element automatisch in einem 4eck-bereich"
+               	style="radio"
+               	toolbarPath="karte/edit"
+				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
                	tooltip="1d 2d zeichen element activieren"/>
-               
+               	    
               </editorContribution>
      </extension>
      

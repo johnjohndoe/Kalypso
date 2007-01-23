@@ -25,7 +25,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
+public class FE1D2DEdge extends AbstractFeatureBinder 
+            implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
 //  public final static QName QNAME_FE1D2DEdge = 
 //            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DEdge" );

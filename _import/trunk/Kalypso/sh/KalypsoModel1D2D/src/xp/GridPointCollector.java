@@ -1,0 +1,292 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package xp;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.print.attribute.standard.Sides;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
+import org.kalypso.ui.editor.styleeditor.panels.ColorBox;
+
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.omg.CORBA._PolicyStub;
+import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geomgraph.Position;
+
+@SuppressWarnings("unchecked")
+class GridPointCollector implements IGeometryBuilder
+{
+  private static final Logger logger=
+        Logger.getLogger( GridPointCollector.class );
+  
+  public static final int SIDE_MAX_NUM=4;
+  public static final int SIDE_TOP=0;
+  public static final int SIDE_BOTTOM=2;
+  public static final int SIDE_LEFT=1;
+  public static final int SIDE_RIGHT=3;
+  
+//  private LineGeometryBuilder builder;
+  
+  private int actualSideKey;
+  
+  private LineGeometryBuilder sides[] = new LineGeometryBuilder[SIDE_MAX_NUM];
+  private Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+  
+  private GM_Curve[] oppossites= new GM_Curve[2]; 
+  
+  public GridPointCollector()
+  {
+    
+  }
+  
+//  public void setSideToBuild(int sideKey, CS_CoordinateSystem targetCrs)
+//  {
+//    checkSideKey( sideKey );
+//    actualSideKey=sideKey;
+////    builder = new LineGeometryBuilder( 0, targetCrs );     
+//    sides[actualSideKey]=new LineGeometryBuilder( 0, targetCrs );//builder;
+//  }
+  
+//  public void resetSideToBuild(CS_CoordinateSystem targetCrs)
+//  {
+//    builder = new LineGeometryBuilder( 0, targetCrs );      
+//  }
+  
+  public void reset(CS_CoordinateSystem targetCrs)
+  {
+    
+//    builder = new LineGeometryBuilder( 0, targetCrs );
+//    setSideToBuild( 0, targetCrs );
+    for(LineGeometryBuilder b:sides)
+    {
+      if(b!=null)
+      {
+        b.clear();
+      }
+    }
+    actualSideKey=0;
+    if(sides[actualSideKey]==null)
+    {
+      sides[actualSideKey]=new LineGeometryBuilder( 0, targetCrs );
+    }
+    
+  }
+  
+  private final void checkSideKey(int sideKey)
+  {
+    if(sideKey<0 || sideKey>=SIDE_MAX_NUM)
+    {
+      throw new IllegalArgumentException(
+          "Legal value for sides are 0,1,2,3 but this value passsed:"+sideKey);
+    }
+  }
+  
+  
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  public GM_Object addPoint( GM_Point p ) throws Exception
+  {
+    Assert.throwIAEOnNull( 
+        sides[actualSideKey], 
+        "builder not available for adding a point" );
+    return sides[actualSideKey].addPoint( p );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#finish()
+   */
+  public GM_Object finish( ) throws Exception
+  {
+    return null;
+//    Assert.throwIAEOnNull( 
+//            builder, 
+//            "builder not available" );
+//          
+//    GM_Object gmObject=builder.finish();
+//    sides[actualSideKey]=(GM_Curve)gmObject;
+//    
+//    if(actualSideKey<(SIDE_MAX_NUM-1))
+//    {
+//      actualSideKey++;
+//      builder=
+//        new LineGeometryBuilder( 0, gmObject.getCoordinateSystem());      
+//    }
+//    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
+//                "\n\tactualSide="+actualSideKey );
+//    return gmObject;      
+  }
+  
+  public GM_Object finishSide( ) throws Exception
+  {
+    Assert.throwIAEOnNull( 
+            sides[actualSideKey], 
+            "builder not available" );
+    LineGeometryBuilder oldBuilder=sides[actualSideKey];      
+    GM_Object gmObject=sides[actualSideKey].finish();
+    
+    if(actualSideKey<(SIDE_MAX_NUM-1))
+    {
+      actualSideKey++;
+      LineGeometryBuilder newSide=sides[actualSideKey];
+      if(newSide==null)
+      {
+        newSide=oldBuilder.getNewBuilder();
+        sides[actualSideKey]= newSide;
+        GM_Point lastP=oldBuilder.getLastPoint();  
+        if(lastP!=null)
+        {
+          newSide.addPoint( lastP );
+        }
+      }
+    }
+    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
+                "\n\tactualSide="+actualSideKey );
+    return gmObject;      
+  }
+  
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
+   */
+  public void paint( Graphics g, GeoTransform projection, Point currentPoint )
+  {
+    LineGeometryBuilder builder=sides[actualSideKey];
+    Assert.throwIAEOnNull( 
+        builder, "builder null, therfore not available for drawing" );
+    logger.info( "Curves="+Arrays.asList( sides ) );
+    final Color curColor=g.getColor();
+    
+    int i=0;
+    for(LineGeometryBuilder b:sides)
+    {
+        if(b==null)
+        {
+          continue;
+        }
+        g.setColor( colors[i]);
+        if(b!=builder)
+        {
+          if(b!=null)
+          {
+            b.paint( g, projection, null);
+          }
+        }
+        else
+        {
+          b.paint( g, projection, currentPoint );
+        }
+        i++;
+    }
+    
+    g.setColor( curColor );
+   
+  }  
+  
+  public void clearCurrent()
+  {
+    LineGeometryBuilder builder=sides[actualSideKey];
+    if(builder!=null)
+    {
+      builder.clear();
+    }
+   
+  }
+  
+//  private static final void drawHandles( 
+//      final Graphics g, 
+//      final int[] x, 
+//      final int[] y )
+//  {
+//    int sizeOuter = 6;
+//    for( int i = 0; i < y.length; i++ )
+//    g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+//  }
+  /**
+   * Tells this classes that to given curves are opposed
+   * 
+   */
+  public void setOpossites(GM_Curve curve1, GM_Curve curve2)
+  {
+    //Checks opposites
+    oppossites[0]=curve1;
+    oppossites[1]=curve2;
+  }
+  
+//  private static final int[][] getPointArrays( 
+//                    final GeoTransform projection, 
+//                    final GM_Curve curve
+//                    /*final Point currentPoint*/ ) 
+//                    throws GM_Exception
+//  {
+//    final List<Integer> xArray = new ArrayList<Integer>();
+//    final List<Integer> yArray = new ArrayList<Integer>();
+//    GM_Position positions[]=
+//            curve.getAsLineString().getPositions();
+//    int [] xCoords = new int[positions.length];
+//    int [] yCoords = new int[positions.length];
+//    int i=0;
+//    for( GM_Position pos:positions )
+//    {
+//      xCoords[i]= (int) projection.getDestX( pos.getX() );
+//      yCoords[i]= (int) projection.getDestY( pos.getY() );
+//    }
+//
+//    return new int[][]{xCoords, yCoords};
+//  }
+  
+}

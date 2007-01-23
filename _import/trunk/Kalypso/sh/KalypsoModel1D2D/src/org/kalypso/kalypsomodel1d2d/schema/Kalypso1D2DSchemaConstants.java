@@ -21,6 +21,9 @@ public class Kalypso1D2DSchemaConstants
       
       public final static QName WB1D2D_F_FE1D2DEDGE = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
+      
+      public final static QName WB1D2D_F_EDGE_INV = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeInv" );
 
       public final static QName WB1D2D_PROP_DIRECTEDNODE = 
                             new QName( 
@@ -87,6 +90,9 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_PROP_EDGES = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" );
     
+      public final static QName WB1D2D_PROP_EDGE_IN_INV = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" );
+      
       /**
        * QName for a property linking a feature to an element.
        * Use for example in DiscretisationModel feature

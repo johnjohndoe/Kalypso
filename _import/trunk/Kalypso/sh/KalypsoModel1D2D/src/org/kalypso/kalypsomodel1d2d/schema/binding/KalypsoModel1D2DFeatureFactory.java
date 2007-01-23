@@ -125,8 +125,23 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                                         Class cls) 
                                         throws IllegalArgumentException
             {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+              if(featureQName.equals( 
+                  Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV) )
+              {
+                Feature toInv=
+                  (Feature)feature.getProperty( 
+                        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
                 
+                FE1D2DEdge edge = new FE1D2DEdge(toInv);
+                
+                return new EdgeInv(edge);     
+              }
+              else
+              {
                 return new FE1D2DEdge(feature);
+              }
             }
         };
         cMap.put(IFE1D2DEdge.class, cTor);

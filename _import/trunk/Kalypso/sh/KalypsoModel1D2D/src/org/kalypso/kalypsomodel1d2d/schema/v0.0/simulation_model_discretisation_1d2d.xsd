@@ -164,6 +164,43 @@
 		Fe1D2dEdge 
 	================================================================== -->
 	<xs:element 
+		name="EdgeInv"
+		type="wb1d2d:EdgeInvType"
+		substitutionGroup="wb1d2d:Edge"/>
+
+	<xs:complexType 
+		name="EdgeInvType">
+		<xs:annotation>
+			<xs:documentation>
+				Edge in a finite element network.
+				It is defined by 2 FE nodes and a middle node.
+				Tow cases are possible:
+					==For a real edge these 3 node muss have different 
+						geometric properties.
+					==Single point edge are also possible, in that case the all
+				
+			</xs:documentation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
+					kapp:property="wb1d2d:geometry"/>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="simBase:FEAbstractEdgeType">
+				<xs:sequence>	
+					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
+					<xs:element 
+						ref="wb1d2d:edge"
+						minOccurs="1" 
+						maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element 
 		name="Edge"
 		type="wb1d2d:EdgeType"
 		substitutionGroup="simBase:_FEEdge">

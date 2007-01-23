@@ -45,7 +45,11 @@
 	<wb1d2d:edgeContainer>
 		<wb1d2d:PolyElement gml:id="QuadriElement">
 		   <wb1d2d:directedEdge xlink:href="#edge1"/>
-		   <wb1d2d:directedEdge xlink:href="#edge1"/>
+		   <wb1d2d:directedEdge >
+		   		<wb1d2d:EdgeInv>
+		   			<wb1d2d:edge xlink:href="#edge1"/>
+		   		</wb1d2d:EdgeInv>
+		   </wb1d2d:directedEdge>
 		   <wb1d2d:directedEdge xlink:href="#edge1"/>
 		   <wb1d2d:directedEdge xlink:href="#edge1"/>
 		</wb1d2d:PolyElement>
