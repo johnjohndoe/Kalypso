@@ -216,7 +216,7 @@ public class JTSUtilities
   }
 
   /**
-   * This function creates a line segment (JTS) of a LineString from a given start point to an end point, including all
+   * This function creates a LineString (JTS) of a LineString from a given start point to an end point, including all
    * points on the given LineString.
    * 
    * @param line
@@ -225,6 +225,7 @@ public class JTSUtilities
    *          The start point of the new line (it has to be one point that lies on the original LineString).
    * @param end
    *          The end point of the new line (it has to be one point that lies on the original LineString).
+   * @return A LineString on the original LineString starting at with the start point and ending with the end point.
    */
   private static LineString createLineSegmentFromLine( LineString line, Point start, Point end )
   {
@@ -269,8 +270,19 @@ public class JTSUtilities
   }
 
   /**
-   * This function creates a line segment (JTS) of a MultiLineString from a given start point to an end point, including
-   * all points on the given MultiLineString.
+   * This function creates a LineString (JTS) of a MultiLineString from a given start point to an end point, including
+   * all points on the given MultiLineString. Gaps between the different LineStrings will be connected in the result, if
+   * it should contain more than one LineString of the original MultiLineString.<br>
+   * <br>
+   * KNOWN ISSUE:<br>
+   * It is possible that this function produce errors, if the start or the end point lies in a gap between two
+   * LineStrings. The two points of the gap will not be checked for that point. The result than, will possibly be
+   * nonsense. <br>
+   * <br>
+   * ATTENTION:<br>
+   * This class is strange, because creating a LineString part of a MultiLineString should be normally done by
+   * dissolving the MultiLineString in one LineString-Object and getting the LineString part of it.<br>
+   * There can not be quaranteed, that this function works error free!
    * 
    * @param line
    *          The original MultiLineString.
@@ -278,6 +290,8 @@ public class JTSUtilities
    *          The start point of the new line (it has to be one point on the original MultiLineString).
    * @param end
    *          The end point of the new line (it has to be one point on the original MultiLineString).
+   * @return A LineString on the original MultiLineString starting at with the start point and ending with the end
+   *         point.
    */
   private static LineString createLineSegmentFromMultiLine( MultiLineString line, Point start, Point end )
   {
@@ -287,14 +301,8 @@ public class JTSUtilities
     boolean endPointFound = false;
 
     points.add( start );
-
-    System.out.println( "Start: " + start );
-    System.out.println( "Distance start - line: " + start.distance( line ) );
-    System.out.println( "End: " + end );
-    System.out.println( "Distance end - line: " + end.distance( line ) );
     for( int i = 0; i < line.getNumGeometries(); i++ )
     {
-      System.out.println( "New LineString!" );
       LineString lineN = (LineString) line.getGeometryN( i );
 
       for( int j = 0; j < lineN.getNumPoints() - 1; j++ )
@@ -307,8 +315,6 @@ public class JTSUtilities
 
         /* Build a line with the two points to check the flag. */
         final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
-        System.out.println( "Start-Punkt:" + testLine.distance( start.getCoordinate() ) );
-        System.out.println( "End-Punkt:" + testLine.distance( end.getCoordinate() ) );
 
         if( testLine.distance( start.getCoordinate() ) < 10E-08 )
           add = true;

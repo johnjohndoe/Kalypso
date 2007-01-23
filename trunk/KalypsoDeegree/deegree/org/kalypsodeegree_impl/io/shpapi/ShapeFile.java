@@ -707,6 +707,7 @@ public class ShapeFile
       }
       else if( clazz == Float.class )
       {
+        // TODO: Problem: reading/writing a shape will change the precision/size of the column!
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
       }
       else if( clazz == Double.class || clazz == Number.class )
@@ -727,7 +728,7 @@ public class ShapeFile
       }
       else if( clazz == Long.class )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
+        fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 0 ) );
       }
       else
       {
