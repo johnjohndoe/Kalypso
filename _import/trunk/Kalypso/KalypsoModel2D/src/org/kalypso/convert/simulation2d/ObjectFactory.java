@@ -8,8 +8,6 @@
 
 package org.kalypso.convert.simulation2d;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.PropertyException;
 
 
 /**
