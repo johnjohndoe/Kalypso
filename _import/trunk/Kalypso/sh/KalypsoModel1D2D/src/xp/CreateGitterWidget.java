@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 
 
 
+import org.eclipse.core.resources.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;

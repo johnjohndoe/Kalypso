@@ -77,8 +77,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
   private boolean isFinished=false;
   private boolean isSelected=false;
   
-  private  int[][] drawPoints;
-  private  int highlightDeltaX=2;
+  private int[][] drawPoints;
+  private int highlightDeltaX=2;
+  private int pointRectSize = 6;
 
   /**
    * The constructor.
@@ -173,24 +174,27 @@ public class LineGeometryBuilder implements IGeometryBuilder
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
     {
-      final int[][] points = getPointArrays( projection, currentPoint );
+      
       
       if(isSelected)
       {
+        final int[][] points = getPointArrays( projection, null );
         int[][] polygonPoints = toPolygonPoints(points,highlightDeltaX );
         
-        g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints.length );
-        drawHandles( g, points[0], points[1] );
+        g.drawPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
+        g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
+        drawHandles( g, points[0], points[1],pointRectSize );
       }
       else
       {
         //draw a line
+        final int[][] points = getPointArrays( projection, currentPoint );
         final int[] arrayX = points[0];
         final int[] arrayY = points[1];
   
         /* Paint a linestring. */
         g.drawPolyline( arrayX, arrayY, arrayX.length );
-        drawHandles( g, arrayX, arrayY );
+        drawHandles( g, arrayX, arrayY, pointRectSize );
         
         drawPoints=points;
       }
@@ -206,7 +210,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
       Assert.throwIAEOnNull( originalPoint, null );
     }
     
-    int SIZE=originalPoint.length;
+    int SIZE=originalPoint[0].length;
     if(SIZE==0)
     {
       return new int[][]{};
@@ -215,13 +219,13 @@ public class LineGeometryBuilder implements IGeometryBuilder
     {
       int[][] polyPoints= new int[2][SIZE+SIZE];
       
-      for(int i=0, opposite=SIZE+SIZE-1;i<SIZE;i++)
+      for(int i=0, opposite=SIZE+SIZE-1;i<SIZE;i++, opposite--)
       {
         polyPoints[0][i]=originalPoint[0][i];
         polyPoints[1][i]=originalPoint[1][i]+deltaY;
         
         polyPoints[0][opposite]=originalPoint[0][i];
-        polyPoints[1][opposite]=originalPoint[1][i]+deltaY;        
+        polyPoints[1][opposite]=originalPoint[1][i]-deltaY;        
       }
       return polyPoints;
     }
@@ -260,12 +264,18 @@ public class LineGeometryBuilder implements IGeometryBuilder
   private static final void drawHandles( 
                             final Graphics g, 
                             final int[] x, 
-                            final int[] y )
+                            final int[] y ,
+                            final int pointRectWidth)
   {
-    int sizeOuter = 4;
+    //int sizeOuter = 4;
+    int halfRectWidth=pointRectWidth/2;
     for( int i = 0; i < y.length; i++ )
     {
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+      g.drawRect( 
+            x[i] - halfRectWidth, 
+            y[i] - halfRectWidth, 
+            pointRectWidth, 
+            pointRectWidth );
     }
   }
   
