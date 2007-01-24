@@ -103,7 +103,13 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       try
       {
         final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
+        // TODO: better error handling; if m_userStyle zero here, we get NPEs later
         m_userStyle = sld.findUserStyle( m_styleName );
+        if( m_userStyle == null )
+        {
+            System.out.println( "No user style with name: " + m_styleName + ". Dummy style created instead.");
+            m_userStyle = createDummyStyle();
+        }
       }
       catch( Exception e )
       {
