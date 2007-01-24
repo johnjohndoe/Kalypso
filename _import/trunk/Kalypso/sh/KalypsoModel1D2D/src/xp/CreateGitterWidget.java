@@ -285,6 +285,15 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   @Override
   public void rightClicked( Point p )
   {
+    
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#middleClicked(java.awt.Point)
+   */
+  @Override
+  public void middleClicked( Point p )
+  {
     gridPointCollector.selectNext();
     MapPanel mapPanel=getMapPanel();
     mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
