@@ -6,12 +6,15 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 
+
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -28,6 +31,9 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   private GridPointCollector gridPointCollector= 
                                         new GridPointCollector();
   private boolean isActivated=false;
+  
+  private int m_radius=20;
+  
   public CreateGitterWidget( )
   {
     super( 
@@ -131,33 +137,58 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   @Override
   public void dragged( Point p )
   {
-    draggedPoint=p;
-    System.out.println("Dragged point="+p);
-    if(isSamePoint( /*gridPointCollector.getLastPoint()*/m_currentPoint, p ))
+    try
     {
-      m_currentPoint=p;
-      return;
+      draggedPoint = p;
+      System.out.println( "Dragged point=" + p );
+      GM_Point lastSaved = gridPointCollector.getLastPoint();
+      GeoTransform transform=getMapPanel().getProjection();
+      if( isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
+      {
+          
+      }
+      else if( isSamePoint( m_currentPoint, p, m_radius ) )
+      {
+        m_currentPoint = p;
+        return;
+      }
+      final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
+      gridPointCollector.replaceLastPoint( currentPos );
+      m_currentPoint = p;
     }
-    final GM_Point currentPos = 
-      MapUtilities.transform( getMapPanel(), p );
-    gridPointCollector.replaceLastPoint( currentPos );
-    m_currentPoint=p;
-//    dd
-//    if(draggedPoint!=null)
-//    {
-//      //check 2 as distance
-//      if(p.distance( draggedPoint )<2)
-//      {
-//        draggedPoint=null;
-//      }
-//      else
-//      {
-//        
-//      }
-//    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }    
+    
   }
   
-  public static final boolean isSamePoint(Point ref, Point toCompare)
+  public static final boolean isSamePoint(
+                                  Point ref, 
+                                  GM_Point toCompare, 
+                                  int m_radius,
+                                  GeoTransform transform
+                                  )
+  {
+    Assert.throwIAEOnNull( transform, "transform must not be null" );
+    if(ref==null || toCompare==null)
+    {
+      return false;
+    }
+    else
+    {
+      final int x = (int) transform.getDestX( toCompare.getX() );
+      final int y = (int) transform.getDestY( toCompare.getY() );
+      return (x > (ref.getX() - m_radius)) && 
+                (x > (ref.getY() - m_radius)) && 
+                (y < (ref.getX() + m_radius)) && 
+                (y < (ref.getY() + m_radius)); 
+    }
+    
+  }
+  
+  public static final boolean isSamePoint(
+                                Point ref, Point toCompare, int m_radius)
   {
     if(ref==null)
     {
@@ -165,7 +196,11 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     }
     else
     {
-      return ref.distance( toCompare )<2;
+      return (toCompare.getX() > (ref.getX() - m_radius)) && 
+                (toCompare.getY() > (ref.getY() - m_radius)) && 
+                (toCompare.getX() < (ref.getX() + m_radius)) && 
+                (toCompare.getY() < (ref.getY() + m_radius)); 
+        
     }
   }
   
@@ -183,6 +218,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
 //        m_builder.paint( g, getMapPanel().getProjection(), currentPoint );
 //      g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
 //    }
+    
     
     if( currentPoint != null )
     {
@@ -231,11 +267,27 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
       }
       
     }
+    else if(typed=='\t')
+    {
+      
+      System.out.println("Selected");
+    }
     else
     {
       System.out.println("Char="+typed);
     }
     //super.keyTyped(e);
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
+   */
+  @Override
+  public void rightClicked( Point p )
+  {
+    gridPointCollector.selectNext();
+    MapPanel mapPanel=getMapPanel();
+    mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
   }
   
   /**

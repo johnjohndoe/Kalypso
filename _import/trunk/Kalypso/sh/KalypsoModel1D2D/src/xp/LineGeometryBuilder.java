@@ -42,10 +42,12 @@ package xp;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -73,8 +75,10 @@ public class LineGeometryBuilder implements IGeometryBuilder
   private final CS_CoordinateSystem m_crs;
   
   private boolean isFinished=false;
+  private boolean isSelected=false;
   
   private  int[][] drawPoints;
+  private  int highlightDeltaX=2;
 
   /**
    * The constructor.
@@ -167,27 +171,60 @@ public class LineGeometryBuilder implements IGeometryBuilder
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
-    if(isFinished && drawPoints!=null && false)
-    {
-      g.drawPolyline( drawPoints[0], drawPoints[1], drawPoints[0].length );
-      drawHandles( g, drawPoints[0], drawPoints[1] );
-      
-    }
-    else if( !m_points.isEmpty() )
+    if( !m_points.isEmpty() )
     {
       final int[][] points = getPointArrays( projection, currentPoint );
-
-      final int[] arrayX = points[0];
-      final int[] arrayY = points[1];
-
-      /* Paint a linestring. */
-      g.drawPolyline( arrayX, arrayY, arrayX.length );
-      drawHandles( g, arrayX, arrayY );
       
-      drawPoints=points;
+      if(isSelected)
+      {
+        int[][] polygonPoints = toPolygonPoints(points,highlightDeltaX );
+        
+        g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints.length );
+        drawHandles( g, points[0], points[1] );
+      }
+      else
+      {
+        //draw a line
+        final int[] arrayX = points[0];
+        final int[] arrayY = points[1];
+  
+        /* Paint a linestring. */
+        g.drawPolyline( arrayX, arrayY, arrayX.length );
+        drawHandles( g, arrayX, arrayY );
+        
+        drawPoints=points;
+      }
+    }    
+  }
+  
+  private static final int[][] toPolygonPoints(
+                                      int[][] originalPoint,
+                                      int deltaY)
+  {
+    if(originalPoint==null)
+    {
+      Assert.throwIAEOnNull( originalPoint, null );
     }
     
-    
+    int SIZE=originalPoint.length;
+    if(SIZE==0)
+    {
+      return new int[][]{};
+    }
+    else
+    {
+      int[][] polyPoints= new int[2][SIZE+SIZE];
+      
+      for(int i=0, opposite=SIZE+SIZE-1;i<SIZE;i++)
+      {
+        polyPoints[0][i]=originalPoint[0][i];
+        polyPoints[1][i]=originalPoint[1][i]+deltaY;
+        
+        polyPoints[0][opposite]=originalPoint[0][i];
+        polyPoints[1][opposite]=originalPoint[1][i]+deltaY;        
+      }
+      return polyPoints;
+    }
   }
 
   private int[][] getPointArrays( 
@@ -352,6 +389,17 @@ public class LineGeometryBuilder implements IGeometryBuilder
     {
       m_points.add( point );
     }
+  }
+  
+  /**
+   * Mark the {@link LineGeometryBuilder} as selected
+   * @param isSelected -- a boolean expressing the selection state
+   *    of the {@link LineGeometryBuilder}
+   *    
+   */
+  public void setSelected( boolean isSelected )
+  {
+    this.isSelected = isSelected;
   }
   
 }

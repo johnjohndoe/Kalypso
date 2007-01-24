@@ -152,7 +152,7 @@ class GridPointCollector implements IGeometryBuilder
     return sides[actualSideKey].addPoint( p );
   }
 
-  public GM_Object getLastPoint() throws Exception
+  public GM_Point getLastPoint() throws Exception
   {
     if(actualSideKey>=SIDE_MAX_NUM)
     {
@@ -357,4 +357,14 @@ class GridPointCollector implements IGeometryBuilder
     oppossites[1]=curve2;
   }
   
+  public void selectNext()
+  {
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      sides[actualSideKey].setSelected( false );
+    }
+    
+    actualSideKey=(actualSideKey+1) %SIDE_MAX_NUM;
+    sides[actualSideKey].setSelected( true );
+  }
 }
