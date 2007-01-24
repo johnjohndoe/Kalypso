@@ -2,6 +2,7 @@ package xp;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 
@@ -153,14 +154,35 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   @Override
   public void keyTyped( KeyEvent e )
   {
-    if(e.getKeyChar()==ESC)
+    char typed=e.getKeyChar();
+    if(typed==ESC)
     {
       gridPointCollector.clearCurrent();
       MapPanel mapPanel=getMapPanel();
       //mapPanel.getMapModell().addModellListener( listener )
       //TODO get the geometry redrawn
-      mapPanel.repaint();
+      mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
       
+    }
+    else if(typed=='\b')
+    {
+      if(e.getModifiers()==InputEvent.SHIFT_MASK)
+      {
+       gridPointCollector.gotoPreviousSide(); 
+      }
+      else
+      {
+        gridPointCollector.removeLastPoint();
+        MapPanel mapPanel=getMapPanel();
+        //mapPanel.getMapModell().addModellListener( listener )
+        //TODO get the geometry redrawn
+        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
+      }
+      
+    }
+    else
+    {
+      System.out.println("Char="+typed);
     }
     //super.keyTyped(e);
   }

@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.print.attribute.standard.Sides;
+import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -239,23 +240,52 @@ class GridPointCollector implements IGeometryBuilder
   
   public void clearCurrent()
   {
-    LineGeometryBuilder builder=sides[actualSideKey];
-    if(builder!=null)
+    LineGeometryBuilder builder=
+                  sides[actualSideKey];
+    if(actualSideKey>0)
     {
-      builder.clear();
+      LineGeometryBuilder previousBuilder=sides[actualSideKey-1];
+      if(previousBuilder!=null)
+      {
+        GM_Point point=previousBuilder.getLastPoint();
+        if(point!=null)
+        {
+          
+          try
+          {
+            builder.addPoint( point );
+          }
+          catch( Exception e )
+          {
+            logger.info( "Error while setting first point from previous builder", e );
+          }
+        }
+      }
     }
    
   }
   
-//  private static final void drawHandles( 
-//      final Graphics g, 
-//      final int[] x, 
-//      final int[] y )
-//  {
-//    int sizeOuter = 6;
-//    for( int i = 0; i < y.length; i++ )
-//    g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
-//  }
+  public void gotoPreviousSide()
+  {
+    LineGeometryBuilder curBuilder = sides[actualSideKey];
+    if(curBuilder!=null)
+    {
+      curBuilder.clear();
+    }
+    if(actualSideKey>0)
+    {
+      actualSideKey--;
+    }
+  }
+  
+  public void removeLastPoint()
+  {
+    LineGeometryBuilder builder=
+                  sides[actualSideKey];
+    builder.removeLastPoint( actualSideKey==0 );
+   
+  }
+  
   /**
    * Tells this classes that to given curves are opposed
    * 
@@ -266,27 +296,5 @@ class GridPointCollector implements IGeometryBuilder
     oppossites[0]=curve1;
     oppossites[1]=curve2;
   }
-  
-//  private static final int[][] getPointArrays( 
-//                    final GeoTransform projection, 
-//                    final GM_Curve curve
-//                    /*final Point currentPoint*/ ) 
-//                    throws GM_Exception
-//  {
-//    final List<Integer> xArray = new ArrayList<Integer>();
-//    final List<Integer> yArray = new ArrayList<Integer>();
-//    GM_Position positions[]=
-//            curve.getAsLineString().getPositions();
-//    int [] xCoords = new int[positions.length];
-//    int [] yCoords = new int[positions.length];
-//    int i=0;
-//    for( GM_Position pos:positions )
-//    {
-//      xCoords[i]= (int) projection.getDestX( pos.getX() );
-//      yCoords[i]= (int) projection.getDestY( pos.getY() );
-//    }
-//
-//    return new int[][]{xCoords, yCoords};
-//  }
   
 }

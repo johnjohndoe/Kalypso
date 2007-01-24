@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -210,7 +209,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    int sizeOuter = 6;
+    int sizeOuter = 4;
     for( int i = 0; i < y.length; i++ )
     {
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
@@ -220,6 +219,16 @@ public class LineGeometryBuilder implements IGeometryBuilder
   void clear()
   {
     m_points.clear();
+  }
+  
+  void removeLastPoint(boolean doDelFirstPoint)
+  {
+    int index=m_points.size()-1;
+    
+    if(index>0 || (doDelFirstPoint &&index==0))
+    {
+      m_points.remove( index );
+    }
   }
   
   public LineGeometryBuilder getNewBuilder()
@@ -239,4 +248,16 @@ public class LineGeometryBuilder implements IGeometryBuilder
       return null;
     }
   }
+  
+  public void setCntPoints(int cntPoints)
+  {
+    this.m_cnt_points=cntPoints;
+  }
+  
+  public int getCurrentPointCnt()
+  {
+    return m_points.size();
+  }
+  
+  
 }
