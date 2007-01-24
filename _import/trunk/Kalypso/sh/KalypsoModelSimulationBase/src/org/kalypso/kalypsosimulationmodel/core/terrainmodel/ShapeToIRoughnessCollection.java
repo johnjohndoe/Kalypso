@@ -9,7 +9,6 @@ import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -90,8 +89,7 @@ public class ShapeToIRoughnessCollection extends Job
 	FeaturePath			m_FeaturePath;
 	IFeatureType		m_FeatureType;
 	ExtentType			m_ExtentType;
-	private final HashSet<String> m_RoughnessNameSet = new HashSet<String>();
-
+	
 	public ShapeToIRoughnessCollection( String name, DataContainer data )
 	{
 		super(name);

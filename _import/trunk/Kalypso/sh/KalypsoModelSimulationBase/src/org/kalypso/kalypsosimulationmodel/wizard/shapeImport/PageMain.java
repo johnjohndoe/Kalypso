@@ -2,8 +2,6 @@ package org.kalypso.kalypsosimulationmodel.wizard.shapeImport;
 
 import java.io.File;
 
-import javax.xml.bind.JAXBContext;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -27,8 +25,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardResourceImportPage;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.template.gismapview.Gismapview;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
@@ -52,11 +50,12 @@ public class PageMain extends WizardResourceImportPage implements Listener
 
 	// status variable for the possible errors on this page
 	IStatus msg_StatusLine;
-	  private static final org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
 
-//	  private static final org.kalypso.template.types.ObjectFactory typeOF = new org.kalypso.template.types.ObjectFactory();
-//
-//	  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.template.gismapview.ObjectFactory.class, org.kalypso.template.types.ObjectFactory.class );
+	private static final org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
+
+//	private static final org.kalypso.template.types.ObjectFactory typeOF = new org.kalypso.template.types.ObjectFactory();
+
+//	private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.template.gismapview.ObjectFactory.class, org.kalypso.template.types.ObjectFactory.class );
 
 	/**
 	 * Constructor for main page
