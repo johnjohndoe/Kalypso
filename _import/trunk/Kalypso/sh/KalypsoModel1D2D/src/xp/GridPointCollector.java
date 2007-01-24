@@ -142,12 +142,28 @@ class GridPointCollector implements IGeometryBuilder
    */
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      return null;
+    }
     Assert.throwIAEOnNull( 
         sides[actualSideKey], 
         "builder not available for adding a point" );
     return sides[actualSideKey].addPoint( p );
   }
 
+  public GM_Object getLastPoint() throws Exception
+  {
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      return null;
+    }
+    Assert.throwIAEOnNull( 
+        sides[actualSideKey], 
+        "builder not available for adding a point" );
+    return sides[actualSideKey].getLastPoint();
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#finish()
    */
@@ -177,12 +193,17 @@ class GridPointCollector implements IGeometryBuilder
     Assert.throwIAEOnNull( 
             sides[actualSideKey], 
             "builder not available" );
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      return null;
+    }
     LineGeometryBuilder oldBuilder=sides[actualSideKey];      
     GM_Object gmObject=sides[actualSideKey].finish();
     
-    if(actualSideKey<(SIDE_MAX_NUM-1))
+    actualSideKey++;
+    if(actualSideKey<SIDE_MAX_NUM)
     {
-      actualSideKey++;
+      //actualSideKey++;
       LineGeometryBuilder newSide=sides[actualSideKey];
       if(newSide==null)
       {
@@ -193,10 +214,14 @@ class GridPointCollector implements IGeometryBuilder
         {
           newSide.addPoint( lastP );
         }
+        else
+        {
+          logger.warn( "Last point is null" );
+        }
       }
     }
-    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
-                "\n\tactualSide="+actualSideKey );
+//    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
+//                "\n\tactualSide="+actualSideKey );
     return gmObject;      
   }
   
@@ -206,10 +231,15 @@ class GridPointCollector implements IGeometryBuilder
    */
   public void paint( Graphics g, GeoTransform projection, Point currentPoint )
   {
-    LineGeometryBuilder builder=sides[actualSideKey];
-    Assert.throwIAEOnNull( 
-        builder, "builder null, therfore not available for drawing" );
-    logger.info( "Curves="+Arrays.asList( sides ) );
+    LineGeometryBuilder builder=null;
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      builder=sides[actualSideKey];
+      Assert.throwIAEOnNull( 
+          builder, "builder null, therfore not available for drawing" );
+    }
+    
+//    logger.info( "Curves="+Arrays.asList( sides ) );
     final Color curColor=g.getColor();
     
     int i=0;
@@ -222,10 +252,8 @@ class GridPointCollector implements IGeometryBuilder
         g.setColor( colors[i]);
         if(b!=builder)
         {
-          if(b!=null)
-          {
-            b.paint( g, projection, null);
-          }
+          b.paint( g, projection, null);
+          
         }
         else
         {
@@ -240,6 +268,11 @@ class GridPointCollector implements IGeometryBuilder
   
   public void clearCurrent()
   {
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      return ;
+    }
+    
     LineGeometryBuilder builder=
                   sides[actualSideKey];
     if(actualSideKey>0)
@@ -267,10 +300,18 @@ class GridPointCollector implements IGeometryBuilder
   
   public void gotoPreviousSide()
   {
-    LineGeometryBuilder curBuilder = sides[actualSideKey];
-    if(curBuilder!=null)
+    LineGeometryBuilder curBuilder;
+    if(actualSideKey>=SIDE_MAX_NUM)
     {
-      curBuilder.clear();
+      //empty
+    }
+    else
+    {
+      curBuilder= sides[actualSideKey];
+      if(curBuilder!=null)
+      {
+        curBuilder.clear();
+      }
     }
     if(actualSideKey>0)
     {
@@ -280,10 +321,29 @@ class GridPointCollector implements IGeometryBuilder
   
   public void removeLastPoint()
   {
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      //goto to the last line builder
+      actualSideKey=SIDE_MAX_NUM-1;
+    }
+    
     LineGeometryBuilder builder=
                   sides[actualSideKey];
-    builder.removeLastPoint( actualSideKey==0 );
-   
+    
+    builder.removeLastPoint( actualSideKey==0 );   
+  }
+  
+  public void replaceLastPoint(GM_Point point)
+  {
+    if(actualSideKey>=SIDE_MAX_NUM)
+    {
+      return;
+    }
+    //TODO check going to previous side
+    LineGeometryBuilder builder=
+                  sides[actualSideKey];
+    
+    builder.replaceLastPoint( point );   
   }
   
   /**

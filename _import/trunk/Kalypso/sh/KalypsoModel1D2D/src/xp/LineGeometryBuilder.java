@@ -85,7 +85,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
    * @param targetCrs
    *          The target coordinate system.
    */
-  public LineGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  public LineGeometryBuilder( 
+              final int cnt_points, 
+              final CS_CoordinateSystem targetCrs )
   {
     m_cnt_points = 0;
 
@@ -113,6 +115,14 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object finish( ) throws Exception
   {
+    int size=m_points.size();
+    
+    if(size==0)
+    {
+      //to avoid empty lines
+      return null;
+    }
+    
     if( (m_points.size() == m_cnt_points) || (m_cnt_points == 0) )
     {
       final GeoTransformer transformer = new GeoTransformer( m_crs );
@@ -120,10 +130,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
       final GM_Position[] poses = new GM_Position[m_points.size()];
       for( int i = 0; i < poses.length; i++ )
       {
-        final GM_Point transformedPoint = (GM_Point) transformer.transform( m_points.get( i ) );
+        final GM_Point transformedPoint = 
+                (GM_Point) transformer.transform( m_points.get( i ) );
         poses[i] = transformedPoint.getPosition();
       }
-
+      isFinished=true;
       return createGeometry( poses );
     }
 
@@ -156,7 +167,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
-    if(isFinished && drawPoints!=null)
+    if(isFinished && drawPoints!=null && false)
     {
       g.drawPolyline( drawPoints[0], drawPoints[1], drawPoints[0].length );
       drawHandles( g, drawPoints[0], drawPoints[1] );
@@ -179,7 +190,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
     
   }
 
-  private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
+  private int[][] getPointArrays( 
+                      final GeoTransform projection, 
+                      final Point currentPoint )
   {
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
@@ -207,7 +220,10 @@ public class LineGeometryBuilder implements IGeometryBuilder
     return new int[][] { xs, ys };
   }
 
-  private void drawHandles( final Graphics g, final int[] x, final int[] y )
+  private static final void drawHandles( 
+                            final Graphics g, 
+                            final int[] x, 
+                            final int[] y )
   {
     int sizeOuter = 4;
     for( int i = 0; i < y.length; i++ )
@@ -216,30 +232,54 @@ public class LineGeometryBuilder implements IGeometryBuilder
     }
   }
   
+  /**
+   * removes all points in this {@link LineGeometryBuilder} 
+   * 
+   */
   void clear()
   {
     m_points.clear();
+    isFinished=false;
   }
   
   void removeLastPoint(boolean doDelFirstPoint)
   {
     int index=m_points.size()-1;
     
-    if(index>0 || (doDelFirstPoint &&index==0))
+    if(index>0)
     {
+      
       m_points.remove( index );
     }
+    else if(index==0)
+    {
+      if(doDelFirstPoint)
+      {
+        m_points.remove( index );
+      }
+    }
+      
+    isFinished=false;
   }
   
+  /**
+   * Conevniance methode to get a new builder with the same required
+   * number of point and coordinate reference system
+   * @param return a new builder
+   */
   public LineGeometryBuilder getNewBuilder()
   {
     return new LineGeometryBuilder(m_cnt_points,m_crs);
   }
   
+  /**
+   * Returns the last point in this {@link LineGeometryBuilder}
+   * @return the last point included in this {@link LineGeometryBuilder}
+   */
   public GM_Point getLastPoint()
   {
     int size=m_points.size();
-    if(size>=0)
+    if(size>0)
     {
       return m_points.get( size-1 );
     }
@@ -249,15 +289,69 @@ public class LineGeometryBuilder implements IGeometryBuilder
     }
   }
   
-  public void setCntPoints(int cntPoints)
+  /**
+   * To get the first point included in this geometry builder
+   * @return the first point in this geometry builder
+   */
+  public GM_Point getFirstPoint()
   {
-    this.m_cnt_points=cntPoints;
+    int size=m_points.size();
+    
+    if(size>0)
+    {
+      return m_points.get( 0 );
+    }
+    else
+    {
+      return null;
+    }
   }
   
+  /**
+   * To set the number of points the this line geometry
+   * is required to have to be considered finished
+   * @param cntPoints the new required number of points
+   *  
+   */
+  public void setCntPoints(int cntPoints)
+  {
+    m_cnt_points=cntPoints;
+    final int SIZE=m_points.size();
+    
+    if(SIZE>cntPoints)
+    {
+      //trim the size to cnt_points if the array 
+      //already contain more than cntPoints elements
+      
+      for(int i=SIZE-1;i>=cntPoints ;i--)
+      {
+        m_points.remove( i );
+      }
+    }
+  }
+  
+  /**
+   * Return the number of points already in this 
+   * {@link LineGeometryBuilder}
+   * @return the number of points allready included in the line
+   *    geometry
+   */
   public int getCurrentPointCnt()
   {
     return m_points.size();
   }
   
+  public void replaceLastPoint(GM_Point point)
+  {
+    int index=m_points.size()-1;
+    if(index>0)
+    {
+      m_points.set( index, point );
+    }
+    else
+    {
+      m_points.add( point );
+    }
+  }
   
 }

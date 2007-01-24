@@ -77,6 +77,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   @Override
   public void leftClicked( final Point p )
   {
+    System.out.println("Click="+p);
     try
     {
 //      if( m_builder != null )
@@ -86,6 +87,8 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
 //
 //        m_builder.addPoint( currentPos );
 //      }
+      
+      
       final GM_Point currentPos = 
         MapUtilities.transform( getMapPanel(), m_currentPoint );
 
@@ -93,6 +96,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
@@ -120,6 +124,51 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     }
   }
 
+  private Point draggedPoint; 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
+  @Override
+  public void dragged( Point p )
+  {
+    draggedPoint=p;
+    System.out.println("Dragged point="+p);
+    if(isSamePoint( /*gridPointCollector.getLastPoint()*/m_currentPoint, p ))
+    {
+      m_currentPoint=p;
+      return;
+    }
+    final GM_Point currentPos = 
+      MapUtilities.transform( getMapPanel(), p );
+    gridPointCollector.replaceLastPoint( currentPos );
+    m_currentPoint=p;
+//    dd
+//    if(draggedPoint!=null)
+//    {
+//      //check 2 as distance
+//      if(p.distance( draggedPoint )<2)
+//      {
+//        draggedPoint=null;
+//      }
+//      else
+//      {
+//        
+//      }
+//    }
+  }
+  
+  public static final boolean isSamePoint(Point ref, Point toCompare)
+  {
+    if(ref==null)
+    {
+      return false;
+    }
+    else
+    {
+      return ref.distance( toCompare )<2;
+    }
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
@@ -155,10 +204,10 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   public void keyTyped( KeyEvent e )
   {
     char typed=e.getKeyChar();
+    MapPanel mapPanel=getMapPanel();
     if(typed==ESC)
     {
       gridPointCollector.clearCurrent();
-      MapPanel mapPanel=getMapPanel();
       //mapPanel.getMapModell().addModellListener( listener )
       //TODO get the geometry redrawn
       mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
@@ -166,14 +215,16 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     }
     else if(typed=='\b')
     {
+      
       if(e.getModifiers()==InputEvent.SHIFT_MASK)
       {
        gridPointCollector.gotoPreviousSide(); 
+       mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
       }
       else
       {
         gridPointCollector.removeLastPoint();
-        MapPanel mapPanel=getMapPanel();
+        
         //mapPanel.getMapModell().addModellListener( listener )
         //TODO get the geometry redrawn
         mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
