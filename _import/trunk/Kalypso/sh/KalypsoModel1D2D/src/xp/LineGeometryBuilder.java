@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -70,7 +71,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   private int m_cnt_points;
 
-  private List<GM_Point> m_points = new ArrayList<GM_Point>();
+  private List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
 
   private final CS_CoordinateSystem m_crs;
   
@@ -78,9 +79,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
   private boolean isSelected=false;
   
   private int[][] drawPoints;
-  private int highlightDeltaX=2;
+  private int highlightDeltaX=1;
   private int pointRectSize = 6;
 
+  private int selection=-1;
+  
   /**
    * The constructor.
    * 
@@ -105,14 +108,23 @@ public class LineGeometryBuilder implements IGeometryBuilder
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  public GM_Object addPoint( final GM_Point p ) throws Exception
+  public GM_Object addPoint( GM_Point p ) throws Exception
   {
-    m_points.add( p );
+    if(!(p instanceof MutableGMPoint))
+    {
+      p=new MutableGMPoint(p);
+    }
+    
+    m_points.add( (MutableGMPoint)p );
 
     if( m_points.size() == m_cnt_points )
+    {
       return finish();
-
-    return null;
+    }
+    else
+    {
+      return null;
+    }
   }
 
   /**
@@ -183,7 +195,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
         
         g.drawPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
         g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
-        drawHandles( g, points[0], points[1],pointRectSize );
+        drawHandles( g, points[0], points[1],pointRectSize,selection );
       }
       else
       {
@@ -194,7 +206,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
   
         /* Paint a linestring. */
         g.drawPolyline( arrayX, arrayY, arrayX.length );
-        drawHandles( g, arrayX, arrayY, pointRectSize );
+//        if(!isFinished)
+//        {
+          //do not draw handle if finish and not selected
+          drawHandles( g, arrayX, arrayY, pointRectSize,selection );
+//        }
         
         drawPoints=points;
       }
@@ -265,18 +281,53 @@ public class LineGeometryBuilder implements IGeometryBuilder
                             final Graphics g, 
                             final int[] x, 
                             final int[] y ,
-                            final int pointRectWidth)
+                            final int pointRectWidth,
+                            final int selection)
   {
+    final Color oldColor=g.getColor();
+    g.setColor( oldColor.darker() );
     //int sizeOuter = 4;
     int halfRectWidth=pointRectWidth/2;
-    for( int i = 0; i < y.length; i++ )
+    
+    if(selection<0)
     {
-      g.drawRect( 
-            x[i] - halfRectWidth, 
-            y[i] - halfRectWidth, 
-            pointRectWidth, 
-            pointRectWidth );
+      for( int i = 0; i < y.length; i++ )
+      {
+        g.drawRect( 
+              x[i] - halfRectWidth, 
+              y[i] - halfRectWidth, 
+              pointRectWidth, 
+              pointRectWidth );
+      }
     }
+    else
+    {
+      int i;
+      for( i = 0; i < selection; i++ )
+      {
+        g.drawRect( 
+              x[i] - halfRectWidth, 
+              y[i] - halfRectWidth, 
+              pointRectWidth, 
+              pointRectWidth );
+      }
+      //is is now selection 
+      g.drawOval( 
+          x[i]-pointRectWidth,//halfRectWidth, 
+          y[i]-pointRectWidth,//halfRectWidth, 
+          pointRectWidth+pointRectWidth, 
+          pointRectWidth+pointRectWidth );
+      i++;
+      for( ; i < y.length; i++ )
+      {
+        g.drawRect( 
+              x[i] - halfRectWidth, 
+              y[i] - halfRectWidth, 
+              pointRectWidth, 
+              pointRectWidth );
+      }
+    }
+    g.setColor( oldColor );
   }
   
   /**
@@ -365,7 +416,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
     m_cnt_points=cntPoints;
     final int SIZE=m_points.size();
     
-    if(SIZE>cntPoints)
+    if(SIZE>cntPoints && cntPoints!=0)
     {
       //trim the size to cnt_points if the array 
       //already contain more than cntPoints elements
@@ -375,6 +426,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
         m_points.remove( i );
       }
     }
+  }
+  
+  public int getPointCnt()
+  {
+    return m_cnt_points;
   }
   
   /**
@@ -393,12 +449,136 @@ public class LineGeometryBuilder implements IGeometryBuilder
     int index=m_points.size()-1;
     if(index>0)
     {
-      m_points.set( index, point );
+      //m_points.set( index, point );
+      m_points.get( index ).setPoint( point );
     }
     else
     {
-      m_points.add( point );
+      if(point instanceof MutableGMPoint)
+      {
+        m_points.add((MutableGMPoint)point);
+      }
+      else
+      {
+        m_points.add( new MutableGMPoint(point) );
+      }
     }
+  }
+  
+  public void changeSelected(GM_Point point)
+  {
+    if(selection>=0)
+    {
+      //m_points.set( selection, point );
+      m_points.get( selection ).setPoint( point );
+      
+    }
+    else
+    {
+      System.out.println("selection="+selection);
+    }
+    
+  }
+  
+  public GM_Point getSelectedPoint( )
+  {
+    if(selection>=0)
+    {
+      return m_points.get( selection);
+    }
+    else
+    {
+      return null;
+    }
+    
+  }
+  
+  public void clearSelection()
+  {
+    selection=-1;
+  }
+  
+  private int selectPoint(
+                    GM_Point lowerCorner, 
+                    GM_Point upperCorner)
+  {
+    if(!isSelected)
+    {
+      selection=-1;
+      return -1;
+    }
+    
+    final double lowX=lowerCorner.getX();
+    final double lowY=lowerCorner.getY();
+    
+    final double upperX=upperCorner.getX();
+    final double upperY=upperCorner.getY();
+    
+    final int SIZE=m_points.size();
+    GM_Point curPoint;
+    double curCoordY, curCoordX;
+    for(int i=0;i<SIZE;i++)
+    {
+      curPoint=m_points.get( i );
+      curCoordX=curPoint.getX();
+      if(lowX<=curCoordX && upperX>=curCoordX)
+      {
+        curCoordY=curPoint.getY();
+        if(lowY<=curCoordY && upperY>=curCoordY)
+        {
+          selection=i;
+          return i;
+        }
+      }
+    }
+    selection=-1;
+    return -1;
+  }
+  
+  public int selectPoint(
+              GM_Point lowerCorner, 
+              double squareWidth)
+  {
+    if(!isSelected)
+    {
+    selection=-1;
+    return -1;
+    }
+    
+    double halfWidth=squareWidth/2;
+    final double lowX=lowerCorner.getX()-halfWidth;
+    final double lowY=lowerCorner.getY()-halfWidth;
+    
+    final double upperX=lowX+squareWidth;
+    final double upperY=lowY+squareWidth;
+    
+    final int SIZE=m_points.size();
+    GM_Point curPoint;
+    double curCoordY, curCoordX;
+    double distance=Double.MAX_VALUE;
+    int nextSel=-1;
+    
+    
+    for(int i=0;i<SIZE;i++)
+    {
+      curPoint=m_points.get( i );
+      curCoordX=curPoint.getX();
+      if(lowX<=curCoordX && upperX>=curCoordX)
+      {
+        curCoordY=curPoint.getY();
+        if(lowY<=curCoordY && upperY>=curCoordY)
+        {
+          if(distance>curPoint.distance( lowerCorner ))
+          {
+            nextSel=i;
+          }
+          
+        }
+      }
+    }
+    
+    selection=nextSel;
+    return selection;
   }
   
   /**
@@ -410,6 +590,13 @@ public class LineGeometryBuilder implements IGeometryBuilder
   public void setSelected( boolean isSelected )
   {
     this.isSelected = isSelected;
+    if(!isSelected)
+    {
+      selection=-1;
+    }
   }
+  
+  
+  
   
 }

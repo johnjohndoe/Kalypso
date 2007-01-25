@@ -65,6 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.omg.CORBA._PolicyStub;
 import org.opengis.cs.CS_CoordinateSystem;
 
+import com.sun.org.apache.xerces.internal.dom3.as.ASAttributeDeclaration;
 import com.vividsolutions.jts.geomgraph.Position;
 
 @SuppressWarnings("unchecked")
@@ -82,6 +83,7 @@ class GridPointCollector implements IGeometryBuilder
 //  private LineGeometryBuilder builder;
   
   private int actualSideKey;
+  private boolean hasAllSides=false;
   
   private LineGeometryBuilder sides[] = new LineGeometryBuilder[SIDE_MAX_NUM];
   private Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
@@ -149,9 +151,24 @@ class GridPointCollector implements IGeometryBuilder
     Assert.throwIAEOnNull( 
         sides[actualSideKey], 
         "builder not available for adding a point" );
-    return sides[actualSideKey].addPoint( p );
+    
+    GM_Point lastAdded= (GM_Point)sides[actualSideKey].addPoint( p );
+    GM_Point autocompleted=autoComplete();
+    return (autocompleted==null)?lastAdded:autocompleted;
+    
   }
 
+  public GM_Point autoComplete()
+  {
+    if(actualSideKey==3)
+    {
+      return null;
+    }
+    else
+    {
+      return null;
+    }
+  }
   public GM_Point getLastPoint() throws Exception
   {
     if(actualSideKey>=SIDE_MAX_NUM)
@@ -218,14 +235,38 @@ class GridPointCollector implements IGeometryBuilder
         {
           logger.warn( "Last point is null" );
         }
+        newSide.setCntPoints( computeSize() );
       }
+    }
+    else
+    {
+      hasAllSides=true;
     }
 //    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
 //                "\n\tactualSide="+actualSideKey );
     return gmObject;      
   }
   
-
+  private final int computeSize()
+  {
+    if(actualSideKey==0 || actualSideKey==1)
+    {
+      return 0; 
+    }
+    else if(actualSideKey==2)
+    {
+      return sides[0].getPointCnt();
+    }
+    else if(actualSideKey==3)
+    {
+      return sides[1].getPointCnt();
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
    */
@@ -366,5 +407,52 @@ class GridPointCollector implements IGeometryBuilder
     
     actualSideKey=(actualSideKey+1) %SIDE_MAX_NUM;
     sides[actualSideKey].setSelected( true );
+  }
+  
+  public void selectPoint(
+                  GM_Point squareCenter, 
+                  double squareWidth)
+  {
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      sides[actualSideKey].selectPoint( squareCenter, squareWidth );   
+    }
+    else
+    {
+      return;   
+    }
+  }
+  
+  public void changeSelectedPoint(  GM_Point newPosition )
+  {
+    
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      sides[actualSideKey].changeSelected( newPosition );
+    }
+    else
+    {
+      return;      
+    }
+    
+  }
+  
+  public GM_Point getSelectedPoint(  )
+  {
+    
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      return sides[actualSideKey].getSelectedPoint();
+    }
+    else
+    {
+      return null;      
+    }
+    
+  }
+  
+  public boolean getHasAllSides()
+  {
+    return hasAllSides;
   }
 }

@@ -6,9 +6,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>FE1D2DNode</Name>
 	<Title>FE1D2DNode</Title>
-    <FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DNode</FeatureTypeName>
+    <FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Node</FeatureTypeName>
 	<Rule>
-		<Name>FE1D2DNode</Name>
+		<Name>Node</Name>
 		<Title>FE-Knoten</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>

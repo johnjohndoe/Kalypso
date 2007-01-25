@@ -6,9 +6,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>FE1D2DEdge</Name>
 	<Title>FE1D2DEdge</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DEdge</FeatureTypeName>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Edge</FeatureTypeName>
 	<Rule>
-		<Name>FE1D2DEdge</Name>
+		<Name>Edge</Name>
 		<Title>FE-Kante</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>

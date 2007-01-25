@@ -6,7 +6,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>FE1D2DPolyElement</Name>
 	<Title>FE1D2DPolyElement</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DPolyElement</FeatureTypeName>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement</FeatureTypeName>
 	<Rule>
 		<Name>FE1D2DPolyElement</Name>
 		<Title>FE1D2DPolyElement</Title>

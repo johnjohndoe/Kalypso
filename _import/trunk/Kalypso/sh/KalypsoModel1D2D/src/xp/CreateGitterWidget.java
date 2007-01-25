@@ -76,6 +76,26 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   public void moved( final Point p )
   {
     m_currentPoint = p;
+    if(gridPointCollector.getHasAllSides())
+    {
+      //gridPointCollector.selectPoint( lowerCorner, upperCorner );
+      final int centerX=(int)p.getX();
+      final int centerY=(int)p.getY();
+      
+      int halfWidth=m_radius/2;
+      Point lower=new Point(centerX-halfWidth, centerY-halfWidth);
+      Point upper=new Point(centerX+halfWidth, centerY+halfWidth);
+      
+      MapPanel mapPanel=getMapPanel();
+      GM_Point gmLower=MapUtilities.transform( mapPanel, lower );
+      gridPointCollector.selectPoint( 
+          gmLower,
+          MapUtilities.calculateWorldDistance( mapPanel, gmLower, m_radius*2 ));
+      System.out.println(
+          "selected On moved="+gridPointCollector.getSelectedPoint());
+      
+    }
+    
   }
 
   /**
@@ -118,7 +138,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     {
 //      final GM_Curve curve = (GM_Curve) m_builder.finish();
       gridPointCollector.finishSide();
-
+      System.out.println("DoubleClick:"+p);
       // validate geometry: doppelte punkte
     }
     catch( final Exception e )
@@ -138,24 +158,58 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   @Override
   public void dragged( Point p )
   {
+    m_currentPoint = p;
     try
     {
-      draggedPoint = p;
-      System.out.println( "Dragged point=" + p );
-      GM_Point lastSaved = gridPointCollector.getLastPoint();
-      GeoTransform transform=getMapPanel().getProjection();
-      if( isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
+      if(gridPointCollector.getHasAllSides())
       {
-          
+        GM_Point selectedPoint =
+                gridPointCollector.getSelectedPoint();
+        if(selectedPoint!=null)
+        {
+          System.out.println(
+                        "HasAllSides:"+selectedPoint.getX() +
+                        " "+ selectedPoint.getY());
+        }
+        if( isSamePoint( 
+                  p, 
+                  gridPointCollector.getSelectedPoint(),
+                  m_radius*2, 
+                  getMapPanel().getProjection() ) )
+        {
+          System.out.println("HasAllSides:dragged change posted");
+            GM_Point nextPoint=
+                MapUtilities.transform( getMapPanel(), p );
+            gridPointCollector.changeSelectedPoint( nextPoint );
+            //getActiveTheme().fireModellEvent( null );
+            //getMapPanel().getMapModell().fireModellEvent( null );
+            getMapPanel().getMapModell().getActiveTheme().fireModellEvent( null );
+        }
+        else
+        {
+          System.out.println("HasAllSides: no dragged change posted");
+        }
       }
-      else if( isSamePoint( m_currentPoint, p, m_radius ) )
+      else
       {
+        draggedPoint = p;
+        System.out.println( "Dragged point=" + p );
+        GM_Point lastSaved = gridPointCollector.getLastPoint();
+        GeoTransform transform=getMapPanel().getProjection();
+        if( isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
+        {
+            
+        }
+        else if( isSamePoint( m_currentPoint, p, m_radius ) )
+        {
+          m_currentPoint = p;
+          return;
+        }
+        final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
+        gridPointCollector.replaceLastPoint( currentPos );
         m_currentPoint = p;
-        return;
       }
-      final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
-      gridPointCollector.replaceLastPoint( currentPos );
-      m_currentPoint = p;
+      
     }
     catch( Exception e )
     {
