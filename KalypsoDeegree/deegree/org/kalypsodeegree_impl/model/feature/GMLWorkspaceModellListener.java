@@ -148,5 +148,4 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
       }
     }
   }
-
 }
