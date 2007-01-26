@@ -666,6 +666,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked features.
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String, boolean)
    */
