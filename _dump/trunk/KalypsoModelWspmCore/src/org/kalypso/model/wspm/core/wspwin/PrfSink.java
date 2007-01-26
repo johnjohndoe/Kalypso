@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
+package org.kalypso.model.wspm.core.wspwin;
 
 import java.io.PrintWriter;
 import java.io.Writer;

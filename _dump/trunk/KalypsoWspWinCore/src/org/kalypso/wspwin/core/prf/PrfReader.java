@@ -86,7 +86,7 @@ public class PrfReader
 
   public void readFromReader( final BufferedReader br ) throws IOException
   {
-        readMetadata( br );
+    readMetadata( br );
 
     final int[] pointCounts = parseLine14( br.readLine() );
 
@@ -122,7 +122,7 @@ public class PrfReader
     br.close();
   }
 
-  public  String createFirstLine ( final String key )
+  public String createFirstLine( final String key )
   {
     if( key.startsWith( "GEL" ) )
       return "GELAENDE-";
@@ -165,7 +165,6 @@ public class PrfReader
 
     return key.toUpperCase();
   }
-
 
   /**
    * Parst die 14.Zeile einer Profildatei als Array von ints
@@ -224,7 +223,6 @@ public class PrfReader
       textString.trim();
       final String dataString = line.length() > 40 ? line.substring( 40, line.length() ).trim() : "";
       m_metaMap.put( i, new String[] { textString, dataString } );
-      
 
     }
   }
@@ -272,7 +270,7 @@ public class PrfReader
   // }
   public IDataBlock getDataBlock( final String key )
   {
-    return m_dbs.get( createFirstLine(key.toUpperCase() ) );
+    return m_dbs.get( createFirstLine( key.toUpperCase() ) );
   }
 
 }

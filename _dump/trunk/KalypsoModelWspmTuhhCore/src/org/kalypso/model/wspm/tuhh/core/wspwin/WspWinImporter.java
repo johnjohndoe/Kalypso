@@ -41,12 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
@@ -57,7 +53,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,14 +70,12 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.wspwin.PrfSource;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.START_KONDITION_KIND;
-import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -286,7 +279,7 @@ public class WspWinImporter
           profile.setStation( bean.getStation() );
         }
       }
-      catch( final FileNotFoundException e )
+      catch( final IOException e )
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
@@ -303,7 +296,7 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, FileNotFoundException
+  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException
   {
     final String fileName = bean.getFileName();
 
@@ -312,43 +305,28 @@ public class WspWinImporter
 
     final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
 
-    Writer urlWriter = null;
-    Reader fileReader = null;
-    try
+    final File prfFile = new File( profDir, fileName );
+
+    final String profiletype;
+    if( isNotTuhhProject )
     {
-      final File prfFile = new File( profDir, fileName );
-      fileReader = new FileReader( prfFile );
-
-      // final PrfSource prfSource = ProfilesSerializer.load( prfFile );
-      final IProfilSource prfSource = new PrfSource();
-
-      final String profiletype;
-      if( isNotTuhhProject )
-      {
-        // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
-        // yet supported
-        profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
-      }
-      else
-        profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
-
-      final IProfil profile = ProfilFactory.createProfil( profiletype );
-      prfSource.read( profile, fileReader );
-
-      ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
-      /* Set state as default name for profile. */
-      prof.setName( bean.getStateName() );
-
-      /* Only add profile if no error occurs */
-      knownProfiles.put( fileName, prof );
-
-      return prof;
+      // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
+      // yet supported
+      profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
     }
-    finally
-    {
-      IOUtils.closeQuietly( urlWriter );
-      IOUtils.closeQuietly( fileReader );
-    }
+    else
+      profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+
+    final IProfil profile = PrfSource.readProfile( prfFile, profiletype );
+
+    ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
+    /* Set state as default name for profile. */
+    prof.setName( bean.getStateName() );
+
+    /* Only add profile if no error occurs */
+    knownProfiles.put( fileName, prof );
+
+    return prof;
   }
 
   /**

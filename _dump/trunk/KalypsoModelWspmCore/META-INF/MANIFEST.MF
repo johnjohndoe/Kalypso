@@ -27,7 +27,9 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.result,
  org.kalypso.model.wspm.core.result.impl,
  org.kalypso.model.wspm.core.strang,
- org.kalypso.model.wspm.core.util
+ org.kalypso.model.wspm.core.util,
+ org.kalypso.model.wspm.core.wspwin
 Require-Bundle: org.junit,
- org.kalypso.core
+ org.kalypso.core,
+ org.kalypso.wspwin.core
 Eclipse-LazyStart: true

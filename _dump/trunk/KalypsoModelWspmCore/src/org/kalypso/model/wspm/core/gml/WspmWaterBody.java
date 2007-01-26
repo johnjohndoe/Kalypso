@@ -102,7 +102,7 @@ public class WspmWaterBody implements IWspmConstants
 
   public WspmProfile createNewProfile( ) throws GMLSchemaException
   {
-    final Feature profile = FeatureHelper.addFeature( m_water, QNAME_PROP_PROFILEMEMBER, new QName( NS_WSPMPROF, "Profile" ) );
+    final Feature profile = FeatureHelper.addFeature( m_water, QNAME_PROP_PROFILEMEMBER, WspmProfile.QNAME_PROFILE );
 
     return new WspmProfile( profile );
   }

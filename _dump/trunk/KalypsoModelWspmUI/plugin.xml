@@ -230,6 +230,20 @@
          <filter
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
+         <menu
+               id="org.kalypso.model.wspm.ui"
+               label="Import"
+               path="additions">
+            <groupMarker name="imports"/>
+            <separator name="additions"/>
+         </menu>
+         <action
+               class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
+               id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
+               label=".prf Dateien"
+               menubarPath="org.kalypso.model.wspm.ui/imports"
+               style="push"
+               tooltip="Importiert eine oder mehrere WspWin .prf Dateien in diese Profil-Liste"/>
          <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"

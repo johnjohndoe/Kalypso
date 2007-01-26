@@ -41,6 +41,7 @@
 package org.kalypso.wspwin.core.prf.datablock;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
@@ -116,19 +117,35 @@ public class CoordDataBlock extends AbstractDataBlock
       final StringTokenizer sT;
       try
       {
-        sT = new StringTokenizer( reader.readLine() );
+        final String readLine = reader.readLine();
+        if( readLine == null )
+          throw new EOFException( "Trying to read more coordinates" );
+          
+        sT = new StringTokenizer( readLine );
       }
       catch( IOException e )
       {
+        // TODO: ist das gut, vielleicht doch lieber ne exception raus werfen und das ganze profil
+        // verwerfen??
         m_logger.log( Level.SEVERE, "unbekannter Formatfehler. " + e.getMessage() );
         return coords;
       }
+      
       if( count < 1 )
-      {
         return coords;
-      }
+      
+      // TODO: auch den Fall abfangen, dass weniger als 4 koordinaten in der Zeile sind aber noch mehr erwartet werden!
+      
       String dblStr = "";
       final int ci = (sT.countTokens() / 2);
+      
+      if( ci < 4 && counter + ci < count )
+      {
+        // line contains not enough tokens!
+        m_logger.log( Level.SEVERE, "Not enough coordinates in coord-data-block " );
+        return coords;
+      }
+      
       for( int i = 0; i < ci; i++ )
       {
         try
