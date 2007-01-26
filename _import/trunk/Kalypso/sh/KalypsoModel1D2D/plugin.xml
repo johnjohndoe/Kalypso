@@ -95,11 +95,11 @@
            point="org.eclipse.ui.popupMenus">
         <objectContribution
               adaptable="false"
-              id="KalypsoModel1D2D.objectContribution.discretisationModel"
+              id="org.kalypso.model1d2d.objectContribution.discretisationModel"
               objectClass="org.kalypsodeegree.model.feature.Feature">
            <filter
                  name="featureType"
-                 value="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d#FE1D2DDiscretisationModel"/>
+                 value="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d#DiscretisationModel"/>
            <action
                  class="org.kalypso.kalypsomodel1d2d.ui.actions.ValidateDiscretisationModelActionDelegate"
                  id="org.kalypso.kalypsomodel1d2d.ui.actions.ValidateDiscretisationModelActionDelegate"
@@ -107,21 +107,24 @@
                  style="push"
                  tooltip="validiert das Modell"/>
            <menu
-                 id="KalypsoModel1D2D.discModelImport"
+                 id="org.kalypso.model1d2d.discModelImport"
                  label="Import"
-                 path="additions"/>
+                 path="additions">
+              <groupMarker name="imports"/>
+              <separator name="additions"/>
+           </menu>
            <action
                  class="org.kalypso.kalypsomodel1d2d.ui.actions.ImportBCE2DActionDelegate"
-                 id="KalypsoModel1D2D.action2"
+                 id="org.kalypso.kalypsomodel1d2d.ui.actions.ImportBCE2DActionDelegate"
                  label="BCE2D"
-                 menubarPath="KalypsoModel1D2D.discModelImport"
+                 menubarPath="org.kalypso.model1d2d.discModelImport/imports"
                  style="push"
                  tooltip="ein BCE2D Modell importieren"/>
            <action
                  class="org.kalypso.kalypsomodel1d2d.ui.actions.ImportWSPMDelegateAction"
-                 id="KalypsoModel1D2D.action3"
+                 id="org.kalypso.kalypsomodel1d2d.ui.actions.ImportWSPMDelegateAction"
                  label="WSPM"
-                 menubarPath="KalypsoModel1D2D.discModelImport"
+                 menubarPath="org.kalypso.model1d2d.discModelImport/imports"
                  style="push"
                  tooltip="ein WSPM Modell importieren"/>
         </objectContribution>
