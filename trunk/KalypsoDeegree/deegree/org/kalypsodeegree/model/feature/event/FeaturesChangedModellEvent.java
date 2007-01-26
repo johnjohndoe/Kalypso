@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
+import java.util.Arrays;
+
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -68,5 +70,25 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
   public GMLWorkspace getGMLWorkspace()
   {
     return m_workspace;
+  }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEvent#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append("FeatureChangedModellEvent[");
+    if(m_features!=null)
+    {
+      buf.append( Arrays.asList( m_features) );
+    }
+    else
+    {
+     buf.append("null");
+    }
+    buf.append(']');
+    return buf.toString();
   }
 }
