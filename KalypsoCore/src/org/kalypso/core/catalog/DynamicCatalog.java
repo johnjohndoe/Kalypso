@@ -99,7 +99,7 @@ public class DynamicCatalog implements ICatalog
    */
   private static final int DELEGATE_SEARCH_5 = 5;
 
-  private Catalog m_catalog;
+  private final Catalog m_catalog;
 
   private URL m_context = null;
 
