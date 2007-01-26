@@ -38,72 +38,67 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package xp.geom_to_struct;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
- * Just wrapped the an {@link IFE1D2DEdge} edge to signal 
- * it is inverted 
+ * Listen to a workspace and given a geometrical change in the 
+ * feature of interes (Node, edge and element transform that change 
+ * to update the concern structure and there geometry.
+ * E.g. if a node location changes update container edges and elements
  * 
  * @author Patrice Congo
+ *
  */
-public class EdgeInv implements IEdgeInv
+public class GeometryToStructUpdater implements IGmlWorkspaceListener
 {
-  private final IFE1D2DEdge edge;
+  /**
+   * Work space which is monitored
+   */
+  private GMLWorkspace workspace;
   
-  public EdgeInv( IFE1D2DEdge edge)
+  
+  public GeometryToStructUpdater()
   {
-    Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" );
-    Feature feature=edge.getWrappedFeature();
-    Assert.throwIAEOnNotDirectInstanceOf( 
-          feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    System.out.println("================GEOM_STRUCT_UPDATER================");
+  }
+  
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#getQNames()
+   */
+  public QName[] getQNames( )
+  {
+    return new QName[]{
+        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
+//        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
+//        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
+        };
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  public void init( GMLWorkspace workspace )
+  {
+    System.out.println("WorkspaceInit="+workspace);
+    this.workspace=workspace;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    System.out.println("modellEvent="+modellEvent);
     
-    this.edge=edge;
   }
   
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv#getInverted()
-   */
-  public IFE1D2DEdge getInverted( )
-  {
-    return edge;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getCurve()
-   */
-  public GM_Curve getCurve( )
-  {
-    return edge.getCurve();
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getContainers()
-   */
-  public IFeatureWrapperCollection getContainers( )
-  {
-    return edge.getContainers();
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
-   */
-  public IFeatureWrapperCollection getNodes( )
-  {
-    return edge.getContainers();
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
-   */
-  public Feature getWrappedFeature( )
-  {
-    throw new RuntimeException("do not use; instead use getInverted()");
-  }
-
+ 
 }

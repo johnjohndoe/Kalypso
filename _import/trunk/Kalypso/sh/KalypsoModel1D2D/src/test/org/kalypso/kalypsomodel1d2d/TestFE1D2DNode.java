@@ -97,7 +97,7 @@ public class TestFE1D2DNode extends TestCase
             assertEquals( 0, edges.size() );
             IFE1D2DEdge edge=
               edges.addNew( 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
+                Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
             assertNotNull( edge );
             assertEquals( 1, edges.size() );
             

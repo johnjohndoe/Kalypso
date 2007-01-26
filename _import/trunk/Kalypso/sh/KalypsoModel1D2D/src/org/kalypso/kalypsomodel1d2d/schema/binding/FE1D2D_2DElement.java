@@ -223,7 +223,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     
     final IFeatureType polyType = 
           parentFT.getGMLSchema().getFeatureType( 
-              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
+              Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
     
     final Feature edgeFeature = 
           parentFeature.getWorkspace().createFeature( 

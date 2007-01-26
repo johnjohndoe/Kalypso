@@ -138,5 +138,12 @@
      <extension
            point="org.kalypso.model1d2d.mapEditStrategy">
      </extension>
+     <extension
+           point="org.kalypso.deegree.gmlWorkspaceListener">
+        <listener
+              class="xp.geom_to_struct.GeometryToStructUpdater"
+              id="xp.geom_to_struct.geometryToStructUpdater"
+              name="xp.geom_to_struct.geometryToStructUpdater"/>
+     </extension>
 	
 </plugin>

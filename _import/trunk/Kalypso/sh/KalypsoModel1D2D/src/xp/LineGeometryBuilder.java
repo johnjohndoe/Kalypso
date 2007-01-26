@@ -423,6 +423,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
       
       for(int i=SIZE-1;i>=cntPoints ;i--)
       {
+        System.out.println("Removing extra points:"+i);
         m_points.remove( i );
       }
     }

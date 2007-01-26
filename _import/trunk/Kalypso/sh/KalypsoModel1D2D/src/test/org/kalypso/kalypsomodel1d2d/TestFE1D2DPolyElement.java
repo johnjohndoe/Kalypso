@@ -61,14 +61,14 @@ public class TestFE1D2DPolyElement extends TestCase
       Feature root = workspace.getRootFeature();
       // gml:FeatureCollection
 
-      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
+      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
 
       IFeatureWrapperCollection<IFE1D2DEdge> edges = ele.getEdges();
       assertEquals( 0, ele.getEdges().size() );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
 
       assertEquals( 4, ele.getEdges().size() );
       // test serial
@@ -91,13 +91,13 @@ public class TestFE1D2DPolyElement extends TestCase
       Feature root = workspace.getRootFeature();
       // gml:FeatureCollection
 
-      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DPolyElement );
+      FE1D2D_2DElement ele = new FE1D2D_2DElement( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
 
       IFeatureWrapperCollection<IFE1D2DEdge> edges = ele.getEdges();
       assertEquals( 0, ele.getEdges().size() );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
-      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
 
       // TODO implements and test size check
 

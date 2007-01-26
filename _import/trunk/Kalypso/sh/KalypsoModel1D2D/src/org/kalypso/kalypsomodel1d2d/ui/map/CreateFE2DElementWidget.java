@@ -37,7 +37,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   private final QNameFeaturesProvider m_provider = 
             new QNameFeaturesProvider( 
-                 Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                 Kalypso1D2DSchemaConstants.WB1D2D_F_NODE
                  /*FE1D2DNode.QNAME_FE1D2DNode*/ );
 
   public CreateFE2DElementWidget( )
@@ -76,7 +76,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
         final IFeatureType featureType = ftheme.getFeatureType();
         if( GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE
                     /*FE1D2DNode.QNAME_FE1D2DNode*/ ) )
         {
           m_nodeTheme = ftheme;

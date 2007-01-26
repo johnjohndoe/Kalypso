@@ -13,13 +13,13 @@ public class Kalypso1D2DSchemaConstants
 	public static final QName SIMULATION_MODEL1D2D=
 			new QName(UrlCatalog1D2D.MODEL_1D2D_NS,"SimulationModelType1D2D");
 ////fem
-	  public final static QName WB1D2D_F_FE1D2DNODE = 
+	  public final static QName WB1D2D_F_NODE = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" );
 
       public final static QName WB1D2D_PROP_POINT = 
              new QName( NS.GML3, "pointProperty" );
       
-      public final static QName WB1D2D_F_FE1D2DEDGE = 
+      public final static QName WB1D2D_F_EDGE = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
       
       public final static QName WB1D2D_F_EDGE_INV = 
@@ -45,7 +45,7 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_F_FE1D2DContinuityLine = 
         new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine" );
       
-      public static final QName WB1D2D_F_FE1D2DPolyElement = 
+      public static final QName WB1D2D_F_POLY_ELEMENT = 
             new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );
 
       public final static QName WB1D2D_PROP_DIRECTEDEDGE = 

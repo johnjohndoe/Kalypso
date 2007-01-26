@@ -40,7 +40,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   {
     super( 
           featureToBind, 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE );
+          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     // m_discretisationModel = new FE1D2DDiscretisationModel( getFeature().getParent() );
     //
@@ -54,7 +54,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       containers = 
             new FeatureWrapperCollection<IFE1D2DEdge>( 
                 featureToBind, 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, 
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS/*QNAME_PROP_NODE_CONTAINERS*/, 
                 IFE1D2DEdge.class );
     }
@@ -89,7 +89,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
         Util.createFeatureAsProperty( 
                   parentFeature, 
                   propQName, 
-                  Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE ) );
+                  Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
   }
   
   //TODO implements this constructor
@@ -128,7 +128,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
                 /*FE1D2DDiscretisationModel.QNAME_PROP_NODES*/ );
     final IFeatureType nodeType = 
       parentFT.getGMLSchema().getFeatureType( 
-              Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE  );
+              Kalypso1D2DSchemaConstants.WB1D2D_F_NODE  );
     final Feature nodeFeature = 
       parentFeature.getWorkspace().createFeature( 
               parentFeature, parentNodeProperty, nodeType );

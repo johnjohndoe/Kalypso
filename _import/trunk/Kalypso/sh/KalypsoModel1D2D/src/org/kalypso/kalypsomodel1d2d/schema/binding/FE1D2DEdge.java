@@ -43,7 +43,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   {
     super( 
           featureToBind, 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE );
+          Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
     // containers
     Object prop = 
       featureToBind.getProperty( 
@@ -51,7 +51,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     if( prop == null )
     {
       // create the property tha is still missing
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
     }
     else
     {
@@ -68,7 +68,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     if( prop == null )
     {
       // create the property tha is still missing
-      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
     }
     else
     {
@@ -91,7 +91,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
    */
   public FE1D2DEdge( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE ) );
+    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE ) );
   }
 
   /**
@@ -161,7 +161,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
     final IFeatureType edgeType = 
             parentFT.getGMLSchema().getFeatureType( 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE /*QNAME_FE1D2DEdge*/ );
+                Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE /*QNAME_FE1D2DEdge*/ );
     final Feature edgeFeature = 
             parentFeature.getWorkspace().createFeature( 
                     parentFeature, parentEdgeProperty, edgeType );

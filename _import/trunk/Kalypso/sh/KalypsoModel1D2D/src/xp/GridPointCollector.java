@@ -227,6 +227,7 @@ class GridPointCollector implements IGeometryBuilder
         newSide=oldBuilder.getNewBuilder();
         sides[actualSideKey]= newSide;
         GM_Point lastP=oldBuilder.getLastPoint();  
+        newSide.setCntPoints( computeSize() );
         if(lastP!=null)
         {
           newSide.addPoint( lastP );
@@ -235,7 +236,7 @@ class GridPointCollector implements IGeometryBuilder
         {
           logger.warn( "Last point is null" );
         }
-        newSide.setCntPoints( computeSize() );
+        
       }
     }
     else

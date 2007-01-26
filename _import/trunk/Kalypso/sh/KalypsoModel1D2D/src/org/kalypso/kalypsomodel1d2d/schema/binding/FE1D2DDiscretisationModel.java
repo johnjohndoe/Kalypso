@@ -51,6 +51,8 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -58,18 +60,17 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
 {
-//  public final static QName QNAME_FE1D2DDiscretisationModel = 
-//        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" );
-
-//  public final static QName QNAME_PROP_EDGES = 
-//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" );
-
-//  public final static QName QNAME_PROP_ELEMENTS = 
-//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" );
-
-//  public final static QName QNAME_PROP_NODES = 
-//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
-
+  
+//  ModellEventListener meListener= 
+//    new ModellEventListener()
+//    {
+//
+//      public void onModellChange( ModellEvent modellEvent )
+//      {
+//        System.out.println("ModelEvent:"+modellEvent);
+//      }
+//    
+//    };
   private IFeatureWrapperCollection<IFE1D2DElement> m_elements = 
             new FeatureWrapperCollection<IFE1D2DElement>( 
                     getFeature(), 
@@ -88,12 +89,18 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
                       IFE1D2DNode.class, 
                       Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES
                       /*QNAME_PROP_NODES*/ );
+  
+  
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
     super( 
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel);
+    
+//    featureToBind.getWorkspace().addModellListener( meListener );
+//    System.out.println("Model event added");
+    
   }
 
   public FE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )

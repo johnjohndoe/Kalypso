@@ -119,11 +119,11 @@ public class CreateFEContlineWidget extends AbstractWidget
         final IFeatureType featureType = featureTheme.getFeatureType();
         if( GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DNODE
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE
                         /*FE1D2DNode.QNAME_FE1D2DNode*/ ) || 
             GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DEDGE
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE
                     /*FE1D2DEdge.QNAME_FE1D2DEdge*/ )|| 
             GMLSchemaUtilities.substitutes( 
                     featureType, 

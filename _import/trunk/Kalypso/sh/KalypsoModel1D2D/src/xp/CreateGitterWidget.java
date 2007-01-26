@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 
 import org.eclipse.core.resources.ICommand;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -365,4 +366,14 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
    isActivated=false;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( ISelection selection )
+  {
+    System.out.println("Sel="+selection);
+  }
+
+   
 }
