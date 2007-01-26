@@ -81,12 +81,12 @@ public class SplitSort implements FeatureList
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;
-    
+
     if( parentFeature == null )
     {
       System.out.println( "vfbr" );
     }
-    
+
     m_parentFeatureTypeProperty = parentFTP;
 
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
@@ -179,7 +179,7 @@ public class SplitSort implements FeatureList
     }
   }
 
-  public boolean remove( Object object )
+  public boolean remove( final Object object )
   {
     final GM_Envelope env = getEnvelope( object );
     if( env != null )
@@ -377,9 +377,13 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#removeAll(java.util.Collection)
    */
-  public boolean removeAll( Collection c )
+  public boolean removeAll( final Collection c )
   {
-    throw new UnsupportedOperationException();
+    boolean result = false;
+    for( final Object object : c )
+      result |= remove( object );
+
+    return result;
   }
 
   /**
@@ -391,6 +395,8 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * 
    * @see java.util.List#iterator()
    */
   public Iterator iterator( )
@@ -401,12 +407,14 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#subList(int, int)
    */
-  public List subList( int fromIndex, int toIndex )
+  public List subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
   }
 
   /**
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * 
    * @see java.util.List#listIterator()
    */
   public ListIterator listIterator( )
@@ -415,9 +423,11 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * 
    * @see java.util.List#listIterator(int)
    */
-  public ListIterator listIterator( int index )
+  public ListIterator listIterator( final int index )
   {
     return m_objects.listIterator( index );
   }
