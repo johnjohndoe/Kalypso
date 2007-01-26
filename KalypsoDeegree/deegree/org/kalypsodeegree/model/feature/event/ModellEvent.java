@@ -44,4 +44,58 @@ public class ModellEvent
   {
     return m_eventSource;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append( "ModelEvent[" );
+    //mask
+    appendMaskText( m_bitmaskType, buf );
+    //source
+    buf.append( m_eventSource );
+    buf.append(']');
+    return buf.toString();
+  }
+  
+  /**
+   * compute and append the text representation of the mask.
+   * the mask may cover multiple types
+   *
+   */
+  private static final void appendMaskText(final long bitmask, StringBuffer buf)
+  {
+    if(( FEATURE_CHANGE & bitmask ) == bitmask)
+    {
+      buf.append( "FEATURE_CHANGE ");
+    }
+    
+    if((STYLE_CHANGE& bitmask ) == bitmask)
+    {
+      buf.append( "STYLE_CHANGE " );
+    }
+    
+    if((WIDGET_CHANGE& bitmask ) == bitmask)
+    {
+      buf.append("WIDGET_CHANGE ");
+    }
+    
+    if((FULL_CHANGE& bitmask ) == bitmask)
+    {
+      buf.append( "FULL_CHANGE ");
+    }
+    
+    if((THEME_ADDED& bitmask ) == bitmask)
+    {
+      buf.append("THEME_ADDED ");
+    }
+
+    if((LEGEND_UPDATED& bitmask ) == bitmask)
+    {
+      buf.append( "LEGEND_UPDATED");
+    }
+  }
 }
