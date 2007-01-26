@@ -128,6 +128,11 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
     return m_selection;
   }
 
+  protected IAction getAction( )
+  {
+    return m_action;
+  }
+  
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
