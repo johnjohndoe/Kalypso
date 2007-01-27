@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.action.IAction;
@@ -66,13 +67,15 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.wspwin.PrfSource;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSourceHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -184,7 +187,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     {
       try
       {
-        final IProfil profil = PrfSource.readProfile( file, "org.kalypso.model.wspm.tuhh.profiletype" );
+        final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+        final IProfil profil = ProfilSourceHelper.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
 
         profil.setProperty( IProfilConstants.PROFIL_PROPERTY_NAME, "Import" );
 
@@ -199,6 +203,11 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         prfReadStatus.add( status );
       }
       catch( final ProfilDataException e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
+        prfReadStatus.add( status );
+      }
+      catch( final CoreException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
         prfReadStatus.add( status );

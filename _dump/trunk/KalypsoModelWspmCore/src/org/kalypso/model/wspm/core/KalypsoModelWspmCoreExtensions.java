@@ -75,6 +75,9 @@ public class KalypsoModelWspmCoreExtensions
     return (IProfilSink) element.createExecutableExtension( "class" );
   }
 
+  /**
+   * @param fileExtension File extension without '.'
+   */
   public static IProfilSource createProfilSource( final String fileExtension ) throws CoreException
   {
     final Map<String, IConfigurationElement> sinkMap = getSinksOrSources( "source" );

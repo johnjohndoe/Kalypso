@@ -55,6 +55,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -65,12 +66,14 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.wspwin.PrfSource;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSourceHelper;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -287,6 +290,10 @@ public class WspWinImporter
       {
         status.add( StatusUtilities.statusFromThrowable( e ) );
       }
+      catch( final CoreException e )
+      {
+        status.add( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return status;
@@ -296,7 +303,7 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException
+  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException, CoreException
   {
     final String fileName = bean.getFileName();
 
@@ -317,8 +324,9 @@ public class WspWinImporter
     else
       profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
 
-    final IProfil profile = PrfSource.readProfile( prfFile, profiletype );
-
+    final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+    final IProfil profile = ProfilSourceHelper.readProfile( prfSource, prfFile, profiletype );
+    
     ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
     /* Set state as default name for profile. */
     prof.setName( bean.getStateName() );

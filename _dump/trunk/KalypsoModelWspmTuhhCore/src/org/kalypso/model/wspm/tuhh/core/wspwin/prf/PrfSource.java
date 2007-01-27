@@ -38,11 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.wspwin;
+package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -52,7 +50,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -62,7 +59,6 @@ import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
@@ -625,28 +621,4 @@ public class PrfSource implements IProfilSource
       return false;
     }
   }
-
-  public static IProfil readProfile( final File prfFile, final String profilType ) throws IOException
-  {
-    Reader fileReader = null;
-    try
-    {
-      fileReader = new BufferedReader( new FileReader( prfFile ) );
-
-      final IProfil profile = ProfilFactory.createProfil( profilType );
-
-      final IProfilSource prfSource = new PrfSource();
-      prfSource.read( profile, fileReader );
-
-      fileReader.close();
-      
-      return profile;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fileReader );
-    }
-
-  }
-
 }
