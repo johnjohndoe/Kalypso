@@ -70,6 +70,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -87,13 +88,6 @@ public class WspmTuhhCalcJob implements ISimulation
 
   // Timeout beim Rechnen([ms])
   public static final int PROCESS_TIMEOUT = 10 * 60 * 1000;
-
-  public static final String MESS_BERECHNUNG_ABGEBROCHEN = "Modell: Berechnung abgebrochen";
-
-  public WspmTuhhCalcJob( )
-  {
-    // will not be instantiated
-  }
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
@@ -135,18 +129,18 @@ public class WspmTuhhCalcJob implements ISimulation
     {
       pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
 
-      pwSimuLog.println( "Parsing GMLXPath: " + calcXPath );
-      monitor.setMessage( "Parsing GMLXPath: " + calcXPath );
+      final LogHelper log = new LogHelper( pwSimuLog, monitor );
+      log.log( true, "Parsing GMLXPath: %s", calcXPath );
+      
       final GMLXPath calcpath = new GMLXPath( calcXPath );
 
       // load gml
-      pwSimuLog.println( "Loading GML: " + modellGmlURL );
-      monitor.setMessage( "Loading GML: " + modellGmlURL );
+      log.log( true, "Loading GML: %s", modellGmlURL );
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL, null );
 
       // get calculation via path
-      pwSimuLog.println( "Loading Calculation: " + calcXPath );
-      monitor.setMessage( "Loading Calculation: " + calcXPath );
+      log.log( true, "Loading Calculation: %s", calcXPath );
 
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof Feature) )
@@ -159,8 +153,8 @@ public class WspmTuhhCalcJob implements ISimulation
       final TuhhCalculation calculation = new TuhhCalculation( calculationFeature );
 
       monitor.setProgress( 10 );
-      pwSimuLog.println( "Writing files for tuhh-mode" );
-      monitor.setMessage( "Writing kernel data" );
+      
+      log.log( true, "Writing files for tuhh calculation-core..." );
 
       // write calculation to tmpDir
       WspWinExporter.writeForTuhhKernel( calculation, tmpDir );
@@ -173,7 +167,6 @@ public class WspmTuhhCalcJob implements ISimulation
       zipInputStream = WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" );
       ZipUtilities.unzip( zipInputStream, tmpDir, false );
 
-      pwSimuLog.println( "Log-Dateien werden übertragen." );
       // prepare kernel logs (log and err)
       final File fleKernelLog = new File( tmpDir, "kernel.log" );
       resultEater.addResult( "KernelLog", fleKernelLog );
@@ -199,23 +192,19 @@ public class WspmTuhhCalcJob implements ISimulation
       pwBat.close();
       String sCmd = "\"" + fleBat.getAbsolutePath() + "\"";
 
-      // String sCmd = "Kalypso-1D.exe";
-
       monitor.setProgress( 20 );
-      monitor.setMessage( "Executing model" );
 
-      new String();
-      if( monitor.isCanceled() )
-      {
-        pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
-      }
+      /* Start kalypso-1d.exe */
+      log.log( true, "Executing calculation core..." );
+
+      if( log.checkCanceled() )
+        return;
 
       // start calculation
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
-      if( monitor.isCanceled() )
-      {
-        pwSimuLog.println( MESS_BERECHNUNG_ABGEBROCHEN );
-      }
+      
+      if( log.checkCanceled() )
+        return;
 
       // load results + copy to result folder + unzip templates
       monitor.setProgress( 80 );
@@ -227,23 +216,27 @@ public class WspmTuhhCalcJob implements ISimulation
       if( ctrlFile.exists() )
       {
         resultEater.addResult( "ControlFile", ctrlFile );
-        pwSimuLog.println( " - Kontroll-Datei erzeugt." );
+        
+        log.log( false, " - Kontroll-Datei erzeugt." );
       }
 
       final File beiwerteFile = new File( dathDir, "Beiwerte.aus" );
       if( beiwerteFile.exists() )
       {
         resultEater.addResult( "BeiwerteAus", beiwerteFile );
-        pwSimuLog.println( " - Beiwerte-Datei erzeugt." );
+        log.log( false,  " - Beiwerte-Datei erzeugt." );
       }
 
       final File lambdaFile = new File( dathDir, "lambda_i.txt" );
       if( lambdaFile.exists() )
       {
         resultEater.addResult( "LambdaI", lambdaFile );
-        pwSimuLog.println( " - LambdaI-Datei erzeugt." );
+        log.log( false,  " - LambdaI-Datei erzeugt." );
       }
 
+      if( log.checkCanceled() )
+        return;
+      
       MODE calcMode = calculation.getCalcMode();
       switch( calcMode )
       {
@@ -265,9 +258,12 @@ public class WspmTuhhCalcJob implements ISimulation
             if( mapFile.exists() )
             {
               resultEater.addResult( "OvwMap", mapFile );
-              pwSimuLog.println( " - Übersichtskarte erzeugt." );
+              log.log( false,  " - Übersichtskarte erzeugt." );
             }
           }
+
+          if( log.checkCanceled() )
+            return;
 
           //
           // laengsschnitt.txt
@@ -276,7 +272,7 @@ public class WspmTuhhCalcJob implements ISimulation
           if( lenSecFile.exists() )
           {
             resultEater.addResult( "LengthSection", lenSecFile );
-            pwSimuLog.println( " - Längsschnitt erzeugt." );
+            log.log( false,  " - Längsschnitt erzeugt." );
 
             // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
             // (without header) + new footer
@@ -303,7 +299,7 @@ public class WspmTuhhCalcJob implements ISimulation
             if( lengthSectionGmlFile.exists() )
             {
               resultEater.addResult( "LengthSectionGml", lengthSectionGmlFile );
-              pwSimuLog.println( " - Längsschnitt (als GML) erzeugt." );
+              log.log( false,  " - Längsschnitt (als GML) erzeugt." );
 
               // Read Length-Section GML
               final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
@@ -327,13 +323,16 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( diagFile.exists() )
                 {
                   resultEater.addResult( "LengthSectionDiag", diagFile );
-                  pwSimuLog.println( " - Längsschnitt-Diagramm erzeugt." );
+                  log.log( false,  " - Längsschnitt-Diagramm erzeugt." );
                 }
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Längsschnitt-Diagramm konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+                log.log( e, "Längsschnitt-Diagramm konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
+
+              if( log.checkCanceled() )
+                return;
 
               //
               // Table
@@ -345,12 +344,15 @@ public class WspmTuhhCalcJob implements ISimulation
                 FileUtilities.makeFileFromUrl( tableUrl, tableFile, false );
 
                 resultEater.addResult( "LengthSectionTab", tableFile );
-                pwSimuLog.println( " - Tabelle erzeugt." );
+                log.log( false,  " - Tabelle erzeugt." );
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Tabelle konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+                log.log( e, "Tabelle konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
+
+              if( log.checkCanceled() )
+                return;
 
               //
               // Breaklines
@@ -362,13 +364,16 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( breaklineFile.exists() )
                 {
                   resultEater.addResult( "Bruchkanten", breaklineFile );
-                  pwSimuLog.println( " - Bruchkanten erzeugt." );
+                  log.log( false,  " - Bruchkanten erzeugt." );
                 }
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Bruchkanten konnten nicht erzeugt werden: " + e.getLocalizedMessage() );
+                log.log( e, "Bruchkanten konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
+
+              if( log.checkCanceled() )
+                return;
 
               //
               // Model-Boundaries
@@ -380,14 +385,16 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( file.exists() )
                 {
                   resultEater.addResult( "Modellgrenzen", file );
-                  pwSimuLog.println( " - Modellgrenzen erzeugt." );
+                  log.log( false,  " - Modellgrenzen erzeugt." );
                 }
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Modellgrenzen konnten nicht erzeugt werden: " );
-                e.printStackTrace( pwSimuLog );
+                log.log( e, "Modellgrenzen konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
+
+              if( log.checkCanceled() )
+                return;
 
               //
               // Waterlevel
@@ -399,13 +406,17 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( file.exists() )
                 {
                   resultEater.addResult( "Ueberschwemmungslinie", file );
-                  pwSimuLog.println( " - Überschwemmungslinie erzeugt." );
+                  log.log( false,  " - Überschwemmungslinie erzeugt." );
                 }
               }
               catch( final Exception e )
               {
-                pwSimuLog.println( "Überschwemmungslinie konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+                log.log( e, "Überschwemmungslinie konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
+              
+              if( log.checkCanceled() )
+                return;
+
             }
           }
 
@@ -416,7 +427,8 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] );
-            pwSimuLog.println( " - Ergebnisliste erzeugt." );
+            
+            log.log( false,  " - Ergebnisliste erzeugt." );
           }
 
           break;
@@ -432,7 +444,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-            pwSimuLog.println( " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
+            log.log( false,  " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
           }
 
           // *.tab (-> fixed name "Ergebnis.list")
@@ -442,7 +454,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] );
-            pwSimuLog.println( " - Ergebnisliste erzeugt." );
+            log.log( false,  " - Ergebnisliste erzeugt." );
           }
 
           break;
@@ -458,7 +470,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-            pwSimuLog.println( " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
+            log.log( false,  " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
           }
 
           // *.km (W/Q-Tabelle für Kalinin-Miljukow)
@@ -468,7 +480,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one KM
             resultEater.addResult( "wqKalMil", kmFiles[0] );
-            pwSimuLog.println( " - W/Q-Tabelle zur Bestimmung der Kalinin-Miljukow-Parameter erzeugt." );
+            log.log( false,  " - W/Q-Tabelle zur Bestimmung der Kalinin-Miljukow-Parameter erzeugt." );
           }
 
           // *.pro (W/Q-Tabellen für jedes Profil -> Verzeichnis)
@@ -477,11 +489,17 @@ public class WspmTuhhCalcJob implements ISimulation
           final File wqProProfilDir = new File( dathDir, "WQTabs" );
           wqProProfilDir.mkdirs();
           for( final File file : proFiles )
+          {
             FileUtils.copyFileToDirectory( file, wqProProfilDir );
+            
+            if( log.checkCanceled() )
+              return;
+          }
+          
           if( wqProProfilDir.exists() )
           {
             resultEater.addResult( "wqProProfil", wqProProfilDir );
-            pwSimuLog.println( " - W/Q-Tabelle pro Profil erzeugt." );
+            log.log( false,  " - W/Q-Tabelle pro Profil erzeugt." );
           }
 
           // *.tb (Ergebnislisten für jeden Abfluss -> Verzeichnis)
@@ -494,7 +512,7 @@ public class WspmTuhhCalcJob implements ISimulation
           if( resNonUniDir.exists() )
           {
             resultEater.addResult( "resultListsNonUni", resNonUniDir );
-            pwSimuLog.println( " - Ergebnislisten pro Abfluss erzeugt." );
+            log.log( false,  " - Ergebnislisten pro Abfluss erzeugt." );
           }
           break;
         }

@@ -85,8 +85,14 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
  * @author Monika Thül
@@ -104,7 +110,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURL(), null );
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
@@ -167,12 +173,28 @@ public class BreakLinesHelper implements IWspmConstants
   {
     try
     {
-      final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
-      final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
-      // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
-      return (GM_Curve) cloneObject;
+      if( epsThinning > 0.0 )
+      {
+        final LineString line = (LineString) JTSAdapter.export( curve );
+        final Coordinate[] coordinates = line.getCoordinates();
+        // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
+        final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
+        final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+        return (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+      }
+      else
+      {
+        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
+        final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
+        return (GM_Curve) cloneObject;
+      }
     }
     catch( final CloneNotSupportedException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -189,7 +211,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURL(), null );
       final Feature rootFeature = workspace.getRootFeature();
 
       // we assume that all points have the same crs

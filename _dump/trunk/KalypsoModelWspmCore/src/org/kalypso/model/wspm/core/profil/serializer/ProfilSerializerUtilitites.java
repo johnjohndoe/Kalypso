@@ -41,10 +41,15 @@
 package org.kalypso.model.wspm.core.profil.serializer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -55,35 +60,54 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
  * 
  * @author Gernot Belger
  */
-public class ProfilSourceHelper
+public class ProfilSerializerUtilitites
 {
-  private ProfilSourceHelper( )
+  private ProfilSerializerUtilitites( )
   {
     // Helper class, do not instantiate
   }
-  
 
   /** Read a file via the given profile source and creates a profile from it. */
   public static IProfil readProfile( final IProfilSource source, final File prfFile, final String profilType ) throws IOException
   {
+    final IProfil profile = ProfilFactory.createProfil( profilType );
+
     Reader fileReader = null;
     try
     {
-      fileReader = new BufferedReader( new FileReader( prfFile ) );
-
-      final IProfil profile = ProfilFactory.createProfil( profilType );
-
+      fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( prfFile ) ) );
       source.read( profile, fileReader );
-
       fileReader.close();
-      
+
       return profile;
     }
     finally
     {
       IOUtils.closeQuietly( fileReader );
     }
+  }
 
+  /**
+   * Writes a single profile into a file.
+   * 
+   * @param file
+   *          The file to write into
+   * @param profile
+   *          This profiles gets written
+   */
+  public static void writeProfile( final IProfilSink sink, final IProfil profile, final File file ) throws IOException
+  {
+    Writer writer = null;
+    try
+    {
+      writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
+      sink.write( profile, writer );
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 
 }

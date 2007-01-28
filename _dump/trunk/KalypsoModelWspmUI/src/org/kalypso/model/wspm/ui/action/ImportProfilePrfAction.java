@@ -75,7 +75,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSourceHelper;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -188,7 +188,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       try
       {
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
-        final IProfil profil = ProfilSourceHelper.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
+        final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
 
         profil.setProperty( IProfilConstants.PROFIL_PROPERTY_NAME, "Import" );
 
@@ -322,54 +322,6 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
     if( workspace != null )
       workspace.postCommand( command );
-
-    // final Job job = new Job( "Übertrage Profile in GML-Struktur" )
-    // {
-    // @Override
-    // protected IStatus run( final IProgressMonitor monitor )
-    // {
-    // monitor.beginTask( "Übertrage Profile in GML-Struktur", profiles.size() );
-    //
-    // final Feature waterFeature = fate.getParentFeature();
-    // final WspmWaterBody water = new WspmWaterBody( waterFeature );
-    // final List<Feature> newFeatureList = new ArrayList<Feature>();
-    // try
-    // {
-    // for( final IProfil profile : profiles )
-    // {
-    // final WspmProfile gmlProfile = water.createNewProfile();
-    // ProfileFeatureFactory.toFeature( profile, gmlProfile.getFeature() );
-    //
-    // newFeatureList.add( gmlProfile.getFeature() );
-    // monitor.worked( 1 );
-    // }
-    //
-    // return Status.OK_STATUS;
-    // }
-    // catch( final GMLSchemaException e )
-    // {
-    // // should never happen, just log
-    // final IStatus status = StatusUtilities.statusFromThrowable( e );
-    // KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    // return status;
-    // }
-    // finally
-    // {
-    // monitor.done();
-    //
-    // final Feature[] addedFeatures = newFeatureList.toArray( new Feature[newFeatureList.size()] );
-    //
-    // final GMLWorkspace workspace = waterFeature.getWorkspace();
-    // final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, waterFeature, addedFeatures,
-    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-    // workspace.fireModellEvent( event );
-    // }
-    // }
-    // };
-    //
-    // job.setUser( true );
-    // job.schedule();
-
   }
 
 }

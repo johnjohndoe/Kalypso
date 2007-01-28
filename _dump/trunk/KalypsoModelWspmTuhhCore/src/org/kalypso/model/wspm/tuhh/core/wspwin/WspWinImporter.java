@@ -73,7 +73,7 @@ import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSourceHelper;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -325,7 +325,7 @@ public class WspWinImporter
       profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
 
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
-    final IProfil profile = ProfilSourceHelper.readProfile( prfSource, prfFile, profiletype );
+    final IProfil profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
     
     ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
     /* Set state as default name for profile. */

@@ -46,9 +46,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author kimwerner
- *
  */
 public interface IProfilSink
 {
-public void write(final IProfil profil,final Writer writer);
+  public void write( final IProfil profil, final Writer writer );
 }

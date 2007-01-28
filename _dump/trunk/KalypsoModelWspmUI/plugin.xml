@@ -231,17 +231,31 @@
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
          <menu
-               id="org.kalypso.model.wspm.ui"
-               label="Import"
+               id="org.kalypso.model.wspm.ui.menu.export"
+               label="&amp;Export"
+               path="additions">
+            <groupMarker name="exports"/>
+            <separator name="additions"/>
+         </menu>
+         <menu
+               id="org.kalypso.model.wspm.ui.menu.import"
+               label="&amp;Import"
                path="additions">
             <groupMarker name="imports"/>
             <separator name="additions"/>
          </menu>
          <action
+               class="org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
+               id="KalypsoModelWspmUI.action1"
+               label="als .&amp;prf Datei(en)"
+               menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
+               style="push"
+               tooltip="Exportiert die markierten Profile im .prf Format"/>
+         <action
                class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               label=".prf Dateien"
-               menubarPath="org.kalypso.model.wspm.ui/imports"
+               label=".&amp;prf Dateien"
+               menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
                style="push"
                tooltip="Importiert eine oder mehrere WspWin .prf Dateien in diese Profil-Liste"/>
          <action
