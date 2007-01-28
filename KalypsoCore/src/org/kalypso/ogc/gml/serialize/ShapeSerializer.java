@@ -207,7 +207,7 @@ public class ShapeSerializer
       
       final Feature rootFeature = createShapeRootFeature( featureType );
       final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
-      final List<Feature> list = (List<Feature>) rootFeature.getProperty( listRelation );
+      final List list = (List) rootFeature.getProperty( listRelation );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
       // Anpassung hier:
