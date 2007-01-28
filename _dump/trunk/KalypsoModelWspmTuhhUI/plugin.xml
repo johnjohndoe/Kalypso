@@ -34,13 +34,13 @@
       </objectContribution>
             <objectContribution
             adaptable="false"
-            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
-            objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.feature.tuhhreach"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
          <filter
-               name="featureAssociationQname"
-               value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
+               name="featureType"
+               value="org.kalypso.model.wspm.tuhh#ReachWspmTuhhSteadyState"/>
          <action
-               class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
+               class="org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                label="Profile in neuer Karte anzeigen"
@@ -48,22 +48,7 @@
                style="push"
                tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
       </objectContribution>
-            <!--objectContribution
-                  adaptable="false"
-                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.showProfileinMap"
-                  objectClass="org.kalypsodeegree.model.feature.Feature">
-               <filter
-                     name="featureType"
-                     value="org.kalypso.model.wspm.tuhh#ReachWspmTuhhSteadyState"/>
-               <action
-                     class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-                     icon="icons/elcl16/createProfileMap.gif"
-                     id="KalypsoModelWspmTuhhUI.action1"
-                     label="Profile in neuer Karte anzeigen"
-                     menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-                     style="push"
-                     tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
-            </objectContribution-->
+
             <objectContribution
                   adaptable="false"
                   id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"

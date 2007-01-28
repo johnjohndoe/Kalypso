@@ -1,16 +1,19 @@
 package org.kalypso.model.wspm.ui.action;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -26,9 +29,8 @@ import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
@@ -36,7 +38,20 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class CreateProfileMapAction extends ActionDelegate
 {
-  private ISelection m_selection;
+  private IFeatureSelection m_selection;
+
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+    m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
+
+    if( action != null )
+      action.setEnabled( m_selection != null );
+  }
 
   /**
    * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
@@ -45,21 +60,16 @@ public class CreateProfileMapAction extends ActionDelegate
   @Override
   public void runWithEvent( final IAction action, final Event event )
   {
-    /* retrieve selected profile-collections/string-segment-collections, abort if none */
+    /* retrieve selected profile-collections, abort if none */
     final Map<Feature, IRelationType> selectedProfiles = new HashMap<Feature, IRelationType>();
-    if( m_selection instanceof IStructuredSelection )
+    for( final Object selectedObject : m_selection.toList() )
     {
-      for( final Object selectedObject : ((IStructuredSelection) m_selection).toList() )
+      if( selectedObject instanceof FeatureAssociationTypeElement )
       {
-        if( selectedObject instanceof Feature )
-          addFeature( selectedProfiles, (Feature) selectedObject );
-        else if( selectedObject instanceof FeatureAssociationTypeElement )
-        {
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
-          final Feature parentFeature = fate.getParentFeature();
+        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
+        final Feature parentFeature = fate.getParentFeature();
 
-          selectedProfiles.put( parentFeature, fate.getAssociationTypeProperty() );
-        }
+        selectedProfiles.put( parentFeature, fate.getAssociationTypeProperty() );
       }
     }
 
@@ -71,6 +81,15 @@ public class CreateProfileMapAction extends ActionDelegate
       return;
     }
 
+    createAndOpenMap( action, selectedProfiles, shell );
+  }
+
+  public static void createAndOpenMap( final IAction action, final Map<Feature, IRelationType> selectedProfiles, final Shell shell )
+  {
+    final String mapTemplate = createMapTemplate( action, selectedProfiles, shell );
+    if( mapTemplate == null )
+      return;
+
     final UIJob uijob = new UIJob( "Open GML Editor" )
     {
       @Override
@@ -78,11 +97,6 @@ public class CreateProfileMapAction extends ActionDelegate
       {
         try
         {
-          final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
-          final StringWriter stringWriter = new StringWriter();
-          GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" );
-          stringWriter.close();
-
           final IWorkbench workbench = PlatformUI.getWorkbench();
 
           final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
@@ -90,7 +104,7 @@ public class CreateProfileMapAction extends ActionDelegate
 
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
-          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", stringWriter.toString(), null ) );
+          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", mapTemplate, null ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
@@ -106,25 +120,29 @@ public class CreateProfileMapAction extends ActionDelegate
     uijob.schedule();
   }
 
-  private void addFeature( final Map<Feature, IRelationType> selectedProfiles, final Feature feature )
+  private static String createMapTemplate( final IAction action, final Map<Feature, IRelationType> selectedProfiles, final Shell shell )
   {
-    final WspmProfile profile = ProfileFeatureProvider.findProfile( feature );
-    if( profile == null )
-      return;
-    
-    final Feature profileFeature = profile.getFeature();
-    final IRelationType rt = profileFeature.getParentRelation();
-    if( rt != null )
-      selectedProfiles.put( profileFeature.getParent(), rt );
+    try
+    {
+      final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
+      final StringWriter stringWriter = new StringWriter();
+      GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" );
+      stringWriter.close();
+
+      return stringWriter.toString();
+    }
+    catch( final JAXBException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      ErrorDialog.openError( shell, action.getText(), "Kartenvorlage konnte nicht erzeugt werden", status );
+      return null;
+    }
+    catch( final IOException e )
+    {
+      // will never happen as we have a string-writer here
+      e.printStackTrace();
+      return null;
+    }
   }
 
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    m_selection = selection;
-  }
 }
