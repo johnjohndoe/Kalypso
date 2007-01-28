@@ -123,8 +123,9 @@ public class TimeLogger
   }
   
   /**
-   *  @deprecated Use {@link #takeInterimTime()} and instead.
+   *  @deprecated Use {@link #takeInterimTime()} and {@link #printCurrentInterim(String)} instead.
    */
+  @Deprecated
   public void showElapsedTime( final String message )
   {
     final long current = System.currentTimeMillis();

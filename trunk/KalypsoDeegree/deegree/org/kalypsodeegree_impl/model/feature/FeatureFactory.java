@@ -286,17 +286,6 @@ public class FeatureFactory
 
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
-   * 
-   * @deprecated Use {@link #createGMLWorkspace(QName, URL, IFeatureProviderFactory)} instead, always provide a context.
-   */
-  @Deprecated
-  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final IFeatureProviderFactory factory ) throws InvocationTargetException
-  {
-    return createGMLWorkspace( rootFeatureQName, null, factory );
-  }
-
-  /**
-   * create a new GMLWorkspace with a root feature for the given feature type
    */
   public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
   {

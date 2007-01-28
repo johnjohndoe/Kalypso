@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
- * @author vdoemming
+ * @author Andreas von Dömming
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
@@ -79,9 +79,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final HashMap<KalypsoUserStyle, StyleDisplayMap> m_styleDisplayMap = new HashMap<KalypsoUserStyle, StyleDisplayMap>();
 
-  private IFeatureType m_featureType = null;
+  private final IFeatureType m_featureType;
 
-  protected FeatureList m_featureList = null;
+  private final FeatureList m_featureList;
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -95,7 +95,30 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_featurePath = featurePath;
     m_selectionManager = selectionManager;
 
-    m_featureType = getFeatureType();
+    final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
+    if( featureFromPath instanceof FeatureList )
+    {
+      m_featureList = (FeatureList) featureFromPath;
+      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
+    }
+    else if( featureFromPath instanceof Feature )
+    {
+      final Feature singleFeature = (Feature) featureFromPath;
+      final Feature parent = singleFeature.getParent();
+      m_featureList = new SplitSort( parent, singleFeature.getParentRelation() );
+      m_featureList.add( singleFeature );
+      m_featureType = singleFeature.getFeatureType();
+    }
+    else
+    {
+      m_featureList = null;
+      m_featureType = null;
+    }
+
+    if( m_featureList != null && m_featureList.getParentFeature() == null )
+    {
+      System.out.println( "BAD!" );
+    }
 
     m_workspace.addModellListener( this );
   }
@@ -128,40 +151,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public IFeatureType getFeatureType( )
   {
-    init();
     return m_featureType;
-  }
-
-  public void init( )
-  {
-    if( m_featureType != null )
-      return; // allready initialized
-    final IFeatureType ft;
-    final FeatureList fl;
-
-    final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
-    if( featureFromPath instanceof FeatureList )
-    {
-      fl = (FeatureList) featureFromPath;
-      // ft = fl.getParentFeatureTypeProperty().getTargetFeatureType();
-      ft = m_workspace.getFeatureTypeFromPath( m_featurePath );
-    }
-    else if( featureFromPath instanceof Feature )
-    {
-      fl = new SplitSort( null, null );
-      fl.add( featureFromPath );
-      ft = ((Feature) featureFromPath).getFeatureType();
-    }
-    else
-    {
-      // TODO: do not do this, feature list without parent will lead to NPEs elsewhere!!!
-      fl = new SplitSort( null, null );
-      ft = null;
-      // throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
-    }
-    m_featureList = fl;
-    m_featureType = ft;
-    // TODO change concept to support multiple featuretypes ...
   }
 
   /**
@@ -173,15 +163,38 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     // find all selected/unselected features in this theme
     final FeatureList featureList = getFeatureList();
+    if( featureList == null )
+      return;
+
     final List<Feature> globalSelectedFeatures = m_selectionManager.toList();
     final List featuresFilter = new ArrayList( featureList.size() );
 
-    // Resolve linked features
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    final Feature parentFeature = featureList.getParentFeature();
+    final GMLWorkspace workspace;
+    if( parentFeature == null )
+    {
+      // this handles the special case where we are just showing the root feature
+      if( featureList.size() > 0 )
+      {
+        final Object object = featureList.get( 0 );
+        workspace = object instanceof Feature ? ((Feature) object).getWorkspace() : null;
+      }
+      else
+        workspace = null;
+    }
+    else
+      workspace = parentFeature.getWorkspace();
+
     for( final Object o : featureList )
     {
-      final Feature feature = FeatureHelper.getFeature( workspace, o );
-      featuresFilter.add( feature );
+      final Feature feature;
+      if( workspace == null )
+        feature = o instanceof Feature ? (Feature) o : null;
+      else
+        feature = FeatureHelper.getFeature( workspace, o );
+
+      if( feature != null )
+        featuresFilter.add( feature );
     }
 
     if( selected )
@@ -218,6 +231,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
+    if( m_featureList == null )
+      return;
+
     if( modellEvent instanceof IGMLWorkspaceModellEvent )
     {
       // my workspace ?
@@ -296,7 +312,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public GM_Envelope getBoundingBox( )
   {
-    return m_featureList.getBoundingBox();
+    return m_featureList == null ? null : m_featureList.getBoundingBox();
   }
 
   public FeatureList getFeatureList( )
@@ -309,6 +325,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public FeatureList getFeatureListVisible( GM_Envelope env )
   {
+    if( m_featureList == null )
+      return null;
+
     if( env == null )
       env = getBoundingBox();
     final Set<Feature> result = new HashSet<Feature>();
@@ -438,7 +457,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     public void restyle( final GM_Envelope env )
     {
-      if( env != null && (m_vaildEnvelope == null || !m_vaildEnvelope.contains( env )) )
+      if( m_featureList != null && env != null && (m_vaildEnvelope == null || !m_vaildEnvelope.contains( env )) )
       { // restyle
         if( m_vaildEnvelope == null )
           m_vaildEnvelope = env;
