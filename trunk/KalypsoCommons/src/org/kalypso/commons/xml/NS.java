@@ -106,4 +106,6 @@ public interface NS
 
   public static final String COMMON = "org.kalypso.gml.common";
 
+  public static final String COMMON_SHP = "org.kalypso.gml.common.shape";
+
 }

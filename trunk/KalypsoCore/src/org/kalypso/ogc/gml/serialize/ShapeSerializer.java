@@ -86,6 +86,8 @@ public class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( "namespace", "name" );
 
+  private static final QName PROPERTY_TYPE = new QName( "namespace", "type" );
+
 //  private static final QName PROPERTY_BBOX = new QName( "namespace", "boundingBox" );
 
   private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
@@ -206,6 +208,10 @@ public class ShapeSerializer
       final IFeatureType featureType = sf.getFeatureType();
       
       final Feature rootFeature = createShapeRootFeature( featureType );
+      
+      final int fileShapeType = sf.getFileShapeType();
+      rootFeature.setProperty( PROPERTY_TYPE, fileShapeType );
+      
       final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
       final List list = (List) rootFeature.getProperty( listRelation );
 
@@ -240,15 +246,12 @@ public class ShapeSerializer
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
-    // root feature of shapefile does not need a boundingbox!
-    // final ITypeHandler envelopeTH = registry.getTypeHandlerForClassName( GeometryUtilities.getEnvelopeClass() );
-    // final IPropertyType boundingProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_BBOX,
-    // envelopeTH.getTypeName(), envelopeTH, 1, 1 );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY, false );
+    final ITypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
 
-    // final IPropertyType[] ftps = new IPropertyType[] { nameProp, boundingProp, memberProp };
-    final IPropertyType[] ftps = new IPropertyType[] { nameProp, memberProp };
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, ft, 0, IRelationType.UNBOUND_OCCURENCY, false );
+    final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ROOT_FEATURETYPE, ftps );
 
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true );

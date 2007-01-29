@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 17.1.2000 ap: method SHPPoint readPoint(byte[] b, int off) modified <BR>
  * 17.1.2000 ap: method SHPEnvelope readBox(byte[] b, int off) modified <BR>
  * 17.1.2000 ap: method writePoint(..) modified <BR>
- * 
+ * 19.1.2007 Thomas Jung: added readZRange(..) and writeZRange(..) for ShapeZ
  * <!---------------------------------------------------------------------------->
  * 
  * @version 25.1.2000
@@ -106,6 +106,30 @@ public class ShapeUtils
   }
 
   /**
+   * readZRange(byte[] b, int off) <BR>
+   * Reads the min. and max. z-value of a shpz-file (as double).
+   * 
+   * @param b
+   *          the raw data buffer
+   * @param off
+   *          the offset into the buffer where the int resides
+   * @return the z-value of the lowest and highest point (zmin and zmax) as doubles. 
+   */
+  public static SHPZRange readZRange( byte[] b, int off )
+  {
+
+    SHPZRange zrange = new SHPZRange();
+
+    zrange.zmin = ByteUtils.readLEDouble( b, off );
+    zrange.zmax = ByteUtils.readLEDouble( b, off + 8 );
+
+    return zrange;
+
+  }  
+  
+  
+  
+  /**
    * method: readBox(byte[] b, int off) <BR>
    * Reads a bounding box record. A bounding box is four double representing, in order, xmin, ymin, xmax, ymax.
    * 
@@ -132,6 +156,8 @@ public class ShapeUtils
 
   }
 
+  
+  
   /**
    * method: writePoint(byte[] b, int off, ESRIPoint point) <BR>
    * Writes the given point to the given buffer at the given location. The point is written as a double representing x
@@ -187,4 +213,33 @@ public class ShapeUtils
 
   }
 
+  /**
+   * method: writeZRange( byte[] b, int off, SHPZRange zrange ) <BR>
+   * Writes the given z-Range to the given buffer at the given location. The Z-Range is written as two
+   * doubles representing, in order, zmin and zmax.
+   * 
+   * @param b
+   *          the data buffer
+   * @param off
+   *          the offset into the buffer where writing should occur
+   * @param SHPZRange
+   *          the Z-Range to write
+   * @return the number of bytes written
+   */
+  public static int writeZRange( byte[] b, int off, SHPZRange zrange )
+  {
+    
+    SHPZRange zr = new SHPZRange();
+    zr.zmin  = zrange.zmin;
+    zr.zmax = zrange.zmax;
+
+
+    int nBytes = ByteUtils.writeLEDouble( b, off, zr.zmin );
+
+    nBytes += ByteUtils.writeLEDouble( b, off + nBytes, zr.zmax     );
+
+    return nBytes;
+
+  }  
+  
 }

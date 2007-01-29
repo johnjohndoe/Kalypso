@@ -72,7 +72,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * <p>
  * Uses class ByteUtils modified from the original package com.bbn.openmap.layer.shape <br>
  * Copyright (C) 1998 BBN Corporation 10 Moulton St. Cambridge, MA 02138 <br>
- * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 14.12.1999 ap: import clauses added <BR>
@@ -94,12 +93,10 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 21.03.2000 ap: method getByRecNo completed; multipoint is now supported <BR>
  * 16.08.2000 ap: method write(..) added <BR>
  * 16.08.2000 ap: method writeHeader(..) added <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
- *  
  */
 
 public class MainFile
@@ -168,7 +165,7 @@ public class MainFile
 
   }
 
-  public void close()
+  public void close( )
   {
     try
     {
@@ -186,7 +183,7 @@ public class MainFile
    * returns the minimum bounding rectangle of geometries <BR>
    * within the shape-file
    */
-  public SHPEnvelope getFileMBR()
+  public SHPEnvelope getFileMBR( )
   {
 
     return sfh.getFileMBR();
@@ -197,7 +194,7 @@ public class MainFile
    * method: getRecordNum() <BR>
    * returns the number of record with in a shape-file <BR>
    */
-  public int getRecordNum()
+  public int getRecordNum( )
   {
 
     return shx.getRecordNum();
@@ -240,8 +237,7 @@ public class MainFile
       /*
        * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
        */
-      if( ( shpType == ShapeConst.SHAPE_TYPE_POLYLINE ) || ( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
-          || ( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT ) )
+      if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ) || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ))
       {
 
         recordMBR = new SHPEnvelope( recBuf );
@@ -275,7 +271,7 @@ public class MainFile
     // multiply with 2 gets number of bytes to seek
     long rafPos = off * 2;
 
-    //fetch record header
+    // fetch record header
     rafShp.seek( rafPos );
 
     recBuf = null;
@@ -309,17 +305,33 @@ public class MainFile
       }
       else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
       {
-
         SHPPolyLine shppolyline = new SHPPolyLine( recBuf );
         shpGeom = shppolyline;
-
       }
       else if( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
       {
-
         SHPPolygon shppolygon = new SHPPolygon( recBuf );
         shpGeom = shppolygon;
-
+      }
+      if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
+      {
+        SHPPointz shppointz = new SHPPointz( recBuf, 4 );
+        shpGeom = shppointz;
+      }
+      else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
+      {
+        SHPPolyLinez shppolyline = new SHPPolyLinez( recBuf );
+        shpGeom = shppolyline;
+      }
+      else if( shpType == ShapeConst.SHAPE_TYPE_POLYGONZ )
+      {
+        SHPPolygonz shppolygonz = new SHPPolygonz( recBuf );
+        shpGeom = shppolygonz;
+      }
+      else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ )
+      {
+        SHPMultiPointz shpmultipointZ = new SHPMultiPointz( recBuf );
+        shpGeom = shpmultipointZ;
       }
 
     } // end if result
@@ -328,14 +340,15 @@ public class MainFile
 
   }
 
-  public int getFileShapeType()
+  public int getFileShapeType( )
   {
     return sfh.getFileShapeType();
   }
 
   /**
-   * method: getShapeType(int RecNo) <BR>
-   * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file <BR>
+   * returns the type of the RecNo'th Geometrie <BR>
+   * per definition a shape file contains onlay one shape type <BR>
+   * but null shapes are possible too! <BR>
    */
   public int getShapeTypeByRecNo( int RecNo ) throws IOException
   {
@@ -363,7 +376,7 @@ public class MainFile
     recBuf = null;
     recBuf = new byte[len];
 
-    if( rafShp.read( recBuf, 0, len ) != -1 )//ck: && recBuf.length != 0)
+    if( rafShp.read( recBuf, 0, len ) != -1 )// ck: && recBuf.length != 0)
     {
 
       shpType = ByteUtils.readLEInt( recBuf, 0 );

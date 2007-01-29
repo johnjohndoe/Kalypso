@@ -71,6 +71,7 @@ package org.kalypsodeegree_impl.io.shpapi;
  * 13.01.2000 ap: all variables except reBuffer removed <BR>
  * 16.08.2000 ap: field enevlope added <BR>
  * 16.08.2000 ap: method getEnvelope() added <BR>
+ * 26.01.2007 Thomas Jung: method getZRange() added <BR> * 
  * 
  * <!---------------------------------------------------------------------------->
  * 
@@ -84,6 +85,8 @@ public class SHPGeometry
   protected byte[] recBuffer = null;
 
   protected SHPEnvelope envelope = null;
+  
+  protected SHPZRange zRange = null;
 
   public SHPGeometry()
   {
@@ -106,4 +109,14 @@ public class SHPGeometry
     return envelope;
   }
 
+  
+  /**
+   * returns the Range of the z-values for Z-Shapes <BR>
+   */
+  public SHPZRange getZRange()
+  {
+    return zRange;
+  }
+
+  
 } // end of class SHPGeometry

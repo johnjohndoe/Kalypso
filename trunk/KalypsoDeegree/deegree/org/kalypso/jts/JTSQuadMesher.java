@@ -162,13 +162,13 @@ public class JTSQuadMesher
       // add a new point. the coordinates will be derived from the intersection nodes.
       meshPoints[j][0] = new Coordinate( coordinatesNewBottom[j] );
 
-      for( int i = 0; i < coordinatesNewLeft.length; i++ ) // (n-1), because the last is the top line
+      for( int i = 0; i < coordinatesNewLeft.length; i++ ) 
       {
         final double dxLeftToRight = coordinatesNewRight[i].x - coordinatesNewLeft[i].x;
         final double dyLeftToRight = coordinatesNewRight[i].y - coordinatesNewLeft[i].y;
 
         final double ratio = i / (coordinatesNewLeft.length - 1);
-        // d0 = d1*(1.-Fk)+d2*Fk;
+        
         final double relativeSegmentDistance = distSegmentBottom * (1 - ratio) + distSegmentTop * ratio;
         final double relativeDistance = distBottom * (1 - ratio) + distTop * ratio;
 

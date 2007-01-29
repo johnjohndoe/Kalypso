@@ -157,6 +157,8 @@ public class ShapeFile
     catch( final IOException e )
     {
       hasDBaseFile = false;
+      
+      e.printStackTrace();
     }
 
     /*
@@ -419,6 +421,57 @@ public class ShapeFile
         geom = null;
       }
     }
+    else if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
+    {
+      SHPPointz shppointz = (SHPPointz) shp.getByRecNo( RecNo );
+
+      geom = shpwks.transformPointz( null, shppointz );
+    }
+    else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
+    {
+      SHPPolyLinez shppolyline = (SHPPolyLinez) shp.getByRecNo( RecNo );
+
+      // TODO!
+      GM_Curve[] curves = shpwks.transformPolyLinez( null, shppolyline );
+
+      if( (curves != null) && (curves.length > 1) )
+      {
+        // create multi curve
+        GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
+        geom = mc;
+      }
+      else if( (curves != null) && (curves.length == 1) )
+      {
+        // single curve
+        geom = curves[0];
+      }
+      else
+      {
+        geom = null;
+      }
+    }
+    else if( shpType == ShapeConst.SHAPE_TYPE_POLYGONZ )
+    {
+      SHPPolygonz shppoly = (SHPPolygonz) shp.getByRecNo( RecNo );
+      // TODO!
+      GM_Surface[] polygonsz = shpwks.transformPolygonz( null, shppoly );
+
+      if( (polygonsz != null) && (polygonsz.length > 1) )
+      {
+        // create multi surface
+        GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygonsz, null );
+        geom = ms;
+      }
+      else if( (polygonsz != null) && (polygonsz.length == 1) )
+      {
+        geom = polygonsz[0];
+      }
+      else
+      {
+        geom = null;
+      }
+    }
+
 
     return geom;
   }
@@ -428,7 +481,7 @@ public class ShapeFile
    * per definition a shape file contains onlay one shape type <BR>
    * but null shapes are possible too! <BR>
    */
-  public int getShapeTypeByRecNo( int RecNo ) throws IOException
+  private int getShapeTypeByRecNo( int RecNo ) throws IOException
   {
     return shp.getShapeTypeByRecNo( RecNo );
   }
@@ -803,6 +856,10 @@ public class ShapeFile
       }
 
       // Get Geometry Type of i'th feature
+      
+      // TODO: this is bad! Like that, shape files with mixed shape-types may be produced
+      // Better: get global type from outside, and check if found geometry fits
+      // If not, write null-shape
       geotype = getGeometryType( features[i] );
 
       if( geotype < 0 )
@@ -985,5 +1042,10 @@ public class ShapeFile
   public IFeatureType getFeatureType( )
   {
     return m_dbf.getFeatureType();
+  }
+  
+  public int getFileShapeType()
+  {
+    return shp.getFileShapeType();
   }
 }
