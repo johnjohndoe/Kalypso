@@ -33,13 +33,4 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
       </factory>
    </extension>
-   <extension
-         point="org.eclipse.ui.newWizards">
-      <wizard
-            category="Imports"
-            class="org.kalypso.kalypsosimulationmodel.wizard.shapeImport.ImportWizard"
-            id="org.kalypso.kalypsosimulationmodel.wizard.shapeImport.ImportWizard"
-            name="Shape import wizard"
-            project="false"/>
-   </extension>
 </plugin>
