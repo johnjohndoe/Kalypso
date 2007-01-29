@@ -61,9 +61,9 @@ public class AbstractFeatureBinder
     return GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname );
   }
 
-  private final Feature m_featureToBind;
+  protected final Feature m_featureToBind;
 
-  private final QName m_qnameToBind;
+  protected final QName m_qnameToBind;
 
   public AbstractFeatureBinder( final Feature featureToBind, final QName qnameToBind )
   {
