@@ -38,7 +38,8 @@ public class SplitSort implements FeatureList
       {
         final GMLWorkspace workspace = getParentFeature().getWorkspace();
         final Feature fe = workspace.getFeature( (String) object );
-        return fe.getEnvelope();
+        if( fe != null )
+          return fe.getEnvelope();
       }
 
       return null;
