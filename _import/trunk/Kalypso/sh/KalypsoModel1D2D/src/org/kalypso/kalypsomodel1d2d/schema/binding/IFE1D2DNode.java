@@ -50,6 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
 {
   public GM_Point getPoint( );
+  public void setPoint(GM_Point newLocation);
 
   public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( );
   

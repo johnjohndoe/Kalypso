@@ -204,4 +204,27 @@ public class FE1D2DEdge extends AbstractFeatureBinder
                       /*QNAME_PROP_CURVE*/ );
   }
   
+  public void setCurve(GM_Curve curve)
+  {
+    if(curve==null)
+    {
+      return;
+    }
+    //TODO allow prop setting vor this
+    getFeature().setProperty( 
+         Kalypso1D2DSchemaConstants.WB1D2D_PROP_CURVE, 
+         curve );
+  }
+  
+  public void resetGeometry()
+  {
+    try
+    {
+      setCurve( recalculateEgdeGeometry() );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
 }

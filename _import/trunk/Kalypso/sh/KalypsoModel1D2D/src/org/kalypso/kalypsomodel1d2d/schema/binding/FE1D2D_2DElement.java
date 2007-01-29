@@ -15,6 +15,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
@@ -256,4 +257,21 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     return edges;
   }
 
+  public void setSurface(GM_Surface surface)
+  {
+    getFeature().setProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CURVE, 
+            surface);
+  }
+  public void resetGeometry()
+  {
+    try
+    {
+      setSurface( (GM_Surface)recalculateElementGeometry() );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
 }

@@ -188,7 +188,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="simBase:FEAbstractEdgeType">
+				base="wb1d2d:EdgeType">
 				<xs:sequence>	
 					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
 					<xs:element 
@@ -228,7 +228,7 @@
 			<xs:extension 
 				base="simBase:FEAbstractEdgeType">
 				<xs:sequence>	
-					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
+					<!--xs:element name="geometry" type="gml:LineStringPropertyType"/ -->
 					<xs:element 
 						ref="wb1d2d:directedNode"
 						minOccurs="2" 

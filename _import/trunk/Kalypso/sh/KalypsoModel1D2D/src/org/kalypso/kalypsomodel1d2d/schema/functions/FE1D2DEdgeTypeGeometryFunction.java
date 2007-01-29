@@ -6,12 +6,27 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
@@ -19,6 +34,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * 
  * @author Gernot Belger
  */
+@SuppressWarnings("unchecked")
 public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
 
 	/**
@@ -50,9 +66,53 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
 	 * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
 	 *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
 	 */
-	public Object setValue(Feature feature, IPropertyType pt, Object valueToSet) {
-		// TODO: move the corresponding node
+	
+  public Object setValue(Feature feature, IPropertyType pt, Object valueToSet) 
+    {
+		System.out.println("New Edge geometry="+valueToSet.getClass());
+        if(valueToSet instanceof GM_Curve)
+        {
+          
+          try
+          {
+            GM_LineString lineString=((GM_Curve)valueToSet).getAsLineString();
+            if(lineString.getNumberOfPoints()==2)
+            {
+              IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge=
+                    (IFE1D2DEdge)feature.getAdapter( IFE1D2DEdge.class );
+              if(edge!=null)
+              {
+                IFeatureWrapperCollection<IFE1D2DNode> nodes=edge.getNodes();
+                if(nodes.size()==2)
+                {
+                  System.out.println("Node set:"+
+                      lineString.getStartPoint().distance(
+                          nodes.get( 0 ).getPoint()));
+                  nodes.get( 0 ).setPoint( 
+                      lineString.getStartPoint());
+                  nodes.get( 1 ).setPoint( 
+                      lineString.getEndPoint()  );
+                  
+                  
+                 return valueToSet;
+                }
+                
+              }
+              
+            }
+            System.out.println("Not sets:"+lineString);
+            return null;
+          }
+          catch( GM_Exception e )
+          {
+            e.printStackTrace();
+            return null;
+          }
+        }
+        
+      // TODO: move the corresponding node
 		return null;
 	}
 
+  
 }

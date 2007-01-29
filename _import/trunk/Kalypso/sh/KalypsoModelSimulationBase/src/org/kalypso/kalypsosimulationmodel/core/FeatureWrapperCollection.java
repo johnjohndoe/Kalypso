@@ -372,12 +372,26 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 		return null;
 	}
 
-	public Object[] toArray() {
+	public Object[] toArray() 
+	{
 		int i = size();
 		Object objs[] = new Object[i];
 		Feature f;
+		Object fObj;
 		for (i--; i >= 0; i--) {
-			f = (Feature) featureList.get(i);
+			fObj=featureList.get(i);
+			if(fObj instanceof Feature)
+			{
+				f = (Feature) fObj;
+			}
+			else if(fObj instanceof String)
+			{
+				f=featureCol.getWorkspace().getFeature((String)fObj);
+			}
+			else
+			{
+				throw new RuntimeException("Type not known:"+fObj);
+			}
 			objs[i] = f.getAdapter(fwClass);
 		}
 		return objs;
