@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author belger
@@ -191,7 +192,6 @@ public class DeleteFeatureCommand implements ICommand
       if( !workspace.contains( featureToRemove ) )
         continue; // is allready remved
 
-
       if( rt.isList() )
       {
         final Object prop = parentFeature.getProperty( rt );
@@ -304,6 +304,8 @@ public class DeleteFeatureCommand implements ICommand
     public void process( ) throws Exception
     {
       m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_ftp, m_childID );
+
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
     }
 
     /**
@@ -320,6 +322,8 @@ public class DeleteFeatureCommand implements ICommand
     public void undo( ) throws Exception
     {
       m_workspace.addFeatureAsAggregation( m_parentFeature, m_ftp, m_pos, m_childID );
+
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
     }
 
     /**
