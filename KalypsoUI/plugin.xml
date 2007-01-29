@@ -887,6 +887,17 @@
 			</description>
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
+  <category
+        id="org.kalypso.ui.newwizards.kalypsoimportwizards"
+        name="Kalypso import wizards"
+        />
+  <wizard
+        category="org.kalypso.ui.newwizards.kalypsoimportwizards"
+        class="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+        icon="icons/kalypso_gmt.gif"
+        id="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+        name="Roughness import wizard"
+        project="false"/>
 	</extension>
 	<extension point="org.kalypso.contribs.java.urlCatalog">
 		<catalog
