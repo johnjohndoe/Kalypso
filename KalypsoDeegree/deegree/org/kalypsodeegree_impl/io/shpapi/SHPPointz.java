@@ -61,90 +61,111 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
+import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Position;
+
 /**
- * Class containing all constants needed for reading of a shape file <BR>
+ * Class representig a three dimensional point <BR>
  * 
  * <B>Last changes <B>: <BR>
- * 21.12.1999 ap: all constants declared <BR>
+ * 16.01.07 Jung: class createtd <BR>
  * 
  * <!---------------------------------------------------------------------------->
  * 
- * @version 14.12.1999
- * @author Andreas Poth
+ * @version 16.01.07
+ * @author Thomas Jung
  *  
  */
 
-public class ShapeConst
+public class SHPPointz extends SHPGeometry
 {
+  public double x;
 
-  /**
-   * The length of a shape file record header in bytes. (8)
-   */
-  public static final int SHAPE_FILE_RECORD_HEADER_LENGTH = 8;
+  public double y;
 
-  /**
-   * The length of a shape file header in bytes. (100)
-   */
-  public static final int SHAPE_FILE_HEADER_LENGTH = 100;
+  public double z;
 
-  /**
-   * A Shape File's magic number.
-   */
-  public static final int SHAPE_FILE_CODE = 9994;
-
-  /**
-   * The currently handled version of Shape Files.
-   */
-  public static final int SHAPE_FILE_VERSION = 1000;
-
-  /**
-   * The indicator for a null shape type. (0)
-   */
-  public static final int SHAPE_TYPE_NULL = 0;
-
-  /**
-   * The indicator for a point shape type. (1)
-   */
-  public static final int SHAPE_TYPE_POINT = 1;
-
-  /**
-   * The indicator for an polyline shape type. (3)
-   */
-  public static final int SHAPE_TYPE_POLYLINE = 3;
-
-  /**
-   * The indicator for a polygon shape type. (5)
-   */
-  public static final int SHAPE_TYPE_POLYGON = 5;
-
-  /**
-   * The indicator for a multipoint shape type. (8)
-   */
-  public static final int SHAPE_TYPE_MULTIPOINT = 8;
-
-  /**
-   * start point of field parts in ESRI shape record
-   */
-  public static final int PARTS_START = 44;
-
-  /**
-   * The indicator for a point shape type. (11)
-   */
-  public static final int SHAPE_TYPE_POINTZ = 11;
+  public double m;
   
-  /**
-   * The indicator for an polyline shape type. (13)
-   */
-  public static final int SHAPE_TYPE_POLYLINEZ = 13;
+  public SHPPointz()
+  {
+  // empty
+  }
 
   /**
-   * The indicator for a polygon shape type. (15)
+   * constructor: gets a stream and the start index <BR>
+   * of point on it <BR>
    */
-  public static final int SHAPE_TYPE_POLYGONZ = 15;  
-  
+  public SHPPointz( byte[] recBuf, int xStart )
+  {
+
+    super( recBuf );
+
+    //get x out of recordbuffer
+    this.x = ByteUtils.readLEDouble( recBuffer, xStart );
+    //get y out of recordbuffer
+    this.y = ByteUtils.readLEDouble( recBuffer, xStart + 8 );
+    //get z out of recordbuffer
+    this.z = ByteUtils.readLEDouble( recBuffer, xStart + 16 );    
+    //get measure m out of recordbuffer
+    //this.m = ByteUtils.readLEDouble( recBuffer, xStart + 24 ); 
+  }
+
   /**
-   * The indicator for a multipoint shape type. (18)
+   * constructor: creates a SHPPoint from a WKS Geometrie <BR>
    */
-  public static final int SHAPE_TYPE_MULTIPOINTZ = 18;
-  
+  public SHPPointz( GM_Position point )
+  {
+    x = point.getX();
+    y = point.getY();
+    z = point.getZ();    
+  }
+
+  /**
+   * method: writeSHPPoint: writes a SHPPoint Objekt to a recBuffer <BR>
+   */
+  public void writeSHPPointz( byte[] byteArray, int start )
+  {
+
+    int offset = start;
+
+    // write shape type identifier ( 11 = pointz )
+    ByteUtils.writeLEInt( byteArray, offset, 11 );
+
+    offset += 4;
+
+    //write x into the recbuffer
+    ByteUtils.writeLEDouble( byteArray, offset, x );
+
+    offset += 8;
+
+    //write y into the recbuffer
+    ByteUtils.writeLEDouble( byteArray, offset, y );
+
+    offset += 8;
+
+    //write z into the recbuffer
+    ByteUtils.writeLEDouble( byteArray, offset, z );
+
+    offset += 8;
+
+    //write m into the recbuffer
+    ByteUtils.writeLEDouble( byteArray, offset, m );
+  }
+
+  /**
+   * returns the size of the point shape in bytes <BR>
+   */
+  public int size()
+  {
+    return 36;
+  }
+
+  public String toString()
+  {
+
+    return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "]";
+
+  }
+
 }

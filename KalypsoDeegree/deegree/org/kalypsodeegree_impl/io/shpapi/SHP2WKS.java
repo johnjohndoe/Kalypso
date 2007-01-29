@@ -61,9 +61,6 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -111,6 +108,18 @@ public class SHP2WKS
   }
 
   /**
+   * method: GM_Point transformPointz(CS_CoordinateSystem srs, <BR>
+   * SHPPointz shppointz)) <BR>
+   * transforms a SHPPointz to a WKSGeometry <BR>
+   * gets a pointz that should be transformed <BR>
+   */
+  public GM_Point transformPointz( CS_CoordinateSystem crs, SHPPointz shppointz )
+  {
+    // return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
+    return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
+  }
+
+  /**
    * method: GM_Point[] transformMultiPoint(CS_CoordinateSystem srs, <BR>
    * SHPMultiPoint shpmultipoint)) <BR>
    * transforms a SHPMultiPoint to a WKSGeometry <BR>
@@ -126,6 +135,23 @@ public class SHP2WKS
     return gm_points;
   }
 
+  /**
+   * method: GM_Point[] transformMultiPointz(CS_CoordinateSystem srs, <BR>
+   * SHPMultiPointz shpmultipointz)) <BR>
+   * transforms a SHPMultiPointz to a WKSGeometry <BR>
+   * gets a multipointz that should be transformed <BR>
+   */
+  public GM_Point[] transformMultiPointz( CS_CoordinateSystem srs, SHPMultiPointz shpmultipointz )
+  {
+    GM_Point[] gm_points = new GM_Point[shpmultipointz.numPoints];
+
+    for( int i = 0; i < shpmultipointz.numPoints; i++ )
+      gm_points[i] = GeometryFactory.createGM_Point( shpmultipointz.pointsz[i].x, shpmultipointz.pointsz[i].y, shpmultipointz.pointsz[i].z, srs );
+
+    return gm_points;
+  }
+  
+  
   /**
    * method: GM_Point[][] transformPolyLine(CS_CoordinateSystem srs, <BR>
    * SHPPolyLine shppolyline)) <BR>
@@ -158,6 +184,40 @@ public class SHP2WKS
 
     return curve;
   }
+
+  /**
+   * method: GM_Point[][] transformPolyLinez(CS_CoordinateSystem srs, <BR>
+   * SHPPolyLinez shppolylinez)) <BR>
+   * transforms a SHPPolyLinez to a WKSGeometry <BR>
+   * gets a polylinez that should be transformed <BR>
+   */
+  public GM_Curve[] transformPolyLinez( CS_CoordinateSystem crs, SHPPolyLinez shppolylinez)
+  {
+    GM_Curve[] curve = new GM_Curve[shppolylinez.numParts];
+
+    try
+    {
+      for( int j = 0; j < shppolylinez.numParts; j++ )
+      {
+        GM_Position[] gm_points = new GM_Position[shppolylinez.pointsz[j].length];
+
+        for( int i = 0; i < shppolylinez.pointsz[j].length; i++ )
+        {
+          gm_points[i] = GeometryFactory.createGM_Position( shppolylinez.pointsz[j][i].x, shppolylinez.pointsz[j][i].y , shppolylinez.pointsz[j][i].z );
+        }
+
+        GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
+        curve[j] = GeometryFactory.createGM_Curve( cs );
+      }
+    }
+    catch( Exception e )
+    {
+      System.out.println( "SHP2WKS::" + e );
+    }
+
+    return curve;
+  }
+  
 
   /**
    * method: private boolean isInsideRing(GM_Point[] ring, GM_Point point) <BR>
@@ -439,6 +499,115 @@ public class SHP2WKS
       catch( final Exception e )
       {
         System.out.println( "SHP2WKS:: transformPolygon\n" + e );
+      }
+    }
+
+    return wkslp.toArray( new GM_Surface[wkslp.size()] );
+  }
+
+  /**
+   * transforms the SHPPolygon to a WKSGeometry <BR>
+   * gets the polygon that should be transformed <BR>
+   */
+  public GM_Surface[] transformPolygonz( CS_CoordinateSystem crs, SHPPolygonz shppolygonz )
+  {
+    // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
+    final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygonz.numRings );
+    final ArrayList<LinearRing> inner_rings = new ArrayList<LinearRing>( shppolygonz.numRings );
+
+    for( int i = 0; i < shppolygonz.numRings; i++ )
+    {
+      final Coordinate[] ring = new Coordinate[shppolygonz.m_rings.pointsz[i].length];
+
+      for( int k = 0; k < shppolygonz.m_rings.pointsz[i].length; k++ )
+        ring[k] = new Coordinate( shppolygonz.m_rings.pointsz[i][k].x, shppolygonz.m_rings.pointsz[i][k].y, shppolygonz.m_rings.pointsz[i][k].z );
+
+      // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
+      double area = GeometryUtilities.calcSignedAreaOfRing( ring );
+      double esriArea = -area;
+
+      final LinearRing linearRing = GF.createLinearRing( ring );
+      if( esriArea >= 0 )
+        outer_rings.add( linearRing );
+      else
+        inner_rings.add( linearRing );
+
+      // pirs.put( linearRing, new SIRtreePointInRing( linearRing ) );
+
+    }
+
+    // // for every outer ring
+    // for( final Entry<LinearRing, PointInRing> inEntry : pirs.entrySet() )
+    // {
+    // final LinearRing test_inner_ring = inEntry.getKey();
+    // for( final Entry<LinearRing, PointInRing> outEntry : pirs.entrySet() )
+    // {
+    // final LinearRing test_outer_ring = outEntry.getKey();
+    // if( test_outer_ring == test_inner_ring )
+    // continue;
+    // boolean in = false;
+    // // check if one or more points of a inner ring are
+    // // within the actual outer ring
+    // try
+    // {
+    // final PointInRing test_outer_pir = outEntry.getValue();
+    //
+    // for( int n = 0; n < test_inner_ring.getNumPoints(); n++ )
+    // {
+    // if( !test_outer_pir.isInside( test_inner_ring.getCoordinateN( n ) ) )
+    // break;
+    //
+    // }
+    //
+    // if( test_inner_pir.isInside( test_outer_ring.getCoordinateN( 0 ) ) )
+    // {
+    // in = true;
+    // inner_rings.add( test_outer_ring );
+    // break;
+    // }
+    // }
+    // catch( final Exception e )
+    // {
+    // System.out.println( "Error: " + e.toString() );
+    // }
+    // }
+    // if( !in )
+    // outer_rings.add( test_outer_ring );
+    // }
+
+    final ArrayList<GM_Surface> wkslp = new ArrayList<GM_Surface>();
+    for( int i = 0; i < outer_rings.size(); i++ )
+    {
+      final LinearRing out_ring = outer_rings.get( i );
+
+      int count = inner_rings.size() - 1;
+      final ArrayList<LinearRing> list = new ArrayList<LinearRing>( count + 2 );
+      // find inner rings of the current outter ring
+      final PointInRing pir = new SIRtreePointInRing( out_ring );
+      // pirs.get( out_ring );
+
+      for( int k = count; k >= 0; k-- )
+      {
+        final LinearRing in_ring = inner_rings.get( k );
+        if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )
+        {
+          list.add( inner_rings.get( k ) );
+        }
+      }
+      for( LinearRing ring : list )
+        inner_rings.remove( ring );
+      final LinearRing[] inrings = list.toArray( new LinearRing[list.size()] );
+
+      try
+      {
+        final Polygon polygon = GF.createPolygon( out_ring, inrings );
+        final GM_Surface sur = (GM_Surface) JTSAdapter.wrap( polygon );
+        sur.setCoordinateSystem( crs );
+        wkslp.add( sur );
+      }
+      catch( final Exception e )
+      {
+        System.out.println( "SHP2WKS:: transformPolygonz\n" + e );
       }
     }
 

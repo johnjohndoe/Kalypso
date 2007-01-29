@@ -61,90 +61,131 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
+import java.io.Serializable;
+
+import org.kalypsodeegree.model.geometry.ByteUtils;
+
 /**
- * Class containing all constants needed for reading of a shape file <BR>
+ * Class representing a z-range of shape-z.
  * 
- * <B>Last changes <B>: <BR>
- * 21.12.1999 ap: all constants declared <BR>
- * 
+  * 
  * <!---------------------------------------------------------------------------->
  * 
- * @version 14.12.1999
- * @author Andreas Poth
+ * @version 19.01.2007
+ * @author Thomas Jung
  *  
  */
 
-public class ShapeConst
+public class SHPZRange implements Serializable
 {
 
   /**
-   * The length of a shape file record header in bytes. (8)
+   * this order:
+   * 
+   * min, max
    */
-  public static final int SHAPE_FILE_RECORD_HEADER_LENGTH = 8;
 
-  /**
-   * The length of a shape file header in bytes. (100)
-   */
-  public static final int SHAPE_FILE_HEADER_LENGTH = 100;
+  // each double 8 byte distance, offset due to position in .shp-file-record
+  public static int recZmin = 4;
 
-  /**
-   * A Shape File's magic number.
-   */
-  public static final int SHAPE_FILE_CODE = 9994;
+  public static int recZmax = 12;
 
-  /**
-   * The currently handled version of Shape Files.
-   */
-  public static final int SHAPE_FILE_VERSION = 1000;
 
-  /**
-   * The indicator for a null shape type. (0)
-   */
-  public static final int SHAPE_TYPE_NULL = 0;
 
-  /**
-   * The indicator for a point shape type. (1)
-   */
-  public static final int SHAPE_TYPE_POINT = 1;
+  //lowest z-value
+  public double zmin;
 
-  /**
-   * The indicator for an polyline shape type. (3)
-   */
-  public static final int SHAPE_TYPE_POLYLINE = 3;
+//highrst z-value
+  public double zmax;
 
-  /**
-   * The indicator for a polygon shape type. (5)
-   */
-  public static final int SHAPE_TYPE_POLYGON = 5;
 
-  /**
-   * The indicator for a multipoint shape type. (8)
-   */
-  public static final int SHAPE_TYPE_MULTIPOINT = 8;
+  //------------- CONSTRUTOR IMPLEMENTATION BEGIN
+  public SHPZRange()
+  {
 
-  /**
-   * start point of field parts in ESRI shape record
-   */
-  public static final int PARTS_START = 44;
-
-  /**
-   * The indicator for a point shape type. (11)
-   */
-  public static final int SHAPE_TYPE_POINTZ = 11;
+    zmin = 0.0;
+    zmax = 0.0;
   
-  /**
-   * The indicator for an polyline shape type. (13)
-   */
-  public static final int SHAPE_TYPE_POLYLINEZ = 13;
+
+  }
+ 
+
+  public SHPZRange( double minz, double maxz )
+  {
+
+    this.zmin = minz; // max. elevation
+    this.zmax = maxz; // min. elevation
+    
+  }
 
   /**
-   * The indicator for a polygon shape type. (15)
+   * Transform from WKBPoint to Rectangle
    */
-  public static final int SHAPE_TYPE_POLYGONZ = 15;  
-  
+  public SHPZRange( SHPPointz minz, SHPPointz maxz )
+  {
+
+    //west bounding coordinate = minEsri.x
+    this.zmin = minz.z;
+    //east bounding coordinate = maxEsri.x
+    this.zmax = maxz.z;
+
+
+  }
+
   /**
-   * The indicator for a multipoint shape type. (18)
+   * create from an existing SHPZRange
    */
-  public static final int SHAPE_TYPE_MULTIPOINTZ = 18;
-  
+  public SHPZRange( SHPZRange zrang )
+  {
+
+    //min
+    this.zmin = zrang.zmin;
+    //max
+    this.zmax = zrang.zmax;
+ 
+  }
+
+  public SHPZRange( byte[] recBuf )
+  {
+
+    //west bounding coordinate = xmin of rec-Box
+    this.zmin = ByteUtils.readLEDouble( recBuf, recZmin );
+    //east bounding coordinate = xmax of rec-Box
+    this.zmax = ByteUtils.readLEDouble( recBuf, recZmax );
+ 
+
+  }
+
+  public byte[] writeLESHPZRange()
+  {
+    byte[] recBuf = new byte[8 * 4];
+    //min z value
+    ByteUtils.writeLEDouble( recBuf, 0, zmin );
+    //max z value
+    ByteUtils.writeLEDouble( recBuf, 8, zmax );
+
+
+    return recBuf;
+  }
+
+  public byte[] writeBESHPRange()
+  {
+    byte[] recBuf = new byte[8 * 4];
+    //west bounding coordinate = xmin of rec-Box
+    ByteUtils.writeBEDouble( recBuf, 0, zmin );
+    //south bounding coordinate = ymin of rec-Box
+    ByteUtils.writeBEDouble( recBuf, 8, zmax );
+
+
+    return recBuf;
+  }
+
+  //----------------- METHOD IMPLEMENTATION
+  public String toString()
+  {
+
+    return "ZRANGE" + "\n[zmin: " + this.zmin + "]" + "\n[zmax: " + this.zmax + "]" +  "]";
+
+  }
+
 }

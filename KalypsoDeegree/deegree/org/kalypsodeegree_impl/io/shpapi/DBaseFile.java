@@ -415,6 +415,12 @@ public class DBaseFile
         return GeometryUtilities.getLineStringClass();
       case ShapeConst.SHAPE_TYPE_POLYGON:
         return GeometryUtilities.getPolygonClass();
+      case ShapeConst.SHAPE_TYPE_POINTZ:
+        return GeometryUtilities.getPointClass();        
+      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+        return GeometryUtilities.getLineStringClass();
+      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+        return GeometryUtilities.getPolygonClass();
       default:
         return GM_Object.class;
     }

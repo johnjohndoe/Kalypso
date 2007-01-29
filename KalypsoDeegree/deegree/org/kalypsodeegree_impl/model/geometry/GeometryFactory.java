@@ -119,7 +119,7 @@ final public class GeometryFactory
   }
 
   /**
-   * creates a GM_Position from two coordinates.
+   * creates a GM_Position from three coordinates.
    */
   public static GM_Position createGM_Position( double x, double y, double z )
   {
