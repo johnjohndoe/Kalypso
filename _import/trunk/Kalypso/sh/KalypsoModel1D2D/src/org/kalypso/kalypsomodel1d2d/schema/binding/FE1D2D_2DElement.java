@@ -210,12 +210,18 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
       final GM_Position position = point.getPosition();
       poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
     }
-
-    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+    
+    return GeometryFactory.createGM_Surface( 
+                    poses, 
+                    new GM_Position[0][], 
+                    new GM_SurfaceInterpolation_Impl( 
+                                  GM_SurfaceInterpolation.PLANAR ), 
+                    crs );
       
   }
 
-  public static FE1D2D_2DElement createPolyElement( final FE1D2DDiscretisationModel discModel )
+  public static FE1D2D_2DElement createPolyElement( 
+                          final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();

@@ -101,6 +101,13 @@ public class TestFE1D2DNode extends TestCase
             assertNotNull( edge );
             assertEquals( 1, edges.size() );
             
+            final String NODE_ID= "_node_id_1_";
+            FE1D2DNode created=
+                new FE1D2DNode(root,TestWorkspaces.GML_PROP_FEATURE_MEMBER,NODE_ID);
+            created.setPoint( GeometryFactory.createGM_Point(0.11, 0.44, cs ) );
+            Feature getNodeFeature=workspace.getFeature( NODE_ID );
+            assertNotNull( getNodeFeature );
+            
             //test serial
             
         }

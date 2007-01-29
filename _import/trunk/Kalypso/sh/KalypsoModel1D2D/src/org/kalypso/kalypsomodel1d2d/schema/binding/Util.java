@@ -83,6 +83,7 @@ public class Util
     Assert.throwIAEOnNull(
         parentFeature, 
         "Argument roughnessCollection must not be null");
+    
     try
     {
        return FeatureHelper.addFeature(

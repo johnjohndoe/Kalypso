@@ -7,46 +7,55 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
+
+import org.deegree.gml.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
- * @author Gernot Belger
+ * The default implementation of {@link IFE1D2DNode} based on 
+ * {@link AbstractFeatureBinder} to bind wb1d2d:Node elements
+ * 
+ * @author Gernot Belger, Patrice Congo
  */
-public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE1D2DEdge>
+public class FE1D2DNode 
+                extends AbstractFeatureBinder 
+                implements IFE1D2DNode<IFE1D2DEdge>
 {
-  //public final static QName QNAME_FE1D2DNode = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DNode" );
-
-//  public final static QName QNAME_PROP_POINT = new QName( NS.GML3, "pointProperty" );
-
-//  public final static QName QNAME_PROP_NODE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dNodeContainer" );
-
-  // TODO check remove of discretisation model
-  // private final FE1D2DDiscretisationModel m_discretisationModel;
+  /** Edges that contains this node*/
   private final FeatureWrapperCollection<IFE1D2DEdge> containers;
   
  
-  
+  /**
+   * Creates a new node object that binds the given feature.
+   * 
+   * @param featureToBind the feature to bind
+   * @see FE1D2DNode#FE1D2DNode(Feature, QName)
+   * @throws IllegalArgumentException if the passed feature does not
+   *  substitutes to wb1d2d:Node
+   */
   public FE1D2DNode( final Feature featureToBind )
   {
     super( 
           featureToBind, 
           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
-    // m_discretisationModel = new FE1D2DDiscretisationModel( getFeature().getParent() );
-    //
-    Object prop = featureToBind.getProperty( 
-                    Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS
-                    /*QNAME_PROP_NODE_CONTAINERS*/ );
+    
+    Object prop = 
+      featureToBind.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS);
 
     if( prop == null )
     {
@@ -70,15 +79,18 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   }
 
   /**
-   * This constructor creates {@link FE1D2DNode} based on a wb1d2d:FE1D2DNode feature which is created as child of the
-   * given parent feaure and linked to it by the property of the type specified by the argument propQName.
+   * This constructor creates {@link FE1D2DNode} based on a wb1d2d:Node feature 
+   * which is created as child of the given parent feaure and 
+   * linked to it by the property of the type specified by the 
+   * argument propQName.
    * 
    * @param parentFeature
    *          the parent feature for the new wbr:Roughness class
    * @param propQName
    *          the Q-name of the linking property type
    * @throws IllegalArgumentException
-   *           if workspace is null or the roughness collection is not part of the workspace
+   *           if workspace is null or the roughness collection is not 
+   *           part of the workspace
    */
   public FE1D2DNode( 
               Feature parentFeature, 
@@ -93,27 +105,87 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   }
   
   //TODO implements this constructor
-//  /**
-//   * Creates a feature with this gml id.
-//   * This 
-//   */
-//  public FE1D2DNode(
-//            Feature parentFeature,
-//            QName propQName,
-//            String gmlID)
-//  {
-//    
-//  }
+  /**
+   * Creates a feature with this gml id.
+   * This 
+   */
+  public FE1D2DNode(
+            Feature parentFeature,
+            QName propQName,
+            String gmlID)
+  {
+    this(
+        createNodeById( 
+              parentFeature, propQName, gmlID ));
+  }
 
+  private static final Feature createNodeById(
+                      Feature parentFeature,
+                      QName propQName,
+                      String gmlID)
+                      throws IllegalArgumentException
+  {
+    Assert.throwIAEOnNull( 
+            parentFeature, 
+            "parentFeatureParameter must not be null" );
+    Assert.throwIAEOnNull( 
+            propQName, "propQName param must notbe null" );
+    gmlID=Assert.throwIAEOnNullOrEmpty( gmlID );
+    
+    GMLWorkspace workspace=parentFeature.getWorkspace();
+    IGMLSchema schema=workspace.getGMLSchema();
+    IFeatureType featureType=
+      schema.getFeatureType(
+          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
+    IPropertyType parentPT=
+         parentFeature.getFeatureType().getProperty( propQName );
+    if(!(parentPT instanceof      IRelationType))
+    {
+      throw new IllegalArgumentException(
+                "Property not a IRelationType="+parentPT+
+                " propQname="+propQName);
+    }
+    
+    Feature created=
+      FeatureFactory.createFeature( 
+        parentFeature, 
+        (IRelationType)parentPT, 
+        gmlID, 
+        featureType, 
+        true );
+    try
+    {
+      if(parentPT.isList())
+      {
+        workspace.addFeatureAsComposition( 
+              parentFeature, 
+              (IRelationType)parentPT, 
+              -1, 
+              created );
+      }
+      else
+      {
+        //TODO test this case
+        parentFeature.setProperty( parentPT, created );
+      }
+    }
+    catch( Exception e )
+    {
+      throw new RuntimeException("Could not add to the workspace",e);
+    }
+    
+    return created;
+  }
+  
   public GM_Point getPoint( )
   {
-    return (GM_Point) getFeature().getProperty( 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT/*QNAME_PROP_POINT*/ );
+    return (GM_Point) m_featureToBind.getProperty( 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT);
   }
 
   public void setPoint( final GM_Point point )
   {
-    getFeature().setProperty( 
+    m_featureToBind.setProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT/*QNAME_PROP_POINT*/, 
         point );
   }
@@ -148,7 +220,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    */
   public Feature getWrappedFeature( )
   {
-    return getFeature();
+    return m_featureToBind;
   }
 
   /**
