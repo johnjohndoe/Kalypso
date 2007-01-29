@@ -157,9 +157,10 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
                   (GMLWorkspace)modellEvent.getEventSource();
                 for(IFE1D2DEdge edge:edges)
                 {
-                    
-                    ((FE1D2DEdge) edge).resetGeometry();
-                    eleList.addAll( ((FE1D2DEdge) edge).getContainers());
+                    //TODO reset
+//                    ((FE1D2DEdge) edge).resetGeometry();
+//                    eleList.addAll( ((FE1D2DEdge) edge).getContainers());
+                  
                     System.out.println("setting edge curve");
 //                    workspace.fireModellEvent(  
 //                        new FeatureStructureChangeModellEvent(

@@ -51,11 +51,15 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
 	 */
 	public Object getValue(final Feature feature, final IPropertyType pt,
 			final Object currentValue) {
-
+	    System.out.println("Getting geom:"+pt.getQName());
 		final FE1D2DEdge edge = new FE1D2DEdge(feature);
 		try {
+          
 			return edge.recalculateEgdeGeometry();
-		} catch (GM_Exception e) {
+		} 
+        catch (GM_Exception e) 
+        {
+          e.printStackTrace();
 			final IStatus status = StatusUtilities.statusFromThrowable(e);
 			KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
 			return null;
@@ -70,6 +74,10 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
   public Object setValue(Feature feature, IPropertyType pt, Object valueToSet) 
     {
 		System.out.println("New Edge geometry="+valueToSet.getClass());
+        if(true)
+        {
+          return valueToSet;
+        }
         if(valueToSet instanceof GM_Curve)
         {
           

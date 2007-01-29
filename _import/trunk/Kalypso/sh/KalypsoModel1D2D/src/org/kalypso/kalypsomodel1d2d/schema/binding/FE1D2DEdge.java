@@ -200,7 +200,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public GM_Curve getCurve()
   {
     return (GM_Curve) getFeature().getProperty( 
-                      Kalypso1D2DSchemaConstants.WB1D2D_PROP_CURVE
+                      Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM
                       /*QNAME_PROP_CURVE*/ );
   }
   
@@ -212,7 +212,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     }
     //TODO allow prop setting vor this
     getFeature().setProperty( 
-         Kalypso1D2DSchemaConstants.WB1D2D_PROP_CURVE, 
+         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM, 
          curve );
   }
   

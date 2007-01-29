@@ -212,6 +212,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     }
 
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+      
   }
 
   public static FE1D2D_2DElement createPolyElement( final FE1D2DDiscretisationModel discModel )
@@ -260,7 +261,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   public void setSurface(GM_Surface surface)
   {
     getFeature().setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_CURVE, 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM, 
             surface);
   }
   public void resetGeometry()

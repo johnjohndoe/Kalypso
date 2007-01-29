@@ -228,7 +228,13 @@
 			<xs:extension 
 				base="simBase:FEAbstractEdgeType">
 				<xs:sequence>	
-					<!--xs:element name="geometry" type="gml:LineStringPropertyType"/ -->
+					<xs:element 
+						name="geometry" 
+						type="gml:LineStringPropertyType"/>
+					<!-- xs:element 
+						name="edgeGeometry" 
+						type="gml:CurvePropertyType"
+						minOccurs="0" maxOccurs="1"/-->
 					<xs:element 
 						ref="wb1d2d:directedNode"
 						minOccurs="2" 
