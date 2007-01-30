@@ -38,6 +38,28 @@ public class Assert
 		}
 	}
 	
+	/**
+	 * Assert the given object for null value.
+	 * This method throws concequently an illegal argument exception
+	 * if the passed object is null
+	 * 
+	 * @param obj the object to be asserted
+	 * @param message the exception message
+	 * @throws IllegalArgumentException if the passed object is null
+	 */
+	public static final void throwIAEOnNullParam(
+								Object param, 
+								String paramName)
+								throws IllegalArgumentException
+	{
+		if(param==null)
+		{
+			StringBuffer buf= new StringBuffer(128);
+			buf.append("Parameter must not be null; param name:");
+			buf.append(paramName);
+			throw new IllegalArgumentException(buf.toString());
+		}
+	}
 	
 	/**
 	 * Assert the given object for null value.

@@ -11,7 +11,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
  * @author Patrice Congo
  */
 public interface IFeatureRangeSet<RangeSetCls extends IFeatureWrapper>
-					extends List<RangeSetCls>
+					extends List<RangeSetCls>, IFeatureWrapper
 {
 	
 }

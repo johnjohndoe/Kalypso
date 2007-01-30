@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypsodeegree.model.feature.FeatureList;
+
 /**
  * Interface to be implemented by classes that wrapped a feature collection to
  * provided a view as a {@link List} of {@link FWCls}
@@ -59,4 +61,11 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper>
 	 *             size()).
 	 */
 	public FWCls addNew(int index, QName newChildType);
+	
+	/**
+	 * To get the {@link FeatureList} which is being wrapped
+	 * 
+	 * @return the wrapped feature list
+	 */
+	public FeatureList getWrappedList();
 }

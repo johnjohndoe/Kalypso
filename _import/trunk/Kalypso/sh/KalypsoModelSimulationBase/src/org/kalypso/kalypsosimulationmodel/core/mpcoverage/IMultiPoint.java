@@ -2,6 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -9,7 +10,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public interface IMultiPoint extends List<GM_Point>
+public interface IMultiPoint extends List<GM_Point>, IFeatureWrapper
 {
 	
 }

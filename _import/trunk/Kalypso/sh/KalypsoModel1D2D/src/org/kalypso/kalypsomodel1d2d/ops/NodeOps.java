@@ -47,6 +47,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -70,38 +75,70 @@ public class NodeOps
   /**
    * Finds the nearest node to the given position.
    */
-  public static FE1D2DNode findNode( 
+  public static /*FE1D2DNode*/IFE1D2DNode findNode( 
                       final GM_Point point, 
                       final FE1D2DDiscretisationModel model )
   {
+    
     final FeatureList elementList = 
           (FeatureList) model.getFeature().getProperty( 
               Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
     final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element
-    final List foundElements = element2DList.query( point.getPosition(), null );
-    final FE1D2DNode nearestNode = nearestNodeOfElements( point, foundElements );
+    final List foundElements = 
+    	      element2DList.query( point.getPosition(), null );
+    final IFE1D2DNode nearestNode = 
+    	      nearestNodeOfElements( point, foundElements );
     if( nearestNode != null )
+    {
       return nearestNode;
+    }
     
     // 2. try: nearest node, brute force
     return nearestNodeOfElements( point, element2DList );
   }
-
-  private static FE1D2DNode nearestNodeOfElements( final GM_Point point, final List foundElements )
+  
+  public static final IFE1D2DNode findeNodeImpl(
+		                            final GM_Point point,
+		                            final FE1D2DDiscretisationModel model)
+  {
+       final FeatureList elementList = 
+          (FeatureList) model.getElements().getWrappedList();
+	    final FeatureList element2DList = 
+	    	        new FilteredFeatureList( 
+	    	        		elementList, 
+	    	        		Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement.getLocalPart(), true );
+	
+	    // 1. Try: look, if the position is within an element
+	    final List foundElements = 
+	    	      element2DList.query( point.getPosition(), null );
+	    final IFE1D2DNode nearestNode = 
+	    	      nearestNodeOfElements( point, foundElements );
+	    if( nearestNode != null )
+	    {
+	      return nearestNode;
+	    }
+	    
+	    // 2. try: nearest node, brute force
+	    return nearestNodeOfElements( point, element2DList );
+  }
+  
+  private static /*FE1D2DNode*/IFE1D2DNode nearestNodeOfElements( final GM_Point point, final List foundElements )
   {
     double currentDistance = Double.MAX_VALUE;
-    FE1D2DNode nearestNode = null;
-    
+    //FE1D2DNode nearestNode = null;
+    IFE1D2DNode nearestNode = null;
     for( final Object object : foundElements )
     {
-      final FE1D2D_2DElement ele = new FE1D2D_2DElement( (Feature) object );
-      final FE1D2DEdge[] edges = ele.getEdgesAsArray();
-      for( final FE1D2DEdge edge : edges )
+      final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele = new FE1D2D_2DElement( (Feature) object );
+//      final FE1D2DEdge[] edges = ele.getEdgesAsArray();
+      List<IFE1D2DEdge> edges=ele.getEdges();
+      for( final /*FE1D2DEdge*/IFE1D2DEdge edge : edges )
       {
-        final FE1D2DNode[] nodes = edge.getNodesAsArray();
-        for( final FE1D2DNode node : nodes )
+//        final FE1D2DNode[] nodes = edge.getNodesAsArray();
+    	final List<IFE1D2DNode<IFE1D2DEdge>> nodes = edge.getNodes();
+        for( final IFE1D2DNode node : nodes )
         {
           final GM_Point nodePoint = node.getPoint();
           final double distance = point.distance( nodePoint );

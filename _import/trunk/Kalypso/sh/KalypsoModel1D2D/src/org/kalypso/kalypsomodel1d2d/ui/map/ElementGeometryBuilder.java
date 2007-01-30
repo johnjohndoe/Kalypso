@@ -184,7 +184,7 @@ public class ElementGeometryBuilder
     }
 
     /* Build new edges */
-    final FE1D2DEdge[] edges = new FE1D2DEdge[m_nodes.size()];
+    final IFE1D2DEdge[] edges = new IFE1D2DEdge[m_nodes.size()];
     final boolean[] edgesGen = new boolean[m_nodes.size()]; // flag indicatig if edge was generated
     for( int i = 0; i < edges.length; i++ )
     {
@@ -192,7 +192,7 @@ public class ElementGeometryBuilder
       final FE1D2DNode node1 = nodes[(i + 1) % nodes.length];
 
       /* Search for existing edge */
-      final FE1D2DEdge edge = discModel.findEdge( node0, node1 );
+      final IFE1D2DEdge edge = discModel.findEdge( node0, node1 );
       if( edge == null )
       {
         final FE1D2DEdge newEdge = FE1D2DEdge.createEdge( discModel );

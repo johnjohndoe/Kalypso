@@ -3,6 +3,7 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -15,13 +16,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public interface IMultipointCoverage<RangeCls extends IFeatureWrapper> 
-				extends IFeatureWrapper
+public interface IMultiSurfaceCoverage<RangeCls extends IFeatureWrapper> 
+			extends IFeatureWrapper
 {
-	public IMultiPoint getDomain();
+	public IMultiSurface getDomain();
 	
 	/**
-	 * Returns the applying range value  the given position
+	 * Returns the applying range value for the given position
 	 * 
 	 * @param location -- position for which a range value are to be found
 	 * @return the range value applying at the given position
@@ -34,54 +35,53 @@ public interface IMultipointCoverage<RangeCls extends IFeatureWrapper>
 	
 	
 	/**
-	 * Get all flow relationhip applying in the given region.
-	 * The region is pass as feature but must be adaptable an IRegion
+	 * Get all all range value applyable in the given region.
 	 * 
-	 * @param region
+	 * @param region the GM_polygon where to find the applyable 
+	 * 			range values
 	 * @return all flow realtionships applying in this region
-	 * @throws IllegalArgumentException if region is null or cannot be
-	 * 			adapted into a {@link IRegion} 
+	 * @throws IllegalArgumentException if region is null  
 	 */
 	public List<RangeCls> getRangeValues(
 								GM_Polygon region)
 								throws IllegalArgumentException;
 
 	/**
-	 * To  Get the position where the given flow relationship can be applied.
+	 * To  Get the positions where the given rangeValue applies 
+	 * can be applied.
 	 * 
-	 * @param flowRelationship -- a flow relationship feature
+	 * @param rangeValue -- the range value wor which the flow relationship feature
 	 * @return All positions where this feature can be applied.
 	 * 
 	 * @throws IllegalArgumentException if passed feature cannot be adapted 
 	 * 			to a Iflow Relationship 
 	 * 			 
 	 */
-	public List<GM_Point> getApplicablePosition(
+	public List<GM_Polygon> getApplicablePosition(
 									RangeCls rangeValue)
 									throws IllegalArgumentException;
 	/**
 	 * Add a coverage entry at the provided value with a range value
 	 * set to the given flow relation ship.
 	 *   
-	 * @param flowRelationship
-	 * @param location
+	 * @param rangeValue
+	 * @param surface
 	 * @throws IllegalArgumentException if any parameter is null or
-	 * 	flowRelationship cannot be adapted to a flowrelationship or 
-	 *  or position feature cannot be adapted into a IPosition 
+	 * 	 
 	 */ 
 	public void addCoverageEntry(
 							RangeCls rangeValue, 
-							GM_Point position) 
+							GM_Surface surface) 
 							throws IllegalArgumentException;
 	
 	/**
-	 * Remove all entry in the coverage concerning the given position
+	 * Remove all entry in the coverage concerning the given surface
 	 * 
-	 * @param position
+	 * @param surface
 	 * @throws IllegalArgumentException
 	 */
 	public void removeCoveredPosition(
-								GM_Point position) 
+								GM_Surface surface) 
 								throws IllegalArgumentException;
 	/**
 	 * 

@@ -359,4 +359,9 @@ public class MultiPoint implements IMultiPoint
 			return super.equals(obj);
 		}
 	}
+	
+	public Feature getWrappedFeature()
+	{
+		return multiPointFeature;
+	}
 }

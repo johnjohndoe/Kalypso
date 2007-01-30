@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import java.util.List;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
 
 /**
@@ -50,5 +52,8 @@ public interface IFE1D2DElement
           <CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
                   extends IFEElement<CT, ET>
 {
-
+  /**
+   * returns a list of element nodes
+   */
+  List<IFE1D2DNode> getNodes();
 }

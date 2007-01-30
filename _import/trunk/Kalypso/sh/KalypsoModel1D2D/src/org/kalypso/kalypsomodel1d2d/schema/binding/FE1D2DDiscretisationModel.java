@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -54,6 +55,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+import com.vividsolutions.jts.geomgraph.Edge;
 
 /**
  * @author Gernot Belger
@@ -103,25 +106,51 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
     
   }
 
-  public FE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
+  public IFE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
   {
-    final List edgeList = 
-        (List) getFeature().getProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-    // TODO: brute force search, check if this scales good with big models
-    for( final Object object : edgeList )
-    {
-      final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
-      final FE1D2DNode[] nodes = edge.getNodesAsArray();
-
-      if( nodes.length != 2 )
+//    final List edgeList = 
+//        (List) getFeature().getProperty( 
+//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+//    // TODO: brute force search, check if this scales good with big models
+//    for( final Object object : edgeList )
+//    {
+//      final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
+//      final FE1D2DNode[] nodes = edge.getNodesAsArray();
+//
+//      if( nodes.length != 2 )
+//        return null;
+//
+//      if( (node0.equals( nodes[0] ) && node1.equals( nodes[1] )) || (node0.equals( nodes[1] ) && node1.equals( nodes[0] )) )
+//        return edge;
+//    }
+//
+//    return null;
+      List<IFE1D2DEdge> edges= new ArrayList<IFE1D2DEdge>();
+      edges.addAll(node0.getContainers() );
+      if(edges.size()==0)
+      {
         return null;
-
-      if( (node0.equals( nodes[0] ) && node1.equals( nodes[1] )) || (node0.equals( nodes[1] ) && node1.equals( nodes[0] )) )
-        return edge;
-    }
-
-    return null;
+      }
+      edges.retainAll( node1.getContainers() );
+      if(edges.size()==1)
+      {
+        IFE1D2DEdge edge=edges.get( 0 );
+        if(edge.equals( node0 ))
+        {
+          return edges.get( 0 );
+        }
+        else
+        {
+          return new EdgeInv(edge);
+        }
+      }
+      else
+      {
+       System.out.println(
+           "Found an several edges with those two nodes:"+edges);
+       return null;
+      }
+      
   }
 
   public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )

@@ -140,7 +140,14 @@ public class ListPropertyChangeCommand implements ICommand
       final FeatureChange change = changes[i];
       featureToChange=change.getFeature();
       propType=change.getProperty();
-      propList=(List)featureToChange.getProperty( propType );
+      if(featureToChange==null)
+      {
+        continue;
+      }
+      else
+      {
+        propList=(List)featureToChange.getProperty( propType );
+      }
       newProp=change.getNewValue();
       m_oldChanges[i]=
          new FeatureChange(

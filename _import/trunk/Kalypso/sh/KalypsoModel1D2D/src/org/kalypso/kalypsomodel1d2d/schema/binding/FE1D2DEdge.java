@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -28,12 +29,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class FE1D2DEdge extends AbstractFeatureBinder 
             implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
-//  public final static QName QNAME_FE1D2DEdge = 
-//            new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "FE1D2DEdge" );
-
-//  public final static QName QNAME_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "fe1d2dDirectedNode" );
-
-//  private static final QName QNAME_PROP_CURVE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   private final IFeatureWrapperCollection<IFE1D2DElement> m_containers;
 
@@ -91,9 +86,24 @@ public class FE1D2DEdge extends AbstractFeatureBinder
    */
   public FE1D2DEdge( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE ) );
+    this( Util.createFeatureAsProperty( 
+                parentFeature, 
+                propQName, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE ) );
   }
-
+  
+  public FE1D2DEdge(
+      Feature parentFeature,
+      QName propQName,
+      String gmlID)
+  {
+  this(
+    org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
+        parentFeature, 
+        propQName, 
+        gmlID ));
+  }
   /**
    * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
    */
@@ -132,24 +142,25 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   /* static helper functions */
   public GM_Curve recalculateEgdeGeometry( ) throws GM_Exception
   {
-    final FE1D2DNode[] nodes = getNodesAsArray();
-    final GM_Position[] poses = new GM_Position[nodes.length];
-
-    if( nodes.length < 2 )
-      return null;
-
-    // REMARK: we assume here, that all nodes live in the same coordinate
-    // system.
-    final CS_CoordinateSystem crs = nodes[0].getPoint().getCoordinateSystem();
-
-    for( int i = 0; i < poses.length; i++ )
-    {
-      final GM_Point point = nodes[i].getPoint();
-      final GM_Position position = point.getPosition();
-      poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
-    }
-
-    return GeometryFactory.createGM_Curve( poses, crs );
+//    final FE1D2DNode[] nodes = getNodesAsArray();
+//    final GM_Position[] poses = new GM_Position[nodes.length];
+//
+//    if( nodes.length < 2 )
+//      return null;
+//
+//    // REMARK: we assume here, that all nodes live in the same coordinate
+//    // system.
+//    final CS_CoordinateSystem crs = nodes[0].getPoint().getCoordinateSystem();
+//
+//    for( int i = 0; i < poses.length; i++ )
+//    {
+//      final GM_Point point = nodes[i].getPoint();
+//      final GM_Position position = point.getPosition();
+//      poses[i] = GeometryFactory.createGM_Position( position.getX(), position.getY() );
+//    }
+//
+//    return GeometryFactory.createGM_Curve( poses, crs );
+    return ModelGeometryBuilder.computeEgdeGeometry( this );
   }
 
   public static FE1D2DEdge createEdge( final FE1D2DDiscretisationModel discModel )

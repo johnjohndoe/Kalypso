@@ -29,10 +29,10 @@
 		/>
 	
 	<xs:element 
-		name="MultiPointCoverage"
-		type="wbGml:CoverageType"/>
+		name="PointCoverage"
+		type="wbGml:PointCoverageType"/>
 	<xs:complexType 
-		name="CoverageType"
+		name="PointCoverageType"
 		abstract="false">
 		<xs:annotation>
 			<xs:documentation>
@@ -44,9 +44,11 @@
 				base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element
-						ref="wbGml:featureRangeSet"/>
+						ref="wbGml:featureRangeSet"
+						minOccurs="1" maxOccurs="1"/>
 					<xs:element
-						ref="wbGml:multiPointDomain"/>
+						ref="wbGml:multiPointDomain"
+						minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -90,9 +92,6 @@
 						ref="gml:pointMember" 
 						minOccurs="0" 
 						maxOccurs="unbounded"/>
-					<!--xs:element 
-						ref="gml:pointMembers" 
-						minOccurs="0"/ -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -138,5 +137,99 @@
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<!-- ========================================================
+			MultiSurface 
+	========================================================= -->
+	<xs:element 
+		name="multiSurface"
+		type="wbGml:MultiSurfacePropertyType"/>
+		
+	<xs:complexType name="MultiSurfacePropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wbGml:MultiSurface"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>	
+	
+	<xs:element 
+		name="MultiSurface" 
+		type="wbGml:MultiSurfaceType" 
+		substitutionGroup="gml:_Feature"/>
+	<!-- ======================================================= -->
+	<xs:complexType name="MultiSurfaceType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:annotation>
+						<xs:documentation>
+							A feature that hold multiple surface property
+						</xs:documentation>
+					</xs:annotation>
+					<xs:element 
+						ref="gml:surfaceProperty" 
+						minOccurs="0" 
+						maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- =================================================================
+		MultiSurface Coverage
+	================================================================== -->
+	<xs:element 
+		name="SurfaceCoverage"
+		type="wbGml:SurfaceCoverageType"/>
+	<xs:complexType 
+		name="SurfaceCoverageType"
+		abstract="false">
+		<xs:annotation>
+			<xs:documentation>
+				coverage to get arround the parsing limitation
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element
+						ref="wbGml:featureRangeSet"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element
+						ref="wbGml:multiSurfaceDomain"
+						minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:element 
+		name="multiSurfaceDomain"
+		type="wbGml:MultiSurfaceDomainPropertyType"/>
+		
+	<xs:complexType name="MultiSurfaceDomainPropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wbGml:MultiSurface"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 </xs:schema>

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -55,6 +57,29 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 public class EdgeInv implements IEdgeInv
 {
   private final IFE1D2DEdge edge;
+  private final Feature wrappedFeature;
+  /**
+   * Create a new edge for the given edge
+   * and linked it the given parentFeature
+   * @param edgeToInv 
+   * @param parentFeature 
+   * @param propQName  
+   */
+  public EdgeInv( 
+        Feature edgeToInv, 
+        Feature parentFeature,
+        QName propQName)
+  {
+    wrappedFeature=
+        Util.createFeatureAsProperty( 
+            parentFeature, 
+            propQName, 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+    wrappedFeature.setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
+        edgeToInv );
+    edge=(IFE1D2DEdge)edgeToInv.getAdapter( IFE1D2DEdge.class);
+  }
   
   public EdgeInv( IFE1D2DEdge edge)
   {
@@ -64,6 +89,7 @@ public class EdgeInv implements IEdgeInv
           feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
     
     this.edge=edge;
+    this.wrappedFeature=null;
   }
   
   /**
@@ -95,7 +121,9 @@ public class EdgeInv implements IEdgeInv
    */
   public IFeatureWrapperCollection getNodes( )
   {
-    return edge.getContainers();
+    throw new UnsupportedOperationException(
+        "getting not in an inverted edge not allow");
+//    return edge.getContainers();
   }
 
   /**
@@ -103,7 +131,9 @@ public class EdgeInv implements IEdgeInv
    */
   public Feature getWrappedFeature( )
   {
-    throw new RuntimeException("do not use; instead use getInverted()");
+//    throw new RuntimeException("do not use; instead use getInverted()");
+    return wrappedFeature;
   }
 
+  
 }

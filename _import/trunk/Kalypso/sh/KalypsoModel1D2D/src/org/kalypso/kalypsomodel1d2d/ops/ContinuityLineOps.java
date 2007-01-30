@@ -103,18 +103,19 @@ public class ContinuityLineOps
 
         // TODO: eventuell das original segment stückeln, um komische wegführungen zu vermeiden (d.h. nächer an der
         // linie beiben)
-        final FE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
-        final FE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
+        final /*FE1D2DNode*/ IFE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
+        final /*FE1D2DNode*/ IFE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
 
         if( startNode != null && endNode != null )
         {
           if( doTrace )
           {
-            System.out.println( "Found start node: " + startNode.getFeature().getId() );
-            System.out.println( "Found end node: " + endNode.getFeature().getId() );
+            System.out.println( "Found start node: " + startNode.getWrappedFeature().getId() );
+            System.out.println( "Found end node: " + endNode.getWrappedFeature().getId() );
           }
 
-          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = ModelOps.routing( startNode, endNode );
+          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = 
+                              ModelOps.routing( startNode, endNode );
           edgeList.addAll( Arrays.asList( edges ) );
         }
         else

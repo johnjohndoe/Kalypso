@@ -61,100 +61,31 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @author Patrice Congo
  *
  */
-public class Util
+public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
 {
-  /**
-   * Create a feature of the given type and link
-   * it to the given parentFeature as a property of the
-   * specified q-name
-   * @param parentFeature the parent feature
-   * @param propQName the q-name of the property linking the
-   *    parent and the newly created child
-   * @param featureQName the q-name denoting the type of the feature
-   */
-  public static final  Feature createFeatureAsProperty(
-      Feature parentFeature,
-      QName propQName, 
-      QName featureQName)
-      throws IllegalArgumentException
-  {
-    Assert.throwIAEOnNull(
-    propQName, "Argument propQName must not be null");
-    Assert.throwIAEOnNull(
-        parentFeature, 
-        "Argument roughnessCollection must not be null");
-    
-    try
-    {
-       return FeatureHelper.addFeature(
-          parentFeature, 
-          propQName, 
-          featureQName);
-    }
-    catch(GMLSchemaException ex)
-    {
-      throw new IllegalArgumentException(
-          "Property "+propQName+
-              " does not accept element of type"+
-          featureQName,
-          ex);
-    }   
-  }
-  
-  /**
-   * TODO complete and test this method
-   */
-  
-  /**
-   * Create a feature of the given type and link
-   * it to the given parentFeature as a property of the
-   * specified q-name
-   * @param parentFeature the parent feature
-   * @param propQName the q-name of the property linking the
-   *    parent and the newly created child
-   * @param featureQName the q-name denoting the type of the feature
-   * @param throws {@link IllegalArgumentException} if parentFeature
-   *    is null or propQName is null, or featureQName is null or 
-   *    featureID is null or empty or there is a feature in the workspace
-   *    with the same id
-   *    
-   */
-  public static final  Feature createFeatureAsProperty(
-            Feature parentFeature,
-            QName propQName, 
-            QName featureQName,
-            String featureID)
-            throws IllegalArgumentException
-  {
-    Assert.throwIAEOnNull(
-    propQName, "Argument propQName must not be null");
-    Assert.throwIAEOnNull(
-        parentFeature, 
-        "Argument roughnessCollection must not be null");
-    featureID=Assert.throwIAEOnNullOrEmpty( featureID );
-    
-    
-    
+//  /**
+//   * Create a feature of the given type and link
+//   * it to the given parentFeature as a property of the
+//   * specified q-name
+//   * @param parentFeature the parent feature
+//   * @param propQName the q-name of the property linking the
+//   *    parent and the newly created child
+//   * @param featureQName the q-name denoting the type of the feature
+//   */
+//  public static final  Feature createFeatureAsProperty(
+//      Feature parentFeature,
+//      QName propQName, 
+//      QName featureQName)
+//      throws IllegalArgumentException
+//  {
+//    Assert.throwIAEOnNull(
+//    propQName, "Argument propQName must not be null");
+//    Assert.throwIAEOnNull(
+//        parentFeature, 
+//        "Argument roughnessCollection must not be null");
+//    
 //    try
 //    {
-      IGMLSchema schema = 
-        parentFeature.getFeatureType().getGMLSchema();
-      IFeatureType featureType=
-          schema.getFeatureType( featureQName );
-      IPropertyType propertyType=
-              featureType.getProperty( propQName );
-      if(!(propertyType instanceof IRelationType))
-      {
-        throw new RuntimeException("UPS I DID IT AGAIN");
-      }
-      return FeatureFactory.createFeature( 
-                        parentFeature, 
-                        (IRelationType)propertyType,//parentRelation, 
-                        featureID, 
-                        featureType, 
-                        true,//initializeWithDefaults, 
-                        1//depth 
-                        );
 //       return FeatureHelper.addFeature(
 //          parentFeature, 
 //          propQName, 
@@ -168,7 +99,76 @@ public class Util
 //          featureQName,
 //          ex);
 //    }   
-  }
+//  }
+  
+//  /**
+//   * TODO complete and test this method
+//   */
+//  
+//  /**
+//   * Create a feature of the given type and link
+//   * it to the given parentFeature as a property of the
+//   * specified q-name
+//   * @param parentFeature the parent feature
+//   * @param propQName the q-name of the property linking the
+//   *    parent and the newly created child
+//   * @param featureQName the q-name denoting the type of the feature
+//   * @param throws {@link IllegalArgumentException} if parentFeature
+//   *    is null or propQName is null, or featureQName is null or 
+//   *    featureID is null or empty or there is a feature in the workspace
+//   *    with the same id
+//   *    
+//   */
+//  public static final  Feature createFeatureAsProperty(
+//            Feature parentFeature,
+//            QName propQName, 
+//            QName featureQName,
+//            String featureID)
+//            throws IllegalArgumentException
+//  {
+//    Assert.throwIAEOnNull(
+//    propQName, "Argument propQName must not be null");
+//    Assert.throwIAEOnNull(
+//        parentFeature, 
+//        "Argument roughnessCollection must not be null");
+//    featureID=Assert.throwIAEOnNullOrEmpty( featureID );
+//    
+//    
+//    
+////    try
+////    {
+//      IGMLSchema schema = 
+//        parentFeature.getFeatureType().getGMLSchema();
+//      IFeatureType featureType=
+//          schema.getFeatureType( featureQName );
+//      IPropertyType propertyType=
+//              featureType.getProperty( propQName );
+//      if(!(propertyType instanceof IRelationType))
+//      {
+//        throw new RuntimeException("UPS I DID IT AGAIN");
+//      }
+//      return FeatureFactory.createFeature( 
+//                        parentFeature, 
+//                        (IRelationType)propertyType,//parentRelation, 
+//                        featureID, 
+//                        featureType, 
+//                        true,//initializeWithDefaults, 
+//                        1//depth 
+//                        );
+////       return FeatureHelper.addFeature(
+////          parentFeature, 
+////          propQName, 
+////          featureQName);
+////    }
+////    catch(GMLSchemaException ex)
+////    {
+////      throw new IllegalArgumentException(
+////          "Property "+propQName+
+////              " does not accept element of type"+
+////          featureQName,
+////          ex);
+////    }   
+//  }
   
   /**
    * Get an {@link IFeatureWrapperCollection} from a feature list

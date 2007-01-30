@@ -8,20 +8,15 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 
-import org.deegree.gml.GMLSchema;
-import org.kalypso.gmlschema.IGMLSchema;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -98,7 +93,7 @@ public class FE1D2DNode
               throws IllegalArgumentException
   {
     this( 
-        Util.createFeatureAsProperty( 
+        org.kalypso.kalypsosimulationmodel.core.Util.createFeatureAsProperty( 
                   parentFeature, 
                   propQName, 
                   Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
@@ -115,67 +110,70 @@ public class FE1D2DNode
             String gmlID)
   {
     this(
-        createNodeById( 
-              parentFeature, propQName, gmlID ));
+        org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
+            parentFeature, 
+            propQName, 
+            gmlID ));
   }
 
-  private static final Feature createNodeById(
-                      Feature parentFeature,
-                      QName propQName,
-                      String gmlID)
-                      throws IllegalArgumentException
-  {
-    Assert.throwIAEOnNull( 
-            parentFeature, 
-            "parentFeatureParameter must not be null" );
-    Assert.throwIAEOnNull( 
-            propQName, "propQName param must notbe null" );
-    gmlID=Assert.throwIAEOnNullOrEmpty( gmlID );
-    
-    GMLWorkspace workspace=parentFeature.getWorkspace();
-    IGMLSchema schema=workspace.getGMLSchema();
-    IFeatureType featureType=
-      schema.getFeatureType(
-          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
-    IPropertyType parentPT=
-         parentFeature.getFeatureType().getProperty( propQName );
-    if(!(parentPT instanceof      IRelationType))
-    {
-      throw new IllegalArgumentException(
-                "Property not a IRelationType="+parentPT+
-                " propQname="+propQName);
-    }
-    
-    Feature created=
-      FeatureFactory.createFeature( 
-        parentFeature, 
-        (IRelationType)parentPT, 
-        gmlID, 
-        featureType, 
-        true );
-    try
-    {
-      if(parentPT.isList())
-      {
-        workspace.addFeatureAsComposition( 
-              parentFeature, 
-              (IRelationType)parentPT, 
-              -1, 
-              created );
-      }
-      else
-      {
-        //TODO test this case
-        parentFeature.setProperty( parentPT, created );
-      }
-    }
-    catch( Exception e )
-    {
-      throw new RuntimeException("Could not add to the workspace",e);
-    }
-    
-    return created;
-  }
+//  private static final Feature createNodeById(
+//                      Feature parentFeature,
+//                      QName propQName,
+//                      String gmlID)
+//                      throws IllegalArgumentException
+//  {
+//    Assert.throwIAEOnNull( 
+//            parentFeature, 
+//            "parentFeatureParameter must not be null" );
+//    Assert.throwIAEOnNull( 
+//            propQName, "propQName param must notbe null" );
+//    gmlID=Assert.throwIAEOnNullOrEmpty( gmlID );
+//    
+//    GMLWorkspace workspace=parentFeature.getWorkspace();
+//    IGMLSchema schema=workspace.getGMLSchema();
+//    IFeatureType featureType=
+//      schema.getFeatureType(
+//          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
+//    IPropertyType parentPT=
+//         parentFeature.getFeatureType().getProperty( propQName );
+//    if(!(parentPT instanceof      IRelationType))
+//    {
+//      throw new IllegalArgumentException(
+//                "Property not a IRelationType="+parentPT+
+//                " propQname="+propQName);
+//    }
+//    
+//    Feature created=
+//      FeatureFactory.createFeature( 
+//        parentFeature, 
+//        (IRelationType)parentPT, 
+//        gmlID, 
+//        featureType, 
+//        true );
+//    try
+//    {
+//      if(parentPT.isList())
+//      {
+//        workspace.addFeatureAsComposition( 
+//              parentFeature, 
+//              (IRelationType)parentPT, 
+//              -1, 
+//              created );
+//      }
+//      else
+//      {
+//        //TODO test this case
+//        parentFeature.setProperty( parentPT, created );
+//      }
+//    }
+//    catch( Exception e )
+//    {
+//      throw new RuntimeException("Could not add to the workspace",e);
+//    }
+//    
+//    return created;
+//  }
   
   public GM_Point getPoint( )
   {

@@ -101,7 +101,7 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element 
-				ref="simBase:terrainElevationModel"
+				ref="simBase:terrainElevationModelSystem"
 				minOccurs="1" maxOccurs="1"/>
 			<xs:element 
 				ref="simBase:roughnessLayerPolynomCollection"
@@ -116,17 +116,17 @@
 		terrainElevationModel	
 	================================================================== -->
 	<xs:element 
-		name="terrainElevationModel"
-		type="simBase:TerrainElevationModelPropertyType"/>
+		name="terrainElevationModelSystem"
+		type="simBase:TerrainElevationModelSystemPropertyType"/>
 	<xs:complexType 
-		name="TerrainElevationModelPropertyType">
+		name="TerrainElevationModelSystemPropertyType">
 		<xs:annotation>
 			<xs:documentation>
 				To define an elevation model element for typicaly a terrain model
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:TerrainElevationModel"/>
+			<xs:element ref="simBase:TerrainElevationModelSystem"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
@@ -135,11 +135,11 @@
 		Terrain elevation Model
 	================================================================== -->
 	<xs:element 
-		name="TerrainElevationModel"
-		type="simBase:TerrainElevationModelType"
+		name="TerrainElevationModelSystem"
+		type="simBase:TerrainElevationModelSystemType"
 		/>
 	<xs:complexType 
-		name="TerrainElevationModelType">
+		name="TerrainElevationModelSystemType">
 		<xs:annotation>
 			<xs:documentation>
 				Abstracts a terrain elevation. which kann hold a digital
@@ -151,16 +151,53 @@
 			<xs:extension 
 				base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element 
+					<xs:element
+						ref="simBase:terrainElevationModelSystem"/>
+					<!--xs:element 
 						ref="simBase:digitalElevationModel"
 						minOccurs="0" maxOccurs="1"/>
 					<xs:element 
 						ref="simBase:triangulatedIrregularNetwork"
-						minOccurs="0" maxOccurs="1"/>
+						minOccurs="0" maxOccurs="1"/-->
 					
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+	<!-- =================================================================
+				Elevation Model 
+	===================================================================-->
+	<xs:element 
+		name="_TerrainElevationModel"
+		type="simBase:AbstractTerrainElevationModelType"
+		abstract="true"/>
+	<xs:complexType 
+		name="AbstractTerrainElevationModelType"
+		abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				The Based type for all terrain elevation modell.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="gml:AbstractFeatureType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element 
+		name="terrainModelElevation" 
+		type="simBase:TerrainElevationModelPropertyType"/>
+
+	<xs:complexType 
+		name="TerrainElevationModelPropertyType">
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:_TerrainElevationModel"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<!-- =================================================================

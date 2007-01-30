@@ -53,23 +53,90 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * Default implementation for {@link IFE1D2DContinuityLine} for
+ * binding a feature of the type wb1d2d:ContinuityLine
+ * 
  * @author Patrice Congo
  */
-public class FE1D2DContinuityLine extends FE1D2D_2DElement implements IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge>
+public class FE1D2DContinuityLine 
+                  extends FE1D2D_2DElement 
+                  implements IFE1D2DContinuityLine<
+                                    IFE1D2DComplexElement, IFE1D2DEdge>
 {
-  public FE1D2DContinuityLine( final Feature featureToBind )
+  /**
+   * Create a new continuity line binding the provided feature.
+   * @param featureToBind the feature to bind. null values are illegal
+   * @throws IllegalArgumentException if the passed featureToBind 
+   *    parameter is null
+   */
+  public FE1D2DContinuityLine( 
+                final Feature featureToBind )
+                throws IllegalArgumentException
   {
     super( featureToBind );
   }
 
-  public FE1D2DContinuityLine( Feature pareFeature, QName propQName )
+  /**
+   * Creates a new continuity line that bind a feature created and linked 
+   * as property of the provided parent feature.
+   * 
+   * @param parentFeature the parent feature of the new to created
+   *        continnuity line feature
+   *         
+   * @throws IllegalArgumentException if the passed parentfeature or the
+   * the property QName is null
+   */
+  public FE1D2DContinuityLine( 
+                Feature parentFeature, 
+                QName propQName )
+                throws IllegalArgumentException
   {
-    super( pareFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
+    super( 
+        parentFeature, 
+        propQName, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine );
   }
 
-  public FE1D2DContinuityLine( Feature parentFeature, QName propQName, QName newFeatureQName ) throws IllegalArgumentException
+  /**
+   * Creates a new continuity line that bind a feature created and linked 
+   * as property of the provided parent feature.
+   * The type of the feature to create is specified by the 
+   * newFeatureQName Q-name
+   * 
+   * @param parentFeature the parent feature of the new to created
+   *        continnuity line feature
+   *         
+   * @throws IllegalArgumentException if the passed parentfeature or the
+   * the property QName is null
+   */
+  public FE1D2DContinuityLine( 
+                Feature parentFeature, 
+                QName propQName, 
+                QName newFeatureQName ) 
+                throws IllegalArgumentException
   {
     super( parentFeature, propQName, newFeatureQName );
+  }
+  
+  /**
+   * Creates a continuity line with a specified GML ID.
+   * The parent feature respectively its link to the newly 
+   * created continuity line are specified as parameters.
+   * @param parentFeature the parent feature
+   * @param propQName the qname of the property linking the
+   *    parent feature to the continuity line 
+   */
+  public FE1D2DContinuityLine( 
+                        Feature parentFeature,
+                        QName propQName,
+                        String gmlID)
+  {
+    this(
+      org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
+          parentFeature, 
+          propQName, 
+          gmlID ));
   }
 
   /**

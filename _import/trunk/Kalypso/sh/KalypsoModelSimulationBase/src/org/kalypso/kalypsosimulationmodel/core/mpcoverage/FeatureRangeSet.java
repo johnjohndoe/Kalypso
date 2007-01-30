@@ -39,6 +39,7 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 	 */
 	private final FeatureList rsFeatureList;
 	
+	/** class of the range set objects*/
 	private final Class<RangeSetCls> rangeSetClass;
 	
 	/**
@@ -426,5 +427,10 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 		{
 			return super.equals(obj);
 		}
+	}
+	
+	public Feature getWrappedFeature()
+	{
+		return rsFeature;
 	}
 }

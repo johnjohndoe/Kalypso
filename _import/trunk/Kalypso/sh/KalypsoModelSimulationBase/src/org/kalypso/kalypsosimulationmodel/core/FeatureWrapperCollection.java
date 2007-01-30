@@ -443,4 +443,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 	public Feature getWrappedFeature() {
 		return featureCol;
 	}
+	
+	public FeatureList getWrappedList()
+	{
+		return featureList;
+	}
 }

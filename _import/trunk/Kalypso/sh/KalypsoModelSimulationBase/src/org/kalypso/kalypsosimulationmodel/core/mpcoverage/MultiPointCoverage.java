@@ -15,13 +15,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public class MultiPointCoverage<RangSetCls extends IFeatureWrapper> implements IMultipointCoverage<RangSetCls>
+public class MultiPointCoverage<RangSetCls extends IFeatureWrapper> 
+						implements IMultipointCoverage<RangSetCls>
 {
 
 	private final Feature mpFeature;
 	private final FeatureRangeSet<RangSetCls> rangeSet;
 	private final MultiPoint domainSet;
-	//private final Class rangeSetClass;
 	
 	public MultiPointCoverage(
 					Feature mpFeature,

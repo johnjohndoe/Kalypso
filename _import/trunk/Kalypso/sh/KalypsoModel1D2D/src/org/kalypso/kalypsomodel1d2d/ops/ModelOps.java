@@ -74,17 +74,25 @@ public class ModelOps
     // never instatiate
   }
 
-  public static IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] routing( final FE1D2DNode startNode, final FE1D2DNode endNode ) throws CoreException
+  public static IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] routing( 
+                                  final /*FE1D2DNode*/IFE1D2DNode startNode, 
+                                  final /*FE1D2DNode*/IFE1D2DNode endNode ) 
+                                  throws CoreException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
 
-    final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> edgeList = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
+    final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> edgeList = 
+                new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
 
     try
     {
-      final Point endPoint = (Point) JTSAdapter.export( endNode.getPoint() );
+      final Point endPoint = 
+          (Point) JTSAdapter.export( endNode.getPoint() );
 
-      final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( startNode.getFeature().getParent() );
+      final FE1D2DDiscretisationModel model = 
+          new FE1D2DDiscretisationModel( 
+                startNode.getWrappedFeature().getParent() );
+      
       final int maxNodeCount = model.getNodes().size();
 
       IFE1D2DNode lastFoundNode = startNode;
