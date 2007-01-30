@@ -33,4 +33,17 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
+            name="Kalypso import wizards"/>
+      <wizard
+            category="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
+            class="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+            icon="etc/images/icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+            name="Roughness import wizard"
+            project="false"/>
+   </extension>
 </plugin>
