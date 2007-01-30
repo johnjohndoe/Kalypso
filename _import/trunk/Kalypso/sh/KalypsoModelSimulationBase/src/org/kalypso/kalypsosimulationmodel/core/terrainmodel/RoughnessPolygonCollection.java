@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -42,7 +43,8 @@ public class RoughnessPolygonCollection
 
 	public List<IRoughnessPolygon> getRoughnessPolygons()
 	{
-		return null;
+		return (List<IRoughnessPolygon>) getWrappedFeature().getProperty(KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON);
+//		return null;
 	}
 
 	public IRoughnessPolygon[] select(GM_Point location)
