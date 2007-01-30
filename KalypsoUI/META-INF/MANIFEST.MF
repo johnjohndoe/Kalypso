@@ -165,8 +165,6 @@ Export-Package: com.keypoint,
  org.kalypso.ui.preferences,
  org.kalypso.ui.repository.factory,
  org.kalypso.ui.repository.view,
- org.kalypso.ui.shapeImportWizards.utils,
- org.kalypso.ui.shapeImportWizards.utils.importRoughness,
  org.kalypso.ui.views.map,
  org.kalypso.ui.wizard,
  org.kalypso.ui.wizard.feature,
@@ -194,6 +192,5 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.metadoc;visibility:=reexport,
  org.junit,
  org.kalypso.services.core.client,
- org.eclipse.ui.forms,
- KalypsoModelSimulationBase
+ org.eclipse.ui.forms
 Eclipse-LazyStart: true
