@@ -81,6 +81,7 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 public class MultiExporter extends AbstractExporter
 {
   private IExporter[] m_exporters;
+
   private ArrayChooserPage m_page;
 
   /**
@@ -92,14 +93,14 @@ public class MultiExporter extends AbstractExporter
     super.init( supplier );
 
     // read and create sub-exporters
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
 
     final Collection<IStatus> stati = new ArrayList<IStatus>();
     final ISupplierCreator creator = new ISupplierCreator()
     {
       public ISupplier createSupplier( final Arguments args ) throws InvocationTargetException
       {
-        return (ISupplier)supplier.supply( args );
+        return (ISupplier) supplier.supply( args );
       }
     };
 
@@ -113,8 +114,7 @@ public class MultiExporter extends AbstractExporter
     {
       final IExporter exporter = m_exporters[i];
       if( exporter.getClass() != firstExporter.getClass() )
-        throw new CoreException( StatusUtilities
-            .createErrorStatus( "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) );
     }
   }
 
@@ -131,7 +131,7 @@ public class MultiExporter extends AbstractExporter
 
     for( int i = 0; i < choosenExporters.length; i++ )
     {
-      final IExporter exporter = (IExporter)choosenExporters[i];
+      final IExporter exporter = (IExporter) choosenExporters[i];
       final IExportableObject[] objects = exporter.createExportableObjects( configuration );
       allObjects.addAll( Arrays.asList( objects ) );
     }
@@ -145,10 +145,9 @@ public class MultiExporter extends AbstractExporter
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration,
-      final ImageDescriptor defaultImage ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException
   {
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
     final String pageTitle = arguments.getProperty( "pageTitle", "Wählen Sie die Exporter" );
 
     final IWizardPage[] exporterPages = m_exporters[0].createWizardPages( configuration, defaultImage );
@@ -156,7 +155,7 @@ public class MultiExporter extends AbstractExporter
     final IWizardPage[] myPages = new IWizardPage[exporterPages.length + 1];
 
     // create wizard page for selecting the templates
-    m_page = new ArrayChooserPage( m_exporters, new Object[] {}, m_exporters, "exporterSelection", pageTitle, null );
+    m_page = new ArrayChooserPage( m_exporters, new Object[] {}, m_exporters, 0, "exporterSelection", pageTitle, null );
     m_page.setImageDescriptor( defaultImage );
 
     myPages[0] = m_page;
@@ -171,7 +170,7 @@ public class MultiExporter extends AbstractExporter
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
   @Override
-  public ImageDescriptor getImageDescriptor()
+  public ImageDescriptor getImageDescriptor( )
   {
     return m_exporters[0].getImageDescriptor();
   }
@@ -179,20 +178,19 @@ public class MultiExporter extends AbstractExporter
   /**
    * Creates exporters from a argument list of exporters.
    */
-  public static Collection<IExporter> createExporterFromArguments( final Collection<IStatus> stati, final Arguments arguments,
-      final String exporterKey, final ISupplierCreator supplierCreator )
+  public static Collection<IExporter> createExporterFromArguments( final Collection<IStatus> stati, final Arguments arguments, final String exporterKey, final ISupplierCreator supplierCreator )
   {
     final Collection<IExporter> exporters = new ArrayList<IExporter>();
 
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry)aIt.next();
-      final String key = (String)entry.getKey();
+      final Map.Entry entry = (Entry) aIt.next();
+      final String key = (String) entry.getKey();
       if( key.startsWith( exporterKey ) )
       {
         try
         {
-          final Arguments args = (Arguments)entry.getValue();
+          final Arguments args = (Arguments) entry.getValue();
           final String exporterId = args.getProperty( "id" );
           if( exporterId == null )
             throw new CoreException( StatusUtilities.createWarningStatus( "Exporter ohne id konfiguriert: " + key ) );
