@@ -117,7 +117,7 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, "profileFeaturesChooserPage", "Profile ausw‰hlen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 0, "profileFeaturesChooserPage", "Profile ausw‰hlen", null );
     m_profileChooserPage.setLabelProvider( new GMLEditorLabelProvider2() );
     m_profileChooserPage.setMessage( "Bitte w‰hlen Sie aus, in welchen Profilen Flieﬂzonen erzeugt werden sollen." );
 

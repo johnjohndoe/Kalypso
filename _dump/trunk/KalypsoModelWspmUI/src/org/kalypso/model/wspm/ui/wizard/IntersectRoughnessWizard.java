@@ -100,7 +100,7 @@ public class IntersectRoughnessWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, "profileFeaturesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 0, "profileFeaturesChooserPage", "Profile auswählen", null );
     m_profileChooserPage.setLabelProvider( m_chooserPageLabelProvider );
     m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Rauheiten zugeweisen werden sollen." );
 
@@ -138,7 +138,7 @@ public class IntersectRoughnessWizard extends Wizard
     final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
     final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
     final IProfilePointFilter[] pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
-    
+
     final ICommandTarget target = m_foundProfiles.theme;
 
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
