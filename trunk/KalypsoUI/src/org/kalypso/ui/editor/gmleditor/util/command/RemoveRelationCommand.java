@@ -94,10 +94,8 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
@@ -117,10 +115,8 @@ public class RemoveRelationCommand implements ICommand
       m_workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
     else
       m_workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
