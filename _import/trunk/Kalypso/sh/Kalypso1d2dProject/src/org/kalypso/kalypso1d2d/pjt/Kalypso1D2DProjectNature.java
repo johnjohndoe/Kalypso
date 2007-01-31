@@ -253,5 +253,11 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 		
 	}
 	
+	public IFolder getImportFolder()
+	{
+		return metaDataFolder;
+	}
+	
+	
 	
 }

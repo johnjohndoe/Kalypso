@@ -1,5 +1,6 @@
 package org.kalypso.afgui.viz;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -30,8 +33,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -43,6 +48,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.ui.wizards.IWizardRegistry;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IHelp;
 import org.kalypso.afgui.model.IPhase;
@@ -53,7 +59,6 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
-import org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
 
 
@@ -951,41 +956,92 @@ public class WorkflowControl
 		
 	}
 	
+	static final IFolder getImportFolder(IProject project)
+	{
+		Object nature= null;
+		try
+		{
+			nature=project.getNature(
+					"org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature");
+			Class natureClass=
+				nature.getClass();
+			Method method=
+				natureClass.getMethod(
+					"getImportFolder", 
+					new Class[0]);
+			Object ret=method.invoke(nature, new Object[]{});
+			logger.info("Folder="+ret);
+			return (IFolder)ret;
+		}
+		catch (Exception e)
+		{
+			logger.error("could not get nature",e);
+			return null;
+		}
+		
+	}
 	static final  void doImportRoughnessShape(IProject project, Shell shell)
 	{
 		
+		final String ID=
+			"org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard";
 		if(project==null)
 		{
 			logger.info("project is null");
 			return;
 		}
-		IFolder folder=project.getFolder(project.getLocation());
-		if(folder==null)
+		IWorkbench workbench=PlatformUI.getWorkbench();
+		
+		IWizardRegistry registry=
+			workbench.getNewWizardRegistry();
+		if(registry==null)
 		{
-			logger.info("Could not get project ifolfer="+project);
+			logger.warn("new Wizard registry is null");
+			return;
+		}
+		
+		IWorkbenchWizard wbWizard=null;
+		
+		try
+		{
+			wbWizard=
+				registry.findWizard(ID).createWizard();
+		}
+		catch (CoreException e1)
+		{
+			logger.error("could not found wizard", e1);
+		}
+		if(wbWizard==null)
+		{
+			logger.warn("Wizard not found:"+ID);
+			return;
 		}
 		
 		try
 		{
+			IFolder folder=getImportFolder(project);
+			if(folder==null)
+			{
+				logger.info("Could not get project ifolfer="+project);
+				return;
+			}
 			IStructuredSelection selection= 
 						new StructuredSelection(new IFolder[]{folder});
-			IWorkbench workbench= PlatformUI.getWorkbench();
-			ImportWizard wizard= new ImportWizard();
-			wizard.init(workbench, selection);
-			
+			wbWizard.init(workbench, selection);
 			WizardDialog wd= 
 				new WizardDialog(
 						shell,
-						wizard);
+						wbWizard);
+			wbWizard.addPages();
 			wd.setTitle("Neue Simulationsmodel");
-			
+				
 			int decision=wd.open();
 		}
 		catch (RuntimeException e)
 		{
 			logger.error("could not start wizard", e);
 		}
-		
+				
 	}
 	
 	private final void doURITask(String uri)
