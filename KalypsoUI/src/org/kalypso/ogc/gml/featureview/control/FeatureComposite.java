@@ -114,6 +114,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
+  /**
+   * The flag, indicating, if the green hook should be displayed.
+   */
+  private boolean m_showOk = false;
+
   /** Used for the compability-hack. Is it possible to get this from the binding classes? */
   private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org"; //$NON-NLS-1$
 
@@ -287,17 +292,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
       {
-        // TODO: should never happen. The error occurs whule generating the ValidatorLabelType
+        // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
         System.out.println( "ValidatorLabelType without property" );
       }
       else
       {
-
-        final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, true );
-
+        final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
         final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
-
         addFeatureControl( vfc );
+        // System.out.println( this );
 
         /* If a toolkit is set, use it. */
         if( m_formToolkit != null )
@@ -309,11 +312,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof GeometryLabelType )
     {
       final GeometryLabelType geometryLabelType = (GeometryLabelType) controlType;
-
       final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
-
       final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( geometryLabelType.getStyle() ) );
-
       addFeatureControl( vfc );
 
       /* If a toolkit is set, use it. */
@@ -448,14 +448,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Image )
     {
       final Image imageType = (Image) controlType;
-      
+
       final ImageFeatureControl ifc = new ImageFeatureControl( feature, ftp );
-      
+
       final int imgStyle = SWTUtilities.createStyleFromString( imageType.getStyle() );
       final Control control = ifc.createControl( parent, imgStyle );
-      
+
       addFeatureControl( ifc );
-      
+
       return control;
     }
     else if( controlType instanceof Extensioncontrol )
@@ -487,7 +487,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final SubcompositeType compoType = (SubcompositeType) controlType;
 
-      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_featureviewFactory );
+      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_showOk, m_featureviewFactory );
 
       fc.setFeature( feature );
 
@@ -764,5 +764,27 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public void setFormToolkit( final FormToolkit formToolkit )
   {
     m_formToolkit = formToolkit;
+  }
+
+  /**
+   * This function sets, if the green hook on a ok validated feature should be displayed. The default is false. This
+   * flag has only an effect, if the validator label is activated.
+   * 
+   * @param showOk
+   *          The flag, indicating, if the green hook should be displayed.
+   */
+  public void setShowOk( boolean showOk )
+  {
+    m_showOk = showOk;
+  }
+
+  /**
+   * This function returns the flag for displaying the green hook on a ok validated feature.
+   * 
+   * @return The flag, indicating, if the green hook should be displayed.
+   */
+  public boolean isShowOk( )
+  {
+    return m_showOk;
   }
 }

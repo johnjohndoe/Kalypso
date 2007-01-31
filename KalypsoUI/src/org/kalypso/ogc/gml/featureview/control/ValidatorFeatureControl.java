@@ -58,7 +58,9 @@ import org.kalypsodeegree_impl.model.feature.validation.rules.IRule;
 import org.kalypsodeegree_impl.model.feature.validation.rules.RuleFactory;
 
 /**
- * @author albert This class controls the ValidatorLabel and its behavior.
+ * This class controls the ValidatorLabel and its behavior.
+ * 
+ * @author Holger Albert
  */
 public class ValidatorFeatureControl extends AbstractFeatureControl
 {
@@ -79,6 +81,8 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   /* This creates the images once for the ValidatorFeature once, cause they are not disposed at this time. */
   // TODO: use Plugin-Imageprovider to handle life-cycle of images!
+  private static Image image_empty;
+
   private static Image image_ok;
 
   private static Image image_warning;
@@ -87,7 +91,15 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   static
   {
-    ImageDescriptor imgdesc = org.kalypso.ui.ImageProvider.IMAGE_FEATURE_VALIDATION_OK;
+    /*
+     * The empty image is needed, if the ok_image is not to be displayed. There must be an image set, otherwise, if the
+     * image in the label is null and you are trying to set a new image it will result somehow in an error. And now
+     * image is set anymore for this label.
+     */
+    ImageDescriptor imgdesc = org.kalypso.ui.ImageProvider.IMAGE_FEATURE_VALIDATION_EMPTY;
+    image_empty = imgdesc.createImage();
+
+    imgdesc = org.kalypso.ui.ImageProvider.IMAGE_FEATURE_VALIDATION_OK;
     image_ok = imgdesc.createImage();
 
     imgdesc = org.kalypso.ui.ImageProvider.IMAGE_FEATURE_VALIDATION_WARNING;
@@ -162,30 +174,26 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
         Vector<IStatus> status = new Vector<IStatus>();
 
         for( int i = 0; i < m_rules.length; i++ )
-        {
           status.add( m_rules[i].isValid( feature.getProperty( ftp ) ) );
-        }
-
-        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null ); //$NON-NLS-1$
 
         /* Set the image and a tooltip. */
+        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null ); //$NON-NLS-1$
         if( mstatus.isOK() == true )
         {
           if( m_showok == true )
-          {
             m_label.setImage( image_ok );
-          }
+          else
+            m_label.setImage( image_empty );
 
           m_label.setToolTipText( "" );
         }
         else
         {
           m_label.setImage( image_error );
-          
-          String message = "";
 
+          String message = "";
           for( int i = 0; i < status.size(); i++ )
-          {            
+          {
             if( !status.get( i ).isOK() )
               message = message + status.get( i ).getMessage() + "\r\n";
           }
