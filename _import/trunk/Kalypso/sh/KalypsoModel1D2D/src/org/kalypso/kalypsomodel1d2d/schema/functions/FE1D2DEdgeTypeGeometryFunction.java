@@ -5,6 +5,8 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IEditorPart;
@@ -49,21 +51,36 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
 	 * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
 	 *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
 	 */
-	public Object getValue(final Feature feature, final IPropertyType pt,
-			final Object currentValue) {
-	    System.out.println("Getting geom:"+pt.getQName());
-		final FE1D2DEdge edge = new FE1D2DEdge(feature);
-		try {
-          
-			return edge.recalculateEgdeGeometry();
-		} 
+	public Object getValue(
+                      final Feature feature, 
+                      final IPropertyType pt,
+                      final Object currentValue) 
+    {
+	   QName featureQName=feature.getFeatureType().getQName(); 
+       
+       if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( featureQName ))
+       {
+  		final FE1D2DEdge edge = new FE1D2DEdge(feature);
+  		try {
+            
+  			return edge.recalculateEgdeGeometry();
+  		} 
         catch (GM_Exception e) 
         {
-          e.printStackTrace();
-			final IStatus status = StatusUtilities.statusFromThrowable(e);
-			KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
-			return null;
-		}
+            e.printStackTrace();
+  			final IStatus status = StatusUtilities.statusFromThrowable(e);
+  			KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
+  			return null;
+  		}
+       }
+       else if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV.equals( featureQName ))
+       {
+         return null;
+       }
+       else
+       {
+         return null;
+       }
 	}
 
 	/**

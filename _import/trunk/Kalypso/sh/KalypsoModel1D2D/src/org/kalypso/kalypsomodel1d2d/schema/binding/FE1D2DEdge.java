@@ -40,9 +40,18 @@ public class FE1D2DEdge extends AbstractFeatureBinder
           featureToBind, 
           Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
     // containers
-    Object prop = 
-      featureToBind.getProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    Object prop=null;
+    try
+    {
+      prop= 
+        featureToBind.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+      System.out.println("feature:"+featureToBind);
+    }
     if( prop == null )
     {
       // create the property tha is still missing

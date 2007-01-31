@@ -180,23 +180,25 @@
 					==Single point edge are also possible, in that case the all
 				
 			</xs:documentation>
-		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+		<!--xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
 					kapp:property="wb1d2d:geometry"/>
-			</xs:appinfo>
+			</xs:appinfo -->
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
+			<xs:restriction 
 				base="wb1d2d:EdgeType">
 				<xs:sequence>	
-					<xs:element name="geometry" type="gml:LineStringPropertyType"/>
+					<!--xs:element 
+						name="geometry" 
+						type="gml:LineStringPropertyType"/ -->
 					<xs:element 
 						ref="wb1d2d:edge"
 						minOccurs="1" 
 						maxOccurs="1"/>
 				</xs:sequence>
-			</xs:extension>
+			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
 	
@@ -935,9 +937,6 @@
 				Associates elements to the element the contains, edges
 			</xs:documentation>
 		</xs:annotation>
-		<!-- xs:complexContent>
-			<xs:restriction 
-				base="simBase:FEEdgeContainerPropertyType"-->
 				<xs:sequence>
 					<xs:element 
 						ref="wb1d2d:Element" 
@@ -945,8 +944,6 @@
 						maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!-- /xs:restriction>
-		</xs:complexContent-->
 	</xs:complexType>
 	
 	<!-- =================================================================

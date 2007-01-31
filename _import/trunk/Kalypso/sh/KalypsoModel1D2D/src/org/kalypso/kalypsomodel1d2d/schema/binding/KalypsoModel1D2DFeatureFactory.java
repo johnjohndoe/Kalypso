@@ -18,6 +18,7 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Adapter Factory for feature in the simBase namespace
@@ -130,11 +131,15 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
               if(featureQName.equals( 
                   Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV) )
               {
-                Feature toInv=
-                  (Feature)feature.getProperty( 
+                Object toInv=
+                  feature.getProperty( 
                         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
-                
-                FE1D2DEdge edge = new FE1D2DEdge(toInv);
+                if(toInv instanceof String)
+                {
+                  GMLWorkspace workspace=feature.getWorkspace();
+                  toInv=workspace.getFeature( (String )toInv);
+                }
+                FE1D2DEdge edge = new FE1D2DEdge((Feature)toInv);
                 
                 return new EdgeInv(edge);     
               }

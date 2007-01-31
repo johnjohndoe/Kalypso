@@ -77,7 +77,7 @@ public class EdgeInv implements IEdgeInv
             Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
     wrappedFeature.setProperty( 
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
-        edgeToInv );
+        edgeToInv.getId() );
     edge=(IFE1D2DEdge)edgeToInv.getAdapter( IFE1D2DEdge.class);
   }
   

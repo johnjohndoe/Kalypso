@@ -89,6 +89,10 @@ public class TestWorkspaces
     public static final String REL_RES_FE1D2D_TRI_ELE=
                           "data/test_fe1d2d_tri_element.xml";
     
+    public static final URL URL_AGGER_2D;
+    public static final String REL_RES_AGGER_2D=
+                          "data/test_model_2d_agger.2d";
+    
 	public static final QName GML_PROP_FEATURE_MEMBER= 
 						new QName(NS.GML3,"featureMember");
 	
@@ -122,6 +126,10 @@ public class TestWorkspaces
                 REL_RES_FE1D2D_TRI_ELE,
                 TestWorkspaces.class.getResource(
                                     REL_RES_FE1D2D_TRI_ELE));
+            urlMap.put(
+                REL_RES_AGGER_2D,
+                TestWorkspaces.class.getResource(
+                                    REL_RES_AGGER_2D));
 		}
 		catch(Throwable th)
 		{
@@ -137,6 +145,7 @@ public class TestWorkspaces
             URL_FE1D2DEDGE=urlMap.get(REL_RES_FE1D2DEDGE);
             URL_FE1D2D_QUADRI_ELE=urlMap.get(REL_RES_FE1D2D_QUADRI_ELE);
             URL_FE1D2D_TRI_ELE=urlMap.get(REL_RES_FE1D2D_TRI_ELE);
+            URL_AGGER_2D=urlMap.get( REL_RES_AGGER_2D );
 		}
 	}
 	
