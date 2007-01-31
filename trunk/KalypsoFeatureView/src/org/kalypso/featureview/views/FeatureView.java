@@ -150,6 +150,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
    */
   private static final String STORE_SHOW_TABLES = "FeatureView.STORE_SHOW_TABLES"; //$NON-NLS-1$
 
+  /**
+   * Settings constant for show green hook at validation ok (value <code>FeatureView.STORE_SHOW_VALIDATION_OK</code>).
+   */
+  private static final String STORE_SHOW_VALIDATION_OK = "FeatureView.STORE_SHOW_VALIDATION_OK"; //$NON-NLS-1$
 
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -222,6 +226,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private Action m_showTablesAction = null;
 
+  private Action m_showValidationOkAction = null;
+
   private FormToolkit m_toolkit;
 
   /**
@@ -239,9 +245,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_settings = viewsSettings.addNewSection( STORE_SECTION );
       // set default values
       m_settings.put( STORE_SHOW_TABLES, true );
+      m_settings.put( STORE_SHOW_VALIDATION_OK, false );
     }
 
     m_fvFactory.setShowTables( m_settings.getBoolean( STORE_SHOW_TABLES ) );
+    m_featureComposite.setShowOk( m_settings.getBoolean( STORE_SHOW_VALIDATION_OK ) );
     m_cfvFactory.reset();
   }
 
@@ -295,6 +303,23 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return m_fvFactory.isShowTables();
   }
 
+  public void setShowOk( final boolean showOk )
+  {
+    final Feature currentFeature = getCurrentFeature();
+
+    m_featureComposite.setShowOk( showOk );
+    m_cfvFactory.reset();
+
+    m_settings.put( STORE_SHOW_VALIDATION_OK, showOk );
+
+    activateFeature( currentFeature, true, null );
+  }
+
+  public boolean isShowOk( )
+  {
+    return m_featureComposite.isShowOk();
+  }
+
   protected void handleSelectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
     m_selectionSourcePart = part;
@@ -313,28 +338,28 @@ public class FeatureView extends ViewPart implements ModellEventListener
       activateFeature( null, false, null );
     }
 
-//    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
-//
-//    runAsync( new Runnable()
-//    {
-//      public void run( )
-//      {
-//        featureSelectionActionGroup.getContext().setSelection( selection );
-//        featureSelectionActionGroup.updateActionBars();
-//      }
-//    } );
+    // final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
+    //
+    // runAsync( new Runnable()
+    // {
+    // public void run( )
+    // {
+    // featureSelectionActionGroup.getContext().setSelection( selection );
+    // featureSelectionActionGroup.updateActionBars();
+    // }
+    // } );
   }
 
-//  private void runAsync( final Runnable runnable )
-//  {
-//    final Group mainGroup = m_mainGroup;
-//    final Control control = m_featureComposite.getControl();
-//    if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
-//    {
-//      if( !control.isDisposed() )
-//        control.getDisplay().asyncExec( runnable );
-//    }
-//  }
+  // private void runAsync( final Runnable runnable )
+  // {
+  // final Group mainGroup = m_mainGroup;
+  // final Control control = m_featureComposite.getControl();
+  // if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
+  // {
+  // if( !control.isDisposed() )
+  // control.getDisplay().asyncExec( runnable );
+  // }
+  // }
 
   protected void handlePartClosed( final IWorkbenchPart part )
   {
@@ -392,8 +417,23 @@ public class FeatureView extends ViewPart implements ModellEventListener
       }
     };
     m_showTablesAction.setChecked( isShowTables() );
+
+    m_showValidationOkAction = new Action( "Validation OK anzeigen", Action.AS_CHECK_BOX )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        setShowOk( isChecked() );
+      }
+    };
+    m_showValidationOkAction.setChecked( isShowOk() );
+
     final IViewSite viewSite = getViewSite();
     viewSite.getActionBars().getMenuManager().add( m_showTablesAction );
+    viewSite.getActionBars().getMenuManager().add( m_showValidationOkAction );
 
     final IWorkbenchWindow workbenchWindow = viewSite.getWorkbenchWindow();
     final IWorkbenchPage activePage = workbenchWindow.getActivePage();
@@ -489,7 +529,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
           if( FeatureView.this == getViewSite().getPage().getActivePart() )
             mainGroup.setFocus();
         }
-        
+
         featureSelectionActionGroup.getContext().setSelection( selection );
         featureSelectionActionGroup.updateActionBars();
 
@@ -519,10 +559,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    // TODO: why doesn't the feature composite itself is a modelllisztener and reacts to the changes?
+    // TODO: why doesn't the feature composite itself is a modelllistener and reacts to the changes?
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
     {
-      
+
       final Group mainGroup = m_mainGroup;
       final Control control = m_featureComposite.getControl();
       if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )

@@ -23,14 +23,17 @@ public class SubFeatureControl extends AbstractFeatureControl
 
   private final FormToolkit m_formToolkit;
 
+  private final boolean m_showOk;
+
   private final IFeatureviewFactory m_featureviewFactory;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final IFeatureviewFactory featureviewFactory )
+  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final boolean showOk, final IFeatureviewFactory featureviewFactory )
   {
     super( ftp );
-    
+
     m_selectionManager = selectionManager;
     m_formToolkit = formToolkit;
+    m_showOk = showOk;
     m_featureviewFactory = featureviewFactory;
   }
 
@@ -47,6 +50,7 @@ public class SubFeatureControl extends AbstractFeatureControl
 
       /* Set the toolkit to the FeatureComposite. The check for null is perfomrmed in FeatureComposite. */
       fc.setFormToolkit( m_formToolkit );
+      fc.setShowOk( m_showOk );
 
       m_fc = fc;
     }

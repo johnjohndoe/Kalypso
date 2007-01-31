@@ -155,7 +155,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_GEOM_PROP_MULTILINE = id( "icons/feature/geom_multiline.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_POLYGON = id( "icons/feature/geom_polygon.gif" );
   public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOLYGON = id( "icons/feature/geom_multipolygon.gif" );
-  
+
+  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_EMPTY = id( "icons/validation/validation_empty.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_OK = id( "icons/validation/validation_inputok.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_WARNING = id( "icons/validation/validation_warning.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_NOTOK = id( "icons/validation/validation_error.gif" );
