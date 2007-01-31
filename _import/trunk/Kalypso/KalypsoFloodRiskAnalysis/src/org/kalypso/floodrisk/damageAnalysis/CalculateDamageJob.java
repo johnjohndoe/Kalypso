@@ -314,8 +314,8 @@ public class CalculateDamageJob implements ISimulation
     TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, Messages.getString("damageAnalysis.CalculateDamageJob.NoData") ); //$NON-NLS-1$
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
-    double min = grid.getRangeSet().getMinValue();
-    double max = grid.getRangeSet().getMaxValue();
+    double min = 0.0;//grid.getRangeSet().getMinValue();
+    double max = 0.0;//grid.getRangeSet().getMaxValue();
     double intervalStep = ( max - min ) / numOfCategories;
     for( int i = 0; i < numOfCategories; i++ )
     {

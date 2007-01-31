@@ -77,8 +77,8 @@ public class RasterTools
     RectifiedGridDomain resultGridDomain = new RectifiedGridDomain( grid1.getGridDomain().getOrigin( null ), grid1
         .getGridDomain().getOffset(), grid1.getGridDomain().getGridRange() );
     Vector<Vector<Double>> resultRangeSetData = new Vector<Vector<Double>>();
-    Vector grid1RangeSetData = grid1.getRangeSet().getRangeSetData();
-    Vector grid2RangeSetData = grid2.getRangeSet().getRangeSetData();
+    Vector grid1RangeSetData = null;//grid1.getRangeSet().getRangeSetData();
+    Vector grid2RangeSetData = null;//grid2.getRangeSet().getRangeSetData();
     for( int i = 0; i < grid1RangeSetData.size(); i++ )
     {
       Vector grid1_rowData = (Vector)grid1RangeSetData.get( i );
@@ -105,7 +105,7 @@ public class RasterTools
       resultRangeSetData.addElement( result_rowData );
     }//for i (Zeilen)
     RangeSet resultRangeSet = new RangeSet( resultRangeSetData, null );
-    return new RectifiedGridCoverage2( resultGridDomain, resultRangeSet );
+    return null;//new RectifiedGridCoverage2( resultGridDomain, resultRangeSet );
   }
 
 }

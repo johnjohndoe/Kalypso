@@ -98,8 +98,8 @@ public class StatisticAnalysis
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
     double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
+    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
     for( int i = 0; i < damage_rangeSetData.size(); i++ )
     {
       Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
@@ -181,9 +181,9 @@ public class StatisticAnalysis
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
     double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector template_rangeSetData = templateGrid.getRangeSet().getRangeSetData();
+    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
     Double data = new Double( 1 );
     for( int i = 0; i < template_rangeSetData.size(); i++ )
     {
@@ -351,9 +351,9 @@ public class StatisticAnalysis
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
     double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector administrationUnit_rangeSetData = administrationUnitGrid.getRangeSet().getRangeSetData();
+    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
     for( int i = 0; i < damage_rangeSetData.size(); i++ )
     {
       Vector damage_rowData = (Vector) damage_rangeSetData.get( i );
@@ -451,10 +451,10 @@ public class StatisticAnalysis
     double offsetX = damageGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
     double offsetY = damageGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
     double cellArea = offsetX * offsetY;
-    Vector damage_rangeSetData = damageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector administrationUnit_rangeSetData = administrationUnitGrid.getRangeSet().getRangeSetData();
-    Vector template_rangeSetData = templateGrid.getRangeSet().getRangeSetData();
+    Vector damage_rangeSetData = null;//damageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
+    Vector template_rangeSetData = null;//templateGrid.getRangeSet().getRangeSetData();
     Double data = new Double( 1 );
     for( int i = 0; i < template_rangeSetData.size(); i++ )
     {

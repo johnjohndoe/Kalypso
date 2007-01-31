@@ -112,8 +112,8 @@ public class DamageAnalysis
 
     RectifiedGridDomain damagePercentage_gridDomain = new RectifiedGridDomain( waterlevelGrid.getGridDomain()
         .getOrigin( null ), waterlevelGrid.getGridDomain().getOffset(), waterlevelGrid.getGridDomain().getGridRange() );
-    Vector waterlevel_rangeSetData = waterlevelGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
+    Vector waterlevel_rangeSetData = null;//waterlevelGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> damagePercentage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < waterlevel_rangeSetData.size(); i++ )
     {
@@ -153,7 +153,7 @@ public class DamageAnalysis
        */
     }//for i
     RangeSet damagePercentage_rangeSet = new RangeSet( damagePercentage_rangeSetData, null );
-    damagePercentageGrid = new RectifiedGridCoverage2( damagePercentage_gridDomain, damagePercentage_rangeSet );
+    damagePercentageGrid = null;//new RectifiedGridCoverage2( damagePercentage_gridDomain, damagePercentage_rangeSet );
     return damagePercentageGrid;
   }
 
@@ -218,9 +218,9 @@ public class DamageAnalysis
 
     RectifiedGridDomain damage_gridDomain = new RectifiedGridDomain( damagePercentageGrid.getGridDomain().getOrigin(
         null ), damagePercentageGrid.getGridDomain().getOffset(), damagePercentageGrid.getGridDomain().getGridRange() );
-    Vector damagePercentage_rangeSetData = damagePercentageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
-    Vector administrationUnit_rangeSetData = administrationUnitGrid.getRangeSet().getRangeSetData();
+    Vector damagePercentage_rangeSetData = null;//damagePercentageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
+    Vector administrationUnit_rangeSetData = null;//administrationUnitGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> damage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < damagePercentage_rangeSetData.size(); i++ )
     {
@@ -269,7 +269,7 @@ public class DamageAnalysis
        */
     }//for i
     RangeSet damage_RangeSet = new RangeSet( damage_rangeSetData, null );
-    damageGrid = new RectifiedGridCoverage2( damage_gridDomain, damage_RangeSet );
+    damageGrid = null;//;new RectifiedGridCoverage2( damage_gridDomain, damage_RangeSet );
     return damageGrid;
   }
 
@@ -292,8 +292,8 @@ public class DamageAnalysis
 
     RectifiedGridDomain damage_gridDomain = new RectifiedGridDomain( damagePercentageGrid.getGridDomain().getOrigin(
         null ), damagePercentageGrid.getGridDomain().getOffset(), damagePercentageGrid.getGridDomain().getGridRange() );
-    Vector damagePercentage_rangeSetData = damagePercentageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
+    Vector damagePercentage_rangeSetData = null;//damagePercentageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> damage_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < damagePercentage_rangeSetData.size(); i++ )
     {
@@ -333,7 +333,7 @@ public class DamageAnalysis
        */
     }//for i
     RangeSet damage_RangeSet = new RangeSet( damage_rangeSetData, null );
-    damageGrid = new RectifiedGridCoverage2( damage_gridDomain, damage_RangeSet );
+    damageGrid = null;//new RectifiedGridCoverage2( damage_gridDomain, damage_RangeSet );
     return damageGrid;
   }
 
@@ -365,8 +365,8 @@ public class DamageAnalysis
 
         RectifiedGridDomain temp_gridDomain = new RectifiedGridDomain( grid.getGridDomain().getOrigin( null ), grid
             .getGridDomain().getOffset(), grid.getGridDomain().getGridRange() );
-        Vector grid_rangeSetData = grid.getRangeSet().getRangeSetData();
-        Vector nextGrid_rangeSetData = nextGrid.getRangeSet().getRangeSetData();
+        Vector grid_rangeSetData = null;//grid.getRangeSet().getRangeSetData();
+        Vector nextGrid_rangeSetData = null;//nextGrid.getRangeSet().getRangeSetData();
         Vector<Vector<Double>> tempGrid_rangeSetData = new Vector<Vector<Double>>();
         for( int j = 0; j < grid_rangeSetData.size(); j++ )
         {
@@ -408,7 +408,7 @@ public class DamageAnalysis
            */
         }//for j
         RangeSet temp_RangeSet = new RangeSet( tempGrid_rangeSetData, null );
-        RectifiedGridCoverage2 tempGrid = new RectifiedGridCoverage2( temp_gridDomain, temp_RangeSet );
+        RectifiedGridCoverage2 tempGrid = null;//new RectifiedGridCoverage2( temp_gridDomain, temp_RangeSet );
         tempGrids.addElement( tempGrid );
         System.out.println( "Key: " + key + ", NextKey: " + nextKey ); //$NON-NLS-1$ //$NON-NLS-2$
       }
@@ -429,7 +429,7 @@ public class DamageAnalysis
     RectifiedGridCoverage2 firstGrid = (RectifiedGridCoverage2)tempGrids.firstElement();
     RectifiedGridDomain annualDamage_gridDomain = new RectifiedGridDomain( firstGrid.getGridDomain().getOrigin( null ),
         firstGrid.getGridDomain().getOffset(), firstGrid.getGridDomain().getGridRange() );
-    Vector firstGrid_rangeSetData = firstGrid.getRangeSet().getRangeSetData();
+    Vector firstGrid_rangeSetData = null;//firstGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> annualDamageGrid_rangeSetData = new Vector<Vector<Double>>();
     for( int j = 0; j < firstGrid_rangeSetData.size(); j++ )
     {
@@ -443,7 +443,7 @@ public class DamageAnalysis
           for( int n = 0; n < tempGrids.size(); n++ )
           {
             RectifiedGridCoverage2 tempGrid = (RectifiedGridCoverage2)tempGrids.get( n );
-            Vector tempGrid_rangeSetData = tempGrid.getRangeSet().getRangeSetData();
+            Vector tempGrid_rangeSetData = null;//tempGrid.getRangeSet().getRangeSetData();
             double tempDamage = 0;
             if( tempGrid_rangeSetData.get( j ) != null )
             {
@@ -470,7 +470,7 @@ public class DamageAnalysis
     RangeSet annualDamage_rangeSet = new RangeSet( annualDamageGrid_rangeSetData, null );
     RectifiedGridCoverage2 annualDamageGrid = RectifiedGridCoverage2.createRectifiedGridCoverage();
     annualDamageGrid.setGridDomain( annualDamage_gridDomain );
-    annualDamageGrid.setRangeSet( annualDamage_rangeSet );
+    //annualDamageGrid.setRangeSet( annualDamage_rangeSet );
       
     return annualDamageGrid;
   }

@@ -42,4 +42,4 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.kalypso.simulation.core,
  org.kalypso.contribs.ogc31
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

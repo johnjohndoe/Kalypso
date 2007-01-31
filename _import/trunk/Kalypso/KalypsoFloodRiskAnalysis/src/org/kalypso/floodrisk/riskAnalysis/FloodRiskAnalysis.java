@@ -81,8 +81,8 @@ public class FloodRiskAnalysis
     GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin(
         null ), annualDamageGrid.getGridDomain().getOffset(), annualDamageGrid.getGridDomain().getGridRange() );
-    Vector annualDamage_rangeSetData = annualDamageGrid.getRangeSet().getRangeSetData();
-    Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
+    Vector annualDamage_rangeSetData = null;//annualDamageGrid.getRangeSet().getRangeSetData();
+    Vector landuse_rangeSetData = null;//landuseGrid.getRangeSet().getRangeSetData();
     Vector<Vector<Double>> floodRisk_rangeSetData = new Vector<Vector<Double>>();
     for( int i = 0; i < annualDamage_rangeSetData.size(); i++ )
     {
@@ -131,7 +131,7 @@ public class FloodRiskAnalysis
        */
     }//for i
     RangeSet floodRisk_rangeSet = new RangeSet( floodRisk_rangeSetData, null );
-    floodRiskGrid = new RectifiedGridCoverage2( floodRisk_gridDomain, floodRisk_rangeSet );
+    floodRiskGrid = null;//new RectifiedGridCoverage2( floodRisk_gridDomain, floodRisk_rangeSet );
     return floodRiskGrid;
   }
 

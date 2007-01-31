@@ -89,7 +89,7 @@ public class VectorToGridConverter
     
     // ovde treba da iscitam fajl
     RangeSetType rangeSet = baseGrid.getRangeSet();
-    Vector rangeSetData = baseGrid.getRangeSet().getRangeSetData();
+    Vector rangeSetData = null;//baseGrid.getRangeSet().getRangeSetData();
     
     for( int i = 0; i < rangeSetData.size(); i++ )
     {
@@ -136,7 +136,7 @@ public class VectorToGridConverter
       // calculated"+ " Progress: "+100 * i / rangeSetData.size());
     }
     RangeSet newRangeSet = new RangeSet( newRangeSetData, null );
-    RectifiedGridCoverage2 newGrid = RectifiedGridCoverage2.createRectifiedGridCoverage( newGridDomain, newRangeSet );
+    RectifiedGridCoverage2 newGrid = null;//RectifiedGridCoverage2.createRectifiedGridCoverage( newGridDomain, newRangeSet );
     return newGrid;
   }
 }
