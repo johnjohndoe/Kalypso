@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -23,8 +27,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -47,6 +53,7 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
+import org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
 
 
@@ -241,6 +248,10 @@ public class WorkflowControl
 				aTBMng.update(true);
 				
 				aTBComp.reflow(true);
+			}
+			else
+			{
+				//Empty not iTak
 			}
 			
 			String uri=workflowPart.getURI();
@@ -804,6 +815,8 @@ public class WorkflowControl
 		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadTiff";
 	public static final String LOAD_IMG_JPG=
 		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadJPEG";
+	public static final String LOAD_ROUGHNESS_SHP=
+		"http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp";
 	
 	private IWorkbenchPage page;
 	private GisMapOutlineViewer m_outlineviewer;
@@ -937,8 +950,47 @@ public class WorkflowControl
 		}
 		
 	}
+	
+	static final  void doImportRoughnessShape(IProject project, Shell shell)
+	{
+		
+		if(project==null)
+		{
+			logger.info("project is null");
+			return;
+		}
+		IFolder folder=project.getFolder(project.getLocation());
+		if(folder==null)
+		{
+			logger.info("Could not get project ifolfer="+project);
+		}
+		
+		try
+		{
+			IStructuredSelection selection= 
+						new StructuredSelection(new IFolder[]{folder});
+			IWorkbench workbench= PlatformUI.getWorkbench();
+			ImportWizard wizard= new ImportWizard();
+			wizard.init(workbench, selection);
+			
+			WizardDialog wd= 
+				new WizardDialog(
+						shell,
+						wizard);
+			wd.setTitle("Neue Simulationsmodel");
+			
+			int decision=wd.open();
+		}
+		catch (RuntimeException e)
+		{
+			logger.error("could not start wizard", e);
+		}
+		
+	}
+	
 	private final void doURITask(String uri)
 	{
+		logger.info("running for:"+uri);
 		if(uri==null)
 		{
 			logger.warn("uri task is null");
@@ -953,9 +1005,14 @@ public class WorkflowControl
 			{
 				importAll();
 			}
+			else if(LOAD_ROUGHNESS_SHP.equals(uri))
+			{
+				
+				doImportRoughnessShape(activeProject,top.getShell());
+			}
 			else
 			{
-				//empty
+				logger.info("Cannot run task="+uri);
 			}
 		}		
 	}
