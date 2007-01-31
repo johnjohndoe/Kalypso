@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -580,6 +581,49 @@ public class TypeHandlerUtilities
         }
       } );
 
+      // <element name="directory" type="directory" />
+      registry.registerTypeHandler( new XsdBaseTypeHandler<File>( new QName( NS.COMMON, "directory" ), File.class )
+      {
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
+         */
+        @Override
+        public File convertToJavaValue( String xmlString )
+        {
+          return new File( xmlString );
+        }
+
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+         */
+        @Override
+        public String convertToXMLString( File value )
+        {
+          return value.getAbsolutePath();
+        }
+      } );
+
+      // <element name="file" type="file" />
+      registry.registerTypeHandler( new XsdBaseTypeHandler<File>( new QName( NS.COMMON, "file" ), File.class )
+      {
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
+         */
+        @Override
+        public File convertToJavaValue( String xmlString )
+        {
+          return new File( xmlString );
+        }
+
+        /**
+         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+         */
+        @Override
+        public String convertToXMLString( File value )
+        {
+          return value.getAbsolutePath();
+        }
+      } );
     }
     catch( final Exception e )
     {

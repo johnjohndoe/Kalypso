@@ -86,5 +86,7 @@ public class GuiTypeHandlerUtilities
     guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
 
     guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) );
+    guiRegistry.registerTypeHandler( new DirectoryGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "directory" ) ) ) );
+    guiRegistry.registerTypeHandler( new FileGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "file" ) ) ) );
   }
 }

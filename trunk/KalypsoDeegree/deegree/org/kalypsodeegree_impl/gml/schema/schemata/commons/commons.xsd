@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:common="org.kalypso.gml.common"
-	targetNamespace="org.kalypso.gml.common" elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.gml.common"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<!-- utility schema for gml application schemas -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 
@@ -62,14 +64,24 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
+
 	<!-- Defines a color based on a string. It uses the format #RGB (Hex). -->
 	<simpleType name="color">
 		<restriction base="string">
-			<pattern value="^#[0-9a-fA-F]{6}"></pattern>
+			<pattern value="^#[0-9a-fA-F]{6}"/>
 		</restriction>
 	</simpleType>
-	
+
+	<!-- Defines a file based on a string. -->
+	<simpleType name="file">
+		<restriction base="string"> </restriction>
+	</simpleType>
+
+	<!-- Defines a directory based on a string. -->
+	<simpleType name="directory">
+		<restriction base="string"> </restriction>
+	</simpleType>
+
 	<!-- Image -->
 	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
 		<annotation>
@@ -87,7 +99,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	
+
 	<complexType name="ImageType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -111,4 +123,3 @@
 		</complexContent>
 	</complexType>
 </schema>
-  
