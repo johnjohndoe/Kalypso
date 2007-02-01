@@ -916,4 +916,26 @@
           name="Log File"
           priority="low"/>
  </extension>
+ <extension
+      	point="org.eclipse.ui.commands">
+	   		<category
+		         description="Widget commands"
+		         id="org.kalypso.ogc.gml.map.widgets.category"
+		         name="Widgets">
+		    </category>
+		    <command
+		         categoryId="org.kalypso.ogc.gml.map.widgets.category"
+		         description="Select a widget"
+		         id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand"
+		         name="Select widget">
+			         <commandParameter
+	                 id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 name="Widget"
+	                 optional="false"/>
+	                 <commandParameter
+	                 id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context"
+	                 name="Context"
+	                 optional="false"/>
+		    </command>
+	 </extension>
 </plugin>
