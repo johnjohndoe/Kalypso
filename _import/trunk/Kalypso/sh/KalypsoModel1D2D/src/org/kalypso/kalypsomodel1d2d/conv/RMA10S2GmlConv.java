@@ -47,6 +47,7 @@ import java.io.LineNumberReader;
 import java.util.Scanner;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 
 /**
@@ -56,65 +57,255 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
  * @author Patrice Congo
  *
  */
-public class RMA10S2GmlConv
+public class RMA10S2GmlConv implements IRMA10SModelReader
 {
-  static public  void toDiscretisationModel(
-                                  InputStream bce2dInput, 
-                                  FE1D2DDiscretisationModel targetModel)
+  
+  private IModelElementIDProvider idProvider;
+  
+  private IRMA10SModelElementHandler handler;
+  
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStream)
+   */
+  public void parse( 
+                InputStream inputStream ) 
+                throws IllegalStateException, IOException
   {
-    Assert.throwIAEOnNullParam( bce2dInput, "bce2dInput" );
-    Assert.throwIAEOnNullParam( targetModel, "targetModel");
-    LineNumberReader reader= 
-          new LineNumberReader(new InputStreamReader(bce2dInput));
-    try
-    {
-      char char0, char1;
-      for(
-          String line=reader.readLine();
-          line!=null;
-          line=reader.readLine())
+    Assert.throwIAEOnNullParam( inputStream, "inputStream" );
+  }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStreamReader)
+   */
+  public void parse( 
+                        InputStreamReader inputStreamReader ) 
+                        throws IllegalStateException, IOException
+  {
+      Assert.throwIAEOnNullParam( 
+                          inputStreamReader, "inputStreamReader" );
+      LineNumberReader reader= 
+          new LineNumberReader(inputStreamReader);
+      try
       {
-        if(line.length()<2)
+        char char0, char1;
+        int length;
+        
+        //signal parsing start
+        handler.start();
+        
+        for(
+            String line=reader.readLine();
+            line!=null;
+            line=reader.readLine())
         {
-          continue;
-        }
-        char0=line.charAt( 0 );
-        char1=line.charAt( 1 );
-        if(char0=='F' && char1=='P')
-        {
-          //point  LineID, ID, rechtscoor, hochcoor, elevation
-          //point LineID    [easting] [equatorial distance northing elevation] 
-          String[] splits=line.split( "\\s+" );
-          int ID=Integer.parseInt( splits[1] );
-
-          double rechtCoor=Double.parseDouble( splits[2] );
-          double hochCoor=Double.parseDouble( splits[3] );
-          double elevation=Double.parseDouble(splits[4]  );
-          System.out.println(ID+" "+rechtCoor+" "+hochCoor);
-        }
-        else if(char0=='F' && char1=='E')
-        {
-          //LineID, ID
-        }
-        else if(char0=='A' && char1=='R')
-        {
-          //edge LINEID, ID, node1, node2, ellinks, elrechts
-        }
-        else if(char0=='R' && char1=='K')
-        {
+          length=line.length();
+          if(line.length()<2)
+          {
+            continue;
+          }
           
+          char0=line.charAt( 0 );
+          char1=line.charAt( 1 );
+          
+          if(char0=='F' && char1=='P')
+          {
+            interpreteNodeLine( length, line, handler );
+
+          }
+          else if(char0=='F' && char1=='E')
+          {
+            //LineID, ID
+            interpreteElementLine( length, line, handler );
+          }
+          else if(char0=='A' && char1=='R')
+          {
+            //edge LINEID, ID, node1, node2, ellinks, elrechts
+            interpreteArcLine( length, line, handler );
+          }
+          else if(char0=='R' && char1=='K')
+          {
+            
+          }
+          else
+          {
+            System.out.println("Unsupported section:"+line);
+          }
         }
-        else
-        {
-          System.out.println("Unsupported section:"+line);
-        }
-      }
+        
+        //signal parsing stop
+        handler.end();
     }
-    catch( IOException e )
+    catch (IOException e) 
     {
-      e.printStackTrace();
+      throw new IOException();
+    }
+      
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
+   */
+  public void setModelElementIDProvider( 
+                        IModelElementIDProvider idProvider ) 
+                        throws IllegalArgumentException
+  {
+    this.idProvider=idProvider;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#setRMA10SModelElementHandler(org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler)
+   */
+  public void setRMA10SModelElementHandler( 
+                        IRMA10SModelElementHandler handler ) 
+                        throws IllegalArgumentException
+  {
+    this.handler=handler;
+  }
+
+  static public  void toDiscretisationModel(
+                                  InputStream rma10sModelInput, 
+                                  IFEDiscretisationModel1d2d targetModel) throws IllegalStateException, IOException
+  {
+    IRMA10SModelReader reader= new RMA10S2GmlConv();
+    IModelElementIDProvider idProvider= new TypeIdAppendIdProvider();
+    IRMA10SModelElementHandler handler= 
+                 new DiscretisationModel1d2dHandler(targetModel);
+    reader.setModelElementIDProvider( idProvider );
+    reader.setRMA10SModelElementHandler( handler );
+    reader.parse( rma10sModelInput );
+    return;
+  }
+  
+  private static final void interpreteNodeLine(
+                                        final int length, 
+                                        final String line,
+                                        final IRMA10SModelElementHandler handler)
+  {
+    if(length==72)
+    {
+      int id = 
+                Integer.parseInt( line.substring( 3-1, 12-1 ) );
+      double easting =
+                Double.parseDouble( line.substring( 13-1, 32-1 ) );
+      double northing =
+                Double.parseDouble( line.substring( 33-1, 52-1 ));
+      
+      double elevation =
+                Double.parseDouble( line.substring( 53-1, 72-1 ));
+
+      handler.handleNode( 
+                line, 
+                id, 
+                easting, 
+                northing, 
+                elevation );
+    }
+    else
+    {
+      handler.handlerError( line, EReadError.LINE_TOO_SHORT );
     }
   }
   
+  private static final void interpreteArcLine(
+                                final int length, 
+                                final String line,
+                                final IRMA10SModelElementHandler handler)
+  {
+     if(length==52)
+     {//no middle node
+       try
+       {
+         int id= Integer.parseInt( line.substring( 3-1,12-1 ) );
+         int node1ID=Integer.parseInt( line.substring( 13-1, 22-1 ));
+         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ));
+         int elementLeftID=Integer.parseInt( line.substring( 33-1,42-1  ));
+         int elementRightID=Integer.parseInt( line.substring( 43-1,52-1  ));
+         int middleNodeID=-1;//Integer.parseInt( line.substring( 43-1,52-1  ));
+         handler.handleArc( 
+                   line,id, 
+                   node1ID, node2ID, 
+                   elementLeftID, elementRightID, 
+                   middleNodeID );
+       }
+       catch(Throwable th)
+       {
+         handler.handlerError( line, EReadError.ILLEGAL_SECTION);
+       }
+     }
+     else if(length==62)
+     {//no middle node
+       try
+       {
+         int id= Integer.parseInt( line.substring( 3-1,12-1 ) );
+         int node1ID=Integer.parseInt( line.substring( 13-1, 22-1 ));
+         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ));
+         int elementLeftID=Integer.parseInt( line.substring( 33-1,42-1  ));
+         int elementRightID=Integer.parseInt( line.substring( 43-1,52-1  ));
+         int middleNodeID=Integer.parseInt( line.substring( 43-1,52-1  ));
+         handler.handleArc( 
+                   line,id, 
+                   node1ID, node2ID, 
+                   elementLeftID, elementRightID, 
+                   middleNodeID );
+       }
+       catch(Throwable th)
+       {
+         handler.handlerError( line, EReadError.ILLEGAL_SECTION);
+       }
+     }
+     else
+     {
+       handler.handlerError( line, EReadError.LINE_TOO_SHORT);
+     }
+  }
+
+  
+  private static final void interpreteElementLine(
+                                final int length, 
+                                final String line,
+                                final IRMA10SModelElementHandler handler)
+  {
+    if(length==32)
+    {
+      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
+      int previousRoughnessClassID=-1;//Integer.parseInt( line.substring( 33-1, 42 ));
+      int eleminationNumber=-1;//Integer.parseInt( line.substring( 43-1, 52 ));
+      handler.handleElement( 
+              line, id, 
+              currentRougthnessClassID, 
+              previousRoughnessClassID, 
+              eleminationNumber );
+    }
+    else if(length==42)
+    {
+      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
+      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ));
+      int eleminationNumber=-1;//Integer.parseInt( line.substring( 43-1, 52 ));
+      handler.handleElement( 
+              line, id, 
+              currentRougthnessClassID, 
+              previousRoughnessClassID, 
+              eleminationNumber );
+    }
+    else if(length==52)
+      
+    {
+      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
+      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ));
+      int eleminationNumber=Integer.parseInt( line.substring( 43-1, 52 ));
+      handler.handleElement( 
+              line, id, 
+              currentRougthnessClassID, 
+              previousRoughnessClassID, 
+              eleminationNumber );
+    }
+    else
+    {
+      handler.handlerError( line, EReadError.LINE_TOO_SHORT );
+    }
+  }
   
 }

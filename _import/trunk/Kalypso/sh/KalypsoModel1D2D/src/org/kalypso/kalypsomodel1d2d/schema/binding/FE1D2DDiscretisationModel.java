@@ -52,21 +52,17 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
+ * Provide a implementation of {@link IFEDiscretisationModel1d2d} to
+ * bind wb1d2d:Discretisation gml elements
+ * 
  * @author Gernot Belger
+ * @author Patrice Congo
  */
-public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
+public class FE1D2DDiscretisationModel 
+                            extends AbstractFeatureBinder 
+                            implements IFEDiscretisationModel1d2d
 {
   
-//  ModellEventListener meListener= 
-//    new ModellEventListener()
-//    {
-//
-//      public void onModellChange( ModellEvent modellEvent )
-//      {
-//        System.out.println("ModelEvent:"+modellEvent);
-//      }
-//    
-//    };
   private IFeatureWrapperCollection<IFE1D2DElement> m_elements = 
             new FeatureWrapperCollection<IFE1D2DElement>( 
                     getFeature(), 
@@ -84,7 +80,14 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
                       getFeature(), 
                       IFE1D2DNode.class, 
                       Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES
-                      /*QNAME_PROP_NODES*/ );
+                      );
+  
+  private IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements=
+          new FeatureWrapperCollection<IFE1D2DComplexElement>( 
+              getFeature(), 
+              IFE1D2DComplexElement.class, 
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS
+              );
   
   
 
@@ -146,6 +149,13 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
       
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#getComplexElements()
+   */
+  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( )
+  {
+    return complexElements;
+  }
   public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )
   {
     return m_elements;
@@ -178,4 +188,12 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder
     return new FE1D2DContinuityLine( contiFeature );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
+   */
+  public Feature getWrappedFeature( )
+  {
+    return m_featureToBind;
+  }
+  
 }

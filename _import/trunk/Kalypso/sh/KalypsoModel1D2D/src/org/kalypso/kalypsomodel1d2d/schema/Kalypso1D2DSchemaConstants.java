@@ -107,6 +107,14 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_PROP_NODES = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
       
+      /**
+       * QName for a property linking a feature to a node.
+       * Use for example in DiscretisationModel feature
+       */
+      public final static QName WB1D2D_PROP_COMPLEX_ELEMENTS = 
+              new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElement" );
+      
+      
       public static final QName WB1D2D_PROP_EDGE_GEOM = 
 //        new QName( NS.GML3, "curveProperty" );
                new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );

@@ -55,7 +55,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
@@ -110,10 +109,16 @@ public class TestBce2dConv extends TestCase
     {
       fail(TestUtils.getStackTraceAsString( e ));
     }
-    
-    RMA10S2GmlConv.toDiscretisationModel( 
-                            aggerStream, 
-                            targetModel );
+    try
+    {
+      RMA10S2GmlConv.toDiscretisationModel( 
+                              aggerStream, 
+                              targetModel );
+    }
+    catch(Throwable th)
+    {
+      fail( TestUtils.getStackTraceAsString( th ) );
+    }
 
   }
 }

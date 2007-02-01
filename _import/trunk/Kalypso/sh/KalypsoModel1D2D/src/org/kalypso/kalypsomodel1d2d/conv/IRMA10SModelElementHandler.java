@@ -1,7 +1,8 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
-/**
-   * 
+  /**
+   *
+   *@author Patrice Congo
    */
   public interface IRMA10SModelElementHandler
   {
@@ -64,9 +65,9 @@ package org.kalypso.kalypsomodel1d2d.conv;
        */
       public void handlerUnIdentifyable(String lineString);
       
-      /**
-       * 
-       */
-      public void handlerError(String lineString);
+    /**
+     * Handle error the Reader 
+     */
+      public void handlerError(String lineString, EReadError errorHints);
       
   }
