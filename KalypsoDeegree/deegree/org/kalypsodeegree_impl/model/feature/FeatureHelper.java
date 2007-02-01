@@ -974,4 +974,100 @@ public class FeatureHelper
 
     return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
+  /**
+   * @author thuel2
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of or equals
+   *         <em>ALL</em> <code>children</code>
+   */
+  public boolean isParentOfAllOrEquals( Feature parent, Feature[] children )
+  {
+    if( children.length < 1 )
+      return false;
+    boolean isParentOfAllOrEquals = true;
+    for( Feature child : children )
+    {
+      isParentOfAllOrEquals = isParentOfAllOrEquals && isParentOrEquals( parent, child );
+    }
+    return isParentOfAllOrEquals;
+  }
+
+  /**
+   * @author thuel2
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> or equals
+   *         <code>child</code>
+   */
+  public boolean isParentOrEquals( Feature parent, Feature child )
+  {
+    if( (parent == null) || (child == null) )
+      return false;
+    if( parent.equals( child ) )
+      return true;
+    else
+      return isParent( parent, child );
+  }
+
+  /**
+   * @author thuel2
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <em>ALL</em> <code>children</code>
+   */
+  public boolean isParentOfAll( Feature parent, Feature[] children )
+  {
+    if( children.length < 1 )
+      return false;
+    boolean isParentOffAll = true;
+    for( Feature child : children )
+    {
+      isParentOffAll = isParentOffAll && isParent( parent, child );
+    }
+    return isParentOffAll;
+  }
+
+  /**
+   * @author thuel2
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> (in relation
+   *         to <code>workspace</code>)
+   */
+  public boolean isParent( GMLWorkspace workspace, Object parent, Object child )
+  {
+    Feature parentFeat = null;
+
+    if( parent instanceof Feature )
+      parentFeat = (Feature) parent;
+    else
+      parentFeat = workspace.getFeature( (String) parent );
+
+    Feature childFeat = null;
+    if( child instanceof Feature )
+      childFeat = (Feature) child;
+    else
+      childFeat = workspace.getFeature( (String) child );
+
+    return isParent( parentFeat, childFeat );
+  }
+
+  /**
+   * @author thuel2
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code>
+   */
+  public boolean isParent( Feature parent, Feature child )
+  {
+    if( (parent == null) || (child == null) )
+      return false;
+    else
+    {
+      if( child.getParentRelation() != null )
+      {
+        final Feature childParent = child.getParent();
+        final Feature childRoot = child.getWorkspace().getRootFeature();
+        if( parent.equals( childParent ) )
+          return true;
+        else if( childParent.equals( childRoot ) )
+          return false;
+        else
+          return isParent( parent, childParent );
+      }
+      else
+        return false;
+    }
+  }
 }
