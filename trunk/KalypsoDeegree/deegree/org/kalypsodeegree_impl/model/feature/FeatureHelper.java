@@ -979,7 +979,7 @@ public class FeatureHelper
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of or equals
    *         <em>ALL</em> <code>children</code>
    */
-  public boolean isParentOfAllOrEquals( Feature parent, Feature[] children )
+  public static boolean isParentOfAllOrEquals( Feature parent, Feature[] children )
   {
     if( children.length < 1 )
       return false;
@@ -996,7 +996,7 @@ public class FeatureHelper
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> or equals
    *         <code>child</code>
    */
-  public boolean isParentOrEquals( Feature parent, Feature child )
+  public static boolean isParentOrEquals( Feature parent, Feature child )
   {
     if( (parent == null) || (child == null) )
       return false;
@@ -1010,7 +1010,7 @@ public class FeatureHelper
    * @author thuel2
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of <em>ALL</em> <code>children</code>
    */
-  public boolean isParentOfAll( Feature parent, Feature[] children )
+  public static boolean isParentOfAll( Feature parent, Feature[] children )
   {
     if( children.length < 1 )
       return false;
@@ -1027,7 +1027,7 @@ public class FeatureHelper
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> (in relation
    *         to <code>workspace</code>)
    */
-  public boolean isParent( GMLWorkspace workspace, Object parent, Object child )
+  public static boolean isParent( GMLWorkspace workspace, Object parent, Object child )
   {
     Feature parentFeat = null;
 
@@ -1049,7 +1049,7 @@ public class FeatureHelper
    * @author thuel2
    * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code>
    */
-  public boolean isParent( Feature parent, Feature child )
+  public static boolean isParent( Feature parent, Feature child )
   {
     if( (parent == null) || (child == null) )
       return false;
