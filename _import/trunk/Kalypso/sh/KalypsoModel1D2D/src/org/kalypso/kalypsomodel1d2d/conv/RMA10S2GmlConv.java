@@ -56,62 +56,8 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
  * @author Patrice Congo
  *
  */
-public class Bce2dConv
+public class RMA10S2GmlConv
 {
-  public enum MODEL_2D_ELEMENT_KEY
-  {
-    
-  };
-  
-  /*TODO 
-   * Ask if comment are possible in the bce2d file,
-   * May be use  the format specification insted of split
-   */
-  /**
-   * 
-   */
-  public interface BCE2DModelElementHandler
-  {
-    //point  LineID, ID, rechtscoor, hochcoor, elevation
-    //point LineID    [easting] [equatorial distance northing elevation] 
-    
-      public void handleNode(
-                      String lineString, 
-                      int id,
-                      double easting,
-                      double northing,
-                      double elevation);
-      
-//    edge LINEID, ID, node1, node2, ellinks, elrechts
-      public void handleArc(
-                      String lineString,
-                      int id,
-                      int node1ID,
-                      int node2ID,
-                      int elementLeftID,
-                      int elementRightID
-                      );
-//    LineID, ID
-      public void handleElement(
-                    String lineString,
-                    int id);
-  }
-  
-  /**
-   * Provides a reversible id mapping von ascii 2d model to
-   * gml:id 
-   * @author Patrice Congo
-   *
-   */
-  public interface IDProvider
-  {
-     /**
-      * Gets the gml id for the provided bc 2d element
-      */
-     public String bceToGmlID(String elementKey, int id);
-     public String gmlToBCE2D(String elementKey, int id);
-  }
-  
   static public  void toDiscretisationModel(
                                   InputStream bce2dInput, 
                                   FE1D2DDiscretisationModel targetModel)
@@ -140,6 +86,7 @@ public class Bce2dConv
           //point LineID    [easting] [equatorial distance northing elevation] 
           String[] splits=line.split( "\\s+" );
           int ID=Integer.parseInt( splits[1] );
+
           double rechtCoor=Double.parseDouble( splits[2] );
           double hochCoor=Double.parseDouble( splits[3] );
           double elevation=Double.parseDouble(splits[4]  );
