@@ -98,7 +98,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
       // den fid-hash aktuell halten
       m_fidHash.put( newFeature.getId(), newFeature );
     }
-    catch( final CloneNotSupportedException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // TODO: error handling

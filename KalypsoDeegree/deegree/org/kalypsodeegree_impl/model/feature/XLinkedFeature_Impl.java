@@ -328,4 +328,29 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     return m_parentRelation;
   }
+
+  public String getActuate( )
+  {
+    return m_actuate;
+  }
+
+  public String getArcrole( )
+  {
+    return m_arcrole;
+  }
+
+  public String getRole( )
+  {
+    return m_role;
+  }
+
+  public String getShow( )
+  {
+    return m_show;
+  }
+
+  public String getTitle( )
+  {
+    return m_title;
+  }
 }

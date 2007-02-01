@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
  * A feature delta represents changes in the state of a feature between two discrete points in time.
@@ -57,115 +56,32 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureDelta
 {
-  /*
-   * Constants defining feature delta kinds:
-   */
-
   /**
-   * Delta kind constant indicating that the feature has not been changed in any way.
+   * Returns a the affected feature id.
    * 
-   * @see IGmlWorkspaceDelta#getKind()
+   * @return the affected feature id
    */
-  public static final int NO_CHANGE = 0x0;
+  public String getId( );
 
+  /** The feature type of the feature this delta cooresponds to. */
+  public IFeatureType getFeatureType();
+  
   /**
-   * Delta kind constant (bit mask) indicating that the feature has been added to the workspace.
+   * Returns the parent delta.
    * 
-   * @see IGmlWorkspaceDelta#getKind()
+   * @return The feature dleta of the parent feature, null iff this is the root delta.
    */
-  public static final int ADDED = 0x1;
+  public IFeatureDelta getParentDelta( );
 
-  /**
-   * Delta kind constant (bit mask) indicating that the (inlined) feature has been removed from the workspace.
-   * 
-   * @see IGmlWorkspaceDelta#getKind()
-   */
-  public static final int REMOVED = 0x2;
-
-  /**
-   * Delta kind constant (bit mask) indicating that the feature has been changed.
-   * <p>
-   * This may be the case if
-   * <ul>
-   * <li>a value of a property was set</li>
-   * <li>the list value of a property has changed (an item was added or removed)</li>
-   * </ul>. If this flag is set, {@link #getProperty()} returns the changed property.
-   * 
-   * @see IResourceDelta#getKind()
-   */
-  public static final int CHANGED = 0x4;
-
-  /**
-   * Returns the kind of this resource delta. Normally, one of <code>ADDED</code>, <code>REMOVED</code>,
-   * <code>CHANGED</code>.
-   * 
-   * @return the kind of this resource delta
-   * @see IResourceDelta#ADDED
-   * @see IResourceDelta#REMOVED
-   * @see IResourceDelta#CHANGED
-   */
-  public int getKind( );
-
-  /**
-   * Returns a the affected feature.
-   * <p>
-   * For additions (<code>ADDED</code>), this is the newly-added feature.
-   * <p>
-   * For changes (<code>CHANGED</code>), this is the changed feature.
-   * <p>
-   * For removals (<code>REMOVED</code>), this is the deleted feature. Even though this resource would not normally
-   * exist in the current workspace, the type and content of the feature can be determined from the handle.
-   * <p>
-   * 
-   * @return the affected feature
-   */
-  public Feature getFeature( );
+  /** The parent relation of the feature this delta corresponds to. */
+  public IPropertyType getParentRelation( );
 
   /**
    * Returns a the affected properties.
    * 
-   * @return the affected property or null
+   * @return the affected properties (may be empty)
    */
   public IPropertyDelta[] getPropertyDeltas( );
-
-  /**
-   * Finds and returns the descendent delta of all features identified by the given qname in this delta, or
-   * <code>null</code> if no such descendent exists.
-   * <p>
-   * This is a convenience method to avoid manual traversal of the delta tree in cases where the listener is only
-   * interested in changes to particular features. Calling this method will generally be faster than manually traversing
-   * the delta to a particular descendent.
-   * </p>
-   * 
-   * @param qname
-   *          the qname of the desired descendent delta
-   * @return the descendent delta, or <code>null</code> if no such descendent exists in the delta
-   */
-  public IFeatureDelta[] findMember( final QName qname );
-
-  /**
-   * Returns workspace deltas for all children of this delta which were added, removed, or changed. Returns an empty
-   * array if there are no affected children.
-   * 
-   * @return the workspace deltas for all affected children
-   * @see IGmlWorkspaceDelta#ADDED
-   * @see IGmlWorkspaceDelta#REMOVED
-   * @see IGmlWorkspaceDelta#CHANGED
-   * @see #getAffectedChildren(int)
-   */
-  public IFeatureDelta[] getAffectedChildren( );
-
-  /**
-   * Returns workspace deltas for all children of this delta which have the desired kind. Returns an empty array if
-   * there are no affected children.
-   * 
-   * @return the workspace deltas for all affected children
-   * @see IGmlWorkspaceDelta#ADDED
-   * @see IGmlWorkspaceDelta#REMOVED
-   * @see IGmlWorkspaceDelta#CHANGED
-   * @see #getAffectedChildren(int)
-   */
-  public IFeatureDelta[] getAffectedChildren( final int kind );
 
   /**
    * Accepts the given visitor. The visitor's <code>visit</code> method is called with this delta. If the visitor

@@ -229,7 +229,7 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           Noch sind nicht alle Typen implementiert
    */
-  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws CloneNotSupportedException
+  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
   {
     final GMLWorkspace workspace = sourceFeature.getWorkspace();
     final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
@@ -251,29 +251,34 @@ public class FeatureHelper
 
       final Object object = sourceFeature.getProperty( sourceFTP );
 
-      final Object newobject = cloneData( object, sourceFTP, gmlVersion );
+      final Object newobject = cloneData( sourceFeature, targetFeature, sourceFTP, object, gmlVersion );
 
       targetFeature.setProperty( targetFTP, newobject );
     }
   }
 
   /**
-   * Clones a feature within a feature-list.
+   * Clones a feature and puts it into the given parent feature at the given property.
+   * 
+   * @param newParentFeature
+   *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
+   * @param relation
+   *          Property where to put the new feature. If a list, the new feature is added at the end of the list.
    */
-  public static Feature cloneFeature( final Feature feature )
+  public static Feature cloneFeature( final Feature newParentFeature, final IRelationType relation, final Feature featureToClone ) throws Exception
   {
-    final IFeatureType featureType = feature.getFeatureType();
-    final Feature parent = feature.getParent();
-    final IRelationType parentRelation = feature.getParentRelation();
+    final IFeatureType featureType = featureToClone.getFeatureType();
 
-    final Feature newFeature = feature.getWorkspace().createFeature( parent, parentRelation, featureType );
+    final Feature newFeature = newParentFeature.getWorkspace().createFeature( newParentFeature, relation, featureType );
+    if( relation.isList() )
+      newParentFeature.getWorkspace().addFeatureAsComposition( newParentFeature, relation, -1, newFeature );
 
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
     {
       try
       {
-        final Object newValue = cloneProperty( feature, pt );
+        final Object newValue = cloneProperty( featureToClone, newFeature, pt );
         newFeature.setProperty( pt, newValue );
       }
       catch( final CloneNotSupportedException e )
@@ -286,24 +291,88 @@ public class FeatureHelper
     return newFeature;
   }
 
+  private static Object cloneProperty( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt ) throws Exception
+  {
+    final String version = sourceFeature.getWorkspace().getGMLSchema().getGMLVersion();
+
+    final Object property = sourceFeature.getProperty( pt );
+    if( pt.isList() )
+    {
+      final List list = (List) property;
+      final List targetList = (List) targetFeature.getProperty( pt );
+
+      for( final Object listElement : list )
+        targetList.add( cloneData( sourceFeature, targetFeature, pt, listElement, version ) );
+
+      return targetList;
+    }
+
+    return cloneData( sourceFeature, targetFeature, pt, property, version );
+  }
+
+  // /**
+  // * Clones a feature within a feature-list.
+  // */
+  // public static Feature cloneFeature( final Feature feature )
+  // {
+  // final IFeatureType featureType = feature.getFeatureType();
+  // final Feature parent = feature.getParent();
+  // final IRelationType parentRelation = feature.getParentRelation();
+  //
+  // final Feature newFeature = feature.getWorkspace().createFeature( parent, parentRelation, featureType );
+  //
+  // final IPropertyType[] properties = featureType.getProperties();
+  // for( final IPropertyType pt : properties )
+  // {
+  // try
+  // {
+  // final Object newValue = cloneProperty( feature, pt );
+  // newFeature.setProperty( pt, newValue );
+  // }
+  // catch( final CloneNotSupportedException e )
+  // {
+  // /* Just log, try to copy at least the rest */
+  // KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+  // }
+  // }
+  //
+  // return newFeature;
+  // }
+
   /**
    * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Object object, final IPropertyType pt, final String gmlVersion ) throws CloneNotSupportedException
+  private static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
   {
     if( object == null )
       return null;
 
     if( pt instanceof IRelationType )
     {
+      final IRelationType rt = (IRelationType) pt;
+
       if( object instanceof String )
-        return object;
-      else if( object instanceof XLinkedFeature_Impl )
-        return object;
-      else if( object instanceof Feature )
-        return cloneFeature( (Feature) object );
+      {
+        // its an internal link: change to external if we change the workspace
+        if( sourceFeature.getWorkspace().equals( targetFeature.getWorkspace() ) )
+          return object;
+        else
+          // TODO: not yet supported; internal links will be broken after clone
+          return null;
+      }
+      else
+      {
+        if( object instanceof XLinkedFeature_Impl )
+        {
+          final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) object;
+          // retarget xlink
+          return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref(), xlink.getRole(), xlink.getArcrole(), xlink.getTitle(), xlink.getShow(), xlink.getActuate() );
+        }
+        else if( object instanceof Feature )
+          return cloneFeature( targetFeature, rt, (Feature) object );
+      }
 
       return null;
     }
@@ -318,7 +387,7 @@ public class FeatureHelper
       {
         return typeHandler.cloneObject( object, gmlVersion );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
         cnse.initCause( e );
@@ -328,32 +397,34 @@ public class FeatureHelper
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
-  /**
-   * Clones a property of a feature. The clone is deep, i.e. inline feature are also cloned, referenced feature are
-   * kept as reference.
-   */
-  private static Object cloneProperty( final Feature feature, final IPropertyType pt ) throws CloneNotSupportedException
-  {
-    final String version = feature.getWorkspace().getGMLSchema().getGMLVersion();
-
-    final Object property = feature.getProperty( pt );
-    if( pt.isList() )
-    {
-      final List list = (List) property;
-      final List<Object> otherList;
-
-      if( pt instanceof IRelationType )
-        otherList = FeatureFactory.createFeatureList( feature.getParent(), (IRelationType) pt );
-      else
-        otherList = new ArrayList<Object>( list.size() );
-      for( final Object listElement : list )
-        otherList.add( cloneData( listElement, pt, version ) );
-
-      return otherList;
-    }
-
-    return cloneData( property, pt, version );
-  }
+  // /**
+  // * Clones a property of a feature. The clone is deep, i.e. inline feature are also cloned, referenced feature are
+  // kept
+  // * as reference.
+  // */
+  // private static Object cloneProperty( final Feature feature, final IPropertyType pt ) throws
+  // CloneNotSupportedException
+  // {
+  // final String version = feature.getWorkspace().getGMLSchema().getGMLVersion();
+  //
+  // final Object property = feature.getProperty( pt );
+  // if( pt.isList() )
+  // {
+  // final List list = (List) property;
+  // final List<Object> otherList;
+  //
+  // if( pt instanceof IRelationType )
+  // otherList = FeatureFactory.createFeatureList( feature.getParent(), (IRelationType) pt );
+  // else
+  // otherList = new ArrayList<Object>( list.size() );
+  // for( final Object listElement : list )
+  // otherList.add( cloneData( listElement, pt, version ) );
+  //
+  // return otherList;
+  // }
+  //
+  // return cloneData( property, pt, version );
+  // }
 
   public static boolean isCompositionLink( Feature srcFE, IRelationType linkProp, Feature destFE )
   {
@@ -551,7 +622,7 @@ public class FeatureHelper
       {
         copySimpleProperty( srcFE, targetFE, srcFTPs[i] );
       }
-      catch( CloneNotSupportedException e )
+      catch( Exception e )
       {
         multiException.addException( e );
       }
@@ -566,7 +637,7 @@ public class FeatureHelper
    * @param property
    * @throws CloneNotSupportedException
    */
-  public static void copySimpleProperty( final Feature srcFE, final Feature targetFE, final IPropertyType property ) throws CloneNotSupportedException
+  public static void copySimpleProperty( final Feature srcFE, final Feature targetFE, final IPropertyType property ) throws Exception
   {
     if( property instanceof IValuePropertyType )
     {
@@ -575,7 +646,7 @@ public class FeatureHelper
 
       final IValuePropertyType pt = (IValuePropertyType) property;
       final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = cloneData( valueOriginal, pt, gmlVersion );
+      final Object cloneValue = cloneData( srcFE, targetFE, pt, valueOriginal, gmlVersion );
       targetFE.setProperty( pt, cloneValue );
     }
   }
@@ -897,10 +968,10 @@ public class FeatureHelper
   {
     if( id == null )
       return null;
-    
-    if( id.startsWith( "#" ))
+
+    if( id.startsWith( "#" ) )
       return id;
-    
+
     return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
 }
