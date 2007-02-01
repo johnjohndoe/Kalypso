@@ -20,10 +20,11 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Dejan Antanaskovic, Patrice Congo
- *
  */
 public class RoughnessPolygon implements IRoughnessPolygon 
 {
+	// TODO: please comment! What is the reason for that implementation here?
+	// Why are you not just using GM_PolygonImpl? 
 	class GM_PolygonImpl implements GM_Polygon
 	{
 		private final GM_SurfacePatch surfacePatch;

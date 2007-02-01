@@ -10,7 +10,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * The interface to be implmented by classes which instances 
- * represents a simBase:RougthnessCollectionElement
+ * represents a simBase:RoughnessCollectionElement
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */

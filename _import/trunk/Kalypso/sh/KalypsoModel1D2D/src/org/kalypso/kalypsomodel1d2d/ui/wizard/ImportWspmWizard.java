@@ -40,12 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.wizard;
 
+import java.io.OutputStreamWriter;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWspmRiverProfileWrapper;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
@@ -54,7 +84,18 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ImportWspmWizard extends Wizard implements IImportWizard
 {
-  private FE1D2DDiscretisationModel m_model;
+//  private FE1D2DDiscretisationModel m_model;
+
+  private GmlFileImportPage m_wspmGmlPage;
+
+  private GmlFileImportPage m_profileCollectionGmlPage;
+
+  public ImportWspmWizard( )
+  {
+    setWindowTitle( "Kalypso Wspm Import" );
+
+    setNeedsProgressMonitor( true );
+  }
 
   /**
    * Excepts a selection containing a feature of type namespace:FE1D2DDiscretisationModel
@@ -64,9 +105,9 @@ public class ImportWspmWizard extends Wizard implements IImportWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final Feature modelFeature = (Feature) selection.getFirstElement();
+//    final Feature modelFeature = (Feature) selection.getFirstElement();
 
-    m_model = new FE1D2DDiscretisationModel( modelFeature );
+//    m_model = new FE1D2DDiscretisationModel( modelFeature );
   }
 
   /**
@@ -75,26 +116,126 @@ public class ImportWspmWizard extends Wizard implements IImportWizard
   @Override
   public void addPages( )
   {
-    // choose wspm model.gml
-//    new ImportWspmChooseModelPage();
-    
-    // choose strands usw.
-    
+    /* Choose wspm-reach */
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", "Gewässerstrang", null );
+    m_wspmGmlPage.setDescription( "Bitte wählen Sie einen Gewässerstrang aus" );
+    m_wspmGmlPage.setValidQNames( new QName[] { TuhhReach.QNAME_TUHH_REACH } );
+    m_wspmGmlPage.setValidKind( true, false );
+
+    /* Choose network collection */
+    m_profileCollectionGmlPage = new GmlFileImportPage( "chooseProfileNetworkGml", "Profile Network Collection", null );
+    m_profileCollectionGmlPage.setDescription( "Bitte wählen Sie eine Profile Network Collection aus" );
+    m_profileCollectionGmlPage.setValidQNames( new QName[] { IRiverProfileNetworkCollection.QNAME } );
+    m_wspmGmlPage.setValidKind( true, false );
+
     // maybe choose results
-    
-    
+
+    addPage( m_wspmGmlPage );
+    addPage( m_profileCollectionGmlPage );
   }
-  
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  @Override
+  public IWizardPage getNextPage( final IWizardPage page )
+  {
+    final IWizardPage wizardPage = super.getNextPage( page );
+
+    // TODO: if next page is result page, set choosen model to it
+
+    return wizardPage;
+  }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
   public boolean performFinish( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    /* Collect page data */
+//    final GMLWorkspace wspmWorkspace = m_wspmGmlPage.getWorkspace();
+    final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
+
+    final GMLWorkspace profCollWorkspace = m_profileCollectionGmlPage.getWorkspace();
+    final IStructuredSelection profCollSelection = m_profileCollectionGmlPage.getSelection();
+
+    /* Do import */
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        monitor.beginTask( "1D-Modell wird importiert", 2 );
+
+        /* Prepare input data */
+        final TuhhReach reach = new TuhhReach( (Feature) wspmSelection.getFirstElement() );
+        final IRiverProfileNetworkCollection networkCollection = (IRiverProfileNetworkCollection) ((Feature) profCollSelection.getFirstElement()).getAdapter( IRiverProfileNetworkCollection.class );
+
+        /* Import reach into profile collection */
+        monitor.subTask( " ... kopiere Profile" );
+        try
+        {
+          doImportNetwork( reach, networkCollection );
+        }
+        catch( final Exception e )
+        {
+          return StatusUtilities.statusFromThrowable( e ,"Failed to copy profiles" );
+        }
+        monitor.worked( 1 );
+
+        /* Create 1D-Network */
+
+        /* Create 1D-Network Association */
+
+        /* Save everything */
+        final URL gmlURL = profCollWorkspace.getContext();
+
+        // ists im Workspace?
+        final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
+        final SetContentHelper thread = new SetContentHelper()
+        {
+          @Override
+          protected void write( final OutputStreamWriter writer ) throws Throwable
+          {
+            GmlSerializer.serializeWorkspace( writer, profCollWorkspace );
+          }
+        };
+
+        thread.setFileContents( file, false, true, new SubProgressMonitor( monitor, 1 ) );
+
+        monitor.done();
+        return Status.OK_STATUS;
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Profile konnten nicht importiert werden", status );
+
+    return status.isOK();
   }
-  
-  
-  
+
+  protected void doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection ) throws Exception
+  {
+    final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
+    // network.setName( reach.getName() );
+    // network.setDescription( reach.getDescription() );
+
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+    for( final TuhhReachProfileSegment segment : reachProfileSegments )
+    {
+      final WspmProfile profileMember = segment.getProfileMember();
+
+      final IRiverProfile profileWrapper = network.addNew( IWspmRiverProfileWrapper.QNAME );
+      final IWspmRiverProfileWrapper wspmProfileWrapper = (IWspmRiverProfileWrapper) profileWrapper.getWrappedFeature().getAdapter( IWspmRiverProfileWrapper.class );
+      
+      final Feature wrappedFeature = profileWrapper.getWrappedFeature();
+      final IRelationType wspmRelation = (IRelationType) wrappedFeature.getFeatureType().getProperty( IWspmRiverProfileWrapper.QNAME_PROP_WSPM_RIVER_PROFILE );
+      final Feature clonedProfileFeature = FeatureHelper.cloneFeature( wrappedFeature, wspmRelation, profileMember.getFeature() );
+      
+      // profile.setName?
+      wspmProfileWrapper.setWspmRiverProfile( new WspmProfile( clonedProfileFeature ) );
+    }
+  }
 }

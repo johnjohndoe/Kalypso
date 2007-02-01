@@ -80,10 +80,4 @@ public class KalypsoModelSimulationBaseConsts
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
 				"Polynomial2D");
-
-	// TODO: What for??
-	static
-	{
-	
-	}
 }

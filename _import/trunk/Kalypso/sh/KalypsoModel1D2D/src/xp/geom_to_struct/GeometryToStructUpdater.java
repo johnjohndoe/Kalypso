@@ -45,38 +45,26 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Listen to a workspace and given a geometrical change in the 
  * feature of interes (Node, edge and element transform that change 
  * to update the concern structure and there geometry.
  * E.g. if a node location changes update container edges and elements
+ * 
+ * TODO: please hide system-outs via trace-mechanism, it pollutes the console
  * 
  * @author Patrice Congo
  *

@@ -48,7 +48,9 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 
 /**
@@ -56,7 +58,7 @@ import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
  */
 public class ImportWSPMDelegateAction implements IObjectActionDelegate
 {
-  private IAction m_action;
+//  private IAction m_action;
 
   private IWorkbenchPart m_targetPart;
 
@@ -68,7 +70,7 @@ public class ImportWSPMDelegateAction implements IObjectActionDelegate
    */
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
-    m_action = action;
+//    m_action = action;
     m_targetPart = targetPart;
   }
 
@@ -82,15 +84,14 @@ public class ImportWSPMDelegateAction implements IObjectActionDelegate
     final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
 
     final ImportWspmWizard importWizard = new ImportWspmWizard( );
+    importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
     importWizard.init( workbench, m_selection );
     
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
+    dialog.setRememberSize( true );
     if( dialog.open() == WizardDialog2.OK )
     {
-//      final IFile wspmModel = dialog.getModel2Import();
-//      final String[ ] results = dialog.getResults2Import();
-//      
-//      WspmImporter.import( model, wspmModel, results );
+      // nothing to do, everything has already happened inside the wizard-finish
     }
   }
 
@@ -100,7 +101,7 @@ public class ImportWSPMDelegateAction implements IObjectActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_action = action;
+//    m_action = action;
     m_selection = (IStructuredSelection) selection;
   }
 

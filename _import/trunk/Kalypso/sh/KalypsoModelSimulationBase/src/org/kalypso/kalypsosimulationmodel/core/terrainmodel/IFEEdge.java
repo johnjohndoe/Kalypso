@@ -3,8 +3,6 @@
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.util.List;
-
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 

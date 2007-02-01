@@ -27,14 +27,10 @@
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
 		/>
-	<!--xs:import
+	<xs:import
 		namespace="org.kalypso.model.wspmprofile"
-		schemaLocation="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd"
-		/-->
-	<!--xs:import
-		namespace="http://www.opengis.net/gml"
-		schemaLocation="../3.1.1/base/gml.xsd"
-		/-->
+		schemaLocation="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/profile.xsd"
+		/>
 	
 	<xs:element 
 		name="Coverage"
@@ -458,6 +454,7 @@
 	<xs:complexType 
 		name="RiverProfileNetworkCollectionType">
 		<xs:complexContent>
+			<!-- TODO: do not derive from FeatureCollection; 'featureMember' and 'featureMembers' is probably not wanted here-->
 			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:element 
@@ -494,6 +491,7 @@
 	<xs:complexType 
 		name="RiverProfileNetworkType">
 		<xs:complexContent>
+			<!-- TODO: do not derive from FeatureCollection; 'featureMember' and 'featureMembers' is probably not wanted here-->
 			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:element 
@@ -531,6 +529,7 @@
 		name="AbstractRiverProfileType"
 		abstract="true">
 		<xs:complexContent>
+			<!-- TODO: change to AbstractFeatureType -->
 			<xs:extension base="gml:AbstractGMLType">
 			</xs:extension>
 		</xs:complexContent>
@@ -555,6 +554,7 @@
 					<xs:sequence>
 						<xs:element
 							name="usage">
+							<!-- TODO: comment idea of usage, where will that be used? -->
 							<xs:simpleType>
 								<xs:restriction
 									base="xs:string">
@@ -579,8 +579,8 @@
 	<xs:complexType 
 		name="WspmRiverProfilePropertyType">
 		<xs:sequence>
-			<!-- xs:element 
-				ref="wspmprofile:Profile"/-->
+			<!-- TODO: set minOccurs to 0, this is a must in combinasion with the 'AssiciationAttributeGroup' -->
+			<xs:element ref="wspmprofile:Profile"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>

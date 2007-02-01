@@ -7,8 +7,6 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -214,6 +212,8 @@ public class FE1D2DNode
   }
 
   /**
+   * TODO: remove this method; it is a duplicate to {@link super#getFeature()}
+   * 
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
   public Feature getWrappedFeature( )

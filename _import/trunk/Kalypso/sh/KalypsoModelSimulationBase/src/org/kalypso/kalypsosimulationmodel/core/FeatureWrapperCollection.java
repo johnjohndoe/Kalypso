@@ -9,10 +9,8 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.kalypsosimulationmodel.schema.GmlImitationsConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -137,6 +135,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 			Feature feature = Util.createFeatureForListProp(featureList,
 					featureMemberProp, newChildType);
 			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
+            
+            // TODO: substitution is a bit trickky here:
+            // what to do if we create a substituted feature which has its own
+            // wrapper-class (which of course inherits from fwClass)
+            // should'nt we return that class? 
+            // But how to obtain it??
 			if (wrapper == null) {
 				throw new IllegalArgumentException("Feature not adaptable:"
 						+ "\n\tfeatureType=" + newChildType
