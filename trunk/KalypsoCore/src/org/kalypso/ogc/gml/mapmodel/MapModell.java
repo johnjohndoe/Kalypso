@@ -94,7 +94,7 @@ public class MapModell implements IMapModell
   public void activateTheme( final IKalypsoTheme theme )
   {
     m_activeTheme = theme;
-    fireModellEvent( null );
+    fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ACTIVATED ) );
   }
 
   public IKalypsoTheme getActiveTheme( )

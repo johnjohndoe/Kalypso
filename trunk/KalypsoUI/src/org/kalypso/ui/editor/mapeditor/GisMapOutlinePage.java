@@ -92,6 +92,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private List<PluginMapOutlineActionDelegate> m_actionDelegates = null;
 
+  private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
+
   public GisMapOutlineViewer getModellView( )
   {
     return m_modellView;
@@ -129,6 +131,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     if( m_modellView != null )
     {
       m_modellView.removeDoubleClickListener( this );
+      IMapModell mapModell = m_modellView.getMapModell();
+      if( mapModell != null )
+      {
+        mapModell.removeModellListener( m_mapModellContextSwitcher );
+      }
       m_modellView.dispose();
     }
 
@@ -266,6 +273,10 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   public void setMapModell( final IMapModell modell )
   {
     m_modellView.setMapModell( modell );
+    if( modell != null )
+    {
+      modell.addModellListener( m_mapModellContextSwitcher );
+    }
   }
 
   /**
@@ -330,9 +341,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( ModellEvent modellEvent )
+  public void onModellChange( final ModellEvent modellEvent )
   {
-    // nix tun
+    //
   }
 
   /**
