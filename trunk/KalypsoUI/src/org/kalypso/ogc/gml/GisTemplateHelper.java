@@ -54,7 +54,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.transformation.XIncludeTransformer;
+import org.apache.cocoon.xml.XMLPipe;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -89,7 +94,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
@@ -98,6 +106,7 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
+
   private GisTemplateHelper( )
   {
     // never instantiate this class
@@ -137,7 +146,30 @@ public class GisTemplateHelper
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
     final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
-    return (Gismapview) unmarshaller.unmarshal( is );
+
+    try
+    {
+      // XInclude awareness
+      SAXParserFactory spf = SAXParserFactory.newInstance();
+      spf.setNamespaceAware( true );
+      spf.setXIncludeAware( true );
+      XMLReader xr = spf.newSAXParser().getXMLReader();
+      xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
+      xr.parse( is );
+    }
+    catch( final SAXException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final ParserConfigurationException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
   }
 
   /**
