@@ -135,7 +135,12 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     for( int i = 0; i < poses.length; i++ )
       pos[i] = poses[i];
 
-    pos[poses.length] = poses[0];
+    /*
+     * REMARK: Need a cloned point, otherwise changes to one point affects the other two, if the workspace containing
+     * the feature is not completely reloaded.
+     */
+    GM_Position newPoint = GeometryFactory.createGM_Position( poses[0].getAsArray() );
+    pos[poses.length] = newPoint;
 
     return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], null, m_crs );
   }
