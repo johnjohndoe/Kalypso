@@ -177,12 +177,14 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @Override
   public Control doCreateControl( final Composite parent, final int style )
   {
+    m_chart = new ChartCanvas( parent, style, new Insets( 20, 0, 0, 0 ) );
+    m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    // TODO: move this to layer provider
+    // or even better: let layer provider create layers and then retrieve domain/value axes from layers
     m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
     m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true,5,1.0 );
     m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
-
-    m_chart = new ChartCanvas( parent, style, new Insets( 20, 0, 0, 0 ) );
-    m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final IAxisRenderer domainrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
     final IAxisRenderer leftrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, false );

@@ -78,6 +78,11 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     }
 
     // liste anzeigen
+
+    // TODO: do it like that instead:
+//    final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+//    final AddableLayer[] addables = provider.createAddables( profil );
+    
     final AddableLayer[] addables = createAddables( profil );
     final ListDialog dialog = new ListDialog( getView().getSite().getShell() );
     dialog.setAddCancelButton( true );
@@ -109,6 +114,8 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
 
   private AddableLayer[] createAddables( final IProfil profil )
   {
+    // TODO: move this code to layer provider
+    
     final Collection<AddableLayer> addables = new ArrayList<AddableLayer>();
 
     // Bauwerke

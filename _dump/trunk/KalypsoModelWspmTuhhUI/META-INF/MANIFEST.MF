@@ -9,8 +9,8 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.rules
 Require-Bundle: org.kalypso.model.wspm.core,
- org.kalypso.model.wspm.tuhh.core,
  org.kalypso.simulation.ui,
  org.kalypso.model.wspm.ui,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.model.wspm.tuhh.schema
 Eclipse-LazyStart: true

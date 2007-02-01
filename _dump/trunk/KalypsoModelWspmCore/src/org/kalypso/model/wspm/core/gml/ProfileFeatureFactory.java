@@ -264,18 +264,18 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
 
       final IProfilBuilding building = profile.getBuilding();
+      final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
       if( building != null )
       {
-        final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
         final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
         final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
         final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingParentRelation, buildingType );
         buildingList.add( buildingFeature );
         final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
-
-        changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
       }
+      
+      changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
     }
     catch( final ProfilDataException e )
     {

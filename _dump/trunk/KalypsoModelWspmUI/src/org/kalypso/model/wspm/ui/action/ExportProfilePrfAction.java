@@ -42,7 +42,9 @@ package org.kalypso.model.wspm.ui.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -66,6 +68,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.gmlschema.adapter.IAnnotation;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -184,24 +187,39 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
     }
   }
 
-  /** @return profil to filename */
+  /**
+   * @return profil to filename
+   */
   private final Map<IProfil, String> getProfiles( ) throws ProfilDataException
   {
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
+    final IRelationType rt = fate.getAssociationTypeProperty();
 
     final Feature parentFeature = fate.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final FeatureList features = (FeatureList) parentFeature.getProperty( fate.getAssociationTypeProperty() );
-    final Map<IProfil, String> profiles = new HashMap<IProfil, String>( features.size() );
 
-    for( final Object object : features )
+    final List foundFeatures;
+    if( rt.isList() )
+      foundFeatures = (FeatureList) parentFeature.getProperty( rt );
+    else
+    {
+      foundFeatures = new ArrayList<Feature>();
+      foundFeatures.add( parentFeature.getProperty( rt ) );
+    }
+
+    final Map<IProfil, String> profiles = new HashMap<IProfil, String>( foundFeatures.size() );
+
+    for( final Object object : foundFeatures )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, object );
-      final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+      if( feature != null )
+      {
+        final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
 
-      final IProfil profile = ProfileFeatureFactory.toProfile( feature );
+        final IProfil profile = ProfileFeatureFactory.toProfile( feature );
 
-      profiles.put( profile, label + ".prf" );
+        profiles.put( profile, label + ".prf" );
+      }
     }
 
     return profiles;

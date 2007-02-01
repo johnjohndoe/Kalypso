@@ -233,6 +233,8 @@ public class PlainProfil implements IProfilConstants, IProfil
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding) m_building).removeProfilProperties( this );
 
+    m_building = null;
+    
     return oldBuilding;
   }
 
@@ -296,7 +298,9 @@ public class PlainProfil implements IProfilConstants, IProfil
   {
     if( m_building != null )
       removeBuilding();
+    
     m_building = building;
+    
     if( m_building instanceof AbstractProfilBuilding )
       ((AbstractProfilBuilding) m_building).addProfilProperties( this );
   }
