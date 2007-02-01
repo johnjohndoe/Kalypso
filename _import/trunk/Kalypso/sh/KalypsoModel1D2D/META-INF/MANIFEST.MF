@@ -19,6 +19,20 @@ Require-Bundle:
  org.kalypso.ui.addlayer,
  org.kalypso.model.wspm.tuhh.schema
 Eclipse-LazyStart: true 
-Export-Package: org.kalypso.kalypsomodel1d2d.schema,
- org.kalypso.kalypsomodel1d2d.sim
+Export-Package: org.kalypso.kalypsomodel1d2d,
+ org.kalypso.kalypsomodel1d2d.conv,
+ org.kalypso.kalypsomodel1d2d.geom,
+ org.kalypso.kalypsomodel1d2d.ops,
+ org.kalypso.kalypsomodel1d2d.schema,
+ org.kalypso.kalypsomodel1d2d.schema.binding,
+ org.kalypso.kalypsomodel1d2d.schema.functions,
+ org.kalypso.kalypsomodel1d2d.sim,
+ org.kalypso.kalypsomodel1d2d.ui.actions,
+ org.kalypso.kalypsomodel1d2d.ui.catalog,
+ org.kalypso.kalypsomodel1d2d.ui.map,
+ org.kalypso.kalypsomodel1d2d.ui.wizard,
+ test.org.kalypso.kalypsomodel1d2d,
+ xp,
+ xp.geom_to_struct,
+ xp.map_editspec
 Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
