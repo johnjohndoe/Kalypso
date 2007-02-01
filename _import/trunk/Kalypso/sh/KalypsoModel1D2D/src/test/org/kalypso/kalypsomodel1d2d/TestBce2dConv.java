@@ -46,7 +46,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
-import org.kalypso.kalypsomodel1d2d.conv.Bce2dConv;
+import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -111,7 +111,7 @@ public class TestBce2dConv extends TestCase
       fail(TestUtils.getStackTraceAsString( e ));
     }
     
-    Bce2dConv.toDiscretisationModel( 
+    RMA10S2GmlConv.toDiscretisationModel( 
                             aggerStream, 
                             targetModel );
 
