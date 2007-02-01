@@ -201,7 +201,7 @@ public class DragFeatureWidget extends AbstractWidget
   @Override
   public void dragged( Point p )
   {
-    if( m_handles == null )
+    if( m_handles == null || m_handles.size() == 0 )
       return;
 
     if( m_startPoint == null )
@@ -238,7 +238,7 @@ public class DragFeatureWidget extends AbstractWidget
   @Override
   public void paint( Graphics g )
   {
-    if( m_handles == null )
+    if( m_handles == null || m_handles.size() == 0 )
       return;
 
     Feature feature = m_handles.get( 0 ).getFeature();
