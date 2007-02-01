@@ -1,0 +1,7 @@
+Changelog of Kalypso-WSPM
+=========================
+
+
+since 30.01.2007
+----------------
+- Bugfix: Deletion of Buildings in Profile-Editor now works

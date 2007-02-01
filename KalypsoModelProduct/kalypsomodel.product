@@ -46,7 +46,6 @@
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.jakarta_log4j"/>
       <plugin id="org.apache.lucene"/>
-      <plugin id="org.apache.xerces"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.ant.ui"/>
       <plugin id="org.eclipse.compare"/>
@@ -67,7 +66,6 @@
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
       <plugin id="org.eclipse.debug.ui"/>
-      <plugin id="org.eclipse.draw2d"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
@@ -115,11 +113,8 @@
       <plugin id="org.eclipse.update.ui"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
-      <plugin id="org.kalypso.NACalcJob"/>
-      <plugin id="org.kalypso.afgui"/>
       <plugin id="org.kalypso.auth"/>
       <plugin id="org.kalypso.chart"/>
-      <plugin id="org.kalypso.chart.ui"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
@@ -129,15 +124,9 @@
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.featureview"/>
-      <plugin id="org.kalypso.floodrisk"/>
-      <plugin id="org.kalypso.gml.processes"/>
-      <plugin id="org.kalypso.gml.ui"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
-      <plugin id="org.kalypso.kalypso1d2d.pjt"/>
-      <plugin id="org.kalypso.layerprovider"/>
       <plugin id="org.kalypso.metadoc"/>
-      <plugin id="org.kalypso.model.flood"/>
       <plugin id="org.kalypso.model.product"/>
       <plugin id="org.kalypso.model.wspm.core"/>
       <plugin id="org.kalypso.model.wspm.schema"/>
@@ -145,7 +134,6 @@
       <plugin id="org.kalypso.model.wspm.tuhh.schema"/>
       <plugin id="org.kalypso.model.wspm.tuhh.ui"/>
       <plugin id="org.kalypso.model.wspm.ui"/>
-      <plugin id="org.kalypso.model1d2d"/>
       <plugin id="org.kalypso.optimize"/>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
@@ -153,11 +141,7 @@
       <plugin id="org.kalypso.simulation.core"/>
       <plugin id="org.kalypso.simulation.ui"/>
       <plugin id="org.kalypso.ui"/>
-      <plugin id="org.kalypso.ui.addlayer"/>
-      <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
-      <plugin id="org.kalypso.wizard"/>
-      <plugin id="org.kalypso.wizard.CreateFloodRiskProject"/>
       <plugin id="org.kalypso.wspwin.core"/>
    </plugins>
 
