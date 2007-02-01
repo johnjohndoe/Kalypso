@@ -99,13 +99,13 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
       final List list = (List) parent.getProperty( rt );
       if( list != null )
       {
-        final IFeatureSelectionManager selectionManager = m_selection.getSelectionManager();
-        final Feature newFeature = FeatureHelper.cloneFeature( m_selectedFeature );
-        final int pos = list.indexOf( m_selectedFeature ) + 1;
-        final AddFeatureCommand command = new AddFeatureCommand( m_workspace, parent, rt, pos, newFeature, selectionManager );
-
         try
         {
+          final IFeatureSelectionManager selectionManager = m_selection.getSelectionManager();
+          final Feature newFeature = FeatureHelper.cloneFeature( parent, rt, m_selectedFeature );
+          final int pos = list.indexOf( m_selectedFeature ) + 1;
+          final AddFeatureCommand command = new AddFeatureCommand( m_workspace, parent, rt, pos, newFeature, selectionManager );
+          
           m_workspace.postCommand( command );
         }
         catch( final Exception e )
