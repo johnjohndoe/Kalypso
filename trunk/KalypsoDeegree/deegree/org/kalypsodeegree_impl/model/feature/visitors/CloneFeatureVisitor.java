@@ -16,6 +16,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * <p>
  * copy a subtree feature structure inside a gml document
  * </p>
+ * TODO: check if this is still working. Probably we dont need to recurse into the tree here, because cloning a feature
+ * is already recursive now.
+ * <p>
  * start visitor with the parent feature of the subtree (the one that you do not want to copy)
  * 
  * @author hübsch, doemming
@@ -116,7 +119,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
         {
           FeatureHelper.copySimpleProperty( parentFEOriginal, parentFEClone, property );
         }
-        catch( CloneNotSupportedException e ) // TODO what to do with the exceptions here ?
+        catch( Exception e ) // TODO what to do with the exceptions here ?
         {
           e.printStackTrace();
         }

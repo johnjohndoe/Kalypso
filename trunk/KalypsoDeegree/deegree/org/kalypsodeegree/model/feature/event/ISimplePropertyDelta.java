@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-
 /**
+ * A property delta which notifies about setting a property to a new value.
+ * <p>
+ * Applies to simple properties (i.e. non-features).
+ * </p>
+ * 
  * @author Gernot Belger
  */
-public interface IPropertyDelta
+public interface ISimplePropertyDelta extends IPropertyDelta
 {
-  /** The feature delta this property delta is part of. */
-  public IFeatureDelta getFeatureDelta( );
+  /** The new value of the changed property. */
+  public Object getNewValue( );
 
-  public IPropertyType getProperty( );
+  /** Wether the overwritten value was null before the change. */
+  public boolean isOldValueNull( );
 }

@@ -38,7 +38,7 @@ public final class FeatureHelperTest extends TestCase
     super.setUp();
   }
 
-  public final void testCopyProperties( ) throws CloneNotSupportedException
+  public final void testCopyProperties( ) throws Exception
   {
     // zwei feature types erzeugen
     final String NAMESPACE = "namespace";

@@ -94,10 +94,10 @@ public interface DeegreeFeature
   IFeatureType getFeatureType( );
 
   /**
-   * @deprecated 
-   * 
-   * returns the properties of the feature as array of Objects
+   * @deprecated Do not use that method. Retrieve all properties from feature type and retrieve value via the
+   *             propertyType. returns the properties of the feature as array of Objects
    */
+  @Deprecated
   Object[] getProperties( );
 
   /**

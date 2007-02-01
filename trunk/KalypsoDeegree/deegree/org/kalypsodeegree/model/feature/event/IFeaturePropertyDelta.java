@@ -40,15 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature.event;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-
 /**
+ * A property delta which notifies about setting a property to a new feature. The feature was created within the
+ * process.
+ * <p>
+ * Applies to properties which contain a single feature.
+ * </p>
+ * 
  * @author Gernot Belger
  */
-public interface IPropertyDelta
+public interface IFeaturePropertyDelta extends IPropertyDelta
 {
-  /** The feature delta this property delta is part of. */
-  public IFeatureDelta getFeatureDelta( );
+  /** The new value of the changed property. */
+  public String getNewId( );
 
-  public IPropertyType getProperty( );
+  /** Return true, if the new value is a link to a feature instead of an inline-feature. */
+  public boolean isNewLink();
+  
+  /** The feature-id of the feature before the operation happended.
+   * @return null, if no feature was set before */
+  public String getOldId( );
+  
+  /**
+   * Returns true, iff the value of the property was a link to a feature instead of a inline-feature.
+   */
+  public boolean wasLinkBefore();
 }

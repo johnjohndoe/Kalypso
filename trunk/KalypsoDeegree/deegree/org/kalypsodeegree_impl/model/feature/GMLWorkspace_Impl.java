@@ -571,18 +571,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       else
         list.add( pos, newFeature );
     }
-    else if( prop == null ) // element not set
+    else 
       parent.setProperty( propName, newFeature );
-    else
-      throw new Exception( "New Feature violates maxOccurs" );
 
     m_indexMap.put( newFeature.getId(), newFeature );
 
     // register also features in subtree of new feature
     accept( new RegisterVisitor(), newFeature, FeatureVisitor.DEPTH_INFINITE );
     return;
-
-    // TODO eigene exception entwerfen
   }
 
   /**

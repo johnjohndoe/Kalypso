@@ -49,7 +49,7 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
       {
         FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
       }
-      catch( CloneNotSupportedException e )
+      catch( Exception e )
       {
         // TODO error handling
         e.printStackTrace();
