@@ -40,15 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.gml;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author Kuepferle
@@ -77,7 +91,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     try
     {
       final IMapModell mapModell = m_outlineviewer.getMapModell();
-      final ICommand[] commands = m_page.getCommands( (GisTemplateMapModell) mapModell );
+      final ICommand[] commands = getCommands( (GisTemplateMapModell) mapModell );
 
       for( int i = 0; i < commands.length; i++ )
       {
@@ -89,8 +103,65 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       e.printStackTrace();
     }
-    m_page.removerListeners();
     return true;
+  }
+
+  private ICommand[] getCommands( final GisTemplateMapModell modell )
+  {
+    final String source = m_page.getSource();
+    final IStructuredSelection selection = m_page.getSelection();
+    final GMLWorkspace workspace = m_page.getWorkspace();
+    
+    final Object firstElement = selection.getFirstElement();
+    final List<String> pathList = new ArrayList<String>();
+    final List<String> titleList = new ArrayList<String>();
+    if( firstElement instanceof Feature )
+    {
+      // create featurepath for element
+      final Feature feature = (Feature) firstElement;
+      final FeaturePath featurepath = workspace.getFeaturepathForFeature( feature );
+      final IFeatureType ft = feature.getFeatureType();
+      // find title
+      String title = NamedFeatureHelper.getName( feature );
+      if( title == null || title.length() < 1 )
+        title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+      pathList.add( featurepath.toString() );
+      titleList.add( title );
+    }
+    else if( firstElement instanceof FeatureAssociationTypeElement )
+    {
+      // create featurepath for association
+      final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
+      final Feature parent = link.getParentFeature();
+      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( parent );
+      final IRelationType ftp = link.getAssociationTypeProperty();
+
+      final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
+      final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
+
+      for( int i = 0; i < associationFeatureTypes.length; i++ )
+      {
+        final IFeatureType ft = associationFeatureTypes[i];
+        final String title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+        final String ftpName = ftp.getQName().getLocalPart();
+        final String ftName = ft.getQName().getLocalPart();
+        final FeaturePath path = new FeaturePath( parentFeaturePath, ftpName + "[" + ftName + "]" );
+        pathList.add( path.toString() );
+        titleList.add( title );
+      }
+    }
+
+    
+    final ICommand[] result = new ICommand[pathList.size()];
+    final Iterator titleIterator = titleList.iterator();
+    int pos = 0;
+    for( Iterator pathIterator = pathList.iterator(); pathIterator.hasNext(); pos++ )
+    {
+      final String title = (String) titleIterator.next();
+      final String featurePath = (String) pathIterator.next();
+      result[pos] = new AddThemeCommand( modell, title, "gml", featurePath, source );
+    }
+    return result;
   }
 
   /**
