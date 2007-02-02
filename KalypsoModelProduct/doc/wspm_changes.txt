@@ -5,3 +5,4 @@ Changelog of Kalypso-WSPM
 since 30.01.2007
 ----------------
 - Bugfix: Deletion of Buildings in Profile-Editor now works
+- Length-Section: additional layers, outline-view toggles visibility and show legend-icons
