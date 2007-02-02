@@ -272,11 +272,12 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setMapModell( final IMapModell modell )
   {
+    if( m_modellView.getMapModell() != null )
+      m_modellView.getMapModell().removeModellListener( m_mapModellContextSwitcher );
+
     m_modellView.setMapModell( modell );
     if( modell != null )
-    {
       modell.addModellListener( m_mapModellContextSwitcher );
-    }
   }
 
   /**
