@@ -936,6 +936,10 @@
 	                 id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context"
 	                 name="Context"
 	                 optional="false"/>
+                  <commandParameter
+                        id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                        name="Plugin Id"
+                        optional="false"/>
 		    </command>
 	 </extension>
 </plugin>
