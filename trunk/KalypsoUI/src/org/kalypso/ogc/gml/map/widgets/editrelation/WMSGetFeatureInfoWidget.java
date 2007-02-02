@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -299,12 +300,10 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( final Composite parent )
+  public Control createControl( final Composite parent )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     m_topLevel.setLayout( new GridLayout( 1, false ) );
-
-    m_topLevel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     m_formatCombo = new Combo( m_topLevel, SWT.SINGLE );
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
@@ -322,6 +321,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_textInfo.setText( "WMS-GetFeatureInfo" );
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
+    return m_topLevel;
   }
 
   /**

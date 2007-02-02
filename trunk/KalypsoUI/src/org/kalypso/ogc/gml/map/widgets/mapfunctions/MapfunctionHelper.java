@@ -73,11 +73,11 @@ public class MapfunctionHelper
     for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
       geoIndex.add( wrapper );
 
-    final double g1x = transform.getSourceX( rectangle.x );
-    final double g1y = transform.getSourceY( rectangle.y );
-
     if( rectangle.width < radius && rectangle.height < radius )
     {
+      final double g1x = transform.getSourceX( rectangle.x );
+      final double g1y = transform.getSourceY( rectangle.y );
+      
       final double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
 
       final JMSelector selector = new JMSelector();
@@ -91,27 +91,28 @@ public class MapfunctionHelper
     }
     else
     {
-      final double g2x = transform.getSourceX( rectangle.x + rectangle.width );
-      final double g2y = transform.getSourceY( rectangle.y + rectangle.height );
+      final GM_Envelope envelope = rectangleToEnvelope( transform, rectangle );
 
-      boolean withinStatus = false;
+      final JMSelector selector = new JMSelector();
+      final List<Object> features = selector.select( envelope, geoIndex, false );
 
-      final double minX = g1x < g2x ? g1x : g2x;
-      final double maxX = g1x > g2x ? g1x : g2x;
-      final double minY = g1y < g2y ? g1y : g2y;
-      final double maxY = g1y > g2y ? g1y : g2y;
-
-      if( minX != maxX && minY != maxY )
-      {
-        final JMSelector selector = new JMSelector();
-        final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-        final List<Object> features = selector.select( envSelect, geoIndex, withinStatus );
-
-        return features.toArray( new EasyFeatureWrapper[features.size()] );
-      }
+      return features.toArray( new EasyFeatureWrapper[features.size()] );
     }
+  }
 
-    return null;
+  public static GM_Envelope rectangleToEnvelope( final GeoTransform transform, final Rectangle rectangle )
+  {
+    final double g1x = transform.getSourceX( rectangle.x );
+    final double g1y = transform.getSourceY( rectangle.y );
+    final double g2x = transform.getSourceX( rectangle.x + rectangle.width );
+    final double g2y = transform.getSourceY( rectangle.y + rectangle.height );
+
+    final double minX = g1x < g2x ? g1x : g2x;
+    final double maxX = g1x > g2x ? g1x : g2x;
+    final double minY = g1y < g2y ? g1y : g2y;
+    final double maxY = g1y > g2y ? g1y : g2y;
+
+    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
   }
 
 }

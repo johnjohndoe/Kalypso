@@ -59,6 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
@@ -567,18 +568,12 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public Control createControl( Composite parent )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     Layout gridLayout = new GridLayout( 1, false );
 
     m_topLevel.setLayout( gridLayout );
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.verticalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.grabExcessVerticalSpace = true;
-    m_topLevel.setLayoutData( data );
 
     // combo, "add relation" or "remove relation"
     final GridData data3 = new GridData();
@@ -651,5 +646,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       }
     } );
     refreshSettings();
+    
+    return m_topLevel;
   }
 }

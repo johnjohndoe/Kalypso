@@ -51,6 +51,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -299,15 +300,15 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( final Composite parent )
+  public Control createControl( final Composite parent )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     m_topLevel.setLayout( new GridLayout( 1, false ) );
 
-    m_topLevel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
     m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
     m_textInfo.setText( "Info" );
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    return m_topLevel;
   }
 }

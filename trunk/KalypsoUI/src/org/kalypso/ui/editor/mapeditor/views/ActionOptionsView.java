@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorPart;
@@ -329,7 +330,9 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
         if( newWidget instanceof IWidgetWithOptions )
         {
           final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
-          widget.createControl( m_group );
+          final Control control = widget.createControl( m_group );
+          control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+          
           m_group.layout();
         }
       }
