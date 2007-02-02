@@ -1,7 +1,3 @@
-package org.kalypso.ui.editor.mapeditor.views;
-
-import org.eclipse.swt.widgets.Composite;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -42,12 +38,16 @@ import org.eclipse.swt.widgets.Composite;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.editor.mapeditor.views;
+
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
 
 public interface IWidgetWithOptions
 {
-
   public void disposeControl();
 
-  public void createControl( Composite parent );
+  public Control createControl( Composite parent );
 
 }

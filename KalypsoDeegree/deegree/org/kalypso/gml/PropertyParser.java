@@ -74,11 +74,15 @@ public class PropertyParser
     factory.setNamespaceAware( true );
   }
 
-  public void createProperty( final Feature feature, final String uri, final String localName )
+  public void createProperty( final Feature feature, final String uri, final String localName ) throws SAXException
   {
     final IFeatureType featureType = feature.getFeatureType();
     final QName propQName = new QName( uri, localName );
     final IPropertyType property = featureType.getProperty( propQName );
+    
+    if( property == null )
+      throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + propQName ); // they
+    
     m_stackPT.push( property );
     // TODO check if it is a link
   }
