@@ -39,25 +39,25 @@
 		         class="org.kalypso.kalypsomodel1d2d.ui.map.PolyElementWidgetHandler"
 		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#PolyElement">
 		      <!--can hide functionality based on active context-->
-		      <activeWhen>   
+		      <!--<activeWhen>   
 		         <with variable="activeContexts">
 		            <iterate operator="or">
 		               <equals value="PolyElement"/>
 		            </iterate>
 		         </with>
-		      </activeWhen>
+		      </activeWhen>-->
 		   </handler>
 		   <handler
 		         class="org.kalypso.kalypsomodel1d2d.ui.map.EdgeWidgetHandler"
 		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Edge">
 		      <!--can hide functionality based on active context-->
-		      <activeWhen>   
+		      <!--<activeWhen>   
 		         <with variable="activeContexts">
 		            <iterate operator="or">
 		               <equals value="Edge"/>
 		            </iterate>
 		         </with>
-		      </activeWhen>
+		      </activeWhen>-->
 		   </handler>
 	</extension>
      <extension
