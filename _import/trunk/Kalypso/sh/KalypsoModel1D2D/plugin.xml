@@ -36,7 +36,7 @@
 	 <extension
       point="org.eclipse.ui.handlers">
 		   <handler
-		         class="org.kalypso.kalypsomodel1d2d.ui.map.PolyElementWidgetHandler"
+		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#PolyElement">
 		      <!--can hide functionality based on active context-->
 		      <!--<activeWhen>   
@@ -48,7 +48,7 @@
 		      </activeWhen>-->
 		   </handler>
 		   <handler
-		         class="org.kalypso.kalypsomodel1d2d.ui.map.EdgeWidgetHandler"
+		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Edge">
 		      <!--can hide functionality based on active context-->
 		      <!--<activeWhen>   
@@ -59,6 +59,9 @@
 		         </with>
 		      </activeWhen>-->
 		   </handler>
+     <handler
+           class="org.kalypso.kalypsomodel1d2d.ui.ImportRoughnessHandler"
+           commandId="org.kalypso.kalypsomodel1d2d.commands.importRoughness"/>
 	</extension>
      <extension
            id="editorActions"
@@ -77,6 +80,8 @@
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="PolyElement"/>
 	       			</class>
@@ -90,6 +95,8 @@
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget"/>
+ 	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="Edge"/>
 	       			</class>
@@ -112,6 +119,8 @@
 	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="xp.CreateGitterWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="PolyElement"/>
 	       			</class>
@@ -197,5 +206,11 @@
               class="xp.geom_to_struct.GeometryToStructUpdater"
               id="xp.geom_to_struct.geometryToStructUpdater"
               name="xp.geom_to_struct.geometryToStructUpdater"/>
+     </extension>
+     <extension
+           point="org.eclipse.ui.commands">
+        <command
+              id="org.kalypso.kalypsomodel1d2d.commands.importRoughness"
+              name="Import Roughness"/>
      </extension>
 </plugin>
