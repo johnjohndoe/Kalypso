@@ -91,7 +91,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
