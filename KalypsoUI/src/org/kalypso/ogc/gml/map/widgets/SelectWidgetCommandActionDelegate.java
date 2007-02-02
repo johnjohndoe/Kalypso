@@ -78,6 +78,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * This action delegate can be used to specify a widget and a context to call and update a {@link Command}. Handlers
@@ -92,6 +93,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  * <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate"> <br>
  * <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="xp.CreateGitterWidget"/>
  * <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" value="MyContext"/> <br>
+ * <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" value="myPlugin"/> <br>
  * </class> </action> <br>
  * <handler class="MySelectWidgetHandler" <br>
  * commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#MyContext"> <br>
@@ -106,6 +108,8 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
 
   public static final String PARAM_WIDGET_CLASS = COMMAND_ID + ".widget";
 
+  public static final String PARAM_PLUGIN_ID = COMMAND_ID + ".plugin";
+
   private String context = null;
 
   private String widgetClass = null;
@@ -115,6 +119,8 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
   private IHandlerService handlerService = null;
 
   private IAction m_action;
+
+  private String pluginId;
 
   // private IToolBarManager m_toolBarManager;
   //
@@ -173,19 +179,18 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
       Map parameterMap = (Map) data;
       widgetClass = (String) parameterMap.get( PARAM_WIDGET_CLASS );
       context = (String) parameterMap.get( PARAM_CONTEXT );
+      pluginId = (String) parameterMap.get( PARAM_PLUGIN_ID );
     }
 
-    if( widgetClass == null || context == null )
+    if( widgetClass == null || context == null || pluginId == null )
     {
       String id = config.getAttribute( "id" );
-      Status status = new Status( IStatus.ERROR, "model1d2dplugin", SWT.OK, "The '" + id + "' action won't work without a context and a widget class", null );
+      Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, "The '" + id + "' action won't work without a context, a widget class and a plugin id.", null );
       throw new CoreException( status );
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
   public void init( IWorkbenchWindow window )
@@ -201,9 +206,7 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
     init( null, view.getSite().getWorkbenchWindow() );
   }
 
-  /*
-   * +
-   * 
+  /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
@@ -265,7 +268,8 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
         cmd.define( cmdName, cmdName, selectWidgetCmd.getCategory(), selectWidgetCmd.getParameters() );
       }
       cmd.addCommandListener( this );
-      parameterizedCommand = new ParameterizedCommand( cmd, new Parameterization[] { new Parameterization( cmd.getParameter( PARAM_WIDGET_CLASS ), widgetClass ) } );
+      parameterizedCommand = new ParameterizedCommand( cmd, new Parameterization[] { new Parameterization( cmd.getParameter( PARAM_WIDGET_CLASS ), widgetClass ),
+          new Parameterization( cmd.getParameter( PARAM_PLUGIN_ID ), pluginId ) } );
     }
     catch( final NotDefinedException e )
     {
