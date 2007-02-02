@@ -132,7 +132,7 @@ public class FE1D2DContinuityLine
                         String gmlID)
   {
     this(
-      org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+      org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
           parentFeature, 
           propQName, 

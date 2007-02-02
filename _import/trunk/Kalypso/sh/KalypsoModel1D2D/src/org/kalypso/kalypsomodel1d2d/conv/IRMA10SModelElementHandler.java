@@ -1,7 +1,10 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
   /**
-   *
+   * The handler interface for rma10s model element.
+   * Class implementing this interface can be set to handle
+   * parsing events from a {@link IRMA10SModelReader}  
+   * 
    *@author Patrice Congo
    */
   public interface IRMA10SModelElementHandler
@@ -68,6 +71,18 @@ package org.kalypso.kalypsomodel1d2d.conv;
     /**
      * Handle error the Reader 
      */
-      public void handlerError(String lineString, EReadError errorHints);
+      public void handlerError(
+                        String lineString, 
+                        EReadError errorHints);
       
+      
+      public void setModelElementIDProvider(
+                        IModelElementIDProvider modelElementIDProvider)
+                        throws IllegalArgumentException;
+      
+      
+      public void setIRoughnessIDProvider(
+                        IRoughnessIDProvider roughnessIDProvider)
+                        throws IllegalArgumentException;
   }
+  

@@ -21,8 +21,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Patrice Congo
  */
-public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
-		IFeatureWrapperCollection<FWCls> {
+public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> 
+            implements IFeatureWrapperCollection<FWCls> 
+{
 	/**
 	 * The feature wrapped by this object
 	 */
@@ -136,12 +137,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 					featureMemberProp, newChildType);
 			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
             
-            // TODO: substitution is a bit trickky here:
-            // what to do if we create a substituted feature which has its own
-            // wrapper-class (which of course inherits from fwClass)
-            // should'nt we return that class? 
-            // But how to obtain it??
-			if (wrapper == null) {
+            /* TODO: substitution is a bit trickky here:
+            /* what to do if we create a substituted feature which has its own
+            /* wrapper-class (which of course inherits from fwClass)
+            /* should'nt we return that class? 
+            /* But how to obtain it??
+            /* true, the feature factory for the adaptable framework
+            /* can care about that, or even the factory framework already 
+             * selects the most specific type for adaptation 
+             *
+             */ 
+			if (wrapper == null) 
+            {
 				throw new IllegalArgumentException("Feature not adaptable:"
 						+ "\n\tfeatureType=" + newChildType
 						+ "\n\tadapatble type=" + fwClass);
@@ -152,6 +159,41 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 			throw new IllegalArgumentException(e);
 		}
 	}
+    
+    @SuppressWarnings("unchecked")
+    public FWCls addNew(QName newChildType, String newFeatureId) 
+    {
+      /**
+       * TODO programm me
+       */
+        Assert.throwIAEOnNull(newChildType, "newChildType must not null");
+        try {
+            Feature feature = Util.createFeatureForListProp(featureList,
+                    featureMemberProp, newChildType);
+            FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
+            
+            /* TODO: substitution is a bit trickky here:
+            /* what to do if we create a substituted feature which has its own
+            /* wrapper-class (which of course inherits from fwClass)
+            /* should'nt we return that class? 
+            /* But how to obtain it??
+            /* true, the feature factory for the adaptable framework
+            /* can care about that, or even the factory framework already 
+             * selects the most specific type for adaptation 
+             *
+             */ 
+            if (wrapper == null) 
+            {
+                throw new IllegalArgumentException("Feature not adaptable:"
+                        + "\n\tfeatureType=" + newChildType
+                        + "\n\tadapatble type=" + fwClass);
+            }
+            featureList.add(feature);
+            return wrapper;
+        } catch (GMLSchemaException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
 	@SuppressWarnings("unchecked")
 	public FWCls addNew(int index, QName newChildType) {
@@ -198,8 +240,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 	@SuppressWarnings("unchecked")
 	public boolean containsAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
-		// TODO: see comment at 'contains'
-		// return featureList.containsAll(c);
+		/* TODO: see comment at 'contains'
+		/* return featureList.containsAll(c);
+         */    
+        /*TOASK 
+		 * i do not understand that one.
+         * and featureList.containsAll(c) will only work
+         * if featureList contains real features or references  
+		 */
 	}
 
 	@SuppressWarnings("unchecked")
@@ -221,6 +269,15 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> implements
 
 			// We do trust in the equals implementation of
 			// AbstractFeatureBinder
+            /*TODO 
+             * may be we should put equals() into the iwrapper
+             * interface because all ifeaturewrapper must not
+             * extends AbtractFeatureBinder, 
+             * and this will therefore work, i guess, only for
+             * AbstractFeatureBinder childs. i will have a look
+             * during the move IfeatureWrapper to kalypso deegree 
+             * 
+             */
 			for (int i = 0; i < size(); i++) {
 				final FWCls cls = get(i);
 				if (cls.equals(o))

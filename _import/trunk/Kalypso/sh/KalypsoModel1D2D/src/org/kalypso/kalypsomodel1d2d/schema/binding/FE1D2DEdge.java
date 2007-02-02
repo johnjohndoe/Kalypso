@@ -107,7 +107,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
       String gmlID)
   {
   this(
-    org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+    org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
         parentFeature, 
         propQName, 

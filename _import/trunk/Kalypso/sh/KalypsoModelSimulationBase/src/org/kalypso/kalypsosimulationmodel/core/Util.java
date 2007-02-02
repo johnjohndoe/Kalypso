@@ -183,7 +183,7 @@ public class Util
 		return false;
 	}
 	
-	public static final Feature createNodeById(
+	public static final Feature createFeatureWithId(
 				QName newFeatureQName,
 	            Feature parentFeature,
 	            QName propQName,

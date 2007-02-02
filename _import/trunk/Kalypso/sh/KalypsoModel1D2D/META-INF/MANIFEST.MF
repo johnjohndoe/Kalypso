@@ -17,7 +17,8 @@ Require-Bundle:
  KalypsoModelSimulationBase,
  org.kalypso.ui,
  org.kalypso.ui.addlayer,
- org.kalypso.model.wspm.tuhh.schema
+ org.kalypso.model.wspm.tuhh.schema,
+ org.eclipse.ui.forms
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,
@@ -34,5 +35,6 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  test.org.kalypso.kalypsomodel1d2d,
  xp,
  xp.geom_to_struct,
- xp.map_editspec
+ xp.map_editspec,
+ org.kalypso.kalypsomodel1d2d.ui.viewer
 Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin

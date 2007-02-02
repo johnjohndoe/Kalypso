@@ -56,7 +56,23 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private IFEDiscretisationModel1d2d model;
   
-  public DiscretisationModel1d2dHandler(IFEDiscretisationModel1d2d model )
+  /**
+   * The provider used for convertion of native roughness
+   * ids to gml model roughness id. 
+   */
+  private IRoughnessIDProvider roughnessIDProvider;
+  
+  /**
+   * The provider used for conversion bettween native and gml
+   * ids
+   */
+  private IModelElementIDProvider modelElementIDProvider;
+  
+  /**
+   * 
+   */
+  public DiscretisationModel1d2dHandler(
+                             IFEDiscretisationModel1d2d model )
   {
     this.model=model;
   }
@@ -72,7 +88,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int, int, int)
    */
-  public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
+  public void handleArc( 
+                  String lineString, 
+                  int id, 
+                  int node1ID, 
+                  int node2ID, 
+                  int elementLeftID, 
+                  int elementRightID, 
+                  int middleNodeID )
   {
     
   }
@@ -80,7 +103,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int, int)
    */
-  public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
+  public void handleElement( 
+                    String lineString, 
+                    int id, 
+                    int currentRougthnessClassID, 
+                    int previousRoughnessClassID, 
+                    int eleminationNumber )
   {
     
   }
@@ -88,9 +116,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double)
    */
-  public void handleNode( String lineString, int id, double easting, double northing, double elevation )
+  public void handleNode( 
+                String lineString, 
+                int id, 
+                double easting, 
+                double northing, 
+                double elevation )
   {
-  
+       String gmlID=modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
+       //model.getNodes().addNew( );
   }
 
   /**
@@ -116,5 +150,27 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
+   */
+  public void setIRoughnessIDProvider( 
+                        IRoughnessIDProvider roughnessIDProvider ) 
+                        throws IllegalArgumentException
+  {
+    this.roughnessIDProvider=roughnessIDProvider;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
+   */
+  public void setModelElementIDProvider( 
+                    IModelElementIDProvider modelElementIDProvider ) 
+                    throws IllegalArgumentException
+  {
+    this.modelElementIDProvider=modelElementIDProvider;
+  }
+  
+  
 
 }

@@ -130,7 +130,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
       String gmlID)
   {
     this(
-      org.kalypso.kalypsosimulationmodel.core.Util.createNodeById( 
+      org.kalypso.kalypsosimulationmodel.core.Util.createFeatureWithId( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement,
           parentFeature, 
           propQName, 

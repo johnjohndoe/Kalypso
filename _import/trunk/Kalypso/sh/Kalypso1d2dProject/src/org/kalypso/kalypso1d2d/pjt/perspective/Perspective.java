@@ -6,6 +6,8 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessClsCollectionView;
+import org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessDBViewer;
 
 
 
@@ -71,6 +73,7 @@ public class Perspective implements IPerspectiveFactory {
 		 //leftMiddle.addView(TasksView.ID);
 		 leftBottom.addView(IPageLayout.ID_OUTLINE);
 		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+		 bottom.addView(RoughnessClsCollectionView.ID);
 		 //bottom.addView(IPageLayout.ID_)
 		 //rightTop.addView(SimulationModelDBView.ID);
 		 rightTop.addView(IPageLayout.ID_RES_NAV);
