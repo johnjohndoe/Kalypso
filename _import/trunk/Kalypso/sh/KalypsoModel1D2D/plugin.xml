@@ -115,7 +115,15 @@
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="PolyElement"/>
 	       			</class>
-       	</action>               	    
+       	</action>            
+        <action
+              class="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
+              id="KalypsoModel1D2D.action1"
+              label="Flussschlauch"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Flussschlauch anhand von Profilen generieren"/>
               </editorContribution>
      </extension>
      
