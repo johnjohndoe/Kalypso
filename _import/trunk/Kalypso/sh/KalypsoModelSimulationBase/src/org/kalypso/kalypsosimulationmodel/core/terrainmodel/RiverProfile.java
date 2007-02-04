@@ -71,4 +71,12 @@ public/* abstract */class RiverProfile extends AbstractFeatureBinder implements 
   {
     return getFeature();
   }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return getFeature().getId();
+  }
 }

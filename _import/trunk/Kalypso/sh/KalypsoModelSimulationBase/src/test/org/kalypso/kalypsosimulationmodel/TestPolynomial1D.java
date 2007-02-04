@@ -99,9 +99,16 @@ public class TestPolynomial1D extends TestCase
 
 		public Feature getWrappedFeature()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
+        
+        /**
+         * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+         */
+        public String getGmlID( )
+        {
+          return null;
+        }
 	};
 	
 	public void testWorkspaceLoad()
@@ -140,8 +147,8 @@ public class TestPolynomial1D extends TestCase
 		{
 			workspace=
 				GmlSerializer.createGMLWorkspace( 
-					TestWorkspaces.URL_EMPTY_GML, null );;
-			Feature root=workspace.getRootFeature();	
+					TestWorkspaces.URL_EMPTY_GML, null );
+//			Feature root=workspace.getRootFeature();	
 			Polynomial1D pol1d= new Polynomial1D(workspace);
 			try
 			{

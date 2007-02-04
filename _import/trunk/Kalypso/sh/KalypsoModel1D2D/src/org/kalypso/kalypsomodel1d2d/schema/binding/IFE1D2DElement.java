@@ -56,4 +56,5 @@ public interface IFE1D2DElement
    * returns a list of element nodes
    */
   List<IFE1D2DNode> getNodes();
+  void addEdge(String edgeID);
 }

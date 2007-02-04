@@ -177,5 +177,13 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper>
 	{
 		return mpFeature;
 	}
+    
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return mpFeature.getId();
+    }
 
 }

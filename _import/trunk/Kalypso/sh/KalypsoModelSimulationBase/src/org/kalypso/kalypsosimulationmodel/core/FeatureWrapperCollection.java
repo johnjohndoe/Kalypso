@@ -105,8 +105,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 							+ "\n\tchildType=" + childQName, ex);
 		}
 
-		this.featureList = (FeatureList) this.featureCol
-				.getProperty(featureMemberProp);
+		this.featureList = 
+          (FeatureList) this.featureCol.getProperty(featureMemberProp);
 		this.featureMemberProp = featureMemberProp;
 
 		this.fwClass = fwClass;
@@ -132,9 +132,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 	@SuppressWarnings("unchecked")
 	public FWCls addNew(QName newChildType) {
 		Assert.throwIAEOnNull(newChildType, "newChildType must not null");
-		try {
-			Feature feature = Util.createFeatureForListProp(featureList,
-					featureMemberProp, newChildType);
+        Feature feature=null;
+        try {
+			 feature= Util.createFeatureForListProp(
+                                       featureList,
+			                           featureMemberProp, 
+                                       newChildType);
 			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
             
             /* TODO: substitution is a bit trickky here:
@@ -156,20 +159,30 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 			featureList.add(feature);
 			return wrapper;
 		} catch (GMLSchemaException e) {
-			throw new IllegalArgumentException(e);
+			throw new IllegalArgumentException(
+                "feature:"+feature+ " class="+fwClass+ " featureQName="+newChildType,
+                e);
 		}
 	}
     
     @SuppressWarnings("unchecked")
     public FWCls addNew(QName newChildType, String newFeatureId) 
     {
+      
       /**
        * TODO programm me
        */
         Assert.throwIAEOnNull(newChildType, "newChildType must not null");
+        Feature feature=null;
         try {
-            Feature feature = Util.createFeatureForListProp(featureList,
-                    featureMemberProp, newChildType);
+          
+            feature=Util.createFeatureWithId( 
+                          newChildType,//newFeatureQName, 
+                          featureCol,//parentFeature, 
+                          featureMemberProp,//propQName, 
+                          newFeatureId//gmlID 
+                          );
+            
             FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
             
             /* TODO: substitution is a bit trickky here:
@@ -190,8 +203,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
             }
             featureList.add(feature);
             return wrapper;
-        } catch (GMLSchemaException e) {
-            throw new IllegalArgumentException(e);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                      "Feature="+feature+" class="+fwClass,e);
         }
     }
 
@@ -505,6 +519,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 		return featureCol;
 	}
 	
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return featureCol.getId();
+    }
+    
 	public FeatureList getWrappedList()
 	{
 		return featureList;

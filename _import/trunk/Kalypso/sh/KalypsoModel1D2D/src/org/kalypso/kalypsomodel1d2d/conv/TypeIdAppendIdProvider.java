@@ -77,7 +77,7 @@ public class TypeIdAppendIdProvider implements IModelElementIDProvider
                     int rma10sID ) 
                     throws IllegalArgumentException
   {
-    return null;
+    return elementKey.toString()+rma10sID;
   }
 
   private static final boolean hasRMA10SPrefix( char char0, char chr1 )

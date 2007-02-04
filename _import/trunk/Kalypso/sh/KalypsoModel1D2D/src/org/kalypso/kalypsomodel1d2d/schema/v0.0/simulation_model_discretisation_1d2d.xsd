@@ -197,6 +197,9 @@
 						ref="wb1d2d:edge"
 						minOccurs="1" 
 						maxOccurs="1"/>
+					<xs:element
+						ref="wb1d2d:edgeContainer"
+						minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -657,7 +660,11 @@
 		<xs:complexContent>
 			<xs:extension 
 				base="wb1d2d:ElementType">
-				<xs:sequence/>
+				<xs:sequence>
+					<xs:element
+						ref="wb1d2d:elementContainer"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
 				</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
@@ -986,17 +993,13 @@
 				Associates an element to the complex element containing it
 			</xs:documentation>
 		</xs:annotation>
-		<!-- xs:complexContent>
-			<xs:restriction 
-				base="simBase:FEElementContainerPropertyType"-->
-				<xs:sequence>
-					<xs:element 
-						ref="wb1d2d:ComplexElement"
-						minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!--/xs:restriction>
-		</xs:complexContent-->
+		<xs:sequence>
+				<xs:element 
+					ref="wb1d2d:ComplexElement"
+					minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+
 	</xs:complexType>
 		
 </xs:schema>

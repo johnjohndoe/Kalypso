@@ -39,6 +39,9 @@ public class Kalypso1D2DSchemaConstants
       public final static QName WB1D2D_PROP_NODE_CONTAINERS=
           new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "nodeContainer" );
       
+      public final static QName WB1D2D_F_ELEMENT = 
+        new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
+      
       public final static QName WB1D2D_F_FE1D2D_2DElement = 
               new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 

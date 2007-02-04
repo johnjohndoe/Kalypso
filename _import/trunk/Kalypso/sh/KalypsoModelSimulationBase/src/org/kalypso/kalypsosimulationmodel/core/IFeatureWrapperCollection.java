@@ -36,6 +36,10 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper>
 	 *             </ul>
 	 */
 	public FWCls addNew(QName newChildType);
+    
+    
+    public FWCls addNew(QName newChildType, String newFeatureId) ;
+    
 
 	/**
 	 * Creates and Adds a new element of the specified type into the feature

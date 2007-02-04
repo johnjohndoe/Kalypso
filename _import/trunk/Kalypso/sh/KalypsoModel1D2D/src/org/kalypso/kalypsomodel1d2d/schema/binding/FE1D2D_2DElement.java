@@ -15,14 +15,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provide the default implementation for 
@@ -37,7 +31,9 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
+@SuppressWarnings("hiding")
+public class FE1D2D_2DElement extends AbstractFeatureBinder 
+                              implements IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
 
@@ -47,9 +43,16 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
     //
-    Object prop = 
-        featureToBind.getProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    Object prop =null;
+    try
+    {
+        prop=featureToBind.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    }
+    catch(Throwable th)
+    {
+      th.printStackTrace();
+    }
 
     if( prop == null )
     {
@@ -57,7 +60,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
       containers = 
           new FeatureWrapperCollection<IFE1D2DComplexElement>( 
                 featureToBind, 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, 
+                Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, 
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, 
                 IFE1D2DComplexElement.class );
     }
@@ -72,7 +75,16 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     }
 
     // edges
-    prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    try
+    {
+      prop = featureToBind.getProperty( 
+                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
+      prop=null;
+    }
 
     if( prop == null )
     {
@@ -148,6 +160,7 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
         (List) feature.getProperty( 
                 Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
+    
     final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
     for( int i = 0; i < edges.length; i++ )
     {
@@ -183,17 +196,19 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
         edgeInvFeature=((IEdgeInv)edge).getWrappedFeature();
         if(edgeInvFeature==null)
         {
-           new EdgeInv(
-               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-               feature,
-               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+//           new EdgeInv(
+//               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
+//               feature,
+//               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+          ((IEdgeInv)edge).addInvEdgeToElement( this );
         }
         else
         {
-          new EdgeInv(
-              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-              feature,
-              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+//          new EdgeInv(
+//              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
+//              feature,
+//              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+          
         }
       }
       else
@@ -295,6 +310,14 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
   {
     return getFeature();
   }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return getFeature().getId();
+  }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
@@ -344,8 +367,8 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
     {
       if(edge instanceof IEdgeInv)
       {
-        edge=((IEdgeInv)edge).getInverted();
-        List<IFE1D2DNode> edgeNodes=edge.getNodes();
+        IFE1D2DEdge invertedEdge=((IEdgeInv)edge).getInverted();
+        List<IFE1D2DNode> edgeNodes=invertedEdge.getNodes();
         IFE1D2DNode<IFE1D2DEdge> node;
         for(int i=edgeNodes.size()-1;i>=0;i--)
         {
@@ -384,5 +407,17 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder implements IFE1D2DEl
       }
     }
     return nodes;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
+   */
+  public void addEdge( String edgeID )
+  {
+    if(edgeID==null)
+    {
+      throw new IllegalArgumentException("edge ID must not be null");
+    }
+    edges.getWrappedList().add( edgeID );
   }
 }

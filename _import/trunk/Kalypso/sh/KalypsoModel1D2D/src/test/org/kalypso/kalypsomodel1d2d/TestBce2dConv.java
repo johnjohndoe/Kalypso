@@ -41,14 +41,20 @@
 package test.org.kalypso.kalypsomodel1d2d;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
+import org.kalypso.kalypsomodel1d2d.conv.TypeIdAppendIdProvider;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -87,15 +93,14 @@ public class TestBce2dConv extends TestCase
               Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel, 
               tmpFile.toURL(), 
               GmlSerializer.DEFAULT_FACTORY);
+      
     }
-    catch( MalformedURLException e )
+    catch( Exception e )
     {
       fail( TestUtils.getStackTraceAsString( e ));
     }
-    catch( InvocationTargetException e )
-    {
-      fail( TestUtils.getStackTraceAsString( e));
-    }
+    
+    
     
     FE1D2DDiscretisationModel targetModel=
         new FE1D2DDiscretisationModel(workspace.getRootFeature());
@@ -113,12 +118,26 @@ public class TestBce2dConv extends TestCase
     {
       RMA10S2GmlConv.toDiscretisationModel( 
                               aggerStream, 
-                              targetModel );
+                              targetModel,
+                              TestWorkspaces.getGaussKrueger(),
+                              new TypeIdAppendIdProvider() );
     }
     catch(Throwable th)
     {
       fail( TestUtils.getStackTraceAsString( th ) );
     }
-
+//    try
+//    {
+//      File gmlFile= new File("C:\\temp\\agger_modell.gml");
+//      OutputStreamWriter writer= 
+//            new OutputStreamWriter(
+//                new FileOutputStream(gmlFile));
+//      
+//      GmlSerializer.serializeWorkspace( writer,workspace );
+//    }
+//    catch(Throwable th)
+//    {
+//      fail( TestUtils.getStackTraceAsString( th ) );
+//    }
   }
 }

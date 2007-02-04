@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
@@ -57,41 +58,170 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 public class EdgeInv implements IEdgeInv
 {
   private final IFE1D2DEdge edge;
-  private final Feature wrappedFeature;
+  private final FeatureWrapperCollection<IFE1D2DElement> containers;
+  
   /**
-   * Create a new edge for the given edge
-   * and linked it the given parentFeature
-   * @param edgeToInv 
-   * @param parentFeature 
-   * @param propQName  
+   * The inverted edge feature. the is only created on demand
+   * using {@link #addInvEdgeToElement(IFE1D2DElement)}
    */
-  public EdgeInv( 
-        Feature edgeToInv, 
-        Feature parentFeature,
-        QName propQName)
+  private Feature wrappedFeature;
+  
+//  /**
+//   * Create a new edge for the given edge
+//   * and linked it the given parentFeature
+//   * @param edgeToInv 
+//   * @param parentFeature 
+//   * @param propQName  
+//   */
+//  private EdgeInv( 
+//        Feature edgeToInv, 
+//        Feature parentFeature,
+//        QName propQName)
+//  {
+//    wrappedFeature=
+//        Util.createFeatureAsProperty( 
+//            parentFeature, 
+//            propQName, 
+//            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+//    wrappedFeature.setProperty( 
+//        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
+//        edgeToInv.getId() );
+//    edge=(IFE1D2DEdge)edgeToInv.getAdapter( IFE1D2DEdge.class);
+//    containers = 
+//      new FeatureWrapperCollection<IFE1D2DElement>( 
+//                  wrappedFeature,//featureToBind, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, 
+//                  IFE1D2DElement.class );
+//  }
+  
+//  /**
+//   * Create a new edge which is the inverted of the given one.
+//   */
+//  private EdgeInv( IFE1D2DEdge edge)
+//  {
+//    Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" );
+//    Feature feature=edge.getWrappedFeature();
+//    Assert.throwIAEOnNotDirectInstanceOf( 
+//          feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+//    
+////    IRelationType parentRelation=feature.getParentRelation();
+////    parentRelation.
+//    this.edge=edge;
+//    this.wrappedFeature=null;
+////    wrappedFeature=
+////    Util.createFeatureAsProperty( 
+////        modelFeature, 
+////        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES, 
+////        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+////  //set link to inverted
+////  wrappedFeature.setProperty( 
+////      Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
+////      edge.getWrappedFeature().getId() );
+//  }
+  
+  /**
+   * Create a new edge which is the inverted of the given one.
+   */
+  public EdgeInv( Feature invEdgeFeature)
   {
-    wrappedFeature=
-        Util.createFeatureAsProperty( 
-            parentFeature, 
-            propQName, 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
-    wrappedFeature.setProperty( 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
-        edgeToInv.getId() );
-    edge=(IFE1D2DEdge)edgeToInv.getAdapter( IFE1D2DEdge.class);
+    Assert.throwIAEOnNull( 
+        invEdgeFeature, "invedgeFeature to wrapped must not be null" );
+//    Feature invertedFeature=null;
+//      (Feature)invEdgeFeature.getProperty( 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
+    Object toInv=
+      invEdgeFeature.getProperty( 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
+    if(toInv instanceof String)
+    {
+      GMLWorkspace workspace=invEdgeFeature.getWorkspace();
+      toInv=workspace.getFeature( (String )toInv);
+    }
+    this.edge = new FE1D2DEdge((Feature)toInv);
+    
+//    Assert.throwIAEOnNotDirectInstanceOf( 
+//          invertedFeature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    
+//    IRelationType parentRelation=feature.getParentRelation();
+//    parentRelation.
+    this.wrappedFeature=invEdgeFeature;
+    containers = 
+      new FeatureWrapperCollection<IFE1D2DElement>(
+          wrappedFeature,
+          IFE1D2DElement.class,
+          Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS);
+//      new FeatureWrapperCollection<IFE1D2DElement>( 
+//                  wrappedFeature, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT,//DGE_INV, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, 
+//                  IFE1D2DElement.class );
   }
   
-  public EdgeInv( IFE1D2DEdge edge)
+  /**
+   * Create a new edge which is the inverted of the given one.
+   */
+  public EdgeInv( IFE1D2DEdge edge, 
+                  IFEDiscretisationModel1d2d targetModel)
   {
     Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" );
     Feature feature=edge.getWrappedFeature();
     Assert.throwIAEOnNotDirectInstanceOf( 
           feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
     
+//    IRelationType parentRelation=feature.getParentRelation();
+//    parentRelation.
     this.edge=edge;
-    this.wrappedFeature=null;
+//    this.wrappedFeature=null;
+    Feature modelFeature=targetModel.getWrappedFeature();
+    Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
+    wrappedFeature=
+        Util.createFeatureAsProperty( 
+            modelFeature, 
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES, 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+    //set link to inverted
+    wrappedFeature.setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
+        edge.getGmlID() );
+    containers = 
+        new FeatureWrapperCollection<IFE1D2DElement>( 
+            wrappedFeature,//featureToBind, 
+            IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
+            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+//      new FeatureWrapperCollection<IFE1D2DElement>( 
+//                  wrappedFeature,//featureToBind, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV, 
+//                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, 
+//                  IFE1D2DElement.class );
+    
   }
-  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv#addInvEdgeToElement(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public void addInvEdgeToElement( 
+                IFE1D2DElement targetElement)
+  {
+//    Feature modelFeature=targetModel.getWrappedFeature();
+//    Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
+//    wrappedFeature=
+//      Util.createFeatureAsProperty( 
+//          modelFeature, 
+//          Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES, 
+//          Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+////  set link to inverted
+//    wrappedFeature.setProperty( 
+//        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
+//        edge.getWrappedFeature().getId() );
+//    
+//    //add to element
+//    Feature elementFeature=targetElement.getWrappedFeature();
+//    Assert.throwIAEOnNull( elementFeature, "Element feature must not be null" );
+//    
+    throw new RuntimeException("add inverted edge to element not in use ");
+    
+    
+  }
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv#getInverted()
    */
@@ -134,6 +264,42 @@ public class EdgeInv implements IEdgeInv
 //    throw new RuntimeException("do not use; instead use getInverted()");
     return wrappedFeature;
   }
-
   
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return wrappedFeature.getId();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
+   */
+  public void addContainer( String containerID )
+  {
+    Assert.throwIAEOnNullParam( containerID, "containerID" );
+    containers.getWrappedList().add( containerID );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
+   */
+  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
+  {
+    if(index>1)
+    {
+      throw new IndexOutOfBoundsException("index="+index);
+    }
+    return edge.getNode( 1-index );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
+   */
+  public void addNode( String nodeID )
+  {
+    throw new UnsupportedOperationException(
+                      "adding node to inv not supported");
+  }
 }

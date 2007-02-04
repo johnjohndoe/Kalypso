@@ -433,4 +433,12 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper>
 	{
 		return rsFeature;
 	}
+    
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return rsFeature.getId();
+    }
 }

@@ -364,4 +364,11 @@ public class MultiPoint implements IMultiPoint
 	{
 		return multiPointFeature;
 	}
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return multiPointFeature.getId();
+    }
 }

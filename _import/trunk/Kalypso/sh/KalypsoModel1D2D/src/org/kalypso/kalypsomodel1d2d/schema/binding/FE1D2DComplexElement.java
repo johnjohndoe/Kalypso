@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -120,5 +119,15 @@ public class FE1D2DComplexElement
   {
     return getFeature();
   }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return getFeature().getId();
+  }
+  
+  
 
 }

@@ -11,6 +11,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,7 +56,13 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     if( prop == null )
     {
       // create the property tha is still missing
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
+      //TODO check this since edge are not edge container this is not okay
+      m_containers = 
+          new FeatureWrapperCollection<IFE1D2DElement>( 
+                      featureToBind, 
+                      Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, 
+                      Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, 
+                      IFE1D2DElement.class );
     }
     else
     {
@@ -217,6 +224,14 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     return getFeature();
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return getFeature().getId();
+  }
+  
   public GM_Curve getCurve()
   {
     return (GM_Curve) getFeature().getProperty( 
@@ -246,5 +261,30 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     {
       e.printStackTrace();
     }
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
+   */
+  public void addContainer( String containerID )
+  {
+    Assert.throwIAEOnNullParam( containerID, "containerID" );
+    m_containers.getWrappedList().add( containerID );    
+  }
+  
+ /**
+ * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
+ */
+  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
+  {
+    return m_nodes.get( index );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
+   */
+  public void addNode( String nodeID )
+  {
+    m_nodes.getWrappedList().add( nodeID );
   }
 }

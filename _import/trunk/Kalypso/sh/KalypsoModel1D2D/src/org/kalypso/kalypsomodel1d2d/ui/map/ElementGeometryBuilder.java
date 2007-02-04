@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -210,12 +211,12 @@ public class ElementGeometryBuilder
         command.addCommand( addEdgeCommand );
         
         addNodeContainerCommand( 
-                      workspace, 
-                      node0, 
-                      node1, 
-                      nodeContainerPT, 
-                      newEdge,
-                      changes);
+                          workspace, 
+                          node0, 
+                          node1, 
+                          nodeContainerPT, 
+                          newEdge,
+                          changes);
       }
       else
       {
@@ -264,8 +265,10 @@ public class ElementGeometryBuilder
     String elementID=elementFeature.getId();
     
 //    FeatureChange changes[]= new FeatureChange[edges.length];
+    
     for(int i=0;i<edges.length;i++)
     {
+      
       changes.add( 
           new FeatureChange(
               edges[i].getWrappedFeature(),

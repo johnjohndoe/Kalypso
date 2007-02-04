@@ -342,7 +342,14 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	{
 		return feature;
 	}
-	
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return feature.getId();
+    }
+    
 	@Override
 	public String toString()
 	{
@@ -412,4 +419,6 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 			return super.equals(obj);
 		}
 	}
+    
+    
 }

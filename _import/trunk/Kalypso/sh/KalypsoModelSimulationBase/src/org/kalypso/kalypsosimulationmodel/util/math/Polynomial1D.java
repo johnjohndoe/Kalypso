@@ -23,7 +23,7 @@ public class Polynomial1D implements IPolynomial1D
 {
 	final private Feature polFeature;
 	
-	public Polynomial1D(Feature polFeature)
+	public Polynomial1D( Feature polFeature)
 	{
 		this.polFeature=polFeature;
 	}
@@ -322,6 +322,15 @@ public class Polynomial1D implements IPolynomial1D
 		return polFeature;
 	}
 	
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return polFeature.getId();
+    }
+    
+    
 	@Override
 	public String toString()
 	{

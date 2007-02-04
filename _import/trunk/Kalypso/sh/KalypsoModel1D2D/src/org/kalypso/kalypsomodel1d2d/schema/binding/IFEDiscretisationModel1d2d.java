@@ -62,8 +62,8 @@ public interface IFEDiscretisationModel1d2d extends IFeatureWrapper
    *        starting from node1 to node0 exists 
    */
   public IFE1D2DEdge findEdge( 
-                          final FE1D2DNode node0, 
-                          final FE1D2DNode node1 );
+                          final IFE1D2DNode node0, 
+                          final IFE1D2DNode node1 );
 
   
   /**

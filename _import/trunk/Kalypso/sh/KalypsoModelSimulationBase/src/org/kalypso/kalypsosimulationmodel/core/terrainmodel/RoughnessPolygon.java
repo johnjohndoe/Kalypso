@@ -364,5 +364,12 @@ public class RoughnessPolygon implements IRoughnessPolygon
 	{
 		return feature;
 	}
-
+	
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+     */
+    public String getGmlID( )
+    {
+      return feature.getId();
+    }
 }

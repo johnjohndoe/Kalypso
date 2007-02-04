@@ -435,7 +435,14 @@ public class RoughnessCls implements IRoughnessCls
 	{
 		return feature;
 	}
-	
+	/**
+	 * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+	 */
+	public String getGmlID( )
+	{
+	  return feature.getId();
+	}
+    
 	@Override
 	public String toString()
 	{

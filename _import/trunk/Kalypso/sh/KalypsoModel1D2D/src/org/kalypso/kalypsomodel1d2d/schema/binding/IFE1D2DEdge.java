@@ -49,4 +49,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
 {
   public GM_Curve getCurve( );
+  public void addContainer(String containerID);
+  
+  public ET getNode(int index) throws IndexOutOfBoundsException;
+  public void addNode(String nodeID);
 }

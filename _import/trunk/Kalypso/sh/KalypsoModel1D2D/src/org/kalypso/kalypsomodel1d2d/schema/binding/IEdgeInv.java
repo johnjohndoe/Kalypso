@@ -51,4 +51,11 @@ public interface IEdgeInv
                   extends IFE1D2DEdge
 {
   public IFE1D2DEdge getInverted();  
+  
+  /**
+   * Adds this an inverted edge to the given element.
+   * 
+   */
+  public void addInvEdgeToElement(
+                  IFE1D2DElement targetElement);
 }

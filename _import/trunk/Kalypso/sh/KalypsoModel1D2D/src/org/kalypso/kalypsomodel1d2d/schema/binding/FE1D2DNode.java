@@ -220,6 +220,14 @@ public class FE1D2DNode
   {
     return m_featureToBind;
   }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return m_featureToBind.getId();
+  }
 
   /**
    * Returns all elements, this node is part of.

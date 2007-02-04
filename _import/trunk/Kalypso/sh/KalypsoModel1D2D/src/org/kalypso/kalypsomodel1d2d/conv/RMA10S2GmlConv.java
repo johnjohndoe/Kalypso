@@ -44,23 +44,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.util.Scanner;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Profides algorithm to convert between a bce2d model and
  * a 1d2d discretisation model
  * 
  * @author Patrice Congo
- *
  */
 public class RMA10S2GmlConv implements IRMA10SModelReader
 {
   
-  private IModelElementIDProvider idProvider;
+//  private IModelElementIDProvider idProvider;
   
   private IRMA10SModelElementHandler handler;
   
@@ -73,6 +71,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
                 throws IllegalStateException, IOException
   {
     Assert.throwIAEOnNullParam( inputStream, "inputStream" );
+    this.parse( new InputStreamReader(inputStream) );
   }
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStreamReader)
@@ -98,6 +97,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
             line!=null;
             line=reader.readLine())
         {
+          System.out.println(line);
           length=line.length();
           if(line.length()<2)
           {
@@ -149,7 +149,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
                         IModelElementIDProvider idProvider ) 
                         throws IllegalArgumentException
   {
-    this.idProvider=idProvider;
+//    this.idProvider=idProvider;
   }
 
   /**
@@ -164,12 +164,15 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   static public  void toDiscretisationModel(
                                   InputStream rma10sModelInput, 
-                                  IFEDiscretisationModel1d2d targetModel) throws IllegalStateException, IOException
+                                  IFEDiscretisationModel1d2d targetModel,
+                                  CS_CoordinateSystem coordinateSystem,
+                                  IModelElementIDProvider idProvider) throws IllegalStateException, IOException
   {
     IRMA10SModelReader reader= new RMA10S2GmlConv();
-    IModelElementIDProvider idProvider= new TypeIdAppendIdProvider();
+    
     IRMA10SModelElementHandler handler= 
-                 new DiscretisationModel1d2dHandler(targetModel);
+                 new DiscretisationModel1d2dHandler(
+                                 targetModel, coordinateSystem, idProvider);
     reader.setModelElementIDProvider( idProvider );
     reader.setRMA10SModelElementHandler( handler );
     reader.parse( rma10sModelInput );
@@ -183,15 +186,16 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   {
     if(length==72)
     {
+      System.out.println(line+"["+line.substring( 3-1, 12 )+"]");
       int id = 
-                Integer.parseInt( line.substring( 3-1, 12-1 ) );
+                Integer.parseInt( line.substring( 3-1, 12 ).trim() );
       double easting =
-                Double.parseDouble( line.substring( 13-1, 32-1 ) );
+                Double.parseDouble( line.substring( 13-1, 32 ).trim() );
       double northing =
-                Double.parseDouble( line.substring( 33-1, 52-1 ));
+                Double.parseDouble( line.substring( 33-1, 52 ).trim());
       
       double elevation =
-                Double.parseDouble( line.substring( 53-1, 72-1 ));
+                Double.parseDouble( line.substring( 53-1, 72 ).trim());
 
       handler.handleNode( 
                 line, 
@@ -215,11 +219,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
      {//no middle node
        try
        {
-         int id= Integer.parseInt( line.substring( 3-1,12-1 ) );
-         int node1ID=Integer.parseInt( line.substring( 13-1, 22-1 ));
-         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ));
-         int elementLeftID=Integer.parseInt( line.substring( 33-1,42-1  ));
-         int elementRightID=Integer.parseInt( line.substring( 43-1,52-1  ));
+         int id= Integer.parseInt( line.substring( 3-1,12 ).toString().trim() );
+         int node1ID=Integer.parseInt( line.substring( 13-1, 22 ).trim());
+         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ).trim());
+         int elementLeftID=Integer.parseInt( line.substring( 33-1,42  ).trim());
+         int elementRightID=Integer.parseInt( line.substring( 43-1,52  ).trim());
          int middleNodeID=-1;//Integer.parseInt( line.substring( 43-1,52-1  ));
          handler.handleArc( 
                    line,id, 
@@ -229,6 +233,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
        }
        catch(Throwable th)
        {
+         th.printStackTrace();
          handler.handlerError( line, EReadError.ILLEGAL_SECTION);
        }
      }
@@ -236,12 +241,12 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
      {//no middle node
        try
        {
-         int id= Integer.parseInt( line.substring( 3-1,12-1 ) );
-         int node1ID=Integer.parseInt( line.substring( 13-1, 22-1 ));
-         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ));
-         int elementLeftID=Integer.parseInt( line.substring( 33-1,42-1  ));
-         int elementRightID=Integer.parseInt( line.substring( 43-1,52-1  ));
-         int middleNodeID=Integer.parseInt( line.substring( 43-1,52-1  ));
+         int id= Integer.parseInt( line.substring( 3-1,12).trim() );
+         int node1ID=Integer.parseInt( line.substring( 13-1, 22 ).trim());
+         int node2ID=Integer.parseInt( line.substring( 23-1, 32 ).trim());
+         int elementLeftID=Integer.parseInt( line.substring( 33-1,42).trim());
+         int elementRightID=Integer.parseInt( line.substring( 43-1,52).trim());
+         int middleNodeID=Integer.parseInt( line.substring( 43-1,52).trim());
          handler.handleArc( 
                    line,id, 
                    node1ID, node2ID, 
@@ -265,10 +270,23 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
                                 final String line,
                                 final IRMA10SModelElementHandler handler)
   {
-    if(length==32)
+    if(length==22)
     {
-      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
-      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
+      int id= Integer.parseInt( line.substring( 3-1,12 ).trim() );
+      int currentRougthnessClassID=Integer.parseInt( 
+                                      line.substring( 13-1, 22).trim());
+      int previousRoughnessClassID=-1;//Integer.parseInt( line.substring( 33-1, 42 ));
+      int eleminationNumber=-1;//Integer.parseInt( line.substring( 43-1, 52 ));
+      handler.handleElement( 
+              line, id, 
+              currentRougthnessClassID, 
+              previousRoughnessClassID, 
+              eleminationNumber );
+    }
+    else if(length==32)
+    {
+      int id= Integer.parseInt( line.substring( 13-1,22 ).trim() );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32).trim());
       int previousRoughnessClassID=-1;//Integer.parseInt( line.substring( 33-1, 42 ));
       int eleminationNumber=-1;//Integer.parseInt( line.substring( 43-1, 52 ));
       handler.handleElement( 
@@ -279,9 +297,9 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     }
     else if(length==42)
     {
-      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
-      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
-      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ));
+      int id= Integer.parseInt( line.substring( 13-1,22).trim() );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32).trim());
+      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ).trim());
       int eleminationNumber=-1;//Integer.parseInt( line.substring( 43-1, 52 ));
       handler.handleElement( 
               line, id, 
@@ -292,10 +310,10 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     else if(length==52)
       
     {
-      int id= Integer.parseInt( line.substring( 13-1,22-1 ) );
-      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32-1 ));
-      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ));
-      int eleminationNumber=Integer.parseInt( line.substring( 43-1, 52 ));
+      int id= Integer.parseInt( line.substring( 13-1,22).trim() );
+      int currentRougthnessClassID=Integer.parseInt( line.substring( 23-1, 32).trim());
+      int previousRoughnessClassID=Integer.parseInt( line.substring( 33-1, 42 ).trim());
+      int eleminationNumber=Integer.parseInt( line.substring( 43-1, 52 ).trim());
       handler.handleElement( 
               line, id, 
               currentRougthnessClassID, 

@@ -11,4 +11,5 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IFeatureWrapper
 {
   public Feature getWrappedFeature( );
+  public String getGmlID();
 }

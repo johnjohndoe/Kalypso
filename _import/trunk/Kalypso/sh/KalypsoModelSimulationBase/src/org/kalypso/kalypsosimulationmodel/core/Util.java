@@ -215,6 +215,7 @@ public class Util
 									gmlID, 
 									featureType, 
 									true );
+       
 		try
 		{
 			if(parentPT.isList())
@@ -264,10 +265,13 @@ public class Util
 	    
 	    try
 	    {
-	       return FeatureHelper.addFeature(
+	       Feature feature=
+             FeatureHelper.addFeature( 
 	          parentFeature, 
 	          propQName, 
 	          featureQName);
+           
+           return feature;
 	    }
 	    catch(GMLSchemaException ex)
 	    {

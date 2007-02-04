@@ -90,7 +90,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
 	
   public Object setValue(Feature feature, IPropertyType pt, Object valueToSet) 
     {
-		System.out.println("New Edge geometry="+valueToSet.getClass());
+//		System.out.println("New Edge geometry="+valueToSet.getClass());
         if(true)
         {
           return valueToSet;

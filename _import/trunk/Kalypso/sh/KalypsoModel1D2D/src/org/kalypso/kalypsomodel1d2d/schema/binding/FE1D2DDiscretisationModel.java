@@ -102,7 +102,7 @@ public class FE1D2DDiscretisationModel
     
   }
 
-  public IFE1D2DEdge findEdge( final FE1D2DNode node0, final FE1D2DNode node1 )
+  public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
 //    final List edgeList = 
 //        (List) getFeature().getProperty( 
@@ -128,7 +128,8 @@ public class FE1D2DDiscretisationModel
         return null;
       }
       edges.retainAll( node1.getContainers() );
-      if(edges.size()==1)
+      int size=edges.size();
+      if(size==1)
       {
         IFE1D2DEdge edge=edges.get( 0 );
         if(edge.equals( node0 ))
@@ -137,14 +138,18 @@ public class FE1D2DDiscretisationModel
         }
         else
         {
-          return new EdgeInv(edge);
+          return new EdgeInv(edge,this);
         }
+      }
+      else if(size==0)
+      {
+        return null;
       }
       else
       {
-       System.out.println(
-           "Found an several edges with those two nodes:"+edges);
-       return null;
+         System.out.println(
+             "Found an several edges with those two nodes:"+edges);
+         return null;
       }
       
   }
@@ -194,6 +199,14 @@ public class FE1D2DDiscretisationModel
   public Feature getWrappedFeature( )
   {
     return m_featureToBind;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return m_featureToBind.getId();
   }
   
   
