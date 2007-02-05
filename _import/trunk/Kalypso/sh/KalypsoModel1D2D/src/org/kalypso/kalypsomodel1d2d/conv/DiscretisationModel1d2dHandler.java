@@ -279,6 +279,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
        String gmlID=
            modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
+       if(workspace.getFeature( gmlID ) !=null)
+       {
+           return ;
+       }
+       
        IFE1D2DNode<IFE1D2DEdge> node= 
                      modelNodes.addNew( 
                            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,gmlID );

@@ -41,20 +41,15 @@
 package test.org.kalypso.kalypsomodel1d2d;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.TypeIdAppendIdProvider;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -126,18 +121,19 @@ public class TestBce2dConv extends TestCase
     {
       fail( TestUtils.getStackTraceAsString( th ) );
     }
-//    try
-//    {
-//      File gmlFile= new File("C:\\temp\\agger_modell.gml");
-//      OutputStreamWriter writer= 
-//            new OutputStreamWriter(
-//                new FileOutputStream(gmlFile));
-//      
-//      GmlSerializer.serializeWorkspace( writer,workspace );
-//    }
-//    catch(Throwable th)
-//    {
-//      fail( TestUtils.getStackTraceAsString( th ) );
-//    }
+    try
+    {
+      File gmlFile= new File("C:\\tmp\\agger_modell.gml");
+      
+      OutputStreamWriter writer= 
+            new OutputStreamWriter(
+                new FileOutputStream(gmlFile));
+      
+      GmlSerializer.serializeWorkspace( writer,workspace );
+    }
+    catch(Throwable th)
+    {
+      fail( TestUtils.getStackTraceAsString( th ) );
+    }
   }
 }
