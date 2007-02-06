@@ -291,7 +291,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                            gmlID );
        node.setPoint( 
            GeometryFactory.createGM_Point(
-               easting*100001,northing*100001,elevation,coordinateSystem ));
+                             easting+35*100000,
+                             northing+35*100000,
+                             elevation,
+                             coordinateSystem ));
        
   }
 
@@ -300,7 +303,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void handlerError( String lineString, EReadError errorHints )
   {
-    throw new RuntimeException("bad line="+lineString);
+    //FIXE redaw me
+    //throw new RuntimeException("bad line="+lineString);
   }
 
   /**

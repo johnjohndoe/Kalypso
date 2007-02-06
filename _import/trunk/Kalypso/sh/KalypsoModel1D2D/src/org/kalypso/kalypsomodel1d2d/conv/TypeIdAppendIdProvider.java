@@ -47,7 +47,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
  *      <li/>gml ids= <FE-element-type>+<integer id>
  * </ul>
  * 
- * @author congo
+ * @author Patrice Congo
  *
  */
 public class TypeIdAppendIdProvider implements IModelElementIDProvider
@@ -80,8 +80,26 @@ public class TypeIdAppendIdProvider implements IModelElementIDProvider
     return elementKey.toString()+rma10sID;
   }
 
-  private static final boolean hasRMA10SPrefix( char char0, char chr1 )
+//  private static final boolean hasRMA10SPrefix( char char0, char chr1 )
+//  {
+//    return true;
+//  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider#allowExtenalID()
+   */
+  public boolean allowExtenalID( )
   {
-    return true;
+    return false;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider#inform(int, java.lang.String)
+   */
+  public void inform( int nativeID, String gmlID )
+  {
+    throw new RuntimeException(
+          "This should not happen since this id provider does not"+
+          "allow external ids");
   }
 }

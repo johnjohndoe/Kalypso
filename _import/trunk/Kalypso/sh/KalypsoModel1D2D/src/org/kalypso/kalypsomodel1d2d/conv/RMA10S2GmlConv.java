@@ -62,7 +62,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   
   private IRMA10SModelElementHandler handler;
   
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStream)
    */

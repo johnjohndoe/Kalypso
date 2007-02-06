@@ -41,4 +41,28 @@ public interface IModelElementIDProvider
                        ERma10sModelElementKey elemenKey, 
                        String gmlID)
                        throws IllegalArgumentException;
+   
+   /**
+    * Answer whether this provider accepts external id creations.
+    * 
+    * For example if the {@link #rma10sToGmlID(ERma10sModelElementKey, int)}
+    * return null than the a feature is created and the id provider is
+    * inform about the newly created id   
+    * 
+    * @return true if external ids are allows#
+    * @see #inform(int, String)
+    *  
+    */
+   public boolean allowExtenalID();
+   
+   /**
+    * Inform the provider about an externaly (typically by the
+    * workspace) created feature id
+    * @param nativeID the nativeID
+    */
+   public void inform(
+                 int nativeID, 
+                 String gmlID)
+                 throws IllegalArgumentException;
+   
 }

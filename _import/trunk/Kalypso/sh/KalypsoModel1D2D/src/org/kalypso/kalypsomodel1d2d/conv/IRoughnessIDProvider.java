@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement;
+
 /**
  * Provides a resversible id mapping between a native id system
  * and the gml roughness id. 
@@ -74,5 +76,15 @@ public interface IRoughnessIDProvider
    * @return the corresponding db id if found or null otherwise 
    */
   public String getRoughnessDbId(int nativeID);
+  
+  /**
+   * Implements to provides a mechanism to get the native roughness
+   * id for the given elemenent
+   * @param element the finite element which native id is to be get
+   * @throws IllegalArgumentException if element is null
+   */
+  public int getElementNativeRoughness(
+                          IFEElement element)
+                          throws IllegalArgumentException;
   
 }
