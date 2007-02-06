@@ -259,6 +259,13 @@
                style="push"
                tooltip="Importiert eine oder mehrere WspWin .prf Dateien in diese Profil-Liste"/>
          <action
+               class="org.kalypso.model.wspm.ui.action.SortProfileActionDelegate"
+               id="KalypsoModelWspmUI.action1"
+               label="Profile sortieren"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               style="push"
+               tooltip="Sortiert die Profile anhand ihrer Station"/>
+         <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"

@@ -95,17 +95,11 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
  */
 public class ProfileFeatureFactory implements IWspmConstants
 {
-  public final static QName QN_PROF_PROFILE = new QName( NS_WSPMPROF, "Profile" );
-
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
   private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
 
   private static final String DICT_COMP_PROFILE_BUILDING_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#";
-
-  public static final QName QNAME_STATION = new QName( NS_WSPMPROF, "station" );
-
-  public static final QName QNAME_TYPE = new QName( NS_WSPMPROF, "type" );
 
   private ProfileFeatureFactory( )
   {
@@ -135,7 +129,7 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
-    if( !GMLSchemaUtilities.substitutes( featureType, QN_PROF_PROFILE ) )
+    if( !GMLSchemaUtilities.substitutes( featureType, WspmProfile.QNAME_PROFILE ) )
       throw new IllegalArgumentException( "Feature ist not a profile: " + targetFeature );
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
@@ -157,15 +151,15 @@ public class ProfileFeatureFactory implements IWspmConstants
       //
       final double station = profile.getStation();
       if( Double.isNaN( station ) || Double.isInfinite( station ) )
-        changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), null ) );
+        changes.add( new FeatureChange( targetFeature, featureType.getProperty( WspmProfile.QNAME_STATION ), null ) );
       else
-        changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_STATION ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) ) );
+        changes.add( new FeatureChange( targetFeature, featureType.getProperty( WspmProfile.QNAME_STATION ), new BigDecimal( station, IWspmConstants.STATION_MATH_CONTEXT ) ) );
 
       //
       // Type
       //
       final String profiletype = profile.getType();
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( QNAME_TYPE ), profiletype ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( WspmProfile.QNAME_TYPE ), profiletype ) );
 
       /* Ensure that record-definition is there */
       final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
@@ -274,7 +268,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         final IObservation<TupleResult> buildingObs = observationFromBuilding( building, buildingFeature );
         ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
       }
-      
+
       changes.add( new FeatureChange( targetFeature, buildingRT, buildingList ) );
     }
     catch( final ProfilDataException e )
@@ -318,12 +312,12 @@ public class ProfileFeatureFactory implements IWspmConstants
   {
     final IFeatureType featureType = profileFeature.getFeatureType();
 
-    if( !GMLSchemaUtilities.substitutes( featureType, QN_PROF_PROFILE ) )
+    if( !GMLSchemaUtilities.substitutes( featureType, WspmProfile.QNAME_PROFILE ) )
       throw new IllegalArgumentException( "Feature ist not a profile: " + profileFeature );
 
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
 
-    final String profiletype = (String) profileFeature.getProperty( QNAME_TYPE );
+    final String profiletype = (String) profileFeature.getProperty( WspmProfile.QNAME_TYPE );
     final IProfil profil = ProfilFactory.createProfil( profiletype );
 
     //
@@ -489,12 +483,12 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public static BigDecimal getProfileStation( final Feature profileFeature )
   {
-    return (BigDecimal) profileFeature.getProperty( QNAME_STATION );
+    return (BigDecimal) profileFeature.getProperty( WspmProfile.QNAME_STATION );
   }
 
   public static void setProfileStation( final Feature profileFeature, final BigDecimal decimal )
   {
-    profileFeature.setProperty( QNAME_STATION, decimal );
+    profileFeature.setProperty( WspmProfile.QNAME_STATION, decimal );
   }
 
   private static IProfilBuilding buildingFromFeature( final Feature buildingFeature ) throws ProfilDataException

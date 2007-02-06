@@ -62,6 +62,10 @@ public class WspmProfile extends AbstractFeatureBinder
 {
   public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
 
+  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
+
+  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
+
   public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
 
   public WspmProfile( final Feature feature )
