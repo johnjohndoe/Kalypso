@@ -30,7 +30,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 //			Logger.getLogger(KalypsoAFGUIFrameworkPlugin.class);
 	
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.kalypso.afgui.KalypsoAFGUIFramework";
+	public static final String PLUGIN_ID = "org.kalypso.afgui";
 	
 	
 	// The shared instance
