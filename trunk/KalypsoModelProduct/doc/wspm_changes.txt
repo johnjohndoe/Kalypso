@@ -1,8 +1,9 @@
 Changelog of Kalypso-WSPM
 =========================
 
-
 since 30.01.2007
 ----------------
 - Bugfix: Deletion of Buildings in Profile-Editor now works
 - Length-Section: additional layers, outline-view toggles visibility and show legend-icons
+- Length-Section: save of changed .kod file enabled
+- Sorting of profiles now possible. Popup dialog lets the user choose from property to sort by.
