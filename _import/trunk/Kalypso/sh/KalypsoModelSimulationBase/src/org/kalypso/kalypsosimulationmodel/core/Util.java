@@ -160,7 +160,18 @@ public class Util
 	    
 	    final Feature newFeature = 
 	    		workspace.createFeature( parentFeature, parentRelation, newFeatureType );
-	
+	    try
+        {
+          workspace.addFeatureAsComposition( 
+                           parentFeature,//parent, 
+                           parentRelation,//linkProperty, 
+                           list.size(),//pos, 
+                           newFeature );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
 	    return newFeature;
 	  }
 	
@@ -201,7 +212,7 @@ public class Util
 		IFeatureType featureType=
 		schema.getFeatureType(newFeatureQName);
 		IPropertyType parentPT=
-		parentFeature.getFeatureType().getProperty( propQName );
+		    parentFeature.getFeatureType().getProperty( propQName );
 		if(!(parentPT instanceof      IRelationType))
 		{
 			throw new IllegalArgumentException(
@@ -209,6 +220,8 @@ public class Util
 			      " propQname="+propQName);
 		}
 	
+        //TOASK does not include the feature into any workspace
+        
 		Feature created = FeatureFactory.createFeature( 
 									parentFeature, 
 									(IRelationType)parentPT, 
@@ -220,6 +233,17 @@ public class Util
 		{
 			if(parentPT.isList())
 			{
+//              workspace.addFeatureAsAggregation( 
+//                    parentFeature,//srcFE, 
+//                    (IRelationType)parentPT,//linkProperty, 
+//                    -1,//pos, 
+//                    gmlID//featureID 
+//                    );
+                
+//              FeatureList propList=
+//                    (FeatureList)parentFeature.getProperty( parentPT );
+//                propList.add( created );
+                
 				workspace.addFeatureAsComposition( 
 				    parentFeature, 
 				    (IRelationType)parentPT, 
@@ -234,7 +258,7 @@ public class Util
 		}
 		catch( Exception e )
 		{
-		throw new RuntimeException("Could not add to the workspace",e);
+		    throw new RuntimeException("Could not add to the workspace",e);
 		}
 		
 		return created;

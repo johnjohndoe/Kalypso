@@ -61,7 +61,7 @@
 		   </handler>
      <handler
            class="org.kalypso.kalypsomodel1d2d.ui.ImportRoughnessHandler"
-           commandId="org.kalypso.kalypsomodel1d2d.commands.importRoughness"/>
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp"/>
 	</extension>
      <extension
            id="editorActions"
@@ -206,11 +206,5 @@
               class="xp.geom_to_struct.GeometryToStructUpdater"
               id="xp.geom_to_struct.geometryToStructUpdater"
               name="xp.geom_to_struct.geometryToStructUpdater"/>
-     </extension>
-     <extension
-           point="org.eclipse.ui.commands">
-        <command
-              id="org.kalypso.kalypsomodel1d2d.commands.importRoughness"
-              name="Import Roughness"/>
      </extension>
 </plugin>

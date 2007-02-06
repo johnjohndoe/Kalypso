@@ -5,16 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -33,12 +37,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
@@ -57,6 +61,7 @@ import org.kalypso.afgui.model.ITask;
 import org.kalypso.afgui.model.ITaskGroup;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
+import org.kalypso.kalypsosimulationmodel.core.ISimulationModelProvider;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
@@ -354,7 +359,9 @@ public class WorkflowControl
 		this.activeProject = activeProject;
 	}
 	
-	public void setWorkflow(IWorkflow workflow)
+	public void setWorkflow(
+					IWorkflow workflow, 
+					ISimulationModelProvider simProvider)
 	{
 		this.workflow = workflow;
 		createWorkFlowView();
@@ -1046,31 +1053,60 @@ public class WorkflowControl
 	
 	private final void doURITask(String uri)
 	{
-		logger.info("running for:"+uri);
-		if(uri==null)
+		IWorkbench workbench=PlatformUI.getWorkbench();
+		ICommandService commandService = 
+			(ICommandService)workbench.getService(ICommandService.class);
+		Command command=
+				(Command)commandService.getCommand(uri);
+		if(!command.isDefined())
+			command.define(uri, null, null);
+		try
 		{
-			logger.warn("uri task is null");
+			command.executeWithChecks(null);
 		}
-		else
+		catch (ExecutionException e)
 		{
-			if(LOAD_IMG_JPG.equals(uri))
-			{
-				importAll();
-			}
-			else if(LOAD_IMG_TIFF.equals(uri))
-			{
-				importAll();
-			}
-			else if(LOAD_ROUGHNESS_SHP.equals(uri))
-			{
-				
-				doImportRoughnessShape(activeProject,top.getShell());
-			}
-			else
-			{
-				logger.info("Cannot run task="+uri);
-			}
-		}		
+			e.printStackTrace();
+		}
+		catch (NotDefinedException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NotEnabledException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NotHandledException e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+//		logger.info("running for:"+uri);
+//		if(uri==null)
+//		{
+//			logger.warn("uri task is null");
+//		}
+//		else
+//		{
+//			if(LOAD_IMG_JPG.equals(uri))
+//			{
+//				importAll();
+//			}
+//			else if(LOAD_IMG_TIFF.equals(uri))
+//			{
+//				importAll();
+//			}
+//			else if(LOAD_ROUGHNESS_SHP.equals(uri))
+//			{
+//				
+//				doImportRoughnessShape(activeProject,top.getShell());
+//			}
+//			else
+//			{
+//				logger.info("Cannot run task="+uri);
+//			}
+//		}		
 	}
 	
 	

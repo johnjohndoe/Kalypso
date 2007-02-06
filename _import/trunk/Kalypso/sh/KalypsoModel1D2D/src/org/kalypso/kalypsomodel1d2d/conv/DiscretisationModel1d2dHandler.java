@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.apache.commons.net.bsd.RLoginClient;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.EdgeInv;
@@ -234,6 +233,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     Feature nodeFeature=
       workspace.getFeature(gmlID);
+    
     IFE1D2DNode<IFE1D2DEdge> node=
         (IFE1D2DNode<IFE1D2DEdge>)nodeFeature.getAdapter(IFE1D2DNode.class);
     return node;
@@ -246,7 +246,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if(eleFeature==null)
     {
      return modelElements.addNew( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,gmlID);
+          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
+          gmlID);
     }
     else
     {
@@ -286,7 +287,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
        
        IFE1D2DNode<IFE1D2DEdge> node= 
                      modelNodes.addNew( 
-                           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,gmlID );
+                           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
+                           gmlID );
        node.setPoint( 
            GeometryFactory.createGM_Point(
                easting*100001,northing*100001,elevation,coordinateSystem ));

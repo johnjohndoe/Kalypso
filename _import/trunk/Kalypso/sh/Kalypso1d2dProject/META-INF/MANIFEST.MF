@@ -14,5 +14,6 @@ Require-Bundle: org.kalypso.afgui,
  org.kalypso.ui,
  org.kalypso.ui.addlayer,
  org.junit4,
- org.kalypso.model1d2d
+ org.kalypso.model1d2d,
+ KalypsoModelSimulationBase
 Eclipse-LazyStart: true

@@ -50,7 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Profides algorithm to convert between a bce2d model and
+ * Provides algorithm to convert between a bce2d model and
  * a 1d2d discretisation model
  * 
  * @author Patrice Congo
@@ -97,7 +97,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
             line!=null;
             line=reader.readLine())
         {
-          System.out.println(line);
+//          System.out.println(line);
           length=line.length();
           if(line.length()<2)
           {
