@@ -65,24 +65,24 @@ public class RoughnessClsCollection
 		return Util.getFirstName(wrappedFeature);
 	}
 
-	public IRoughnessCls getRoughnessByURI(String uri) throws IllegalArgumentException
-	{
-		Assert.throwIAEOnNullOrEmpty(uri);
-		String curUri;
-		for(IRoughnessCls rc:this)
-		{
-			curUri=rc.getURI();
-			if(uri!=null)
-			{
-				if(uri.equals(curUri))
-				{
-					return rc;
-				}
-			}
-		}
-		
-		return null;
-	}
+//	public IRoughnessCls getRoughnessByURI(String uri) throws IllegalArgumentException
+//	{
+//		Assert.throwIAEOnNullOrEmpty(uri);
+//		String curUri;
+//		for(IRoughnessCls rc:this)
+//		{
+//			curUri=rc.getURI();
+//			if(uri!=null)
+//			{
+//				if(uri.equals(curUri))
+//				{
+//					return rc;
+//				}
+//			}
+//		}
+//		
+//		return null;
+//	}
 
 	public List<IRoughnessCls> selectRoughnessByName(String nameRegExp)
 	{

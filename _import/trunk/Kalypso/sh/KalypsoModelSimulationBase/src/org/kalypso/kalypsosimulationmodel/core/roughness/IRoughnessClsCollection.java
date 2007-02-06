@@ -28,16 +28,16 @@ public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoug
    */
   public void setName( String name ) throws IllegalArgumentException;
 
-  /**
-   * To get the roughness with the specified uri
-   * 
-   * @param uri
-   *          the uri of the roughness to look-up
-   * @return the roughness with the specified uri
-   * @throws IllegalArgumentException
-   *           if uri is null or an empty string
-   */
-  public IRoughnessCls getRoughnessByURI( String uri ) throws IllegalArgumentException;
+//  /**
+//   * To get the roughness with the specified uri
+//   * 
+//   * @param uri
+//   *          the uri of the roughness to look-up
+//   * @return the roughness with the specified uri
+//   * @throws IllegalArgumentException
+//   *           if uri is null or an empty string
+//   */
+//  public IRoughnessCls getRoughnessByURI( String uri ) throws IllegalArgumentException;
 
   /**
    * Select all rougthness in the collection with a name matching the the given regular expression

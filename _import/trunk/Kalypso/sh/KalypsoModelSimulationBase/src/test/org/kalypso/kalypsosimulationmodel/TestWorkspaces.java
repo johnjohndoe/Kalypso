@@ -46,7 +46,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -63,8 +62,8 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public class TestWorkspaces
 {
-	private static final Logger logger= 
-			Logger.getLogger(TestWorkspaces.class);
+//	private static final Logger logger= 
+//			Logger.getLogger(TestWorkspaces.class);
 	
 	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
 	
@@ -119,9 +118,6 @@ public class TestWorkspaces
 	public static final URL URL_SHAPE_2_ROUGHNESS_POLYGON;
 	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
     
-    public static final URL URL_ROUGHNESS_DATABASE;
-    public static final String REL_ROUGHNESS_DATABASE="data/roughness_types.xml";
-	
 	static 
 	{
 		Map<String ,URL> urlMap=new Hashtable<String, URL>();
@@ -177,9 +173,6 @@ public class TestWorkspaces
                 REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST,
                 TestWorkspaces.class.getResource(
                         REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST));
-            urlMap.put(
-                REL_ROUGHNESS_DATABASE,
-                TestWorkspaces.class.getResource(REL_ROUGHNESS_DATABASE));
 		}
 		catch(Throwable th)
 		{
@@ -215,8 +208,6 @@ public class TestWorkspaces
 			URL_SHAPE_2_ROUGHNESS_POLYGON=
                 urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
 
-            URL_ROUGHNESS_DATABASE=
-              urlMap.get(REL_ROUGHNESS_DATABASE);
         }
 	}
 	

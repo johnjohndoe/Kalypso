@@ -1,7 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
-import org.kalypso.kalypsosimulationmodel.exception.IllegalFeatureState;
 
 /**
  * Interface for klasses representing the roughness feature
@@ -136,26 +135,6 @@ public interface IRoughnessCls extends IFeatureWrapper
 	public void setName(
 					String name) 
 					throws IllegalArgumentException;
-	
-	/**
-	 * The return the uri identifying this roughness
-	 * 
-	 * @return the uri of this roughness as string
-	 */
-	public String getURI();
-	
-	/**
-	 * changes the uri for this roughness
-	 * 
-	 * @param uri -- the new uri to set
-	 * @throws IllegalArgumentException if uri is null
-	 * 	or an empty string 
-	 * 	
-	 * 
-	 */
-	public void setURI(
-				String uri)
-				throws IllegalArgumentException;
 	
 	/**
 	 * To get the description for this roughness

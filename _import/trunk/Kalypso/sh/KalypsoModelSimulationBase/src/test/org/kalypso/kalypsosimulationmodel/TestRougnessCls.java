@@ -3,21 +3,12 @@
  */
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.util.Arrays;
+import junit.framework.TestCase;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.MultiPoint;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-
-import junit.framework.TestCase;
 
 /**
  * Test the {@link RoughnessCls} implementaion by loading it from
@@ -75,9 +66,9 @@ public class TestRougnessCls extends TestCase
 		assertEquals(
 				"grass", 
 				roughnessCls.getName());
-		assertEquals(
-				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
-				roughnessCls.getURI());
+//		assertEquals(
+//				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
+//				roughnessCls.getURI());
 		assertNull(
 				"", 
 				roughnessCls.getDescription());
@@ -124,7 +115,7 @@ public class TestRougnessCls extends TestCase
 		{
 			workspace=
 				GmlSerializer.createGMLWorkspace( 
-					TestWorkspaces.URL_EMPTY_GML, null );;
+					TestWorkspaces.URL_EMPTY_GML, null );
 			
 			Feature root=
 				workspace.getRootFeature();	

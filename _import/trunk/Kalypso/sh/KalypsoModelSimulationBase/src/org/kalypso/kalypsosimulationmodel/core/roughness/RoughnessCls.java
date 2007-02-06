@@ -7,10 +7,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -254,25 +252,25 @@ public class RoughnessCls implements IRoughnessCls
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getURI()
-   */
-  public String getURI( )
-  {
-    // return feature.getId();
-    Object obj = m_Feature.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI );
-    if( obj instanceof String )
-    {
-      return (String) obj;
-    }
-    else
-    {
-      return null;
-    }
-  }
-
+//  /*
+//   * (non-Javadoc)
+//   * 
+//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getURI()
+//   */
+//  public String getURI( )
+//  {
+//    // return feature.getId();
+//    Object obj = m_Feature.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI );
+//    if( obj instanceof String )
+//    {
+//      return (String) obj;
+//    }
+//    else
+//    {
+//      return null;
+//    }
+//  }
+//
   /*
    * (non-Javadoc)
    * 
@@ -288,31 +286,31 @@ public class RoughnessCls implements IRoughnessCls
     m_Feature.setProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME, Arrays.asList( new String[] { name } ) );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setURI(java.lang.String)
-   */
-  public void setURI( String uri ) throws IllegalArgumentException
-  {
-    uri = Assert.throwIAEOnNullOrEmpty( uri );
-    if( uri.equals( m_Feature.getId() ) )
-    {
-      return;
-    }
-    // TODO test the workspace for uri not already in use
-    // GMLWorkspace workspace=feature.getWorkspace();
-    // FeatureVisitor vi
-    // uri ist treated as the gml:id
-
-    if( Util.isInFeatureWorkspace( m_Feature, KalypsoModelRoughnessConsts.WBR_PROP_URI, uri ) )
-    {
-      throw new IllegalArgumentException( "uri already in workspace:" + uri );
-    }
-
-    m_Feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI, uri );
-
-  }
+//  /*
+//   * (non-Javadoc)
+//   * 
+//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setURI(java.lang.String)
+//   */
+//  public void setURI( String uri ) throws IllegalArgumentException
+//  {
+//    uri = Assert.throwIAEOnNullOrEmpty( uri );
+//    if( uri.equals( m_Feature.getId() ) )
+//    {
+//      return;
+//    }
+//    // TODO test the workspace for uri not already in use
+//    // GMLWorkspace workspace=feature.getWorkspace();
+//    // FeatureVisitor vi
+//    // uri ist treated as the gml:id
+//
+//    if( Util.isInFeatureWorkspace( m_Feature, KalypsoModelRoughnessConsts.WBR_PROP_URI, uri ) )
+//    {
+//      throw new IllegalArgumentException( "uri already in workspace:" + uri );
+//    }
+//
+//    m_Feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI, uri );
+//
+//  }
 
   /*
    * (non-Javadoc)
