@@ -290,8 +290,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
     final IDocumentReference[] refs = rt.getDocumentReferences();
     for( final IDocumentReference ref : refs )
     {
-      final GMLWorkspace workspace;
       final String uri = ref.getReference();
+      final GMLWorkspace workspace;
       if( ref == IDocumentReference.SELF_REFERENCE )
         workspace = localWorkspace;
       else
@@ -301,8 +301,12 @@ public class ComboFeatureControl extends AbstractFeatureControl
         workspace = provider.getWorkspace();
       }
 
+      if( workspace == null )
+        return new Feature[] {};
+      
       final CollectorVisitor collectorVisitor = new CollectorVisitor();
       final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
+      
       workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final Feature[] features = collectorVisitor.getResults( true );

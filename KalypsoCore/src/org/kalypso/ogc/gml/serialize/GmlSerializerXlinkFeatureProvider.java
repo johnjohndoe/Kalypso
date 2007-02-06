@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -84,7 +85,9 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
           return null;
 
         final URL context = contextWorkspace.getContext();
-        final URL url = new URL( context, uri );
+        
+        final URL url = new UrlResolver().resolveURL( context, uri );
+        
         m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
       }
       catch( final Exception e )
