@@ -38,7 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.jts;
+package org.kalypso.jts.QuadMesher;
+
+import org.kalypso.jts.LineStringUtilities;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -162,20 +164,30 @@ public class JTSQuadMesher
       // add a new point. the coordinates will be derived from the intersection nodes.
       meshPoints[j][0] = new Coordinate( coordinatesNewBottom[j] );
 
-      for( int i = 0; i < coordinatesNewLeft.length; i++ ) 
+      for( int i = 0; i < coordinatesNewLeft.length; i++ )
       {
         final double dxLeftToRight = coordinatesNewRight[i].x - coordinatesNewLeft[i].x;
         final double dyLeftToRight = coordinatesNewRight[i].y - coordinatesNewLeft[i].y;
 
         final double ratio = i / (coordinatesNewLeft.length - 1);
-        
+
         final double relativeSegmentDistance = distSegmentBottom * (1 - ratio) + distSegmentTop * ratio;
         final double relativeDistance = distBottom * (1 - ratio) + distTop * ratio;
 
         double x = coordinatesNewLeft[i].x + dxLeftToRight * relativeSegmentDistance / relativeDistance;
         double y = coordinatesNewLeft[i].y + dyLeftToRight * relativeSegmentDistance / relativeDistance;
-        meshPoints[j][i] = new Coordinate( x, y );
+        double z = 0;
+        
+        if( i == 0 )
+        {
+          z = coordinatesNewBottom[j].z;
+        }
+        else if ( i == coordinatesNewLeft.length - 1)
+        {
+          z = coordinatesNewTop[j].z;
+        }
 
+        meshPoints[j][i] = new Coordinate( x, y, z );
       }
 
     }
