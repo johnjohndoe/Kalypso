@@ -103,7 +103,7 @@ public class TestBce2dConv extends TestCase
     try
     {
       aggerStream=
-        TestWorkspaces.URL_AGGER_2D.openStream();
+        TestWorkspaces.URL_STOER_2D.openStream();
     }
     catch( IOException e )
     {

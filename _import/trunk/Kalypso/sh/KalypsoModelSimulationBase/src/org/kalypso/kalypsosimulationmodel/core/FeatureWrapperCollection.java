@@ -201,7 +201,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
                         + "\n\tfeatureType=" + newChildType
                         + "\n\tadapatble type=" + fwClass);
             }
-            featureList.add(feature);
+//            featureList.add(feature);
             return wrapper;
         } catch (Exception e) {
             throw new IllegalArgumentException(
