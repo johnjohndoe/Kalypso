@@ -39,7 +39,7 @@
  *   
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import java.net.URL;
 import java.util.ArrayList;

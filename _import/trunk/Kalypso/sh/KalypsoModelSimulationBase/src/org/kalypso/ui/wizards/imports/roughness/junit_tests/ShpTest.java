@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness.junit_tests;
+package org.kalypso.ui.wizards.imports.roughness.junit_tests;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +8,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ui.shapeImportWizards.utils.importRoughness.TransformerShapeToIRoughnessCollection;
+import org.kalypso.ui.wizards.imports.roughness.TransformerShapeToIRoughnessCollection;
 
 public class ShpTest extends TestCase {
 

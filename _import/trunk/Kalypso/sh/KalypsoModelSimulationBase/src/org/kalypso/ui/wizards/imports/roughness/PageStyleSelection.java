@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import java.util.Iterator;
 
@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
-import org.kalypso.ui.shapeImportWizards.utils.StyleUtils;
+import org.kalypso.ui.wizards.imports.utils.StyleUtils;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 

@@ -1,0 +1,210 @@
+package org.kalypso.ui.wizards.imports.roughness;
+
+import java.awt.Color;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
+import org.eclipse.core.runtime.Path;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.opengis.cs.CS_CoordinateSystem;
+
+/**
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ */
+public class DataContainer
+{
+
+  public final static String GAUS_KRUEGER = "EPSG:31467";
+
+  private String m_inputFile = "";
+
+  private String m_outputFile = "";
+
+  private String m_projectDirectory = ""; // absolute project path
+
+  private String m_outputDirectory = ""; // relative to project
+
+  private String m_shapeProperty = "";
+
+  private CS_CoordinateSystem m_coordinateSystem;
+
+  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+
+  private String m_description = "";
+
+  private boolean m_createMap = false;
+
+  private HashMap<String, Color> m_filterPropertyColorMap;
+
+  private Feature m_selectedFeature;
+
+  private boolean b_outputToFile = true; // to feature otherwise
+
+  public DataContainer( )
+  {
+    super();
+  }
+
+  public final void setInputFile( String inputFile )
+  {
+    this.m_inputFile = inputFile;
+  }
+
+  public final void setOutputFile( String outputFile )
+  {
+    if( outputFile == null || outputFile.length() == 0 )
+      this.m_outputFile = FileUtilities.nameWithoutExtension( FileUtilities.nameFromPath( this.m_inputFile ) ) + ".gml";
+    if( outputFile.lastIndexOf( ".gml" ) > 0 )
+      this.m_outputFile = outputFile;
+    else
+      this.m_outputFile = outputFile + ".gml";
+  }
+
+  public final void setOutputDirectory( String directory )
+  {
+    m_outputDirectory = directory;
+    Path path = new Path(m_outputDirectory);
+    setProjectDirectory( path.segments()[0] );
+  }
+
+  public final void setShapeProperty( String shapeProperty )
+  {
+    this.m_shapeProperty = shapeProperty;
+  }
+
+  public final void setCoordinateSystem( String coordinateSystem )
+  {
+    this.m_coordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( coordinateSystem );
+  }
+
+  public final void setCreateMap( boolean createMap )
+  {
+    this.m_createMap = createMap;
+  }
+
+  public final void setDescription( String description )
+  {
+    this.m_description = description;
+  }
+
+  public final void setFilterPropertyColorMap( HashMap<String, Color> propertyColorMap )
+  {
+    m_filterPropertyColorMap = propertyColorMap;
+  }
+
+  public String getInputFile( )
+  {
+    return m_inputFile;
+  }
+
+  public URL getInputFileURL( )
+  {
+    try
+    {
+      return new URL( "file:" + m_inputFile ); //$NON-NLS-1$
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public String getOutputFile( )
+  {
+    return m_outputFile;
+  }
+
+  public URL getOutputFileURL( )
+  {
+    try
+    {
+      return new URL( "file:" + m_outputFile ); //$NON-NLS-1$
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public final String getOutputFileRelativePath( )
+  {
+    return "project:" + File.separator + m_outputDirectory + FileUtilities.nameFromPath( m_outputFile );
+  }
+
+  public String getShapeProperty( )
+  {
+    return m_shapeProperty;
+  }
+
+  public CS_CoordinateSystem getCoordinateSystem( boolean getDefaultIfNull )
+  {
+    if( m_coordinateSystem == null && getDefaultIfNull )
+      return m_defaultCoordinateSystem;
+    else
+      return m_coordinateSystem;
+  }
+
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public boolean doCreateMap( )
+  {
+    return b_outputToFile && m_createMap;
+  }
+
+  public URL getMapFileURL( )
+  {
+    try
+    {
+      return new URL( "file:" + FileUtilities.nameWithoutExtension( m_outputFile ) + ".gmt" ); //$NON-NLS-1$
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public final HashMap<String, Color> getFilterPropertyColorMap( )
+  {
+    return m_filterPropertyColorMap;
+  }
+
+  public final Feature getSelectedFeature( )
+  {
+    return m_selectedFeature;
+  }
+
+  public final void setSelectedFeature( Feature feature )
+  {
+    m_selectedFeature = feature;
+  }
+
+  public final boolean isOutputToFile( )
+  {
+    return b_outputToFile;
+  }
+
+  public final void setOutputToFile( boolean toFile )
+  {
+    b_outputToFile = toFile;
+  }
+
+  public final String getProjectDirectory( )
+  {
+    return m_projectDirectory;
+  }
+
+  public final void setProjectDirectory( String projectDirectory )
+  {
+    m_projectDirectory = projectDirectory;
+  }
+}

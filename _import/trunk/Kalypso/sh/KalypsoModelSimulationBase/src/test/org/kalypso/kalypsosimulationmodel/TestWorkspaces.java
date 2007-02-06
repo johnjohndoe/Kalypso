@@ -118,6 +118,9 @@ public class TestWorkspaces
 	
 	public static final URL URL_SHAPE_2_ROUGHNESS_POLYGON;
 	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
+    
+    public static final URL URL_ROUGHNESS_DATABASE;
+    public static final String REL_ROUGHNESS_DATABASE="data/roughness_types.xml";
 	
 	static 
 	{
@@ -125,8 +128,6 @@ public class TestWorkspaces
 		Throwable  th1=null;
 		try
 		{
-			
-			
 			urlMap.put(
 					REL_RES_POLYNOMIAL1D,
 					TestWorkspaces.class.getResource(REL_RES_POLYNOMIAL1D));
@@ -176,6 +177,9 @@ public class TestWorkspaces
                 REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST,
                 TestWorkspaces.class.getResource(
                         REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST));
+            urlMap.put(
+                REL_ROUGHNESS_DATABASE,
+                TestWorkspaces.class.getResource(REL_ROUGHNESS_DATABASE));
 		}
 		catch(Throwable th)
 		{
@@ -210,7 +214,10 @@ public class TestWorkspaces
 				urlMap.get(REL_RES_ROUGHNESS_POLYGON);
 			URL_SHAPE_2_ROUGHNESS_POLYGON=
                 urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
-		}
+
+            URL_ROUGHNESS_DATABASE=
+              urlMap.get(REL_ROUGHNESS_DATABASE);
+        }
 	}
 	
 	

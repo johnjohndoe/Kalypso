@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import java.io.File;
 
@@ -15,14 +15,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardResourceImportPage;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -34,7 +37,7 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
   // widgets on this page
   Text txt_OutputFile;
 
-//  Text txt_Description;
+  // Text txt_Description;
 
   Button btn_CheckBox_CreateGMT;
 
@@ -46,7 +49,7 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
    */
   public PageOutputFile( final IStructuredSelection selection )
   {
-	    this( Messages.getString( "PageOutputFile.0" ), selection );
+    this( Messages.getString( "PageOutputFile.0" ), selection );
   }
 
   protected PageOutputFile( final String name, final IStructuredSelection selection )
@@ -57,11 +60,10 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
     this.m_Selection = selection;
     msg_StatusLine = new Status( IStatus.OK, "not_used", 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
-  
+
   @Override
   public void createOptionsGroupButtons( Group optionsGroup )
   {
-
     // create the composite to hold the widgets
     GridData gd;
     Composite composite = new Composite( optionsGroup, SWT.NULL );
@@ -80,17 +82,17 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
     gd.grabExcessHorizontalSpace = true;
     // gd.horizontalSpan = ncol - 1;
     txt_OutputFile.setLayoutData( gd );
-    
+
     txt_OutputFile.setFocus();
 
     // Description
-//    new Label( composite, SWT.NONE ).setText( Messages.getString( "PageOutputFile.4" ) ); //$NON-NLS-1$
-//    txt_Description = new Text( composite, SWT.BORDER );
-//    gd = new GridData();
-//    gd.horizontalAlignment = GridData.FILL;
-//    gd.grabExcessHorizontalSpace = true;
-//    // gd.horizontalSpan = ncol - 1;
-//    txt_Description.setLayoutData( gd );
+    // new Label( composite, SWT.NONE ).setText( Messages.getString( "PageOutputFile.4" ) ); //$NON-NLS-1$
+    // txt_Description = new Text( composite, SWT.BORDER );
+    // gd = new GridData();
+    // gd.horizontalAlignment = GridData.FILL;
+    // gd.grabExcessHorizontalSpace = true;
+    // // gd.horizontalSpan = ncol - 1;
+    // txt_Description.setLayoutData( gd );
 
     createLine( composite, ncol );
 
@@ -103,24 +105,24 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
     btn_CheckBox_CreateGMT.setSelection( true );
 
     setControl( composite );
-	addListeners();
+    addListeners();
   }
 
-	private void addListeners()
-	{
-		txt_OutputFile.addListener(SWT.Modify, this);
-	}
+  private void addListeners( )
+  {
+    txt_OutputFile.addListener( SWT.Modify, this );
+  }
 
-	/**
-	 * @see Listener#handleEvent(Event)
-	 */
-	public void handleEvent(Event event)
-	{
-		getWizard().getContainer().updateButtons();
-	}
+  @Override
+  public void handleEvent( Event event )
+  {
+    // getWizard().getContainer().updateButtons();
+  }
 
   protected boolean isTextNonEmpty( Text t )
   {
+    if( t == null )
+      return false;
     String s = t.getText();
     if( (s != null) && (s.trim().length() > 0) )
       return true;
@@ -140,24 +142,32 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
   {
     return false;
   }
-  
+
   @Override
-  public boolean isPageComplete() {
-	  boolean isComplete = isTextNonEmpty(txt_OutputFile);
-	  if(isComplete){
-		  saveDataToModel( );
-	  }
-	  return isComplete;
+  public boolean isPageComplete( )
+  {
+//    DirectoryDialog d = new DirectoryDialog(this.getShell());
+//    d.setMessage( "Tekst dijaloga" );
+//    d.setText( "Naslov dijaloga" );
+//    String path = "D:\\Eclipse\\runtime-KalypsoEnterprise\\";
+//    d.setFilterPath( path );
+//    System.out.println(path);
+//    System.out.println(d.getFilterPath());
+//    d.open();
+    return isTextNonEmpty( txt_OutputFile );
   }
 
-  private void saveDataToModel( )
+  protected void saveDataToModel( )
   {
-    DataContainer m_data = ((ImportWizard) getWizard()).m_data;
-    m_data.setOutputFile( getResourceAbsolutePath() + File.separator + txt_OutputFile.getText() );
-//    m_data.setDescription( txt_Description.getText() );
-    m_data.setProject( getTargetContainer().getProject() );
-    m_data.setCreateMap( btn_CheckBox_CreateGMT.getSelection() );
-    m_data.setOutputDirectory( getResourceRelativePath() );
+    if( isCurrentPage() )
+    {
+      DataContainer m_data = ((ImportWizard) getWizard()).m_data;
+      m_data.setOutputFile( getResourceAbsolutePath() + File.separator + txt_OutputFile.getText() );
+      // m_data.setDescription( txt_Description.getText() );
+      // m_data.setProject( getTargetContainer().getProject() );
+      m_data.setCreateMap( btn_CheckBox_CreateGMT.getSelection() );
+      m_data.setOutputDirectory( getResourceRelativePath() );
+    }
   }
 
   public IContainer getTargetContainer( )
@@ -196,10 +206,10 @@ public class PageOutputFile extends WizardResourceImportPage implements Listener
     return null;
   }
 
-@Override
-protected void createSourceGroup(Composite parent)
-{
-	// TODO Auto-generated method stub
-	
-}
+  @Override
+  protected void createSourceGroup( Composite parent )
+  {
+    // TODO Auto-generated method stub
+
+  }
 }

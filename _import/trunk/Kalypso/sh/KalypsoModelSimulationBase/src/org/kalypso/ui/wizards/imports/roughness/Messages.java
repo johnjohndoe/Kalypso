@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -12,8 +12,8 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-//	private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages";//$NON-NLS-1$
-	private static final String BUNDLE_NAME = "org.kalypso.ui.shapeImportWizards.utils.importRoughness.messages";
+	private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages";//$NON-NLS-1$
+//	private static final String BUNDLE_NAME = "org.kalypso.ui.shapeImportWizards.utils.importRoughness.messages";
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

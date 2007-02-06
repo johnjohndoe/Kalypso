@@ -44,9 +44,9 @@
             name="Kalypso import wizards"/>
       <wizard
             category="org.kalypso.kalypsosimulationmodel.ui.shapeimportwizards"
-            class="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+            class="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
             icon="etc/images/icons/kalypso_gmt.gif"
-            id="org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard"
+            id="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
             name="Roughness import wizard"
             project="false"/>
    </extension>

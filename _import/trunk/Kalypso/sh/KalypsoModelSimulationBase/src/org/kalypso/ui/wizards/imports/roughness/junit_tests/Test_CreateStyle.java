@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness.junit_tests;
+package org.kalypso.ui.wizards.imports.roughness.junit_tests;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ui.shapeImportWizards.utils.StyleUtils;
+import org.kalypso.ui.wizards.imports.utils.StyleUtils;
 
 public class Test_CreateStyle extends TestCase {
 

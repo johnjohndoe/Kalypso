@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,8 +20,8 @@ public class ImportAction implements IObjectActionDelegate
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart part) {
-			this.part = part;
+	public void setActivePart(IAction action, IWorkbenchPart wbPart) {
+			this.part = wbPart;
 	}
 
 	/**
@@ -44,8 +44,8 @@ public class ImportAction implements IObjectActionDelegate
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
+	public void selectionChanged(IAction action, ISelection iSelection) {
+		this.selection = iSelection;
 	}
 
 }

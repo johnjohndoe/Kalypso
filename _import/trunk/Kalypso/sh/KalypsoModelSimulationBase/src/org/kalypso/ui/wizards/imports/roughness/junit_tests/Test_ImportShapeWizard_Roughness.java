@@ -1,20 +1,11 @@
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness.junit_tests;
+package org.kalypso.ui.wizards.imports.roughness.junit_tests;
 
 import junit.framework.TestCase;
 
 import org.eclipse.jface.wizard.WizardDialog;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard;
+import org.kalypso.ui.wizards.imports.roughness.ImportWizard;
 
 public class Test_ImportShapeWizard_Roughness extends TestCase {
-
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 
 	public final void testImportWizard() {
 //		KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog(); //have to initialize catalog, to register feature types

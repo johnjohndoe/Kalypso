@@ -12,6 +12,7 @@
 	xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:wspmprofile="org.kalypso.model.wspmprofile"
 	elementFormDefault="qualified" 
@@ -26,6 +27,10 @@
 	<xs:import 
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
+		/>
+	<xs:import 
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
+		schemaLocation="roughness_model.xsd"
 		/>
 	<xs:import
 		namespace="org.kalypso.model.wspmprofile"
@@ -416,16 +421,25 @@
 					<!--xs:element
 						ref="gml:surfaceProperty"/-->	
 					<xs:element 
-						name="roughnessID"
-						type="xs:anyURI"
-						minOccurs="1"	
-						maxOccurs="1"/>
-						
+						name="roughnessClassMember"
+						type="simBase:RoughnessClassPropertyType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
+	<xs:complexType name="RoughnessClassPropertyType">
+        <xs:annotation>
+            <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+                <kapp:documentReference>project:/.metadata/roughness.gml</kapp:documentReference>
+            </xs:appinfo>
+        </xs:annotation>
+		<xs:sequence>
+			<xs:element ref="wbr:RoughnessCls" minOccurs="0" maxOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+
 	<xs:element
 		name="polygonProperty"
 		type="gml:SurfacePropertyType"/>

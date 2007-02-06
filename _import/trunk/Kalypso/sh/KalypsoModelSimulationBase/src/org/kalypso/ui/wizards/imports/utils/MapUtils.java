@@ -1,4 +1,4 @@
-package org.kalypso.ui.shapeImportWizards.utils;
+package org.kalypso.ui.wizards.imports.utils;
 
 import java.awt.Color;
 import java.io.FileWriter;

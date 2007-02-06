@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.ui.shapeImportWizards.utils.importRoughness;
+package org.kalypso.ui.wizards.imports.roughness;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -11,7 +11,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
@@ -50,17 +49,16 @@ public class ImportWizard extends Wizard implements INewWizard
 	/**
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection)
+	public void init(IWorkbench iWorkbench, IStructuredSelection iSelection)
 	{
-		this.workbench = workbench;
-		this.selection = selection;
+		this.workbench = iWorkbench;
+		this.selection = iSelection;
 	}
 
 	@Override
 	public void addPages()
 	{
-		if(this.selection == null)
-		  this.selection = new StructuredSelection();
+		if (this.selection == null) this.selection = new StructuredSelection();
 		pageMain = new PageMain(m_data);
 		pageOutputFile = new PageOutputFile(selection);
 		pageOutputFeature = new PageOutputFeature();
@@ -85,6 +83,7 @@ public class ImportWizard extends Wizard implements INewWizard
 	public boolean performFinish()
 	{
 		pageMain.saveDataToModel();
+        pageOutputFile.saveDataToModel();
 		m_data.setSelectedFeature(pageOutputFeature.getSelectedFeature());
 		// Feature[] features = pageFeatureSelection.getFeatures();
 		final ICoreRunnableWithProgress operation = new TransformerShapeToIRoughnessCollection(m_data); //$NON-NLS-1$
