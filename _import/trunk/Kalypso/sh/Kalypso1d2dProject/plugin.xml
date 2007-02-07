@@ -90,24 +90,6 @@
             
    </extension>
    
-   <extension
-    	point = "org.eclipse.ui.viewActions">
-    	<viewContribution 
-    		id="org.kalypso.kalypso1d2d.pjt.setactiveproject" 
-    		targetID="org.eclipse.ui.views.ResourceNavigator">
-    		<!--action 
-    			id="org.kalypso.kalypso1d2d.pjt.SetActiveProject" 
-              	label="Set active project" 
-			    menubarPath="1d2d"
-              	toolbarPath="1d2d" 
-              	tooltip="%PopupMenu.ResourceNav.tooltip" 
-              	class="org.kalypso.kalypso1d2d.pjt.actions.SetActiveProjectActionDelegate" 
-              	enablesFor="0"> 
-              	<selection class="org.eclipse.core.resources.IProject" name="*"/> 
-              </action -->
-		</viewContribution>
-		
-     </extension>
    	
    	<extension
     	point = "org.eclipse.ui.viewActions">
@@ -115,25 +97,22 @@
     		id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib" 
     		targetID="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView">
     		<action
-            class="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
-            icon="icons/nuvola_select/edit_add.png"
-            id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
-            label="AddSM"
-            menubarPath="1d2d"
-            toolbarPath="1d2d"
-            tooltip="Add simulation modell"> 
-              	
+	            class="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
+	            icon="icons/nuvola_select/edit_add.png"
+	            id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
+	            label="AddSM"
+	            menubarPath="1d2d"
+	            toolbarPath="1d2d"
+	            tooltip="Add simulation modell"> 
              </action>
-             
              <action
-            class="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
-            icon="icons/nuvola_select/edit_remove.png"
-            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
-            label="Remove model Data"
-            menubarPath="1d2d"
-            toolbarPath="1d2d"
-            tooltip="Remove model data"> 
-              	
+	            class="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
+	            icon="icons/nuvola_select/edit_remove.png"
+	            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
+	            label="Remove model Data"
+	            menubarPath="1d2d"
+	            toolbarPath="1d2d"
+	            tooltip="Remove model data"> 
              </action>
         </viewContribution>
      </extension>
@@ -167,6 +146,9 @@
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp"/>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler"
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport"/>
 	</extension>
         <extension
          point="org.eclipse.ui.commands">

@@ -16,7 +16,10 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
+import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 
 //TODO move to workflow system problem with project??
 
@@ -80,6 +83,8 @@ public class ActiveWorkContext
 	
 	private IWorkflowSystem workflowSystem;
 	
+    private final SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
+
 	private IProject activeProject;
 	
 	private List< IActiveContextChangeListener> activeProjectChangeListener=
@@ -90,7 +95,7 @@ public class ActiveWorkContext
 		IWorkbenchWindow window=
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		window.getSelectionService().addPostSelectionListener(resSelListener);
-        final SimulationModelProvider simModelProvider = new SimulationModelProvider(this);
+        final SzenarioSourceProvider simModelProvider = new SzenarioSourceProvider( this );
         final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
         service.addSourceProvider(simModelProvider);
         //TODO remove source provider somewhere
@@ -242,4 +247,14 @@ public class ActiveWorkContext
 						oldWorkflowSystem);
 		}
 	}
+    
+    public ISzenarioDataProvider getSzenarioDataProvider( )
+    {
+      return m_dataProvider;
+    }
+
+    public void setCurrentSzenario( final IProject project, final IWorkflowData data )
+    {
+      m_dataProvider.setCurrent( project, data );
+    }
 }

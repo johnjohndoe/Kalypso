@@ -59,6 +59,9 @@
 	
 	<xs:complexType name="DiscretisationModelType">
 		<xs:complexContent>
+			<!-- TODO: with this restriction, the standard gml properties
+				'name', 'description', ... are removed. Is this intended?
+			-->
 			<xs:restriction base="simBase:FEDiscretisationModelType">
 				<xs:sequence>					
 					<xs:element 

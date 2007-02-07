@@ -5,7 +5,6 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -33,11 +32,11 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 		viewPart=view;
 		try
 		{
-			IContributionItem cItem=
-				view.getViewSite().getActionBars().getToolBarManager().
-					find("org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib");
-			cItem.update();
-			logger.info(cItem);
+//			IContributionItem cItem=
+//				view.getViewSite().getActionBars().getToolBarManager().
+//					find("org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib");
+//			cItem.update();
+//			logger.info(cItem);
 		}
 		catch(Throwable th)
 		{

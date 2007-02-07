@@ -941,6 +941,7 @@ public class WorkflowControl {
         } catch (NotEnabledException e) {
             e.printStackTrace();
         } catch (NotHandledException e) {
+        	// TODO: popup 'Operation not supported'
             e.printStackTrace();
         }
 

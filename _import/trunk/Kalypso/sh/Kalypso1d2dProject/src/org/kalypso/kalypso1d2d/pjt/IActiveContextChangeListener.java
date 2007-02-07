@@ -15,6 +15,7 @@ import org.kalypso.afgui.model.IWorkflowSystem;
  */
 public interface IActiveContextChangeListener
 {
+	/* TODO: why do inform about the OLD worflow db and so on? Why not also the new one?*/
 	public void activeProjectChanged(
 					IProject newProject, 
 					IProject oldProject,

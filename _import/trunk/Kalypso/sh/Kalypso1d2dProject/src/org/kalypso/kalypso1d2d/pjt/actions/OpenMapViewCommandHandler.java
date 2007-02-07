@@ -6,18 +6,18 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.core.ISimulationModelProvider;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 
 /**
  * Opens the map view on a given resource and activates a given layer
@@ -37,23 +37,22 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
             throws CoreException {
         final IEvaluationContext context = (IEvaluationContext) event
                 .getApplicationContext();
-        final String resource = event.getParameter(PARAM_RESOURCE);
+        final String resource = "maps/base.gmt";//event.getParameter(PARAM_RESOURCE);
         if (resource == null) {
             throw new CoreException(StatusUtilities
                     .createErrorStatus("Resource parameter was null."));
         }
         final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context
                 .getVariable(ISources.ACTIVE_WORKBENCH_WINDOW_NAME);
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IFolder projectPath = (IFolder) context
-                .getVariable(ISimulationModelProvider.ACTIVE_SIMULATION_MODEL_BASE_FOLDER_NAME);
-        final IResource file = workspace.getRoot().findMember(
-                projectPath.getFullPath().append(resource));
-
-        if (file.getType() == IResource.FILE) {
+        final IFolder szenarioPath = (IFolder) context
+                .getVariable(SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);
+        
+        final IFile file = szenarioPath.getFile( new Path(resource) );
+        
+        if (file.exists()) {
             final IWorkbenchPage workbenchPage = activeWorkbenchWindow
                     .getActivePage();
-            // IDE.openEditor(workbenchPage, (IFile) file);
+             IDE.openEditor(workbenchPage, file);
         }
         return Status.OK_STATUS;
     }
