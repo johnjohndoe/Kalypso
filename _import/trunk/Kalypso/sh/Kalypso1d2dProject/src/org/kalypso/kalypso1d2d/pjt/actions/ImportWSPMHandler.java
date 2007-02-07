@@ -56,7 +56,8 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ui.command.WorkflowCommandHandler;
+
+import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * @author Gernot Belger

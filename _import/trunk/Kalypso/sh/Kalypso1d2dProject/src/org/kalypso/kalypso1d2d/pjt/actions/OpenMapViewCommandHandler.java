@@ -18,7 +18,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
-import org.kalypso.ui.command.WorkflowCommandHandler;
+
+import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * Opens the map view on a given resource and activates a given layer

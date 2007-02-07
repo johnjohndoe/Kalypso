@@ -18,5 +18,6 @@ Require-Bundle: org.junit4,
  org.kalypso.ui,
  org.kalypso.model1d2d,
  org.kalypso.afgui,
- KalypsoModelSimulationBase
+ KalypsoModelSimulationBase,
+ de.renew.workflow.connector
 Eclipse-LazyStart: true

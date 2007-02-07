@@ -1,0 +1,3 @@
+Preprocessing,"Preprocessing",de.renew.workflow.WorkflowTaskImpl,1,"",model
+ImportRoughness,"ImportRoughness",de.renew.workflow.EclipseContextTaskImpl,1,"commandId:org.kalypso.kalypsomodel1d2d.commands.importRoughness",model
+EditRoughnessZones,"EditRoughnessZones",de.renew.workflow.EclipseContextTaskImpl,2,"commandId:org.kalypso.kalypsomodel1d2d.commands.importRoughness",model

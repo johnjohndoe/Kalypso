@@ -13,44 +13,46 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.ui.command.WorkflowCommandHandler;
+
+import de.renew.workflow.WorkflowCommandHandler;
 
 /**
  * Starts the import roughness wizard
  * 
  * @author Stefan Kurzbach
  */
-public class ImportRoughnessHandler extends WorkflowCommandHandler {
-    private static final String ROUGHNESS_IMPORT_WIZARD_ID = "org.kalypso.ui.wizards.imports.roughness.ImportWizard";
+public class ImportRoughnessHandler extends WorkflowCommandHandler
+{
+  private static final String ROUGHNESS_IMPORT_WIZARD_ID = "org.kalypso.ui.wizards.imports.roughness.ImportWizard";
 
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    protected IStatus executeInternal(final ExecutionEvent event)
-            throws CoreException {
-        final IEvaluationContext context = (IEvaluationContext) event
-                .getApplicationContext();
-        final IStructuredSelection selection = (IStructuredSelection) context
-                .getVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME);
-        final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context
-                        .getVariable(ISources.ACTIVE_WORKBENCH_WINDOW_NAME);
-        final IWorkbench workbench = (workbenchWindow)
-                .getWorkbench();
-        
-//        final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-//        final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
-        
-        final IWizardDescriptor wizardDescriptor = workbench
-                .getNewWizardRegistry().findWizard(ROUGHNESS_IMPORT_WIZARD_ID);
-        final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
-        final WizardDialog wizardDialog = new WizardDialog(workbenchWindow.getShell(), wizard);
-        wizard.init(workbench, selection);
-        if (wizardDialog.open() != Window.OK) {
-            return Status.CANCEL_STATUS;
-        } else {
-            return Status.OK_STATUS;
-        }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
+  {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IWorkbench workbench = (workbenchWindow).getWorkbench();
 
+    // final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable(
+    // SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    // final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel(
+    // IFEDiscretisationModel1d2d.class );
+
+    final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( ROUGHNESS_IMPORT_WIZARD_ID );
+    final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
+    final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+    wizard.init( workbench, selection );
+    if( wizardDialog.open() != Window.OK )
+    {
+      return Status.CANCEL_STATUS;
     }
+    else
+    {
+      return Status.OK_STATUS;
+    }
+
+  }
 }

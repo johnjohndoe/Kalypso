@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="de.renew.workflow.debug.DebugView"
+            id="WorkflowConnector.debugView"
+            name="Debug View"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="WorkflowConnector.WorkItemContribution"
+            objectClass="de.renew.workflow.WorkItem">
+         <action
+               class="de.renew.workflow.debug.RequestWorkItemActionDelegate"
+               id="WorkflowConnector.RequestWorkItemAction"
+               label="Request Workitem"/>
+      </objectContribution>
+   </extension>
+
+
+
+</plugin>
+

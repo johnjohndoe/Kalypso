@@ -38,7 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.command;
+package de.renew.workflow;
+
+import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -51,9 +53,39 @@ import org.eclipse.core.runtime.IStatus;
  */
 public abstract class WorkflowCommandHandler extends AbstractHandler
 {
+  private WorkflowConnector m_connector;
+
+  public static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
+
+  private static final boolean log = true;
+
+  static
+  {
+    if( !log )
+      logger.setUseParentHandlers( false );
+  }
+
+  /**
+   * Do not override this method. Implement your code in executeInternal.
+   * 
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final String commandId = event.getCommand().getId();
+    if( WorkflowConnector.isWorkflowMode() )
+    {
+      if( m_connector.canRequest( commandId ) )
+      {
+        m_connector.request( commandId );
+        logger.info( "requested work item for " + commandId );
+      }
+      else
+      {
+        logger.info( "no work item available for " + commandId );
+      }
+    }
     final IStatus status;
     try
     {
@@ -68,15 +100,37 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
       throw new ExecutionException( "Problem in internal execution: " + t.getLocalizedMessage(), t );
     }
 
-    if( !status.isOK() )
+    if( status.isOK() )
     {
-      // TODO: log to plugin
-      // KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
+      if( WorkflowConnector.isWorkflowMode() )
+      {
+        m_connector.confirm( commandId, status.getMessage() );
+        logger.info( "confirmed activity for " + commandId );
+      }
+    }
+    else
+    {
+      if( WorkflowConnector.isWorkflowMode() )
+      {
+        m_connector.cancel( commandId );
+        logger.info( "cancelled activity for " + commandId );
+      }
     }
 
     return status;
   }
 
-  protected abstract IStatus executeInternal( final ExecutionEvent event ) throws CoreException;
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+   */
+  @Override
+  public boolean isEnabled( )
+  {
+    return WorkflowConnector.checkWorkflowMode();
+  }
 
+  /**
+   * Implement this method instead of execute(*) for your command code
+   */
+  protected abstract IStatus executeInternal( final ExecutionEvent event ) throws CoreException;
 }

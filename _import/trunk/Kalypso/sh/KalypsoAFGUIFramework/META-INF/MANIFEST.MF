@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.apache.jakarta_log4j,
  org.eclipse.ui.forms,
  org.kalypso.ui.addlayer,
- KalypsoModelSimulationBase
+ KalypsoModelSimulationBase,
+ de.renew.workflow.connector
 Eclipse-LazyStart: true 
 Bundle-ClassPath: lib/jena_2_3/antlr-2.7.5.jar,
  lib/jena_2_3/arq.jar,

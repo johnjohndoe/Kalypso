@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="model1D2Dnetsrc/" kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/libs/log4j/log4j-1.2.12.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/libs/hsqldb/hsqldb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/access-2.2dev_0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/loader.jar" sourcepath="/Renew/Loader/src"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/ch-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/formalism-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/formalismgui-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/gui-2.2dev_1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/misc-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/simulator-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/util-2.2dev_1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/renew-2.2dev/plugins/workflow-2.2dev_0.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/renew2.0/plugins/access-2.2dev_0.5.jar"/>
-	<classpathentry kind="lib" path="lib/renew2.0/plugins/util-2.2dev_1.0.jar"/>
-	<classpathentry kind="lib" path="lib/renew2.0/plugins/workflow-2.2dev_0.6.jar"/>
-	<classpathentry kind="lib" path="lib/renew2.0/plugins/simulator-2.2dev_1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

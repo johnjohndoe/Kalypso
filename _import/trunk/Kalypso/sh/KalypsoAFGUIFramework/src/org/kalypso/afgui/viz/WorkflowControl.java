@@ -1,6 +1,5 @@
 package org.kalypso.afgui.viz;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,22 +11,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -38,13 +26,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -55,9 +38,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.ui.wizards.IWizardRegistry;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IHelp;
@@ -68,9 +48,8 @@ import org.kalypso.afgui.model.ITaskGroup;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
-import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
+
+import de.renew.workflow.WorkflowConnector;
 
 public class WorkflowControl {
     public static final Logger logger = Logger.getLogger(WorkflowControl.class);
@@ -93,7 +72,7 @@ public class WorkflowControl {
             // c.dispose();
             // }
             // }
-            IContributionItem ci = null;// aTBMng.
+            // IContributionItem ci = null;// aTBMng.
 
             tTBMng.removeAll();
             aTBMng.removeAll();
@@ -139,8 +118,15 @@ public class WorkflowControl {
                         }
                         c.setData(KEY_ITASK_ACTIONS, actions);
                     } else {
+                        final IWorkbench workbench = PlatformUI.getWorkbench();
+                        final ICommandService commandService = (ICommandService) workbench
+                                .getService(ICommandService.class);
                         for (TaskAction ta : actions) {
-                            tTBMng.add(ta);
+                            final Command command = getCommand(commandService,
+                                    ta.getId());
+                            if (isTaskPossible(command)) {
+                                tTBMng.add(ta);
+                            }
                         }
                     }
                     tTBMng.update(true);
@@ -225,8 +211,16 @@ public class WorkflowControl {
 
                 } else {
                     // TODO nullPEx while using iterator throw compactloo
+                    final IWorkbench workbench = PlatformUI.getWorkbench();
+                    final ICommandService commandService = (ICommandService) workbench
+                            .getService(ICommandService.class);
                     for (int i = 0; i < activityActions.size(); i++) {
-                        aTBMng.add(activityActions.get(i));
+                        final TaskAction<IActivity> ta = activityActions.get(i);
+                        final Command command = getCommand(commandService, ta
+                                .getId());
+                        if (isTaskPossible(command)) {
+                            aTBMng.add(ta);
+                        }
 
                     }
                 }
@@ -288,11 +282,11 @@ public class WorkflowControl {
 
     private Composite top;
 
-    private boolean allowMultiPhase = false;
-
-    private boolean allowMultiTG = false;
-
-    private boolean allowMultiSTG = false;
+    // private boolean allowMultiPhase = false;
+    //
+    // private boolean allowMultiTG = false;
+    //
+    // private boolean allowMultiSTG = false;
 
     private FormToolkit toolkit;
 
@@ -733,207 +727,206 @@ public class WorkflowControl {
         }
     }
 
-    public static final String LOAD_URI = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad";
+    // public static final String LOAD_URI =
+    // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad";
+    //
+    // public static final String LOAD_K2D2D =
+    // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadK2D2D";
+    //
+    // public static final String LOAD_IMG_TIFF =
+    // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadTiff";
+    //
+    // public static final String LOAD_IMG_JPG =
+    // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadJPEG";
+    //
+    // public static final String LOAD_ROUGHNESS_SHP =
+    // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp";
 
-    public static final String LOAD_K2D2D = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadK2D2D";
+    // private IWorkbenchPage page;
 
-    public static final String LOAD_IMG_TIFF = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadTiff";
+    // private GisMapOutlineViewer m_outlineviewer;
 
-    public static final String LOAD_IMG_JPG = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadJPEG";
+    // private void resolveGisMapOutlineViewer() {
+    // for(IWorkbenchPage
+    // p:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages())
+    // {
+    // ContentOutline co;
+    // IViewPart vp=p.findView(IPageLayout.ID_OUTLINE);
+    // vp.get
+    //			
+    // }
 
-    public static final String LOAD_ROUGHNESS_SHP = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp";
+    // go through editor
+    // IContentOutlinePage outlinePage = (IContentOutlinePage)
+    // editor.getAdapter(IContentOutlinePage.class);
+    // }
 
-    private IWorkbenchPage page;
+    // public void openEditor() {
+    // logger.info("Opening editor");
+    // if (page == null) {
+    // page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+    // .getActivePage();
+    // }
+    // if (page != null) {
+    //
+    // try {
+    // if (activeProject == null) {
+    // logger.warn("Active project is null");
+    // return;
+    // }
+    // IWorkspace ws = ResourcesPlugin.getWorkspace();
+    //
+    // IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
+    // IFile gmtFile = activeProject
+    // .getFile("project:/.metadata/agger_karte.gmt");
+    // if (!gmtFile.exists()) {
+    // logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
+    // + activeProject);
+    // return;
+    // }
+    //
+    // IEditorPart ep = IDE.openEditor(page, gmtFile);
+    // GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
+    // .getAdapter(IContentOutlinePage.class);
+    //
+    // //
+    // logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
+    // // GisMapOutlinePage getModelView for setting themes
+    // } catch (PartInitException e) {
+    // logger.error("/test/Karte.gmt", e);
+    // }
+    // // IEditorDescriptor desc = PlatformUI.getWorkbench().
+    // // getEditorRegistry().getDefaultEditor(file.getName());
+    // // page.openEditor(
+    // // new FileEditorInput(file),
+    // // desc.getId());
+    // }
+    //
+    // }
 
-    private GisMapOutlineViewer m_outlineviewer;
+    // public void importAll() {
+    // if (page == null) {
+    // page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+    // .getActivePage();
+    // }
+    // if (page != null) {
+    //
+    // try {
+    // if (activeProject == null) {
+    // logger.warn("Active project is null");
+    // return;
+    // }
+    // IWorkspace ws = ResourcesPlugin.getWorkspace();
+    //
+    // IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
+    // IFile gmtFile = activeProject
+    // .getFile("project:/.metadata/agger_karte.gmt");
+    // if (!gmtFile.exists()) {
+    // logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
+    // + activeProject);
+    // return;
+    // }
+    //
+    // IEditorPart ep = IDE.openEditor(page, gmtFile);
+    // GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
+    // .getAdapter(IContentOutlinePage.class);
+    //
+    // KalypsoAddLayerWizard wiz = new KalypsoAddLayerWizard(gmoPage
+    // .getModellView());
+    // wiz.init(PlatformUI.getWorkbench());
+    // // TODO add wizard page
+    // // ImportImageWizardPage imgIP=
+    // // new ImportImageWizardPage("","",null);
+    // // wiz.addPage(imgIP);
+    // // dlg
+    // WizardDialog wd = new WizardDialog(top.getShell(), wiz);
+    // wd.setTitle("Neue Simulationsmodel");
+    // // wd.setMessage("Neue Simulationsmodell");
+    // // wd.setBlockOnOpen(true);
+    // int decision = wd.open();
+    // } catch (PartInitException e) {
+    // logger.error("/test/Karte.gmt", e);
+    // }
+    // // IEditorDescriptor desc = PlatformUI.getWorkbench().
+    // // getEditorRegistry().getDefaultEditor(file.getName());
+    // // page.openEditor(
+    // // new FileEditorInput(file),
+    // // desc.getId());
+    // }
+    //
+    // }
 
-    private void resolveGisMapOutlineViewer() {
-        // for(IWorkbenchPage
-        // p:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages())
-        // {
-        // ContentOutline co;
-        // IViewPart vp=p.findView(IPageLayout.ID_OUTLINE);
-        // vp.get
-        //			
-        // }
+    // static final IFolder getImportFolder(IProject project) {
+    // Object nature = null;
+    // try {
+    // nature = project
+    // .getNature("org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature");
+    // Class natureClass = nature.getClass();
+    // Method method = natureClass.getMethod("getImportFolder",
+    // new Class[0]);
+    // Object ret = method.invoke(nature, new Object[] {});
+    // logger.info("Folder=" + ret);
+    // return (IFolder) ret;
+    // } catch (Exception e) {
+    // logger.error("could not get nature", e);
+    // return null;
+    // }
+    //
+    // }
 
-        // go through editor
-        // IContentOutlinePage outlinePage = (IContentOutlinePage)
-        // editor.getAdapter(IContentOutlinePage.class);
-    }
-
-    public void openEditor() {
-        logger.info("Opening editor");
-        if (page == null) {
-            page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                    .getActivePage();
-        }
-        if (page != null) {
-
-            try {
-                if (activeProject == null) {
-                    logger.warn("Active project is null");
-                    return;
-                }
-                IWorkspace ws = ResourcesPlugin.getWorkspace();
-
-                IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
-                IFile gmtFile = activeProject
-                        .getFile("project:/.metadata/agger_karte.gmt");
-                if (!gmtFile.exists()) {
-                    logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
-                            + activeProject);
-                    return;
-                }
-
-                IEditorPart ep = IDE.openEditor(page, gmtFile);
-                GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
-                        .getAdapter(IContentOutlinePage.class);
-
-                // logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
-                // GisMapOutlinePage getModelView for setting themes
-            } catch (PartInitException e) {
-                logger.error("/test/Karte.gmt", e);
-            }
-            // IEditorDescriptor desc = PlatformUI.getWorkbench().
-            // getEditorRegistry().getDefaultEditor(file.getName());
-            // page.openEditor(
-            // new FileEditorInput(file),
-            // desc.getId());
-        }
-
-    }
-
-    public void importAll() {
-        if (page == null) {
-            page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                    .getActivePage();
-        }
-        if (page != null) {
-
-            try {
-                if (activeProject == null) {
-                    logger.warn("Active project is null");
-                    return;
-                }
-                IWorkspace ws = ResourcesPlugin.getWorkspace();
-
-                IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
-                IFile gmtFile = activeProject
-                        .getFile("project:/.metadata/agger_karte.gmt");
-                if (!gmtFile.exists()) {
-                    logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
-                            + activeProject);
-                    return;
-                }
-
-                IEditorPart ep = IDE.openEditor(page, gmtFile);
-                GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
-                        .getAdapter(IContentOutlinePage.class);
-
-                KalypsoAddLayerWizard wiz = new KalypsoAddLayerWizard(gmoPage
-                        .getModellView());
-                wiz.init(PlatformUI.getWorkbench());
-                // TODO add wizard page
-                // ImportImageWizardPage imgIP=
-                // new ImportImageWizardPage("","",null);
-                // wiz.addPage(imgIP);
-                // dlg
-                WizardDialog wd = new WizardDialog(top.getShell(), wiz);
-                wd.setTitle("Neue Simulationsmodel");
-                // wd.setMessage("Neue Simulationsmodell");
-                // wd.setBlockOnOpen(true);
-                int decision = wd.open();
-            } catch (PartInitException e) {
-                logger.error("/test/Karte.gmt", e);
-            }
-            // IEditorDescriptor desc = PlatformUI.getWorkbench().
-            // getEditorRegistry().getDefaultEditor(file.getName());
-            // page.openEditor(
-            // new FileEditorInput(file),
-            // desc.getId());
-        }
-
-    }
-
-    static final IFolder getImportFolder(IProject project) {
-        Object nature = null;
-        try {
-            nature = project
-                    .getNature("org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature");
-            Class natureClass = nature.getClass();
-            Method method = natureClass.getMethod("getImportFolder",
-                    new Class[0]);
-            Object ret = method.invoke(nature, new Object[] {});
-            logger.info("Folder=" + ret);
-            return (IFolder) ret;
-        } catch (Exception e) {
-            logger.error("could not get nature", e);
-            return null;
-        }
-
-    }
-
-    static final void doImportRoughnessShape(IProject project, Shell shell) {
-
-        final String ID = "org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard";
-        if (project == null) {
-            logger.info("project is null");
-            return;
-        }
-        IWorkbench workbench = PlatformUI.getWorkbench();
-
-        IWizardRegistry registry = workbench.getNewWizardRegistry();
-        if (registry == null) {
-            logger.warn("new Wizard registry is null");
-            return;
-        }
-
-        IWorkbenchWizard wbWizard = null;
-
-        try {
-            wbWizard = registry.findWizard(ID).createWizard();
-        } catch (CoreException e1) {
-            logger.error("could not found wizard", e1);
-        }
-        if (wbWizard == null) {
-            logger.warn("Wizard not found:" + ID);
-            return;
-        }
-
-        try {
-            IFolder folder = getImportFolder(project);
-            if (folder == null) {
-                logger.info("Could not get project ifolfer=" + project);
-                return;
-            }
-            IStructuredSelection selection = new StructuredSelection(
-                    new IFolder[] { folder });
-            wbWizard.init(workbench, selection);
-            WizardDialog wd = new WizardDialog(shell, wbWizard);
-            wbWizard.addPages();
-            wd.setTitle("Neue Simulationsmodel");
-
-            int decision = wd.open();
-        } catch (RuntimeException e) {
-            logger.error("could not start wizard", e);
-        }
-
-    }
+    // static final void doImportRoughnessShape(IProject project, Shell shell) {
+    //
+    // final String ID =
+    // "org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard";
+    // if (project == null) {
+    // logger.info("project is null");
+    // return;
+    // }
+    // IWorkbench workbench = PlatformUI.getWorkbench();
+    //
+    // IWizardRegistry registry = workbench.getNewWizardRegistry();
+    // if (registry == null) {
+    // logger.warn("new Wizard registry is null");
+    // return;
+    // }
+    //
+    // IWorkbenchWizard wbWizard = null;
+    //
+    // try {
+    // wbWizard = registry.findWizard(ID).createWizard();
+    // } catch (CoreException e1) {
+    // logger.error("could not found wizard", e1);
+    // }
+    // if (wbWizard == null) {
+    // logger.warn("Wizard not found:" + ID);
+    // return;
+    // }
+    //
+    // try {
+    // IFolder folder = getImportFolder(project);
+    // if (folder == null) {
+    // logger.info("Could not get project ifolfer=" + project);
+    // return;
+    // }
+    // IStructuredSelection selection = new StructuredSelection(
+    // new IFolder[] { folder });
+    // wbWizard.init(workbench, selection);
+    // WizardDialog wd = new WizardDialog(shell, wbWizard);
+    // wbWizard.addPages();
+    // wd.setTitle("Neue Simulationsmodel");
+    //
+    // int decision = wd.open();
+    // } catch (RuntimeException e) {
+    // logger.error("could not start wizard", e);
+    // }
+    //
+    // }
 
     private final void doURITask(final String uri, final Event event) {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final ICommandService commandService = (ICommandService) workbench
                 .getService(ICommandService.class);
-        final Command command = (Command) commandService.getCommand(uri);
-        if (!command.isDefined()) {
-            final Category category = commandService
-                    .getCategory("org.kalypso.afgui.tasks");
-            if (!category.isDefined()) {
-                category.define("Tasks", null);
-            }
-            command.define(uri, null, category);
-        }
+        final Command command = getCommand(commandService, uri);
         try {
             final IHandlerService handlerService = (IHandlerService) workbench
                     .getService(IHandlerService.class);
@@ -979,6 +972,26 @@ public class WorkflowControl {
         // logger.info("Cannot run task="+uri);
         // }
         // }
+    }
+
+    private Command getCommand(final ICommandService commandService,
+            final String commandId) {
+        final Command command = (Command) commandService.getCommand(commandId);
+        if (!command.isDefined()) {
+            final Category category = commandService
+                    .getCategory("org.kalypso.afgui.tasks");
+            if (!category.isDefined()) {
+                category.define("Tasks", null);
+            }
+            command.define(commandId, null, category);
+        }
+        return command;
+    }
+
+    private boolean isTaskPossible(final Command command) {
+        return // command.isEnabled() &&
+        (!WorkflowConnector.isWorkflowMode() || WorkflowConnector
+                .getConnector().canRequest(command.getId()));
     }
 
 }

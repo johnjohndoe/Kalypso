@@ -1,19 +1,18 @@
 package org.kalypso.afgui;
 
-import java.io.IOException;
 import java.net.URL;
 
-import org.apache.log4j.BasicConfigurator;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.model.EActivityAction;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.afgui.model.impl.WorkflowSystem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+
+import de.renew.workflow.WorkflowConnectorPlugin;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -25,14 +24,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	public static final String WORKFLOW_SPEC="/workflow/spec.xml";
 	public static final String WORKFLOW_STATUS="/workflow/status.xml";
 	
-	
-//	private static final Logger logger=
-//			Logger.getLogger(KalypsoAFGUIFrameworkPlugin.class);
-	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.kalypso.afgui";
-	
-	
+		
 	// The shared instance
 	private static KalypsoAFGUIFrameworkPlugin plugin;
 	
@@ -42,12 +36,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public KalypsoAFGUIFrameworkPlugin() {
-		plugin = this;
-		BasicConfigurator.configure();
+		plugin = this;		   
+        final Bundle workflowConnectorPlugin = Platform.getBundle(WorkflowConnectorPlugin.PLUGIN_ID);
+        try {
+            workflowConnectorPlugin.start();
+        } catch (final BundleException e) {         
+            e.printStackTrace();
+        }
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**	 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
@@ -57,24 +55,26 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 //		logger.info("\n======Pluging Workflow"+workflowSystem);
 	}
 
-	final private static IWorkflowSystem createWorkflowSystem(Bundle bundle)
-	{
-		//Bundle bundle=context.getBundle();
-		URL specURL= bundle.getEntry(WORKFLOW_SPEC);
-		URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
-		
-		try
-		{
-			WorkflowSystem system= new WorkflowSystem(specURL,statusURL);
-			return system;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
+    //TODO remove
+//	final private static IWorkflowSystem createWorkflowSystem(Bundle bundle)
+//	{
+//		//Bundle bundle=context.getBundle();
+//		URL specURL= bundle.getEntry(WORKFLOW_SPEC);
+//		URL statusURL=bundle.getEntry(WORKFLOW_STATUS);
+//		
+//		try
+//		{
+//			WorkflowSystem system= new WorkflowSystem(specURL,statusURL);
+//			return system;
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 	
+    //TODO remove
 //	/**
 //	 * This is a temporary test method to create a workflow from its specification
 //	 * and static files without using projects
@@ -180,30 +180,32 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 		
 	}
 	
+    //TODO remove
 	public void reloadWorkflow()
 	{
-		try{
-			//TODO adopt also for workflow System
-			//this.workflow.adopt(createWorkflow(getBundle()));
-		}catch(Throwable th)
-		{
-			showMessage(th.getMessage());
-		}
-		
+//		try{
+//			//TODO adopt also for workflow System
+//			//this.workflow.adopt(createWorkflow(getBundle()));
+//		}catch(Throwable th)
+//		{
+//			showMessage(th.getMessage());
+//		}
+//		
 	}
 	
-	public void showMessage(final String message)
-	{
-
-		plugin.getWorkbench().getDisplay().syncExec(
-		        new Runnable() {
-		           public void run(){
-		        	   Shell shell=plugin.getWorkbench().getDisplay().getActiveShell();
-		       		MessageDialog.openInformation(shell,"Message",message);
-		           }
-		        }
-		     );
-	}
+    //TODO remove
+//	public void showMessage(final String message)
+//	{
+//
+//		plugin.getWorkbench().getDisplay().syncExec(
+//		        new Runnable() {
+//		           public void run(){
+//		        	   Shell shell=plugin.getWorkbench().getDisplay().getActiveShell();
+//		       		MessageDialog.openInformation(shell,"Message",message);
+//		           }
+//		        }
+//		     );
+//	}
 	
 	public URL getTemplateWorkflowData()
 	{
@@ -213,6 +215,5 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin {
 	public URL getWorkflowSpec()
 	{
 		return getBundle().getResource(WORKFLOW_SPEC);
-	}
-	
+	}	
 }
