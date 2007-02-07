@@ -1,5 +1,6 @@
 CIPK  LAST UPDATE MAY 30 2006 CORRECT FRICTION SUBSCRIPT
 CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
+cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -17,7 +18,6 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  K    26 Jan 2007    5:00 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -134,7 +134,7 @@ CIPK OCT02  add logic to make ice cover functions linear
         QWLI(1)=QICE(NOP(NN,1))
         QWLI(3)=QICE(NOP(NN,3))
       ELSE
-CIPK MAR06 fix undefined     
+CIPK MAR06 fix undefined
         THKI(1)=0.
         QWLI(1)=0.
         THKI(3)=0.
@@ -145,10 +145,6 @@ C-
 C- INITIALIZE MATRICES AND VARIABLES
 C-
       NEF=NCN*NDF
-      !nis,oct06,testing:
-      !WRITE(*,*) 'ndf: ', ndf
-      !-
-
       !NiS,jul06:testing
       !  if (nn.eq.4465) WRITE(*,*) nef, 'nef ist gleich'
       !-
@@ -663,7 +659,8 @@ CIPK SEP04  ADD MAH OPTION
 !
 !           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
-CIPK MAY06  MOVE NR TO MAT
+Cipk may06 replace NR with MAT
+C            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
             FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
