@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  org.kalypso.simulation.core,
  org.kalypso.core,
- org.kalypso.chart;resolution:=optional,
+ org.kalypso.chart,
  org.kalypso.model.wspm.schema;visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.tuhh.schema,
