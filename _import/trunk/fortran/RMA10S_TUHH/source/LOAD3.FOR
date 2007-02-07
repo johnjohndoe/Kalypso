@@ -1,3 +1,4 @@
+C     Last change:  K    26 Jan 2007    4:58 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -39,6 +40,11 @@ C-
       DATA CNMIN,PCERIN/1.0,1.0/ITIMTH/1/
       Dist(n1,n2)=sqrt((cord(n1,1)-cord(n2,1))**2 + 
      +                 (cord(n1,2)-cord(n2,2))**2)
+
+!nis,nov06: Defintion of local variables for 1D-2D-line-transition handling
+      INTEGER :: LiNo, LiLe, CoNode
+!-
+
 C-
 C       NTHREE(N) = 1 FOR THREE DIMENSIONAL NODES
 C       NTHREE(N) = 0 FOR TWO DIMENSIONAL HORIZONTAL NODES
@@ -64,7 +70,9 @@ CZZZ
         IENT=IENT+1
       ENDIF
 
-      EXTLDEL=0
+      !nis,dec06: EXTLDEL is an array for all elements. Initialization moved to initl.for
+      !EXTLDEL=0
+      !-
 
       !NiS,may06: testing
       !testing IHGNN and JLIN
@@ -556,7 +564,7 @@ C-
         IF(IMAT(NN) .EQ. 0) GO TO 260
 cipk oct98 update to f90
         NTYP=NETYP(NN)
-        !NiS,may06: NTYP.eq. 18 means 2D-3D-transition element
+        !NiS,may06: NTYP.eq. 18 means 2D-3D-transition element???
         IF(NTYP .EQ. 18) THEN
           DO 230 ITM=1,3
             NNL=NOP(NN,ITM+4)
@@ -812,6 +820,72 @@ cipk oct98 update to f90
           ENDIF
   255   CONTINUE
       ENDIF
+
+      !nis,jan07: Add control for 1D-2D-line-transitions
+      if (maxLT.ne.0) then
+        !test for all possible transitions
+        EquationAdjustment: do i=1,MaxLT
+
+          !look, whether element is part of a transition, if not test next transition
+          if (NN.ne.TransLines(i,1)) CYCLE EquationAdjustment
+
+          !Get the Line Number and it's length as well as the connecting node number
+          LiNo   = TransLines(i,2)
+          LiLe   = LMT(LiNo)
+          CoNode = TransLines(i,3)
+
+          !initializing NLN; connectivity starts with first node of transitioning line
+          NLN = Line(LiNo,1)
+
+          !Get the smallest node number to reference equations to; 1st was already processed in lines before
+          DO K=2,LiLe
+            IF(NLN .GT. Line(LiNo,K)) NLN = Line(LiNo,K)
+          ENDDO
+
+          !testing, whether connecting node is part of line; transmember(i).eq.2 means seperate node
+          if (transmember(i) .eq. 2) then
+            !check, whether the number is less than referenced node number for coupling of DOFs
+            if (NLN.gt.CoNode) NLN = CoNode
+          end if
+
+          !assign references to all nodes of the connection line
+          equationassigning: DO K=1, LiLe
+
+            !the same node must not be processed on
+            IF(NLN .EQ. LINE(LiNo,k)) CYCLE equationassigning
+
+            !Stop, if there is gap in line
+            if (Line(LiNo,k) .eq. 0) then
+              WRITE(*,*) 'ERROR - Definition gap in transition line.'
+              WRITE(*,*) 'the ', k, 'th slot has a zero entry'
+              WRITE(*,*) 'Have a look at your line definition'
+              WRITE(*,*) 'Program can not be executed'
+              WRITE(*,*) 'STOP'
+              STOP
+            endif
+
+            !get copy of node number
+            nd = line(LiNo,k)
+            !assign equation references
+            DO eqdof=1,6
+              NBC(ND,eqdof)= -NLN
+            ENDDO
+
+          ENDDO equationassigning
+
+          !Overgive to 1D-node, if this is a seperate transition node and if it is not the reference node
+          if (TransMember(i).eq.2 .and. NLN.ne.CoNode) then
+            DO eqdof=1,6
+              NBC(CoNode,eqdof)= -NLN
+            ENDDO
+          end if
+
+          !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
+          EXIT EquationAdjustment
+        ENDDO EquationAdjustment
+      end if
+      !-
+
   260 CONTINUE
 
 

@@ -105,6 +105,24 @@ C
 
 !nis,sep06,com: discharge-boundary condition for a continuity line
       IF(ID(1:2) .EQ. 'QC') THEN
+
+
+        !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
+        !find out the ID-number
+        READ(DLIN,'(i8)') J
+        !Test for every 1D-2D-line transition
+        do i = 1, MaxLT
+          !test,whether it is present in one coupling
+          if (TransLines(i,2).eq.J) then
+            WRITE(*,*) 'ERROR!!!'
+            WRITE(*,*) 'Transition Line has specified value!'
+            WRITE(*,*) 'There can be no specified DISCHARGES.'
+            WRITE(*,*) 'Leave Transition line without conditions!'
+            stop
+          end if
+        enddo
+        !-
+
         IQGEN=IQGEN+1
 
         !nis,sep06,com: just an number of inflows test
@@ -300,6 +318,23 @@ CIPK AUG00
 CIPK JUN03
       IF(ID(1:2) .EQ. 'HC'.OR.  ID(1:2) .EQ. 'HI'
      +                    .OR.  ID(1:2) .EQ. 'HJ'      ) THEN
+
+        !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
+        !find out the ID-number
+        READ(DLIN,'(i8)') J
+        !test for every 1D-2D-line-transitions
+        do i = 1, MaxLT
+          !test,whether it is present in one coupling
+          if (TransLines(i,2).eq.J) then
+            WRITE(*,*) 'ERROR!!!'
+            WRITE(*,*) 'Transition Line has specified value!'
+            WRITE(*,*) 'There can be no specified WATERSTAGES.'
+            WRITE(*,*) 'Leave Transition line without conditions!'
+            stop
+          end if
+        enddo
+        !-
+
         IHGNN=IHGNN+1
 CIPK AUG00
         IF(ID(1:2) .EQ. 'HC') THEN
@@ -384,6 +419,23 @@ C-
       ISTGEN=0
  212  CONTINUE
       IF(ID(1:3) .EQ. 'SQC') THEN
+
+        !nis,nov06: testing against present line-coupling. If so, stop the program and give an error message
+        !find out the ID-number
+        READ(DLIN,'(i8)') J
+        !Test for every line Transition
+        do i = 1, MaxLT
+          !test,whether it is present in one coupling
+          if (TransLines(i,2).eq.J) then
+            WRITE(*,*) 'ERROR!!!'
+            WRITE(*,*) 'Transition Line has specified value!'
+            WRITE(*,*) 'There can be no specified WL-Q-RELATIONSHIP.'
+            WRITE(*,*) 'Leave Transition line without conditions!'
+            stop
+          end if
+        enddo
+        !-
+
         ISTGEN=ISTGEN+1
         READ(DLIN,5035) J,AC1,AC2,AC3,AC4,AC5,QQAL
         IF(ISTGEN .EQ. 1) WRITE(LOUT,6045)

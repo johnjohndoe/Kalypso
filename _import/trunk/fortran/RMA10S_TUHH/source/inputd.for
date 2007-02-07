@@ -1,3 +1,4 @@
+C     Last change:  K    15 Nov 2006   11:22 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -283,11 +284,25 @@ C        endif
 C      enddo
 C
 C-
+
+!nis,oct06,testing:
+      WRITE(*,*) nop(4464,3), ibn(nop(4464,3)), alfa(nop(4464,3))
+      WRITE(*,*) nop(4464,4), ibn(nop(4464,4)), alfa(nop(4464,4))
+      WRITE(*,*) nop(4464,5), ibn(nop(4464,5)), alfa(nop(4464,5))
+!-
+
 C...... Call routine to establish boundary conditions and angles
 C-
       CALL BLINE(1)
       DELT=DELT*3600.
 C-
+
+!nis,oct06,testing:
+      WRITE(*,*) nop(4464,3), ibn(nop(4464,3)), alfa(nop(4464,3))
+      WRITE(*,*) nop(4464,4), ibn(nop(4464,4)), alfa(nop(4464,4))
+      WRITE(*,*) nop(4464,5), ibn(nop(4464,5)), alfa(nop(4464,5))
+!-
+
 C......READ SPECIAL CASE BOUNDARY CONDITIONS AND INSERT FUNCTIONAL SHAPE
 C-
       CALL BCS(IBIN,CMIN,CPR)

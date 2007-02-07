@@ -1,3 +1,4 @@
+C     Last change:  K    24 Jan 2007   11:37 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -34,10 +35,14 @@ CIPK APR06
       DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
       CHARACTER(LEN=20)    :: inquiretest
-      INTEGER              :: dummy(3)
+      INTEGER              :: dummy(4)
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
-      REAL(KIND=8) :: VAAA, HTP, H, HS
+      REAL(KIND=8)         :: VAAA, HTP, H, HS
+!-
+
+!nis,jan07: Needs a switch for line transitions
+      INTEGER              :: TransLineMember
 !-
 
 C-
@@ -52,7 +57,7 @@ C-
 
       RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
         WRITE(*,*) ' Going to RDKALYPSO for restarting'
-        call RDKALYPS(dummy(1),dummy(2),dummy(3),2)
+        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),2)
         npx = maxp-1
         ndx = 9
         !NiS,may06: Testausgabe
@@ -296,15 +301,50 @@ C-
 	IF(IMAT(N) .EQ. 0) GO TO 173
 	IF(IMAT(N) .GT. 900) GO TO 173
 	IF(NOP(N,6) .GT. 0) GO TO 173
-	IF(NCRN(N) .EQ. 5) THEN
+
+        !nis,jan07: Checking, whether element is part of a transition line
+        TransLineMember = 0
+        do i=1,MaxLT
+          if (n.eq. TransLines(i,1)) TransLineMember = 1
+          IF(n.EQ.61) WRITE(*,*)
+     +     '61', (TransLines(i,j),j=1,2), TransLineMember
+        end do
+        !-
+
+        !nis,jan07,com: For the original 1D-2D-transitions the initial guess for 1D is just set at the nodes, that are not belonging to the
+        !               transition construct
+        !nis,jan07: Enlarging the test
+	!IF(NCRN(N) .EQ. 5) THEN
+        IF(NCRN(N) .EQ. 5 .or. TransLineMember.eq.1) THEN
+        !-
 	  NLM=2
 	ELSE
 	  NLM=3
 	ENDIF
+
+        !nis,jan07,testing
+        if (n.eq.61) WRITE(*,*) 'NLM is:', NLM
+        !-
+
 	DO 172 M=1,NLM
 	  NA=NOP(N,M)
 	  VEL(1,NA)=UNOM
+          !nis,jan07,testing
+          if (n.eq.61) then
+            WRITE(*,*) na, vel(1,na)
+            WRITE(*,*) na, vel(2,na)
+          end if
+          !-
+
   172   CONTINUE
+
+          !nis,jan07,testing
+          if (n.eq.61) then
+            WRITE(*,*) vel(1,nop(n,3))
+            WRITE(*,*) vel(2,nop(n,3))
+          end if
+          !-
+
   173 CONTINUE
   175 CONTINUE
 c      DO 1780 N=1,NP

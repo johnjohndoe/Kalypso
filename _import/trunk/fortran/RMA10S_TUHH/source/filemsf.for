@@ -1,3 +1,4 @@
+C     Last change:  K    15 Dec 2006    4:41 pm
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -213,6 +214,9 @@ cipk sep99 add test for blank initial characters
           FNAM6=FNAM(1:LNNAM) // '.ech'
           OPEN(LOUT,FILE=FNAM6,STATUS='UNKNOWN')
           FNAM1=FNAM(1:LNNAM) // '.itr'
+          !nis,dec06: Litr has no unit number, giving it a default number for the moment
+          Litr = 1234
+          !-
           OPEN(LITR,FILE=FNAM1,STATUS='UNKNOWN')
 CIPK SEP04
           FNAMMES=FNAM(1:LNNAM)// 'MESS.OUT'

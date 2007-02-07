@@ -1,3 +1,4 @@
+C     Last change:  K    20 Dec 2006   11:11 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -36,6 +37,19 @@ C-
 CIPK AUG05      COMMON/BIGONE/ EQ(MFW,MFW),LHED(MFW),QQ(MFW),PVKOL(MFW)
 C-
 c     LBMAX=MBUF
+
+!nis,nov06: Local container for Scaling factors at stiffness matrix assembly
+      REAL (KIND=4), DIMENSION (80) :: fac
+      !local copy of the actual nbn of the element
+      INTEGER                       :: temp_nbn
+      INTEGER                       :: node, degree
+!-
+
+!nis,nov06: Initializing fac
+      do init=1,80
+        fac(init) = 1.0
+      end do
+!-
 
       NMAX = MFW
       CALL SECOND(ASEC)
@@ -103,7 +117,7 @@ C
 cipk oct98 update to f90
           NTYP=NETYP(N)
 
-          !NiS,may06: for junction elements (7 (1D) or 17 (2D))
+          !NiS,may06,com: for junction elements (7 (1D) or 17 (2D))
           IF(MOD(NTYP,10) .EQ. 7) THEN
 CIPK JAN99 SKIP OUT FOR 2DV
             if(ntyp .NE. 17) THEN
@@ -485,10 +499,15 @@ C
 	ENDIF
    52 CONTINUE
 CIPK FEB04
-      DO L=1,LCOL
+      !nis,dec06: if LHED(L).eq.0, the loop should be cycled because of assignment problems
+      !DO L=1,LCOL
+      columnassigning: DO L=1,LCOL
 	  LEQ=ABS(LHED(L))
+          !nis,dec06: see above
+          if (LEQ.eq.0) CYCLE columnassigning
+          !-
 	  IF(NLSTEL(LEQ) .EQ. N) LHED(L)=-ABS(LHED(L))
-      ENDDO
+      ENDDO columnassigning
 
       IF(LCOL .GT. LCMAX) LCMAX=LCOL
       IF(MOD(NELL,1000) .EQ. 0) THEN
@@ -528,14 +547,54 @@ CIPK FEB04
       STOP
    54 CONTINUE
 
+        !nis,nov06: introduce a scaling factor, that is in general 1.0, but changes at connections. It may be also used for other
+        !           node to node relationships
+        do node = 1,ncn
+          !for every degree of freedom, because NBN = NDF * NCN
+          do degree = 1,ndf
+            !get line in Matrix
+            temp_nbn = node * degree
+            !get the factor; the factor is .ne. 1.0, if the node is     in a line-Connection
+            !                the factor is .eq. 1.0, if the node is not in a line-Connection
+            fac(temp_nbn) = EqScale(nop(n,node),degree)
+            !testing
+            if (fac(temp_nbn).ne.1.0) then
+              WRITE(*,*) 'Factor wird angewendet:'
+              WRITE(*,*) fac(temp_nbn), nop(n,node), n, degree
+              WRITE(*,*) 'Faktor, Knoten, Element, freiheitsgrad'
+            end if
+            !-
+          enddo
+        end do
+        !-
+
       !NiS,jun06,comment: Assembly of global matrix within the solution window
-      DO 57 L=1,NBN        !for every nodal degree of freedom (row of element matrix)
-	IF(NK(L) .NE. 0) THEN  !if equation is present
-	  LL=LDEST(L)          !take the solution window slot
-	  DO 56 K=1,NBN        !then take again every nodal degree of freedom (column of element matrix)
+      !nis,jun06,com: for every nodal degree of freedom (row of element matrix)
+      DO 57 L=1,NBN
+        !nis,jun06,com: if equation is present
+        IF(NK(L) .NE. 0) THEN
+          !nis,jun06,com: take the solution window slot
+          LL=LDEST(L)
+          !nis,jun06,com: then take again every nodal degree of freedom (column of element matrix)
+          DO 56 K=1,NBN
 	  IF(NK(K) .NE. 0) THEN
 	    KK=LDEST(K)
-	    EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
+!nis,nov06: Insert scaling factor for e.g. line-Transitions. The factor scales the coefficients in the column of the local matrix. The factor
+!           gives a relation between the local nodal degree of freedom value and the referenced value. It is calculated from the solution of
+!           the initial guess/solution of the equation system.
+!
+!           SWITCH EXPLANATION
+!           If there is a 1D-2D-coupling, then coming from the initial guess, the relation between
+!           the 1D-coupling point and each of the coupled 2D-points is known and can be expressed as a factor. For the iteration step it is assumed,
+!           that this relation is the end-relation. The result of the line-scaling is, that the variable in all local equation systems, that are
+!           connected to one coupling point can be collapsed to one point with two degrees of freedom. The local equations at the coupling can then
+!           all come together.
+!           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
+            !nis,nov06,testing:
+!            WRITE(*,*) 'Fac(L)=', fac(l)
+            !-
+            EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)*Fac(L)
+!-
 	  ENDIF
    56     CONTINUE
 	ENDIF

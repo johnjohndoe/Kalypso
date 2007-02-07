@@ -6,7 +6,7 @@ cipk  last update apr 12 2001 fix averages for zero flow case
 cipk  LAST UPDATE mar 18 2001 add constituents for average concentration 
 cipk  last update feb 09 2001 allow for zero length cc lines
 cipk  last update jan 12 1999  add ss1 terms
-C     Last change:  IPK   3 Oct 98    4:15 pm
+C     Last change:  K     7 Feb 2007    2:30 pm
 cipk  last update Jan 21 1998
       SUBROUTINE CHECK
       USE BLK10MOD
@@ -32,6 +32,9 @@ cipk jul01 add line above
 !      REAL*8 WAITX,WAITT,WAITR
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
 !-
+!nis,nov06: For line connections
+      INTEGER :: linecheck
+!-
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
@@ -51,6 +54,10 @@ C-
       !nis,sep06,com: Run through every CCL to overgive the real number of nodes
       DO 125 J = 1, NCL
         M = LMT(J)
+        !nis,jan07,testing
+        WRITE(*,*) 'Erreiche Check.subroutine', J, M, MaxLT
+        !pause
+        !-
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
         IF(M .EQ. 0) GO TO 125
@@ -156,7 +163,59 @@ CIPK SEP04
 	      IERR=1
 		ENDIF
   124   CONTINUE
+
+      !nis,nov06: Here the Continuity lines are complete. Now the midside nodes at 1D-2D-line-transitions can be set with alfak. It is the
+      !           continuation of the parts in the GETGEO.subroutine. It will lead to problems, if there was only 1 element, that defines
+      !           the transition. For that case it is already tested in the subroutine GETGEO. Thus at this point, there is no possibility
+      !           that the transition line is shorter than 2 elements.
+        if (MaxLT.ne.0) then
+
+          !for every transition
+          Transitiontest: do i=1,MaxLT
+
+            !test, whether actual Continuityline is a Transitionline
+            if (J.eq.TransLines(i,2)) then
+
+              !nis,jan07,testing
+              WRITE(*,*) 'Erreiche line transition Winkelübergabe'
+              !pause
+              !-
+
+              !LMT of the Line must be .ge.5, because the minimum element number is 2 (tested in GETGEO.subroutine)
+              DO nodeno=2,LMT(J),2
+                !all midside nodes get the direction angle of the 3rd node in the line. There are a combination of reasons
+                !for chosing the 3rd node
+                !1.    The third node is always present. At the minimum Transitionline with 5 nodes, the 1st and the 5th describe
+                !      the corner nodes, the 2nd and 4th describe the midside node without alfak value and the 3rd describes a
+                !      corner node within the the Transitionline.
+                !2.    The 1st and the last corner node don't have the direction of the flow angle alfak. Their direction
+                !      is dependent on the parallel flow boundary direction. The governing boundaries are connected at those
+                !      nodes.
+                !Concluding these things, that first the 3rd node is always present and always has the correct alfak-direction,
+                !leads to the taken choice.
+                alfak(LINE(J,nodeno)) = alfak(LINE(J,3))
+
+                !nis,jan07,testing
+                WRITE(*,*) alfak(line(j,3)), line(j,3), lmt(j), nodeno
+                !pause
+                !-
+
+              END DO
+              !jump out of loop over all transitions
+              EXIT Transitiontest
+            end if
+          end do Transitiontest
+        end if
+      !-
+
   125 CONTINUE
+
+      !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
+      if (MaxLT.ne.0) then
+        call check_linetransition
+      end if
+      !-
+
 CIPK JUL02
       IF(IERR .EQ. 1) THEN
 	  WRITE(*,*) 
@@ -173,6 +232,7 @@ CIPK JUL01
       IF(NB .EQ. 0) RETURN
   140 CONTINUE
       WRITE(LOUT,6030)
+
       ND = NB
       DO 180 J = 1, NCL
 CIPK OCT98        NTL=1
@@ -530,7 +590,7 @@ CIPK JUL01
 CIPK JUL01
         PCT = 100.0*TOTAL(J)/REF
 CIPK OCT98        MX = LMT(J)
-        WRITE(LOUT,6035) 
+        WRITE(LOUT,6035)
      +	  J,TOTAL(J),SUMX,SUMY,PCT,AVES(J),AVET(J),AVESD(J)
   180 CONTINUE
       NB = ND

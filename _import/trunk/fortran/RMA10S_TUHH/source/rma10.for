@@ -1,3 +1,4 @@
+C     Last change:  K     7 Feb 2007   12:14 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -39,6 +40,10 @@ cipk aug98 add character statement
       CHARACTER*4 IPACKB(1200),IPACKT(77)
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: VTM, HTP, VH, H, HS
+!-
+
+!nis,jan07: iostat variable for test writing purposes
+      INTEGER :: teststat
 !-
 
       DATA (IREC(I),I=1,40) / 40*0 /
@@ -91,9 +96,10 @@ cipk feb01 add thetcn
 C-
 C......INPUT GEOMETRY ETC
 C-
+
       CALL INPUT(IBIN)
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
-      
+
       IF(IRMAFM .GT. 0) THEN
         WRITE(HEADER(41:60),'(2I10)') NP,NE
         HEADER(101:172)=TITLE   
@@ -219,6 +225,7 @@ CIPK JUN03 SETUP STRESS WEIGHTING
         ENDDO
       ENDIF
 !-
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C.......  Establish flow directions for one dimensional elements
@@ -274,25 +281,9 @@ c     set IACTV to be active for all
       ENDIF
 cipk mar01 end change
 
-!nis,oct06,testing:
-      WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
-      WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
-      WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
-      WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
-!-
-
 cipk apr97 end change
       write(*,*) 'ENTERING BLINE'
       CALL BLINE(MAXN)
-
-!nis,oct06,testing:
-      WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
-      WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
-      WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
-      WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
-!-
-
-
 
       ICK=ITEQS(MAXN)+4
 
@@ -306,20 +297,64 @@ CIPK JAN02 SET SIDFF TO ZERO
 cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
-      !NiS,jul06:testing
-      !do i = 12600, maxp
-      !  write (*,'(1x,i5,1x,3(f4.1,1x),i1)')i,(vel(j,i),j=1,3),ibn(i)
-      !end do
-      !-
+!nis,jan07: testoutput because of solution at the line transition
+!      teststat=0
+!      open (UNIT=901,FILE='test_vor_LOAD.txt',IOSTAT=teststat)
+!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!        WRITE(901,*) '68', (vel(j,68),j=1,3)
+!
+!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
+!        WRITE(901,*) 'Ausgabe des IBN-arrays'
+!      do i = 1,np
+!        WRITE(901,'(i4,1x,i2,1x,i1,2(1x,f11.8))')
+!     +         i, ibn(i), Transmember (i), alfa(i), alfak(i)
+!      end do
+!      close (901)
+!-
+
+!nis,feb07: Calling the processing of the 1D 2D line transitions
+      if (MaxLT /= 0) call TransVelDistribution
+!-
+
 
       write(*,*) 'entering load'
       CALL LOAD
 
-      !NiS,jul06:testing
-      !do i = 1, maxp
-      !  if(i.gt.2180.and.i.lt.2190)WRITE(*,*)'nbc:',i,(nbc(i,j),j=1,3)
-      !end do
-      !-
+!nis,jan07: testoutput because of solution at the line transition
+!      teststat=0
+!      open (UNIT=901,FILE='test_nach_LOAD.txt',IOSTAT=teststat)
+!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!        WRITE(901,*) '68', (vel(j,68),j=1,3)
+!
+!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
+!      close (901)
+!-
 
 C-
 C......  Compute areas of continuity lines for stage flow input
@@ -337,9 +372,35 @@ CIPK JAN97
       ENDIF
 CIPK JAN97 END CHANGES
 
-
       IDRYC=IDRYC-1
       CALL UPDATE
+
+
+!nis,jan07: testoutput because of solution at the line transition
+!      teststat=0
+!      open (UNIT=901,FILE='test_voroutput.txt',IOSTAT=teststat)
+!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!        WRITE(901,*) '68', (vel(j,68),j=1,3)
+!
+!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
+!      close (901)
+!-
+
+
+
 C      CALL CHECK
 C     REWIND IVS
       IF(ITEQV(MAXN) .NE. 5  .AND.  ITEQV(MAXN) .NE. 2
@@ -356,6 +417,32 @@ CIPK AUG04      IPRTF=IABS(NPRTF)
       IF(MOD(MAXN,IPRTF) .EQ. 0  .OR.  MAXN .EQ. NITA
      +             .OR. NCONV .EQ. 1) THEN
          CALL OUTPUT(2)
+
+!nis,jan07: testoutput because of solution at the line transition
+!      teststat=0
+!      open (UNIT=901, FILE='test_nachoutput.txt',IOSTAT=teststat)
+!        WRITE(*,*) 'Ausgabe der Variablen vel-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (vel(j,i),j=1,3)
+!      end do
+!        WRITE(901,*) '68', (vel(j,68),j=1,3)
+!
+!        WRITE(901,*) 'Ausgabe der Knotenrelationen nbc-array'
+!      do i = 17,20
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!      do i = 106,108
+!        WRITE(901,*) i, (nbc(i,j),j=1,4)
+!      end do
+!        WRITE(901,*) '68', (nbc(68,j),j=1,4)
+!
+!      close (901)
+!
+!-
+
 
          CALL CHECK
 CIPK MAR00

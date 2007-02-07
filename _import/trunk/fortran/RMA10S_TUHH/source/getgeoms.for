@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  IPK   5 Oct 98    3:29 pm
+C     Last change:  K    26 Jan 2007    2:13 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -29,7 +29,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE PARAMMOD
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
-      INTEGER :: n, m, a
+      INTEGER :: n, m, a, lt
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -42,6 +42,10 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
 cipk apr99 add line below
       character*8 id8
+
+!nis,jan07: Line Transition needs a temporary node storage place
+      INTEGER :: noptemp
+!-
 
 CIPK MAY02 ADD CHARACTER VARIABLES
       CHARACTER*6 HEADSH
@@ -105,7 +109,7 @@ CIPK JUN03
          READ (IFILE) N,M
          IERR=0
 
-!NiS,mar06,com: Stop inbetween of reading-block 2
+!NiS,mar06,com: Stop in between of reading-block 2
 
          IF(N .GT. MAXP) THEN
 CIPK SEP04 CREATE ERROR FILE
@@ -308,53 +312,53 @@ CIPK JUN03
 
 !NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
 !-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
-!OPEN(5555,'testRm1.rm1')
-!do i = 1, maxe
-!  if (nop(i,1) /= 0) then
-!    WRITE(5555,*)i,(nop(i,j),j=1,8),imat(i),imato(i),nfixh(i)
-!  end if
-!ENDDO
-!do i = 1, maxp
-!  write (5555,*)i,(cord(i,j),j=1,2), ao(i)
-!end do
-!do i = 1, ncl
-!  write (5555,*) (line(i,j),j = 1, lmt(i))
-!end do
-!CLOSE(5555, STATUS='keep')
+      OPEN(5555,'testRm1.rm1')
+      do i = 1, maxe
+        if (nop(i,1) /= 0) then
+          WRITE(5555,*)i,(nop(i,j),j=1,8),imat(i),imato(i),nfixh(i)
+        end if
+      ENDDO
+      do i = 1, maxp
+        write (5555,*)i,(cord(i,j),j=1,2), ao(i)
+      end do
+      do i = 1, ncl
+        write (5555,*) (line(i,j),j = 1, lmt(i))
+      end do
+      CLOSE(5555, STATUS='keep')
 !-
 
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
-         call rdkalyps(n,m,a,0)
+         call rdkalyps(n,m,a,lt,0)
   !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
          NCLL = NCL
   !-
 
 !NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
 !-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
-!         OPEN(5555,'testKalypso.rm1')
-!         do i = 1, maxe
-!           if (nop(i,1) /= 0) then
-!             istat = 0
-!             WRITE(5555,FMT=2001,IOSTAT=istat)i,(nop(i,j),j=1,8),imat(i)
-!     +        ,0.0,nfixh(i)
-!             if (istat /= 0) then
-!               write (*,*) 'Fehler beim Schreiben'
-!             end if
-! 2001        FORMAT(10I5,F10.3,I5)
-!           end if
-!         ENDDO
-!         WRITE(5555,'(i5)')9999
-!         WRITE(*,*)'justinfo: ',maxe
-!         do i = 1, (maxp-1)
-!           write (5555,2002)i,(cord(i,j),j=1,2), ao(i),0,0.0
-! 2002      format (I10, 2(F16.6,'    '),F10.3,
-!     +  '                                                            ',
-!     +  I10,F10.4)
-!         end do
-!         WRITE(5555,'(i5)')9999
-!         CLOSE(5555, STATUS='keep')
+         OPEN(5555,'testKalypso.rm1')
+         do i = 1, maxe
+           if (nop(i,1) /= 0) then
+             istat = 0
+             WRITE(5555,FMT=2001,IOSTAT=istat)i,(nop(i,j),j=1,8),imat(i)
+     +        ,0.0,nfixh(i)
+             if (istat /= 0) then
+               write (*,*) 'Fehler beim Schreiben'
+             end if
+ 2001        FORMAT(10I5,F10.3,I5)
+           end if
+         ENDDO
+         WRITE(5555,'(i5)')9999
+         WRITE(*,*)'justinfo: ',maxe
+         do i = 1, (maxp-1)
+           write (5555,2002)i,(cord(i,j),j=1,2), ao(i),0,0.0
+ 2002      format (I10, 2(F16.6,'    '),F10.3,
+     +  '                                                            ',
+     +  I10,F10.4)
+         end do
+         WRITE(5555,'(i5)')9999
+         CLOSE(5555, STATUS='keep')
 !-
 
        ENDIF
@@ -1133,42 +1137,126 @@ C.......  Force widths and slopes equal for main stem nodes
   224       CONTINUE
           ENDIF
 
+        !nis,nov06,com: This is for 1D-2D-transition-elements
 
-        elseIF(NCRN(N) .EQ. 5  .AND.  IMAT(N) .LT. 901) THEN
+        ELSEIF (NCRN(N) .EQ. 5  .AND.  IMAT(N) .LT. 901) THEN
+          !nis,com: get the two corner nodes of the coupling (2D-corners of connected 2D-element)
           N1=NOP(N,4)
           N2=NOP(N,5)
+          !nis,com: calculate the x- and y-distances
           DX=CORD(N1,1)-CORD(N2,1)
           DY=CORD(N1,2)-CORD(N2,2)
+          !nis,com: calculate the chord length between the two transition corner nodes
           WIDTT=SQRT(DX**2+DY**2)
 cipk aug97 add fix for alfak
           ANG=ATAN2(DX,-DY)
+          !nis,com: Bring vector-direction into 1. or 4. quadrant of Cartesian coordinate system
           IF(ANG .GT. 1.5707963) ANG=ANG-3.1415926
           IF(ANG .LT. -1.5707963) ANG=ANG+3.1415926
 cipk aug97 end of change
+          !nis,com: Get the transition node
           N3=NOP(N,3)
 C-
 C....... Set midside at halfway point
 C-
+          !nis,com: Set the midside node onto the middle of the transition-chord
           CORD(N3,1)=(CORD(N1,1)+CORD(N2,1))/2.
           CORD(N3,2)=(CORD(N1,2)+CORD(N2,2))/2.
+
+          !nis,nov06,com: It has to be a rectangular channel at the coupling with no side-slopes!!!
           IF(SS1(N3) .NE. 0.  .OR.  SS2(N3) .NE. 0.) THEN
             WRITE(*,*) ' **ERROR**  SIDE SLOPES AT NODE',N3,' NON-ZERO'
             WRITE(*,*) '   VALUES FORCED TO ZERO'
+            !nis,nov06,com: Set side slopes to zero
             SS1(N3)=0.0
             SS2(N3)=0.0
           ENDIF
+          !nis,com: Resetting the width of the transition with the chord length between the transition-corner-nodes
           WIDTO=WIDTH(N3)
           WIDTH(N3)=WIDTT
 cipk aug97 2nd part of change for alfak
            IF(ANG .NE. 0.) THEN
+            !nis,nov06,com: Overgive the angle to the coupling node
             ALFAK(N3)=ANG
           ELSE
+            !nis,nov06,com: If the angle is by accident zero, reset the direction to an increment unequal to zero, to show, that the direction is
+            !               fixed! It wouldn't be handled as fixed direction, if it was zero.
             ALFAK(N3)=0.0001
           ENDIF
 cipk aug97 end changes
 !NiS,may06: adding alfak to output
-          WRITE(*,*) ' SETTING ALFAK,WIDTH, OLD WIDTH',N3, alfak(n3)
+          WRITE(*,*) ' SETTING ALFAK, WIDTH, OLD WIDTH',N3, alfak(n3)
      +                , WIDTH(N3), WIDTO
+!-
+!nis,nov06: Adding fixes for direction of 1D-2D-line-transitions:
+        !nis,nov06: MaxLT shows the number of line-transitions within network
+        ELSEIF (MaxLT.ne.0) then
+
+          Transitiontest: do i=1,MaxLT
+            !n is the actual element number in loop
+            if (n.eq.TransLines(i,1)) then
+
+              !look, whether length is non-zero
+              if (lmt(TransLines(i,2)).le.0) then
+               WRITE(*,*) 'Transition line has zero-length.'
+               WRITE(*,*) 'Redefine it with non-zero-length!'
+               WRITE(*,*) 'The problemline is: ', TransLines(i,2)
+               WRITE(*,*) 'Program stopped for redefinition of line.'
+               STOP       'Redefine line!'
+              !look, whether length is not only one element
+              elseif (lmt(TransLines(i,2)).eq.1) then
+               WRITE(*,*) 'Transition consist only of one element.'
+               WRITE(*,*) 'For this sort of transition use'
+               WRITE(*,*) 'element-to-element-transition!'
+               WRITE(*,*) 'Program stopped for transition-redefinition.'
+               STOP       'Redefine transition!'
+              end if
+
+              !start- and ending-node of coupling
+              N1 = Line ( TransLines(i,2) , 1)
+              N2 = Line ( TransLines(i,2) , LMT (TransLines(i,2)) )
+
+              !x- and y-distances
+              DX = cord(n1,1) - cord(n2,1)
+              DY = cord(n1,2) - cord(n2,2)
+              !nis,jan07,testing
+              WRITE(*,*) DX, cord(n1,1), cord(n2,1)
+              WRITE(*,*) DY, cord(n1,2), cord(n2,2)
+              !-
+
+
+              !chord-length
+              translength = sqrt(DX*DX + DY*DY)
+
+              !velocity-direction of the nodes in between
+              alfak_temp = atan2(Dx,-DY)
+
+              !correction to bring it into quadrants 1 or 4
+              if (alfak_temp .gt. 1.5707963) then
+                alfak_temp = alfak_temp-3.1415926
+              elseif (alfak_temp .LT. -1.5707963) then
+                alfak_temp = alfak_temp+3.1415926
+              endif
+              !assign the value to the nodes of the line-coupling, the midside nodes will be filled in check.subroutine
+              assigning: do j = 2, lmt(Translines(i,2))-1
+                alfak(Line(Translines(i,2),j)) = alfak_temp
+                !nis,jan07: Finding out what the global flow-angle does
+                !testingversion: alfak(Line(Translines(i,2),j)) = alfak_temp - 3.1415926
+                !-
+              ENDDO assigning
+
+              !nis,jan07,testing
+              WRITE(*,*) alfak_temp, line(Translines(i,2),2)
+              !pause
+              !-
+
+              !jump out of loop over all transitions
+              EXIT Transitiontest
+            endif
+            !Assigning the directions to the CORNER-nodes of the coupling. Problem: This is in getgeo. The line-construct still consists only of
+            !corner nodes of connected 2D-elements. In the subroutine check it is widened to the midside node. So the assignment changes to that
+            !subroutine: CHECK.subroutine
+          enddo Transitiontest
 !-
         ENDIF
   195 CONTINUE

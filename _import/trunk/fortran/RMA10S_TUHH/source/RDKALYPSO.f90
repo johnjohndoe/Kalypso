@@ -1,3 +1,4 @@
+!     Last change:  K     7 Feb 2007    2:36 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -251,11 +252,25 @@ END SUBROUTINE check_Kalypso
       USE BLK2
       USE BLKASTEPH
       !-
+      !nis,dec06: Using module that includes the definition of the continuity lines
+      USE BLK10MOD
+      !-
+      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
+      USE ParaReord
+      !-
 
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
                                                                         
 !NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
-      INTEGER kntimel (MaxE, 8), qlist (2, 160), knot, elem
+      !nis,dec06: Integrating the LineTransitions into the reordering schema, the kntimel field width has to be increased to the maximum
+      !number of nodes being connected to the node-line connection. Not to make it too big, the array is newly defined dynmaic
+      !INTEGER kntimel (MaxE, 8), qlist (2, 160), knot, elem
+      INTEGER              :: qlist (2, 160), knot, elem
+       !Nis,dec06: Reordering array newly in module
+       !INTEGER, ALLOCATABLE :: kntimel (:,:)
+       !-
+      INTEGER              :: maxsize
+      !-
       INTEGER icon (MaxP, maxcn)
                                                                         
 !NiS,mar06: the common blocks are replaced with modules dealing with allocatable arrays. These modules are inserted above and allocated below.
@@ -263,6 +278,25 @@ END SUBROUTINE check_Kalypso
 !      msn (mnd), icol (100, 5000), nadm (5000), inum (mnd), alpha (mnd)
 !      COMMON / blk2 / wd (mnd), iel (mnd), list (mnd), ihold (5000),    &
 !      paxis (mel)
+!-
+
+WRITE(*,*) 'Reordering started'
+WRITE(*,*) 'Reordering started'
+WRITE(*,*) 'Reordering started'
+
+!nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
+!           connected to a Transition line
+      !test for all possible line transitions
+      if (MaxLT.ne.0) then
+        maxsize = 0
+        do i = 1, 50
+          if (lmt(i).gt.maxsize) maxsize = lmt(i)
+        end do
+        !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
+        ALLOCATE (kntimel(MaxE,MaxSize+2))
+      else
+        ALLOCATE (kntimel(MaxE,8))
+      endif
 !-
 
 !NiS,mar06: Allocating the arrays of module blkasteph
@@ -283,16 +317,82 @@ END SUBROUTINE check_Kalypso
       ne = elem 
       np = knot 
                                                                         
-      DO 10 i = 1, ne 
-        k = 3 
-        IF (nop (i, 7) .gt.0) k = 4 
-        DO 10 j = 1, k 
-          l = 2 * j - 1 
-          kntimel (i, j) = nop (i, l) 
-   10 CONTINUE 
-                                                                        
-      maxc = maxcn 
-      ncn = 8 
+!nis,dec06: kntimel can be from larger size, if there's a 1D-2D-Line-Transition
+!      DO 10 i = 1, ne
+!        k = 3
+!        IF (nop (i, 7) .gt.0) k = 4
+!        DO 10 j = 1, k
+!          l = 2 * j - 1
+!          kntimel (i, j) = nop (i, l)
+!   10 CONTINUE
+      Throughelements: DO i = 1, ne
+!nis,jan07: This part has to be reworked!!! It is the connectivity information for reordering
+!
+!        WRITE(*,*) ne, np, i
+!        WRITE(*,*) nop(i,1)
+!        WRITE(*,*) nop(i,3)
+!
+!        if (nop(i,1).eq.0 .or. nop(i,3).eq.0) CYCLE Throughelements
+!
+!        if ((Transmember(nop(i,1)).ne.0 .or. Transmember(nop(i,3)).ne.0)) then
+!
+!          !error fishing:
+!          if (ncorn(i).ne.3) STOP 'error - non-1D-element is transitioning element in 1D-2D-transition'
+!          ConnNode = 0
+!
+!          !Find the connecting node to 1D-2D-TransitionLine
+!          ConnNode = TransLines(
+!          if (ConnNode.eq.nop(i,1)) then
+!            NonConnNode = nop(i,3)
+!          else
+!            NonConnNode = nop(i,1)
+!          end if
+!
+!          !find the connected CCL wich represents the 1D-2D-Transitionline
+!          findline: do j = 1, MaxLT
+!            if (i.eq.TransLines(j,1)) then
+!              ConnLine = TransLines(j,2)
+!              EXIT findline
+!            endif
+!            !Error-message
+!            stop 'ERROR - no line connected'
+!          end do findline
+!
+!          !insert the 1D-sided node of the transitioning 1D-element
+!          kntimel(i,1) = NonConnNode
+!          !if the connecting 1D-node is not member of the transition line, store it in the second slot of kntimel
+!          if (Transmember(ConnNode).eq.2) kntimel(i,2) = ConnNode
+!            !depending on whether the connecting node is member of the line or not, the nodes of the lines are stored in the
+!            !rest of the slot starting at slot 2 (if 1Dnode is part of line) or at slot 3 (if 1Dnode is not part of line)
+!            do j = 1, lmt(ConnLine)
+!              kntimel(i,j+TransMember(ConnNode)) = line(ConnLine,j)
+!            end do
+!
+!        !enter kntimel entries to all the other elements, i.e. to 2D-elements and 1D-elements
+!        else
+          k = 3
+          IF (nop (i, 7) .gt.0) k = 4
+          DO j = 1, k
+            l = 2 * j - 1
+            kntimel (i, j) = nop (i, l)
+          enddo
+!        endif
+!-
+      ENDDO Throughelements
+!-
+
+      maxc = maxcn
+!nis,dec06: Size is given automatically later on
+!!nis,dec06: The size might be bigger then 8, if there are 1D-2D-LineTransitions
+!      !ncn = 8
+!      if (MaxLT.ne.0) then
+!        ncn = maxsize
+!      else
+!        ncn = 8
+!      end if
+!!-
+!-
+
       ierr = 0 
 !tm Thomas Maurer, 15.05,1998                                           
 !tm in folgender Zeile befindet sich eine Variable idx,                 
@@ -308,8 +408,40 @@ END SUBROUTINE check_Kalypso
         DO 400 m = 1, maxc 
           icon (n, m) = 0 
   400 CONTINUE 
-      DO 500 n = 1, ne 
-        DO 470 m = 1, ncn 
+      DO 500 n = 1, ne
+
+!nis,jan07: Reordering scheme has to be reworked
+!        !nis,dec06: Problem of connected node numbers
+!        if (nop(n,1).ne.0 .and. nop(n,3).ne.0) then
+!          if (Transmember(nop(n,1)).ne.0 .or. Transmember(nop(n,3)).ne.0) then
+!          !find the connected CCL which represents the 1D-2D-Transitionline
+!          findlineagain: do j = 1, MaxLT
+!            if (n.eq.TransLines(j,1)) then
+!              !get the number of connected nodes; connectivity of transition element
+!              ncn = lmt(TransLines(j,2)) + Transmember(ConnectNode(n))
+!              EXIT findlineagain
+!            endif
+!          end do findlineagain
+!          else
+!            if (ncorn(n).eq.3) then
+!              ncn = 2
+!            else
+!              ncn = ncorn(n)/2
+!            endif
+!          end if
+!        else
+!            if (ncorn(n).eq.3) then
+!              ncn = 2
+!            else
+!              ncn = ncorn(n)/2
+!            endif
+!        end if
+!        !testing
+!        WRITE(*,*) n, ncn
+!        !-
+!-
+
+        DO 470 m = 1, ncn
           i = kntimel (n, m) 
           IF (i.eq.0) goto 500 
           DO 465 k = 1, ncn 
@@ -317,7 +449,7 @@ END SUBROUTINE check_Kalypso
             IF (l.eq.i) goto 465 
             DO 450 j = 1, maxc 
               IF (icon (i, j) .eq.0) goto 460 
-              IF (icon (i, j) .eq.l) goto 465 
+              IF (icon (i, j) .eq.l) goto 465
   450       END DO 
             ierr = 1 
 !NiS,mar06: unit name changed; changed iout to Lout
@@ -340,7 +472,10 @@ END SUBROUTINE check_Kalypso
         is = 0 
         DO 530 m = 1, mp 
           IF (n.eq.list (m) ) is = 1
-          IF (is.eq.1) list (m) = list (m + 1)
+!nis,dec06: This makes no sense, because list(m+1) doesn't have a value, changing the definition order
+!          IF (is.eq.1) list (m) = list (m + 1)
+          IF (is.eq.1) list (m+1) = list (m)
+!-
   530   END DO 
         IF (is.eq.1) mp = mp - 1 
         DO 600 j = 1, maxc 
@@ -378,7 +513,10 @@ END SUBROUTINE check_Kalypso
         DO 780 j = 1, maxc 
   780 icon (i, j) = iabs (icon (i, j) ) 
 
-      CALL order (idxx, kntimel, qlist, icon) 
+!nis,dec06: kntimel becomes global, so no overgiving necessary
+!      CALL order (idxx, kntimel, qlist, icon)
+      CALL order_Kalyps (idxx, qlist, icon)
+!-
 
       DO 785 k = 1, 160 
         qlist (1, k) = qlist (2, k) 
@@ -454,6 +592,9 @@ END SUBROUTINE check_Kalypso
       DEALLOCATE (ihold)
       DEALLOCATE (paxis)
 !-
+!nis,dec06: Deallocate the kntimel-array
+      deallocate (kntimel)
+!-
 
       RETURN
       END SUBROUTINE reord_Kalyps
@@ -462,7 +603,9 @@ END SUBROUTINE check_Kalypso
                                                                         
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      SUBROUTINE order (n, kntimel, qlist, icon)
+!nis,dec06: kntimel becomes global, so no overgiving necessary
+!      SUBROUTINE order (n, kntimel, qlist, icon)
+      SUBROUTINE order_Kalyps (n, qlist, icon)
 !-
       !NiS,mar06: change the module-access for global variables to the RMA10S-construction
       !INCLUDE "common.cfg"
@@ -472,10 +615,17 @@ END SUBROUTINE check_Kalypso
       USE BLK2
       USE BLKASTEPH
 !-
+      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
+      USE ParaReord
+      !-
+
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8), qlist (2, 160)
-      INTEGER kntimel (MaxE, 8), qlist (2, 160) 
-                                                                        
+ !nis,dec06:Reordering array in module
+ !      INTEGER kntimel (MaxE, 8), qlist (2, 160)
+       integer :: qlist (2, 160)
+ !-
+!-
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
                                                                         
 !NiS,mar06: name of variable has changed in RMA10S
@@ -546,7 +696,10 @@ END SUBROUTINE check_Kalypso
       nadm (nr) = 100 
       DO 600 m = 1, mp 
         ii = list (m) 
-        CALL adjpt (ii, m, kntimel, icon) 
+!nis,dec06: kntimel becomes global, so no overgiving necessary
+!        CALL adjpt (ii, m, kntimel, icon)
+        CALL adjpt_Kalyps (ii, m, icon)
+!-
   600 END DO 
  1000 m = icol (1, 1) 
 !      print *,'m=',m                                                   
@@ -581,6 +734,9 @@ END SUBROUTINE check_Kalypso
 !     add to column adjacent point of eliminated point                  
 !                                                                       
       DO 270 j = 1, maxc 
+        !nis,dec06,testing
+        !WRITE(*,*) n
+        !-
         ii = icon (n, j) 
         IF (ii.le.0) goto 270 
         mp = mp + 1 
@@ -617,12 +773,15 @@ END SUBROUTINE check_Kalypso
         msn (n) = iel (n) 
  1400 END DO 
       RETURN 
-      END SUBROUTINE order                          
+      END SUBROUTINE order_Kalyps
                                                                         
                                                                         
                                                                         
 !-----------------------------------------------------------------------
-      SUBROUTINE adjpt (ii, m, kntimel, icon)
+!nis,dec06: kntimel becomes global, so no overgiving necessary
+!      SUBROUTINE adjpt (ii, m, kntimel, icon)
+      SUBROUTINE adjpt_Kalyps (ii, m, icon)
+!-
 !                                                                       
 !     Hier wird ???  WP                                                 
 !                                                                       
@@ -636,10 +795,16 @@ END SUBROUTINE check_Kalypso
       USE BLK2
       USE BLKASTEPH
 !-
+      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
+      USE ParaReord
+      !-
+
 
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8) 
-      INTEGER kntimel (MaxE, 8)
+ !nis,dec06: Reordering array newly in module
+ !     INTEGER kntimel (MaxE, 8)
+ !-
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
 !      INTEGER icon (mnd, maxcn)
       INTEGER icon (MaxP, maxcn)
@@ -672,13 +837,16 @@ END SUBROUTINE check_Kalypso
       icol (nr, nc) = m 
   400 CONTINUE 
       RETURN 
-      END SUBROUTINE adjpt                          
+      END SUBROUTINE adjpt_Kalyps
                                                                         
                                                                         
                                                                         
 
 !-----------------------------------------------------------------------
-SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
+!nis,dec06: Adding TLcnt as counter for number of 1D-2D-Transition lines
+!SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
+SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
+!-
 !
 ! This Subroutine reads the model data to run FE-net-data in Kalypso-2D-format
 ! within RMA10S. It is developed out of the subroutine 'modell_lesen', that
@@ -739,13 +907,25 @@ INTEGER                :: i, j, k, l		       !loop-counters with different meani
 INTEGER                :: m, n                         !copy of nodecount and elementcount at the end of the subroutine; the need is not clear!
 INTEGER                :: elzaehl, mittzaehl           !real element and midside counters
 INTEGER,ALLOCATABLE    :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
+!nis,dec06: for neighbourhood relations at line couplings
+INTEGER, ALLOCATABLE   :: nop_temp (:)
+INTEGER                :: ncorn_temp
+!-
+
+!nis,dec06: Adding TLcnt
 INTEGER                :: arccnt,elcnt,nodecnt         !nominal arc-, element- and nodecounter, it shows maximum of real counter and maximum used ID
+INTEGER                :: TLcnt                        !nominal 1D-2D-Transitionline counter, it shows maximum of real counter and maximum used ID
       						       !the purpose is, not to generate errors with numerical gaps in defintion lists.
+!-
 INTEGER                :: elem (MaxE, 6)               !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
                                               	       !on the type and shape of element; the first entry can also show 1D-ELEMENT with negative value
 INTEGER                :: elkno(5), mikno(4)           !local array for loop, that generates midsides for elements where no midside is assigned
 INTEGER                :: elfix (MaxE)                 !for reordering subroutine of RMA1, not used in RMA10S
 INTEGER                :: istat                        !IOSTAT-Value that becomes non-zero while input-reading-errors
+
+!nis,dec06: Local supporting variable for reading Continuity lines
+INTEGER                :: DefLine
+!-
 
 !NiS,mar06: Comments added and array sizes changed to:
 !INTEGER :: i, j, k, l, m, n, elzaehl, mittzaehl, arc (mnd, 5),&
@@ -785,6 +965,10 @@ INTEGER                :: KSWIT                        !Switch for Run-option of
 
 INTEGER                :: unit_nr                      !internal unit number, because this subroutine works as modell and restart data reader
 
+!nis,jan07: temporary variables for connection handling
+INTEGER                :: ConnNumber
+!-
+
 
 !NiS,mar06: the following common block has been replaced by global module called ParaKalyps
 
@@ -814,12 +998,19 @@ ENDIF                     !NiS,mar06
 arcs_without_midside = 0
 midsidenode_max = 0
 
-!Nis,may06: initializing the I/O error space
+!Nis,may06,com: initializing the I/O error space
 istat =0
 
 nodecnt = 0
 arccnt  = 0
 elcnt   = 0
+!nis,dec06: adding TLcnt for 1D-2D-Transition-lines
+TLcnt   = 0
+!-
+
+!nis,dec06: Initilaizing CCL supporting variable
+DefLine = 0
+!-
 
 !WP Auch Initialisierung bei traditionell GFEM nicht noetig, aber
 !   erst mal dringelassen
@@ -1032,7 +1223,54 @@ reading: do
     END IF
     !-
 
+    !NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection
+    !           TransLines(i,1) : transitioning element
+    !           TransLines(i,2) : transitioning line
+    !           TransLines(i,3) : node, which is connected on the 1D side of the transition element
+    if (linie(1:2).eq.'TL') then
+      IF (KSWIT.eq.1) THEN
+        READ (linie,'(a2,i10)') id_local, i
+        WRITE(*,*) 'getting here, TLcnt definition'
+        IF (i.gt.TLcnt) TLcnt = i
+      ELSE
+        WRITE(*,*) MaxLT
+        READ (linie, '(a2,4i10)') id_local, i, (TransLines(i,k),k=1,3)
+        WRITE(*,*) id_local, i, Translines(i,1), TransLines(i,3)
+        WRITE(*,*) linie
+!        MaxLT = MaxLT + 1
+      END IF
+    end if
+    !-
 
+    !nis,dec06: 'Continuity lines' can also be defined in the network file. The purpose is to make use of the already implemented structure
+    !           of CCLs for defining line geometry at transitions. For reordering purposes it is necessary to be able to read in Continuity
+    !           lines at the beginning together with the network.
+    if (linie(1:2).eq.'CC') then
+
+        read (linie,'(a2,i1,i5)') id_local,DefLine,i
+      if (kswit.eq.1) then
+        if (DefLine.eq.1) WRITE(*,*) 'Continuity Line',i, 'defined in network file.'
+      else
+        if (DefLine.eq.1) then
+          read (linie(9:80),'(9i8)') (line(i,k),k=1,9)
+          !Remember Line number
+          if (i.gt.NCL) NCL = i
+        ELSEIF (DefLine.gt.1) then
+          if (line(i,(DefLine-1)*9-1).eq.0) then
+            WRITE(*   ,*) 'Continuity line',i,'not properly defined. Previous read values in line will be deleted'
+            WRITE(*   ,*) 'Error occurs at defintion line CC',DefLine,'in geometry file.'
+            WRITE(Lout,*) 'Continuity line',i,'not properly defined. Previous read values in line will be deleted'
+            WRITE(Lout,*) 'Error occurs at defintion line CC',DefLine,'in geometry file.'
+            do k=1,350
+              line(i,k) = 0
+            end do
+          else
+            read (linie(9:80),'(9i8)') (line(i,k),k=(DefLine-1)*9+1,k+8)
+          end if
+        end if
+      end if
+    end if
+    !-
 
   ELSEIF (KSWIT == 2) THEN
 
@@ -1148,6 +1386,21 @@ reading: do
 
 END DO reading
 WRITE(*,*) ' Schaffe die Leseschleife'
+
+
+!nis,dec06: Form Continuity lines length arrays
+CClineforming: do i=1,50
+  if (line(i,1).eq.0) CYCLE CClineforming
+  getfirstzeroentry: do j=2,350
+    if (line(i,j).EQ.0) then
+      lmt(i) = j-1
+      CYCLE CClineforming
+    end if
+    !if 350 nodes are in the line the entry has to be made after loop here.
+    lmt(i) = 350
+  end do getfirstzeroentry
+end do CClineforming
+!-
 
 !NiS,mar06: file is closed in the calling subroutine getgeo; it can't be closed here because it is used twice
 !CLOSE (12)
@@ -1484,6 +1737,10 @@ cvarccnt = arccnt
 !DO 1400 i = 1, arccnt
 all_arcs: DO i=1,arccnt
 
+  !nis,dec06: dead arcs have to be skipped
+  if (arc(i,1).eq.0) CYCLE all_arcs
+  !-
+
   ! Mittseitenknoten vorhanden?
   !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
   !IF ( (arc (i, 5) .gt.0) .and. (arc (i, 5) .le.nodecnt) ) goto 1402
@@ -1691,7 +1948,51 @@ ENDDO
 !SR
 !WP 04.04.03 Ende --------------------------------------
                                                                         
+!---------------------------------------------------------------------------------------------------------------------------------------------
+!nis,jan07: Work on Line transitions
+!---------------------------------------------------------------------------------------------------------------------------------------------
+!nis,jan07: Turning the transitioning elements, if necessary; while doing this: Testing, whether transition is properly defined
+if (maxlt.ne.0) then
+  !run through all possible transitionings
+  elementturning: do i = 1, maxlt
 
+    !if transition is dead, go to next one
+    if (TransLines(i,1).eq.0) CYCLE elementturning
+
+    !test for correct order of nodes in transitioning element
+    if (nop(TransLines(i,1),3) .ne. TransLines(i,3)) then
+
+      !nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)
+      if (nop(TransLines(i,1),1) .ne. TransLines(i,3)) then
+        WRITE(*,*) 'ERROR - The transitioning node is not defined in element'
+        WRITE(*,*) 'Problem occured in line ', i
+        WRITE(*,*) 'Check the defined transition node in TL-line with the two'
+        WRITE(*,*) 'corner nodes of the transitioning 1D-element'
+        WRITE(*,*) 'Program can not be executed'
+        WRITE(*,*) 'Nodes are: '
+        WRITE(*,*) nop(TransLines(i,1),1), nop(TransLines(i,1),3), TransLines(i,3)
+        WRITE(*,*) nop(61,1), nop(61,3), TransLines(i,3)
+        WRITE(*,*) TransLines(i,1)
+        WRITE(*,*) 'STOP'
+        stop
+      end if
+      !-
+
+      !turn the corner nodes around
+      noptemp = nop(TransLines(i,1),1)
+      nop(TransLines(i,1),1) = nop(TransLines(i,1),3)
+      nop(TransLines(i,1),3) = noptemp
+
+    end if
+  end do elementturning
+endif
+!-
+
+!nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
+if (MaxLT.ne.0) then
+  call check_linetransition
+end if
+!-
 
 ! REORDERING -------------------------------------------------------------------
 DO i = 1, elcnt
@@ -1723,10 +2024,11 @@ WRITE (Lout,105)
 WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
-CALL start_node (qlist, k, np)
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
+!CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
-CALL reord_Kalyps (np, ne, qlist)
+!CALL reord_Kalyps (np, ne, qlist)
+!-
 
 
 4004 CONTINUE
@@ -1771,6 +2073,76 @@ neighbours: do i=1,elcnt
   ! leere Elementnummern uebergehen:
   if (elem(i,1).ne.0) then
 
+    !nis,jan07: Get the transition number and the transitioning CCL
+    findconnection: do j= 1, MaxLT
+      if (TransLines(j,1).eq.i) then
+        ConnNumber = j
+        ConnLine = TransLines(j,2)
+        EXIT findconnection
+      end if
+      if (j.eq.MaxLT) ConnNumber = 0
+    end do findconnection
+    !-
+
+  !nis,dec06: For 1D-2D-transition-lines the connectivity of the nodes differs from the original 2D-connectivity,
+  !           that can be also used for simple 1D-networks and simple 1D-2D-elementToelement-transitions
+  !           For those line-transitions, the following two loops are inserted
+  !
+  if (Transmember(ConnNumber).gt.0 .and. ConnNumber.ne.0) then
+    !the slope is just connected to the CORNER nodes of the transition line, the midside nodes are not effecting!
+    !number of nodes at that 1D-2D-transtion without the midsidenodes of the line
+    ncorn_temp = lmt(ConnLine)+Transmember(ConnNumber)+1
+
+    !nis,dec06,testing
+    !WRITE(*,*) 'Element: ', i
+    !-
+
+    !this is the temporary nop-array for the '1D-2D-transitionline-element'
+    ALLOCATE (nop_temp(1:ncorn_temp))
+
+    !overgive the three nodes of the 1D-part; they are already sorted:
+    !1: connection to next 1D-element
+    !2: midside node
+    !3: connection to transition line
+    do k = 1, 3
+      nop_temp(k) = nop(i,k)
+    end do
+    !-
+
+    !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
+    adding = 3
+    !overgiving the nodes into the temporary array nop_temp
+    nodeassigning: do j=1,lmt(ConnLine)
+      !if the connecting node is also part of the line-defintion, this placeholder has to skipped. For next run through loop because j is increased,
+      !  adding has to be decreased
+      if (line(ConnLine,j) .eq. TransLines(ConnNumber,3)) then
+        adding = 2
+        CYCLE nodeassigning
+      endif
+      !overgive the connected node to the temporary array
+      nop_temp(j+adding)=line(ConnLine,j)
+      !nis,dec06: testing
+      !WRITE(*,*) j+adding, nop_temp(j+adding)
+      !-
+    end do nodeassigning
+
+    !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
+    outerLT: do j = 1, ncorn_temp
+      node1 = nop_temp(j)
+      innerLT: do l = 1, ncorn_temp
+        node2 = nop_temp(l)
+        if (node1.ne.node2) then
+          nconnect(node1) = nconnect(node1) + 1
+          neighb(node1,nconnect(node1)) = node2
+        end if
+      end do innerLT
+    end do outerLT
+    !array resetting for next transition, that is probably be from other size
+    DEALLOCATE(nop_temp)
+
+  else
+  !-
+
     ! Lesen aller Knotennummern eines Elementes
     outer: do j=1,ncorn(i)
 
@@ -1778,9 +2150,15 @@ neighbours: do i=1,elcnt
 !        write (*,*) 'Lebe noch! i=', i, '   j=', j, '   nop(i,j)=', nop(i,j), 'ncorn(i): ', ncorn(i)
 !      end if
 
+!nis,dec06: for increasing speed of program, bring line to outside of loop
+        node1 = nop(i,j)
+!-
+
       inner: do l=1,ncorn(i)
 
-        node1 = nop(i,j)
+!nis,dec06: for increasing speed of program, bring line to outside of loop
+!        node1 = nop(i,j)
+!-
         node2 = nop(i,l)
 
 !        if (i == 2306) then
@@ -1800,6 +2178,10 @@ neighbours: do i=1,elcnt
       end do inner
 
     end do outer
+
+  !nis,dec06: endif for the test of whether line transition or not
+  endif
+  !-
 
   end if
 
@@ -2046,6 +2428,14 @@ SUBROUTINE start_node (qlist, k, n)
 USE BLK10MOD
 
 INTEGER qlist (2, 160)
+
+
+!nis,dec06: Initializing qlist
+do i = 1,160
+  qlist(1,i) = 0
+  qlist(2,i) = 0
+enddo
+!-
 
 
 IF (lmt (1) .gt.0) then

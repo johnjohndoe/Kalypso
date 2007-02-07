@@ -1,4 +1,4 @@
-!     Last change:  AF   17 Jul 2006    9:54 am
+!     Last change:  K    29 Jan 2007    6:00 pm
 !-----------------------------------------------------------------------
 ! This code, roughness.f90, computes the resistance factor lambda according
 ! the Darcy-Weissbahc-resistance law in the library 'Kalypso-2D'.
@@ -62,7 +62,12 @@ REAL 	:: lambdabedform= 0.0
 
 
 !NiS,may06: testing
-IF (ks.le.0.0) stop 'ks.le.0'
+ !IF (ks.le.0.0) stop 'ks.le.0'
+IF (ks.le.0.0) then
+  WRITE(*,*) nn
+  stop 'ks.le.0'
+endif
+!-
 IF (h.le.0.01) then
   lambda = 100000.0
   RETURN

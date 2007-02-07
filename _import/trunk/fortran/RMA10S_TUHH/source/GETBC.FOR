@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  IPK  28 Apr 96    
+C     Last change:  K    15 Nov 2006   11:36 am
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -343,7 +343,6 @@ cipk jun05
 
         endif
       enddo
-
 C-
 C...... Call routine to establish boundary conditions and angles
 C-

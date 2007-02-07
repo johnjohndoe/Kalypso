@@ -43,7 +43,7 @@ CIPK  LAST UPDATE NOV 20 1997 ADD ELEMENT COUNTING
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
-C     Last change:  IPK   3 Oct 98    4:30 pm
+C     Last change:  K     6 Feb 2007   12:24 pm
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
@@ -1075,6 +1075,7 @@ CIPK OCT96 END ADDITION
 C-
 C-.....READ GENERATED GEOMETRY DATA
 C-
+
       write(*,*) 'going to getgeo'
    
       CALL GETGEO
@@ -1086,17 +1087,18 @@ C-
 !           started below.
       !NiS,may06: testing
       !OPEN(UNIT=357, FILE='roughnesstest.txt')
-      DO J=1,MaxE
+      Materialassigning: DO J=1,MaxE
       !  WRITE(357,*) ' element    : ', J
       !  WRITE(357,*) ' Material   : ', IMAT(J)
       !  WRITE(357,*) ' Sandrauheit: ', ORT(IMAT(J),15)
       !  WRITE(357,*) ' Baumabstand: ', ORT(IMAT(J),16)
       !  WRITE(357,*) ' Baumdurchm.: ', ORT(IMAT(J),17)
       !  WRITE(357,*) ' Ende Element ', J
+        if (IMAT(J).eq.0) CYCLE Materialassigning
         CNIKU(J)     = ORT(IMAT(J),15)
         ABST(J)      = ORT(IMAT(J),16)
         DURCHBAUM(J) = ORT(IMAT(J),17)
-      END DO
+      END DO Materialassigning
       !close (357,STATUS='keep')
 !-
 
@@ -1404,13 +1406,12 @@ C
 C...... Initialize CHECK
 C-
       CALL CHECK
+
 C-
 C-.....INPUT BOUNDARY AND WIND DATA.....
 C-
       write(*,*) 'going to getbc', ibin
       CALL GETBC(IBIN)
-
-
 
 cipk jan99 set directions
        do n=1,ne
@@ -1560,10 +1561,10 @@ cipk dec00          IF (IMAT(N) .GE. 900) GO TO 141
 C
 C....... Call ANGLEN to find major axis and scale velocity terms
 C
+
       CALL ANGLEN
 CZZZ
       CALL GETCON
-
 C-
 C-
 C......FORM THREE DIMENSIONAL ELEMENTS FROM INPUT
@@ -1874,6 +1875,7 @@ c           elements below each node
       NN=1
  1301 CONTINUE
       N=NFIXH(NN)
+
       IF(N .LE. NEM) THEN
 cipk feb98 update to skip zero
         IF(N .EQ. 0) THEN

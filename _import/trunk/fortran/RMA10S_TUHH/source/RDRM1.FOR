@@ -1,3 +1,4 @@
+C     Last change:  K    15 Nov 2006    4:34 pm
 CIPK  LAST UPDATE JUN 20 2006  FIX ERROR NO INITIALIZATION OF nptemp ETC
 CIPK  LAST UPDATE MAY 23 2006  FIX ERROR READING CCLINES
 CIPK  LAST UPDATE SEP 6 2004  add error file
@@ -152,7 +153,7 @@ cipk may05  REPLACE IFILE WITH DLINE2
             ENDDO
             LMT(J)=350
             !NiS,mar06,com:
-            !LMT(I)=350 should be right!, not LMT(J)
+            !LMT(I)=350 should be correct!, not LMT(J)
             GO TO 330
           ELSEIF(ID1 .EQ. 'END') THEN
             GO TO 375

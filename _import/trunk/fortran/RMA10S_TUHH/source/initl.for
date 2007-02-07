@@ -1,3 +1,4 @@
+C     Last change:  K     7 Feb 2007    1:23 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -722,6 +723,57 @@ CIPK MAR01
           gl_bedform(i,j) = 0
         enddo
       enddo
-!-      
+!-
+
+!NiS,nov06: Allocating and initializing Transmember
+!           Transmember shows, how the geometry is given; there are two possibilities
+!           Transmember = 1 means the coupling node of the 1D element is part of the continuity line defintion
+!           Transmember = 2 means the coupling node of the 1D element is not part of the continuity line defintion
+!                         This leads to a geometry check, so that the coupling node is in range of 5 percent of the
+!                         transition line's chord length (tolerance).
+      ALLOCATE (TransMember(1:MaxLT))
+      do i=1,MaxLT
+        TransMember(i) = 0
+      end do
+!-
+
+!nis,nov06: allocating Transition lines for 1D 2D line transition;
+!           1. 1D element number of the coupling
+!           2. continuity line number of the transtion
+!           3. 1D coupling node [nop(TransLines(i,1),3) = TransLines(i,3)]
+      ALLOCATE (TransLines (MaxLT,1:3))
+      DO i = 1, MaxLT
+        DO j = 1,2
+          TransLines (i,j) = 0
+        ENDDO
+      ENDDO
+!
+
+!nis,nov06: allocating the 1D-2D-Transition-line-Factor array and initialization of that (at the beginning no scaling)
+!           in the coefs subroutines this factor is generally applied!
+!           If later this approach is expanded also to calculate the concentrations, this EqScale array was initialized
+!           for all degrees of freedom
+      ALLOCATE (EqScale (1:MaxP,1:7))
+      !for all nodes (in general only nodes at line-transition, but differing use is also possible)
+      do i = 1, MaxP
+        !for all degrees of freedom
+        do j = 1, 7
+          EqScale (i,j) = 1.0
+        end do
+      end do
+!-
+
+!nis,dec06: Initializing problematic array here
+      do i = 1,MaxE
+        EXTLDEL(i) = 0
+      end do
+!-
+
+!nis,jan07: Initializing property of network. Value 0 means network has 2D or 3D elements. Value 1 means only 1D elements. The standard is 0
+      ONLY1D = 1
+!-
+
+
+
       RETURN
-	END
+      END

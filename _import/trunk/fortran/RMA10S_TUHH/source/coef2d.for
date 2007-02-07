@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  IPK   5 Oct 98    3:17 pm
+C     Last change:  K    26 Jan 2007    5:01 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -851,8 +851,19 @@ CIPK SEP04  ADD MAH AND MAT OPTION
          endif
         ENDIF
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      ELSEIF (ORT(NR,5) == -1) THEN
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+      !nis,jan07: This statement can not work
+      !ELSEIF (ORT(NR,5) == -1) THEN
+      ELSEIF (ORT(NR,5) .lt. 0) THEN
+      !-
+        !nis,jan07,testing
+        !WRITE(*,*) 'in coef2d: ', ort(imat(nn),15)
+        !-
+
+        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
+        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+        call darcy(lambda, vecq, h, ort(imat(nn),15),
+     +             abst(nn), durchbaum(nn),
+        !-
      +             nn, morph, gl_bedform, mel, c_wr(nn))
         FFACT = lambda/8.0
 !-
@@ -1765,12 +1776,20 @@ CIPK NOV97
 
 CIPK JUN05
  1320 CONTINUE
+
+      !nis,nov06,com: for all nodes of the element
       DO 1450 I=1,NCN
+        !nis,nov06,com: get the node number
         J=NCON(I)
+        !nis,nov06,com: calculate the starting equation number of equation set for one node within element
         IA=NDF*(I-1)
+        !nis,nov06,com: add all the values of the equation set from the local to the global residual vector
         DO 1400 K=1,NDF
+          !nis,nov06,com: move foreward in equation order from actual node
           IA=IA+1
+          !nis,nov06,com: get global equation number of actual nodal degree of freedom (global equation number)
           JA=NBC(J,K)
+          !nis,nov06,com: adding the local residual errors to the global residual errors
           IF(JA.GT.0) THEN
             R1(JA)=R1(JA)+F(IA)
           ENDIF

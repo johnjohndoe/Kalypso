@@ -1,5 +1,5 @@
 cipk  last update feb 09 2001 allow for zero length cc lines
-C     Last change:  K     9 Nov 2006    9:56 am
+C     Last change:  K    26 Jan 2007    3:08 pm
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
       !nis,sep06,com: Overgiven variables:
@@ -31,7 +31,7 @@ C-
       !nis,nov06: cwr_line for intentinout-property of Darcy-subroutine
       REAL         :: cwr_line
       !-
-      REAL(KIND=8) :: fliesstiefe
+      REAL(KIND=8) :: fliesstiefe, waspi
       !nis,nov06: For proper passing d2 must be KIND=4
       !REAL(KIND=8) :: d1,d2,d3,d1v,d3v
       REAL(KIND=8) :: d1,d3,d1v,d3v,d2_kind8
@@ -59,12 +59,12 @@ cipk aug05      INCLUDE 'BLK10.COM'
 C-
       DATA VOID/-1.E20/
 
-      !nis,sep06,testfile:
+      !nis,sep06,testfileouput-------------------------------------
       iostaterror = 0
       WRITE(filename,'(a,i2.2,a)')  'Randbedingungen_Linie',J,'.txt'
       open (999,filename,iostat = iostaterror)
       if (iostaterror.ne.0) STOP 'file does not work'
-      !-
+      !------------------------------------------------------------
 
 C-
 C...... Calculate total projected area
@@ -81,10 +81,6 @@ CIPK FEB01
 	ENDIF
       !nis,sep06,com: Use the global direction of the inflow direction
       STQT(J)=THET
-
-      !nis,testing
-      !WRITE(*,*) 'Linie: ', j,' , Winkel: ', stqt(j)
-      !-
 
       !nis,sep06,com: If the CCL has only 1 node, that means 1D-element
       IF(MAX .EQ. 1) THEN
@@ -149,15 +145,15 @@ CIPK OCT01
           SPEC(NA,6)=-QQAL(3)
         ENDIF
 
-!nis,sep06: In the 2D-part an additional control structure was entered, so
-!           that the following control structure could not be reached by
+!nis,sep06: In the 2D-part an additional if control was entered, so
+!           that the following if control could not be reached by
 !           a 1D-boundary. This is preserved by copying it to this place.
-!           The control structure number 500 is renamed to 501 here.
+!           The if control number 500 is replaced by actual way of statement.
         IF(ICYC .GT. 0) THEN
-          DO 501 K=1,MAX
+          DO K=1,MAX
             NA=LINE(J,K)
             CALL BFORM(NA)
-  501     CONTINUE
+          ENDDO
         ENDIF
 !-
 
@@ -168,6 +164,8 @@ CIPK OCT01
 
 
 !nis,sep06,com: If CCL has more than 1 node, that means 2D
+!nis,jan07,com: condition to come here is: max.ne.1
+
 cipk oc98        VM=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)
 C       VEL(1,NA)=VM*COS(BEETA)
 C       VEL(2,NA)=VM*SIN(BEETA)
@@ -176,12 +174,13 @@ C-
 C...... IBN contains counter for number of references to a node
 C-
 
-        !nis,sep06,controloutput:
-      WRITE(999,*)'Control Output file for checking boundary conditions'
+        !nis,sep06,testfileoutput---------------------------------------
+        WRITE(999,*) 'Control Output file for checking',
+     +               'boundary conditions'
         WRITE(999,*) 'Linie CCL: ', J
         WRITE(999,*) 'Anzahl Knoten: ', lmt(J)
         WRITE(999,*)
-        !-
+        !---------------------------------------------------------------
 
 
         !nis,sep06,com: Set every number of elements-reference-counter for every surface node to 0
@@ -218,6 +217,7 @@ cipk oct98 update to f90
   104     CONTINUE
   105   CONTINUE
 
+!nis,jan07,com: BSWIT.eq.1 means original method of rma10s
 !NiS,sep06: Activating possibility of chosing the way of discharge boundary condition transformation
         IF (BSWIT.eq.1) THEN
 
@@ -411,56 +411,83 @@ C-
       !NiS,sep06: Using the Kalypso-2D-option for Q-boundary condition transformation
       ELSEIF (BSWIT.eq.2) then
 
-      !Nis,oct06: Problem is, that in Kalypso2D, version 1.2.4 (Ocotber 2006), the boundary conditions are later in assigned as
-      !           the initial conditions. In RMA10S it behaves the other way round. Because of that the algorithm in Kalypso2D for setting the
-      !           BCs can not directly be applied in RMA10S. Therefore the rdKalypso-subroutine has to be changed in a new way,
-      !           that it can get the initial conditions for the boundary lines from the input file.
-      !
-      !Getting the boundary conditions
-      do i = 1, lmt(j)
-        REWIND(nb)
-        iostaterror = 0
-        !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
-        if (nb.ne.0 .and. igeo.eq.2) then
-          reading: do WHILE (iostaterror.eq.0)
-            read (nb,'(a2)') LineID
-            if (LineID.eq.'VA') then
-              BACKSPACE(nb)
-              read (nb,*) LineID, tmpnode,tmpvx,tmpvy,tmpdepth,tmpwl
-              if (tmpnode.eq.line(j,i)) then
-                VEL(1,tmpnode)=tmpvx
-                VEL(2,tmpnode)=tmpvy
-                VEL(3,tmpnode)=tmpdepth
+        !Nis,oct06: Problem is, that in Kalypso2D, version 1.2.4 (Ocotber 2006), the boundary conditions are later in assigned as
+        !           the initial conditions. In RMA10S it behaves the other way round. Because of that the algorithm in Kalypso2D for setting the
+        !           BCs can not directly be applied in RMA10S. Therefore the rdKalypso-subroutine has to be changed in a new way,
+        !           that it can get the initial conditions for the boundary lines from the input file.
+        !
+        !Getting the initial solution for first iteration, if restarting
+        do i = 1, lmt(j)
+          REWIND(nb)
+          iostaterror = 0
+          !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
+          if (nb.ne.0 .and. igeo.eq.2) then
+            reading: do WHILE (iostaterror.eq.0)
+              read (nb,'(a2)') LineID
+              if (LineID.eq.'VA') then
+                BACKSPACE(nb)
+                read (nb,*) LineID, tmpnode,tmpvx,tmpvy,tmpdepth,tmpwl
+                if (tmpnode.eq.line(j,i)) then
+                  VEL(1,tmpnode)=tmpvx
+                  VEL(2,tmpnode)=tmpvy
+                  VEL(3,tmpnode)=tmpdepth
 
-                EXIT reading
+                  EXIT reading
+                endif
               endif
-            endif
-          enddo reading
-        endif
-      enddo
-      REWIND(nb)
-      !-
+            enddo reading
+          endif
+        enddo
+        REWIND(nb)
+        !-
 
+        !nis,jan07,com: starting node, ending node, chord length from starting to ending node
         na = line (j, 1)
         nc = line (j, lmt (j) )
         dx = cord (nc, 1) - cord (na, 1)
-        dy = - (cord (nc, 2) - cord (na, 2) )
+        !nis,nov06: for vector usage, the coordinates have to be from the same sign
+        !dy = - (cord (nc, 2) - cord (na, 2) )
+        dy = (cord (nc, 2) - cord (na, 2) )
+        !-
 
-        !pl     Anfang
-        !       260199
-        IF (dx.lt.0.00001.and.dx.gt. - 0.00001.and.
-     +    dy.lt.0.00001.and.dy.gt. - 0.00001) then
-          WRITE (Lout, * ) 'Nr.', 'Knoten m', 'Knoten c', 'Knoten a'
-          WRITE (Lout, * ) '6.', nm, nc, na
-        ENDIF
-        !pl   Ende
-                                                                        
+!nis,dec06: deactivating, confuses!
+!        !pl     Anfang
+!        !       260199
+!        IF (dx.lt.0.00001.and.dx.gt. - 0.00001.and.
+!     +    dy.lt.0.00001.and.dy.gt. - 0.00001) then
+!          WRITE (Lout, * ) 'Nr.', 'Knoten m', 'Knoten c', 'Knoten a'
+!          WRITE (Lout, * ) '6.', nm, nc, na
+!        ENDIF
+!        !pl   Ende
+!-
+
         alp = atan2 (dx, dy)
         ! alp ist der Winkel zwischen x-Achse und Liniensehne
         ! thet=thet+alp
         ! thet ist jetzt der Winkel zwischen x-Achse und der Senkrechten
         ! der Einstroemgeschwindigkeiten
-        !
+
+        !nis,nov06,testing: test for irregular angles
+        !if (ABS(thet).gt.2*3.141596.or.ABS(alp).gt.2*3.141596) then
+        !  WRITE(*,*) 'Einstroemwinkel in QGEN, BSWIT.eq.2 zu hoch!!!'
+        !end if
+
+        !nis,nov06: Scalarproduct of continuity line chord's normal vector and
+        !           Q-flow direction
+        !testing:
+        !WRITE(*,*) 'line:', j
+        !WRITE(*,*) 'alp:', alp
+        !WRITE(*,*) 'thet:',thet
+        !thet = (dx*COS(thet)+dy*SIN(thet))/(SQRT(dx**2+dy**2))
+        !WRITE(*,*) 'thet:', thet
+        !-
+
+        !nis,nov06: Setting thet to zero, if angle to small
+        !if (thet.lt.1e-3) thet = 0
+        !WRITE(*,*) 'thet:', thet
+        !-
+
+
         ! um Wellen laengs des Einstroemrandes zu vermeiden, die sich bei
         ! wiederholtem durchlaufen dieser Option einstellen koennen, wird
         ! hier erst einmal ein mittlerer Wasserspiegel am Einstroemrand
@@ -468,92 +495,19 @@ C-
 
         !nis,sep06,com: Initializing the Summed waterlevel
         waspi = 0.0
-        !nis,sep06,com: Initializing the counter for not drown nodes of CCL
-        lump = lmt (j)
+        !nis,dec06: Getting the waterlevel at the continuity line
+        call getLineAverageWaterlevel(j,waspi)
+        !-
 
-           !nis,sep06,controloutput: CCL-Fließtiefen
-           WRITE(999,*) 'Fliesstiefenkontrolle an der Linie',J
-           WRITE(999,*) 'Anzahl der Knoten ist', lmt(j)
-           WRITE(999,*)
-           WRITE(999,'(1x,a6,2(1x,a10))') 'node','calcFt.','marshFt.'
-           !-
-
-
-        !nis,sep06,com: Objective for every node of CCL
-        DO k = 1, lmt (j)
-
-          !nis,sep06,com: Initialize temporyry flow depth for node k
-          fliesstiefe = 0.0
-          !nis,sep06,com: Get node k
-          na = line (j, k)
-          !nis,sep06,com: Test whether node exists, if so get the flow depth
-          IF (na.gt.0) fliesstiefe = vel (3, na)
-
-          !nis,testing
-          !write (*,*) 'Fließtiefe: ',na, fliesstiefe
-          !-
-
-          !nis,sep06,com: Very small flow depth
-          IF (fliesstiefe.le.0.001) then
-
-            !nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3
-            lump = lump - 1
-            d3 = 0.0
-
-          !nis,sep06,com: If flow depth is not small
-          ELSE
-            !nis,sep06,com: Calculate the true depth over node k
-
-!nis,sep06: Zeigmarsh is not working in RMA10S yet
-!            CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na),
-!     +       amec (k), d2, 0, zeigmarsh)
-            CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na),
-     +        amec (k), d2, 0)
-!-
-
-            !nis,testing
-            !WRITE(*,*) 'Fließtiefe, d3: ', Fliesstiefe, d3
-            !WRITE(*,*) 'akp und so: ',akp(na),adt(na),adb(na),amec(k),d2
-            !-
-
-            !nis,sep06,com: Sum the waterlevel elevation, that is the flow depth plus bottom elevation
-            d3 = d3 + ao (na)
-
-            !nis,sep06,controloutput: CCL-Fließtiefen
-              WRITE(999,'(1x,i6,2(1x,f10.7))')na,fliesstiefe,(d3-ao(na))
-            !-
-
-          ENDIF
-                                                                        
-          !nis,sep06,com: Summed waterlevel elevation over all not drown nodes
-          waspi = waspi + d3
-
-        END DO
-                                                                        
-          !nis,sep06,com: Test for the whole CCL, whether it is dry
-          IF (lump.eq.0) then
-            write ( *  , 9000) j
-            write (Lout, 9000) j
- 9000       format (/1X, 'Error: Inflow line No. ', I3,' is dry!', /,
-     +                    1X, 'Stopping program!')
-            stop
-          END if
-
-                                                                        
-          !nis,sep06,com: calculate average flow depth over all not drown elements
-          waspi = waspi / lump
-        WRITE (Lout, *) 'average marsh-waterlevel at inflow line',
-     +                  j, ' ist: ', waspi
-
-      !nis,sep06,controloutput:
-       !calculation of real average waterlevel
-       tmpwl = 0
-       do zzz = 1,lmt(j)
-         tmpwl = tmpwl + ao(line(j,zzz))+vel(3,line(j,zzz))
-         WRITE(999,*)tmpwl
-       end do
-       tmpwl = tmpwl/lmt(j)
-       !-
+      !nis,sep06,testfileoutput:--------------------------------------------
+        !calculation of real average waterlevel
+        tmpwl = 0
+        do zzz = 1,lmt(j)
+          tmpwl = tmpwl + ao(line(j,zzz))+vel(3,line(j,zzz))
+          WRITE(999,*)'tmpwl', tmpwl
+        end do
+        tmpwl = tmpwl/lmt(j)
+        !-
        WRITE(999,*) 'average marsh-waterlevel at line',J,':',waspi
        WRITE(999,*) 'average  real waterlevel at line',J,':',tmpwl
        WRITE(999,'(1x,a6,4(1x,a10))')'Knoten','depth','diff.',
@@ -573,8 +527,9 @@ C-
        WRITE(999,*) 'positive sign means WL higher  than average'
        WRITE(999,*) 'negative sign means WL smaller than average'
        WRITE(999,*) '------------------------------------------------'
-      !-
-                                                                        
+      !---------------------------------------------------------------------
+
+
           ! Zur Verteilung der Fliessgeschwindigkeiten laengs eines Q-Randes
           ! muss ein Proportionalitaetsfaktor 'suma' gebildet werden, der sich
           ! aus der Integration der spezifischen Abfluesse ueber die gesamte
@@ -582,53 +537,45 @@ C-
 
           !nis,sep06,com: Initialize factor suma
           suma = 0.
-
           !nis,sep06,com: Run over all nodes of CCL
-          DO 307 k = 1, lmt (j)
-            !nis,sep06,com: Initialize teillinie and dxl for every node
+          DO k = 1, lmt (j)
+            !nis,sep06,com: Initialize teillinie (Conveyance factors) and dxl (influenced segment length) for every node
             teilline (k) = 0.0
             dxl (k) = 0.0
-  307     END DO
+          END DO
 
           !nis,sep06,com: For next loop the maximum value is the penultimate CORNER node
           max = lmt (j) - 2
-                                                                        
-!nis,testing
-!      do zzz = 1,lmt(j)
-!        WRITE(999,*) 'lineimat(',j,',',line(j,zzz),'): ',
-!     +               lineimat(j,zzz)
-!      end do
-!      WRITE(999,*) 'Testen der Geschwindigkeiten und des Wasserstandes'
-!      WRITE(999,'(4(5x,a2,4x))') 'vx','vy','h','WL'
-!      WRITE(999,'(4(1x,a10))') '----------','----------',
-!     +                         '----------','----------'
-!      do zzz = 1,lmt(j)
-!        yy = line(j,zzz)
-!        write(999,'(4(1x,f10.7))')(vel(ccc,yy),ccc=1,3),ao(yy)+vel(3,yy)
-!      end do
-!-
 
-          !nis,sep06,com: Run through all corner nodes till the last but one of CCL
+
+      !nis,jan07,testfileoutput-----------------------------------------------
+      do zzz = 1,lmt(j)
+        WRITE(999,*) 'lineimat(',j,',',line(j,zzz),'): ',
+     +               lineimat(j,zzz)
+      end do
+      WRITE(999,*) 'Testen der Geschwindigkeiten und des Wasserstandes'
+      WRITE(999,'(4(5x,a2,4x))') 'vx','vy','h','WL'
+      WRITE(999,'(4(1x,a10))') '----------','----------',
+     +                         '----------','----------'
+      do zzz = 1,lmt(j)
+        yy = line(j,zzz)
+        write(999,'(4(1x,f10.7))')(vel(ccc,yy),ccc=1,3),ao(yy)+vel(3,yy)
+      end do
+      !-----------------------------------------------------------------------
+
+          !nis,sep06,com: Loop over all corner nodes till the last one of CCL to get the Conveyance factor of the single parts of line.
           DO 750 k = 1, max, 2
             !nis,sep06,com: Get the first (na), midside (ncc), and endnode (nc) of the actual line segment
-            na = line (j, k)
+            na  = line (j, k)
             ncc = line (j, k + 1)
-            nc = line (j, k + 2)
-
-            !nis,testing
-            !WRITE(*,*) 'na,ncc,nc: ', na, ncc, nc
-            !-
+            nc  = line (j, k + 2)
 
             !nis,sep06,com: Calculate the x- and y- length of the actual CCL-segment
             dx = cord (nc, 1) - cord (na, 1)
             dy = - (cord (nc, 2) - cord (na, 2) )
-            !nis,sep06,com: Calculate the sixth part of the Euklidean length of the actual CCL-segment
+            !nis,sep06,com: Calculate the sixth part of the Euklidean length of the actual CCL-segment, it's used for the Simpson Integration rule
             xl = sqrt (dx**2 + dy**2) * 1 / 6
 
-            !nis,testing
-            !WRITE(*,*) 'dx,dy,xl: ', dx,dy,xl
-            !-
-                                                                        
 !pl         Anfang
 !           260199
           IF (dx.lt.0.00001.and.dx.gt. -
@@ -641,11 +588,6 @@ C-
             !nis,sep06,com: Calculate the direction angle of the actual CCL-segment
             alp = atan2 (dx, dy)
 
-            !nis,testing
-            !WRITE(*,*) 'alp: ', alp
-            !-
-
-                                                                        
 ! uralt   d1=vel(3,na)                                                  
 ! uralt   d3=vel(3,nc)                                                  
 ! alt     d1=waspi-ao(na)-amec(k)                                       
@@ -662,11 +604,6 @@ C-
               d1v = waspi - ao (na)
               d3v = waspi - ao (nc)
 
-            !nis,testing
-            !WRITE(*,*) 'd1,d2,d3,d1v,d3v: ', d1,d2,d3,d1v,d3v,waspi
-            !-
-
-
               !nis,sep06,com: Transform the depths to the marsh-algorithm-depths
 
 !nis,sep06: zeigmarsh-parameter is not working in RMA10S yet
@@ -679,7 +616,6 @@ C-
               CALL amf (d3v, d3, akp (nc), adt (nc), adb (nc), amec (k),
      +         d2, 1)
 !-
-
             ENDIF
 
             !nis,sep06,com: Set depth to 0, if neglectable
@@ -688,18 +624,11 @@ C-
             !nis,sep06,com: Average the water depth for the midside node
             d2 = (d1 + d3) / 2.0
 
-              !nis,nov06,testing
-              !WRITE(*,*) 'test:', lineimat(j,k+1)
-              !WRITE(*,*) 'test:', ort(lineimat(j,k+1),5)
-              !WRITE(*,*) 'test:', cniku(lineimat(j,k+1))
-              !-
-
-            !nis,testing
-            !WRITE(*,*) 'd1,d2,d3,d1v,d3v: ', d1,d2,d3,d1v,d3v
-            !-
-
             !nis,sep06,com: If roghness-value.gt.0 applied Darcy-Weisbach-law (ks-value)
-            IF (cniku (lineimat (j, k + 1)) .gt.0.) then
+            !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
+            !IF (cniku (lineimat (j, k + 1)) .gt.0.) then
+            IF (ort (lineimat (j, k + 1), 15) .gt.0.) then
+            !-
 !             Darcy-Weisbach
                                                                         
               !nis,sep06,com: Beginning corner node of the actual CCL-segment (1/6 of the element width)
@@ -714,12 +643,25 @@ C-
               cwr_line = 1.0
 !              CALL darcy (lambda, vecq, d1, ort (lineimat(j, k + 1), 5),
 !     +                    0., 0., 0,  0,     bedform, mel, cwr_line)
-              CALL darcy (lambda, vecq, d1, cniku (lineimat(j, k + 1)),
+              !nis,jan07: Some problems with cniku-array, so using the origin ort(nn,15) for sand roughness
+              !CALL darcy (lambda, vecq, d1, cniku (lineimat(j, k + 1)),
+
+                !nis,jan07,testing
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !-
+              CALL darcy (lambda, vecq, d1, ort(lineimat(j, k + 1), 15),
+              !-
      +                    0., 0., 0,  0,     gl_bedform, mel, cwr_line)
               !-
               !nis,sep06,com: teilline represents the Conveyance factor of the element part.
               teilline(k) = teilline(k) + xl*(d1** (3./2.)) *
      +                      ((78.48/lambda)**0.5)
+
+              !nis,dec06,testfileoutput-------------------------------------
+              WRITE(999,*) 'Corner node ', k,':', line(j,k)
+              WRITE(999,*) 'Conveyance: ', teilline(k)
+              WRITE(999,*) 'Resistance: ', lambda
+              !-------------------------------------------------------------
 
               !nis,sep06,com: Initialize the total flow velocity
               vecq = 0.0
@@ -743,13 +685,26 @@ C-
 !              CALL darcy (lambda, vecq, d2, ort (lineimat (j, k+1), 5),
 !     +                    0., 0., 0,  0, bedform, mel, 1.0)
 
-              CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(j,k+1)),
+              !nis,jan07: Some problems with cniku, so origin ort(nn,15) is used
+              !CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(j,k+1)),
+                !nis,jan07,testing
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !-
+              CALL darcy(lambda, vecq,d2_kind8, ort(lineimat(j,k+1),15),
+              !-
      +                    0., 0., 0,  0,    gl_bedform, mel, cwr_line)
               d2 = d2_kind8
               !-
               !nis,sep06,com: Calculate the Conveyance factor of the midside node of the actual CCL-segment
               teilline (k + 1) = xl * 4 * (d2** (3. / 2.) ) *
      +                           ((78.48/lambda)**0.5)
+
+              !nis,dec06,testfileoutput--------------------------------------
+              WRITE(999,*) 'Midside node ', k+1,':', line(j,k+1)
+              WRITE(999,*) 'Conveyance: ', teilline(k+1)
+              WRITE(999,*) 'Resistance: ', lambda
+              !--------------------------------------------------------------
+
 
               !nis,sep06,com: Ending corner node of the actual CCL-segment (1/6 of the element width)
               !**************************************************************************************
@@ -762,13 +717,27 @@ C-
               cwr_line = 1.0
 !              CALL darcy (lambda, vecq, d3, ort (lineimat (j, k+1),5),
 !     +                    0., 0., 0,  0, bedform, mel, 1.0)
-              CALL darcy (lambda, vecq, d3, cniku(lineimat (j, k+1)),
+              !nis,jan07: Some Problems with cniku, so origin ort(nn,15) is used
+              !CALL darcy (lambda, vecq, d3, cniku(lineimat (j, k+1)),
+                !nis,jan07,testing
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                !-
+              CALL darcy (lambda, vecq, d3, ort(lineimat (j, k+1),15),
+              !-
      +                    0., 0., 0,  0, gl_bedform, mel, cwr_line)
 !-
               !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
               teilline (k + 2) = teilline (k + 2) + xl * (d3**(3./2.)) *
      +                           ((78.48/lambda)**0.5)
                                                                         
+              !nis,dec06,testfileoutput------------------------------------------
+              if (k.eq.max) then
+                WRITE(999,*) 'End node ', k+2,':', line(j,k+2)
+                WRITE(999,*) 'Conveyance: ', teilline(k+2)
+                WRITE(999,*) 'Resistance: ', lambda
+              endif
+              !------------------------------------------------------------------
+
             ELSE
 !             Manning-Strickler:
 
@@ -799,9 +768,6 @@ C-
 
           !nis,sep06,com: Summing of the Conveyance factors
           DO 303 k = 1, lmt (j)
-            !nis,testing
-            !WRITE(*,*) 'k,lmt,teilline', k, line(j,k), teilline(k)
-            !-
             suma = suma + teilline (k)
   303     END DO
                                                                         
@@ -957,17 +923,25 @@ C-
                                                                         
             !nis,sep06,com: Set depth 0, if ngelectable
             IF (d1.le.0.0) d1 = 0.0
-                                                                        
-            !nis,sep06,com: Thet defines the inflow angle of the discharge, 0 means it is perpendicular to the chord of the line-segment
-          IF (thet.eq.0.0) then
+
+          !nis,sep06,com: Thet defines the inflow angle of the discharge, 0 means it is perpendicular to the chord of the line-segment
+          !nis,jan07: machineaccuracy is less than a value 1e-4; value can not be equal zero
+          !IF (thet.eq.0.0) then
+          IF (ABS(thet).lt.1e-4) then
+          !-
 !             Stroemungsrichtung senkrecht zum jeweiligen Liniensegment
-                                                                        
+
 
               !nis,sep06,com: Checking the angle between the segment(part)s at the actual node. The question comes from the relation:
               !   dx1   dx2
               !   --- = --- => dx1 * dy2 - dx2 * dy1 = 0, if the angle is (nearly .lt. 0.0001.) the same.
               !   dy1   dy2
             IF (abs (dy2 * dx1 - dy1 * dx2) .lt.0.0001) then
+
+              !nis,dec06,testing
+              !WRITE(*,*) 'Berechne Teilabfluss, Sort1'
+              !WRITE(*,*) 'an Knoten',k
+              !-
 
               !nis,sep06,com: Not clear yet (25092006)
               IF ( (dx1**2 + dy1**2) .gt.0.9) then
@@ -992,6 +966,14 @@ C-
 !               halbierenden, der Betrag des gesetzten Abflusses ist groesser
 !               als der vorgegebenen Abfluss.
 
+              !nis,dec06,testing
+              !WRITE(*,*) 'Berechne Teilabfluss, Sort2'
+              !WRITE(*,*) 'an Knoten',k
+              !WRITE(*,*) 'Winkel zwischen Segmenten:',
+      !+                    abs (dy2 * dx1 - dy1 * dx2)
+              !-
+
+
                 spec (na, 1) = vest * (teilline (k) / dxl (k) ) *
      +            ((dx2 - dx1) / (dx1 * dy2 - dx2 * dy1) )
                 spec (na, 2) = vest * (teilline (k) / dxl (k) ) *
@@ -999,6 +981,11 @@ C-
             ENDIF
           ELSE
                                                                         
+              !nis,dec06,testing
+              !WRITE(*,*) 'Berechne Teilabfluss, Sort3'
+              !WRITE(*,*) 'an Knoten',k
+              !-
+
 !             Stroemungsrichtung im Winkel ',thet,' Grad zur X-Richtung
                                                                         
 !             29.01.98 cosd/sind unbekannt ?
@@ -1255,9 +1242,11 @@ C-
         total = sumx - sumy
 !       Korrektur:
         total = abs (qreq) / abs (total)
-!       write(*,*)
-!       +  ' gesetzter Durchfluss an Linie',j,' = ',qreq
-                                                                        
+      !nis,nov06,testfileoutput------------------------------------------------
+      write(999,*)
+     +  ' gesetzter Durchfluss an Linie',j,' = ',qreq,
+     +  'Korrektur:', total
+      !------------------------------------------------------------------------
 
         !nis,sep06,com: Correct the discharge at the nodes by scaling with correction-factor
         DO 561 k = 1, max
@@ -1268,15 +1257,18 @@ C-
           ENDIF
   561   END DO
                                                                         
-        !nis,sep06,com: Control output
+        !nis,sep06,testfileoutput-----------------------------------------------
         DO 563 k = 1, max
           na = line (j, k)
-          WRITE (Lout, * ) 'Q-Linie', j, ' Knoten: ', na,' Geschw.-X= ',
-     +                     spec (na, 1) , ' Geschw.-Y= ', spec (na, 2)
+          WRITE (999,9898)  j, na, spec(na,1), spec (na, 2),
+     +                      SQRT((spec(na,2))**2+(spec(na,1))**2)
   563   END DO
                                                                         
-        WRITE (Lout,  * ) ' gesetzter Durchfluss an Linie', j, ' ist: ',
+        WRITE (Lout,*) ' gesetzter Durchfluss an Linie', j, ' ist: ',
      +                    qreq, ' Durchflussverhaeltnis  ist: ', total
+ 9898  format (1x,'Q-Linie',i6.6,' Knoten: ',i6.6,' Geschw.-X= ',f10.5,
+     +         ' Geschw.-Y= ', f10.5,'Gesamtgeschw.:',f10.5)
+        !-----------------------------------------------------------------------
                                                                         
         !nis,sep06,com: For unsteady calculation ???
         IF (icyc.gt.0) then
@@ -1310,8 +1302,8 @@ C-
       !enddo
       !-
 
-      !nis,sep06,controloutput: Closing file
+      !nis,sep06: Closing testfile-------
       CLOSE(999,STATUS = 'keep')
-      !-
+      !----------------------------------
       RETURN
       END

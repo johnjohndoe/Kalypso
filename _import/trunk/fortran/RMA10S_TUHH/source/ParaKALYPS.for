@@ -1,4 +1,4 @@
-C     Last change:  AF   17 Jul 2006   12:13 pm
+C     Last change:  K    25 Jan 2007    6:05 pm
       MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
@@ -27,8 +27,10 @@ C     Last change:  AF   17 Jul 2006   12:13 pm
 !               the DW-roughness method are put together to see possible errors directly:
 !      REAL(KIND=8), ALLOCATABLE, DIMENSION (:)
       REAL, ALLOCATABLE, DIMENSION (:)
-     +                  	:: abst, c_wr, cniku, durchbaum,
+!     +                  	:: abst, c_wr, cniku, durchbaum,
+     +                  	:: abst, c_wr, durchbaum,
      +                             mvx, mvy, mvxvy
+      ALLOCATABLE cniku (:)
       REAL(KIND=8), ALLOCATABLE, DIMENSION (:) :: mh
 
       CHARACTER (LEN=32)        :: name_cwr

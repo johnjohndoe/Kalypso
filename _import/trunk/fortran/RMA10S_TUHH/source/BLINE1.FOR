@@ -2,7 +2,7 @@ CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update July 18 199 fix problem with combined SL and SN data
-C     Last change:  IPK   3 Oct 98    4:08 pm
+C     Last change:  K    26 Jan 2007    2:07 pm
 cipk  last update Sep 3 1996   Add ocean boundary capability
       SUBROUTINE BLINE(NTR) 
 !NiS,may06,com:
@@ -25,6 +25,9 @@ C-
      +   
       ALLOCATABLE IFORM(:),IOD(:),ION(:)
 
+      !nis,nov06: variables for line couplings
+      INTEGER :: LiNo
+      !-
 C-
       DATA PI2/1.570796/,VOIDP/-1.E19/,ITIMEH/0/
 C
@@ -77,10 +80,8 @@ C-
           MCL=2
         ENDIF
 CIPK JUN05
-!nis,oct06,com:
-!          from, till, increment (only midside node for none-1D-elts!)
+!nis,oct06,com: All the corner nodes for 2Ds (MCL=2) or all nodes for 1D (MCL=1)
         DO M=MCL,NCN,MCL
-!-
           K=NOPS(N,M)
 CIPK JUN05
           IF(K .GT. 0) THEN
@@ -96,12 +97,30 @@ CIPK JUN05
               ENDIF
             ELSE
               IF(MCL .EQ. 1) IOD(K)=1
+              !nis,jan07: Increasing ibn, if the node is member of a 1D-2D-line-transition, because it is no boundary
+              ibnTLincrease: do j = 1, MaxLT
+                if (TransLines(j,3) .eq. k) then
+                  IBN(K) = IBN(K)+1
+                  EXIT ibnTLincrease
+                end if
+              end do ibnTLincrease
+              !-
               IBN(K)=IBN(K)+1
             ENDIF
 CIPK JUN05
           ENDIF
         ENDDO
   280 CONTINUE
+
+      !nis,jan07: IBN-array has to be increased for all midside nodes, that are part of a transition line
+      do i = 1, MaxLT
+        if (TransLines(i,1).ne.0) then
+          do j = 2,lmt(TransLines(i,2))-1,2
+           ibn(line(TransLines(i,2),j)) = ibn(line(TransLines(i,2),j))+1
+          end do
+        end if
+      end do
+      !-
 C-
 C...... Reset IBN for merger nodes
 C-
@@ -111,15 +130,9 @@ C-
           IF (J .GT. 0)  IBN(J)=2
         ENDIF
   290 CONTINUE
+
       !NiS,may06,com: for every element
       DO 600 N=1,NEM
-
-        !nis,oct06,testing:
-        !if (n.eq.194) then
-        !  WRITE(*,*) '545: ',xslp(545),yslp(545)
-        !  WRITE(*,*) '546: ',xslp(546),yslp(546)
-        !endif
-        !-
 
 CIPK OCT98 REVISE FOR F90
         MTYP=IMAT(N)
@@ -145,7 +158,7 @@ C-
 C-
 C...... Get direction of outward normal for 2-d plan elements
 C-
-        !NiS,may06,com: 2D/3D-part: transition elements with normally ncn.eq.5 are here declared with ncn.eq.3, so only 1D
+        !NiS,may06,com: 2D/3D-part: transition elements with normally ncn.eq.5 are here declared with ncn.eq.3, so they're only 1D
             IF(NCN .GT. 3) THEN
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,1)
@@ -214,46 +227,13 @@ CIPK JUN05
   600 CONTINUE
 
 CIPK JUN05  SETUP FOR SUBMERGENGE
-      !NiS,may06,com: NTR shows position of calling this subroutine
-      !Nis,may06,com: It shows the task of the subroutine
       IF(NTR .GT. 0) THEN
         CALL SUBSET
       ENDIF
 
 C-
 
-!nis,oct06,testing:
-!      gefunden=0
-!-
-
       DO 701 N=1,NPM
-
-!nis,oct06,testing:
-!      if (n.EQ.(nop(194,1)-1).OR.n.eq.nop(194,1)
-!     +                       .OR.n.eq.(nop(194,1)+1).or.
-!     +    n.EQ.(nop(194,3)-1).OR.n.EQ.nop(194,3)
-!     +                       .OR.n.eq.(nop(194,3)+1).or.
-!     +    n.EQ.(nop(194,5)-1).OR.n.EQ.nop(194,5)
-!     +                       .OR.n.eq.(nop(194,5)+1).or.
-!     +    n.EQ.(nop(194,7)-1).OR.n.EQ.nop(194,7)
-!     +                       .OR.n.eq.(nop(194,7)+1)) then
-!
-!      if ((alfa(545).ne.0.0.or.alfa(546).ne.0.0)
-!     +     .and.gefunden.lt.2) then
-!     +                       ) then
-!        gefunden=gefunden+1
-!        WRITE(*,*) 'Randwerte verändert! Element:',n
-!        WRITE(*,*) nop(194,3), ibn(nop(194,3)), alfa(nop(194,3))
-!        WRITE(*,*) nop(194,5), ibn(nop(194,5)), alfa(nop(194,5))
-!        WRITE(*,*) ntr
-!      end if
-!
-!        WRITE(*,*) 'Habe Punkt gefunden2!'
-!        WRITE(*,*) nop(194,1), ibn(nop(194,1)), alfa(nop(194,1))
-!        WRITE(*,*) nop(194,7), ibn(nop(194,7)), alfa(nop(194,7))
-!      endif
-!-
-
 
       NFIX(N)=NFIXK(N)
       IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
@@ -263,13 +243,8 @@ CIPK OCT98  CONVERT TO F90
       NQB=MOD(NFTYP,100)
       NLFT=NFTYP/100
 
-      !nis,oct06,testing
-      !  if (n.eq.545.or.n.eq.546) then
-      !    WRITE(*,*) 'nlft: ', nlft
-      !  end if
-      !-
-
       IF(NLFT .EQ. 0) ALFA(N)=0.
+
       IF(MOD(NLFT,10) .EQ. 2) THEN
 C-
 C......   THESE ARE ONE-D ELEMENTS TYPE 102 012 OR 002
@@ -362,13 +337,6 @@ cycw aug96 end additions
 ***
       ELSE
 
-        !nis,oct06,testing
-        !if (n.eq.545.or.n.eq.546) then
-        !  WRITE(*,*) 'richtige Schleife'
-        !  WRITE(*,*) n,iod(n),xslp(n),yslp(n),alfa(n)
-        !end if
-        !-
-
         IF(NFIX(N) .LE. 10010) GO TO 610
         IF(IOD(N) .EQ. 0) GO TO 700
 C-
@@ -381,12 +349,12 @@ C-
           GO TO 700
         ENDIF
   610   CONTINUE
+
 CIPK JUN05
+        !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
         IF(ALFAK(N) .NE. 0.  .AND. IBN(N) .NE. 15) THEN
           ALFA(N)=ALFAK(N)
         ELSEIF(XSLP(N) .NE. 0.) THEN
-
-          !nis,oct06,com: Here the angle of the flow-direction is set
           ALFA(N)=ATAN(YSLP(N)/XSLP(N))
         ELSE
           IF(YSLP(N) .EQ. 0.) GO TO 700
@@ -403,7 +371,7 @@ cipk juN05
                 DO 615 K=1,8
                   IF(NOP(M,K) .EQ. N) THEN
                     IMT=IMAT(M)-900
-	              IF(NJT(IMT).NE. 10) THEN
+	            IF(NJT(IMT).NE. 10) THEN
                       IF(QD(IMT) .GE. 0.) THEN
                         IF(QD(IMT)-ALFA(N) .LT. 1.5708) GO TO 630
                         ALFA(N)=ALFA(N)+3.14159
@@ -411,33 +379,33 @@ cipk juN05
                         IF(ALFA(N)-QD(IMT) .LT. 1.5708) GO TO 630
                         ALFA(N)=ALFA(N)-3.14159
                       ENDIF
-	              ELSE
+	            ELSE
 	                
                       AG1=ATAN2(CORD(NOP(M,6),2)-CORD(NOP(M,2),2),
-     +                 CORD(NOP(M,6),1)-CORD(NOP(M,2),1))
-                      AZ=AG1-ALFA(N)      
+     +                    CORD(NOP(M,6),1)-CORD(NOP(M,2),1))
+                      AZ=AG1-ALFA(N)
                       IF(AG1 .GE. 0.) THEN
                         IF(AG1-ALFA(N) .LT. 1.570795  .OR.
-     +                     AG1-ALFA(N) .GT. 4.712385) GO TO 630
-	
-	                  if(icyc .lt. 2 .and .maxn .eq. 1) then
-	                   write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
+     +                    AG1-ALFA(N) .GT. 4.712385) GO TO 630
+
+	                if(icyc .lt. 2 .and .maxn .eq. 1) then
+	                 write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
                          write(75,*) AZ,nfix(n),wsll(n),whgt(n),ISUBM(N)
-     +                   ,VEL(1,N),VEL(2,N)
-	                  endif
+     +                                ,VEL(1,N),VEL(2,N)
+	                endif
                         ALFA(N)=ALFA(N)+3.14159
                       ELSE
                         IF(ALFA(N)-AG1 .LT. 1.570795 .OR.
      +                     ALFA(N)-AG1 .GT. 4.712385) GO TO 630
-	                  if(icyc .lt. 2  .and. maxn .eq. 1) then
-	                   write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
+	                if(icyc .lt. 2  .and. maxn .eq. 1) then
+	                 write(75,*)'redirect weir',n,alfa(n),ag1,ibn(n)
                          write(75,*) AZ,nfix(n),wsll(n),whgt(n),ISUBM(N)
-     +                   ,VEL(1,N),VEL(2,N)
-     	                  endif
+     +                               ,VEL(1,N),VEL(2,N)
+     	                endif
                         ALFA(N)=ALFA(N)-3.14159
                       ENDIF
 
-	              ENDIF
+	            ENDIF
                     GO TO 630
                   ENDIF
   615           CONTINUE
@@ -524,24 +492,25 @@ C Correct velocities along boundary for subsurface nodes
 cycw aug96 end additions
         ENDIF
         IF(NFIX(N)/10000 .EQ. 1) ALFA(N)=0.
-  700 CONTINUE
+  700   CONTINUE
       ENDIF
   701 CONTINUE
+
   720 CONTINUE
       do 725 n=1,nem
       if(netyp(n) .eq. 18) then
-       nn=nop(n,19)
-       n1=nop(n,7)
-       if (nn .gt. 0  .and.  n1 .gt. 0)  then
-       alfa(nn)=alfa(n1)
-       nfix(nn)=nfix(n1)
-       endif
-       nn=nop(n,20)
-       n1=nop(n,5)
-       if (nn .gt. 0  .and.  n1 .gt. 0) then
-       alfa(nn)=alfa(n1)
-       nfix(nn)=nfix(n1)
-       endif
+        nn=nop(n,19)
+        n1=nop(n,7)
+        if (nn .gt. 0  .and.  n1 .gt. 0)  then
+          alfa(nn)=alfa(n1)
+          nfix(nn)=nfix(n1)
+        endif
+        nn=nop(n,20)
+        n1=nop(n,5)
+        if (nn .gt. 0  .and.  n1 .gt. 0) then
+          alfa(nn)=alfa(n1)
+          nfix(nn)=nfix(n1)
+        endif
       endif
   725 continue 
 Csep93 ipk  added code
@@ -550,30 +519,30 @@ Csep93 ipk  added code
 C-
 C.......   ADJUST VELOCITY COMPONENTS FOR NEW ANGLE OF SPEC FLOW
 C-
-            IF(VEL(1,N) .EQ. 0.  .AND.  VEL(2,N) .EQ. 0.) THEN
-              ALOLD=0.0
-            ELSE
-              ALOLD=ATAN2(VEL(2,N),VEL(1,N))
-            ENDIF
-            IF(ABS(ALFA(N)-ALOLD) .GT. PI2  .AND.
-     +         ABS(ALFA(N)-ALOLD) .LT. 3.*PI2) ALOLD=ALOLD+2.*PI2
-            CSX=COS(ALOLD)
-            SSX=SIN(ALOLD)
-            CSN=COS(ALFA(N))
-            SSN=SIN(ALFA(N))
-            VT=VEL(1,N)*CSX+VEL(2,N)*SSX
-            VEL(1,N)=VT*CSN
-            VEL(2,N)=VT*SSN
-            VT=VOLD(1,N)*CSX+VOLD(2,N)*SSX
-            VOLD(1,N)=VT*CSN
-            VOLD(2,N)=VT*SSN
-            VT=VDOT(1,N)*CSX+VDOT(2,N)*SSX
-            VDOT(1,N)=VT*CSN
-            VDOT(2,N)=VT*SSN
-            VT=VDOTO(1,N)*CSX+VDOTO(2,N)*SSX
-            VDOTO(1,N)=VT*CSN
-            VDOTO(2,N)=VT*SSN
+          IF(VEL(1,N) .EQ. 0.  .AND.  VEL(2,N) .EQ. 0.) THEN
+            ALOLD=0.0
+          ELSE
+            ALOLD=ATAN2(VEL(2,N),VEL(1,N))
           ENDIF
+          IF(ABS(ALFA(N)-ALOLD) .GT. PI2  .AND.
+     +       ABS(ALFA(N)-ALOLD) .LT. 3.*PI2) ALOLD=ALOLD+2.*PI2
+          CSX=COS(ALOLD)
+          SSX=SIN(ALOLD)
+          CSN=COS(ALFA(N))
+          SSN=SIN(ALFA(N))
+          VT=VEL(1,N)*CSX+VEL(2,N)*SSX
+          VEL(1,N)=VT*CSN
+          VEL(2,N)=VT*SSN
+          VT=VOLD(1,N)*CSX+VOLD(2,N)*SSX
+          VOLD(1,N)=VT*CSN
+          VOLD(2,N)=VT*SSN
+          VT=VDOT(1,N)*CSX+VDOT(2,N)*SSX
+          VDOT(1,N)=VT*CSN
+          VDOT(2,N)=VT*SSN
+          VT=VDOTO(1,N)*CSX+VDOTO(2,N)*SSX
+          VDOTO(1,N)=VT*CSN
+          VDOTO(2,N)=VT*SSN
+        ENDIF
   728 CONTINUE
 csep93 ipk end of added code
 C
@@ -623,7 +592,7 @@ C-
         DO 760 N=1,NP 
           IF(NFIX(N)/1000 .EQ. 31) THEN
            IF (ABS(ALFA(N)-SPEC(N,2)) .GT. 1.570796  .AND.
-     +          ABS(ALFA(N)-SPEC(N,2)) .LT. 4.713388) THEN
+     +         ABS(ALFA(N)-SPEC(N,2)) .LT. 4.713388) THEN
               SPEC(N,1)=-SPEC(N,1)
               IF(ALFA(N) .GT. SPEC(N,2)) THEN
                 SPEC(N,2)=SPEC(N,2)+3.141592
@@ -637,58 +606,99 @@ C-
 C-
 C...... Compute angular difference at 1D - 2D junctions
 C-
-      DO 800 N=1,NEM
+!nis,nov06: Enlarge computation of angular differences for 1D-2D-line-transitions
+
+      !nis,nov06: Change way of do loop
+      !DO 800 N=1,NEM
+      angulardiffs: DO N=1,NEM
+      !-
+      !nis,jan07: Check, whether element is part of line transition
         IF(NCRN(N) .EQ. 5) THEN
-        IF(IMAT(N) .LT. 901  .OR.  IMAT(N) .GT. 5000) THEN
-          N1=NOPS(N,3)
-          N2=NOPS(N,4)
-          N3=NOPS(N,5)
-!NiS,may06: testing
-!          write(*,*) 'nodes: ', N1,n2,n3
-!          WRITE(*,*) 'angles: ', alfa(n1), alfa(n2), alfa(n3)
-!-
-          ADIF(N2)=ALFA(N2)-ALFA(N1)
-          IF(ADIF(N2) .GT. PI2) THEN
-            ALFA(N2)=ALFA(N2)-2.*PI2
+          IF(IMAT(N) .LT. 901  .OR.  IMAT(N) .GT. 5000) THEN
+            N1=NOPS(N,3)
+            N2=NOPS(N,4)
+            N3=NOPS(N,5)
             ADIF(N2)=ALFA(N2)-ALFA(N1)
-          ELSEIF(ADIF(N2) .LT. -PI2) THEN
-            ALFA(N2)=ALFA(N2)+2.*PI2
-            ADIF(N2)=ALFA(N2)-ALFA(N1)
-          ENDIF
-          ADIF(N3)=ALFA(N3)-ALFA(N1)
-          IF(ADIF(N3) .GT. PI2) THEN
-            ALFA(N3)=ALFA(N3)-2.*PI2
-            ADIF(N3)=ALFA(N3)-ALFA(N1)
-          ELSEIF(ADIF(N3) .LT. -PI2) THEN
-            ALFA(N3)=ALFA(N3)+2.*PI2
-            ADIF(N3)=ALFA(N3)-ALFA(N1)
-          ENDIF
-!NiS,may06: testing
-!          WRITE(*,*) 'adifs: ', adif(n1), adif(n2), adif(n3)
-!          WRITE(*,*) 'ntr: ', ntr
-!-
-          IF(NTR .GT. 0) THEN
-            K=NREF(N2)+1
-            IF(K .GT. 1  .AND.  NDEP(N2) .GT. 0) THEN
-              L=K+NDEP(N2)-2
-              DO 765 M=K,L
-                ALFA(M)=ALFA(N2)
-                ADIF(M)=ADIF(N2)
-  765         CONTINUE
+            IF(ADIF(N2) .GT. PI2) THEN
+              ALFA(N2)=ALFA(N2)-2.*PI2
+              ADIF(N2)=ALFA(N2)-ALFA(N1)
+            ELSEIF(ADIF(N2) .LT. -PI2) THEN
+              ALFA(N2)=ALFA(N2)+2.*PI2
+              ADIF(N2)=ALFA(N2)-ALFA(N1)
             ENDIF
-            K=NREF(N3)+1
-            IF(K .GT. 1  .AND.  NDEP(N3) .GT. 0) THEN
-              L=K+NDEP(N3)-2
-              DO 770 M=K,L
-                ALFA(M)=ALFA(N3)
-                ADIF(M)=ADIF(N3)
-  770         CONTINUE
+            ADIF(N3)=ALFA(N3)-ALFA(N1)
+            IF(ADIF(N3) .GT. PI2) THEN
+              ALFA(N3)=ALFA(N3)-2.*PI2
+              ADIF(N3)=ALFA(N3)-ALFA(N1)
+            ELSEIF(ADIF(N3) .LT. -PI2) THEN
+              ALFA(N3)=ALFA(N3)+2.*PI2
+              ADIF(N3)=ALFA(N3)-ALFA(N1)
+            ENDIF
+            IF(NTR .GT. 0) THEN
+              K=NREF(N2)+1
+              IF(K .GT. 1  .AND.  NDEP(N2) .GT. 0) THEN
+                L=K+NDEP(N2)-2
+                DO 765 M=K,L
+                  ALFA(M)=ALFA(N2)
+                  ADIF(M)=ADIF(N2)
+  765           CONTINUE
+              ENDIF
+              K=NREF(N3)+1
+              IF(K .GT. 1  .AND.  NDEP(N3) .GT. 0) THEN
+                L=K+NDEP(N3)-2
+                DO 770 M=K,L
+                  ALFA(M)=ALFA(N3)
+                  ADIF(M)=ADIF(N3)
+  770           CONTINUE
+              ENDIF
             ENDIF
           ENDIF
-          ENDIF
+!nis,nov06: Test for 1D-2D-line-transitions
+        ELSEIF (ncrn(n).eq.3) then
+
+          findtranselt: do j = 1, MaxLT
+            !if the element n is part of any transition go on with the dirAdjustment-loop
+            if (TransLines(j,1) .eq. n) then
+              TransNumber = J
+              EXIT findtranselt
+            ENDIF
+            !if the last line still shows no consistency with the active element n, this is no transition element then and the main loop has to cycle
+            if (j.eq.MaxLT) CYCLE angulardiffs
+          end do findtranselt
+
+          !get local copy of line no.
+          LiNo = TransLines(TransNumber,2)
+          !Get number of node 3 (for explanation why node number 3 have a look at CHECK.subroutine)
+          N3 = Line(LiNo,3)
+
+          !calculate angular difference of first and last node
+          do nodeno = 1,LMT(Lino),(LMT(LiNo)-1)
+
+            !Get nodal number
+            N1 = Line(LiNo,nodeno)
+            !Calculate angular difference of first and last node
+            ADIF(N1) = ALFA(N1) - ALFA(N3)
+
+            !Correct direction, so that the vectors points into quadrant 1 or 4
+            IF(ADIF(N1) .GT. PI2) THEN
+              ALFA(N1)=ALFA(N1)-2.*PI2
+              ADIF(N1)=ALFA(N1)-ALFA(N3)
+            ELSEIF(ADIF(N1) .LT. -PI2) THEN
+              ALFA(N1)=ALFA(N1)+2.*PI2
+              ADIF(N1)=ALFA(N1)-ALFA(N3)
+            ENDIF
+
+          end do
+
 c         WRITE(90,*) 'SETTING ADIF',N1,N2,N3,ADIF(N2),ADIF(N3)
         ENDIF
-  800 CONTINUE
+!nis,nov06: new way of do loop
+!  800 CONTINUE
+      ENDDO angulardiffs
+!-
+
+
+
       IF(NTR .GT. 0) THEN
 CIPK SEP01        DO 840 N=1,NP
         DO 840 N=1,NPM

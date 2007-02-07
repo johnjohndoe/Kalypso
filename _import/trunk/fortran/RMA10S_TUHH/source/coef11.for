@@ -17,7 +17,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  IPK   5 Oct 98    2:21 pm
+C     Last change:  K    26 Jan 2007    5:00 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -146,7 +146,7 @@ C- INITIALIZE MATRICES AND VARIABLES
 C-
       NEF=NCN*NDF
       !nis,oct06,testing:
-      WRITE(*,*) 'ndf: ', ndf
+      !WRITE(*,*) 'ndf: ', ndf
       !-
 
       !NiS,jul06:testing
@@ -674,8 +674,19 @@ CIPK MAY06  MOVE NR TO MAT
           ENDIF
         ENDIF
 !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      ELSEIF (ORT(NR,5) == -1) THEN
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+
+      !nis,jan07: This statement can not work
+      !ELSEIF (ORT(NR,5) == -1) THEN
+      ELSEIF (ORT(NR,5) .lt. 0) THEN
+      !-
+        !nis,jan07,testing
+        !WRITE(*,*) 'in coef11: ', ort(imat(nn),15)
+        !-
+        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
+        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
+        call darcy(lambda, vecq, h, ort(imat(nn),15),
+     +             abst(nn), durchbaum(nn),
+        !-
      +             nn, morph, gl_bedform, mel, c_wr(nn))
         FFACT = lambda/8.0
 !-
@@ -842,7 +853,7 @@ C-
       DO 305 M = 1, NCN
       IA=IA+NDF
       !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
       !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   305 CONTINUE
@@ -892,7 +903,7 @@ C-
       DO 320 M = 1, NCN
       IA=IA+NDF
       !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
       !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB) +(XN(M)*FEEAN + DNX(M)*FEEBN)*QFACT(M)
   320 CONTINUE
@@ -914,7 +925,7 @@ C-
           DO 329 M=1,NCN
             IA=IA+NDF
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+(DNX(M)*FEEAN+XN(M)*FEEBN)*
      +                    QFACT(M)
@@ -939,7 +950,7 @@ C
       DO 360 N = 1, NCN
       IB=IB+NDF
       !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
       !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
   360 CONTINUE
@@ -949,7 +960,7 @@ C
       DO 363 N=1,NCNX
       IB=IB+2*NDF
       !NiS,jul06:testing
-      if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+      !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
       !-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
   363 CONTINUE
@@ -979,7 +990,7 @@ CMAY93          FEECN=XO(M)*T3
           DO 385 N=1,NCN
             IB=IB+NDF
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XN(N)*FEEAN*QFACT(N)
   385     CONTINUE
@@ -988,7 +999,7 @@ CMAY93          FEECN=XO(M)*T3
             IB=IB+2*NDF
 CMAY93           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DMX(N)*FEECN+XM(N)*FEEEN
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*FEEEN
   390     CONTINUE
@@ -1008,7 +1019,7 @@ CIPK MAY02
           DO N=1,NCNX
             IB=IB+8
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)+FEEBN*DMX(N)
           ENDDO
@@ -1038,7 +1049,7 @@ cipk aug98
           IB=IB+4
           IF(NSTRT(NCON(N),1) .EQ. 0) THEN
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XO(N)+FEEBN*DOX(N)
           ENDIF
@@ -1072,7 +1083,7 @@ C-
         IF(L .EQ. 1) PPL=-PPL
         F(NA)=F(NA)-PPL*(SPEC(N1,3)-VEL(3,N1)/2.)*SPEC(N1,3)
         !NiS,jul06:testing
-        if (na.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12; na'
+        !if (na.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12; na'
         !-
         ESTIFM(NA,NA+2)=ESTIFM(NA,NA+2)-PPL*SPEC(N1,3)/2.
       ELSEIF(IBN(N1) .EQ. 1  .OR.  IBN(N1) .GE. 3) THEN
@@ -1081,7 +1092,7 @@ C-
 c         WRITE(*,*) 'IBN=',IBN(N1),NN,NA
           DO 6667 KK=1,NEF
             !NiS,jul06:testing
-            if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
+            !if (ia.gt.12) WRITE(*,*)'Höhere Zeilennummer als 12'
             !-
             ESTIFM(NA,KK)=0.
  6667     CONTINUE

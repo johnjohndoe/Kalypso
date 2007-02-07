@@ -1,4 +1,4 @@
-C     Last change:  WP   23 Feb 2006   12:11 pm
+C     Last change:  K    19 Dec 2006    7:36 pm
       MODULE BLK10 
 
       REAL*8 R1,RKEEP
@@ -9,6 +9,9 @@ C     Last change:  WP   23 Feb 2006   12:11 pm
      +              EKEEP(:),RKEEPEQ(:)
 
 	ALLOCATABLE   LHS(:),QS(:),LDEST(:),QR(:)
+      !nis,dec06: QS' type must be defined to integer
+      INTEGER :: QS
+      !-
             
       ALLOCATABLE   EQ(:,:),LHED(:),QQ(:),PVKOL(:)
 

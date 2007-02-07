@@ -1,4 +1,4 @@
-!     Last change:  K    23 Oct 2006    8:57 am
+!     Last change:  K    10 Jan 2007    8:55 am
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -202,7 +202,10 @@ ENDIF
 
 ! Writing detailled information of the calculated values
 ! for the friction due to trees.
-call cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, mel)
+!nis,dec06: Replacing mel with MaxE
+!call cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, mel)
+call cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, MaxE)
+!-
 
 end subroutine get_element_cwr
 
@@ -244,6 +247,7 @@ INTEGER  			:: second_loc		! Neighbour nodes of the flow vector
 
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
+INTEGER                         :: elcnt
 !-
 
 REAL(KIND=4), DIMENSION(1:2) 	:: angle_v              ! direction of the actual flow vector
@@ -263,6 +267,14 @@ INTEGER         		:: i,j,m
 
 !nis,sep06: nodecnt value must be specified, it is not global
 nodecnt = np
+ !nis,dec06: adding element number
+ elcnt   = ne
+!-
+!nis,dec06: Initializing the marker_slope Vector
+do i = 1, nodecnt
+  marker_slope(i) = .false.
+!  WRITE(*,*) marker_slope(i)
+end do
 !-
 
 outer: do i = 1, nodecnt
@@ -272,6 +284,9 @@ outer: do i = 1, nodecnt
   angle_v(1) = vel(1,i)
   angle_v(2) = vel(2,i)
   vecq = SQRT(vel(1,i)**2 + vel(2,i)**2)
+  !nis,dec06,testing
+  !WRITE(*,*) 'Knoten:', i, vecq
+  !-
 
   if (vecq < 0.001 .or. rausv(3,i) < ao(i)) then
     ! If velocity is very small or water surface is below node,
@@ -302,20 +317,152 @@ outer: do i = 1, nodecnt
   call GET_MIN_ANGLE_POINTS(angle_delt, nconnect(i), i, first_loc, second_loc)
 
   if (second_loc /= 0) then
-    call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope)
+!nis,dec06: Only the marker_slope of the passed node i is wanted!!!
+!    call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope)
+    call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope(i))
+!-
   else
     marker_slope(i) = .false.
   end if
 
 end do outer
 
+!for 1D-elts, the slopes have to be resetted
+resetslopes: do i = 1,elcnt
+  if (ncorn(i).eq.3) then
+    !nis,dec06,testing
+    !WRITE(*,*) '1D-Elemente:',i
+    !-
+    slope(nop(i,1)) = 0
+    eslope(nop(i,1))= 0
+    slope(nop(i,2)) = 0
+    eslope(nop(i,2))= 0
+    slope(nop(i,3)) = 0
+    eslope(nop(i,3))= 0
+  end if
+end do resetslopes
+!-
+
+!nis,dec06: using another subroutine for 1D-elements
+outer1D: do i = 1, elcnt
+  if (ncorn(i).eq.3) then
+    do j = 1,3
+      !node, whose slopes shall be calculated
+      node2=nop(i,j)
+
+      !nis,jan07,testing
+      !WRITE(*,*) nconnect(node2)
+      !pause
+      !-
+
+      if (nconnect(node2).gt.5) CYCLE outer1D
+
+      !nis,dec06,testing
+      !WRITE(*,*) 'verbundene Knoten:',nconnect(node2)
+      !WRITE(*,*) 'Element', i
+      !-
+
+      if (j.eq.2) then
+        !if midside node get the two corner nodes
+        node1=nop(i,1)
+        node3=nop(i,3)
+      ELSE
+        !if corner node, get the midside node
+        node1=nop(i,2)
+        node3=0
+      endif
+
+      !nis,jan07,testing
+      !WRITE(*,*) 'vorher',slope(nop(i,j)), eslope(nop(i,j))
+      !-
+
+      CALL Get_1D_slope(node1,node2,node3, slope(nop(i,j)), eslope(nop(i,j)))
+      marker_slope(node2) = .true.
+
+      !nis,jan07,testing
+      !WRITE(*,*) 'nachher',slope(nop(i,j)), eslope(nop(i,j))
+      !-
+
+      !nis,dec06,testing
+      !WRITE(*,*) node2, marker_slope (node2)
+      !WRITE(*,*) nconnect(node2)
+      !-
+
+    end do
+  end if
+end do outer1D
+!-
+
+!nis,dec06,testing
+!do i=1,nodecnt
+!  WRITE(*,*) marker_slope(i)
+!end do
+!-
+
+
 ! All point that have been marked as not detected (MARKER_SLOPE = .false.)
 ! the slope will be interpolated from the neighbouring points.
-call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, mnd)
+!nis,dec06: Correction of line, replacing mnd with MaxP
+!call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, mnd)
+call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, MaxP)
+!-
+
+!nis,dec06,testing
+!WRITE(*,*) 'Erreiche Ende von Fill_slopes'
+!-
 
 end subroutine GET_NODE_SLOPE
 
+!--------------------------------------------------------------------------------------
+!nis,dec06: Getting the slopes at 1D-nodes
+! This subroutine calculates the bottom and the watersurface slope at 1D-nodes
+!
+!
+!December 2006
+!--------------------------------------------------------------------------------------
 
+subroutine GET_1D_SLOPE(node1,node2,node3,slope_temp, eslope_temp)
+
+  USE blk10mod
+
+  REAL(KIND=4)                :: dx1, dy1, dl1, dx2, dy2, dl2
+  REAL(KIND=4), intent(inout) :: slope_temp, eslope_temp
+  INTEGER, INTENT (IN)        :: node1, node2, node3
+
+  dx1 = cord(node1,1) - cord(node2,1)
+  dy1 = cord(node1,2) - cord(node2,2)
+  dl1 = SQRT(dx1*dx1 +dy1*dy1)
+  dh1 = vel(3,node1) - vel(3,node2)
+  dz1 = ao(node1) - ao(node2)
+
+  if (node3.ne.0) then
+    dx2 = cord(node3,1) - cord(node2,1)
+    dy2 = cord(node3,2) - cord(node2,2)
+    dl2 = SQRT(dx2*dx2 +dy2*dy2)
+    dh2 = vel(3,node3) - vel(3,node2)
+    dz2 = ao(node3) - ao(node2)
+    n = 2
+  else
+    dl2 = 1 !dividing by zero is not good
+    dh2 = 0
+    dz2 = 0
+    n = 1
+  endif
+
+  if (slope_temp.eq.0.0) then
+    slope_temp = (dz1/dl1+dz2/dl2) / n
+  else
+    slope_temp = 1/2 * slope_temp + 1/2* (1/n * (dz1/dl1+dz2/dl2))
+  end if
+
+  if (eslope_temp.eq.0.0) then
+    eslope_temp = 1/n * (dh1/dl1+dh2/dl2)
+  else
+    eslope_temp = 1/2 * eslope_temp + 1/2* (1/n * (dh1/dl1+dh2/dl2))
+  end if
+
+end subroutine
+!--------------------------------------------------------------------------------------
 
 
 !--------------------------------------------------------------------------------------
@@ -409,6 +556,10 @@ subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope, nconnect, neighb, m
 !                                               Wolf Ploeger, Jul 2004
 !----------------------------------------------------------------------------------------
 
+!nis,jan07: For checking, whether nodes are active, the coordinates must be present
+USE blk10mod
+!-
+
 implicit none
 
 ! Calling variables
@@ -426,13 +577,38 @@ REAL(KIND=4) 	:: temp_slope, temp_eslope
 
 anz = 0
 
+!nis,dec06,testing
+!WRITE(*,*) mnd, '1'
+!WRITE(*,*) 'test for marker_slope', marker_slope
+!-
+
 ! 1.) Number of missing nodes is counted.
 ! ---------------------------------------
-do i = 1, nodecnt
+!nis,jan07: Naming this loop
+!do i = 1, nodecnt
+numbertest: do i = 1, nodecnt
+  !nis,jan07: There might be dead nodes within the network. Their coordinates are initialized by -1e20. These nodes have to be cycled.
+  if (cord(i,1) .lt. (-0.5E20) .and. cord(i,2) .lt. (-0.5E20)) then
+    !Those nodes shouldn't be a hindrance factor
+    marker_slope(i) = .True.
+    !anz shouldn't be increased
+    CYCLE numbertest
+  END if
+  !-
+
   if (.not. marker_slope(i)) then
-    anz = anz + 1
+	    anz = anz + 1
+    !nis,dec06,testing
+    !WRITE(*,*) 'fehlendes Gefaelle: ', i
+    !-
   end if
-end do
+!end do
+end do numbertest
+!-
+
+!nis,dec06,testing
+!WRITE(*,*) mnd, '2', anz
+!-
 
 
 ! 2.) Filling
@@ -445,11 +621,25 @@ end do
 
 eliminate: do
 
+  !nis,dec06: modelerror causes this temporary change
   if (anz == 0) exit eliminate
+  !if (anz == 1) exit eliminate
+  !-
+!nis,dec06,testing
+!WRITE(*,*) mnd, '3', anz
+!-
 
   all_nodes: do i = 1, nodecnt
 
+    !nis,dec06,testing
+    !WRITE(*,*)'Knoten: ',i
+    !WRITE(*,*)'marker: ', marker_slope(i)
+    !-
+
     if (.not. marker_slope(i)) then
+      !nis,dec06,testing
+      !WRITE(*,*) i, nconnect(i)
+      !-
 
        temp_anz = 0
        temp_slope = 0.0
@@ -457,7 +647,8 @@ eliminate: do
 
        all_neighb: do j = 1, nconnect(i)
          !nis,oct06,testing:
-         !WRITE(*,*)'Knoten: ',i , 'nachbarn: ', nconnect(i)
+         !WRITE(*,*)'nachbarn: ', nconnect(i)
+         !WRITE(*,*)'Nachbar: ', neighb(i,j), marker_slope(neighb(i,j))
          !-
          if ( marker_slope(neighb(i,j)) ) then
            temp_anz   = temp_anz + 1
@@ -488,7 +679,10 @@ end subroutine FILL_SLOPES
 
 
 !----------------------------------------------------------------------------------------
- subroutine GET_SLOPE(angle_v, pn, first_neighb, second_neighb, slope, eslope, marker_slope)
+!nis,dec06: Only the marker_slope of the passed node i is wanted!!!
+! subroutine GET_SLOPE(angle_v, pn, first_neighb, second_neighb, slope, eslope, marker_slope)
+ subroutine GET_SLOPE(angle_v, pn, first_neighb, second_neighb, slope, eslope, marker_slope_pn)
+!-
 
 ! The SLOPE at point PN of the watersurface is calculated.
 !
@@ -521,7 +715,9 @@ INTEGER, INTENT(IN)                             :: second_neighb! Second neighbo
 !LOGICAL, DIMENSION(1:mnd), INTENT(OUT)       	:: marker_slope
 REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT)    :: slope        ! Slope to be calculated
 REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT)    :: eslope       ! Energy-Slope to be calculated
-LOGICAL, DIMENSION(1:MaxP), INTENT(OUT)       	:: marker_slope ! Marker if slope could be determined
+!nis,dec06, just one value is needed here
+!LOGICAL, DIMENSION(1:MaxP), INTENT(OUT)       	:: marker_slope
+LOGICAL,INTENT(OUT)       	                :: marker_slope_pn ! Marker if slope could be determined
 !-
 ! Local variables
 REAL(KIND=8) 	:: ax,ay,bx,by,cx,cy,dx,dy, he_pn, he_cross
@@ -541,6 +737,14 @@ LOGICAL :: sing = .false.
 v_pn  = 0.0
 he_pn = 0.0
 
+!nis,dec06: Initializing the marker_slope array entry because of bas passing problems
+marker_slope_pn = .false.
+!-
+
+!nis,dec06,testing
+!WRITE(*,*) 'Reaches get_slope.subroutine'
+!-
+
 ! calculate v_pn and he_pn
 v_pn  = SQRT(rausv(1,pn)**2 + rausv(2,pn)**2)
 he_pn = rausv(3,pn) + ((v_pn**2)/(2*9.81))
@@ -555,7 +759,10 @@ if (second_neighb == 0) then
   slope(pn)  = ABS( (rausv(3,first_neighb) - rausv(3,pn)) / d_cross_pn )
   he_cross   = rausv(3,first_neighb) + ((cross_v**2)/(2*9.81))
   eslope(pn) = ABS( (he_pn - he_cross) / d_cross_pn )
-  marker_slope = .true.
+!nis,dec06: Detected error, because line just counts for one node, by the way: only one value is needed in this subroutine
+!  marker_slope = .true.
+  marker_slope_pn = .true.
+!-
   return
 end if
 
@@ -568,7 +775,10 @@ end if
 if (vel(3,first_neighb) < 0.01 .or. vel(3,second_neighb) < 0.01) then
   slope(pn) = 0.0
   eslope(pn)= 0.0
-  marker_slope(pn) = .false.
+!nis,dec06: Only one value is needed in this subroutine
+!  marker_slope(pn) = .false.
+  marker_slope_pn = .false.
+!-
   return
 END if
 
@@ -601,7 +811,10 @@ END if
 ! <=>   A      *     X      =      B
 
 
-marker_slope(pn) = .true.
+!nis,dec06: Only one value is needed in this subroutine
+!marker_slope(pn) = .true.
+marker_slope_pn = .true.
+!-
 
 ax = cord(pn,1)
 ay = cord(pn,2)
@@ -628,7 +841,10 @@ if (SING) then
   ! No success for solving equations (singularity)
   slope(pn) = 0.0
   eslope(pn)= 0.0
-  marker_slope(pn) = .false.
+!nis,dec06: Only one value is needed in this subroutine
+!  marker_slope(pn) = .false.
+  marker_slope_pn = .false.
+!-
   return
 end if
 
@@ -673,7 +889,10 @@ d_cross_pn = SQRT( (cross_x - cord(pn,1))**2 + (cross_y - cord(pn,2))**2 )
 if (d_cross_pn < 0.0001) then
   slope(pn) = 0.0
   eslope(pn)= 0.0
-  marker_slope(pn) = .false.
+!nis,dec06: Only one value is needed in this subroutine
+!  marker_slope(pn) = .false.
+  marker_slope_pn = .false.
+!-
   return
 end if
 

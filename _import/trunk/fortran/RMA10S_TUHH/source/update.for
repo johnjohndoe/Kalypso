@@ -3,7 +3,7 @@ CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Jan 16 2000 fix bug from SL condition
-C     Last change:  IPK   5 Oct 98    2:15 pm
+C     Last change:  K     2 Feb 2007    3:52 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE APR 30 1996
       SUBROUTINE UPDATE
@@ -41,6 +41,31 @@ C-
      1          'LOW)','LOW)','TH) ',')   ','P)  ',')   ',')   '/
 
       DATA ITIMS/0/
+!nis,jan07: Getting the information, whether network is only 1D or has other dimensions. This test needs only to be done in first iteration
+      if (maxn.eq.1) then
+        testfor1d: do i=1, ne
+          if (ncorn(i) .gt. 3) then
+            ONLY1D = 0
+            WRITE(*,*) 'mehr als 1D-element:', i
+            EXIT testfor1d
+          end if
+        end do testfor1d
+      end if
+!-
+!nis,jan07,testing
+!        do i = 17, 20
+!          write (*,*) 'Knoten: ', i
+!          WRITE (*,*) 'Richtungsbedingung:', Alfa(i)
+!        end do
+!        !pause
+!-
+
+!nis,jan07,testing
+      WRITE(*,*) 'Aenderungen:  ', R1(nbc(17,1)), r1(nbc(17,3))
+!      WRITE(*,*) 'Verknuepfung: ', (nbc(i,1),i=17,20)
+!      pause
+!-
+
 C-
 C-.....SETUP FOR SOLUTION CORRECTIONS.....
 C-
@@ -50,7 +75,11 @@ CIPK MAY02 EXPAND TO 7
         DO K=1,7
           NCNV(K)=9999
         ENDDO
-        DO I=1,NITN
+        !nis,jan07: NITN is always the number of iterations in unsteady state. For steady state this would be NITI. The generalization for this
+        !           loop would be using the NITA which is always a copy of the actual number
+        !DO I=1,NITN
+        DO I=1,NITA
+        !-
  	    IF(ITEQV(I) .EQ. 0) THEN
 	      NCNV(1)=1
 	      NCNV(2)=1
@@ -73,19 +102,19 @@ CIPK MAY02 EXPAND TO 7
 	      NCNV(1)=1
 	      NCNV(2)=1
 	      NCNV(3)=1        
-            NCNV(5)=1
+              NCNV(5)=1
 	    ELSEIF(ITEQV(I) .EQ. 7) THEN
 	      NCNV(1)=1
 	      NCNV(2)=1
 	      NCNV(3)=1        
-            NCNV(6)=1
+              NCNV(6)=1
 	    ELSEIF(ITEQV(I) .EQ. 8) THEN
 	      NCNV(5)=1
 	    ELSEIF(ITEQV(I) .EQ. 9) THEN
 	      NCNV(6)=1
 CIPK MAY02
 	    ELSEIF(ITEQV(I) .EQ. 10) THEN
-            NCNV(7)=1
+              NCNV(7)=1
 CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 10) THEN
 	    ELSEIF(ITEQV(I) .EQ. 11) THEN
 	      NCNV(1)=1
@@ -98,6 +127,13 @@ CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 11) THEN
 	      NCNV(6)=1
           ENDIF		         
         ENDDO
+
+      !nis,jan07: If the network is just 1D, the second degree of freedom must not be calculated. Reactivating it:
+      if (ONLY1d .eq. 1) then
+        NCNV(2) = 9999
+      end if
+      !-
+
       WRITE(75,*) 'NCNV',MAXN,(NCNV(I),I=1,7)
 CIPK AUG01 END UPDATE
       
@@ -202,6 +238,14 @@ cipk jan00      GO TO 150
         VEL(K,J)   = VEL(K  ,J) + EX*COS( ALFA(J) )
       ENDIF
       GO TO 150
+
+      !nis,jan07,testing
+      if (j.eq.17 .or. j.eq.18 .or. j.eq.19 .or. j.eq.20 .OR. j.EQ. 150
+     +    ) then
+        WRITE(*,*) vel(3,j)
+      ENDIF
+      !-
+
 CIPK NOV97
   140 IF(K .NE. 3) GO TO 149
 CIPK APR05      
@@ -264,6 +308,14 @@ CIPK APR01 UPDATE WATER SURFACE ELEVATION
       ELSE
         WSLL(J) = VEL(3,J) + AO(J)
       ENDIF
+
+      !nis,jan07,testing
+      !if (j.eq.17 .or. j.eq.18 .or. j.eq.19 .or. j.eq.20 .OR. j.EQ. 150
+      !+    ) then
+      !  WRITE(*,*) vel(3,j)
+      !  pause
+      !ENDIF
+      !-
 
       GO TO 150
 CIPK MAY02 ALLOW FOR ICK=7

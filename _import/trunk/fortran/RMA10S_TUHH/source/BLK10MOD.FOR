@@ -1,4 +1,4 @@
-C     Last change:  K    25 Sep 2006    3:03 pm
+C     Last change:  K    26 Jan 2007    2:12 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -31,6 +31,10 @@ cipk aug06  add input options
 !NiS,mar06      add MAXA as dimensioner for arc-array, MaxT for number of 1D-2D-TRANSITION ELEMENTS
      +          ,MaxA, MaxT
 !-
+!nis,nov06      add MaxLT as dimensioner for line-transitions
+     +          ,MaxLT
+!-
+
 !NiS,apr06      add IKALYPSOFM and KALYPRST as unit specifier for output file and restart-in file in KALYPSO-2D-format in global use
      +          ,IKALYPSOFM, KALYPRST
 !-
@@ -167,6 +171,32 @@ C     LAYER VARIABLE
 !NiS,apr06: for data exchange with kalypso-reading and writing modules
       REAL(KIND=8), ALLOCATABLE :: aour(:)!,fehler(:,:),
 !-
+
+!nis,nov06: Adding arrays
+      !for the storage of line-couplings
+      INTEGER, ALLOCATABLE                 :: TransLines (:,:)
+      !Stores information, whether node is member of Line-transition or not. Values: 0 means no member of any transition, 1 means member of a transition,
+      !means member of a transition and member of the belonging line. This differentiation is necessary because there are two line options:
+      !
+      !  1. the node of the 1D-element is member of the line (the 1D-element's node gets the entry TransMember=2),
+      !  2. the node of the 1D-element is member of the connection but not in the defining list of the line
+      !     (the 1D-element's node gets the entry Transmember=1)
+      INTEGER, allocatable                 :: TransMember (:)
+      !The scaling factors for vx, vy and h, that comes into the global matrix
+      REAL, ALLOCATABLE, DIMENSION (:,:)   :: EqScale
+!-
+      !nis,dec06: Connection node of the coupling elements
+      !INTEGER, ALLOCATABLE                 :: ConnectNode (:)
+      !-
+      !nis,jan07: Pointer for network, that shows, whether network only consists of 1D
+      INTEGER                              :: ONLY1D
+      !-
+
+      !nis,jan07: The velocities at the transition have to be stored temporarily; allocation takes place at the calling of the qgen-subroutine with
+      !           BSWIT == 3; the size is then exactly of the transition size; it is deallocated directly after everery usage
+      REAL, ALLOCATABLE, DIMENSION (:,:)   :: TransitionVels
+      !-
+
 
       END MODULE
 
