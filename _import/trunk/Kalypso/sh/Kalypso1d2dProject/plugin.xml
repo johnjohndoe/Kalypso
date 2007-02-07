@@ -149,6 +149,9 @@
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net2DImport"/>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImport"/>
 	</extension>
         <extension
          point="org.eclipse.ui.commands">

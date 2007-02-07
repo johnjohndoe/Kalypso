@@ -1,6 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 

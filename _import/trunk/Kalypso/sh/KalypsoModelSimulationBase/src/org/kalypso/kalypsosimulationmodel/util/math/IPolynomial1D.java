@@ -1,7 +1,7 @@
 
 package org.kalypso.kalypsosimulationmodel.util.math;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 
 /**

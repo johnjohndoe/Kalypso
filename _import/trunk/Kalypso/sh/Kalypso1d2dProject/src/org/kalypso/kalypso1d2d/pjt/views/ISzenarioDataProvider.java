@@ -41,15 +41,13 @@
 package org.kalypso.kalypso1d2d.pjt.views;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
- * @author bce
- *
+ * @author Gernot Belger
  */
 public interface ISzenarioDataProvider
 {
-
   /**
    * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
    * provider.

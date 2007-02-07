@@ -83,7 +83,7 @@
 	================================================================== -->
 	<xs:element 
 		name="TerrainModel" 
-		type="simBase:TerrainModelType">
+		type="simBase:TerrainModelType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				Terrain model element with one terrain elevation element and 
@@ -100,17 +100,21 @@
 				and a roughness layer polygon 
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element 
-				ref="simBase:terrainElevationModelSystem"
-				minOccurs="1" maxOccurs="1"/>
-			<xs:element 
-				ref="simBase:roughnessLayerPolynomCollection"
-				minOccurs="1" maxOccurs="1"/>
-			<xs:element
-				ref="simBase:riverProfileNetwork"
-				minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element 
+						ref="simBase:terrainElevationModelSystem"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="simBase:roughnessLayerPolynomCollection"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element
+						ref="simBase:riverProfileNetworkCollectionMember"
+						minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	
 	<!-- =================================================================
@@ -459,8 +463,26 @@
 	
 		
 	<!-- =================================================================
-		riverProfileNetworkProperty
+		riverProfileNetwork
 	================================================================== -->
+	
+	<xs:element 
+		name="riverProfileNetworkCollectionMember" 
+		type="simBase:RiverProfileNetworkCollectionPropertyType"/>
+	<xs:complexType 
+		name="RiverProfileNetworkCollectionPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				An inline RiverProfileNetworkCollection - Property
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="simBase:RiverProfileNetworkCollection"
+				 minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
 	<xs:element
 		name="RiverProfileNetworkCollection"
 		type="simBase:RiverProfileNetworkCollectionType"
@@ -468,8 +490,7 @@
 	<xs:complexType 
 		name="RiverProfileNetworkCollectionType">
 		<xs:complexContent>
-			<!-- TODO: do not derive from FeatureCollection; 'featureMember' and 'featureMembers' is probably not wanted here-->
-			<xs:extension base="gml:AbstractFeatureCollectionType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element 
 						ref="simBase:riverProfileNetwork"
@@ -493,7 +514,7 @@
 		<xs:sequence>
 			<xs:element 
 				ref="simBase:RiverProfileNetwork"
-				 minOccurs="0" maxOccurs="unbounded"/>
+				 minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
@@ -505,8 +526,7 @@
 	<xs:complexType 
 		name="RiverProfileNetworkType">
 		<xs:complexContent>
-			<!-- TODO: do not derive from FeatureCollection; 'featureMember' and 'featureMembers' is probably not wanted here-->
-			<xs:extension base="gml:AbstractFeatureCollectionType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element 
 						ref="simBase:riverProfile"

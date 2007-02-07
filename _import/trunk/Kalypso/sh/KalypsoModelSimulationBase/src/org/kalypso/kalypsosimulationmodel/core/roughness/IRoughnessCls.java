@@ -1,6 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
  * Interface for klasses representing the roughness feature

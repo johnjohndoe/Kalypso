@@ -38,45 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.command;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
- * @author Stefan Kurzbach
+ * This is the root element of the terain-model.
+ * 
+ * @author Gernot Belger
  */
-public abstract class WorkflowCommandHandler extends AbstractHandler
+public interface ITerrainModel extends IFeatureWrapper
 {
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final IStatus status;
-    try
-    {
-      status = executeInternal( event );
-    }
-    catch( final CoreException e )
-    {
-      throw new ExecutionException( "Problem in internal execution: " + e.getLocalizedMessage(), e );
-    }
-    catch( final Throwable t )
-    {
-      throw new ExecutionException( "Problem in internal execution: " + t.getLocalizedMessage(), t );
-    }
+  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
 
-    if( !status.isOK() )
-    {
-      // TODO: log to plugin
-      // KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
-    }
+  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
 
-    return status;
-  }
-
-  protected abstract IStatus executeInternal( final ExecutionEvent event ) throws CoreException;
-
+  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection();
+  
+  // TODO: add other getters
 }

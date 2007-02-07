@@ -6,13 +6,14 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface to be implemented by class which represents the simBase:RiverProfileNetworkCollection
  * 
  * @author Patrice Congo
  */
-public interface IRiverProfileNetworkCollection extends IFeatureWrapperCollection<IRiverProfileNetwork>
+public interface IRiverProfileNetworkCollection extends IFeatureWrapperCollection<IRiverProfileNetwork>, IFeatureWrapper2
 {
   public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetworkCollection" );
 

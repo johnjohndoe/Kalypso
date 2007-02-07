@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 
 public class SzenarioSourceProvider extends AbstractSourceProvider 
          {
@@ -18,7 +17,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   
   public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
 
-    private static final Logger LOGGER = Logger.getLogger(WorkflowView.class
+    private static final Logger LOGGER = Logger.getLogger(SzenarioSourceProvider.class
             .getName());
 
     static {

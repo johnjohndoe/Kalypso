@@ -16,13 +16,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -31,7 +32,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
  * always at the same place.
  * </p>
- * TODO: find other name for this class, because there is a name conflict with IWorkflowData
  * 
  * @author Gernot Belger
  */
@@ -50,6 +50,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     // simulation model gets its own wrapper.
     LOCATION_MAP.put( IFeatureWrapper.class, "simulation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, "discretisation.gml" );
+    LOCATION_MAP.put( ITerrainModel.class, "terrain.gml" );
     // TODO: add other model types here
   }
 

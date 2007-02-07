@@ -122,44 +122,6 @@
       </factory>
    </extension>
      <extension
-           point="org.eclipse.ui.popupMenus">
-        <objectContribution
-              adaptable="false"
-              id="org.kalypso.model1d2d.objectContribution.discretisationModel"
-              objectClass="org.kalypsodeegree.model.feature.Feature">
-           <filter
-                 name="featureType"
-                 value="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d#DiscretisationModel"/>
-           <action
-                 class="org.kalypso.kalypsomodel1d2d.ui.actions.ValidateDiscretisationModelActionDelegate"
-                 id="org.kalypso.kalypsomodel1d2d.ui.actions.ValidateDiscretisationModelActionDelegate"
-                 label="Modell validieren"
-                 style="push"
-                 tooltip="validiert das Modell"/>
-           <menu
-                 id="org.kalypso.model1d2d.discModelImport"
-                 label="Import"
-                 path="additions">
-              <groupMarker name="imports"/>
-              <separator name="additions"/>
-           </menu>
-           <action
-                 class="org.kalypso.kalypsomodel1d2d.ui.actions.ImportBCE2DActionDelegate"
-                 id="org.kalypso.kalypsomodel1d2d.ui.actions.ImportBCE2DActionDelegate"
-                 label="BCE2D"
-                 menubarPath="org.kalypso.model1d2d.discModelImport/imports"
-                 style="push"
-                 tooltip="ein BCE2D Modell importieren"/>
-           <action
-                 class="org.kalypso.kalypsomodel1d2d.ui.actions.ImportWSPMDelegateAction"
-                 id="org.kalypso.kalypsomodel1d2d.ui.actions.ImportWSPMDelegateAction"
-                 label="WSPM"
-                 menubarPath="org.kalypso.model1d2d.discModelImport/imports"
-                 style="push"
-                 tooltip="ein WSPM Modell importieren"/>
-        </objectContribution>
-     </extension>
-     <extension
          name="Workflow Views"
          point="org.eclipse.ui.views">
 	      <view

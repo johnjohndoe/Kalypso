@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**

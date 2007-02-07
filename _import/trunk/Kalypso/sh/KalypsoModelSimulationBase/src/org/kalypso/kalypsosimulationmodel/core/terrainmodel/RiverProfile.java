@@ -63,20 +63,4 @@ public/* abstract */class RiverProfile extends AbstractFeatureBinder implements 
   {
     super( feature, qname );
   }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
-   */
-  public Feature getWrappedFeature( )
-  {
-    return getFeature();
-  }
-  
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-   */
-  public String getGmlID( )
-  {
-    return getFeature().getId();
-  }
 }

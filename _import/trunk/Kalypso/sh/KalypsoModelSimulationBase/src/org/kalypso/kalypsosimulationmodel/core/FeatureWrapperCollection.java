@@ -11,7 +11,9 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * Class representing the wbGml:RangeSetFeature element.
@@ -21,7 +23,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Patrice Congo
  */
-public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> 
+public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends AbstractFeatureBinder
             implements IFeatureWrapperCollection<FWCls> 
 {
 	/**
@@ -50,6 +52,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 	 */
 	public FeatureWrapperCollection(Feature featureCol, Class<FWCls> fwClass,
 			QName featureMemberProp) {
+      
+      super( featureCol, featureCol.getFeatureType().getQName() );
+      
 		Assert.throwIAEOnNull(fwClass, "Parameter fwClass must not be null");
 
 		Assert.throwIAEOnNull(featureCol,
@@ -79,6 +84,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 					Class<FWCls> fwClass)
 					throws IllegalArgumentException 
 	{
+      super( createSubfeature( parentFeature, childQName, featureMemberProp ), childQName );
+      
 		Assert.throwIAEOnNull(parentFeature,
 				"Parameter parentFeature must not be null");
 		Assert.throwIAEOnNull(childQName,
@@ -111,6 +118,31 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper>
 
 		this.fwClass = fwClass;
 	}
+    
+    private static Feature createSubfeature(        
+        Feature parentFeature, 
+        QName childQName,
+        QName featureMemberProp)
+    {
+        try 
+        {
+            return 
+                FeatureHelper.addFeature(
+                        parentFeature,
+                        featureMemberProp, 
+                        childQName);
+        } 
+        catch (GMLSchemaException ex) 
+        {
+
+            throw new IllegalArgumentException(
+                    "Parent does not accept property of the specified type"
+                            + "\n\tparent=" + parentFeature
+                            + "\n\tpropertyType=" + featureMemberProp
+                            + "\n\tchildType=" + childQName, ex);
+        }
+
+    }
 
 	@SuppressWarnings("unchecked")
 	public void add(int index, FWCls element) {

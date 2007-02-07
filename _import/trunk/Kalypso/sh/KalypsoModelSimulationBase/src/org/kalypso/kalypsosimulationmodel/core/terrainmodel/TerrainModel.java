@@ -38,45 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.command;
+package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
- * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
-public abstract class WorkflowCommandHandler extends AbstractHandler
+public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
 {
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public TerrainModel( final Feature featureToBind )
   {
-    final IStatus status;
-    try
-    {
-      status = executeInternal( event );
-    }
-    catch( final CoreException e )
-    {
-      throw new ExecutionException( "Problem in internal execution: " + e.getLocalizedMessage(), e );
-    }
-    catch( final Throwable t )
-    {
-      throw new ExecutionException( "Problem in internal execution: " + t.getLocalizedMessage(), t );
-    }
-
-    if( !status.isOK() )
-    {
-      // TODO: log to plugin
-      // KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
-    }
-
-    return status;
+    super( featureToBind, QNAME_TERRAIN_MODEL );
   }
 
-  protected abstract IStatus executeInternal( final ExecutionEvent event ) throws CoreException;
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerainModel#getRiverProfileNetworkCollection()
+   */
+  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( )
+  {
+    final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER );
+    if( feature == null )
+      return null;
 
+    return (IRiverProfileNetworkCollection) feature.getAdapter( IRiverProfileNetworkCollection.class );
+  }
 }

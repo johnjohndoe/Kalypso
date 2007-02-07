@@ -19,10 +19,12 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -56,6 +58,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.wizards.IWizardRegistry;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IHelp;
 import org.kalypso.afgui.model.IPhase;
@@ -64,6 +67,7 @@ import org.kalypso.afgui.model.ITask;
 import org.kalypso.afgui.model.ITaskGroup;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowPart;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
@@ -935,14 +939,19 @@ public class WorkflowControl {
                     .getService(IHandlerService.class);
             handlerService.executeCommand(uri, event);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+        	final IStatus status = StatusUtilities.statusFromThrowable(e);
+        	ErrorDialog.openError( form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + uri, status );
+        	KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log(status);
+        	logger.error( "Failed to execute command: " + uri, e);
         } catch (NotDefinedException e) {
             e.printStackTrace();
         } catch (NotEnabledException e) {
             e.printStackTrace();
         } catch (NotHandledException e) {
-        	// TODO: popup 'Operation not supported'
-            e.printStackTrace();
+        	final IStatus status = StatusUtilities.statusFromThrowable(e);
+        	ErrorDialog.openError( form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + uri, status );
+        	KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log(status);
+        	logger.error( "Failed to execute command: " + uri, e);
         }
 
         // logger.info("running for:"+uri);

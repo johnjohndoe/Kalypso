@@ -29,6 +29,7 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWspmRiverProfileWrapper"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
       </factory>
       
       <factory

@@ -38,71 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.actions;
+package org.kalypso.kalypso1d2d.pjt.actions;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ui.command.WorkflowCommandHandler;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWSPMDelegateAction implements IObjectActionDelegate
+public class ImportWSPMHandler extends WorkflowCommandHandler
 {
-//  private IAction m_action;
-
-  private IWorkbenchPart m_targetPart;
-
-  private IStructuredSelection m_selection;
-
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
+   * @see org.kalypso.ui.command.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
-  public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
+  @Override
+  protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
-//    m_action = action;
-    m_targetPart = targetPart;
-  }
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
-  {
-    final IWorkbenchPartSite site = m_targetPart.getSite();
-    final Shell shell = site.getShell();
-    final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
+    final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
+    final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 
-    final ImportWspmWizard importWizard = new ImportWspmWizard( );
+    final ImportWspmWizard importWizard = new ImportWspmWizard( networkModel );
     importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
-    importWizard.init( workbench, m_selection );
-    
+
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
-    if( dialog.open() == WizardDialog2.OK )
-    {
-      // nothing to do, everything has already happened inside the wizard-finish
-    }
-  }
+    if( dialog.open() == Window.OK )
+      return Status.OK_STATUS;
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-//    m_action = action;
-    m_selection = (IStructuredSelection) selection;
+    return Status.CANCEL_STATUS;
   }
 
 }
