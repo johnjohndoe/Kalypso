@@ -137,6 +137,48 @@
              </action>
         </viewContribution>
      </extension>
+     
+     	 <extension
+      point="org.eclipse.ui.handlers">
+		   <handler
+		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#PolyElement">
+		      <!--can hide functionality based on active context-->
+		      <!--<activeWhen>   
+		         <with variable="activeContexts">
+		            <iterate operator="or">
+		               <equals value="PolyElement"/>
+		            </iterate>
+		         </with>
+		      </activeWhen>-->
+		   </handler>
+		   <handler
+		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Edge">
+		      <!--can hide functionality based on active context-->
+		      <!--<activeWhen>   
+		         <with variable="activeContexts">
+		            <iterate operator="or">
+		               <equals value="Edge"/>
+		            </iterate>
+		         </with>
+		      </activeWhen>-->
+		   </handler>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp"/>
+	</extension>
+        <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.kalypso.kalypso1d2dpjt.OpenMapViewCommand"
+            name="Open Map View">
+         <commandParameter
+               id="org.kalypso.kalypso1d2dpjt.OpenMapViewCommand.resource"
+               name="Resource"
+               optional="false"/>
+      </command>
+   </extension>
     <extension
           id="KalypsoEnterpriseSH"
           point="org.eclipse.core.runtime.products">

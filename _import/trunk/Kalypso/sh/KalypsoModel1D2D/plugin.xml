@@ -33,36 +33,6 @@
               id="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
               name="FE1D2D_2DElementTypeGeometry"/>
      </extension>     
-	 <extension
-      point="org.eclipse.ui.handlers">
-		   <handler
-		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#PolyElement">
-		      <!--can hide functionality based on active context-->
-		      <!--<activeWhen>   
-		         <with variable="activeContexts">
-		            <iterate operator="or">
-		               <equals value="PolyElement"/>
-		            </iterate>
-		         </with>
-		      </activeWhen>-->
-		   </handler>
-		   <handler
-		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Edge">
-		      <!--can hide functionality based on active context-->
-		      <!--<activeWhen>   
-		         <with variable="activeContexts">
-		            <iterate operator="or">
-		               <equals value="Edge"/>
-		            </iterate>
-		         </with>
-		      </activeWhen>-->
-		   </handler>
-     <handler
-           class="org.kalypso.kalypsomodel1d2d.ui.ImportRoughnessHandler"
-           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp"/>
-	</extension>
      <extension
            id="editorActions"
            name="editorActions"

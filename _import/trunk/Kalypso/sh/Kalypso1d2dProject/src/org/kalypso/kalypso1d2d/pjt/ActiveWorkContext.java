@@ -12,6 +12,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
@@ -89,6 +90,10 @@ public class ActiveWorkContext
 		IWorkbenchWindow window=
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		window.getSelectionService().addPostSelectionListener(resSelListener);
+        final SimulationModelProvider simModelProvider = new SimulationModelProvider(this);
+        final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+        service.addSourceProvider(simModelProvider);
+        //TODO remove source provider somewhere
 	}
 	
 	synchronized public void setActiveProject(IProject activeProject) throws CoreException

@@ -1,28 +1,17 @@
-/**
- * 
- */
 package org.kalypso.kalypsosimulationmodel.core;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISourceProvider;
 
 /**
- * Interface to be implemented class to act as simulation model provider. This is use e.g. in the worksflow system
+ * Interface to be implemented to act as simulation model source provider. This is used e.g. in the workflow system
  * 
  * @author Patrice Congo
  * @author Gernot Belger
  * @author Stefan Kurzbach
  */
-public interface ISimulationModelProvider
+public interface ISimulationModelProvider extends ISourceProvider
 {
-  /**
-   * To get the simulation model
-   * 
-   * @return the simulation model as {@link IFeatureWrapper}
-   */
-  IFeatureWrapper getSimulationModel( );
+  public static final String ACTIVE_SIMULATION_MODEL_NAME = "activeSimulationModel";
 
-  IStructuredSelection getSelection( );
-
-  Shell getShell( );
+  public static final String ACTIVE_SIMULATION_MODEL_BASE_FOLDER_NAME = "activeSimulationModelBaseFolder";
 }
