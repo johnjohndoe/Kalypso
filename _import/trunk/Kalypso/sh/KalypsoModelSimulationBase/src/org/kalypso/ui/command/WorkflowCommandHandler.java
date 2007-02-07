@@ -38,37 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.ui.command;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 
 /**
  * @author Stefan Kurzbach
  */
-public abstract class WorkflowCommandHandler extends AbstractHandler {
-
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final IStatus status;
-        try {
-            status = executeInternal(event);
-        } catch (final CoreException e) {
-            throw new ExecutionException("Problem in internal execution", e);
-        }
-
-        if (!status.isOK()) {
-            KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
-        }
-
-        return status;
+public abstract class WorkflowCommandHandler extends AbstractHandler
+{
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  {
+    final IStatus status;
+    try
+    {
+      status = executeInternal( event );
+    }
+    catch( final CoreException e )
+    {
+      throw new ExecutionException( "Problem in internal execution", e );
     }
 
-    protected abstract IStatus executeInternal(final ExecutionEvent event)
-            throws CoreException;
+    if( !status.isOK() )
+    {
+      // TODO: log to plugin
+      // KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
+    }
+
+    return status;
+  }
+
+  protected abstract IStatus executeInternal( final ExecutionEvent event ) throws CoreException;
 
 }

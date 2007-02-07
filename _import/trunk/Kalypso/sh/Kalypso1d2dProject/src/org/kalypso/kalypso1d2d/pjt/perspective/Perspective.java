@@ -7,7 +7,6 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessClsCollectionView;
-import org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessDBViewer;
 
 
 
@@ -50,33 +49,33 @@ public class Perspective implements IPerspectiveFactory {
 			 				0.7f,
 			 				"leftTop");
 		 
-		 IFolderLayout bottom = 
-			 	layout.createFolder(
-			 				"bottom", 
-			 				IPageLayout.BOTTOM, 
-			 				0.80f,
-			 				editorArea);
-		 IFolderLayout rightTop = 
+//		 IFolderLayout bottom = 
+//			 	layout.createFolder(
+//			 				"bottom", 
+//			 				IPageLayout.BOTTOM, 
+//			 				0.80f,
+//			 				editorArea);
+		 IFolderLayout rightMiddle = 
 			 	layout.createFolder(
 			 				"rightTop", 
 			 				IPageLayout.RIGHT, 
 			 				0.7f,
 			 				editorArea);
-		 IFolderLayout rightMiddle = 
-			 	layout.createFolder(
-			 				"rightMiddle", 
-			 				IPageLayout.BOTTOM, 
-			 				0.5f,
-			 				"rightTop");
+//		 IFolderLayout rightMiddle = 
+//			 	layout.createFolder(
+//			 				"rightMiddle", 
+//			 				IPageLayout.BOTTOM, 
+//			 				0.5f,
+//			 				"rightTop");
 		 
 		 leftTop.addView(WorkflowView.ID);//IPageLayout.ID_RES_NAV);
 		 //leftMiddle.addView(TasksView.ID);
 		 leftBottom.addView(IPageLayout.ID_OUTLINE);
-		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		 bottom.addView(RoughnessClsCollectionView.ID);
+//		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+//		 bottom.addView(RoughnessClsCollectionView.ID);
 		 //bottom.addView(IPageLayout.ID_)
 		 //rightTop.addView(SimulationModelDBView.ID);
-		 rightTop.addView(IPageLayout.ID_RES_NAV);
+//		 rightTop.addView(IPageLayout.ID_RES_NAV);
 		 //rightMiddle.addView(ActivitiesView.ID);
 		 rightMiddle.addView(SimulationModelDBView.ID);
 		 layout.addNewWizardShortcut(Kalypso1D2DNewProjectWizard.ID);

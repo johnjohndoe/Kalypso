@@ -43,6 +43,7 @@ public class WorkflowDB implements IWorkflowDB
 	
 	final static private Model loadModel(URL url) throws IOException
 	{
+		// TODO: close input stream!! (finally!)
 		logger.info("specURL="+url);
 		InputStream iStream=url.openStream();
 		Model rdfModel= ModelFactory.createDefaultModel();

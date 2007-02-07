@@ -21,5 +21,6 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.roughness,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
  org.kalypso.kalypsosimulationmodel.schema,
+ org.kalypso.ui.command,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 

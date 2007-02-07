@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.part.WorkbenchPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
 import org.kalypso.afgui.model.IWorkflowData;
@@ -75,6 +76,8 @@ public class SimulationModelDBView extends ViewPart
 				//top.setVisible(false);
 			}
 			tv.setInput(activeWorkContext);
+            // TODO: this is for debugging purposes, remove later?
+            setContentDescription( newProject == null ? "" : newProject.getName() );
 		}
 		
 	};

@@ -55,9 +55,11 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 			IProject project = getNewProject();
 			try 
 			{
-				Kalypso1D2DProjectNature.addNature(project);
-				//TODO change back
-				//Kalypso1D2DProjectNature.createMetaDataFolder(project);
+				Kalypso1D2DProjectNature.addNature( project );
+                
+                /* Also activate new project */
+                ActiveWorkContext.getInstance().setActiveProject( project );
+                
 				logger.info("DADADADADA:\n"+project);
 			} 
 			catch (CoreException e) 

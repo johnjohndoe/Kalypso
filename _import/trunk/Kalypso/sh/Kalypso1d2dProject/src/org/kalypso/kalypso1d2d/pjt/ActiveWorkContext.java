@@ -77,7 +77,7 @@ public class ActiveWorkContext
 	final static Logger logger=
 				Logger.getLogger(ActiveWorkContext.class);
 	
-	private final static ActiveWorkContext activeWorkContext= new ActiveWorkContext();;
+	private final static ActiveWorkContext activeWorkContext= new ActiveWorkContext();
 	
 	private IWorkflowDB workflowDB;
 	

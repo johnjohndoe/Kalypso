@@ -16,6 +16,8 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 
 /**
  * 
+ * TODO: obsolete, remove?
+ * 
  * @author Patrice Congo
  */
 public class SetActiveProjectActionDelegate implements IViewActionDelegate
