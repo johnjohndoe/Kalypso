@@ -57,12 +57,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 @SuppressWarnings("unchecked")
 /**
@@ -320,5 +322,14 @@ public class ModelOps
     }
     
     
+  }
+  
+  /**
+   * 
+   */
+  public static final void insertAsFEModelPart(
+                                    Coordinate[][] coordinates)
+  {
+    Assert.throwIAEOnNullParam( coordinates, "coordinates" );    
   }
 }

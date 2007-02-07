@@ -142,20 +142,28 @@ public class LineGeometryBuilder implements IGeometryBuilder
     
     if( (m_points.size() == m_cnt_points) || (m_cnt_points == 0) )
     {
-      final GeoTransformer transformer = new GeoTransformer( m_crs );
-
-      final GM_Position[] poses = new GM_Position[m_points.size()];
-      for( int i = 0; i < poses.length; i++ )
-      {
-        final GM_Point transformedPoint = 
-                (GM_Point) transformer.transform( m_points.get( i ) );
-        poses[i] = transformedPoint.getPosition();
-      }
+      m_cnt_points=m_points.size();
+//      final GeoTransformer transformer = new GeoTransformer( m_crs );
+//
+//      final GM_Position[] poses = new GM_Position[m_points.size()];
+//      for( int i = 0; i < poses.length; i++ )
+//      {
+//        final GM_Point transformedPoint = 
+//                (GM_Point) transformer.transform( m_points.get( i ) );
+//        poses[i] = transformedPoint.getPosition();
+//      }
       isFinished=true;
-      return createGeometry( poses );
+      return getLastPoint();
+      //FIXME changed to prevent the curve geometry not to be drawn
+//      return createGeometry( poses );
+    }
+    else
+    {
+      System.out.println("Bad finishing");
+      return null;
     }
 
-    return null;
+    
   }
 
   /**
@@ -434,6 +442,8 @@ public class LineGeometryBuilder implements IGeometryBuilder
     return m_cnt_points;
   }
   
+  
+  
   /**
    * Return the number of points already in this 
    * {@link LineGeometryBuilder}
@@ -443,6 +453,28 @@ public class LineGeometryBuilder implements IGeometryBuilder
   public int getCurrentPointCnt()
   {
     return m_points.size();
+  }
+  
+  
+  /**
+   * Return the remaining number of point to add 
+   * to this {@link LineGeometryBuilder} to reach the expected
+   * number of points 
+   * 
+   * @return the actual of number of point remaining for completion
+   *  or {@link Integer#MAX_VALUE} if the required number of point
+   *  was set to a zero or negativ integer     
+   */
+  public int getRemainingPointCnt()
+  {
+    if(m_cnt_points<=0)
+    {
+      return Integer.MAX_VALUE;
+    }
+    else
+    {
+      return m_cnt_points-m_points.size();
+    }
   }
   
   public void replaceLastPoint(GM_Point point)
@@ -492,6 +524,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
       return null;
     }
     
+  }
+  
+  public GM_Point getPointAt(int index)
+  {
+    return m_points.get( index );    
   }
   
   public void clearSelection()

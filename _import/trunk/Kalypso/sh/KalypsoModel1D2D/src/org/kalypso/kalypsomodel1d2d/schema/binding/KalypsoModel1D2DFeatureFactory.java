@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.ui.IFileEditorMapping;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
@@ -204,6 +205,32 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         };
         cMap.put(IFE1D2DComplexElement.class, cTor);
         
+        ///////////////
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+              QName featureQName=feature.getFeatureType().getQName();
+              
+                if(featureQName.equals( 
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel) )
+                {
+                  return new FE1D2DDiscretisationModel(feature);     
+                }
+                else
+                {
+                  return new FE1D2D_2DElement(feature);
+                }
+            }
+        };
+        cMap.put(IFEDiscretisationModel1d2d.class, cTor);
+        
+        
 		return Collections.unmodifiableMap(cMap);
 	}
+    
+    
 }

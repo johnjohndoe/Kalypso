@@ -12,11 +12,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -36,6 +41,8 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
   
   private int m_radius=20;
   
+  
+  
   public CreateGitterWidget( )
   {
     super( 
@@ -53,10 +60,12 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
             final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-
+    
+   
     // find the right themes to edit i.e. the discretisation model
     if(isActivated==false)
     {
+      
       reinit();
       isActivated=true;
     }
@@ -327,6 +336,23 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     {
       
       System.out.println("Selected");
+    }
+    else if(typed=='t')
+    {
+       IFEDiscretisationModel1d2d model1d2d = 
+                 UtilMap.findFEModelTheme(  
+                                getMapPanel().getMapModell(), 
+                                Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      try
+      {
+        //TODO add elements to model from the 4 lines
+        gridPointCollector.getAddToModel( model1d2d );
+        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+      }
+      catch( GM_Exception e1 )
+      {
+        e1.printStackTrace();
+      }
     }
     else
     {

@@ -43,30 +43,31 @@ package xp;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import javax.print.attribute.standard.Sides;
-import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
-
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
-import org.kalypso.ui.editor.styleeditor.panels.ColorBox;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.omg.CORBA._PolicyStub;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import com.sun.org.apache.xerces.internal.dom3.as.ASAttributeDeclaration;
-import com.vividsolutions.jts.geomgraph.Position;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+
 
 @SuppressWarnings("unchecked")
 class GridPointCollector implements IGeometryBuilder
@@ -83,9 +84,11 @@ class GridPointCollector implements IGeometryBuilder
 //  private LineGeometryBuilder builder;
   
   private int actualSideKey;
+  
   private boolean hasAllSides=false;
   
   private LineGeometryBuilder sides[] = new LineGeometryBuilder[SIDE_MAX_NUM];
+  
   private Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
   
   private GM_Curve[] oppossites= new GM_Curve[2]; 
@@ -154,19 +157,58 @@ class GridPointCollector implements IGeometryBuilder
     
     GM_Point lastAdded= (GM_Point)sides[actualSideKey].addPoint( p );
     GM_Point autocompleted=autoComplete();
-    return (autocompleted==null)?lastAdded:autocompleted;
-    
-  }
-
-  public GM_Point autoComplete()
-  {
-    if(actualSideKey==3)
+    if(autocompleted!=null)
     {
-      return null;
+      return this.finishSide();
     }
     else
     {
-      return null;
+      return lastAdded;//(autocompleted==null)?lastAdded:autocompleted;
+    }
+    
+  }
+
+  /**
+   * Auto complete this line collector and returns the 
+   * completing point if done.
+   * Auto completion is only done for the last side because
+   * 
+   * @return the auto completion point 
+   */
+  public GM_Point autoComplete() throws Exception
+  {
+    if(actualSideKey==3)
+    {
+      System.out.println("Autocompleting:");
+      if(sides[actualSideKey].getRemainingPointCnt()==1)
+      {
+        GM_Point point= sides[0].getFirstPoint();
+        if(point instanceof MutableGMPoint)
+        {
+          sides[actualSideKey].addPoint( point );
+          return point;
+        }
+        else
+        {
+          throw new RuntimeException("Mutable point expected");
+//          return null;
+        }
+      }
+      else
+      {
+        return null;
+      }
+    }
+    else
+    {
+      if(sides[actualSideKey].getRemainingPointCnt()==0)
+      {
+        return (GM_Point)sides[actualSideKey].finish();//getLastPoint();
+      }
+      else
+      {
+        return null;
+      }
     }
   }
   public GM_Point getLastPoint() throws Exception
@@ -256,11 +298,11 @@ class GridPointCollector implements IGeometryBuilder
     }
     else if(actualSideKey==2)
     {
-      return sides[0].getPointCnt();
+      return sides[0].getCurrentPointCnt();
     }
     else if(actualSideKey==3)
     {
-      return sides[1].getPointCnt();
+      return sides[1].getCurrentPointCnt();
     }
     else
     {
@@ -455,5 +497,94 @@ class GridPointCollector implements IGeometryBuilder
   public boolean getHasAllSides()
   {
     return hasAllSides;
+  }
+  
+  public void getAddToModel(
+                      IFEDiscretisationModel1d2d model) 
+                      throws GM_Exception
+  {
+    GeometryFactory geometryFactory= new GeometryFactory();
+    final LineString topLine = pointToLineString( sides[0] );
+    final LineString bottomLine = pointToLineString( sides[2] );
+    final LineString leftLine = pointToLineString( sides[1] );
+    final LineString rightLine = pointToLineString( sides[3] );
+    
+    JTSQuadMesher mesher= 
+              new JTSQuadMesher(
+                        topLine,
+                        bottomLine,
+                        leftLine,
+                        rightLine);
+    Coordinate[][] coordinates=mesher.calculateMesh();  
+    IFE1D2DNode[][] newNodesArray2D= 
+                   new IFE1D2DNode[coordinates.length][];
+    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
+   
+    //Create the nodes
+    for(int i=0;i<coordinates.length;i++)
+    {
+      Coordinate[] line=coordinates[i];
+      IFE1D2DNode[] newNodesArray1D= 
+                        new IFE1D2DNode[line.length];
+      newNodesArray2D[i]=newNodesArray1D;
+      for(int j=0;j<line.length;j++)
+      {
+        Coordinate coord=line[j];
+        //TODO check node for existance
+        IFE1D2DNode node=
+          nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+        
+        node.setPoint( 
+              (GM_Point)JTSAdapter.wrap( 
+                  geometryFactory.createPoint(coord)));
+        newNodesArray1D[j]=node;
+      }
+    }
+      
+//  add edges
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+    for(int i=0;i<newNodesArray2D.length;i++)
+    {
+      IFE1D2DNode[] nodeLine1=newNodesArray2D[i];
+      IFE1D2DNode[] nodeLine2=
+        (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
+      for(int j=0; j<nodeLine1.length-1;j++)
+      {
+        //horidonzal edges
+        IFE1D2DEdge edge = edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+        //todo add vertical edge
+        edge.addNode( nodeLine1[j].getGmlID() );
+        edge.addNode( nodeLine1[j+1].getGmlID() );
+        
+        if(nodeLine2!=null)
+        {
+//          edge=edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+//          edge.addNode( nodeLine2[j].getGmlID() );
+//          edge.addNode( nodeLine2[j+1].getGmlID() );
+        }
+        
+      }
+    }
+    model.getWrappedFeature().getWorkspace().fireModellEvent( null );
+    
+  }
+  
+  private LineString pointToLineString(
+                LineGeometryBuilder lineGeometryBuilder)
+  {
+    final int SIZE=lineGeometryBuilder.getCurrentPointCnt();
+      Coordinate coordinates[] = new Coordinate[SIZE];
+      for(int i=0;i<SIZE;i++)
+      {
+        coordinates[i]=
+          JTSAdapter.export(  
+                lineGeometryBuilder.getPointAt( i ).getPosition());
+      }
+//    CoordinateSequence 
+//    JTSAdapter
+    GeometryFactory geometryFactory=new GeometryFactory();
+    LineString lineString=
+      geometryFactory.createLineString( coordinates );
+    return lineString;
   }
 }

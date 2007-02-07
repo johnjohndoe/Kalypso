@@ -118,6 +118,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d"/>
       </factory>
    </extension>
      <extension
