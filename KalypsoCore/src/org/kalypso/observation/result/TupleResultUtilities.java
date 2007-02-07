@@ -40,6 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.XmlTypes;
+
 /**
  * @author Gernot Belger
  */
@@ -84,4 +93,99 @@ public class TupleResultUtilities
     return null;
   }
 
+  /**
+   * @author thuel2
+   * @return returns minimum value for component of a tupleResult, works for components of XmlType XS_BOOLEAN,
+   *         XS_DOUBLE, XS_DATE, XS_STRING
+   */
+  public static Object findComponentMinById( final TupleResult result, final String compID )
+  {
+    final IComponent comp = TupleResultUtilities.findComponentById( result, compID );
+    if( comp == null )
+      return null;
+    final QName valueTypeName = comp.getValueTypeName();
+
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
+    {
+      final List<Boolean> values = new ArrayList<Boolean>();
+      for( final IRecord record : result )
+        values.add( (Boolean) record.getValue( comp ) );
+      return Collections.min( values );
+    }
+    else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
+    {
+      // TODO think about other numerical types:
+      // XmlTypes.XS_BYTE, XmlTypes.XS_DECIMAL, XmlTypes.XS_FLOAT, XmlTypes.XS_INT, XmlTypes.XS_INTEGER,
+      // XmlTypes.XS_LONG, XmlTypes.XS_SHORT
+      final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
+      for( final IRecord record : result )
+        values.add( (java.lang.Double) record.getValue( comp ) );
+      return Collections.min( values );
+    }
+    else if( XmlTypes.XS_DATE.equals( valueTypeName ) )
+    {
+      // TODO think about other date types
+      // XmlTypes.XS_DATETIME, XmlTypes.XS_DURATION, XmlTypes.XS_TIME
+      final List<Date> values = new ArrayList<Date>();
+      for( final IRecord record : result )
+        values.add( (Date) record.getValue( comp ) );
+      return Collections.min( values );
+    }
+    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+    {
+      final List<String> values = new ArrayList<String>();
+      for( final IRecord record : result )
+        values.add( (String) record.getValue( comp ) );
+      return Collections.min( values );
+    }
+    return null;
+  }
+
+  /**
+   * @author thuel2
+   * @return returns maximum value for component of a tupleResult, works for components of XmlType XS_BOOLEAN,
+   *         XS_DOUBLE, XS_DATE, XS_STRING
+   */
+  public static Object findComponentMaxById( final TupleResult result, final String compID )
+  {
+    final IComponent comp = TupleResultUtilities.findComponentById( result, compID );
+    if( comp == null )
+      return null;
+    final QName valueTypeName = comp.getValueTypeName();
+
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
+    {
+      final List<Boolean> values = new ArrayList<Boolean>();
+      for( final IRecord record : result )
+        values.add( (Boolean) record.getValue( comp ) );
+      return Collections.max( values );
+    }
+    else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
+    {
+      // TODO think about other numerical types:
+      // XmlTypes.XS_BYTE, XmlTypes.XS_DECIMAL, XmlTypes.XS_FLOAT, XmlTypes.XS_INT, XmlTypes.XS_INTEGER,
+      // XmlTypes.XS_LONG, XmlTypes.XS_SHORT
+      final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
+      for( final IRecord record : result )
+        values.add( (java.lang.Double) record.getValue( comp ) );
+      return Collections.max( values );
+    }
+    else if( XmlTypes.XS_DATE.equals( valueTypeName ) )
+    {
+      // TODO think about other date types
+      // XmlTypes.XS_DATETIME, XmlTypes.XS_DURATION, XmlTypes.XS_TIME
+      final List<Date> values = new ArrayList<Date>();
+      for( final IRecord record : result )
+        values.add( (Date) record.getValue( comp ) );
+      return Collections.max( values );
+    }
+    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+    {
+      final List<String> values = new ArrayList<String>();
+      for( final IRecord record : result )
+        values.add( (String) record.getValue( comp ) );
+      return Collections.max( values );
+    }
+    return null;
+  }
 }
