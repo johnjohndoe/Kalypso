@@ -1,4 +1,3 @@
-C     Last change:  K    15 Dec 2006    4:41 pm
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -20,7 +19,7 @@ CIPK  LAST UPDATE jAN 22 1997
 CIPK  AUG 95  SIGNIFICANT CHANGES TO FILE
       SUBROUTINE FILE(NT,FNAM0)
 !NiS,Nov06: Not available in Fortran
-!      USE IFPORT
+!cintel      USE IFPORT
 !CIPK COMPAQ      USE DFLIB
 !-
       USE BLK10MOD
@@ -63,8 +62,12 @@ CIPK JUL01 ADD FNAM20,
       CHARACTER*10 DATEC,TIMEC,ZONEC
       INTEGER  DTI(8)
 cipk sep99 add to line above
-CIPK AUG98 ADD COMMAND LINE 
+CIPK AUG98 ADD COMMAND LINE
       INTEGER*2 N1,STATUS
+
+	write (*,*) FNAM
+
+
 CIPK DEC00      DATA VOID/-1.E20/
       LIN=2
       LOUT=3
@@ -76,7 +79,7 @@ CIPK DEC00      DATA VOID/-1.E20/
       !NiS,mar06,com: Second call
       IF( NT .EQ. 2) THEN
         CLOSE (LOUT)
-          FNAME=FNAM(1:LNNAM) // '.out'
+        FNAME=FNAM(1:LNNAM) // '.out'
         OPEN(LOUT,FILE=FNAME,STATUS='UNKNOWN')
         RETURN
       !NiS,mar06,com: First call
@@ -139,7 +142,7 @@ CIPK SEP04
 CIPK JUN05
 	  INCSTR=0
 	  INTIMS=0
-CIPK MAY06	  
+CIPK MAY06
 	  IMASSOUT=0
 C-
 *...... Open input and output files
@@ -214,14 +217,14 @@ cipk sep99 add test for blank initial characters
           FNAM6=FNAM(1:LNNAM) // '.ech'
           OPEN(LOUT,FILE=FNAM6,STATUS='UNKNOWN')
           FNAM1=FNAM(1:LNNAM) // '.itr'
-          !nis,dec06: Litr has no unit number, giving it a default number for the moment
-          Litr = 1234
+          !nis,dec06: chosen unit number for LITR
+          LITR = 1234
           !-
           OPEN(LITR,FILE=FNAM1,STATUS='UNKNOWN')
 CIPK SEP04
           FNAMMES=FNAM(1:LNNAM)// 'MESS.OUT'
           IMESOUT=75
-		OPEN(IMESOUT,FILE=FNAMMES,STATUS='UNKNOWN')
+		  OPEN(IMESOUT,FILE=FNAMMES,STATUS='UNKNOWN')
           CALL ZVRS(0)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
