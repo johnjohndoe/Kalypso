@@ -46,7 +46,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
   private IRelationType m_parentRelation;
 
   private GM_Envelope m_envelope = INVALID_ENV;
-  
+
   protected Feature_Impl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     if( ft == null )
@@ -98,6 +98,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
       throw new IllegalArgumentException( "pt may not null" );
 
     final int pos = m_featureType.getPropertyPosition( pt );
+    if( pos == -1 )
+    {
+      final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
+      throw new IllegalArgumentException( msg );
+    }
 
     final IFeaturePropertyHandler fsh = getPropertyHandler();
 
@@ -308,7 +313,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
       return (Feature) m_parent;
     return null;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
    */
@@ -352,7 +357,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
     final IPropertyType prop = featureType.getProperty( propQName );
     if( prop == null )
       throw new IllegalArgumentException( "Property not found: " + propQName );
-    
+
     setProperty( prop, value );
   }
 

@@ -250,7 +250,7 @@ public class ResourcePool
    * <p>
    * Bear in mind that the pool-listener mechanism is bypassed here.
    */
-  public Object getObject( final PoolableObjectType key ) throws CoreException
+  public Object getObject( final IPoolableObjectType key ) throws CoreException
   {
     final KeyInfo info = m_keyInfos.get( key );
     if( info != null )
