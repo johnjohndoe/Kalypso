@@ -92,7 +92,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   {
     final QName qname = pt.getQName();
 
-    // HACK: in order to reverse the order of controls, we remeber them in own lists until we get to 'description'.
+    // HACK: in order to reverse the order of controls, we remember them in own lists until we get to 'description'.
     // This also implies that name and description must be there in order to have any output at all
     final List<JAXBElement< ? extends ControlType>> list;
     if( QNAME_GML_DESCRIPTION.equals( qname ) )
