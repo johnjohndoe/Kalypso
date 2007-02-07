@@ -65,7 +65,7 @@ public class LineStringUtilities
     Coordinate[] coordinatesInputLine = InputLine.getCoordinates();
     LinkedList<Coordinate> newCoordinates = new LinkedList<Coordinate>(); 
 
-    for (int i = coordinatesInputLine.length -1; i >=0; i++) 
+    for (int i = coordinatesInputLine.length -1; i >=0; i--) 
     {
       newCoordinates.add( coordinatesInputLine[i] );
     }
