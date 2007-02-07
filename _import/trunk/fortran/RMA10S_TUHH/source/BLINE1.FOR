@@ -2,7 +2,6 @@ CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update July 18 199 fix problem with combined SL and SN data
-C     Last change:  K    26 Jan 2007    2:07 pm
 cipk  last update Sep 3 1996   Add ocean boundary capability
       SUBROUTINE BLINE(NTR) 
 !NiS,may06,com:
@@ -227,6 +226,7 @@ CIPK JUN05
   600 CONTINUE
 
 CIPK JUN05  SETUP FOR SUBMERGENGE
+      !NiS,may06: NTR is again the calling position of BLINE
       IF(NTR .GT. 0) THEN
         CALL SUBSET
       ENDIF

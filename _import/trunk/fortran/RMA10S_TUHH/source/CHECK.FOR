@@ -1,17 +1,17 @@
-!NiS  LAST UPDATE JUL XX 2006 Declaration of variables for consistency
-CIPK  LAST UPDATE DEC 17 2005 ADD TEST FORLINE AND ERROR FILE
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
 cipk  LAST UPDATE mar 18 2001 add constituents for average concentration 
 cipk  last update feb 09 2001 allow for zero length cc lines
 cipk  last update jan 12 1999  add ss1 terms
-C     Last change:  K     7 Feb 2007    2:30 pm
 cipk  last update Jan 21 1998
       SUBROUTINE CHECK
       USE BLK10MOD
       USE BLKDRMOD
       USE BLK11MOD
+      !nis,feb07: Using module for polynomial approach
+      USE paraFlow1DFE
+      !-
       SAVE
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -252,12 +252,35 @@ cipk feb01  skip out for zero lines
         ELSEIF(LMT(J) .EQ. 1) THEN
           NA=LINE(J,1)
           IF(NDEP(NA) .LT. 2) THEN
-            SUMX=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)*VEL(3,NA)*
+            !nis,feb07: Allow for continuity checks at nodes with polynomial approach
+            !get check value
+            testProd = 1
+            testSum  = 0
+            !Testsum and Testproduct
+            AddMultTest: do i = 1, 13
+              testSum  = testSum + qpoly(NA,i)
+              if (qpoly(NA,i) == 0) CYCLE AddMultTest
+              testProd = testProd * qpoly(NA,i)
+            end do AddMultTest
+
+            !Proceed on nodes of polynomial approach
+            if (testSum /= 0 .or. testProd /= 1) then
+              TempArea = 0.0
+              do i = 1, 13
+                TempArea = TempArea + APoly(NA,i) * vel(3,na)**(i-1)
+              end do
+              SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
+
+            !nis,feb07,com: Original trapezoidal cross sections
+            else
+              SUMX=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)*VEL(3,NA)*
      +           (2.*WIDTH(NA)+(SS1(NA)+SS2(NA))*VEL(3,NA))/2.
 cipk mar01 add constituents
 	      SUMXS=SUMX*VEL(4,NA)
             SUMXT=SUMX*VEL(5,NA)
 	      SUMXSD=SUMX*VEL(6,NA)
+            endif
+            !-
           ELSE
             K=NREF(NA)
             L=K+NDEP(NA)-3
