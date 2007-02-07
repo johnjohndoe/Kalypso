@@ -16,6 +16,10 @@ CIPK AUG05      INCLUDE 'BLK4.COM'
       DIMENSION   DD(4), X(8),Y(8)
 C
       DO 90 LL=1,NE
+      !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
+      if (nop(ll,2).eq.-9999) then
+        GOTO 90
+      end if
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
@@ -214,7 +218,8 @@ cccc      ENDIF
 CIPK NOV97     open(75,file='elemdir.dat')
          open(76,file='elemxycoef.dat')
          do 11  j=1,ne
-
+           !EFa Dec06, Fallunterscheidung für 1d-Teschke-ELemente
+           if (nop(j,2).NE.-9999) then
 cipk jan01 put in test
 	     if(imat(j) .gt. 0) then
                angx = th(j)
@@ -222,6 +227,7 @@ c              if (angx .lt. 0.)  angx = angx + 3.14159
 CC             write(75,1500) j, (nop(j,k),k=1,8), nfixh(j),angx
                write(76,1600) j, (eexxyy(k,j),k=1,6),ort(imat(j),5)
              endif
+           end if
 11       continue
 1500     format(10i5,f10.3)
 1600     format(i10,6f10.2,f10.3)
