@@ -6,78 +6,60 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
-import org.kalypso.kalypsomodel1d2d.ui.viewer.RoughnessClsCollectionView;
+import org.kalypso.ui.views.map.MapView;
 
+public class Perspective implements IPerspectiveFactory
+{
 
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
 
-public class Perspective implements IPerspectiveFactory {
-	
-	final static public String ID="org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
-	
-	public void createInitialLayout(IPageLayout layout) {
-		
-		 // Get the editor area.
-		 String editorArea = layout.getEditorArea();
+  public void createInitialLayout( IPageLayout layout )
+  {
 
-		 // Top left: Resource Navigator view and Bookmarks view placeholder
-		 IFolderLayout leftTop = 
-			 	layout.createFolder(
-			 				"leftTop", 
-			 				IPageLayout.LEFT, 
-			 				0.3f,//0.2f,
-			 				editorArea);
-		//with left middle and bottom 
-//		 IFolderLayout leftMiddle = 
-//			 	layout.createFolder(
-//			 				"leftMiddle", 
-//			 				IPageLayout.BOTTOM, 
-//			 				0.4f,
-//			 				"leftTop");
-//		 
-//		 IFolderLayout leftBottom = 
-//			 	layout.createFolder(
-//			 				"leftBottom", 
-//			 				IPageLayout.BOTTOM, 
-//			 				0.5f,
-//			 				"leftMiddle");
-		 
-		 //only leftbottom
-		 IFolderLayout leftBottom = 
-			 	layout.createFolder(
-			 				"leftBottom", 
-			 				IPageLayout.BOTTOM, 
-			 				0.7f,
-			 				"leftTop");
-		 
-//		 IFolderLayout bottom = 
-//			 	layout.createFolder(
-//			 				"bottom", 
-//			 				IPageLayout.BOTTOM, 
-//			 				0.80f,
-//			 				editorArea);
-		 IFolderLayout rightMiddle = 
-			 	layout.createFolder(
-			 				"rightTop", 
-			 				IPageLayout.RIGHT, 
-			 				0.7f,
-			 				editorArea);
-//		 IFolderLayout rightMiddle = 
-//			 	layout.createFolder(
-//			 				"rightMiddle", 
-//			 				IPageLayout.BOTTOM, 
-//			 				0.5f,
-//			 				"rightTop");
-		 
-		 leftTop.addView(WorkflowView.ID);//IPageLayout.ID_RES_NAV);
-		 //leftMiddle.addView(TasksView.ID);
-		 leftBottom.addView(IPageLayout.ID_OUTLINE);
-//		 bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-//		 bottom.addView(RoughnessClsCollectionView.ID);
-		 //bottom.addView(IPageLayout.ID_)
-		 //rightTop.addView(SimulationModelDBView.ID);
-//		 rightTop.addView(IPageLayout.ID_RES_NAV);
-		 //rightMiddle.addView(ActivitiesView.ID);
-		 rightMiddle.addView(SimulationModelDBView.ID);
-		 layout.addNewWizardShortcut(Kalypso1D2DNewProjectWizard.ID);
-	}
+    // Get the editor area.
+    String editorArea = layout.getEditorArea();
+    layout.setEditorAreaVisible( false );
+
+    IFolderLayout leftTop = layout.createFolder( "leftTop", IPageLayout.LEFT, 0.3f,// 0.2f,
+    editorArea );
+
+    // with left middle and bottom
+    // IFolderLayout leftMiddle =
+    // layout.createFolder(
+    // "leftMiddle",
+    // IPageLayout.BOTTOM,
+    // 0.4f,
+    // "leftTop");
+    //		 
+
+    // only leftbottom
+    IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, 0.7f, "leftTop" );
+
+    // IFolderLayout bottom =
+    // layout.createFolder(
+    // "bottom",
+    // IPageLayout.BOTTOM,
+    // 0.80f,
+    // editorArea);
+    IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );
+
+    // IFolderLayout rightMiddle = layout.createFolder( "rightMiddle", IPageLayout.BOTTOM, 0.5f, "rightTop" );
+
+    
+    leftTop.addView( WorkflowView.ID );// IPageLayout.ID_RES_NAV);
+    // leftMiddle.addView(TasksView.ID);
+    // leftBottom.addView(IPageLayout.ID_OUTLINE);
+    // bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+    // bottom.addView(RoughnessClsCollectionView.ID);
+    // bottom.addView(IPageLayout.ID_)
+    // rightTop.addView(SimulationModelDBView.ID);
+    // rightTop.addView(IPageLayout.ID_RES_NAV);
+    // rightMiddle.addView(ActivitiesView.ID);
+    leftBottom.addView( SimulationModelDBView.ID );
+    rightTop.addView( MapView.ID );
+    layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
+    layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
+    layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
+    layout.addNewWizardShortcut( Kalypso1D2DNewProjectWizard.ID );
+  }
 }

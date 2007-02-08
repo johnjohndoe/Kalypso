@@ -56,7 +56,7 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
 {
   private WorkflowConnector m_connector;
 
-  public static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
+  protected static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
@@ -67,12 +67,12 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
   }
 
   /**
-   * Do not override this method. Implement your code in executeInternal.
+   * Implement your code in executeInternal.
    * 
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public final Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final String commandId = event.getCommand().getId();
     if( WorkflowConnector.isWorkflowMode() )
@@ -125,7 +125,7 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
    * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
    */
   @Override
-  public boolean isEnabled( )
+  public final boolean isEnabled( )
   {
     return WorkflowConnector.checkWorkflowMode();
   }
