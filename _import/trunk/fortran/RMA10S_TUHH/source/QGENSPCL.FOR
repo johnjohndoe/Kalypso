@@ -1,10 +1,10 @@
 cipk  last update sep 04 2004 add error message
 CIPK  LAST UPDATE DEC 10 2002 rearrange boundaries near the inflow level, reset magnitude
 cipk  last update feb 09 2001 allow for zero length cc lines
-C     Last change:  IPK   5 Oct 98    1:58 pm
       SUBROUTINE QGENSPCL(IKEY,nl,J,QREQ,THET,QQAL)
       USE BLK10MOD
       USE BLK11MOD
+      USE PARAFlow1dFE !neues Modul für Teschke-1D-Elemente
       SAVE
 C-
 C-..... Generate specified total flow boundary conditions for 3-d layer
@@ -86,13 +86,19 @@ c
             IQSPCL(NA) = -1
          ENDIF
 C
-         IF (CORD(NM,1) .GT. VOID) THEN
-            DX = 2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
-            DY = 2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
-         ELSE
-            DX = CORD(NC,1)-CORD(NA,1)
-            DY = CORD(NC,2)-CORD(NA,2)
-         ENDIF
+           !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+           if (nm.EQ.-9999) then
+             dx=cord(nc,1)-cord(na,1)
+             dy=cord(nc,2)-cord(na,2)
+           else
+             IF(CORD(NM,1) .GT. VOID) THEN
+               DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
+               DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
+             ELSE
+               DX=CORD(NC,1)-CORD(NA,1)
+               DY=CORD(NC,2)-CORD(NA,2)
+             ENDIF
+           endif
          BEETA = ATAN2(DY,DX)
          WRITE(*,*) 'NA,NM,NC,DX,DY,,BEETA',NA,NM,NC,DX,DY,BEETA
          IF (ABS(BEETA-THET) .GT. 1.570796  .AND.
@@ -141,8 +147,11 @@ cipk oct98 update to f90
             IF (NCN .EQ. 5) NCN=3
             DO 104 M=1,NCN
 cipk oct98 update to f90
-               K = ABS(NOP(N,M))
-               IBN(K) = IBN(K) + 1
+              !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+              if (nop(n,2).NE.-9999) then
+                K=ABS(NOP(N,M))
+                IBN(K)=IBN(K)+1
+              end if
   104       CONTINUE
   105    CONTINUE
 C
@@ -153,7 +162,12 @@ C
             NC = LINE(J,K+2)
             DX = CORD(NC,1)-CORD(NA,1)
             DY =-(CORD(NC,2)-CORD(NA,2))
-            XL = SQRT(DX**2+DY**2)
+            !EFa Nov06, Sonderfall für Teschke-1D-Elemente mit Kilometrierung
+            if (kmx(na).NE.-1.and.kmx(nc).NE.-1) then
+              xl=ABS(kmx(na)-kmx(nc))
+            else
+              XL=SQRT(DX**2+DY**2)
+            end if
             ALP = ATAN2(DX,DY)
             D1 = VEL(3,NA)
             D3 = VEL(3,NC)

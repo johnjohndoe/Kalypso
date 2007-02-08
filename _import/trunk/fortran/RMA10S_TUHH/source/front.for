@@ -1,4 +1,3 @@
-C     Last change:  K    20 Dec 2006   11:11 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -88,6 +87,7 @@ C
 C
 C...... Find last appeareance of each node moved from LOAD3
 C
+      !WRITE(*,*)'nszf',nszf !EFa Dec06, Test
       DO J=1,NSZF
         NLSTEL(J)=0
       ENDDO
@@ -241,11 +241,16 @@ CIPK NOV99     Either process surface integrals or collapse to 2-d
           ELSEIF(IMAT(N) .LT. 2000) THEN
             IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
-              IF(INOTR .EQ. 0) THEN
-                CALL COEF1(N,NRX)
-              ELSE
-                CALL COEF1NT(N,NRX)
-	      ENDIF
+              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (notwendig?)
+              IF(nop(n,2).NE.-9999)then
+                IF(INOTR .EQ. 0) THEN
+                  CALL COEF1(N,NRX)
+                ELSE
+                  CALL COEF1NT(N,NRX)
+	        endif
+              ELSEif(nop(n,2).EQ.-9999)then
+                call coef1dFE(n,nrx)
+              endif
 
 C     Modify tests to allows for IDIFSW
 
@@ -362,8 +367,13 @@ CIPK MAR05
               !NiS,may06: testing
               !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' vor'
               !-
+              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
               IF(INOTR .EQ. 0) THEN
-                CALL COEF1(N,NRX)
+                if (nop(n,2).eq.-9999) then
+                  CALL COEF1dFE(N,NRX)
+                else
+                  CALL COEF1(N,NRX)
+                endif
               ELSE
 !NiS,jul06:testing
 !      if(ncorn(n).lt.6.AND.(ibn(nop(n,1)).eq.1
@@ -456,7 +466,7 @@ CIPK JAN99
 	  NK(KC)=LL   !NiS,may06: NK saves the equation number of node-degree of freedom; KC runs from 1 to ncn*ndf
 	  IF(LL .NE. 0) THEN
 	    IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL !NiS,may06: if the current element is the last one of the equation (NLSTEL), then make
-                                         !           NK(KC) negative as pointer, that degree of freedom can be taken out
+                                             !           NK(KC) negative as pointer, that degree of freedom can be taken out
 	  ENDIF
    22   CONTINUE
    23 CONTINUE

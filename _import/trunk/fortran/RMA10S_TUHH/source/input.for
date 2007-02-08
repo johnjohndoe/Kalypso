@@ -43,7 +43,6 @@ CIPK  LAST UPDATE NOV 20 1997 ADD ELEMENT COUNTING
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATE JAN22 1997 ADD SMAGORINSKY OPTION
 CIPK  LAST UPDATE OCT 1 1996
-C     Last change:  K     6 Feb 2007   12:24 pm
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
@@ -58,6 +57,7 @@ CIPK  LAST UPDATED SEP 19 1995
 !NiS,mar06: add the module Parammod because the occuring error while compiling is caused by a variable
 !           that is defined within that module (NLAYMX)
       USE Parammod
+      USE PARAFlow1dFE
 !-
       SAVE
 C-
@@ -224,6 +224,7 @@ cipk nov98 add surface friction option
 cipk mar03 add diffusion switch ( default of  0 uses old formulations
       
 CIPK MAR05
+      beient=2
       READ(DLIN,5010) NDP,IGRV,IZB,IPASS1,IPASS2,IPASS3,IZERS,IDIFSW
      +  ,INOTR
       write(*,*) 'read c1'
@@ -331,8 +332,10 @@ cipk sep04
         STOP 'LOOKING FOR C4'
       ENDIF 
 cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
-      READ(DLIN,5020) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX
+      !EFa Nov06, beient ließt Option für Beiwert ein
+      READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
+      !WRITE(*,*)'beiwert',beient
       WRITE(LOUT,6021) prcnt,DMIX,SALI,TEMPI,SEDI,UINP,VINP
  6021 FORMAT(5X,'PERCENT RETURNED AT OCEAN',T26,F10.1/
      +       5X,'SURFACE MIXING DEPTH',T26,F10.1
@@ -369,7 +372,7 @@ cipk sep04
       ENDIF
 !-
       READ(DLINEXTRA,5011) NBSFRQ
-CIPK AUG02 ADD NBSFRQ ABOVE 
+CIPK AUG02 ADD NBSFRQ ABOVE
       write(*,*) 'read c5'
 C
       WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
@@ -396,7 +399,7 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
       IF(ID(1:2) .EQ. 'C6') THEN
-cipk mar06 allow for output file rewind      
+cipk mar06 allow for output file rewind
         READ(DLIN,'(3I8)') IOUTFREQ,IOUTRST,IOUTRWD
         call ginpt(lin,id,dlin)
 	  WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
@@ -747,7 +750,7 @@ cipk dec03 add element dependence IEDSW
 	      IF(TT2 .GT. 0.) THEN
 	        TBMIN1(J)=TT2
               ENDIF
-          ELSEIF(IEDSW .LT. 0) THEN	      
+          ELSEIF(IEDSW .LT. 0) THEN
 cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
@@ -1080,6 +1083,10 @@ C-
    
       CALL GETGEO
       write(*,*) 'back from getgeo'
+      !nis,feb07,testing
+      WRITE(*,*) 'number of surface nodes: ', nem
+      WRITE(*,*) 'number of nodes: ', ne
+      !-
 
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
@@ -1290,7 +1297,7 @@ C
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K) 
+            N = IMIDD(K)
             IF(N .GT. 0) NSTRT(N,2)=1
           ENDDO
           GO TO 116
@@ -1348,7 +1355,7 @@ cipk sep04
 CIPK NOV97          READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
           DO K= N1,N9
-            N = IMIDD(K) 
+            N = IMIDD(K)
             IF(N .GT. 0) ICPON(N)=J
           ENDDO
           GO TO 193
@@ -1391,8 +1398,6 @@ cipk sep04
         STOP
       ENDIF
 
-
-
       CALL INITSED(IBIN)
 
 
@@ -1406,19 +1411,25 @@ C
 C...... Initialize CHECK
 C-
       CALL CHECK
-
 C-
 C-.....INPUT BOUNDARY AND WIND DATA.....
 C-
       write(*,*) 'going to getbc', ibin
       CALL GETBC(IBIN)
 
+
+
 cipk jan99 set directions
        do n=1,ne
          if(imat(n) .gt. 900) then
            n1=nop(n,1)
            if(ndep(n1) .gt. 1) then
-             n2=nop(n,2)
+             !EFa Nov06, gesonderte Richtungsberechnung für 1D-Techke-Elemente
+             if (nop(n,2).EQ.-9999) then
+               n2=nop(n,3)
+             else
+               n2=nop(n,2)
+             endif
              if(abs(alfa(n1)-alfa(n2)) .gt. 1.570796  .and.
      +          abs(alfa(n1)-alfa(n2)) .lt. 4.713388) then
                 if(alfa(n1) .gt. alfa(n2)) then
@@ -1561,7 +1572,6 @@ cipk dec00          IF (IMAT(N) .GE. 900) GO TO 141
 C
 C....... Call ANGLEN to find major axis and scale velocity terms
 C
-
       CALL ANGLEN
 CZZZ
       CALL GETCON
@@ -1619,6 +1629,9 @@ C     IF(NCORN(J) .EQ. 3  .AND.  IMAT(J) .LT. 1000) NCORN(J)=NCRN(J)
         ELSE
           ILK=1
         ENDIF
+
+        !EFa Nov06, keine Berechnung fü 1D-Teschke-Elemente
+        if (nop(j,2).NE.-9999) then
         DO 101 K=1,NCN
           KL=IL(K,ILK)
 CIPK SEP05
@@ -1670,22 +1683,26 @@ CIPK OCT98 CONVERT TO F90
             NSTRT(N2,2)=KH
           ENDIF
   101   CONTINUE
+      endif
   102 CONTINUE
 
 CIPK SEP04  ENSURE VALUES AT ALL NODES
-      DO N=1,NPM  
-        IF(NDEP(N) .GT. 1) THEN
-          N1=NREF(N)+1
-          NV=NDEP(N)+N1-2
+      DO N=1,NPM
+        !EFa Nov06, keine Sicherung der Werte für 1D-Teschke-Elemente
+        if (nop(n,2).NE.-9999) then
+          IF(NDEP(N) .GT. 1) THEN
+            N1=NREF(N)+1
+            NV=NDEP(N)+N1-2
 	    DO M=N1,NV
-            AO(M)=AO(N)
-            ADO(M)=ADO(N)
-            ADT(M)=ADT(N)
-            ADB(M)=ADB(N)
-            akp(M)=akp(n)
-          ENDDO
+              AO(M)=AO(N)
+              ADO(M)=ADO(N)
+              ADT(M)=ADT(N)
+              ADB(M)=ADB(N)
+              akp(M)=akp(n)
+            ENDDO
 	  ENDIF
-	ENDDO
+        endif
+      ENDDO
 
 
 c-
@@ -1861,11 +1878,16 @@ CIPKNOV97
 
 cipk dec00 allow for gate option
 
-          ELSEIF(IMAT(N) .LT. 900  .or.
-     +    IGTP(N) .NE. 0) THEN
+          ELSEIF((IMAT(N) .LT. 900  .or.
+     +    IGTP(N) .NE. 0).and.nop(n,2).NE.-9999) THEN
             CALL COEF1(N,0)
 CIPK NOV97
             CALL COEF1(N,3)
+          !EFa Nov06, Aufruf der coef1dFE-Subroutine für 1D-Teschke-Elemente
+          ELSEIF((IMAT(N) .LT. 900  .or.
+     +    IGTP(N) .NE. 0).and.nop(n,2).eq.-9999) THEN
+            CALL COEF1dFE(N,0)
+            CALL COEF1dFE(N,3)
           ENDIF
         ENDIF
       ENDDO
@@ -1963,8 +1985,6 @@ CIPK FEB98 ADD TEST TO SKIP ZERO ELEMENT
         ENDIF
       ENDDO
 CIPK NOV97 END CHANGES
-
-
       DO 133 N=1,NE
         IF(IMAT(N)/1000 .NE. 2) GO TO 133
         CALL BSLOP(N)
@@ -1993,6 +2013,7 @@ C
 C       
       CALL HGENSPCL(1,0,0, 0.,QDM)
 C-
+
 C
       IF( IPRT .NE. 1 ) GO TO 156
 C-
@@ -2092,6 +2113,7 @@ cipk jan94 new format
 CIPK AUG02
  5011 FORMAT( 2I8,F8.0,7I8)
  5020 FORMAT(9F8.0)
+ 5021 FORMAT(7F8.0,i8)
  5029 FORMAT(I8,F8.0)
  5030 FORMAT( I8, 8F8.0)
  5031 FORMAT(8X,8F8.0)
@@ -2323,7 +2345,9 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk feb97 new subroutine to process input files
       SUBROUTINE GINPT(IIN,ID,DLIN)
+
       CHARACTER ID*8,DLIN*72
+
 cipk jan03  ADD AN EXTRA 8 CHARACTERS
       CHARACTER*8 DLINEXTRA
       COMMON /DLINF/ DLINEXTRA

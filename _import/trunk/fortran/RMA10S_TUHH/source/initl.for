@@ -1,4 +1,3 @@
-C     Last change:  K     7 Feb 2007    1:23 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -28,6 +27,8 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAMMOD
 !NiS,apr06: add module for Kalypso-specific calculations
       USE PARAKalyps
+      !EFa Nov06, neues Modul für Teschke-1D-Elemente
+      USE PARAFlow1dFE
 !-
       
 C	INCLUDE 'BLK10.COM'
@@ -108,7 +109,7 @@ C        READ(DLIN,'(I8)') MAXSTP
       WRITE(LOUT,6001) NBSS
       WRITE(LOUT,6014) NLAYMX
       WRITE(LOUT,6015) MXSEDLAY
-CIPKMAR06            
+CIPKMAR06
       WRITE(LOUT,6004) NCQOBS
       WRITE(LOUT,6005) NQLDS
       WRITE(LOUT,6006) NCHOBS
@@ -294,7 +295,7 @@ CIPK AUG05 ZERO ARRAYS
       IDONE=0
       DELBED=0.
       GP=0.
-      
+
 CIPK MAR06
       SGSAND=0.
       CLDEND=0.
@@ -773,7 +774,181 @@ CIPK MAR01
       ONLY1D = 1
 !-
 
+      !EFa Nov06, allocating für Teschke-1D-Elemente
+      ALLOCATE(apoly(maxp,13))
+      ALLOCATE(hhmin(maxp))
+      ALLOCATE(hhmax(maxp))
+      ALLOCATE(qpoly(maxp,13))
+      ALLOCATE(qgef(maxp))
+      ALLOCATE(hbordv(maxp))
+      ALLOCATE(alphah(maxp))
+      ALLOCATE(alphad(maxp,5))
+      ALLOCATE(alphapk(maxp,13))
+      ALLOCATE(betah(maxp))
+      ALLOCATE(betad(maxp,5))
+      ALLOCATE(betapk(maxp,13))
+      ALLOCATE(kmx(maxp))
+      ALLOCATE(sfwicht(maxp))
+      ALLOCATE(ah(maxp))
+      ALLOCATE(qh(maxp))
+      ALLOCATE(hdif(maxp))
+      ALLOCATE(dahdh(maxp))
+      ALLOCATE(dqhdh(maxp))
+      ALLOCATE(d2ahdh(maxp))
+      ALLOCATE(d2qhdh(maxp))
+      ALLOCATE(sfnod(maxp))
+      ALLOCATE(dsfnoddh(maxp))
+      ALLOCATE(dsfnoddq(maxp))
+      ALLOCATE(pdif(maxp,4))
+      ALLOCATE(pbei(maxp,13))
+      ALLOCATE(bei(maxp))
+      ALLOCATE(dbeidh(maxp))
+      ALLOCATE(d2beidh(maxp))
+      ALLOCATE(dbeizdh(maxp))
+      ALLOCATE(d2beizdh(maxp))
+      ALLOCATE(dbeiodh(maxp))
+      ALLOCATE(d2beiodh(maxp))
+      ALLOCATE(bnode(maxp))
+      ALLOCATE(hhint(maxp,4))
+      ALLOCATE(dhhintdx(maxp,4))
+      ALLOCATE(dhintdt(maxp,4))
+      ALLOCATE(qqint(maxp,4))
+      ALLOCATE(qqintdx(maxp,4))
+      ALLOCATE(areaint(maxp,4))
+      ALLOCATE(dareaintdh(maxp,4))
+      ALLOCATE(d2areaintdh(maxp,4))
+      ALLOCATE(daintdx(maxp,4))
+      ALLOCATE(d2aintdx(maxp,4))
+      ALLOCATE(d2aidhdx(maxp,4))
+      ALLOCATE(daintdt(maxp,4))
+      ALLOCATE(qschint(maxp,4))
+      ALLOCATE(dqsintdh(maxp,4))
+      ALLOCATE(d2qsidh(maxp,4))
+      ALLOCATE(dqsintdx(maxp,4))
+      ALLOCATE(d2qsidhdx(maxp,4))
+      ALLOCATE(s0schint(maxp,4))
+      ALLOCATE(sfwicint(maxp,4))
+      ALLOCATE(sfint(maxp,4))
+      ALLOCATE(dsfintdh1(maxp,4))
+      ALLOCATE(dhht(maxe,2))
+      ALLOCATE(beiint(maxp,4))
+      ALLOCATE(dbeiintdh(maxp,4))
+      ALLOCATE(d2beiintdh(maxp,4))
+      ALLOCATE(dbeiintdx(maxp,4))
+      ALLOCATE(d2beiintdhdx(maxp,4))
+      ALLOCATE(bint(maxp,4))
+      ALLOCATE(qqt(maxp))
+      ALLOCATE(dqqt(maxe,2))
+      ALLOCATE(dqdtaltzs(maxe,2))
+      ALLOCATE(froude(maxp))
+      ALLOCATE(froudeint(maxp,4))
+      ALLOCATE(dqintdt(maxp,4))
+      ALLOCATE(sbot(maxp))
+      ALLOCATE(vflowint(maxp,4))
+      ALLOCATE(dvintdx(maxp,4))
+      ALLOCATE(teschke(maxp))
+      ALLOCATE(qhalt(maxe,2))
+      ALLOCATE(dhdtaltzs(maxe,2))
+      ALLOCATE(hhalt(maxe,2))
+      ALLOCATE(hht(maxp))
+      ALLOCATE(kennung(maxp))
+
+      outer3: DO i = 1, MaxP
+            hhmin(i)=0
+            hhmax(i)=0
+            qgef(i)=0
+            hbordv(i)=0
+            alphah(i)=0
+            betah(i)=0
+            kmx(i)=-1
+            sfwicht(i)=1
+            ah(i)=0
+            qh(i)=0
+            hdif(i)=0
+            dahdh(i)=0
+            dqhdh(i)=0
+            d2ahdh(i)=0
+            d2qhdh(i)=0
+            sfnod(i)=0
+            bei(i)=0
+            dbeidh(i)=0
+            d2beidh(i)=0
+            dbeizdh(i)=0
+            d2beizdh(i)=0
+            dbeiodh(i)=0
+            d2beiodh(i)=0
+            bnode(i)=0
+            qqt(i)=0
+            froude(i)=0
+            sbot(i)=0
+            teschke(i)=0
+            hht(i)=0
+            kennung(maxp)=0
+        inner3: DO j = 1, 13
+              apoly (i, j) = 0
+              qpoly (i, j) = 0
+              alphapk(i,j) = 0
+              betapk(i,j) = 0
+              pbei(i,j)=0
+        ENDDO inner3
+      ENDDO outer3
+      outer4: DO i = 1,MaxP
+        inner4: DO j = 1, 5
+              alphad(i,j) = 0
+              betad(i,j) = 0
+        ENDDO inner4
+      ENDDO outer4
+      outer5: DO i = 1,MaxP
+        inner5: DO j = 1, 4
+              pdif(i,j) = 0
+              hhint(i,j) = 0
+              dhhintdx(i,j) = 0
+              dhintdt(i,j) = 0
+              qqint(i,j) = 0
+              qqintdx(i,j) = 0
+              areaint(i,j) = 0
+              dareaintdh(i,j) = 0
+              d2areaintdh(i,j) = 0
+              daintdx(i,j) = 0
+              d2aintdx(i,j) = 0
+              d2aidhdx(i,j)=0
+              daintdt(i,j) = 0
+              qschint(i,j) = 0
+              dqsintdh(i,j) = 0
+              d2qsidh(i,j) = 0
+              dqsintdx(i,j) = 0
+              d2qsidhdx(i,j) = 0
+              s0schint(i,j) = 0
+              sfwicint(i,j) = 0
+              sfint(i,j) = 0
+              dsfintdh1(i,j) = 0
+              beiint(i,j) = 0
+              dbeiintdh(i,j) = 0
+              d2beiintdh(i,j) = 0
+              dbeiintdx(i,j) = 0
+              d2beiintdhdx(i,j) = 0
+              bint(i,j) = 0
+              froudeint(i,j)=0
+              dqintdt(i,j)=0
+              vflowint(i,j)=0
+              dvintdx(i,j)=0
+        ENDDO inner5
+      ENDDO outer5
+
+      urfc=1
+
+      do i=1,maxe
+        do j=1,2
+          dhht(i,j)=0
+          hhalt(i,j)=0
+          dhdtaltzs(i,j)=0
+          dqqt(i,j)=0
+          qhalt(i,j)=0
+          dqdtaltzs(i,j)=0
+        end do
+      end do
 
 
+!-      
       RETURN
-      END
+	END

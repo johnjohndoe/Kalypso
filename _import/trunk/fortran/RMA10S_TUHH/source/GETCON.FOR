@@ -7,8 +7,10 @@ C     Routine to get elements connected to nodes and allocate areas
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG95      INCLUDE 'BLKSAND.COM'
 
+      !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (wegen Mittseitenknoten -9999)
       DO N=1,NE
-	  IF(IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999) THEN
+	  IF((IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
+     +      (nop(n,2).NE.-9999)) THEN
           NCN=NCORN(N)
 	    DO M=1,NCN
             DO I=1,12
@@ -27,6 +29,23 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
      +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
 	      STOP
   250       CONTINUE
+          ENDDO
+          ELSEIF((imat(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
+     +         (nop(n,2).eq.-9999)) then
+          NCN=NCORN(N)
+	    DO M=1,NCN,2
+            DO I=1,12
+		    IF(ELTON(NOP(N,M),I) .EQ. 0) THEN
+	          ELTON(NOP(N,M),I) = N
+	          GO TO 251
+	        ENDIF
+	      ENDDO
+  	      WRITE(75,*) 
+     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+            WRITE(*,*)
+     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
+	      STOP
+  251       CONTINUE
           ENDDO
 	  ENDIF
 	ENDDO

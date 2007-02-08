@@ -1,4 +1,3 @@
-!     Last change:  JAJ   5 Jul 2006   12:36 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -56,6 +55,8 @@ USE BLK10mod
 USE BLK11mod
 USE PARAKalyps
 USE BlkDRmod
+!EFa Dec06, neues Modul für 1d-Teschke-Elemente
+USE PARAFlow1dFE
 !-
 
 !NiS,mar06: Find undeclared variables
@@ -85,7 +86,7 @@ INTEGER, ALLOCATABLE :: Trans_nodes(:,:)               !informations for writing
 INTEGER              :: trans_els                      !counter and name-giver for transition-elements
 
 !NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
-ALLOCATE (arc_tmp (maxp,5), arcmid(maxp,4))
+ALLOCATE (arc_tmp (maxp,5), arcmid(maxp,5))            !EFa Dec06, Spaltenanzahl von arcmid für 1d-Teschke-Elemente auf 5 erhöht
 !NiS,may06: allocate 1D-2D-TRANSITION ELEMENTS array (1: number; 2-6: nodes)
 ALLOCATE (Trans_nodes(MaxT,6))
 
@@ -103,7 +104,7 @@ nodecnt = np
 elcnt = ne
 
 DO i = 1, np
-  DO j = 1, 4
+  DO j = 1, 5
     !NiS,apr06: Changed arc to arc_tmp because of global conflict
     arc_tmp (i, j) = 0
     arcmid (i, j) = 0
@@ -134,11 +135,17 @@ END DO
           !midside node
           k = nop (nelem, 2)
           !no midside node assigned to arcmid yet:
-          IF (arcmid (k, 3) .eq. 0) THEN
+          IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
             arcmid (k, 1) = nop (nelem, 1)
             arcmid (k, 2) = nop (nelem, 3)
             arcmid (k, 3) = nelem
             arcmid (k, 4) = nelem
+          ELSEIF (arcmid (nelem, 3) .eq. 0.and.k.eq.-9999) then  !EFa Dec06, Test der Fallunterscheidung
+            arcmid (nelem, 1) = nop (nelem, 1)
+            arcmid (nelem, 2) = nop (nelem, 3)
+            arcmid (nelem, 3) = nelem
+            arcmid (nelem, 4) = nelem
+            arcmid (nelem, 5) = -9999
           ENDIF
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
@@ -212,14 +219,17 @@ arccnt = 0
 DO i = 1, np
   IF (arcmid (i, 3) .ne.0) then
     arccnt = arccnt + 1
-    DO j = 1, 4
+    DO j = 1, 5
       !Save 1st and 2nd node as well as elemts associated to the arc
       !NiS,apr06: Changed arc to arc_tmp because of global conflict
       arc_tmp (arccnt, j) = arcmid (i, j)
     END DO
     !Save midside node to ARC array
-    !NiS,apr06: Changed arc to arc_tmp because of global conflict
-    arc_tmp (arccnt, 5) = i
+    !NiS,apr06: Changed arc to arc_tmp because of global conflict!
+    !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
+    if (arcmid(i,5).NE.-9999) then
+      arc_tmp (arccnt, 5) = i
+    end if
   ENDIF
 END DO
                                                                         
@@ -343,7 +353,11 @@ write_nodes: DO i = 1, np
   !NiS,may06: The cord array is initialized with -1.e20, so every node with coordinates less than -1e19 that are skipped for writing
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
   !-
-  WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
+  if (kmx(i).NE.-1) then
+    write (IKALYPSOFM, 7036) i, cord (i, 1), cord (i, 2), aour(i),kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+  else
+    WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
+  endif
   WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3), rausv (3, i)
   !NiS,may06: All degrees of freedom have to be written and read for restart
   WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
@@ -361,6 +375,33 @@ write_nodes: DO i = 1, np
   IF (width (i) .ne. 0) THEN
     WRITE (IKALYPSOFM, 7013) i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
   END IF
+
+  !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
+  teschke(i)=0
+  do j=1,13
+    if (apoly(i,j).ne.0) then
+      teschke(i)=1
+    end if
+  end do
+
+  if (teschke(i).eq.1) then
+    WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
+    WRITE (IKALYPSOFM, 7021) i, (apoly(i,j), j=1,5)
+    WRITE (IKALYPSOFM, 7022) i, (apoly(i,j), j=6,10)
+    WRITE (IKALYPSOFM, 7023) i, (apoly(i,j), j=11,13)
+    WRITE (IKALYPSOFM, 7024) i, qgef(i),(qpoly(i,j), j=1,4)
+    WRITE (IKALYPSOFM, 7025) i, (qpoly(i,j), j=5,9)
+    WRITE (IKALYPSOFM, 7026) i, (qpoly(i,j), j=10,13)
+    WRITE (IKALYPSOFM, 7027) i, hbordv(i)
+    WRITE (IKALYPSOFM, 7028) i, alphah(i),(alphad(i,j), j=1,4)
+    WRITE (IKALYPSOFM, 7029) i, (alphapk(i,j), j=1,5)
+    WRITE (IKALYPSOFM, 7030) i, (alphapk(i,j), j=6,10)
+    WRITE (IKALYPSOFM, 7031) i, (alphapk(i,j), j=11,13)
+    WRITE (IKALYPSOFM, 7032) i, betah(i),(betad(i,j), j=1,4)
+    WRITE (IKALYPSOFM, 7033) i, (betapk(i,j), j=1,5)
+    WRITE (IKALYPSOFM, 7034) i, (betapk(i,j), j=6,10)
+    WRITE (IKALYPSOFM, 7035) i, (betapk(i,j), j=11,13)
+  end if
 
 END DO write_nodes
                                                                         
@@ -417,6 +458,8 @@ END do write_roughness
 !                              Knoten; Nummer und raeumliche Lage (x,y,z
  7000 FORMAT ('FP', i10,3f20.7)
 
+ !EFa Dec06, neues Format für Ausgabe der Knotendaten, wenn Kilometrierung vorhanden
+ 7036 FORMAT ('FP', i10,4f20.7)
 
 !                              aktuelle Freiheitsgrade; Knotennummer,   
 !                              x-, y-Geschwindigkeit, Wasserspiegel):   
@@ -470,6 +513,41 @@ END do write_roughness
 !                              salinity, temperature etc.):
  7015 FORMAT ('DF', i10,4f20.7)
 !-
+
+!EFa Dec06, neue Formate für 1d-Teschke-Elemente
+ 7020 FORMAT ('MM', i10,2f20.7)
+
+ 7021 FORMAT ('AP1', i9,5f20.7)
+
+ 7022 FORMAT ('AP2', i9,5f20.7)
+
+ 7023 FORMAT ('AP3', i9,3f20.7)
+
+ 7024 FORMAT ('QP1', i9,5f20.7)
+
+ 7025 FORMAT ('QP2', i9,5f20.7)
+
+ 7026 FORMAT ('QP3', i9,4f20.7)
+
+ 7027 FORMAT ('HB', i10,f20.7)
+
+ 7028 FORMAT ('AD', i10,5f20.7)
+
+ 7029 FORMAT ('AK1' ,i9,5f20.7)
+
+ 7030 FORMAT ('AK2' ,i9,5f20.7)
+
+ 7031 FORMAT ('AK3' ,i9,3f20.7)
+
+ 7032 FORMAT ('BD', i10,5f20.7)
+
+ 7033 FORMAT ('BK1' ,i9,5f20.7)
+
+ 7034 FORMAT ('BK2' ,i9,5f20.7)
+
+ 7035 FORMAT ('BK3' ,i9,3f20.7)
+
+
 
 !--------------- deallocation section -----------------------------
 !NiS,apr06      to clean the memory, the arrays, allocated and only used

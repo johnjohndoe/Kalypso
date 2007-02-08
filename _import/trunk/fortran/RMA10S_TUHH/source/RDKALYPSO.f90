@@ -1,4 +1,3 @@
-!     Last change:  K     7 Feb 2007    2:36 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -893,6 +892,7 @@ SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
       USE BLK10MOD    	!cord(i,1), cord(i,2), ao(i), tett, MaxE, MaxP, irk, rk_zeile
       USE BLKDRMOD
       USE ParaKalyps    !new module for KALYPSO-specific globals and neighbourhood relations
+      USE ParaFlow1dFE  !Modul für Teschke-1D-Elemente
 !-
 
 !NiS,may06: Former variable declaration is sorted and the variables are described; new entered variables are EXPLICITLY pointed out
@@ -991,6 +991,7 @@ COMMON / vnach / cvva, cvga, cvvo, cvgo, cvzu, cvfe, cvarccnt
 
 IF (KSWIT==1) THEN        !In the first case the value MAXA has to be found, the allocation of
   MAXA=0                  !arc(i,j) is not necessary for the first run, so that it is allocated
+  maxe=0                  !EFa Nov06
   ALLOCATE(arc(MAXA,5))   !just pro forma, it is deallocated at the end of this run.
 ELSE                      !In the second run, the value of MAXA is known and the arc-array is
   ALLOCATE(arc(MAXA,5))   !allocated again; it is deallocated at the end of the run.
@@ -1120,7 +1121,18 @@ reading: do
       !NiS,mar06: Read NODE geometry informations
       ELSE
         !NiS,mar06: changed id to id_local; global conflict
-        READ (linie, '(a2,i10,3f20.7)') id_local, i, cord (i, 1) , cord (i, 2), ao (i)
+        !READ (linie, '(a2,i10,3f20.7)') id_local, i, cord (i, 1) , cord (i, 2), ao (i)
+        !EFa Nov06, einlesen der Kilometrierung
+        !read (linie, '(a2,i10,4f20.7)') id_local, i, cord (i, 1) , cord (i, 2), ao (i), kmx(i)
+        istat=0
+
+        READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
+        !WRITE(*,*)'FP ',id_local,i,cord(i,1),cord(i,2),ao(i),kmx(i)
+
+        if (istat.eq.0) then
+          WRITE(lout,*)'Die Kilometrierung von Knoten',i,'wurde eingelesen:',kmx(i)
+        end if
+
         IF (i.gt.nodecnt) nodecnt = i
         !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
         !  IF (nodecnt.gt.mnd) THEN
@@ -1167,6 +1179,158 @@ reading: do
         IF (i.le.0) stop 'Kantennummer.le.0'                                  
       ENDIF
     ENDIF
+
+    !EFa Nov06, Gültigeitsgrenzen der Polynome
+    if (linie(1:2) .eq. 'MM') then
+      IF (KSWIT == 1) then
+        read (linie, '(a2,i10)') id_local, i
+      else
+        read (linie, '(a2,i10,2f20.7)') id_local, i, hhmin(i), hhmax(i)
+        !write (*,*) 'MM',i,hhmin(i),hhmax(i)
+      endif
+    end if
+
+    !EFa Nov06, Flächenpolynom
+    if (linie (1:3) .eq. 'AP1') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j=1,5)
+        !write (*,*) 'AP1',i,(apoly(i,j), j=1,5)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'AP2') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local,i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j=6,10)
+        !write (*,*) 'AP2',i,(apoly(i,j), j=6,10)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'AP3') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(apoly(i,j), j=11,13)
+        !write (*,*) 'AP3',i,(apoly(i,j), j=11,13)
+      endif
+    end if
+
+    !EFa Nov06, Q(h)-Kurve
+    if (linie (1:3) .eq. 'QP1') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,qgef(i),(qpoly(i,j), j=1,4)
+        !write (*,*) 'QP1',i,qgef(i),(qpoly(i,j), j=1,4)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'QP2') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(qpoly(i,j), j=5,9)
+        !write (*,*) 'QP2',i,(qpoly(i,j), j=5,9)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'QP3') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,4f20.7)') id_local, i,(qpoly(i,j), j=10,13)
+        !write (*,*) 'QP3',(qpoly(i,j), j=10,13)
+      endif
+    end if
+
+    !EFa Nov06, h-Bordvoll
+    if (linie(1:2) .eq. 'HB') then
+      IF (KSWIT == 1) then
+        read (linie,'(a2,i10)') id_local,i
+      else
+        read (linie,'(a2,i10,f20.7)') id_local,i,hbordv(i)
+        !write (*,*) 'HB', i, hbordv(i)
+      endif
+    end if
+
+    !EFa Nov06, alpha-Übergang bis h
+    if (linie (1:2) .eq. 'AD') then
+      IF (KSWIT == 1) then
+        read (linie, '(a2,i10)') id_local, i
+      else
+        read (linie, '(a2,i10,5f20.7)') id_local, i,alphah(i),(alphad(i,j), j=1,4)
+        !write (*,*) 'AD',i,alphah(i),(alphad(i,j), j=1,4)
+      endif
+    end if
+
+    !EFa Nov06, alpha-Beiwertpolynomkoeffizienten
+    if (linie (1:3) .eq. 'AK1') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j=1,5)
+        !write (*,*) 'AK1',i,(alphapk(i,j), j=1,5)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'AK2') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j=6,10)
+        !write (*,*) 'AK2',i,(alphapk(i,j), j=6,10)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'AK3') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(alphapk(i,j), j=11,13)
+        !write (*,*) 'AK3',i,(alphapk(i,j), j=11,13)
+      endif
+    end if
+
+    !EFa Nov06, beta-Übergang bis h
+    if (linie (1:2) .eq. 'BD') then
+      IF (KSWIT == 1) then
+        read (linie, '(a2,i10)') id_local, i
+      else
+        read (linie, '(a2,i10,5f20.7)') id_local, i,betah(i),(betad(i,j), j=1,4)
+        !write (*,*) 'BD',i,betah(i),(betad(i,j), j=1,4)
+      endif
+    end if
+
+    !EFa Nov06, beta-Beiwertpolynomkoeffizienten
+    if (linie (1:3) .eq. 'BK1') then
+       IF (KSWIT == 1) then
+         read (linie, '(a3,i9)') id_local, i
+       else
+         read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j=1,5)
+         !write (*,*) 'BK1',i,(betapk(i,j), j=1,5)
+       endif
+    end if
+
+    if (linie (1:3) .eq. 'BK2') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j=6,10)
+        !write (*,*) 'BK2',i,(betapk(i,j), j=6,10)
+      endif
+    end if
+
+    if (linie (1:3) .eq. 'BK3') then
+      IF (KSWIT == 1) then
+        read (linie, '(a3,i9)') id_local, i
+      else
+        read (linie, '(a3,i9,3f20.7)') id_local, i,(betapk(i,j), j=11,13)
+        !write (*,*) 'BK3',i,(betapk(i,j), j=11,13)
+      endif
+    end if
 
     !ELEMENT DEFINITIONS ---
     IF (linie (1:2) .eq.'FE') then
@@ -1485,7 +1649,13 @@ DO i = 1, arccnt
       ELSE
         !No 4th NODE at normal 1D-ELEMENTS
         IF (nop(arc(i,3),4).eq.0) THEN
-          elem(j,1) = -1
+          if (arc(i,5).EQ.-9999) then
+            !EFa Nov06, Teschke (nur Eckknoten)
+            elem(j,1)=-3
+          else
+            !EFa Nov06, mit Mittseitenknoten
+            elem(j,1)=-1
+          end if
         !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
         ELSE
           elem(j,1) = -2
@@ -1579,6 +1749,18 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
     IF (arc(elem(i,2),5) .gt. 0) THEN
       nop(i,2) = arc(elem(i,2),5)
     ENDIF
+
+  !EFa Nov06, 1D-Teschke-Element
+  ELSEIF (elem(i,1) .EQ. -3) then
+    !EFa Nov06, for 1D_Teschke-elements, the number of nodes is 3 and the number of corner nodes is 2
+    jnum = 2
+    ncorn(i) = 3
+
+    !EFa Nov06, Passing corner nodes to node array
+    nop(i,1) = arc(elem(i,2),1)
+    nop(i,3) = arc(elem(i,2),2)
+    nop(i,2) = -9999
+
 
   !1D-2D-transition elements -------------
   ELSEIF (elem(i,1) .EQ. -2) THEN
@@ -1741,6 +1923,9 @@ all_arcs: DO i=1,arccnt
   if (arc(i,1).eq.0) CYCLE all_arcs
   !-
 
+  !EFa Nov06, Mittseitenknoten für 1D-Teschke-Element werden nicht berechnet
+  if (arc(i,5).NE.-9999) then
+  
   ! Mittseitenknoten vorhanden?
   !NiS,expand test for defined midside nodes in ARC-array but without coordinate-definitions; this was a logical gap
   !IF ( (arc (i, 5) .gt.0) .and. (arc (i, 5) .le.nodecnt) ) goto 1402
@@ -1846,6 +2031,8 @@ all_arcs: DO i=1,arccnt
     ENDIF
   !NiS,may06: IF clause for coordinate test
   ENDIF
+
+ENDIF
 !NiS,may06: 1402 jump mark has no more use
 !1402 CONTINUE
 !NiS,may: changed do LOOP to cycle it clearly
@@ -1865,7 +2052,8 @@ WRITE (*   ,106) mittzaehl
 
 DO i = 1, arccnt
   !Only 1D-ELEMENT-ARCS stand this test
-  IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0) THEN
+  !EFa Nov06, nicht für 1D-Teschke-Elemente
+  IF (arc(i,3).eq.arc(i,4) .and. arc(i,3).ne.0.and. arc(i,5).NE.-9999) THEN
     !error if one of the two corner nodes does not have cross sectional informations
     IF (WIDTH(nop(arc(i,3),1)).eq.0 .or. WIDTH(nop(arc(i,3),3)).eq.0) THEN
       CLOSE (75)
@@ -1876,6 +2064,7 @@ DO i = 1, arccnt
       STOP
     ELSE
       !Interpolate cross sectional informations for midside nodes, if necessary
+      !EFa Nov06, Korrektur der Knoten (2.Knoten wird zwischen dem 1. und 3. Knoten interpoliert)
       IF(WIDTH (nop(arc(i,3),2)) .eq. 0) THEN
         width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),1)) + width (nop(arc(i,3),3)))
         ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),1))   + ss1 (nop(arc(i,3),3)))
@@ -2045,13 +2234,23 @@ do i=1,ne
   ! der drei Freiheitsgerade
   !NiS,mar06: unit name changed; changed iout to Lout
   !write (Lout,*) ' Anzahl Knoten (Element ',i,'): ', ncorn(i)
-  do j = 1,ncorn(i)
-    sumx = sumx + cord(nop(i,j),1)
-    sumy = sumy + cord(nop(i,j),2)
-  end do
-  ! Mittelung der Werte
-  mcord(i,1) = sumx/ncorn(i)
-  mcord(i,2) = sumy/ncorn(i)
+  !EFa Nov06, für die 1D-Teschke-Elemente werden für die Mittelung nur die Eckknoten betrachtet
+  if (elem(i,1).EQ.-3) then
+    do j =1, 2
+      sumx = sumx + cord(nop(i,(j*2-1)),1)
+      sumy = sumy + cord(nop(i,(j*2-1)),1)
+    end do
+    mcord(i,1) = sumx/2
+    mcord(i,2) = sumy/2
+  else
+    do j = 1,ncorn(i)
+      sumx = sumx + cord(nop(i,j),1)
+      sumy = sumy + cord(nop(i,j),2)
+    end do
+    ! Mittelung der Werte
+    mcord(i,1) = sumx/ncorn(i)
+    mcord(i,2) = sumy/ncorn(i)
+  end if
 END do
 
 
@@ -2140,9 +2339,18 @@ neighbours: do i=1,elcnt
     !array resetting for next transition, that is probably be from other size
     DEALLOCATE(nop_temp)
 
-  else
-  !-
 
+    !nis,feb07: Here is a conflict!!!    
+
+    !EFa Nov06, gesonderte Berechnung für 1D-Teschke-Elemente
+    elseIF(nop(i,2).EQ.-9999) then
+      node1 = nop(i,1)
+      node2 = nop(i,3)
+      nconnect(node1) = nconnect(node1)+1
+      nconnect(node2) = nconnect(node2)+1
+      neighb(node1,nconnect(node1)) = node2
+      neighb(node2,nconnect(node2)) = node1
+    else
     ! Lesen aller Knotennummern eines Elementes
     outer: do j=1,ncorn(i)
 

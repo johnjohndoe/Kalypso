@@ -1,4 +1,3 @@
-C     Last change:  K     1 Dec 2006    3:40 pm
 CIPK  LAST UPDATE OCT 4 2002 ADD ICE THICKNESS TO OUTPUT
 CIPK  LAST UPDATE JAN 12 20010 CHANGE AME TO AME1
 CIPK  LAST UPDATE MAR 22 2000 ADD WSLL
@@ -11,6 +10,8 @@ cIPK  LAST UPDATE APR 27 1996
       USE BLKSANMOD
 !NiS,apr06: adding module for Kalypso-specific calculations
       USE PARAKalyps
+      !EFa Dec06, neues Modul für 1d-Teschke-Elemente
+      USE PARAFlow1dFE
 !-
       SAVE
 C-
@@ -43,6 +44,10 @@ CIPK MAY02 ADD ICK=7
 cipk apr96
 ccc      WRITE(LOUT,6003) ICYC,TET,MAXN
       WRITE(LOUT,6015)
+      !EFa Dec06, niedrigste Knotennummer für 1d-Teschke-Elemente ersetzten
+      IF(lp.EQ.-9999)then
+        lp=1
+      endif
       INT=(NP-LP)/2+1
 CCC      INTT=INT+LP-1
 C-
@@ -148,7 +153,13 @@ C..... Define flows for 1-D element node locations
 C
       JJ=0
       DO 300 J=1,NPM
-        IF(WIDTH(J) .GT. 0.  .AND. NDEP(J) .LT. 2) THEN
+        !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
+        IF(ah(j).gt.0.and.ndep(j).lt.2)then
+          jj=jj+1
+          lab(jj)=j
+          XVEL(1,JJ)=(VEL(1,J)*COS(ALFA(J))+VEL(2,J)*SIN(ALFA(J)))
+     +    *VEL(3,J)*ah(j)/vel(3,j)
+        elseif(WIDTH(J) .GT. 0.  .AND. NDEP(J) .LT. 2) THEN
           JJ=JJ+1
           LAB(JJ)=J
           XVEL(1,JJ)=(VEL(1,J)*COS(ALFA(J))+VEL(2,J)*SIN(ALFA(J)))
