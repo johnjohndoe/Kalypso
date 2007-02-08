@@ -17,7 +17,6 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  K    26 Jan 2007    2:13 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -32,13 +31,13 @@ CIPK  LAST UPDATE OCT 1 1996
       INTEGER :: n, m, a, lt
 !-
 C-
-cipk aug05      INCLUDE 'BLK10.COM'
+cipk aug05	INCLUDE 'BLK10.COM'
 CIPK AUG03 ADD
-CIPK AUG05      INCLUDE 'BLK11.COM'
+CIPK AUG05	INCLUDE 'BLK11.COM'
 CIPK NOV97 REACTIVATE BLKDR
-CIPK AUG05      INCLUDE 'BLKDR.COM'
+CIPK AUG05	INCLUDE 'BLKDR.COM'
 CIPK JUN05
-CIPK AUG05      INCLUDE 'BLKSUB.COM'
+CIPK AUG05	INCLUDE 'BLKSUB.COM'
 
 cipk apr99 add line below
       character*8 id8
@@ -238,6 +237,9 @@ CIPK JUL00 NEED TO REMOVE END= FOR LAHEY
 !          read(ifile,err=24, end=24) id8
           read(ifile,err=24) id8
 !-          
+
+!NiS,mar06	Hinzugefügt!, wird denn richtig weiter gelesen?
+          WRITE(*,*)' ID8:  *>',id8,'<* Ende'
 
           if(id8(1:6) .eq. 'part-2') then
             write(75,*) 'reading part 2'
