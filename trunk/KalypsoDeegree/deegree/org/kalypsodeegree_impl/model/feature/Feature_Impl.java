@@ -207,7 +207,8 @@ public class Feature_Impl extends AbstractFeature implements Feature
     m_envelope = env;
   }
 
-  private void invalidEnvelope( )
+  // TODO: make it private again?
+  public void invalidEnvelope( )
   {
     m_envelope = INVALID_ENV;
   }

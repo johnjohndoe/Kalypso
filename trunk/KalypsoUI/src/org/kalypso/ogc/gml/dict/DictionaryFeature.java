@@ -221,4 +221,12 @@ public class DictionaryFeature implements Feature
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
+   */
+  public void invalidEnvelope( )
+  {
+    m_feature.invalidEnvelope();
+  }
+
 }
