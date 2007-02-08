@@ -50,6 +50,10 @@
             id="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
             name="Roughness import wizard"
             project="false"/>
+      <wizard
+            class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            id="KalypsoModelSimulationBase.wizard3"
+            name="BaseMap"/>
    </extension>
    <extension
          point="org.kalypso.deegree.functionProperty">

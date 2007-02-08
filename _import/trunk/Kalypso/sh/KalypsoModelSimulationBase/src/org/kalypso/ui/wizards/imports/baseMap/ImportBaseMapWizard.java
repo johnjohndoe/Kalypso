@@ -68,27 +68,15 @@ public class ImportBaseMapWizard extends Wizard
    private IStructuredSelection initialSelection;
 
    private BaseMapMainPage mPage;
-  // private SelectStringsWizardPage selectStringsPage;
    
    /**
     * Construct a new instance and initialize the dialog settings
     * for this instance.
     */
    public ImportBaseMapWizard() {
-//      IDialogSettings favoritesSettings =
-//         FavoritesPlugin.getDefault().getDialogSettings();
-//      IDialogSettings wizardSettings =
-//         favoritesSettings.getSection("ExtractStringsWizard");
-//      if (wizardSettings == null)
-//         wizardSettings =
-//            favoritesSettings.addNewSection("ExtractStringsWizard");
-//      setDialogSettings(favoritesSettings);
    }
    
    /**
-    * Initializes this creation wizard using the passed workbench and
-    * object selection. This method is called after the no argument
-    * constructor and before other methods are called.
     * 
     * @param workbench the current workbench
     * @param selection the current object selection
@@ -102,8 +90,6 @@ public class ImportBaseMapWizard extends Wizard
       setWindowTitle(Messages.getString( "BaseMapWizard.0" ));
       mPage = new BaseMapMainPage();
       addPage(mPage);
-//      selectStringsPage = new SelectStringsWizardPage();
-//      addPage(selectStringsPage);
       mPage.init(initialSelection);
    }
 
@@ -113,8 +99,6 @@ public class ImportBaseMapWizard extends Wizard
     */
    public boolean performFinish() {
 
-      // Perform the operation in a separate thread
-      // so that the operation can be canceled.
       try {
          getContainer().run(true, true, new IRunnableWithProgress() {
             public void run(IProgressMonitor monitor)
@@ -127,7 +111,6 @@ public class ImportBaseMapWizard extends Wizard
          });
       }
       catch (InvocationTargetException e) {
-       //  FavoritesLog.logError(e);
          return false;
       }
       catch (InterruptedException e) {
