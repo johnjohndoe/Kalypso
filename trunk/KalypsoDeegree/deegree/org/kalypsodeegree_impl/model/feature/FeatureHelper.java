@@ -272,6 +272,8 @@ public class FeatureHelper
     final Feature newFeature = newParentFeature.getWorkspace().createFeature( newParentFeature, relation, featureType );
     if( relation.isList() )
       newParentFeature.getWorkspace().addFeatureAsComposition( newParentFeature, relation, -1, newFeature );
+    else
+      newParentFeature.setProperty( relation, newFeature );
 
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
