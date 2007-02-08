@@ -565,10 +565,15 @@ class GridPointCollector implements IGeometryBuilder
       new AddEdgeCommand[newNodesArray2D.length][];
     AddEdgeCommand addEdgeV2D[][]= 
           new AddEdgeCommand[newNodesArray2D.length][];
+    AddEdgeCommand addEdgeH2DInv[][]= 
+      new AddEdgeCommand[newNodesArray2D.length][];
+    AddEdgeCommand addEdgeV2DInv[][]= 
+          new AddEdgeCommand[newNodesArray2D.length][];
     addEdges( 
         model, newNodesArray2D, 
         compositeCommand, 
-        addEdgeH2D, addEdgeV2D )    ;
+        addEdgeH2D, addEdgeV2D, 
+        addEdgeH2DInv, addEdgeV2DInv);
     
     //add elements
     addElements( 
@@ -603,40 +608,52 @@ class GridPointCollector implements IGeometryBuilder
     }
   }
   
-  private final void  addNodesddd(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand,
-      Coordinate[][] coordinates) throws GM_Exception
-  {
-    GeometryFactory geometryFactory= new GeometryFactory();
-    for(int i=0;i<coordinates.length;i++)
-    {
-      Coordinate[] line=coordinates[i];
-      AddNodeCommand[] newNodesArray1D= 
-              new AddNodeCommand[line.length];
-      newNodesArray2D[i]=newNodesArray1D;
-      for(int j=0;j<line.length;j++)
-      {
-        Coordinate coord=line[j];
-        //TODO check node for existance
-        AddNodeCommand nodeCommand=
-          new AddNodeCommand(
-            model,
-            (GM_Point)JTSAdapter.wrap( 
-                  geometryFactory.createPoint(coord)));
-        newNodesArray1D[j]=nodeCommand;
-        compositeCommand.addCommand( nodeCommand );
-      }
-    }
-  }
+//  private final void  addNodesddd(
+//      IFEDiscretisationModel1d2d model,
+//      AddNodeCommand[][] newNodesArray2D,
+//      ChangeDiscretiationModelCommand compositeCommand,
+//      Coordinate[][] coordinates) throws GM_Exception
+//  {
+//    GeometryFactory geometryFactory= new GeometryFactory();
+//    for(int i=0;i<coordinates.length;i++)
+//    {
+//      Coordinate[] line=coordinates[i];
+//      AddNodeCommand[] newNodesArray1D= 
+//              new AddNodeCommand[line.length];
+//      newNodesArray2D[i]=newNodesArray1D;
+//      for(int j=0;j<line.length;j++)
+//      {
+//        Coordinate coord=line[j];
+//        //TODO check node for existance
+//        AddNodeCommand nodeCommand=
+//          new AddNodeCommand(
+//            model,
+//            (GM_Point)JTSAdapter.wrap( 
+//                  geometryFactory.createPoint(coord)));
+//        newNodesArray1D[j]=nodeCommand;
+//        compositeCommand.addCommand( nodeCommand );
+//      }
+//    }
+//  }
+  
+  
+  //TODO separate in create horizontal and vertical edges
+  //TODO introduce inverted edges along
+  //TODO create test case for this
+  //TODO Prevent premature double click
+  //TODO Caching 
+  //TODO on the fly meching plus displaying
+  //TODO get the map to be redrawn after last point
+ 
   
   private final void  addEdges(
                   IFEDiscretisationModel1d2d model,
                   AddNodeCommand[][] newNodesArray2D,
                   ChangeDiscretiationModelCommand compositeCommand,
                   AddEdgeCommand[][] addEdgeH2D,
-                  AddEdgeCommand[][] addEdgeV2D)
+                  AddEdgeCommand[][] addEdgeV2D,
+                  AddEdgeCommand[][] addEdgeH2DInv,
+                  AddEdgeCommand[][] addEdgeV2DInv)
   {
     for(int i=0;i<newNodesArray2D.length;i++)
     {
@@ -650,16 +667,38 @@ class GridPointCollector implements IGeometryBuilder
       AddEdgeCommand addEdgeH1D[]= 
                   new AddEdgeCommand[addNodeLine1.length];
       addEdgeH2D[i]=addEdgeH1D;
-      for(int j=0; j<addNodeLine1.length;j++)
+      for(int j=0; j<addNodeLine1.length-1;j++)
       {
         //horidonzal edges
-        if((addNodeLine1.length-j)>1)
+        
+        if(i==0 )
         {
           AddEdgeCommand edgeCommand=
             new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
           addEdgeH1D[j]=edgeCommand;
         }
+        else if(i==(addEdgeH2D.length-1))
+        {
+          AddEdgeCommand edgeCommand=
+                      new AddEdgeCommand(
+                          model,addNodeLine1[j+1], addNodeLine1[j]);
+          compositeCommand.addCommand( edgeCommand );
+          addEdgeH1D[j]=edgeCommand;
+        }            
+        else
+        {
+          AddEdgeCommand edgeCommand=
+            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+          compositeCommand.addCommand( edgeCommand );
+          addEdgeH1D[j]=edgeCommand;
+          
+//          //create inverted
+//          AddEdgeCommand edgeInv=
+//            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+//          addEdgeH2DInv[i][j] =edgeInv;
+        }          
+        
         //todo add vertical edge        
         if(addNodeLine2!=null)
         {
