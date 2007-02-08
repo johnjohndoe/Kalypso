@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 
-import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -25,7 +24,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin {
 						"org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject";
 
 	// The shared instance
-	private static Kalypso1d2dProjectPlugin plugin;
+	static Kalypso1d2dProjectPlugin plugin;
 	
 	
 	private static final String ICON_SIM_MODEL_PATH="/icons/nuvola_select/ledblue.png";
@@ -35,8 +34,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Kalypso1d2dProjectPlugin() {
-		plugin = this;
-		BasicConfigurator.configure();
+		plugin = this;		
 	}
 
 	/**

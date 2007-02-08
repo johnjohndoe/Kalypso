@@ -3,7 +3,10 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
@@ -16,10 +19,17 @@ import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
  */
 abstract public class AddNewWorkflowData implements IViewActionDelegate
 {
-	final static public Logger logger=
-				Logger.getLogger(AddNewWorkflowData.class);
+	final static public Logger logger = Logger.getLogger( AddNewWorkflowData.class.getName() );
+
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
 	
-	protected IViewPart viewPart;
+	protected IViewPart m_viewPart;
 	
 	protected ActiveWorkContext activeWorkContext=
 								ActiveWorkContext.getInstance();
@@ -29,7 +39,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	 */
 	public void init(IViewPart view)
 	{
-		viewPart=view;
+		m_viewPart=view;
 		try
 		{
 //			IContributionItem cItem=
@@ -40,7 +50,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 		}
 		catch(Throwable th)
 		{
-			logger.error("Erro while updating contribution items",th);
+			logger.log(Level.SEVERE,"Erro while updating contribution items",th);
 		}
 	}
 
@@ -49,7 +59,7 @@ abstract public class AddNewWorkflowData implements IViewActionDelegate
 	 */
 	public void run(IAction action)
 	{
-		createWorkflowData(viewPart, selected);
+		createWorkflowData(m_viewPart, selected);
 		selected=null;
 	}
 

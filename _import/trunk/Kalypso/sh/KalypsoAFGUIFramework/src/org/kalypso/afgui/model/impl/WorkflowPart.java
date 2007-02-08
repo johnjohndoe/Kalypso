@@ -3,7 +3,10 @@
  */
 package org.kalypso.afgui.model.impl;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.IHelp;
 import org.kalypso.afgui.model.IWorkflowPart;
 import org.kalypso.afgui.schema.Schema;
@@ -16,8 +19,15 @@ import com.hp.hpl.jena.rdf.model.Resource;
  */
 public class WorkflowPart implements IWorkflowPart
 {
-	final static private Logger logger= Logger.getLogger(WorkflowPart.class);
-	
+	final static private Logger logger= Logger.getLogger(WorkflowPart.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	protected Resource resource;
 	
 	
@@ -80,7 +90,7 @@ public class WorkflowPart implements IWorkflowPart
 			}
 			catch(Throwable th)
 			{
-				logger.error("Exception while comparing:",th);
+				logger.log(Level.SEVERE, "Exception while comparing:", th);
 				return false;
 			}
 		}

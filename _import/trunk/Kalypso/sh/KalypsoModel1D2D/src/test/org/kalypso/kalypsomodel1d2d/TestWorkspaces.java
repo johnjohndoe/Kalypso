@@ -46,7 +46,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -65,8 +64,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TestWorkspaces
 {
-	private static final Logger logger= 
-			Logger.getLogger(TestWorkspaces.class);
+//	private static final Logger logger= 
+//			Logger.getLogger(TestWorkspaces.class.getName());
 	
     
 	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";

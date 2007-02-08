@@ -13,7 +13,6 @@ Require-Bundle:
  org.kalypso.optimize,
  org.junit,
  org.kalypso.simulation.core,
- org.apache.jakarta_log4j,
  org.kalypso.contribs.ogc31,
  org.eclipse.core.resources,
  org.kalypso.ui,

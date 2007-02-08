@@ -3,14 +3,13 @@ package org.kalypso.afgui.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IPhase;
 import org.kalypso.afgui.model.ISubTaskGroup;
 import org.kalypso.afgui.model.ITask;
 import org.kalypso.afgui.model.ITaskGroup;
 import org.kalypso.afgui.model.IWorkflow;
-import org.kalypso.afgui.model.events.WorkflowChangeEvent;
 import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
 import org.kalypso.afgui.schema.Schema;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -42,9 +41,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
  */
 public class WorkflowImpl extends WorkflowPart implements IWorkflow
 {
-	final static private Logger logger=
-					Logger.getLogger(WorkflowImpl.class);
-	
+//	final static private Logger logger=
+//					Logger.getLogger(WorkflowImpl.class.getName());
+//  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+//
+//  static
+//  {
+//    if( !log )
+//      logger.setUseParentHandlers( false );
+//  }
+  
 	
 	final private List<WorkflowChangeEventListerner> wfceListener;
 	
@@ -133,13 +139,13 @@ public class WorkflowImpl extends WorkflowPart implements IWorkflow
 //		fireWorkflowChangedEvent(new WorkflowChangeEvent(this));
 //	}
 	
-	private final void fireWorkflowChangedEvent(WorkflowChangeEvent event)
-	{
-		for(WorkflowChangeEventListerner l:wfceListener)
-		{
-			l.onWorkflowChanged(event);
-		}
-	}
+//	private final void fireWorkflowChangedEvent(WorkflowChangeEvent event)
+//	{
+//		for(WorkflowChangeEventListerner l:wfceListener)
+//		{
+//			l.onWorkflowChanged(event);
+//		}
+//	}
 
 
 

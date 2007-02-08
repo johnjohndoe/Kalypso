@@ -43,9 +43,9 @@ package xp;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.log4j.Logger;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -66,7 +66,6 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -75,7 +74,7 @@ import com.vividsolutions.jts.geom.LineString;
 class GridPointCollector implements IGeometryBuilder
 {
   private static final Logger logger=
-        Logger.getLogger( GridPointCollector.class );
+        Logger.getLogger( GridPointCollector.class.getName() );
   
   public static final int SIDE_MAX_NUM=4;
   public static final int SIDE_TOP=0;
@@ -133,14 +132,14 @@ class GridPointCollector implements IGeometryBuilder
     
   }
   
-  private final void checkSideKey(int sideKey)
-  {
-    if(sideKey<0 || sideKey>=SIDE_MAX_NUM)
-    {
-      throw new IllegalArgumentException(
-          "Legal value for sides are 0,1,2,3 but this value passsed:"+sideKey);
-    }
-  }
+//  private final void checkSideKey(int sideKey)
+//  {
+//    if(sideKey<0 || sideKey>=SIDE_MAX_NUM)
+//    {
+//      throw new IllegalArgumentException(
+//          "Legal value for sides are 0,1,2,3 but this value passsed:"+sideKey);
+//    }
+//  }
   
   
   
@@ -278,7 +277,7 @@ class GridPointCollector implements IGeometryBuilder
         }
         else
         {
-          logger.warn( "Last point is null" );
+          logger.warning( "Last point is null" );
         }
         
       }
@@ -376,7 +375,7 @@ class GridPointCollector implements IGeometryBuilder
           }
           catch( Exception e )
           {
-            logger.info( "Error while setting first point from previous builder", e );
+            logger.log(Level.INFO, "Error while setting first point from previous builder", e );
           }
         }
       }
@@ -523,7 +522,7 @@ class GridPointCollector implements IGeometryBuilder
     Coordinate[][] coordinates=mesher.calculateMesh();  
     AddNodeCommand[][] newNodesArray2D= 
        new AddNodeCommand[coordinates.length][];
-    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
+//    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
     
     //Create the nodes
     for(int i=0;i<coordinates.length;i++)
@@ -547,7 +546,7 @@ class GridPointCollector implements IGeometryBuilder
     }
     
     //add edges
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+//    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
     for(int i=0;i<newNodesArray2D.length;i++)
     {
       AddNodeCommand[] addNodeLine1=newNodesArray2D[i];

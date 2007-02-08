@@ -3,9 +3,12 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -23,7 +26,14 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 public class SetActiveProjectActionDelegate implements IViewActionDelegate
 {
 	final static private Logger logger=
-			Logger.getLogger(SetActiveProjectActionDelegate.class);
+			Logger.getLogger(SetActiveProjectActionDelegate.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
 	//private IViewPart viewPart;
 	
 	private IProject selectedProject;
@@ -50,7 +60,7 @@ public class SetActiveProjectActionDelegate implements IViewActionDelegate
 		}
 		catch (CoreException e)
 		{
-			logger.error("error while selting new project:"+selectedProject,e);
+			logger.log(Level.SEVERE,"error while selting new project:"+selectedProject,e);
 		}
 	}
 
@@ -59,8 +69,8 @@ public class SetActiveProjectActionDelegate implements IViewActionDelegate
 	 */
 	public void selectionChanged(IAction action, ISelection selection)
 	{
-		logger.info(action);
-		logger.info(selection);
+		logger.info(action.toString());
+		logger.info(selection.toString());
 		
 		if(selection instanceof IStructuredSelection)
 		{
@@ -92,7 +102,7 @@ public class SetActiveProjectActionDelegate implements IViewActionDelegate
 				}
 				catch (CoreException e)
 				{
-					logger.warn(e);
+					logger.log(Level.WARNING, "", e);
 					action.setEnabled(false);
 				}
 			}

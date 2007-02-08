@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,7 +20,7 @@ public class RequestWorkItemActionDelegate implements IObjectActionDelegate
 
   private static final Logger logger = Logger.getLogger( WorkflowServer.class.getName() );
 
-  private static final boolean log = true;
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
   static
   {

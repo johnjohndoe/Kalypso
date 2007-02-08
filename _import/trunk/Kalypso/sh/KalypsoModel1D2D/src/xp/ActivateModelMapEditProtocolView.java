@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -68,7 +69,7 @@ public class ActivateModelMapEditProtocolView extends AbstractWidget implements 
 
   public static final String TOOL_TIP = "1d 2d zeichen toobal activieren";
 
-  private static final Logger logger = Logger.getLogger( ActivateModelMapEditProtocolView.class );
+  private static final Logger logger = Logger.getLogger( ActivateModelMapEditProtocolView.class.getName() );
 
   private ModelMapEditStrategyView protoView;
 

@@ -3,7 +3,9 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,7 +20,14 @@ import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
  */
 public class RemoveWorkflowData implements IViewActionDelegate
 {
-	private static final Logger logger= Logger.getLogger(RemoveWorkflowData.class);
+	private static final Logger logger= Logger.getLogger(RemoveWorkflowData.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
 	
 	private IWorkflowData selected;
 	

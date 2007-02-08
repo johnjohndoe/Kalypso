@@ -2,8 +2,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.net.URL;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -28,7 +27,7 @@ public class SimMode1D2DCalcJob implements ISimulation
 	 * class logger
 	 */
 	final static private Logger logger= 
-						Logger.getLogger(SimMode1D2DCalcJob.class); 
+						Logger.getLogger(SimMode1D2DCalcJob.class.getName()); 
 	
  
   /**
@@ -45,7 +44,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   {
     try
     {
-    	logger.warn("run not implemented");
+    	logger.warning( "run not implemented" );
     }
     catch( Exception e )
     {

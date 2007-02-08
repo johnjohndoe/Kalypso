@@ -3,10 +3,10 @@
  */
 package org.kalypso.kalypso1d2d.pjt.views;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -29,17 +29,24 @@ import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
  */
 public class SimulationModelDBView extends ViewPart
 {
-	final static private Logger logger= 
-				Logger.getLogger(SimulationModelDBView.class);
+	final static Logger logger= 
+				Logger.getLogger(SimulationModelDBView.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
 	
 	static public final String ID=
 				"org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView";
 	
-	private TreeViewer tv;
+	TreeViewer tv;
 	
 	private SimModelBasedContentProvider simModelBasedCP;
 	
-	private ActiveWorkContext activeWorkContext= 
+	ActiveWorkContext activeWorkContext= 
 						ActiveWorkContext.getInstance();
 	
 	private WorkflowDataLabelProvider labelProvider=
@@ -51,7 +58,8 @@ public class SimulationModelDBView extends ViewPart
 		new IActiveContextChangeListener()
 	{
 
-		public void activeProjectChanged(
+		@SuppressWarnings("synthetic-access")
+    public void activeProjectChanged(
 						IProject newProject, 
 						IProject olProject,
 						IWorkflowDB oldWorkflowDB,
@@ -71,7 +79,7 @@ public class SimulationModelDBView extends ViewPart
 			}
 			else
 			{
-				logger.warn("New Project DB is nul");
+				logger.warning("New Project DB is nul");
 				//top.setVisible(false);
 			}
 			tv.setInput(activeWorkContext);
@@ -83,7 +91,7 @@ public class SimulationModelDBView extends ViewPart
 	
 	private Composite top;
 	
-	private IWorkflowDBChangeListerner dbChangeListerner= 
+	IWorkflowDBChangeListerner dbChangeListerner= 
 		new IWorkflowDBChangeListerner()
 	{
 		public void workflowDBChanged()
@@ -121,9 +129,10 @@ public class SimulationModelDBView extends ViewPart
 		
 	}
 	
-	public void updateTreeView(IWorkflowData selected)
+	public void updateTreeView(@SuppressWarnings("unused")
+  IWorkflowData selected)
 	{
 		tv.refresh();
-		IStructuredSelection selection= new StructuredSelection(selected);
+//		IStructuredSelection selection= new StructuredSelection(selected);
 	}
 }

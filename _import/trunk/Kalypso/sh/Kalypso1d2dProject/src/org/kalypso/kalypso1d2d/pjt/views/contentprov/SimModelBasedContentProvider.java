@@ -4,7 +4,9 @@
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
 import java.util.List;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.afgui.db.EWorkflowProperty;
@@ -21,8 +23,15 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 public class SimModelBasedContentProvider implements ITreeContentProvider
 {
 	final static private Logger logger=
-				Logger.getLogger(SimModelBasedContentProvider.class);
-	
+				Logger.getLogger(SimModelBasedContentProvider.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	final static public Object[] EMPTY_ARRAY={};
 	
 	
@@ -75,7 +84,7 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
 			IWorkflowDB workflowDB=workContext.getWorkflowDB();
 			if(workflowDB==null)
 			{
-				logger.warn("Workflow DB is null");
+				logger.warning("Workflow DB is null");
 				return EMPTY_ARRAY;
 			}
 			else
@@ -88,7 +97,7 @@ public class SimModelBasedContentProvider implements ITreeContentProvider
 		}
 		else
 		{
-			logger.warn("Not supportetd root:"+inputElement);
+			logger.warning("Not supportetd root:"+inputElement);
 			return EMPTY_ARRAY;
 		}
 	}

@@ -3,6 +3,8 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.logging.Level;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewPart;
@@ -43,7 +45,7 @@ public class AddNewSimulationModelActionDelegate extends AddNewWorkflowData
 			}
 			else
 			{
-				logger.warn("No Workflow data selcted:"+object);
+				logger.warning("No Workflow data selcted:"+object);
 				object=super.activeWorkContext;
 			}
 			return object;
@@ -51,7 +53,7 @@ public class AddNewSimulationModelActionDelegate extends AddNewWorkflowData
 		}
 		else
 		{
-			logger.warn("Cannot handle selection:"+selection);
+			logger.warning("Cannot handle selection:"+selection);
 			return super.activeWorkContext;
 		}
 		
@@ -73,7 +75,7 @@ public class AddNewSimulationModelActionDelegate extends AddNewWorkflowData
 		}
 		catch(Throwable th)
 		{
-			logger.error("Error creating data", th);
+			logger.log(Level.SEVERE, "Error creating data", th);
 		}
 	}
 

@@ -11,6 +11,7 @@ import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -25,7 +26,7 @@ public class EclipseOperationDelegate implements ClientOperation
 
   static final Logger logger = Logger.getLogger( EclipseOperationDelegate.class.getName() );
 
-  private static final boolean log = true;
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
   static
   {

@@ -8,8 +8,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflow;
@@ -29,19 +30,26 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class WorkflowSystem implements IWorkflowSystem
 {
 	final static private Logger logger=
-				Logger.getLogger(WorkflowSystem.class);
-	
+				Logger.getLogger(WorkflowSystem.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        	
 	final private Model specModel;
 	
 	final private Model mergedModel;
 	
-	private IWorkflowPartRTContext currentWorkflowRTContext;
-	private IWorkflowPartRTContext currentTaskGroupRTContext;
-	private IWorkflowPartRTContext currentSubTaskGroupRTContext;
-	private IWorkflowPartRTContext currentTaskRTContext;
+//	private IWorkflowPartRTContext currentWorkflowRTContext;
+//	private IWorkflowPartRTContext currentTaskGroupRTContext;
+//	private IWorkflowPartRTContext currentSubTaskGroupRTContext;
+//	private IWorkflowPartRTContext currentTaskRTContext;
 	//private IWorkflowPartRTContext currentActivityRTContext;
 	
-	private IWorkflowData currentDataModel;
+//	private IWorkflowData currentDataModel;
 	
 	private IWorkflow currentWorkflow;
 	

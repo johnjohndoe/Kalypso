@@ -3,8 +3,9 @@ package org.kalypso.afgui.viz;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -13,6 +14,7 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -52,8 +54,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import de.renew.workflow.WorkflowConnector;
 
 public class WorkflowControl {
-    public static final Logger logger = Logger.getLogger(WorkflowControl.class);
+    public static final Logger logger = Logger.getLogger(WorkflowControl.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
 
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
     public static final String KEY_GROUP_TASKS = "_GROUP_TASKS";
 
     public static final String KEY_GROUP_ACTIVITIES = "_GROUP_ACTIVITIES";
@@ -63,6 +72,7 @@ public class WorkflowControl {
 
         private Section lastExpanded;
 
+        @SuppressWarnings("unchecked")
         public void expansionStateChanged(ExpansionEvent e) {
             // Control controls[]=taskComposite.getChildren();
             // if(controls!=null)
@@ -930,12 +940,12 @@ public class WorkflowControl {
         try {
             final IHandlerService handlerService = (IHandlerService) workbench
                     .getService(IHandlerService.class);
-            handlerService.executeCommand(uri, event);
+            handlerService.executeCommand(command.getId(), event);
         } catch (ExecutionException e) {
         	final IStatus status = StatusUtilities.statusFromThrowable(e);
         	ErrorDialog.openError( form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + uri, status );
         	KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log(status);
-        	logger.error( "Failed to execute command: " + uri, e);
+        	logger.log(Level.SEVERE, "Failed to execute command: " + uri, e);
         } catch (NotDefinedException e) {
             e.printStackTrace();
         } catch (NotEnabledException e) {
@@ -944,7 +954,7 @@ public class WorkflowControl {
         	final IStatus status = StatusUtilities.statusFromThrowable(e);
         	ErrorDialog.openError( form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + uri, status );
         	KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log(status);
-        	logger.error( "Failed to execute command: " + uri, e);
+        	logger.log(Level.SEVERE, "Failed to execute command: " + uri, e);
         }
 
         // logger.info("running for:"+uri);

@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.EActivityRelationship;
 import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IRelationshipStatement;
@@ -24,8 +25,15 @@ import org.kalypso.afgui.model.IWorkflowSpecification;
 public class WorkflowSpecification implements IWorkflowSpecification
 {
 	final static private Logger logger= 
-			Logger.getLogger(WorkflowSpecification.class);
-	
+			Logger.getLogger(WorkflowSpecification.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        
 	final private Map<String, IActivitySpecification> specs;
 	
 	final private Map<	EActivityRelationship, 
@@ -99,9 +107,9 @@ public class WorkflowSpecification implements IWorkflowSpecification
 												IActivitySpecification spec, 
 												EActivityRelationship aRelationship)
 	{
-		logger.info(spec);
-		logger.info(aRelationship);
-		logger.info(statements);
+		logger.info(spec.toString());
+		logger.info(aRelationship.toString());
+		logger.info(statements.toString());
 		
 		List<IRelationshipStatement> rels= statements.get(aRelationship);
 		if(spec==null)
@@ -118,7 +126,7 @@ public class WorkflowSpecification implements IWorkflowSpecification
 		{
 			List<IActivitySpecification> actSpecs=
 				new ArrayList<IActivitySpecification>(rels.size());
-			IActivitySpecification subject;
+//			IActivitySpecification subject;
 			for(IRelationshipStatement rel: rels)
 			{
 				

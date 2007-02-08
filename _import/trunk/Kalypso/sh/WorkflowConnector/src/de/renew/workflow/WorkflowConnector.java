@@ -11,6 +11,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 import de.renew.access.LoginInfo;
@@ -29,7 +30,7 @@ public class WorkflowConnector
 
   public static Logger logger = Logger.getLogger( WorkflowConnector.class.getName() );
 
-  private static final boolean log = true;
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
   static
   {

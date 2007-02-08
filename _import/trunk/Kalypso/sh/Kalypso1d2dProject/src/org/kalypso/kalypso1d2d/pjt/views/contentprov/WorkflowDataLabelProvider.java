@@ -3,7 +3,10 @@
  */
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -17,7 +20,15 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 public class WorkflowDataLabelProvider implements ILabelProvider
 {
 	private static final Logger logger= 
-				Logger.getLogger(WorkflowDataLabelProvider.class);
+				Logger.getLogger(WorkflowDataLabelProvider.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
@@ -30,7 +41,7 @@ public class WorkflowDataLabelProvider implements ILabelProvider
 		}
 		catch(Throwable th)
 		{
-			logger.error("Error getting image", th);
+			logger.log(Level.SEVERE, "Error getting image", th);
 			return null;
 		}
 	

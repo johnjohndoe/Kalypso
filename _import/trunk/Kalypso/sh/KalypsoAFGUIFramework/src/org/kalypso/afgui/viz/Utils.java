@@ -1,14 +1,12 @@
 package org.kalypso.afgui.viz;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -26,8 +24,15 @@ public class Utils
 	public static final String ID_GIS_MAP_EDITOR=
 		"org.kalypso.ui.editor.mapeditor.GisMapEditor";
 	private static final Logger logger= 
-						Logger.getLogger(Logger.class);
-	
+						Logger.getLogger(Logger.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        
 	public void importAll(IProject activeProject)
 	{
 		IWorkbenchPage page = 
@@ -39,17 +44,17 @@ public class Utils
 			{
 				if(activeProject==null)
 				{
-					logger.warn("Active project is null");
+					logger.warning("Active project is null");
 					return ;
 				}
-				IWorkspace ws=ResourcesPlugin.getWorkspace();
+//				IWorkspace ws=ResourcesPlugin.getWorkspace();
 				
-				IPath gmtPath=new Path("/.metadata/agger_karte.gmt");
+//				IPath gmtPath=new Path("/.metadata/agger_karte.gmt");
 				IFile gmtFile=
 					activeProject.getFile("project:/.metadata/agger_karte.gmt");
 				if(!gmtFile.exists())
 				{
-					logger.warn(
+					logger.warning(
 							"DO NOT EXISTS:"+gmtFile+
 							" pjt="+activeProject);
 					return;
@@ -58,8 +63,8 @@ public class Utils
 				
 				IWorkbench ui=PlatformUI.getWorkbench();
 				ui.getActiveWorkbenchWindow().getPages();
-				IEditorDescriptor eDesc=
-					ui.getEditorRegistry().findEditor(ID_GIS_MAP_EDITOR);
+//				IEditorDescriptor eDesc=
+//					ui.getEditorRegistry().findEditor(ID_GIS_MAP_EDITOR);
 				
 				IEditorPart ep=IDE.openEditor(
 						page, 
@@ -76,11 +81,11 @@ public class Utils
 							page.getActivePart().getSite().getShell(),
 							wiz);
 				wd.setTitle("Neue Simulationsmodel");
-				int decision=wd.open();
+//				int decision=wd.open();
 			}
 			catch (PartInitException e)
 			{
-				logger.error("/test/Karte.gmt",e);
+				logger.log(Level.SEVERE,"/test/Karte.gmt",e);
 			}
 		}
 	}

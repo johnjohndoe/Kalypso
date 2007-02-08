@@ -1,11 +1,9 @@
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
-
-
-
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -37,8 +35,15 @@ public class NewSimulationModelControlBuilder
 	
 	final static String NEW_NAME_MUST_NOT_BE_EMPTY="Namem feld kann nicht leer sein";
 	final static String ALLREADY_EXISTS="Simulation mit diesem namen existiert schon";
-	final static private Logger logger=
-			Logger.getLogger(NewSimulationModelControlBuilder.class);
+	final static Logger logger=
+			Logger.getLogger(NewSimulationModelControlBuilder.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
 	
 	private String errorMessage; 
 	
@@ -52,7 +57,7 @@ public class NewSimulationModelControlBuilder
 	
 	private Text commentText;
 	
-	private IUpdateListener updateListener;
+	IUpdateListener updateListener;
 	
 	private String newName;
 
@@ -76,7 +81,8 @@ public class NewSimulationModelControlBuilder
 	};
 	
 	public NewSimulationModelControlBuilder(
-							IWorkflowData parentWorkflowData,
+							@SuppressWarnings("hiding")
+              IWorkflowData parentWorkflowData,
 							Composite parentComposite)
 	{
 		this.parentWorkflowData=parentWorkflowData;
@@ -196,7 +202,8 @@ public class NewSimulationModelControlBuilder
 		return errorMessage;
 	}
 	
-	public void setUpdateListerner(IUpdateListener updateListener)
+	public void setUpdateListerner(@SuppressWarnings("hiding")
+  IUpdateListener updateListener)
 	{
 		this.updateListener=updateListener;
 	}
@@ -322,7 +329,7 @@ public class NewSimulationModelControlBuilder
 				ActiveWorkContext.getInstance().getWorkflowDB();
 			if(workflowDB==null)
 			{
-				logger.warn("no workflow db available");
+				logger.warning("no workflow db available");
 				return;
 			}
 			else
@@ -337,5 +344,5 @@ public class NewSimulationModelControlBuilder
 		{
 			logger.info("Wizard canceled:"+decision);
 		}
-	};
+	}
 }

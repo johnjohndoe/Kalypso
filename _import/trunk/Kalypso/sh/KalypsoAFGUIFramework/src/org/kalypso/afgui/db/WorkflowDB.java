@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
@@ -21,11 +21,18 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class WorkflowDB implements IWorkflowDB
 {
 	
-	final static private Logger logger=
-			Logger.getLogger(WorkflowDB.class);
-	
-	final private Map< String, IWorkflowDataCreationMechanism> 
-				creationMechanism= new Hashtable<String, IWorkflowDataCreationMechanism>();
+	final static private Logger logger = Logger.getLogger( WorkflowDB.class.getName() );
+
+	private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+
+  // final private Map< String, IWorkflowDataCreationMechanism>
+  // creationMechanism= new Hashtable<String, IWorkflowDataCreationMechanism>();
 	
 	
 	private List<IWorkflowDBChangeListerner> dbListener=
@@ -81,8 +88,9 @@ public class WorkflowDB implements IWorkflowDB
 		}
 		catch(Throwable th)
 		{
-			logger.error("error createing:"+id+" dbModel="+dbModel,th);
-			return null;
+			logger.log(Level.SEVERE, "error createing:" + id + " dbModel="
+                    + dbModel, th);
+            return null;
 		}
 		
 	}
@@ -202,7 +210,7 @@ public class WorkflowDB implements IWorkflowDB
 		}
 		catch (Exception e)
 		{
-			logger.error("Could not save model",e);
+			logger.log(Level.SEVERE, "Could not save model", e);
 			return false;
 		}
 	}

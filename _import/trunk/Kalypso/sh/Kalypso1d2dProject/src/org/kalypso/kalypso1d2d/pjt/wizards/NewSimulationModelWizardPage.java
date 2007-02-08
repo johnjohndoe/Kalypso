@@ -13,9 +13,9 @@ import org.kalypso.afgui.model.IWorkflowData;
  */
 public class NewSimulationModelWizardPage extends WizardPage
 {
-	private IWorkflowData workflowData;
+//	private IWorkflowData workflowData;
 	
-	private NewSimulationModelControlBuilder c;
+	NewSimulationModelControlBuilder c;
 	
 	IUpdateListener updateListener= new IUpdateListener()
 	{
@@ -36,11 +36,12 @@ public class NewSimulationModelWizardPage extends WizardPage
 	
 	public NewSimulationModelWizardPage(
 								String pageName,
-								IWorkflowData workflowData)
+								@SuppressWarnings("unused")
+                IWorkflowData workflowData)
 	{
 		super(pageName);
 		super.setTitle(pageName);
-		this.workflowData=workflowData;
+//		this.workflowData=workflowData;
 	}
 
 	

@@ -1,6 +1,5 @@
 package org.kalypso.afgui.schema;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -14,8 +13,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.model.EActivityExeState;
 import org.kalypso.afgui.model.EActivityRelationship;
@@ -78,7 +79,15 @@ final public class Schema
 	};
 	
 	static final private Logger logger=
-						Logger.getLogger(Schema.class);
+						Logger.getLogger(Schema.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        
 	public static final String SCHEMA_NS=
 		"http://www.tu-harburg.de/wb/kalypso/schema/workflow#";
 	
@@ -361,7 +370,7 @@ final public class Schema
 		catch(Throwable th)
 		{
 			//remove all sothat vocabulary element will be init with null
-			logger.error("Loading fails", th);
+			logger.log(Level.SEVERE,"Loading fails", th);
 			propMap.clear();
 			resMap.clear();
 			backupTh=th;
@@ -481,7 +490,7 @@ final public class Schema
 					pair[0], 
 					(IResourceWrapperConstructor)pair[1]);
 		}
-		logger.info(map);
+		logger.info(map.toString());
 		return Collections.unmodifiableMap(map);
 	}
 
@@ -537,7 +546,7 @@ final public class Schema
 	static public void main(String[] args) throws IOException
 	{
 		System.out.println("------------------------------");
-		FileOutputStream out= new FileOutputStream("G:\\test.txt");
+//		FileOutputStream out= new FileOutputStream("G:\\test.txt");
 		PrintStream pOut= System.out;//new PrintStream(out);
 		//System.setOut(pOut);
 //		System.out.println(Schema.CLASS_ACTIVITY);
@@ -694,7 +703,7 @@ final public class Schema
 			}
 			catch(Throwable th)
 			{
-				logger.error(
+				logger.log(Level.SEVERE,
 						"New Res="+res+" parent="+parent+" propIsDevFrom="+PROP_IS_DERIVED_FROM,
 						th);
 			}
@@ -753,7 +762,7 @@ final public class Schema
 				resource.getProperty(PROP_HAS_NAME);
 			if(stm==null)
 			{
-				logger.warn("No name property:"+resource.getURI());
+				logger.warning("No name property:"+resource.getURI());
 				return null;
 			}
 			else
@@ -799,7 +808,7 @@ final public class Schema
 	{
 		if(resource==null)
 		{
-			logger.warn("Resource is null returning 0 size activity list");
+			logger.warning("Resource is null returning 0 size activity list");
 			return Collections.emptyList();
 		}
 		else
@@ -818,7 +827,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error(
+					logger.log(Level.SEVERE,
 							"No activities sequence found",th);
 					return Collections.emptyList();
 				}
@@ -843,7 +852,7 @@ final public class Schema
 			Statement stm=resource.getProperty(PROP_EXE_STATE);
 			if(stm==null)
 			{
-				logger.warn("No exe state property");
+				logger.warning("No exe state property");
 				return EActivityExeState.UNKNOWN;
 			}
 			else
@@ -860,7 +869,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.warn("exe property not a literal", th);
+					logger.log(Level.SEVERE,"exe property not a literal", th);
 					return EActivityExeState.UNKNOWN;
 				}
 			}
@@ -879,7 +888,7 @@ final public class Schema
 			Statement stm=resource.getProperty(PROP_PROCESSED_RES);
 			if(stm==null)
 			{
-				logger.warn(
+				logger.warning(
 						"Context does not have processed resource:"+PROP_PROCESSED_RES+
 						"\n"+resource);
 				return null;
@@ -893,7 +902,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error("Cannot processed workflow data", th);
+					logger.log(Level.SEVERE,"Cannot processed workflow data", th);
 					return null;
 				}
 			}
@@ -924,14 +933,14 @@ final public class Schema
 					IResourceWrapperConstructor c=
 						RT_CLASS_MAP.get(typeStm.getResource());
 					//logger.info(CLASS_WORKFLOW.getURI().equals(typeStm.getResource().getURI()));
-					logger.info(typeStm);
-					logger.info(c);
+					logger.info(typeStm.toString());
+					logger.info(c.toString());
 					IWorkflowPart wfp= (IWorkflowPart)c.construct(wfPart);
 					return wfp;
 				}
 				catch(Throwable th)
 				{
-					logger.error("Error while creating wrapper",th);
+					logger.log(Level.SEVERE,"Error while creating wrapper",th);
 					return null;
 				}
 			}
@@ -947,7 +956,7 @@ final public class Schema
 		}
 		else
 		{
-			Resource type=resource.getProperty(RDF.type).getResource();
+//			Resource type=resource.getProperty(RDF.type).getResource();
 			Class cls=null;
 			try
 			{
@@ -956,7 +965,7 @@ final public class Schema
 			}
 			catch(Throwable th)
 			{
-				logger.error("Could not create wrapper class for:"+resource,th);
+				logger.log(Level.SEVERE,"Could not create wrapper class for:"+resource,th);
 				return null;
 			}
 			
@@ -971,7 +980,7 @@ final public class Schema
 		}
 		else
 		{
-			Resource type=resource.getProperty(RDF.type).getResource();
+//			Resource type=resource.getProperty(RDF.type).getResource();
 			
 			try
 			{
@@ -981,7 +990,7 @@ final public class Schema
 			}
 			catch(Throwable th)
 			{
-				logger.error("Could not create wrapper class for:"+resource,th);
+				logger.log(Level.SEVERE,"Could not create wrapper class for:"+resource,th);
 				return null;
 			}
 			
@@ -992,7 +1001,7 @@ final public class Schema
 	{
 		if(resource==null)
 		{
-			logger.warn("Resource is null returning 0 size activity list");
+			logger.warning("Resource is null returning 0 size activity list");
 			return Collections.emptyList();
 		}
 		else
@@ -1011,7 +1020,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error(
+					logger.log(Level.SEVERE,
 							"No activities sequence found",th);
 					return Collections.emptyList();
 				}
@@ -1023,7 +1032,7 @@ final public class Schema
 	{
 		if(resource==null)
 		{
-			logger.warn("Resource is null returning 0 size activity list");
+			logger.warning("Resource is null returning 0 size activity list");
 			return Collections.emptyList();
 		}
 		else
@@ -1042,7 +1051,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error(
+					logger.log(Level.SEVERE,
 							"No activities sequence found",th);
 					return Collections.emptyList();
 				}
@@ -1055,7 +1064,7 @@ final public class Schema
 	{
 		if(resource==null)
 		{
-			logger.warn("Resource is null returning 0 size activity list");
+			logger.warning("Resource is null returning 0 size activity list");
 			return Collections.emptyList();
 		}
 		else
@@ -1074,7 +1083,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error(
+					logger.log(Level.SEVERE,
 							"No activities sequence found",th);
 					return Collections.emptyList();
 				}
@@ -1087,7 +1096,7 @@ final public class Schema
 	{
 		if(resource==null)
 		{
-			logger.warn("Resource is null returning 0 size activity list");
+			logger.warning("Resource is null returning 0 size activity list");
 			return Collections.emptyList();
 		}
 		else
@@ -1106,7 +1115,7 @@ final public class Schema
 				}
 				catch(Throwable th)
 				{
-					logger.error(
+					logger.log(Level.SEVERE,
 							"No activities sequence found",th);
 					return Collections.emptyList();
 				}

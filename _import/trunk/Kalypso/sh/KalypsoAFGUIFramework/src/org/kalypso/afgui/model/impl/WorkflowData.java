@@ -6,13 +6,13 @@ package org.kalypso.afgui.model.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -26,8 +26,15 @@ import com.hp.hpl.jena.vocabulary.RDF;
 public class WorkflowData implements IWorkflowData 
 {
 	final static private Logger logger=
-			Logger.getLogger(WorkflowData.class);
-	private final Resource resource;
+			Logger.getLogger(WorkflowData.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    private final Resource resource;
 	
 	
 	public WorkflowData(Resource resource)
@@ -81,7 +88,7 @@ public class WorkflowData implements IWorkflowData
 		logger.info("PropertyLinkToGet="+jenaProp+" Res="+resource.getModel());
 		if(prop==null)
 		{
-			logger.warn("No Jena property for:"+prop);
+			logger.warning("No Jena property for:"+prop);
 			return false;
 		}
 		else 
@@ -98,7 +105,7 @@ public class WorkflowData implements IWorkflowData
 		Property jenaProp=Schema.toJenaProperty(prop);
 		if(prop==null)
 		{
-			logger.warn("Cannot get jena property for:"+prop);
+			logger.warning("Cannot get jena property for:"+prop);
 			return Collections.emptyList();
 		}
 		else

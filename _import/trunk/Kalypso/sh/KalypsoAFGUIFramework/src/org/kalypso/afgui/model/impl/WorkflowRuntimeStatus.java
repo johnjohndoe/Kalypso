@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.EActivityAction;
 import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IActivityRuntimeStatus;
@@ -26,8 +27,16 @@ import org.kalypso.afgui.model.IWorkflowRuntineStatus;
 public class WorkflowRuntimeStatus implements IWorkflowRuntineStatus
 {
 	final static private Logger logger=
-			Logger.getLogger(WorkflowSpecification.class);
-	/**
+			Logger.getLogger(WorkflowSpecification.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
+    /**
 	 * A map containing the instantiated activities 
 	 */
 	private final Map<String , IActivity> activities;

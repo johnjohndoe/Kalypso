@@ -3,19 +3,17 @@
  */
 package org.kalypso.afgui.views;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.EActivityAction;
-import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.events.WorkflowChangeEvent;
 import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
-
-import com.hp.hpl.jena.reasoner.rdfsReasoner1.BRWRule;
 
 /**
  * @author pat_dev
@@ -26,7 +24,15 @@ public class WorkflowHelpView extends ViewPart
 	private Browser browser;
 	final static private String BLANK_HTML="<html></html>";
 	final static private Logger logger=
-				Logger.getLogger(WorkflowHelpView.class);
+				Logger.getLogger(WorkflowHelpView.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        
 	final static public String ID="org.kalypso.afgui.views.WorkflowHelpView";
 	private WorkflowChangeEventListerner wfceListener=
 		new WorkflowChangeEventListerner()
@@ -35,7 +41,7 @@ public class WorkflowHelpView extends ViewPart
 			public void onWorkflowChanged(WorkflowChangeEvent event)
 			{
 				logger.info("*+*+*+*+*+*+*+*\n"+event);
-				IWorkflow workflow=(IWorkflow)event.getSource();
+//				IWorkflow workflow=(IWorkflow)event.getSource();
 //				if(!(workflow.getRuntineStatus().getCurrentAction()==
 //												EActivityAction.GET_HELP))
 //				{

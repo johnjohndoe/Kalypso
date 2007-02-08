@@ -28,18 +28,18 @@ public class WorkflowView extends ViewPart
 
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorkflowView";
 
-  private static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
+  static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
 
   static
   {
     final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
-    if( log )
+    if( !log )
       LOGGER.setUseParentHandlers( false );
   }
 
-  private WorkflowControl workflowControl;
+  WorkflowControl workflowControl;
 
-  private ActiveWorkContext activeWorkContext = ActiveWorkContext.getInstance();
+  ActiveWorkContext activeWorkContext = ActiveWorkContext.getInstance();
 
   private IPartListener partListener = new IPartListener()
   {
@@ -163,7 +163,7 @@ public class WorkflowView extends ViewPart
 
   }
 
-  private void setCurrentSzenario( final IProject project, final IWorkflowData data )
+  void setCurrentSzenario( final IProject project, final IWorkflowData data )
   {
     activeWorkContext.setCurrentSzenario( project, data );
   }

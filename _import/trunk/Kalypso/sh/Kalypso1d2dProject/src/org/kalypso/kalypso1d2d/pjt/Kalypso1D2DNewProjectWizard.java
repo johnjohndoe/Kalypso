@@ -1,8 +1,11 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
@@ -17,7 +20,15 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 	final static public String ID=
 			"org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"; 
 	final static private Logger logger= 
-				Logger.getLogger(Kalypso1D2DNewProjectWizard.class);
+				Logger.getLogger(Kalypso1D2DNewProjectWizard.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	public Kalypso1D2DNewProjectWizard()
 	{
 		//empty
@@ -64,7 +75,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 			} 
 			catch (CoreException e) 
 			{
-				logger.info(MSG, e);
+				logger.log(Level.INFO, MSG, e);
 				Kalypso1d2dProjectPlugin.getDefault().showException("", e);
 				return false;
 			}
@@ -76,7 +87,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard
 //			}
 			catch(Throwable th)
 			{
-				logger.error(MSG, th);
+				logger.log(Level.SEVERE, MSG, th);
 				return false;
 			}
 			return true;

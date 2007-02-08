@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -18,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.WorkflowDB;
@@ -33,8 +35,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class Kalypso1D2DProjectNature implements IProjectNature
 {
-  private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class );
+  private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
 
+  static
+  {
+    if( !log )
+      logger.setUseParentHandlers( false );
+  }
+  
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
 
   public static final String METADATA_FOLDER = ".metadata";
@@ -135,11 +144,11 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     }
     catch( MalformedURLException e )
     {
-      logger.error( "Bad url to work flow desc data", e );
+      logger.log(Level.SEVERE, "Bad url to work flow desc data", e );
     }
     catch( IOException e )
     {
-      logger.error( "Work flow data could not be found", e );
+      logger.log(Level.SEVERE, "Work flow data could not be found", e );
     }
     logger.info( "Config End:" + workflowDB );
     // return workflowDB;

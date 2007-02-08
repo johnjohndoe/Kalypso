@@ -4,14 +4,14 @@
 package org.kalypso.afgui.model.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.model.IActivityHelp;
 import org.kalypso.afgui.model.IActivitySpecification;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.schema.Schema;
 
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 
@@ -26,8 +26,15 @@ public class ActivitySpecification implements
 	 * Logger for the Activity specification class
 	 */
 	final static Logger logger=
-		Logger.getLogger(ActivitySpecification.class);
-	
+		Logger.getLogger(ActivitySpecification.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	/** the resource representing this activity*/
 	final private Resource activity; 
 	
@@ -77,7 +84,7 @@ public class ActivitySpecification implements
 	 */
 	public IActivityHelp getHelp()
 	{
-		final String help=getHelpString(activity);
+//		final String help=getHelpString(activity);
 		return new IActivityHelp()
 		{
 
@@ -95,30 +102,30 @@ public class ActivitySpecification implements
 		};
 	}
 	
-	private static final String getHelpString(Resource activity)
-	{
-		Statement stm=
-			activity.getProperty(Schema.PROP_HAS_HELP);
-		if(stm==null)
-		{
-			return null;
-		}
-		else 
-		{
-			RDFNode object=stm.getObject();
-			if(object.isLiteral())
-			{
-				return object.toString();
-			}
-			else
-			{
-				logger.warn(
-						"Help is an object change implementation to cope:"+object);
-				return object.toString();
-			}
-		}
-			
-	}
+//	private static final String getHelpString(Resource activity)
+//	{
+//		Statement stm=
+//			activity.getProperty(Schema.PROP_HAS_HELP);
+//		if(stm==null)
+//		{
+//			return null;
+//		}
+//		else 
+//		{
+//			RDFNode object=stm.getObject();
+//			if(object.isLiteral())
+//			{
+//				return object.toString();
+//			}
+//			else
+//			{
+//				logger.warning(
+//						"Help is an object change implementation to cope:"+object);
+//				return object.toString();
+//			}
+//		}
+//			
+//	}
 	
 	/* (non-Javadoc)
 	 * @see org.kalypso.afgui.model.IActivitySpecification#getName()
@@ -178,7 +185,7 @@ public class ActivitySpecification implements
 	{
 		Statement stm=activity.getProperty(Schema.PROP_IS_ROOT);
 		logger.info("\nisRoot:"+stm);
-		logger.info(activity);
+		logger.info(activity.toString());
 		if(stm==null)
 		{
 			return false;

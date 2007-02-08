@@ -2,10 +2,12 @@ package org.kalypso.kalypso1d2d.pjt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
@@ -59,7 +61,7 @@ public class ActiveWorkContext
 							}
 							catch(Throwable th)
 							{
-								logger.error("Error secting active:"+firstEl,th);
+								logger.log(Level.SEVERE, "Error secting active:"+firstEl,th);
 								try{setActiveProject(null);}catch(Throwable th1){}
 								
 							}
@@ -67,7 +69,7 @@ public class ActiveWorkContext
 					}
 					else
 					{
-						logger.warn("Can only cope with single selection: "+isl);
+						logger.warning("Can only cope with single selection: "+isl);
 					}
 				}
 			}
@@ -75,8 +77,15 @@ public class ActiveWorkContext
 	};
 	
 	final static Logger logger=
-				Logger.getLogger(ActiveWorkContext.class);
-	
+				Logger.getLogger(ActiveWorkContext.class.getName());
+    private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+
+    static
+    {
+      if( !log )
+        logger.setUseParentHandlers( false );
+    }
+    
 	private final static ActiveWorkContext activeWorkContext= new ActiveWorkContext();
 	
 	private IWorkflowDB workflowDB;
@@ -85,7 +94,7 @@ public class ActiveWorkContext
 	
     private final SzenarioDataProvider m_dataProvider = new SzenarioDataProvider();
 
-	private IProject activeProject;
+	private IProject m_activeProject;
 	
 	private List< IActiveContextChangeListener> activeProjectChangeListener=
 		new ArrayList<IActiveContextChangeListener>();
@@ -103,12 +112,12 @@ public class ActiveWorkContext
 	
 	synchronized public void setActiveProject(IProject activeProject) throws CoreException
 	{
-		if(this.activeProject==activeProject)
+		if(this.m_activeProject==activeProject)
 		{
 			return;
 		}
 		logger.info("New Project to Set:"+activeProject);
-		IProject oldProject=this.activeProject;
+		IProject oldProject=this.m_activeProject;
 		IWorkflowDB oldWorkflowDB=getWorkflowDB();
 		IWorkflowSystem oldWorkflowSystem=getWorkflowSystem();
 		if(oldWorkflowDB!=null)
@@ -122,7 +131,7 @@ public class ActiveWorkContext
 			{
 				Kalypso1D2DProjectNature nature=
 					Kalypso1D2DProjectNature.toThisNature(activeProject);
-				this.activeProject = activeProject;
+				this.m_activeProject = activeProject;
 				this.workflowDB=nature.getWorkflowDB();
 				this.workflowSystem=nature.getWorkflowSystem();
 				logger.info("WorkflowDB="+workflowDB);
@@ -131,14 +140,14 @@ public class ActiveWorkContext
 			else
 			{
 				
-				this.activeProject=null;
+				this.m_activeProject=null;
 				this.workflowDB=null;
-				logger.warn("Project to set is not of 1d2d nature");
+				logger.warning("Project to set is not of 1d2d nature");
 			}
 		}
 		catch (CoreException e)
 		{
-			logger.error("Error setting current project", e);
+			logger.log(Level.SEVERE, "Error setting current project", e);
 			throw e;
 		}
 		finally
@@ -158,7 +167,7 @@ public class ActiveWorkContext
 	
 	synchronized public IProject getActiveProject()
 	{
-		return activeProject;
+		return m_activeProject;
 	}
 	
 	synchronized public IWorkflowDB getWorkflowDB()
@@ -173,7 +182,7 @@ public class ActiveWorkContext
 		
 	public IWorkflow getCurrentWorkflow()
 	{
-		if(activeProject==null)
+		if(m_activeProject==null)
 		{
 			return null;
 		}

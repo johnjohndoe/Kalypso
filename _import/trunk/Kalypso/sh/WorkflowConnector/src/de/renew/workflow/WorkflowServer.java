@@ -1,12 +1,12 @@
 package de.renew.workflow;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 
 import de.renew.plugin.PluginManager;
 
@@ -35,17 +35,17 @@ public class WorkflowServer
 
   private static final String DE_RENEW_NET_PATH_PROPERTY = "de.renew.netPath";
 
-  private static final Logger logger = Logger.getLogger( WorkflowServer.class );
-
   private static final boolean gui = true;
 
-  // private static final boolean log = true;
+  private static final Logger logger = Logger.getLogger( WorkflowServer.class.getName() );
 
-  // static
-  // {
-  // if( !log )
-  // logger.setUseParentHandlers( false );
-  // }
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
+
+  static
+  {
+    if( !log )
+      logger.setUseParentHandlers( false );
+  }
 
   static
   {
@@ -79,7 +79,7 @@ public class WorkflowServer
     catch( final Exception e )
     {
       // so much could happen...
-      logger.error( "Problem starting Renew", e );
+      logger.log( Level.SEVERE, "Problem starting Renew", e );
     }
   }
 
@@ -173,7 +173,7 @@ public class WorkflowServer
     return v;
   }
 
-  private void setCodebase( ) throws IOException, Exception, URISyntaxException
+  private void setCodebase( )
   {
     // final String libDir = WorkflowConnectorPlugin.getDefault().getBundle().getLocation() + "lib";
     final String libDir = "lib";

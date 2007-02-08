@@ -4,9 +4,9 @@
 package org.kalypso.afgui.views;
 
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.ParagraphAction;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -17,24 +17,16 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.EActivityAction;
-import org.kalypso.afgui.model.IActivity;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.events.WorkflowChangeEvent;
 import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
@@ -47,7 +39,15 @@ import org.kalypso.afgui.model.events.WorkflowChangeEventListerner;
 public class WorkflowView extends ViewPart
 {
 	final static private Logger logger=
-			Logger.getLogger(WorkflowView.class);
+			Logger.getLogger(WorkflowView.class.getName());
+     private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+
+        static
+        {
+          if( !log )
+            logger.setUseParentHandlers( false );
+        }
+        
 	final static public String ID="org.kalypso.afgui.views.WorkflowView"; 
 	
 	private Viewer view;
@@ -69,8 +69,8 @@ public class WorkflowView extends ViewPart
 
 			public void onWorkflowChanged(WorkflowChangeEvent event)
 			{
-				logger.info(event);
-				IWorkflow workflow=(IWorkflow)event.getSource();
+				logger.info(event.toString());
+//				IWorkflow workflow=(IWorkflow)event.getSource();
 //				if(workflow.getRuntineStatus().getCurrentAction()==
 //												EActivityAction.GET_HELP)
 //				{
@@ -110,7 +110,7 @@ public class WorkflowView extends ViewPart
 
 			public void selectionChanged(SelectionChangedEvent event)
 			{
-				logger.info(event);
+				logger.info(event.toString());
 				((TreeViewer)view).expandAll();
 			}
 			
@@ -158,77 +158,77 @@ public class WorkflowView extends ViewPart
 		
 	}
 	
-	private void createTableTreeView(Composite parent)
-	{
-		TableTreeViewer ttView;
-		ttView= new TableTreeViewer(parent,SWT.FILL);		
-		ttView.setContentProvider(provider);
-		Table table = ttView.getTableTree().getTable();
-	    new TableColumn(table, SWT.CENTER);
-	    new TableColumn(table, SWT.CENTER);
-	    new TableColumn(table, SWT.RIGHT);//.setText("Points");
-	    new TableColumn(table, SWT.RIGHT);//.setText("Rebounds");
-	    new TableColumn(table, SWT.RIGHT);//.setText("Assists");
-	    ttView.setLabelProvider(
-	    		new TableLabelProvider(
-	    				(WorkflowViewContentProvider)provider));
-		ttView.setInput(workflow);
-		
-		 // Expand everything
-	    ttView.expandAll();
-
-	    // Pack the columns
-	    for (int i = 0, n = table.getColumnCount(); i < n; i++) {
-	      table.getColumn(i).pack();
-	    }
-
-	    // Turn on the header and the lines
-	    table.setHeaderVisible(false);
-	    table.setLinesVisible(false);
-	    
-	    ttView.addDoubleClickListener(dkListener);
-	    view=ttView;
-	}
+//	private void createTableTreeView(Composite parent)
+//	{
+//		TableTreeViewer ttView;
+//		ttView= new TableTreeViewer(parent,SWT.FILL);		
+//		ttView.setContentProvider(provider);
+//		Table table = ttView.getTableTree().getTable();
+//	    new TableColumn(table, SWT.CENTER);
+//	    new TableColumn(table, SWT.CENTER);
+//	    new TableColumn(table, SWT.RIGHT);//.setText("Points");
+//	    new TableColumn(table, SWT.RIGHT);//.setText("Rebounds");
+//	    new TableColumn(table, SWT.RIGHT);//.setText("Assists");
+//	    ttView.setLabelProvider(
+//	    		new TableLabelProvider(
+//	    				(WorkflowViewContentProvider)provider));
+//		ttView.setInput(workflow);
+//		
+//		 // Expand everything
+//	    ttView.expandAll();
+//
+//	    // Pack the columns
+//	    for (int i = 0, n = table.getColumnCount(); i < n; i++) {
+//	      table.getColumn(i).pack();
+//	    }
+//
+//	    // Turn on the header and the lines
+//	    table.setHeaderVisible(false);
+//	    table.setLinesVisible(false);
+//	    
+//	    ttView.addDoubleClickListener(dkListener);
+//	    view=ttView;
+//	}
 	
-	private void createTreeColumn(Composite parent)
-	{
-		TreeViewer tv= new TreeViewer(parent);
-		
-		Tree tree = tv.getTree();//new Tree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-	    //tree.setHeaderVisible(true);
-		TreeColumn column;
-		for(int i=EActivityAction.values().length-1;i>=0;i--)
-		{
-			column=new TreeColumn(tree, SWT.LEFT);
-			column.setWidth(100);
-		    column.setText("Column 1");
-		    
-		}
-//	    TreeColumn column1 = new TreeColumn(tree, SWT.LEFT);
-//	    //column1.setText("Column 1");
-//	    column1.setWidth(100);
-//	    TreeColumn column2 = new TreeColumn(tree, SWT.CENTER);
-//	    //column2.setText("Column 2");
-//	    //column2.setWidth(200);
-//	    TreeColumn column3 = new TreeColumn(tree, SWT.RIGHT);
-//	    //column3.setText("Column 3");
-//	    column3.setWidth(200);
-//	    //TreeViewer tv= new TreeViewer(tree);
-	    tv.setContentProvider(provider);
-	    
-	    tv.setLabelProvider(
-	    		new TableLabelProvider(
-	    				(WorkflowViewContentProvider)provider));
-	    tv.setInput(IWorkflow.class);//(workflow);
-	    for (int i = 0, n = tree.getColumnCount(); i < n; i++) {
-		      tree.getColumn(i).pack();
-		}
-	    tree.setHeaderVisible(false);
-	    tv.addDoubleClickListener(dkListener);
-	    tv.addSelectionChangedListener(scListener);
-	    
-	    view=tv;
-	}
+//	private void createTreeColumn(Composite parent)
+//	{
+//		TreeViewer tv= new TreeViewer(parent);
+//		
+//		Tree tree = tv.getTree();//new Tree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+//	    //tree.setHeaderVisible(true);
+//		TreeColumn column;
+//		for(int i=EActivityAction.values().length-1;i>=0;i--)
+//		{
+//			column=new TreeColumn(tree, SWT.LEFT);
+//			column.setWidth(100);
+//		    column.setText("Column 1");
+//		    
+//		}
+////	    TreeColumn column1 = new TreeColumn(tree, SWT.LEFT);
+////	    //column1.setText("Column 1");
+////	    column1.setWidth(100);
+////	    TreeColumn column2 = new TreeColumn(tree, SWT.CENTER);
+////	    //column2.setText("Column 2");
+////	    //column2.setWidth(200);
+////	    TreeColumn column3 = new TreeColumn(tree, SWT.RIGHT);
+////	    //column3.setText("Column 3");
+////	    column3.setWidth(200);
+////	    //TreeViewer tv= new TreeViewer(tree);
+//	    tv.setContentProvider(provider);
+//	    
+//	    tv.setLabelProvider(
+//	    		new TableLabelProvider(
+//	    				(WorkflowViewContentProvider)provider));
+//	    tv.setInput(IWorkflow.class);//(workflow);
+//	    for (int i = 0, n = tree.getColumnCount(); i < n; i++) {
+//		      tree.getColumn(i).pack();
+//		}
+//	    tree.setHeaderVisible(false);
+//	    tv.addDoubleClickListener(dkListener);
+//	    tv.addSelectionChangedListener(scListener);
+//	    
+//	    view=tv;
+//	}
 	
 	private void createSimpleTreeView(Composite parent)
 	{
@@ -265,7 +265,7 @@ public class WorkflowView extends ViewPart
 				logger.info("DODODODODODOD");
 				IStructuredSelection sel=
 							(IStructuredSelection)view.getSelection();
-				IActivity activity=(IActivity)sel.getFirstElement();
+//				IActivity activity=(IActivity)sel.getFirstElement();
 //				workflow.updateWorkflow(activity, EActivityAction.DO);
 				logger.info("sel:"+sel);
 			}
@@ -279,9 +279,9 @@ public class WorkflowView extends ViewPart
 ///////////////////////////////////////////////
 		getHelpAction = new Action() {
 			public void run() {
-				IStructuredSelection sel=
-					(IStructuredSelection)view.getSelection();
-				IActivity activity=(IActivity)sel.getFirstElement();
+//				IStructuredSelection sel=
+//					(IStructuredSelection)view.getSelection();
+//				IActivity activity=(IActivity)sel.getFirstElement();
 //				workflow.updateWorkflow(activity, EActivityAction.GET_HELP);				//showMessage("Action 2 executed");
 				
 			}
@@ -319,9 +319,9 @@ public class WorkflowView extends ViewPart
 ///////////////////////////////////////////////
 		upAction = new Action() {
 			public void run() {
-				IStructuredSelection sel=
-					(IStructuredSelection)view.getSelection();
-				IActivity activity=(IActivity)sel.getFirstElement();
+//				IStructuredSelection sel=
+//					(IStructuredSelection)view.getSelection();
+//				IActivity activity=(IActivity)sel.getFirstElement();
 //				workflow.updateWorkflow(activity, EActivityAction.UP);				
 			}
 		};
@@ -333,9 +333,9 @@ public class WorkflowView extends ViewPart
 ///////////////////////////////////////////////
 		downAction = new Action() {
 			public void run() {
-				IStructuredSelection sel=
-					(IStructuredSelection)view.getSelection();
-				IActivity activity=(IActivity)sel.getFirstElement();
+//				IStructuredSelection sel=
+//					(IStructuredSelection)view.getSelection();
+//				IActivity activity=(IActivity)sel.getFirstElement();
 //				workflow.updateWorkflow(activity, EActivityAction.DOWN);	
 				
 			}

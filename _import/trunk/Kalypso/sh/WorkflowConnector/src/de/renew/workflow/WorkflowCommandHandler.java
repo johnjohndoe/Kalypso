@@ -47,6 +47,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Stefan Kurzbach
@@ -57,7 +58,7 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
 
   public static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
 
-  private static final boolean log = true;
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
   static
   {
