@@ -46,6 +46,7 @@ import java.awt.Point;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
@@ -53,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -499,7 +501,98 @@ class GridPointCollector implements IGeometryBuilder
     return hasAllSides;
   }
   
-  public void getAddToModel(
+  
+  public ICommand getAddToModelCommand(
+      IFEDiscretisationModel1d2d model) 
+      throws GM_Exception
+  {
+    CompositeCommand compositeCommand = new CompositeCommand("Grid Command");
+    
+    GeometryFactory geometryFactory= new GeometryFactory();
+    final LineString topLine = pointToLineString( sides[0] );
+    final LineString bottomLine = pointToLineString( sides[2] );
+    final LineString leftLine = pointToLineString( sides[1] );
+    final LineString rightLine = pointToLineString( sides[3] );
+    
+    JTSQuadMesher mesher= 
+    new JTSQuadMesher(
+            topLine,
+            bottomLine,
+            leftLine,
+            rightLine);
+    Coordinate[][] coordinates=mesher.calculateMesh();  
+    AddNodeCommand[][] newNodesArray2D= 
+       new AddNodeCommand[coordinates.length][];
+    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
+    
+    //Create the nodes
+    for(int i=0;i<coordinates.length;i++)
+    {
+      Coordinate[] line=coordinates[i];
+      AddNodeCommand[] newNodesArray1D= 
+              new AddNodeCommand[line.length];
+      newNodesArray2D[i]=newNodesArray1D;
+      for(int j=0;j<line.length;j++)
+      {
+        Coordinate coord=line[j];
+        //TODO check node for existance
+        AddNodeCommand nodeCommand=
+          new AddNodeCommand(
+            model,
+            (GM_Point)JTSAdapter.wrap( 
+                  geometryFactory.createPoint(coord)));
+        newNodesArray1D[j]=nodeCommand;
+        compositeCommand.addCommand( nodeCommand );
+      }
+    }
+    
+    //add edges
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+    for(int i=0;i<newNodesArray2D.length;i++)
+    {
+      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
+      AddNodeCommand[] addNodeLine2=
+      (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
+      for(int j=0; j<addNodeLine1.length;j++)
+      {
+        //horidonzal edges
+        if((addNodeLine1.length-j)>1)
+        {
+          AddEdgeCommand edgeCommand=
+            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+          compositeCommand.addCommand( edgeCommand );
+        }
+        //todo add vertical edge        
+        if(addNodeLine2!=null)
+        {
+          AddEdgeCommand edgeCommand=
+            new AddEdgeCommand(
+                        model, 
+                        addNodeLine1[j],
+                        addNodeLine2[j]);
+          compositeCommand.addCommand( edgeCommand );
+          //lastvertical edge
+          if(addNodeLine1.length-j==2)
+          {
+            edgeCommand=
+              new AddEdgeCommand(
+                          model, 
+                          addNodeLine1[j+1],
+                          addNodeLine2[j+1]);
+            compositeCommand.addCommand( edgeCommand );
+          }
+        //edge=edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+        //edge.addNode( nodeLine2[j].getGmlID() );
+        //edge.addNode( nodeLine2[j+1].getGmlID() );
+        }      
+      }
+    }
+//    model.getWrappedFeature().getWorkspace().fireModellEvent( null );
+//    
+    return compositeCommand;
+  }
+  
+  public void getAddToModelVV(
                       IFEDiscretisationModel1d2d model) 
                       throws GM_Exception
   {

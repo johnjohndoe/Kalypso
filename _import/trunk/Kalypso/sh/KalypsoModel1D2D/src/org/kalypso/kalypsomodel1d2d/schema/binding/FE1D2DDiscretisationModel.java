@@ -43,13 +43,17 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+import com.sun.org.apache.xpath.internal.axes.NodeSequence;
 
 /**
  * Provide a implementation of {@link IFEDiscretisationModel1d2d} to
@@ -209,6 +213,46 @@ public class FE1D2DDiscretisationModel
     return m_featureToBind.getId();
   }
   
-  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(org.deegree.model.geometry.GM_Point)
+   */
+  public IFE1D2DNode createNode( 
+                          GM_Point nodeLocation,
+                          boolean[] alreadyExists
+                          )
+  { 
+    List<Feature> foundNodes= new ArrayList<Feature>();
+    m_nodes.getWrappedList().query(
+                    nodeLocation.getEnvelope(),
+                    foundNodes);
+    if(foundNodes.isEmpty())
+    {
+      System.out.println("NodeFound!");
+      IFE1D2DNode node = 
+        m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      node.setPoint( nodeLocation );
+      alreadyExists[0]=false;
+      return node;
+    }
+    else
+    {
+      double min=-1, curDist;
+      IFE1D2DNode nearest=null, curNode; 
+      for(Feature feature:foundNodes)
+      {
+        curNode=new FE1D2DNode(feature);
+        curDist=nodeLocation.distance( curNode.getPoint() );
+        if(min>curDist)
+        {
+          nearest=curNode;
+          min=curDist;          
+        }
+      }
+      alreadyExists[0]=true;
+      return nearest;
+    }
+  }
+
+
   
 }

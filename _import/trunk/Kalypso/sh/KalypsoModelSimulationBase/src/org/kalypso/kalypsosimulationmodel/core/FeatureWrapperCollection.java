@@ -442,7 +442,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 		if (o instanceof IFeatureWrapper) {
 			return featureList
 					.remove(((IFeatureWrapper) o).getWrappedFeature());
-		} else {
+		}
+        else if(o instanceof String)
+        {
+          return featureList.remove( o );
+        }else {
 			return false;
 		}
 	}

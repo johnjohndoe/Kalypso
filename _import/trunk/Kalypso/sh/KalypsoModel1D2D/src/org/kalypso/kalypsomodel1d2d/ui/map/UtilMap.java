@@ -64,7 +64,7 @@ public class UtilMap
    * element of the specified QName
    *  
    */
-  static public IKalypsoTheme findEditableThem(
+  static public IKalypsoFeatureTheme findEditableThem(
                               IMapModell mapModel,
                               QName editElementQName)
   {
@@ -83,7 +83,7 @@ public class UtilMap
                     featureType, 
                     Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )
         {
-          return ftheme;
+          return (IKalypsoFeatureTheme)ftheme;
           //m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
         }
       }

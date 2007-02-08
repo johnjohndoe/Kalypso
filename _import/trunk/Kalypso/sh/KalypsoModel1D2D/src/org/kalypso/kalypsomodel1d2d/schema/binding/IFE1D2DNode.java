@@ -57,4 +57,6 @@ public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
   public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
 
   public IFE1D2DNode<IFE1D2DEdge>[] getNeighbours( );
+  
+  public void addContainer(String linkRef);
 }

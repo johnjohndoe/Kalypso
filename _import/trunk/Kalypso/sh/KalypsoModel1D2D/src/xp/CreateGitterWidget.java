@@ -7,8 +7,10 @@ import java.awt.event.KeyEvent;
 
 
 
-import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.themes.ITheme;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -16,10 +18,13 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -339,17 +344,27 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     }
     else if(typed=='t')
     {
-       IFEDiscretisationModel1d2d model1d2d = 
+      IMapModell mapModel=getMapPanel().getMapModell();
+      IFEDiscretisationModel1d2d model1d2d = 
                  UtilMap.findFEModelTheme(  
-                                getMapPanel().getMapModell(), 
+                                mapModel, 
                                 Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      IKalypsoFeatureTheme theme=
+      UtilMap.findEditableThem(  
+           mapModel, 
+           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      
+      CommandableWorkspace workspace = theme.getWorkspace();
       try
       {
         //TODO add elements to model from the 4 lines
-        gridPointCollector.getAddToModel( model1d2d );
-        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+        ICommand command = gridPointCollector.getAddToModelCommand( model1d2d );
+        
+        workspace.postCommand( command );
+        System.out.println("GridCommand posted");
+//        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
       }
-      catch( GM_Exception e1 )
+      catch( Throwable e1 )
       {
         e1.printStackTrace();
       }

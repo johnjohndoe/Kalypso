@@ -10,6 +10,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -340,4 +341,13 @@ public class FE1D2DNode
     return neighbourNodes.toArray( new IFE1D2DNode[neighbourNodes.size()] );
   }
 
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#addContainer(java.lang.String)
+   */
+  public void addContainer( String linkRef )
+  {
+    linkRef=Assert.throwIAEOnNullOrEmpty( linkRef );
+    containers.getWrappedList().add( linkRef);
+  }
 }
