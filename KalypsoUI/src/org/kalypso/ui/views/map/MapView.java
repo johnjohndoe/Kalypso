@@ -101,7 +101,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class MapView extends ViewPart implements ICommandTarget, IMapPanelListener
 {
-  // public static final String ID = MapView.class.getName();
+  public static final String ID = "org.kalypso.ui.views.mapView";
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -238,6 +238,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     job.schedule();
   }
 
+  /**
+   * Use this method to set a new map-file to this map-view.
+   */
   public void loadMap( final IStorage storage, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
