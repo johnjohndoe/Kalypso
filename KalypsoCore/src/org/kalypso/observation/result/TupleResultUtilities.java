@@ -95,8 +95,9 @@ public class TupleResultUtilities
 
   /**
    * @author thuel2
-   * @return returns minimum value for component of a tupleResult, works for components of XmlType XS_BOOLEAN,
-   *         XS_DOUBLE, XS_DATE, XS_STRING
+   * @return returns minimum value for component of a tupleResult.<br>
+   *         Works for components of XmlType XS_BOOLEAN, XS_DOUBLE, XS_DATE, XS_STRING. <br>
+   *         For all others <code>object.toString</code> will be used for comparison.
    */
   public static Object findComponentMinById( final TupleResult result, final String compID )
   {
@@ -110,6 +111,8 @@ public class TupleResultUtilities
       final List<Boolean> values = new ArrayList<Boolean>();
       for( final IRecord record : result )
         values.add( (Boolean) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.min( values );
     }
     else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
@@ -120,6 +123,8 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
       for( final IRecord record : result )
         values.add( (java.lang.Double) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.min( values );
     }
     else if( XmlTypes.XS_DATE.equals( valueTypeName ) )
@@ -129,6 +134,8 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<Date>();
       for( final IRecord record : result )
         values.add( (Date) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.min( values );
     }
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
@@ -136,15 +143,26 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
         values.add( (String) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.min( values );
     }
-    return null;
+    else
+    {
+      final List<String> values = new ArrayList<String>();
+      for( final IRecord record : result )
+        values.add( (record.getValue( comp )).toString() );
+      if( values.size() < 1 )
+        return null;
+      return Collections.min( values );
+    }
   }
 
   /**
    * @author thuel2
-   * @return returns maximum value for component of a tupleResult, works for components of XmlType XS_BOOLEAN,
-   *         XS_DOUBLE, XS_DATE, XS_STRING
+   * @return returns maximum value for component of a tupleResult. <br>
+   *         Works for components of XmlType XS_BOOLEAN, XS_DOUBLE, XS_DATE, XS_STRING. <br>
+   *         For all others <code>object.toString()</code> will be used for comparison.
    */
   public static Object findComponentMaxById( final TupleResult result, final String compID )
   {
@@ -158,6 +176,8 @@ public class TupleResultUtilities
       final List<Boolean> values = new ArrayList<Boolean>();
       for( final IRecord record : result )
         values.add( (Boolean) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.max( values );
     }
     else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
@@ -168,6 +188,8 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
       for( final IRecord record : result )
         values.add( (java.lang.Double) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.max( values );
     }
     else if( XmlTypes.XS_DATE.equals( valueTypeName ) )
@@ -177,6 +199,8 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<Date>();
       for( final IRecord record : result )
         values.add( (Date) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.max( values );
     }
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
@@ -184,8 +208,18 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
         values.add( (String) record.getValue( comp ) );
+      if( values.size() < 1 )
+        return null;
       return Collections.max( values );
     }
-    return null;
+    else
+    {
+      final List<String> values = new ArrayList<String>();
+      for( final IRecord record : result )
+        values.add( (record.getValue( comp )).toString() );
+      if( values.size() < 1 )
+        return null;
+      return Collections.max( values );
+    }
   }
 }
