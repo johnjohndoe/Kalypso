@@ -4,6 +4,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -15,6 +16,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -30,7 +32,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class FE1D2DEdge extends AbstractFeatureBinder 
             implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
-
+  private static final Logger logger=
+        Logger.getLogger( FE1D2DEdge.class.toString() );
+  
   private final IFeatureWrapperCollection<IFE1D2DElement> m_containers;
 
   private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes;
@@ -51,7 +55,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder
     catch (Exception e) 
     {
       e.printStackTrace();
-      System.out.println("feature:"+featureToBind);
+      logger.info( "feature:"+featureToBind);
     }
     if( prop == null )
     {
@@ -269,7 +273,17 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public void addContainer( String containerID )
   {
     Assert.throwIAEOnNullParam( containerID, "containerID" );
-    m_containers.getWrappedList().add( containerID );    
+    FeatureList wrappedList=m_containers.getWrappedList();
+    if(wrappedList.contains( containerID ))
+    {
+      logger.info( 
+          "Edge container already registered as container:"+
+          containerID );
+    }
+    else
+    {
+      wrappedList.add( containerID );
+    }
   }
   
  /**

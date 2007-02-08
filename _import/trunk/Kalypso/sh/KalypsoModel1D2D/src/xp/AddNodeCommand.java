@@ -45,6 +45,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -55,7 +56,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Patrice Congo
  */
-public class AddNodeCommand implements ICommand
+public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
 {
   
   private IFE1D2DNode<IFE1D2DEdge>  addedNode;
@@ -134,6 +135,19 @@ public class AddNodeCommand implements ICommand
     return addedNode;
   }
   
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
+   */
+  public IFeatureWrapper getChangedFeature( )
+  {
+    return addedNode;
+  }
   
-  
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
+   */
+  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
+  {
+    return discretisationModel;
+  }
 }

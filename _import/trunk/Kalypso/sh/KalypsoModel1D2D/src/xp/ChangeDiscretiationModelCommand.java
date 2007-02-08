@@ -47,6 +47,9 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Composite command used to change the discretisation command.
@@ -73,6 +76,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
                       new ArrayList<IDiscrMode1d2dlChangeCommand>();
   private boolean isUndoable=false;
 
+
+  
   public ChangeDiscretiationModelCommand( 
                           CommandableWorkspace commandableWorkspace,   
                           IFEDiscretisationModel1d2d model1d2d)
@@ -116,25 +121,61 @@ public class ChangeDiscretiationModelCommand implements ICommand
    */
   public void process( ) throws Exception
   {
+    List<Feature> changedFeatures= new ArrayList<Feature>();
     for(IDiscrMode1d2dlChangeCommand command:commands)
     {
       try
       {
         command.process();
+        IFeatureWrapper changedFeature = command.getChangedFeature();
+        if(changedFeature!=null)
+        {
+          Feature wrappedFeature=changedFeature.getWrappedFeature();
+          if(wrappedFeature!=null)
+          {
+            changedFeatures.add( wrappedFeature );
+            wrappedFeature.invalidEnvelope();
+          }
+        }
       }
       catch (Exception e) 
       {
-        
-      }
+        e.printStackTrace();
+      }      
     }
+    
+    model1d2d.getEdges().getWrappedList().invalidate();
+    
+    fireStructureChange( changedFeatures );    
   }
 
+  private final void fireStructureChange(List<Feature> changedFeatures)
+  {
+    Feature[] changedFeaturesArray=new Feature[changedFeatures.size()];
+    changedFeatures.toArray( changedFeaturesArray );
+    commandableWorkspace.fireModellEvent( 
+        new FeatureStructureChangeModellEvent( 
+                          commandableWorkspace, 
+                          model1d2d.getWrappedFeature(), 
+                          changedFeaturesArray, 
+                          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+  }
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    
+    for(IDiscrMode1d2dlChangeCommand command:commands)
+    {
+      try
+      {
+        command.redo();
+      }
+      catch (Throwable th) 
+      {
+        th.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -143,10 +184,29 @@ public class ChangeDiscretiationModelCommand implements ICommand
   public void undo( ) throws Exception
   {
     
+//  reverse order  is taken because of eventual dependencies
+    IDiscrMode1d2dlChangeCommand command;
+    for(int index=commands.size()-1;index>=0;index-- )
+    {
+      command=commands.get( index );
+      try
+      {
+        command.undo();
+      }
+      catch (Exception e) 
+      {
+        e.printStackTrace();
+      }
+    }
+    
   }
   
   public void addCommand(IDiscrMode1d2dlChangeCommand command)
   {
+    Assert.throwIAEOnNullParam( command, "command" );
+    commands.add( command );
+    
+    isUndoable=isUndoable && command.isUndoable();
     
   }
 }

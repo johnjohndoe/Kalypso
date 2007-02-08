@@ -253,6 +253,5 @@ public class FE1D2DDiscretisationModel
     }
   }
 
-
   
 }

@@ -41,6 +41,13 @@
 package xp;
 
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -57,18 +64,18 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
   
-  private IFE1D2DEdge elementEdges[];
+  private AddEdgeCommand elementEdgeCmds[];
   
   private IFEDiscretisationModel1d2d model;
   
   public AddElementCommand(
               IFEDiscretisationModel1d2d model,
-              IFE1D2DEdge[] elementEdges)
+              AddEdgeCommand[] elementEdgeCmds)
   {
     Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementEdges, "elementEdges" );
+    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdges" );
     this.model=model;
-    this.elementEdges= new IFE1D2DEdge[elementEdges.length];
+    this.elementEdgeCmds= elementEdgeCmds;
     
   }
   
@@ -93,7 +100,28 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void process( ) throws Exception
   {
-    
+    if(addedElement==null)
+    {
+      List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
+      IFE1D2DEdge curEdge;
+      for(AddEdgeCommand edgeCmd:elementEdgeCmds)
+      {
+        if(edgeCmd==null)
+        {
+         System.out.println("EdgeCmd is null"); 
+        }
+        else
+        {
+          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
+          if(curEdge!=null)
+          {
+            edges.add( curEdge );
+          }
+        }
+      }
+      addedElement=ModelOps.createElement2d( model, edges );
+      System.out.println("Adding elment:"+addedElement);
+    }
   }
 
   /**
@@ -101,7 +129,10 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void redo( ) throws Exception
   {
-    
+    if(addedElement==null)
+    {
+      process();
+    }
   }
 
   /**
@@ -109,7 +140,10 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void undo( ) throws Exception
   {
-    
+    if(addedElement!=null)
+    {
+      //TODO remove element and links to it edges
+    }
   }
 
   /**

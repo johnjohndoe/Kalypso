@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
@@ -57,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -274,6 +276,86 @@ public class ModelOps
     
   }
   
+  public static final IFE1D2DElement createElement2d(
+                              IFEDiscretisationModel1d2d model1d2d,
+                              List<IFE1D2DEdge> edges)
+  {
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( edges, "edges" );
+    final int EDGE_NUM=edges.size();
+    if(!(EDGE_NUM == 3 || EDGE_NUM == 4))
+    {
+      throw new IllegalArgumentException(
+          "2D element must have 3 or 4 element but number "+
+          "of edges to set="+EDGE_NUM);
+    }
+    
+    IFeatureWrapperCollection<IFE1D2DElement> elements = 
+                                        model1d2d.getElements();
+    IFE1D2DElement element = elements.addNew( 
+          Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+    sortEdgesAddToElement( element, edges );
+    String elementID = element.getGmlID();
+    for(IFE1D2DEdge edge:edges)
+    {
+      edge.addContainer( elementID );
+    }
+    return element;
+    
+  }
+  
+  public static final void sortEdgesAddToElement(
+                                  IFE1D2DElement element,
+                                  List<IFE1D2DEdge> toSortAndAddEdges)
+  {
+    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges=element.getEdges();
+    final int INITIAL_SIZE=toSortAndAddEdges.size();
+    if(INITIAL_SIZE<3)
+    {
+      String str=
+        "Illegal2D element:"+element.getGmlID()+
+        " edgeCount="+INITIAL_SIZE;
+//      throw new IllegalStateException(str);
+      System.out.println(str);
+      return;
+    }
+    List<IFE1D2DEdge> edges=
+          new ArrayList<IFE1D2DEdge>(toSortAndAddEdges);
+    
+    //clear old edge for reordering
+    elementEdges.clear();
+    
+    FeatureList edgeFeatureList=elementEdges.getWrappedList();
+    
+//  just select the first node
+    IFE1D2DEdge edge=edges.remove(0);    
+    for(int i=0; edges.size()>0;)
+    {
+      
+      IFE1D2DNode nodeEnd=edge.getNode( 1 );
+      i=edges.size()-1;
+      for(;i>=0;i--)
+      {
+        if( nodeEnd.getGmlID().equals( edges.get( i ).getNode( 0 ).getGmlID()) )
+        {
+          break;
+        }
+      }
+      if(i==-1)
+      {
+        ///no following not found ordering ends
+        return;
+      }
+      else
+      {
+        edge=edges.remove( i );
+        edgeFeatureList.add( edge.getGmlID() );
+      }
+    }
+    
+    
+  }
+
   public static final void sortElementEdges(IFE1D2DElement element)
   {
 //    sortElementEdgesOld( element );
@@ -324,12 +406,5 @@ public class ModelOps
     
   }
   
-  /**
-   * 
-   */
-  public static final void insertAsFEModelPart(
-                                    Coordinate[][] coordinates)
-  {
-    Assert.throwIAEOnNullParam( coordinates, "coordinates" );    
-  }
+  
 }

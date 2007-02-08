@@ -54,8 +54,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -500,31 +500,116 @@ class GridPointCollector implements IGeometryBuilder
     return hasAllSides;
   }
   
-  
-  public ICommand getAddToModelCommand(
-      IFEDiscretisationModel1d2d model) 
-      throws GM_Exception
+  public void enableOnTheFlyMesh()
   {
-    CompositeCommand compositeCommand = new CompositeCommand("Grid Command");
     
-    GeometryFactory geometryFactory= new GeometryFactory();
+  }
+  
+  private final GM_Point[][] computeMesh() throws GM_Exception
+  {
+    //GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( sides[0] );
     final LineString bottomLine = pointToLineString( sides[2] );
     final LineString leftLine = pointToLineString( sides[1] );
     final LineString rightLine = pointToLineString( sides[3] );
     
+    //compute mesh points
     JTSQuadMesher mesher= 
     new JTSQuadMesher(
             topLine,
             bottomLine,
             leftLine,
             rightLine);
-    Coordinate[][] coordinates=mesher.calculateMesh();  
+    Coordinate[][] coordinates=mesher.calculateMesh();
+    GeometryFactory geometryFactory= new GeometryFactory();
+    GM_Point points2D[][] = new GM_Point[coordinates.length][]; 
+    for(int i=0;i<coordinates.length;i++)
+    {
+      Coordinate[] line=coordinates[i];
+      GM_Point[] points1D= 
+              new GM_Point[line.length];
+      points2D[i]=points1D;
+      for(int j=0;j<line.length;j++)
+      {
+        Coordinate coord=line[j];
+        points1D[j]=    
+          (GM_Point)JTSAdapter.wrap( 
+                  geometryFactory.createPoint(coord));
+      }
+    }
+    return points2D;
+  }
+  
+  
+  public ICommand getAddToModelCommand(
+      IFEDiscretisationModel1d2d model,
+      CommandableWorkspace commandableWorkspace) 
+      throws GM_Exception
+  {
+    ChangeDiscretiationModelCommand compositeCommand = 
+          new ChangeDiscretiationModelCommand(
+              commandableWorkspace,
+              model);// new CompositeCommand("Grid Command");
+    //compute Points
+    GM_Point[][] points2D=computeMesh();
+    //add nodes
     AddNodeCommand[][] newNodesArray2D= 
-       new AddNodeCommand[coordinates.length][];
-//    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
+       new AddNodeCommand[points2D.length][];
+    addNodesFromPoints( 
+        model, 
+        newNodesArray2D, 
+        compositeCommand, points2D );    
     
-    //Create the nodes
+    //add edges
+    AddEdgeCommand addEdgeH2D[][]= 
+      new AddEdgeCommand[newNodesArray2D.length][];
+    AddEdgeCommand addEdgeV2D[][]= 
+          new AddEdgeCommand[newNodesArray2D.length][];
+    addEdges( 
+        model, newNodesArray2D, 
+        compositeCommand, 
+        addEdgeH2D, addEdgeV2D )    ;
+    
+    //add elements
+    addElements( 
+        model, newNodesArray2D, 
+        compositeCommand, 
+        addEdgeH2D, addEdgeV2D );
+    return compositeCommand;
+  }
+  
+  private final void  addNodesFromPoints(
+      IFEDiscretisationModel1d2d model,
+      AddNodeCommand[][] newNodesArray2D,
+      ChangeDiscretiationModelCommand compositeCommand,
+      GM_Point[][] points2D)
+  {
+    for(int i=0;i<points2D.length;i++)
+    {
+      GM_Point[] points1D=points2D[i];
+      AddNodeCommand[] newNodesArray1D= 
+              new AddNodeCommand[points1D.length];
+      newNodesArray2D[i]=newNodesArray1D;
+      for(int j=0;j<points1D.length;j++)
+      {
+        //TODO check node for existance
+        AddNodeCommand nodeCommand=
+          new AddNodeCommand(
+            model,
+            points1D[j]);
+        newNodesArray1D[j]=nodeCommand;
+        compositeCommand.addCommand( nodeCommand );
+      }
+    }
+  }
+  
+  private final void  addNodesddd(
+      IFEDiscretisationModel1d2d model,
+      AddNodeCommand[][] newNodesArray2D,
+      ChangeDiscretiationModelCommand compositeCommand,
+      Coordinate[][] coordinates) throws GM_Exception
+  {
+    GeometryFactory geometryFactory= new GeometryFactory();
     for(int i=0;i<coordinates.length;i++)
     {
       Coordinate[] line=coordinates[i];
@@ -544,14 +629,27 @@ class GridPointCollector implements IGeometryBuilder
         compositeCommand.addCommand( nodeCommand );
       }
     }
-    
-    //add edges
-//    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+  }
+  
+  private final void  addEdges(
+                  IFEDiscretisationModel1d2d model,
+                  AddNodeCommand[][] newNodesArray2D,
+                  ChangeDiscretiationModelCommand compositeCommand,
+                  AddEdgeCommand[][] addEdgeH2D,
+                  AddEdgeCommand[][] addEdgeV2D)
+  {
     for(int i=0;i<newNodesArray2D.length;i++)
     {
       AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
       AddNodeCommand[] addNodeLine2=
       (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
+      
+      AddEdgeCommand addEdgeV1D[]= 
+                  new AddEdgeCommand[addNodeLine1.length];
+      addEdgeV2D[i]=addEdgeV1D;
+      AddEdgeCommand addEdgeH1D[]= 
+                  new AddEdgeCommand[addNodeLine1.length];
+      addEdgeH2D[i]=addEdgeH1D;
       for(int j=0; j<addNodeLine1.length;j++)
       {
         //horidonzal edges
@@ -560,6 +658,7 @@ class GridPointCollector implements IGeometryBuilder
           AddEdgeCommand edgeCommand=
             new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
+          addEdgeH1D[j]=edgeCommand;
         }
         //todo add vertical edge        
         if(addNodeLine2!=null)
@@ -570,6 +669,7 @@ class GridPointCollector implements IGeometryBuilder
                         addNodeLine1[j],
                         addNodeLine2[j]);
           compositeCommand.addCommand( edgeCommand );
+          addEdgeV1D[j]=edgeCommand;
           //lastvertical edge
           if(addNodeLine1.length-j==2)
           {
@@ -579,18 +679,43 @@ class GridPointCollector implements IGeometryBuilder
                           addNodeLine1[j+1],
                           addNodeLine2[j+1]);
             compositeCommand.addCommand( edgeCommand );
+            addEdgeV1D[j]=edgeCommand;
           }
-        //edge=edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-        //edge.addNode( nodeLine2[j].getGmlID() );
-        //edge.addNode( nodeLine2[j+1].getGmlID() );
         }      
       }
-    }
-//    model.getWrappedFeature().getWorkspace().fireModellEvent( null );
-//    
-    return compositeCommand;
+    }    
   }
   
+  private final void  addElements(
+      IFEDiscretisationModel1d2d model,
+      AddNodeCommand[][] newNodesArray2D,
+      ChangeDiscretiationModelCommand compositeCommand,
+      AddEdgeCommand[][] addEdgeH2D,
+      AddEdgeCommand[][] addEdgeV2D)
+  {
+      
+      for(int i=0; i<addEdgeH2D.length-1;i++)
+      {
+        AddEdgeCommand[] aeHCnds0=addEdgeH2D[i];
+        AddEdgeCommand[] aeHCnds1=addEdgeH2D[i+1];
+        
+        AddEdgeCommand[] aeVCnds0=addEdgeV2D[i];
+        AddEdgeCommand[] aeVCnds1=addEdgeV2D[i+1];
+        
+        for(int j=0;j<aeHCnds0.length;j++)
+        {
+          AddEdgeCommand edge0=aeHCnds0[j];
+          AddEdgeCommand edge1=aeVCnds1[j];
+          AddEdgeCommand edge2=aeHCnds1[j];
+          AddEdgeCommand edge3=aeVCnds0[j];
+          AddElementCommand addElementCommand=
+            new AddElementCommand(
+                model,
+                new AddEdgeCommand[]{edge0,edge1,edge2,edge3});
+          compositeCommand.addCommand( addElementCommand );
+        }
+      }
+  }
   public void getAddToModelVV(
                       IFEDiscretisationModel1d2d model) 
                       throws GM_Exception

@@ -7,31 +7,22 @@ import java.awt.event.KeyEvent;
 
 
 
-import org.eclipse.core.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.themes.ITheme;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -335,16 +326,13 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
       else
       {
         gridPointCollector.removeLastPoint();
-        
         //mapPanel.getMapModell().addModellListener( listener )
         //TODO get the geometry redrawn
         mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
-      }
-      
+      }      
     }
     else if(typed=='\t')
     {
-      
       System.out.println("Selected");
     }
     else if(typed=='t')
@@ -363,26 +351,13 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
       try
       {
         //TODO add elements to model from the 4 lines
-        ICommand command = gridPointCollector.getAddToModelCommand( model1d2d );
+        ICommand command = 
+          gridPointCollector.getAddToModelCommand( 
+              model1d2d,workspace );
         
         workspace.postCommand( command );
         
-        //TODO use  model change command
-        IFeatureWrapperCollection<IFE1D2DEdge> edges = model1d2d.getEdges();
-        final int SIZE=edges.size();
-        Feature edgeFeatures[]= new Feature[edges.size()];
-        for(int i=0;i<SIZE;i++)
-        {
-          edgeFeatures[i]=edges.get( i ).getWrappedFeature();
-        }
-        workspace.fireModellEvent( 
-            new FeatureStructureChangeModellEvent( 
-                              workspace, 
-                              model1d2d.getWrappedFeature(), 
-                              edgeFeatures, 
-                              FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
         System.out.println("GridCommand posted");
-//        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
       }
       catch( Throwable e1 )
       {
@@ -393,7 +368,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
     {
       System.out.println("Char="+typed);
     }
-    //super.keyTyped(e);
+    
   }
   
   /**
