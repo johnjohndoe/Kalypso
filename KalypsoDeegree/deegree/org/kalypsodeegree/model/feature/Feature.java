@@ -56,4 +56,6 @@ public interface Feature extends DeegreeFeature, IAdaptable
    * intended to be called from GMLWorkspace when root feature is set.
    */
   public void setWorkspace( final GMLWorkspace workspace );
+  
+  public void invalidEnvelope( );
 }

@@ -289,6 +289,14 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     getFeature().setProperty( propQName, value );
   }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
+   */
+  public void invalidEnvelope( )
+  {
+    getFeature().invalidEnvelope();
+  }
 
   public String getHref( )
   {
