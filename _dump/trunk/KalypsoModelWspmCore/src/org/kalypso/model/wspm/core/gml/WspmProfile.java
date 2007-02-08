@@ -52,13 +52,14 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
-public class WspmProfile extends AbstractFeatureBinder
+public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrapper2
 {
   public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
 
