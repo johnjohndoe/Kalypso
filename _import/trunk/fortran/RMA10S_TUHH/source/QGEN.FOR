@@ -1,5 +1,4 @@
 cipk  last update feb 09 2001 allow for zero length cc lines
-C     Last change:  K    26 Jan 2007    3:08 pm
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
       !nis,sep06,com: Overgiven variables:
@@ -16,6 +15,7 @@ C     Last change:  K    26 Jan 2007    3:08 pm
 !nis,nov06: Usage of ParaKalyps for Darcy-Subroutine
       USE ParaKalyps
 !-
+      USE PARAFlow1dFE !neues Modul für Teschke-1D-Elemente
       SAVE
 C-
 C-..... Generate specified total flow boundary conditions
@@ -104,13 +104,19 @@ C-
           ENDIF
   120   CONTINUE
   127   NM=NOP(K,2)
-        IF(CORD(NM,1) .GT. VOID) THEN
-          DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
-          DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
-        ELSE
-          DX=CORD(NC,1)-CORD(NA,1)
-          DY=CORD(NC,2)-CORD(NA,2)
-        ENDIF
+        !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+        if (nm.EQ.-9999) then
+          dx=cord(nc,1)-cord(na,1)
+          dy=cord(nc,2)-cord(na,2)
+        else
+          IF(CORD(NM,1) .GT. VOID) THEN
+            DX=2.*(CORD(NM,1)-CORD(NA,1))-0.5*(CORD(NC,1)-CORD(NA,1))
+            DY=2.*(CORD(NM,2)-CORD(NA,2))-0.5*(CORD(NC,2)-CORD(NA,2))
+          ELSE
+            DX=CORD(NC,1)-CORD(NA,1)
+            DY=CORD(NC,2)-CORD(NA,2)
+          ENDIF
+        endif
         BEETA=ATAN2(DY,DX)
         IF(ABS(BEETA-THET) .GT. 1.570796  .AND.
      +     ABS(BEETA-THET) .LT. 4.712394) BEETA=BEETA+3.141596
@@ -212,8 +218,16 @@ cipk oct98 update to f90
           !nis,sep06,com: increase IBN by one for every occurance in an element.
           DO 104 M=1,NCN
 cipk oct98 update to f90
-            K=ABS(NOP(N,M))
-            IBN(K)=IBN(K)+1
+            !EFa Nov06, Sonderfall für Teschke-1D-Elemente
+            if (nop(n,2).NE.-9999) then
+              K=ABS(NOP(N,M))
+              IBN(K)=IBN(K)+1
+            else
+              if (nop(n,m).NE.-9999) then
+                K=ABS(NOP(N,M))
+                IBN(K)=IBN(K)+1
+              end if
+            end if
   104     CONTINUE
   105   CONTINUE
 
@@ -231,7 +245,12 @@ cipk oct98 update to f90
             NC = LINE(J,K+2)
             DX=CORD(NC,1)-CORD(NA,1)
             DY=-(CORD(NC,2)-CORD(NA,2))
-            XL=SQRT(DX**2+DY**2)
+            !EFa Nov06, Sonderfall für Teschke-1D-Elemente mit Kilometrierung
+            if (kmx(na).NE.-1.and.kmx(nc).NE.-1) then
+              xl=ABS(kmx(na)-kmx(nc))
+            else
+              XL=SQRT(DX**2+DY**2)
+            end if
             ALP=ATAN2(DX,DY)
             D1=VEL(3,NA)
             D3=VEL(3,NC)
