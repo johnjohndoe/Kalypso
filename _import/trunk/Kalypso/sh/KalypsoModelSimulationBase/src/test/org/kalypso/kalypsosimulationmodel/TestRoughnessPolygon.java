@@ -3,6 +3,7 @@ package test.org.kalypso.kalypsosimulationmodel;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 
+import junit.framework.TestCase;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -14,13 +15,10 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import junit.framework.TestCase;
 
 /**
  * Tests the {@link RoughnessPolygon} class by loading a gml workspace
@@ -91,7 +89,7 @@ public class TestRoughnessPolygon extends TestCase
 					);
 			
 			rp.setProperty(
-					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_ID, 
+					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_STYLE, 
 					"htpp://wwww.tuhh.de/wb/roughness_db/grass");
 			
 //			FeatureHelper.addProperty(
@@ -133,7 +131,7 @@ public class TestRoughnessPolygon extends TestCase
 			new RoughnessPolygon((Feature)list.get(0));
 		assertEquals(
 				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
-				rp.getRoughnessID());
+				rp.getRoughnessStyle());
 		GM_Polygon pol=rp.getPolygon();
 		GM_Position[] positions=pol.getExteriorRing();
 		double[][] posArray={{0,0},{0,1},{1,1},{1,0},{0,0}};

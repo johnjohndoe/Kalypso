@@ -378,6 +378,13 @@
 	</xs:element>
 		
 	<xs:complexType name="RoughnessPolygonType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+					kapp:property="simBase:roughnessStyle"/>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
@@ -427,6 +434,9 @@
 					<xs:element 
 						name="roughnessClassMember"
 						type="simBase:RoughnessClassPropertyType"/>
+					<xs:element 
+						name="roughnessStyle"
+						type="xs:string"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -51,4 +51,11 @@
             name="Roughness import wizard"
             project="false"/>
    </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+            id="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+            name="Linked-Feature-Property-Fetcher"/>
+   </extension>
 </plugin>

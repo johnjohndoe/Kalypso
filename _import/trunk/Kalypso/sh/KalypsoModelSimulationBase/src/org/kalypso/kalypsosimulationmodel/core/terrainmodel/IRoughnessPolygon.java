@@ -1,6 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypso.gmlschema.property.relation.RelationType;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -18,7 +19,7 @@ public interface IRoughnessPolygon extends IFeatureWrapper
 	 * 
 	 * @return the id of the rougthness associated to the polygon
 	 */
-	public String getRoughnessID();
+	public String getRoughnessStyle();
 	
 	/**
 	 * 
@@ -26,9 +27,12 @@ public interface IRoughnessPolygon extends IFeatureWrapper
 	 * 
 	 * @throws IllegalArgumentException if id is null or empty
 	 */
-	public void setRoughnessID(String id)
+	public void setRoughnessStyle(String id)
 				throws IllegalArgumentException;
 	
+    public void setRoughnessClassMember(RelationType linkedFeature)
+    throws IllegalArgumentException;
+
 	/**
 	 * Returns the rougthness polygon
 	 * @return the polygom 

@@ -11,14 +11,6 @@ import org.kalypso.ui.wizards.imports.utils.StyleUtils;
 
 public class Test_CreateStyle extends TestCase {
 
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public final void testCreateCustomStyle() throws TransformerFactoryConfigurationError, Exception {
 		HashMap<String, Color> knownPropertyColorSet = new HashMap<String, Color>();
 		knownPropertyColorSet.put("See", 		Color.BLUE);

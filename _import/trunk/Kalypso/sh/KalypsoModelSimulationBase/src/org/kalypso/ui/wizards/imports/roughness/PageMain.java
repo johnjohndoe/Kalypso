@@ -37,16 +37,8 @@ public class PageMain extends WizardPage implements Listener
 
   Button btn_inputFileBrowse;
 
-  Button btnRadio_exportToFile;
-
-  Button btnRadio_exportToFeature;
-
   // status variable for the possible errors on this page
   IStatus msg_StatusLine;
-
-  // just to be sure that this ObjectFactory is loaded, otherwise some
-  // TypeHandlers will be null
-  private static final org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
 
   /**
    * Constructor for main page
@@ -116,20 +108,6 @@ public class PageMain extends WizardPage implements Listener
     cmb_CoordinateSystem.setEnabled( true );
     cmb_CoordinateSystem.setLayoutData( gd );
 
-    createLine( composite, ncol );
-
-    btnRadio_exportToFile = new Button( composite, SWT.RADIO );
-    btnRadio_exportToFile.setText( Messages.getString( "PageMain.3" ) ); //$NON-NLS-1$
-    btnRadio_exportToFile.setSelection( true );
-
-    btnRadio_exportToFeature = new Button( composite, SWT.RADIO );
-    btnRadio_exportToFeature.setText( Messages.getString( "PageMain.4" ) ); //$NON-NLS-1$
-
-    gd = new GridData( GridData.FILL_HORIZONTAL );
-    gd.horizontalSpan = ncol;
-    btnRadio_exportToFile.setLayoutData( gd );
-    btnRadio_exportToFeature.setLayoutData( gd );
-
     // set the composite as the control for this page
 
     btn_inputFileBrowse.setFocus();
@@ -143,8 +121,6 @@ public class PageMain extends WizardPage implements Listener
     btn_inputFileBrowse.addListener( SWT.KeyDown, this );
     txt_InputFile.addListener( SWT.Modify, this );
     cmb_ShapeProperty.addListener( SWT.Selection, this );
-    btnRadio_exportToFile.addListener( SWT.MouseDown, this );
-    btnRadio_exportToFeature.addListener( SWT.MouseDown, this );
   }
 
   /**
@@ -174,9 +150,6 @@ public class PageMain extends WizardPage implements Listener
             cmb_ShapeProperty.setItems( propertyNames );
             cmb_ShapeProperty.select( 0 );
             cmb_ShapeProperty.setEnabled( true );
-            Text outputtext = ((ImportWizard) getWizard()).pageOutputFile.txt_OutputFile;
-            if( !isTextNonEmpty( outputtext ) )
-              outputtext.setText( FileUtilities.nameWithoutExtension( FileUtilities.nameFromPath( txt_InputFile.getText() ) ) + ".gml" );
           }
           else
           {
@@ -198,9 +171,6 @@ public class PageMain extends WizardPage implements Listener
         e.printStackTrace();
       }
     }
-    else if( event.widget == btnRadio_exportToFile || event.widget == btnRadio_exportToFeature )
-      m_data.setOutputToFile( !btnRadio_exportToFile.getSelection() );
-
     // Show the most serious error
     applyToStatusLine( msg_StatusLine );
     getWizard().getContainer().updateButtons();
@@ -276,23 +246,14 @@ public class PageMain extends WizardPage implements Listener
   @Override
   public boolean canFlipToNextPage( )
   {
-    // return cmb_ShapeProperty.isEnabled();
-    return true;
+    return cmb_ShapeProperty.isEnabled();
   }
 
   @Override
   public IWizardPage getNextPage( )
   {
     saveDataToModel();
-    if( btnRadio_exportToFile.getSelection() )
-      return ((ImportWizard) getWizard()).pageOutputFile;
-    else
-      return ((ImportWizard) getWizard()).pageOutputFeature;
-    // PageStyleSelection nextPage = ((ImportWizard) getWizard()).pageStyleSelection;
-    // nextPage.createColorControls();
-    // return nextPage;
-
-    // return null;
+    return null;
   }
 
   protected void saveDataToModel( )
@@ -302,7 +263,6 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
-      m_data.setOutputToFile( btnRadio_exportToFile.getSelection() );
     }
   }
 

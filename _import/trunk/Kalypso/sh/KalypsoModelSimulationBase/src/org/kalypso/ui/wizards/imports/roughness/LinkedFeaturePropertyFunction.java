@@ -40,48 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.roughness;
 
-import javax.xml.namespace.QName;
+import java.util.Map;
 
-import org.kalypso.kalypsosimulationmodel.exception.IllegalFeatureState;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
  * @author antanas
+ *
  */
-public class RoughnessDatabase
+public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  private final Feature m_Feature;
 
-  private static final QName s_RootFT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessDatabase" );
-  private static final QName s_RoughnessTypeFT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessType" );
-
-  RoughnessDatabase( Feature feature )
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
+   */
+  @Override
+  public void init( Map<String, String> properties )
   {
-    if( feature == null )
-      throw new IllegalArgumentException( "msg" );
-    if( !feature.getFeatureType().getQName().equals( s_RootFT ) )
-      throw new IllegalArgumentException( "second msg" );
-    m_Feature = feature;
   }
 
-  public double[] getCoefficients( ) throws IllegalFeatureState
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
-    Object coefs = m_Feature.getProperty( s_RoughnessTypeFT );
-    if( coefs instanceof String )
-    {
-      String[] subStrings = ((String) coefs).split( " " );// "/s+");
-      double doubles[] = new double[subStrings.length];
-      for( int i = 0; i < subStrings.length; i++ )
-      {
-        doubles[i] = Double.parseDouble( subStrings[i] );
-      }
-      return doubles;
-    }
-    else
-    {
-      throw new IllegalFeatureState( m_Feature, s_RoughnessTypeFT, coefs );
-    }
+    return "someValue";
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  {
+    return null;
   }
 
 }

@@ -29,8 +29,7 @@ public class ImportAction implements IObjectActionDelegate
 	 * Instantiates the wizard and opens it in the wizard container
 	 */
 	public void run(IAction action) {
-		// Instantiates and initializes the wizard
-		ImportWizard wizard = new ImportWizard();
+        ImportWizard wizard = new ImportWizard( null );
 		if ((selection instanceof IStructuredSelection) || (selection == null))
 		wizard.init(part.getSite().getWorkbenchWindow().getWorkbench(), 
 			(IStructuredSelection)selection);
