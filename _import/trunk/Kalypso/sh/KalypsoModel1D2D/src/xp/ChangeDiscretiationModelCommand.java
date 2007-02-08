@@ -40,39 +40,67 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * Unduable add edge command.
+ * Composite command used to change the discretisation command.
+ * This composite takes the responsibility to nodifies the 
+ * commandable workspace about the chnage introduced by its
+ * sub command 
+ * 
  * 
  * @author Patrice Congo
+ *
  */
-public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
+public class ChangeDiscretiationModelCommand implements ICommand
 {
-  private AddNodeCommand node1Command;
-  private AddNodeCommand node2Command;
-  private IFEDiscretisationModel1d2d model;
-  private IFE1D2DEdge addedEdge;
-  public AddEdgeCommand(
-          IFEDiscretisationModel1d2d model, 
-          AddNodeCommand node1Command,
-          AddNodeCommand node2Command)
+  public static final String DEFAULT_DESCRIPTION=
+                            "Change Discretisation model";
+  
+  private String description;
+  
+  private IFEDiscretisationModel1d2d model1d2d;
+  
+  private CommandableWorkspace commandableWorkspace;
+  
+  private List<IDiscrMode1d2dlChangeCommand> commands = 
+                      new ArrayList<IDiscrMode1d2dlChangeCommand>();
+  private boolean isUndoable=false;
+
+  public ChangeDiscretiationModelCommand( 
+                          CommandableWorkspace commandableWorkspace,   
+                          IFEDiscretisationModel1d2d model1d2d)
   {
-    this.node1Command=node1Command;
-    this.node2Command=node2Command;
-    this.model=model;
+    this(   
+        commandableWorkspace,
+        model1d2d,  
+        DEFAULT_DESCRIPTION );
   }
+  
+  public ChangeDiscretiationModelCommand(
+                      CommandableWorkspace commandableWorkspace,
+                      IFEDiscretisationModel1d2d model1d2d,
+                      String description)
+  {
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( description, "description" );
+    this.description=description;
+    this.model1d2d=model1d2d;
+    this.commandableWorkspace=commandableWorkspace;
+  }
+  
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Adding Edge";
+    return description;
   }
 
   /**
@@ -80,7 +108,7 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public boolean isUndoable( )
   {
-    return true;
+    return isUndoable;
   }
 
   /**
@@ -88,18 +116,17 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void process( ) throws Exception
   {
-    //TODO move code into discretisation model
-    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    String edgeGmlID = addedEdge.getGmlID();
-    IFE1D2DNode<IFE1D2DEdge> addedNode1 = node1Command.getAddedNode();
-    addedEdge.addNode( addedNode1.getGmlID() );
-    addedNode1.addContainer( edgeGmlID );
-    //
-    IFE1D2DNode<IFE1D2DEdge> addedNode2 = node2Command.getAddedNode();
-    addedEdge.addNode( addedNode2.getGmlID() );
-    addedNode2.addContainer( edgeGmlID );
-    
-    
+    for(IDiscrMode1d2dlChangeCommand command:commands)
+    {
+      try
+      {
+        command.process();
+      }
+      catch (Exception e) 
+      {
+        
+      }
+    }
   }
 
   /**
@@ -107,10 +134,7 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedEdge!=null)
-    {
-      process();
-    }
+    
   }
 
   /**
@@ -118,25 +142,11 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedEdge!=null)
-    {
-      model.getEdges().remove( addedEdge.getWrappedFeature() );
-      //TODO remove edges from node add method to node interface
-    }
-  }
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
-   */
-  public IFeatureWrapper getChangedFeature( )
-  {
-    return addedEdge;
+    
   }
   
-  /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
-   */
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
+  public void addCommand(IDiscrMode1d2dlChangeCommand command)
   {
-    return model;
+    
   }
 }

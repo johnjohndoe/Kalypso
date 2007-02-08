@@ -40,18 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
-import org.kalypso.commons.command.ICommand;
+
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
  * Undoable Add fe element command
  * 
  * @author Patrice Congo
  */
-public class AddElementCommand implements ICommand
+public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
 {
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
@@ -111,4 +112,19 @@ public class AddElementCommand implements ICommand
     
   }
 
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
+   */
+  public IFeatureWrapper getChangedFeature( )
+  {
+    return addedElement;
+  }
+  
+  /**
+   * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
+   */
+  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
+  {
+    return model;
+  }
 }
