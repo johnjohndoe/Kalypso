@@ -538,6 +538,10 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
+					<!--  xs:element 
+						ref="simBase:riverProfile"
+						minOccurs="0" maxOccurs="unbounded"
+						/-->
 					<xs:element 
 						ref="simBase:riverProfile"
 						minOccurs="0" maxOccurs="unbounded"
@@ -549,7 +553,7 @@
 	<!-- =================================================================
 		riverProfile
 	================================================================== -->
-	<xs:element 
+	<!-- xs:element 
 		name="riverProfile" 
 		type="simBase:RiverProfilePropertyType"/>			
 	<xs:complexType 
@@ -559,32 +563,31 @@
 				ref="simBase:_RiverProfile"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
+	</xs:complexType-->
 	
 	<!-- =================================================================
 		_RiverProfile AbstractRiverProfile
 	================================================================== -->
-	<xs:element
+	<!-- xs:element
 		name="_RiverProfile"
 		type="simBase:AbstractRiverProfileType"
-		abstract="true"/>
+		abstract="true" substitutionGroup="gml:_Feature"/>
 	
 	<xs:complexType 
 		name="AbstractRiverProfileType"
 		abstract="true">
 		<xs:complexContent>
-			<!-- TODO: change to AbstractFeatureType -->
-			<xs:extension base="gml:AbstractGMLType">
+			<xs:extension base="gml:AbstractFeatureType">
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>
+	</xs:complexType-->
 	
 	
 	<!-- =================================================================
 	WspmRiverProfileWrapper
 	================================================================== -->
 	
-	<xs:element 
+	<!-- xs:element 
 		name="WspmRiverProfileWrapper"
 		type="simBase:WspmRiverProfileWrapperType"
 		substitutionGroup="simBase:_RiverProfile">
@@ -598,7 +601,6 @@
 					<xs:sequence>
 						<xs:element
 							name="usage">
-							<!-- TODO: comment idea of usage, where will that be used? -->
 							<xs:simpleType>
 								<xs:restriction
 									base="xs:string">
@@ -613,12 +615,12 @@
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
-		</xs:complexType>
+		</xs:complexType-->
 	<!-- =================================================================
 		wspmRiverProfile
 	================================================================== -->
 	<xs:element 
-		name="wspmRiverProfile" 
+		name="riverProfile" 
 		type="simBase:WspmRiverProfilePropertyType"/>			
 	<xs:complexType 
 		name="WspmRiverProfilePropertyType">

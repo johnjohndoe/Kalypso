@@ -12,18 +12,14 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWspmRiverProfileWrapper;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfile;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.WspmRiverProfileWrapper;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
 import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
@@ -223,33 +219,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		  }
 		};
 		cMap.put(IRiverProfileNetwork.class, cTor);
-		
-		//IRiverProfile
-		cTor= new AdapterConstructor()
-		{
-		  public Object constructAdapter(
-		      Feature feature, 
-		      Class cls) 
-		  throws IllegalArgumentException
-		  {
-		    return new RiverProfile(feature);
-		  }
-		};
-		cMap.put(IRiverProfile.class, cTor);
-		
-		//IWspmRiverProfileWrapper
-		cTor= new AdapterConstructor()
-		{
-		  public Object constructAdapter(
-		      Feature feature, 
-		      Class cls) 
-		  throws IllegalArgumentException
-		  {
-		    return new WspmRiverProfileWrapper(feature);
-		  }
-		};
-		cMap.put(IWspmRiverProfileWrapper.class, cTor);
-		
 		
 		return Collections.unmodifiableMap(cMap);
 	}

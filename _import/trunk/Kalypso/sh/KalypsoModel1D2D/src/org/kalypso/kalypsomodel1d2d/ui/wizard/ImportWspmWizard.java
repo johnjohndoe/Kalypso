@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.wizard;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -58,10 +59,9 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWspmRiverProfileWrapper;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -83,9 +83,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
   private GmlFileImportPage m_wspmGmlPage;
 
   private final IRiverProfileNetworkCollection m_networkModel;
+  
+  private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  public ImportWspmWizard( final IRiverProfileNetworkCollection networkModel )
+  public ImportWspmWizard( final IFEDiscretisationModel1d2d discretisationModel, final IRiverProfileNetworkCollection networkModel )
   {
+    m_discretisationModel = discretisationModel;
     m_networkModel = networkModel;
 
     setWindowTitle( "Kalypso Wspm Import" );
@@ -137,6 +140,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
 
     final IRiverProfileNetworkCollection profNetworkColl = m_networkModel;
+    final IFEDiscretisationModel1d2d discModel = m_discretisationModel;
 
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
@@ -144,6 +148,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
       public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( "1D-Modell wird importiert", 1 );
+
+        /* Activate network map */
+        
 
         /* Prepare input data */
         final TuhhReach reach = new TuhhReach( (Feature) wspmSelection.getFirstElement() );
@@ -161,6 +168,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         monitor.worked( 1 );
 
         /* Create 1D-Network */
+        doCreate1DNet( reach, discModel );
 
         /* Create 1D-Network Association */
 
@@ -177,31 +185,34 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return status.isOK();
   }
 
-  protected void doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection ) throws Exception
+  protected static void doCreate1DNet( final TuhhReach reach, final IFEDiscretisationModel1d2d discretisationModel )
+  {
+    // TODO just do it!
+  }
+
+  protected static void doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
-    network.setName( reach.getName() );
+    final Feature networkFeature = network.getWrappedFeature();
     
-    final String desc = String.format( "Importiert aus WSPM-Gewässerstrang: %s - %s\nImportiert am %s", reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ) );
+    /* Set user friendly name and descrption */
+    final URL reachContext = reach.getFeature().getWorkspace().getContext();
+    final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm();
+    final String desc = String.format( "Importiert aus WSPM-Gewässerstrang: %s - %s\nImportiert am %s aus %s", reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath );
+    network.setName( reach.getName() );
     network.setDescription( desc );
 
+    /* Clone all profiles into network */
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
 
-      final IRiverProfile profileWrapper = network.addNew( IWspmRiverProfileWrapper.QNAME );
-      final IWspmRiverProfileWrapper wspmProfileWrapper = (IWspmRiverProfileWrapper) profileWrapper.getWrappedFeature().getAdapter( IWspmRiverProfileWrapper.class );
-
-      final Feature wrappedFeature = profileWrapper.getWrappedFeature();
-      final IRelationType wspmRelation = (IRelationType) wrappedFeature.getFeatureType().getProperty( IWspmRiverProfileWrapper.QNAME_PROP_WSPM_RIVER_PROFILE );
-      final Feature clonedProfileFeature = FeatureHelper.cloneFeature( wrappedFeature, wspmRelation, profileMember.getFeature() );
-
-      wspmProfileWrapper.setWspmRiverProfile( new WspmProfile( clonedProfileFeature ) );
+      final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
+      /*final Feature clonedProfileFeature = */FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember.getFeature() );
     }
 
-    final Feature networkFeature = network.getWrappedFeature();
     final GMLWorkspace workspace = networkFeature.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, networkFeature, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, networkFeature.getParent(), (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 }

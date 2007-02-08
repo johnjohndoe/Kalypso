@@ -42,20 +42,28 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -72,18 +80,37 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final ISzenarioDataProvider modelProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( ITerrainModel.class );
+    
+    /* Open map with fe-net */
+    final IFile file = szenarioPath.getFile( new Path( "maps/fenet.gmt" ) );
+    if( file.exists() )
+    {
+      final IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+      IDE.openEditor( workbenchPage, file, GisMapEditor.ID );
+    }
+
+    /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 
-    final ImportWspmWizard importWizard = new ImportWspmWizard( networkModel );
+    final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel );
     importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
     if( dialog.open() == Window.OK )
       return Status.OK_STATUS;
+
+    /* Add new layer to profile-collection-map */
+    // TODO: add a new layer containing the new profiles in the profile-network map
+    
+    /* Zoom to new elements in fe-map?  */
+    
 
     return Status.CANCEL_STATUS;
   }

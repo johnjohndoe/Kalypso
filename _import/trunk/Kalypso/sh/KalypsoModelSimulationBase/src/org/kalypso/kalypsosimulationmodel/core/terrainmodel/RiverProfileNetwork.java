@@ -41,22 +41,23 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class RiverProfileNetwork extends FeatureWrapperCollection<IRiverProfile> implements IRiverProfileNetwork
+public class RiverProfileNetwork extends FeatureWrapperCollection<WspmProfile> implements IRiverProfileNetwork
 {
   public RiverProfileNetwork( final Feature feature )
   {
-    super( feature, IRiverProfile.class, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
+    super( feature, WspmProfile.class, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getNext(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
    */
-  public IRiverProfile getNext( final IRiverProfile riverProfile )
+  public WspmProfile getNext( final WspmProfile riverProfile )
   {
     // TODO Auto-generated method stub
     return null;
@@ -65,7 +66,7 @@ public class RiverProfileNetwork extends FeatureWrapperCollection<IRiverProfile>
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork#getPrevious(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfile)
    */
-  public IRiverProfile getPrevious( final IRiverProfile riverProfile )
+  public WspmProfile getPrevious( final WspmProfile riverProfile )
   {
     // TODO Auto-generated method stub
     return null;

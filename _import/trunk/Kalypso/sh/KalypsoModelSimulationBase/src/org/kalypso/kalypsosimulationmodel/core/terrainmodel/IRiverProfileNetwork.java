@@ -4,6 +4,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -11,7 +12,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patrice Congo
  */
-public interface IRiverProfileNetwork extends IFeatureWrapperCollection<IRiverProfile>, IFeatureWrapper2
+public interface IRiverProfileNetwork extends IFeatureWrapperCollection<WspmProfile>, IFeatureWrapper2
 {
   public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetwork" );
 
@@ -24,7 +25,7 @@ public interface IRiverProfileNetwork extends IFeatureWrapperCollection<IRiverPr
    *          the reference profile
    * @return the river profile situated before the specified one
    */
-  public IRiverProfile getPrevious( final IRiverProfile riverProfile );
+  public WspmProfile getPrevious( final WspmProfile riverProfile );
 
   /**
    * To get the river profile which is located after the given river
@@ -33,6 +34,6 @@ public interface IRiverProfileNetwork extends IFeatureWrapperCollection<IRiverPr
    *          the reference profile
    * @return the river profile situated after the specified one
    */
-  public IRiverProfile getNext( final IRiverProfile riverProfile );
+  public WspmProfile getNext( final WspmProfile riverProfile );
 
 }
