@@ -7,12 +7,13 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  IPK  30 Apr 96    
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
       USE BLK11MOD
       USE PARAMMOD
+      !EFa Dec06, neues Modul für 1d-Teschke-ELemente
+      USE PARAFlow1dFE
       SAVE
 C-
 C...... Input special boundary conditions
@@ -168,6 +169,7 @@ cipk APR96 save data to a scratch file
           NDATLN=NDATLN+1
           !nis,sep06,com: Control output
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL,LABL
+          qrandb=qf!EFa Dec06
 
           !nis,sep06,com: Power Station control, not for standard inflow
 CIPK AUG01   ADD FOR POWER STATION RECYCLING

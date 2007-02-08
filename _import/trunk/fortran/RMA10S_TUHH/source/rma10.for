@@ -1,4 +1,3 @@
-C     Last change:  K     7 Feb 2007   12:14 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -89,8 +88,7 @@ c     ICFL=0
       IDRYC=0
 CIPK AUG95 MAKE ALPHA 1.8
       ALPHA=1.8
-
-CCC      ALPHA=2.0
+CIPK JUN05      ALPHA=2.0
 cipk feb01 add thetcn
       thetcn=1./alpha
 C-
@@ -548,6 +546,8 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
         maxn = temp_maxn
 !-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if(niti .eq. 0) go to 400
 C-
 C......STORE AS A SINGLE PRECISION ARRAY
 C-
@@ -599,9 +599,9 @@ CIPK AUG02
           IMATL(JJ)=IMAT(JJ)
         ENDDO
         NQAL=3
-        WRITE (ISMSFM1) TETT, NQAL,NPM,       
+        WRITE (ISMSFM1) TETT, NQAL,NPM,
      +   ((VSING(J,K),K=1,NPM),J=4,6),
-     *   NEM,  (IMATL(JJ), JJ = 1, NEM) 
+     *   NEM,  (IMATL(JJ), JJ = 1, NEM)
   	ENDIF
 
 
@@ -640,7 +640,7 @@ C-
 C......LOOP ON NUMBER OF TIME STEPS
 C-
         IF(LBED .GT. 0) THEN
-	    CALL KINVIS
+	      CALL KINVIS
           CALL SANDX
         ENDIF
 
