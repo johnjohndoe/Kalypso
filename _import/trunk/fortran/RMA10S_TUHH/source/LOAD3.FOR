@@ -1,4 +1,3 @@
-C     Last change:  K    26 Jan 2007    4:58 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -444,7 +443,7 @@ cipk jun05      vel+ dep + sal
           NBC(N,6)=0
  2205   CONTINUE
       ELSEIF(ITEQV(MAXN) .EQ. 1) THEN
-cipk jun05      vel+ dep	  
+cipk jun05      vel+ dep
         DO 221 N=1,NP
           NBC(N,4)=0
           NBC(N,5)=0
@@ -560,6 +559,23 @@ cipk jun05      vels+sed
 C-
 C...... Install special values for one-two dimension intersections
 C-
+      !EFa Nov06, Modifikation für 1D-Teschke-Elemente
+      do nn=1,ne
+        if ((ncorn(nn).eq.5.or.ncorn(nn).eq.3).and.
+     +       nop(nn,2).EQ.-9999) then
+          nbc(nop(nn,1),2)=0 !EFa Dec06
+          nbc(nop(nn,3),2)=0 !EFa Dec06
+          if (icyc.le.0) then
+            nbc(nop(nn,1),1)=0
+            nbc(nop(nn,3),1)=0
+          end if
+          do i=1,4
+            nbc(nop(nn,2),i)=0
+          end do
+          !WRITE(*,*)'nbc',nn,nbc(nop(nn,1),1),nbc(nop(nn,1),3)!EFa Dec06, Test
+        end if
+      end do
+
       DO 260 NN=1,NE
         IF(IMAT(NN) .EQ. 0) GO TO 260
 cipk oct98 update to f90
@@ -672,7 +688,7 @@ CIPK  TEST
                       NBC(N2,1)=1
                       NBC(N2,2)=1
 	              endif
-	              if(inovel .gt. 0) then 
+	              if(inovel .gt. 0) then
                       IF(ABS(Q1) .GT. 0) then
 	                  NBC(N2,INOVEL+3)=-N1
 	                ENDIF
@@ -770,12 +786,15 @@ c       now do 1-d structures
             ENDIF
             !NiS,may06,com: get midside node
             N1=NOP(NN,2)
+            !EFa Nov06, die folgende nbc-Zuweisung nicht für 1D-Teschke-Elemente
+            if (n1.ne.-9999) then
             IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
                 NBC(N1,2)=0
             ELSE
               NBC(N1,1)=1
             ENDIF          
+            end if
 
           ENDIF
 CIPK JUN05 FINISHED CHANGES
@@ -891,7 +910,7 @@ cipk oct98 update to f90
 
 
 C
-C    Insert velocity distribution for line types with negative pointer 
+C    Insert velocity distribution for line types with negative pointer
 C
 CIPK JAN98 EXPAND TEST            8 AND 9
       IF(ITEQV(MAXN) .NE. 2  .AND.  ITEQV(MAXN) .NE. 8  
@@ -1061,11 +1080,14 @@ C-
           N1=NOP(N,1)
           IF(NDEP(N1) .GT. 1  .OR.  N .GT. NEM) THEN
             N2=NOP(N,2)
+            !EFa Nov06, die folgenden nbc-Zuweisungen nicht für1D-Teschke-Elemente
+            if (n2.NE.-9999) then
 cipk may02 switch  to 7
             DO 282 K=1,7
 cipk may02            DO 282 K=1,6
               NBC(N2,K)= -N1
   282       CONTINUE
+            endif
             N3=NOP(N,3)
 cuuu
               nbc(n3,4) = -n1
@@ -1077,11 +1099,14 @@ cipk may02
             SPEC(N3,3)=VEL(3,N1) + AO(N1)-AO(N3)
 C
 C
+            !EFa Nov06, folgende Berechnungen nicht für 1D-Teschke-ELemente
+            if (n2.NE.-9999) then
             WZ = WIDTH(N3) + (SS1(N3)+SS2(N3))*(CORD(N3,3)-AO(N3))
      &                    * (VEL(3,N3)/(ELEV-AO(N3)) ) 
 C
             SIDN(N1) = 2.*WZ/(XTLN(N1)+XTLN(N2))
             SIDN(N2)=SIDN(N1)
+            endif
             CXX=COS(ALFA(N3))
             SAA=SIN(ALFA(N3))
             VTB=-(VEL(1,N3)*CXX+VEL(2,N3)*SAA)*DIR(N3)
