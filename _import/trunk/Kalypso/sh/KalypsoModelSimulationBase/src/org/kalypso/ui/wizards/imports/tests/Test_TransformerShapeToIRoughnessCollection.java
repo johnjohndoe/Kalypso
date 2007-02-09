@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.roughness.junit_tests;
+package org.kalypso.ui.wizards.imports.tests;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -15,7 +15,7 @@ import org.kalypso.ui.wizards.imports.roughness.TransformerShapeToIRoughnessColl
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
-public class ShpTest extends TestCase
+public class Test_TransformerShapeToIRoughnessCollection extends TestCase
 {
 
   public final void testConvertShp2Gml( ) throws MalformedURLException, InvocationTargetException

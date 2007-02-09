@@ -1,6 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.gmlschema.property.relation.RelationType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -30,7 +30,7 @@ public interface IRoughnessPolygon extends IFeatureWrapper
 	public void setRoughnessStyle(String id)
 				throws IllegalArgumentException;
 	
-    public void setRoughnessClassMember(RelationType linkedFeature)
+    public void setRoughnessClassMember(Feature linkedFeature)
     throws IllegalArgumentException;
 
 	/**

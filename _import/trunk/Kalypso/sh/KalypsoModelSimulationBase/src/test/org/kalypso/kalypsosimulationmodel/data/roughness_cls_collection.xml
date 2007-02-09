@@ -8,7 +8,7 @@
 	gml:id="htpp://wwww.tuhh.de/wb/roughness_db/grass">
 	<gml:name>ColName1</gml:name>
 	<wbr:roughnessClsMember>
-		<wbr:RoughnessCls>
+		<wbr:RoughnessCls gml:id="uri_r1">
 			<gml:name>Klass 1</gml:name>
 			<wbr:ks>0.1</wbr:ks>
 			<wbr:axay>0.2</wbr:axay>
@@ -30,7 +30,7 @@
 	</wbr:roughnessClsMember>
 	
 	<wbr:roughnessClsMember>
-		<wbr:RoughnessCls>
+		<wbr:RoughnessCls gml:id="uri_r3">
 			<gml:name>Klass 3</gml:name>
 			<wbr:ks>0.1</wbr:ks>
 			<wbr:axay>0.2</wbr:axay>

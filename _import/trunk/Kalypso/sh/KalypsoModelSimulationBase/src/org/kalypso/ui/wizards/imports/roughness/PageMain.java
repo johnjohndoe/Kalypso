@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
@@ -253,7 +255,7 @@ public class PageMain extends WizardPage implements Listener
   public IWizardPage getNextPage( )
   {
     saveDataToModel();
-    return null;
+    return ((ImportWizard)getWizard()).m_pageSecond;
   }
 
   protected void saveDataToModel( )
@@ -263,6 +265,15 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
+      try
+      {
+        ((TransformerShapeToIRoughnessCollection)((ImportWizard)getWizard()).m_operation).prepare(true);
+      }
+      catch( GmlSerializeException e )
+      {
+        e.printStackTrace();
+      }
+      ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
     }
   }
 

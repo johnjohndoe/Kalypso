@@ -64,4 +64,17 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
 
     return (IRiverProfileNetworkCollection) feature.getAdapter( IRiverProfileNetworkCollection.class );
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessPolygonCollection()
+   */
+  public IRoughnessPolygonCollection getRoughnessPolygonCollection( )
+  {
+    final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
+    if( feature == null )
+      return null;
+
+    return (IRoughnessPolygonCollection) feature.getAdapter( IRoughnessPolygonCollection.class );
+  }
+
 }

@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.roughness;
+package org.kalypso.ui.wizards.imports;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;

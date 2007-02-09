@@ -18,9 +18,12 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+
+import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
@@ -34,6 +37,8 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
   private static final QName m_RootPropertyMemberQName = KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON;
 
   private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
+
+  private boolean isDataPrepared = false;
 
   public TransformerShapeToIRoughnessCollection( DataContainer data )
   {
@@ -53,7 +58,9 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
       }
       try
       {
-        prepare();
+        if( !isDataPrepared )
+          prepare( true );
+        setSelectedRoughnessChoice();
         serialize();
         if( hasMonitor && monitor.isCanceled() )
           return Status.CANCEL_STATUS;
@@ -75,8 +82,10 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
     return Status.OK_STATUS;
   }
 
-  private void prepare( ) throws GmlSerializeException
+  public void prepare( boolean resetMap ) throws GmlSerializeException
   {
+    if( resetMap )
+      m_data.getRoughnessShapeStaticRelationMap().clear();
     QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
     QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
@@ -98,11 +107,26 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
       else
         throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
       roughnessPolygon.setSurface( gm_Surface );
-      m_data.getRoughnessDatabaseMap().put( propertyValue, null );
+      m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
+    }
+    isDataPrepared = true;
+  }
+  
+  private void setSelectedRoughnessChoice() throws Exception
+  {
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST, null );
+    for(String key:m_data.getRoughnessShapeStaticRelationMap().keySet())
+    {
+      Feature f = m_data.getWorkspace().getFeature( key );
+//      IRoughnessPolygon roughnessPolygon = (RoughnessPolygon) m_data.getWorkspace().getFeature( key );
+      Feature linkedFeature = workspace.getFeature(m_data.getRoughnessShapeStaticRelationMap().get( key ));
+      f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
+//      roughnessPolygon.setRoughnessClassMember( linkedFeature );
     }
   }
   
-  private void serialize() throws IOException, GmlSerializeException {
+  private void serialize( ) throws IOException, GmlSerializeException
+  {
     FileWriter writer = new FileWriter( m_data.getWorkspace().getContext().getPath() );
     GmlSerializer.serializeWorkspace( writer, m_data.getWorkspace() );
     writer.close();

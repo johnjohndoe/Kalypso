@@ -56,7 +56,9 @@ public interface ITerrainModel extends IFeatureWrapper
 
   public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
 
+  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerPolynomCollection" );
+
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection();
   
-  // TODO: add other getters
+  public IRoughnessPolygonCollection getRoughnessPolygonCollection();
 }

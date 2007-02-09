@@ -24,14 +24,17 @@ public class DataContainer
   
   private GMLWorkspace m_workspace;
   
-  private HashMap<String, String> m_roughnessDatabaseMap;
+  private HashMap<String, String> m_roughnessStaticCollectionMap;
+  
+  private HashMap<String, String> m_roughnessShapeStaticRelationMap;
 
   private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
 
   public DataContainer( )
   {
     super();
-    m_roughnessDatabaseMap = new HashMap<String, String>();
+    m_roughnessStaticCollectionMap = new HashMap<String, String>();
+    m_roughnessShapeStaticRelationMap = new HashMap<String, String>();
   }
 
   public final void setInputFile( String inputFile )
@@ -90,14 +93,14 @@ public class DataContainer
     m_workspace = workspace;
   }
 
-  public final HashMap<String, String> getRoughnessDatabaseMap( )
+  public final HashMap<String, String> getRoughnessStaticCollectionMap( )
   {
-    return m_roughnessDatabaseMap;
+    return m_roughnessStaticCollectionMap;
   }
 
-  public final void setRoughnessDatabaseMap( HashMap<String, String> roughnessDatabaseMap )
+  public final HashMap<String, String> getRoughnessShapeStaticRelationMap( )
   {
-    m_roughnessDatabaseMap = roughnessDatabaseMap;
+    return m_roughnessShapeStaticRelationMap;
   }
 
 }

@@ -3,6 +3,12 @@
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -11,7 +17,10 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -20,7 +29,11 @@ public class ImportWizard extends Wizard implements INewWizard
 {
   protected DataContainer m_data; // the data model
 
-  private PageMain pageMain;
+  protected PageMain m_pageMain;
+  
+  protected PageSecond m_pageSecond;
+
+  protected final ICoreRunnableWithProgress m_operation;
 
   // workbench selection when the wizard was started
   protected IStructuredSelection selection;
@@ -31,19 +44,26 @@ public class ImportWizard extends Wizard implements INewWizard
   public ImportWizard()
   {
     super();
-    setWindowTitle( "Shape import" );
     m_data = new DataContainer();
-//    m_data.setWorkspace( workspace );
     setNeedsProgressMonitor( true );
-  }
-
-  public ImportWizard( GMLWorkspace workspace )
-  {
-    super();
-    setWindowTitle( "Shape import" );
-    m_data = new DataContainer();
-    m_data.setWorkspace( workspace );
-    setNeedsProgressMonitor( true );
+    final QName m_RootFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION;
+    URL outputFileURL;
+    GMLWorkspace workspace;
+    try
+    {
+      outputFileURL = new URL( "file:D:/Eclipse/TESTS_RESULTS/rauheitstest.gml" );
+      workspace = FeatureFactory.createGMLWorkspace( m_RootFeatureQName, outputFileURL, GmlSerializer.DEFAULT_FACTORY );
+      m_data.setWorkspace( workspace );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( InvocationTargetException e )
+    {
+      e.printStackTrace();
+    }
+    m_operation = new TransformerShapeToIRoughnessCollection( m_data ); //$NON-NLS-1$
   }
 
   /**
@@ -52,30 +72,42 @@ public class ImportWizard extends Wizard implements INewWizard
    */
   public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
   {
+    setWindowTitle( "Shape import" );
+  }
+
+  public void setWorkspace( GMLWorkspace workspace )
+  {
+    m_data.setWorkspace( workspace );
   }
 
   @Override
   public void addPages( )
   {
-    pageMain = new PageMain( m_data );
-    addPage( pageMain );
+    m_pageMain = new PageMain( m_data );
+    addPage( m_pageMain );
+    try
+    {
+      m_pageSecond = new PageSecond( m_data );
+      addPage( m_pageSecond );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public boolean canFinish( )
   {
-//    WizardPage pageSecond = m_data.isOutputToFile() ? pageOutputFile : pageOutputFeature;
-//    wizardCompleted = pageMain.canFlipToNextPage() && pageSecond.isPageComplete();
-//    return wizardCompleted;
-    return true;
+    return m_pageSecond.isPageComplete();
   }
 
   @Override
   public boolean performFinish( )
   {
-    pageMain.saveDataToModel();
-    final ICoreRunnableWithProgress operation = new TransformerShapeToIRoughnessCollection( m_data ); //$NON-NLS-1$
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    m_pageMain.saveDataToModel();
+    m_pageSecond.saveDataToModel();
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
     ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
     return status.isOK();
   }

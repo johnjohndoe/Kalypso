@@ -266,7 +266,7 @@ public class RoughnessPolygon implements IRoughnessPolygon
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRoughnessClassMember(org.kalypso.gmlschema.property.relation.RelationType)
    */
-  public void setRoughnessClassMember( RelationType linkedFeature ) throws IllegalArgumentException
+  public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException
   {
     feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
   }

@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.roughness.junit_tests;
+package org.kalypso.ui.wizards.imports.tests;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import org.kalypso.ui.wizards.imports.utils.StyleUtils;
 
-public class Test_CreateStyle extends TestCase {
+public class Test_StyleUtils extends TestCase {
 
 	public final void testCreateCustomStyle() throws TransformerFactoryConfigurationError, Exception {
 		HashMap<String, Color> knownPropertyColorSet = new HashMap<String, Color>();

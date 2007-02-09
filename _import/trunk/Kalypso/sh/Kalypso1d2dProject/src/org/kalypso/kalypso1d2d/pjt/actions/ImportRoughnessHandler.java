@@ -13,6 +13,10 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -36,11 +40,11 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbench workbench = (workbenchWindow).getWorkbench();
 
-    // final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable(
-    // SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-    // final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel(
-    // IFEDiscretisationModel1d2d.class );
+    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ITerrainModel model = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
 
+    final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
+    
     final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( ROUGHNESS_IMPORT_WIZARD_ID );
     final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
