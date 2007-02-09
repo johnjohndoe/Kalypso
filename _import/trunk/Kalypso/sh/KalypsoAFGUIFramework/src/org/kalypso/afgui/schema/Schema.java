@@ -76,9 +76,9 @@ final public class Schema
 	interface IResourceWrapperConstructor
 	{
 		public IWorkflowConcept construct(Object resource);
-	};
+	}
 	
-	static final private Logger logger=
+	static final Logger logger=
 						Logger.getLogger(Schema.class.getName());
      private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
 
@@ -460,7 +460,7 @@ final public class Schema
 //						" pair1="+pair[1].getClass());
 			toPropertyMap.put(
 					(EWorkflowProperty) pair[0], 
-					(Property)schemaModel.getProperty((String)pair[1]));
+					schemaModel.getProperty((String)pair[1]));
 		}
 		
 		return toPropertyMap;
@@ -543,29 +543,29 @@ final public class Schema
 		return toPropertyMap.get(prop);
 	}
 	
-	static public void main(String[] args) throws IOException
-	{
-		System.out.println("------------------------------");
-//		FileOutputStream out= new FileOutputStream("G:\\test.txt");
-		PrintStream pOut= System.out;//new PrintStream(out);
-		//System.setOut(pOut);
-//		System.out.println(Schema.CLASS_ACTIVITY);
-		pOut.println("Exception="+Schema.PROBLEM_FLAG);
-		pOut.println("hasName="+Schema.PROP_HAS_NAME);
-		pOut.println("hasActivity="+PROP_HAS_ACTIVITY);
-		pOut.println("isRoot="+PROP_IS_ROOT);
-		pOut.println("partOf="+PROP_PART_OF);
-		pOut.println("exestate="+PROP_EXE_STATE);
-		pOut.println("workflow="+CLASS_WORKFLOW);
-		pOut.println("activity="+CLASS_ACTIVITY);
-		pOut.println("Phase="+CLASS_PHASE);
-		//pOut.println("schemaModel="+schemaModel);
-		
-		//schemaModel.write(pOut);
-//		Schema.PROBLEM_FLAG.printStackTrace(pOut);
-		//pOut.println(Schema.class.getResource(WORKFLOW_SCHEMA_FILE));
-		//pOut.println(Schema.class.getResource("res/workflow_schema.rdfs"));
-	}
+//	static public void main(String[] args) throws IOException
+//	{
+//		System.out.println("------------------------------");
+////		FileOutputStream out= new FileOutputStream("G:\\test.txt");
+//		PrintStream pOut= System.out;//new PrintStream(out);
+//		//System.setOut(pOut);
+////		System.out.println(Schema.CLASS_ACTIVITY);
+//		pOut.println("Exception="+Schema.PROBLEM_FLAG);
+//		pOut.println("hasName="+Schema.PROP_HAS_NAME);
+//		pOut.println("hasActivity="+PROP_HAS_ACTIVITY);
+//		pOut.println("isRoot="+PROP_IS_ROOT);
+//		pOut.println("partOf="+PROP_PART_OF);
+//		pOut.println("exestate="+PROP_EXE_STATE);
+//		pOut.println("workflow="+CLASS_WORKFLOW);
+//		pOut.println("activity="+CLASS_ACTIVITY);
+//		pOut.println("Phase="+CLASS_PHASE);
+//		//pOut.println("schemaModel="+schemaModel);
+//		
+//		//schemaModel.write(pOut);
+////		Schema.PROBLEM_FLAG.printStackTrace(pOut);
+//		//pOut.println(Schema.class.getResource(WORKFLOW_SCHEMA_FILE));
+//		//pOut.println(Schema.class.getResource("res/workflow_schema.rdfs"));
+//	}
 
 	final  static public EActivityRelationship toEActivityRelationship(Property prop)
 	{
