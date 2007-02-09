@@ -89,6 +89,10 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   private static Image image_error;
 
+  private final boolean m_showWarning;
+
+  private final String m_warningText;
+
   static
   {
     /*
@@ -121,9 +125,22 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
    */
   public ValidatorFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showok )
   {
+    this( feature, ftp, showok, false, null );
+  }
+
+  /**
+   * @param showWarning
+   *          Show warning icon
+   * @param warningText
+   *          tooltip text for warning icon
+   */
+  public ValidatorFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showok, final boolean showWarning, final String warningText )
+  {
     super( feature, ftp );
 
     m_showok = showok;
+    m_showWarning = showWarning;
+    m_warningText = warningText;
 
     /* Get the specific rules for this PropertyType. */
     m_rules = RuleFactory.getRules( ftp );
@@ -182,10 +199,16 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
         {
           if( m_showok == true )
             m_label.setImage( image_ok );
+          else if( m_showWarning == true )
+            m_label.setImage( image_warning );
           else
             m_label.setImage( image_empty );
 
-          m_label.setToolTipText( "" );
+          if( m_showWarning )
+            m_label.setToolTipText( m_warningText );
+          else
+            m_label.setToolTipText( "" );
+
         }
         else
         {
