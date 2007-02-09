@@ -569,17 +569,25 @@ class GridPointCollector implements IGeometryBuilder
       new AddEdgeCommand[newNodesArray2D.length][];
     AddEdgeCommand addEdgeV2DInv[][]= 
           new AddEdgeCommand[newNodesArray2D.length][];
-    addEdges( 
-        model, newNodesArray2D, 
-        compositeCommand, 
-        addEdgeH2D, addEdgeV2D, 
-        addEdgeH2DInv, addEdgeV2DInv);
+//    addEdges( 
+//        model, newNodesArray2D, 
+//        compositeCommand, 
+//        addEdgeH2D, addEdgeV2D, 
+//        addEdgeH2DInv, addEdgeV2DInv);
     
-    //add elements
-    addElements( 
+    addEdgesH( 
         model, newNodesArray2D, 
         compositeCommand, 
-        addEdgeH2D, addEdgeV2D );
+        addEdgeH2D, addEdgeH2DInv);
+    addEdgesV( 
+        model, 
+        newNodesArray2D, compositeCommand, 
+        addEdgeV2D, addEdgeV2DInv );
+    //add elements
+//    addElements( 
+//        model, newNodesArray2D, 
+//        compositeCommand, 
+//        addEdgeH2D, addEdgeV2D );
     return compositeCommand;
   }
   
@@ -645,82 +653,139 @@ class GridPointCollector implements IGeometryBuilder
   //TODO on the fly meching plus displaying
   //TODO get the map to be redrawn after last point
  
-  
-  private final void  addEdges(
-                  IFEDiscretisationModel1d2d model,
-                  AddNodeCommand[][] newNodesArray2D,
-                  ChangeDiscretiationModelCommand compositeCommand,
-                  AddEdgeCommand[][] addEdgeH2D,
-                  AddEdgeCommand[][] addEdgeV2D,
-                  AddEdgeCommand[][] addEdgeH2DInv,
-                  AddEdgeCommand[][] addEdgeV2DInv)
+  private final void  addEdgesH(
+      IFEDiscretisationModel1d2d model,
+      AddNodeCommand[][] newNodesArray2D,
+      ChangeDiscretiationModelCommand compositeCommand,
+      AddEdgeCommand[][] addEdgeH2D,
+      AddEdgeCommand[][] addEdgeH2DInv
+      )
   {
     for(int i=0;i<newNodesArray2D.length;i++)
     {
       AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
-      AddNodeCommand[] addNodeLine2=
-      (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
+//      AddNodeCommand[] addNodeLine2=
+//      (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
       
-      AddEdgeCommand addEdgeV1D[]= 
-                  new AddEdgeCommand[addNodeLine1.length];
-      addEdgeV2D[i]=addEdgeV1D;
+      AddEdgeCommand addEdgeV1DInv[]= 
+            new AddEdgeCommand[addNodeLine1.length];
+      addEdgeH2DInv[i]=addEdgeV1DInv;
       AddEdgeCommand addEdgeH1D[]= 
-                  new AddEdgeCommand[addNodeLine1.length];
+            new AddEdgeCommand[addNodeLine1.length];
       addEdgeH2D[i]=addEdgeH1D;
       for(int j=0; j<addNodeLine1.length-1;j++)
       {
         //horidonzal edges
         
         if(i==0 )
-        {
+        {//first line only one direction
           AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+          new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
           addEdgeH1D[j]=edgeCommand;
         }
         else if(i==(addEdgeH2D.length-1))
-        {
+        {//last line back direction
           AddEdgeCommand edgeCommand=
-                      new AddEdgeCommand(
-                          model,addNodeLine1[j+1], addNodeLine1[j]);
+                    new AddEdgeCommand(
+                        model,addNodeLine1[j+1], addNodeLine1[j]);
           compositeCommand.addCommand( edgeCommand );
           addEdgeH1D[j]=edgeCommand;
         }            
         else
         {
           AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+                new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
           addEdgeH1D[j]=edgeCommand;
           
-//          //create inverted
-//          AddEdgeCommand edgeInv=
-//            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
-//          addEdgeH2DInv[i][j] =edgeInv;
+          ////create inverted
+//          if(j!=0 && j!=(addEdgeH1D.length-2))
+//          {
+           // DONOT ADD for first and last edge
+            AddEdgeCommand edgeInv=
+            new AddEdgeCommand(model, addNodeLine1[j+1],addNodeLine1[j]);
+            addEdgeH2DInv[i][j] =edgeInv;
+            compositeCommand.addCommand( edgeInv );
+//          }
         }          
-        
-        //todo add vertical edge        
-        if(addNodeLine2!=null)
+      }
+    }    
+  }
+  private final void  addEdgesV(
+                  IFEDiscretisationModel1d2d model,
+                  AddNodeCommand[][] newNodesArray2D,
+                  ChangeDiscretiationModelCommand compositeCommand,
+                  AddEdgeCommand[][] addEdgeV2D,
+                  AddEdgeCommand[][] addEdgeV2DInv)
+  {
+    for(int i=0;i<newNodesArray2D.length-1;i++)
+    {
+      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
+      AddNodeCommand[] addNodeLine2=newNodesArray2D[i+1];
+      
+      AddEdgeCommand addEdgeV1D[]= 
+                  new AddEdgeCommand[addNodeLine1.length];
+      addEdgeV2D[i]=addEdgeV1D;
+      
+      AddEdgeCommand addEdgeV1DInv[]= 
+                  new AddEdgeCommand[addNodeLine1.length];
+      addEdgeV2DInv[i]=addEdgeV1DInv;
+      
+      for(int j=0; j<addNodeLine1.length;j++)
+      {
+              
+        if(j==0 )
         {
           AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(
-                        model, 
-                        addNodeLine1[j],
-                        addNodeLine2[j]);
+            new AddEdgeCommand(model, addNodeLine2[j],addNodeLine1[j]);
           compositeCommand.addCommand( edgeCommand );
           addEdgeV1D[j]=edgeCommand;
-          //lastvertical edge
-          if(addNodeLine1.length-j==2)
-          {
-            edgeCommand=
-              new AddEdgeCommand(
-                          model, 
-                          addNodeLine1[j+1],
-                          addNodeLine2[j+1]);
-            compositeCommand.addCommand( edgeCommand );
-            addEdgeV1D[j]=edgeCommand;
-          }
-        }      
+        }
+        else if(j==(addNodeLine1.length-1))
+        {
+          AddEdgeCommand edgeCommand=
+                      new AddEdgeCommand(
+                          model,addNodeLine1[j], addNodeLine2[j]);
+          compositeCommand.addCommand( edgeCommand );
+          addEdgeV1D[j]=edgeCommand;
+        }            
+        else
+        {
+          AddEdgeCommand edgeCommand=
+            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine2[j]);
+          compositeCommand.addCommand( edgeCommand );
+          addEdgeV1D[j]=edgeCommand;
+          
+          //create inverted
+          AddEdgeCommand edgeInv=
+            new AddEdgeCommand(model, addNodeLine2[j],addNodeLine1[j]);
+          addEdgeV2DInv[i][j] =edgeInv;
+          compositeCommand.addCommand( edgeInv );
+        }          
+        
+//        //todo add vertical edge        
+//        if(addNodeLine2!=null)
+//        {
+//          AddEdgeCommand edgeCommand=
+//            new AddEdgeCommand(
+//                        model, 
+//                        addNodeLine1[j],
+//                        addNodeLine2[j]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeV1D[j]=edgeCommand;
+//          //lastvertical edge
+//          if(addNodeLine1.length-j==2)
+//          {
+//            edgeCommand=
+//              new AddEdgeCommand(
+//                          model, 
+//                          addNodeLine1[j+1],
+//                          addNodeLine2[j+1]);
+//            compositeCommand.addCommand( edgeCommand );
+//            addEdgeV1D[j]=edgeCommand;
+//          }
+//        }      
       }
     }    
   }

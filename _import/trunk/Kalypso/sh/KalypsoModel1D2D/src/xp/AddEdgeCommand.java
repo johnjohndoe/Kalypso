@@ -89,15 +89,20 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
   public void process( ) throws Exception
   {
     //TODO move code into discretisation model
-    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    String edgeGmlID = addedEdge.getGmlID();
     IFE1D2DNode<IFE1D2DEdge> addedNode1 = node1Command.getAddedNode();
-    addedEdge.addNode( addedNode1.getGmlID() );
-    addedNode1.addContainer( edgeGmlID );
-    //
     IFE1D2DNode<IFE1D2DEdge> addedNode2 = node2Command.getAddedNode();
-    addedEdge.addNode( addedNode2.getGmlID() );
-    addedNode2.addContainer( edgeGmlID );
+    addedEdge=model.findEdge( addedNode1, addedNode2 );
+    if(addedEdge==null)
+    {
+      addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+      String edgeGmlID = addedEdge.getGmlID();
+      addedEdge.addNode( addedNode1.getGmlID() );
+      addedNode1.addContainer( edgeGmlID );
+      //
+      addedEdge.addNode( addedNode2.getGmlID() );
+      addedNode2.addContainer( edgeGmlID );
+    }
+    
     
     
   }
