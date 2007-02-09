@@ -15,6 +15,7 @@ import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -349,5 +350,25 @@ public class FE1D2DNode
   {
     linkRef=Assert.throwIAEOnNullOrEmpty( linkRef );
     containers.getWrappedList().add( linkRef);
+  }
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append( "FE1D2DNode[" );
+    buf.append( getPoint() );
+    //edges
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = getContainers();
+    buf.append("{Edges=");
+    for(IFeatureWrapper edge:edges)
+    {
+      buf.append( edge.getGmlID() );
+    }
+    buf.append('}');
+    buf.append(']');
+    return buf.toString();
   }
 }

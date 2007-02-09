@@ -64,17 +64,35 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
   
-  private AddEdgeCommand elementEdgeCmds[];
+  private IDiscrMode1d2dlChangeCommand elementEdgeCmds[];
   
   private IFEDiscretisationModel1d2d model;
   
+  /**
+   * @param model
+   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
+   *  by this command. the array must contains only {@link AddEdgeCommand} and 
+   *    {@link AddEdgeInvCommand} commands
+   */
   public AddElementCommand(
               IFEDiscretisationModel1d2d model,
-              AddEdgeCommand[] elementEdgeCmds)
+              IDiscrMode1d2dlChangeCommand[] elementEdgeCmds)
   {
     Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdges" );
+    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
+    for(IDiscrMode1d2dlChangeCommand cmd:elementEdgeCmds)
+    {
+      if(   !(
+              (cmd instanceof AddEdgeCommand) || 
+              (cmd instanceof AddEdgeInvCommand)) )
+      {
+        throw new IllegalArgumentException(
+            "elementEdgeCmds must only contains edge or edgeinv  command: "+cmd); 
+      }
+    }
+    
     this.model=model;
+    
     this.elementEdgeCmds= elementEdgeCmds;
     
   }
@@ -104,20 +122,14 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
     {
       List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
       IFE1D2DEdge curEdge;
-      for(AddEdgeCommand edgeCmd:elementEdgeCmds)
+      for(IDiscrMode1d2dlChangeCommand edgeCmd:elementEdgeCmds)
       {
-        if(edgeCmd==null)
-        {
-         System.out.println("EdgeCmd is null"); 
-        }
-        else
-        {
           curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
           if(curEdge!=null)
           {
             edges.add( curEdge );
           }
-        }
+        
       }
       addedElement=ModelOps.createElement2d( model, edges );
       System.out.println("Adding elment:"+addedElement);

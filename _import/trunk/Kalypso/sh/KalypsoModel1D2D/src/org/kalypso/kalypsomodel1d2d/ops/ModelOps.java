@@ -294,12 +294,20 @@ public class ModelOps
                                         model1d2d.getElements();
     IFE1D2DElement element = elements.addNew( 
           Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
-    sortEdgesAddToElement( element, edges );
+    for(IFE1D2DEdge edge:edges)
+    {
+      element.addEdge( edge.getGmlID() );
+    }
+    
+//    sortElementEdgesOld( element );
+//    sortEdgesAddToElement( element, edges );
+    sortElementEdges( element );
     String elementID = element.getGmlID();
     for(IFE1D2DEdge edge:edges)
     {
       edge.addContainer( elementID );
     }
+    
     return element;
     
   }

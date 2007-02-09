@@ -12,7 +12,9 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -418,6 +420,27 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     {
       throw new IllegalArgumentException("edge ID must not be null");
     }
-    edges.getWrappedList().add( edgeID );
+    FeatureList edgeFeatureList=edges.getWrappedList();
+    if(edgeFeatureList.contains( edgeID ))
+    {
+      return;
+    }
+    edgeFeatureList.add( edgeID );
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append( "FE1D2D_Element[" );
+    for(IFeatureWrapper featureWrapper:edges)
+    {
+      buf.append( featureWrapper );
+    }
+    buf.append( ']' );
+    return buf.toString();
   }
 }

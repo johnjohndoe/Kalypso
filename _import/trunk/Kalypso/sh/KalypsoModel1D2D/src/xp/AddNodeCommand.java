@@ -150,4 +150,17 @@ public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
   {
     return discretisationModel;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer();
+    buf.append( "AddNodeCommand[" );
+    buf.append( nodePoint );
+    buf.append( ']' );
+    return buf.toString();
+  }
 }

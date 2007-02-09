@@ -74,7 +74,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   
   private List<IDiscrMode1d2dlChangeCommand> commands = 
                       new ArrayList<IDiscrMode1d2dlChangeCommand>();
-  private boolean isUndoable=false;
+  private boolean isUndoable=true;
 
 
   
@@ -145,7 +145,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     }
     
     model1d2d.getEdges().getWrappedList().invalidate();
-    
+    model1d2d.getElements().getWrappedList().invalidate();
     fireStructureChange( changedFeatures );    
   }
 

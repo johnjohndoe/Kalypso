@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
@@ -52,27 +51,25 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
+public class AddEdgeInvCommand implements IDiscrMode1d2dlChangeCommand
 {
-  private AddNodeCommand node1Command;
-  private AddNodeCommand node2Command;
+  private AddEdgeCommand edgeCommand;
   private IFEDiscretisationModel1d2d model;
-  private IFE1D2DEdge addedEdge;
-  public AddEdgeCommand(
+  private IEdgeInv addedEdgeInv;
+  
+  public AddEdgeInvCommand(
           IFEDiscretisationModel1d2d model, 
-          AddNodeCommand node1Command,
-          AddNodeCommand node2Command)
+          AddEdgeCommand addEdgeCommand)
   {
-    this.node1Command=node1Command;
-    this.node2Command=node2Command;
     this.model=model;
+    this.edgeCommand=addEdgeCommand;
   }
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Adding Edge";
+    return "Add EdgeInv";
   }
 
   /**
@@ -89,22 +86,27 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
   public void process( ) throws Exception
   {
     //TODO move code into discretisation model
-    IFE1D2DNode<IFE1D2DEdge> addedNode1 = node1Command.getAddedNode();
-    IFE1D2DNode<IFE1D2DEdge> addedNode2 = node2Command.getAddedNode();
-    addedEdge=model.findEdge( addedNode1, addedNode2 );
-    if(addedEdge==null)
+    IFE1D2DEdge edgeToInv = (IFE1D2DEdge)edgeCommand.getChangedFeature();
+    if(edgeToInv==null)
     {
-      addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-      String edgeGmlID = addedEdge.getGmlID();
-      addedEdge.addNode( addedNode1.getGmlID() );
-      addedNode1.addContainer( edgeGmlID );
-      //
-      addedEdge.addNode( addedNode2.getGmlID() );
-      addedNode2.addContainer( edgeGmlID );
+      return;
+    }
+    
+    if(edgeToInv.getNodes().size()!=2)
+    {
+      throw new RuntimeException(
+            "Edge does not contains 2 nodes:"+edgeToInv.getNodes().size());
     }
     
     
-    
+    IFE1D2DNode<IFE1D2DEdge> addedNode1 = edgeToInv.getNode( 0 );
+    IFE1D2DNode<IFE1D2DEdge> addedNode2 = edgeToInv.getNode( 1 );
+    addedEdgeInv = (IEdgeInv)model.findEdge( addedNode2, addedNode1 );//got the node inverted
+    if(addedEdgeInv==null)
+    {
+      throw new RuntimeException("Could not create edge for");
+    }
+        
   }
 
   /**
@@ -112,7 +114,7 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if(addedEdgeInv!=null)
     {
       process();
     }
@@ -123,9 +125,9 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if(addedEdgeInv!=null)
     {
-      model.getEdges().remove( addedEdge.getWrappedFeature() );
+      model.getEdges().remove( addedEdgeInv.getWrappedFeature() );
       //TODO remove edges from node add method to node interface
     }
   }
@@ -134,7 +136,7 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public IFeatureWrapper getChangedFeature( )
   {
-    return addedEdge;
+    return addedEdgeInv;
   }
   
   /**
@@ -153,17 +155,8 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
   {
     StringBuffer buf= new StringBuffer(128);
     buf.append("AddEdgeCommand[");
-    buf.append( node1Command );
-    buf.append( node2Command );
+    buf.append( edgeCommand);
     buf.append( ']' );
     return buf.toString();
-  }
-  public AddNodeCommand getNode1Command( )
-  {
-    return node1Command;
-  }
-  public AddNodeCommand getNode2Command( )
-  {
-    return node2Command;
   }
 }

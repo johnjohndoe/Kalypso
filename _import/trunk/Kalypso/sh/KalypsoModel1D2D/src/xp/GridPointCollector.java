@@ -65,6 +65,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
+import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -507,6 +509,20 @@ class GridPointCollector implements IGeometryBuilder
   
   private final GM_Point[][] computeMesh() throws GM_Exception
   {
+//    GM_Point[][] points= new GM_Point[4][3];
+//    for(int i=0;i<4;i++)
+//    {
+//      for(int j=0;j<3;j++)
+//      {
+//        points[i][j]= 
+//          org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( 
+//                i, j, TestWorkspaces.getGaussKrueger() );
+//      }
+//    }
+//    if(true)
+//    {
+//      return points;
+//    }
     //GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( sides[0] );
     final LineString bottomLine = pointToLineString( sides[2] );
@@ -552,9 +568,17 @@ class GridPointCollector implements IGeometryBuilder
               model);// new CompositeCommand("Grid Command");
     //compute Points
     GM_Point[][] points2D=computeMesh();
+    final int DIM_X=points2D.length;
+    if(DIM_X==0)
+    {
+      System.out.println("DimX is null");
+      return compositeCommand;
+    }
+    
+    final int DIM_Y=points2D[0].length;
     //add nodes
     AddNodeCommand[][] newNodesArray2D= 
-       new AddNodeCommand[points2D.length][];
+       new AddNodeCommand[DIM_X][DIM_Y];
     addNodesFromPoints( 
         model, 
         newNodesArray2D, 
@@ -562,32 +586,30 @@ class GridPointCollector implements IGeometryBuilder
     
     //add edges
     AddEdgeCommand addEdgeH2D[][]= 
-      new AddEdgeCommand[newNodesArray2D.length][];
+      new AddEdgeCommand[DIM_X][DIM_Y];
     AddEdgeCommand addEdgeV2D[][]= 
-          new AddEdgeCommand[newNodesArray2D.length][];
-    AddEdgeCommand addEdgeH2DInv[][]= 
-      new AddEdgeCommand[newNodesArray2D.length][];
-    AddEdgeCommand addEdgeV2DInv[][]= 
-          new AddEdgeCommand[newNodesArray2D.length][];
-//    addEdges( 
-//        model, newNodesArray2D, 
-//        compositeCommand, 
-//        addEdgeH2D, addEdgeV2D, 
-//        addEdgeH2DInv, addEdgeV2DInv);
+          new AddEdgeCommand[DIM_X][DIM_Y];
+    AddEdgeInvCommand addEdgeH2DInv[][]= 
+      new AddEdgeInvCommand[DIM_X][DIM_Y];
+    AddEdgeInvCommand addEdgeV2DInv[][]= 
+          new AddEdgeInvCommand[DIM_X][DIM_Y];
     
-    addEdgesH( 
-        model, newNodesArray2D, 
-        compositeCommand, 
-        addEdgeH2D, addEdgeH2DInv);
-    addEdgesV( 
-        model, 
-        newNodesArray2D, compositeCommand, 
-        addEdgeV2D, addEdgeV2DInv );
-    //add elements
-//    addElements( 
+//    addEdgesH( 
 //        model, newNodesArray2D, 
 //        compositeCommand, 
-//        addEdgeH2D, addEdgeV2D );
+//        addEdgeH2D, addEdgeH2DInv);
+//    addEdgesV( 
+//        model, 
+//        newNodesArray2D, compositeCommand, 
+//        addEdgeV2D, addEdgeV2DInv );
+    
+    //add elements
+//     addElements( 
+//         model, newNodesArray2D, 
+//         compositeCommand, 
+//         addEdgeH2D, addEdgeH2DInv, 
+//         addEdgeV2D, addEdgeV2DInv );
+    addElementsFromNodes( model, newNodesArray2D, compositeCommand );
     return compositeCommand;
   }
   
@@ -600,9 +622,9 @@ class GridPointCollector implements IGeometryBuilder
     for(int i=0;i<points2D.length;i++)
     {
       GM_Point[] points1D=points2D[i];
-      AddNodeCommand[] newNodesArray1D= 
-              new AddNodeCommand[points1D.length];
-      newNodesArray2D[i]=newNodesArray1D;
+//      AddNodeCommand[] newNodesArray1D= 
+//              new AddNodeCommand[points1D.length];
+//      newNodesArray2D[i]=newNodesArray1D;
       for(int j=0;j<points1D.length;j++)
       {
         //TODO check node for existance
@@ -610,39 +632,13 @@ class GridPointCollector implements IGeometryBuilder
           new AddNodeCommand(
             model,
             points1D[j]);
-        newNodesArray1D[j]=nodeCommand;
+        newNodesArray2D[i][j]=nodeCommand;//newNodesArray1D[j]=nodeCommand;
         compositeCommand.addCommand( nodeCommand );
       }
     }
   }
   
-//  private final void  addNodesddd(
-//      IFEDiscretisationModel1d2d model,
-//      AddNodeCommand[][] newNodesArray2D,
-//      ChangeDiscretiationModelCommand compositeCommand,
-//      Coordinate[][] coordinates) throws GM_Exception
-//  {
-//    GeometryFactory geometryFactory= new GeometryFactory();
-//    for(int i=0;i<coordinates.length;i++)
-//    {
-//      Coordinate[] line=coordinates[i];
-//      AddNodeCommand[] newNodesArray1D= 
-//              new AddNodeCommand[line.length];
-//      newNodesArray2D[i]=newNodesArray1D;
-//      for(int j=0;j<line.length;j++)
-//      {
-//        Coordinate coord=line[j];
-//        //TODO check node for existance
-//        AddNodeCommand nodeCommand=
-//          new AddNodeCommand(
-//            model,
-//            (GM_Point)JTSAdapter.wrap( 
-//                  geometryFactory.createPoint(coord)));
-//        newNodesArray1D[j]=nodeCommand;
-//        compositeCommand.addCommand( nodeCommand );
-//      }
-//    }
-//  }
+
   
   
   //TODO separate in create horizontal and vertical edges
@@ -658,56 +654,45 @@ class GridPointCollector implements IGeometryBuilder
       AddNodeCommand[][] newNodesArray2D,
       ChangeDiscretiationModelCommand compositeCommand,
       AddEdgeCommand[][] addEdgeH2D,
-      AddEdgeCommand[][] addEdgeH2DInv
+      AddEdgeInvCommand[][] addEdgeH2DInv
       )
   {
+    final int LAST_INDEX_I=newNodesArray2D.length-1;
     for(int i=0;i<newNodesArray2D.length;i++)
     {
+      final int LAST_INDEX_J=newNodesArray2D[0].length-2;
       AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
-//      AddNodeCommand[] addNodeLine2=
-//      (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
-      
-      AddEdgeCommand addEdgeV1DInv[]= 
-            new AddEdgeCommand[addNodeLine1.length];
-      addEdgeH2DInv[i]=addEdgeV1DInv;
-      AddEdgeCommand addEdgeH1D[]= 
-            new AddEdgeCommand[addNodeLine1.length];
-      addEdgeH2D[i]=addEdgeH1D;
-      for(int j=0; j<addNodeLine1.length-1;j++)
+      for(int j=0; j<=LAST_INDEX_J;j++)
       {
         //horidonzal edges
         
         if(i==0 )
         {//first line only one direction
           AddEdgeCommand edgeCommand=
-          new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+              new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeH1D[j]=edgeCommand;
+          addEdgeH2D[i][j]=edgeCommand;
         }
-        else if(i==(addEdgeH2D.length-1))
+        else if(i==LAST_INDEX_I)
         {//last line back direction
           AddEdgeCommand edgeCommand=
                     new AddEdgeCommand(
                         model,addNodeLine1[j+1], addNodeLine1[j]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeH1D[j]=edgeCommand;
+          addEdgeH2D[i][j]=edgeCommand;
         }            
         else
         {
           AddEdgeCommand edgeCommand=
                 new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeH1D[j]=edgeCommand;
+          addEdgeH2D[i][j]=edgeCommand;
           
           ////create inverted
-//          if(j!=0 && j!=(addEdgeH1D.length-2))
-//          {
-           // DONOT ADD for first and last edge
-            AddEdgeCommand edgeInv=
-            new AddEdgeCommand(model, addNodeLine1[j+1],addNodeLine1[j]);
-            addEdgeH2DInv[i][j] =edgeInv;
-            compositeCommand.addCommand( edgeInv );
-//          }
+            AddEdgeInvCommand edgeInvCommand = 
+                  new AddEdgeInvCommand(model,edgeCommand);
+            addEdgeH2DInv[i][j] =edgeInvCommand;
+            compositeCommand.addCommand( edgeInvCommand );
         }          
       }
     }    
@@ -717,75 +702,51 @@ class GridPointCollector implements IGeometryBuilder
                   AddNodeCommand[][] newNodesArray2D,
                   ChangeDiscretiationModelCommand compositeCommand,
                   AddEdgeCommand[][] addEdgeV2D,
-                  AddEdgeCommand[][] addEdgeV2DInv)
+                  AddEdgeInvCommand[][] addEdgeV2DInv)
   {
     for(int i=0;i<newNodesArray2D.length-1;i++)
     {
-      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
-      AddNodeCommand[] addNodeLine2=newNodesArray2D[i+1];
-      
-      AddEdgeCommand addEdgeV1D[]= 
-                  new AddEdgeCommand[addNodeLine1.length];
-      addEdgeV2D[i]=addEdgeV1D;
-      
-      AddEdgeCommand addEdgeV1DInv[]= 
-                  new AddEdgeCommand[addNodeLine1.length];
-      addEdgeV2DInv[i]=addEdgeV1DInv;
-      
-      for(int j=0; j<addNodeLine1.length;j++)
+      final int LENGTH = newNodesArray2D[0].length;
+      final int LAST_INDEX=LENGTH-1;
+      for(int j=0; j<LENGTH;j++)
       {
               
         if(j==0 )
         {
           AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(model, addNodeLine2[j],addNodeLine1[j]);
+            new AddEdgeCommand(
+                model, 
+                newNodesArray2D[i+1][j],
+                newNodesArray2D[i][j]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeV1D[j]=edgeCommand;
+          addEdgeV2D[i][j]=edgeCommand;
         }
-        else if(j==(addNodeLine1.length-1))
+        else if(j==LAST_INDEX)
         {
           AddEdgeCommand edgeCommand=
                       new AddEdgeCommand(
-                          model,addNodeLine1[j], addNodeLine2[j]);
+                          model,
+                          newNodesArray2D[i][j], 
+                          newNodesArray2D[i+1][j]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeV1D[j]=edgeCommand;
+          addEdgeV2D[i][j]=edgeCommand;
         }            
         else
         {
           AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(model, addNodeLine1[j],addNodeLine2[j]);
+            new AddEdgeCommand(
+                model, 
+                newNodesArray2D[i][j],
+                newNodesArray2D[i+1][j]);
           compositeCommand.addCommand( edgeCommand );
-          addEdgeV1D[j]=edgeCommand;
+          addEdgeV2D[i][j]=edgeCommand;
           
           //create inverted
-          AddEdgeCommand edgeInv=
-            new AddEdgeCommand(model, addNodeLine2[j],addNodeLine1[j]);
-          addEdgeV2DInv[i][j] =edgeInv;
-          compositeCommand.addCommand( edgeInv );
+          AddEdgeInvCommand edgeInvCommand=
+            new AddEdgeInvCommand(model, edgeCommand);
+          addEdgeV2DInv[i][j] =edgeInvCommand;
+          compositeCommand.addCommand( edgeInvCommand );
         }          
-        
-//        //todo add vertical edge        
-//        if(addNodeLine2!=null)
-//        {
-//          AddEdgeCommand edgeCommand=
-//            new AddEdgeCommand(
-//                        model, 
-//                        addNodeLine1[j],
-//                        addNodeLine2[j]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeV1D[j]=edgeCommand;
-//          //lastvertical edge
-//          if(addNodeLine1.length-j==2)
-//          {
-//            edgeCommand=
-//              new AddEdgeCommand(
-//                          model, 
-//                          addNodeLine1[j+1],
-//                          addNodeLine2[j+1]);
-//            compositeCommand.addCommand( edgeCommand );
-//            addEdgeV1D[j]=edgeCommand;
-//          }
-//        }      
       }
     }    
   }
@@ -795,27 +756,57 @@ class GridPointCollector implements IGeometryBuilder
       AddNodeCommand[][] newNodesArray2D,
       ChangeDiscretiationModelCommand compositeCommand,
       AddEdgeCommand[][] addEdgeH2D,
-      AddEdgeCommand[][] addEdgeV2D)
+      AddEdgeInvCommand[][] addEdgeH2DInv,
+      AddEdgeCommand[][] addEdgeV2D,
+      AddEdgeInvCommand[][] addEdgeV2DInv)
   {
-      
-      for(int i=0; i<addEdgeH2D.length-1;i++)
+      final int LAST_INDEX_I = addEdgeH2D.length-2;
+      for(int i=0; i<=LAST_INDEX_I/*i<addEdgeH2D.length-1*/;i++)
       {
         AddEdgeCommand[] aeHCnds0=addEdgeH2D[i];
-        AddEdgeCommand[] aeHCnds1=addEdgeH2D[i+1];
-        
-        AddEdgeCommand[] aeVCnds0=addEdgeV2D[i];
-        AddEdgeCommand[] aeVCnds1=addEdgeV2D[i+1];
-        
-        for(int j=0;j<aeHCnds0.length;j++)
+        final int LAST_INDEX_J=addEdgeH2D[0].length-2;
+        for(int j=0;j<=LAST_INDEX_J/*j<aeHCnds0.length-1*/;j++)
         {
-          AddEdgeCommand edge0=aeHCnds0[j];
-          AddEdgeCommand edge1=aeVCnds1[j];
-          AddEdgeCommand edge2=aeHCnds1[j];
-          AddEdgeCommand edge3=aeVCnds0[j];
+          IDiscrMode1d2dlChangeCommand edge0 = addEdgeH2D[i][j];
+          IDiscrMode1d2dlChangeCommand edge1 = addEdgeV2D[i+1][j+1];
+          IDiscrMode1d2dlChangeCommand edge2 = addEdgeH2DInv[i][j];
+          IDiscrMode1d2dlChangeCommand edge3 = 
+                        (j==0)?addEdgeV2D[i][j]:addEdgeV2DInv[i][j];
+          if(edge0==null || edge1==null || edge2==null|| edge3==null )
+          {
+            System.out.println("An edge is null");
+            continue;
+          }
           AddElementCommand addElementCommand=
             new AddElementCommand(
                 model,
-                new AddEdgeCommand[]{edge0,edge1,edge2,edge3});
+                new IDiscrMode1d2dlChangeCommand[]{edge0,edge1,edge2,edge3});
+          compositeCommand.addCommand( addElementCommand );
+        }
+      }
+  }
+  
+  private final void  addElementsFromNodes(
+      IFEDiscretisationModel1d2d model,
+      AddNodeCommand[][] newNodesArray2D,
+      ChangeDiscretiationModelCommand compositeCommand)
+  {
+      final int LAST_INDEX_I = newNodesArray2D.length-2;
+      for(int i=0; i<=LAST_INDEX_I/*i<addEdgeH2D.length-1*/;i++)
+      {
+        final int LAST_INDEX_J=newNodesArray2D[0].length-2;
+        for(int j=0;j<=LAST_INDEX_J;j++)
+        {
+          AddNodeCommand node0 = newNodesArray2D[i][j];
+          AddNodeCommand node1 = newNodesArray2D[i][j+1];
+          AddNodeCommand node2 = newNodesArray2D[i+1][j+1];
+          AddNodeCommand node3 = newNodesArray2D[i+1][j];
+          AddNodeCommand node4 = newNodesArray2D[i][j];
+          
+          AddElementCmdFromNodeCmd addElementCommand=
+            new AddElementCmdFromNodeCmd(
+                model,
+                new AddNodeCommand[]{node0,node1,node2,node3, node4});
           compositeCommand.addCommand( addElementCommand );
         }
       }
