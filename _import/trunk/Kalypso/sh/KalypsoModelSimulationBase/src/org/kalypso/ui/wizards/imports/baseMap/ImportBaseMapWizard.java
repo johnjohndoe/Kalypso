@@ -44,87 +44,83 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ui.wizards.imports.Messages;
 
-
 /**
  * @author Madanagopal
- *
  */
-public class ImportBaseMapWizard extends Wizard
-      implements INewWizard
+public class ImportBaseMapWizard extends Wizard implements INewWizard
 {
-   private IStructuredSelection initialSelection;
+  private IStructuredSelection initialSelection;
 
-   private BaseMapMainPage mPage;
-   
-   /**
-    * Construct a new instance and initialize the dialog settings
-    * for this instance.
-    */
-   public ImportBaseMapWizard() {
-   }
-   
-   /**
-    * 
-    * @param workbench the current workbench
-    * @param selection the current object selection
-    */
-   public void init(IWorkbench workbench, IStructuredSelection selection)
-   {
-      initialSelection = selection;
-   }
+  private BaseMapMainPage mPage;
 
-   public void addPages() {
-      setWindowTitle(Messages.getString( "BaseMapWizard.0" ));
-      mPage = new BaseMapMainPage();
-      addPage(mPage);
-      mPage.init(initialSelection);
-   }
+  /**
+   * Construct a new instance and initialize the dialog settings for this instance.
+   */
+  public ImportBaseMapWizard( )
+  {
+  }
 
-   /**
-    * This method is called by the wizard framework when the user
-    * presses the Finish button.
-    */
-   public boolean performFinish() {
+  /**
+   * @param workbench
+   *          the current workbench
+   * @param selection
+   *          the current object selection
+   */
+  public void init( IWorkbench workbench, IStructuredSelection selection )
+  {
+    initialSelection = selection;
+  }
 
-      try {
-         getContainer().run(true, true, new IRunnableWithProgress() {
-            public void run(IProgressMonitor monitor)
-               throws InvocationTargetException, InterruptedException
-            {
-//               performOperation(monitor);
-            }
+  public void addPages( )
+  {
+    setWindowTitle( Messages.getString( "BaseMapWizard.0" ) );
+    mPage = new BaseMapMainPage();
+    addPage( mPage );
+    mPage.init( initialSelection );
+  }
 
-            
-         });
-      }
-      catch (InvocationTargetException e) {
-         return false;
-      }
-      catch (InterruptedException e) {
-         // User canceled, so stop but don’t close wizard.
-         return false;
-      }
-      return true;
-   }
+  /**
+   * This method is called by the wizard framework when the user presses the Finish button.
+   */
+  public boolean performFinish( )
+  {
 
-   /**
-    * Answer the selected source location
-    */
-   public IPath getSourceLocation() {
-      return mPage.getSourceLocation();
-   }
+    try
+    {
+      getContainer().run( true, true, new IRunnableWithProgress()
+      {
+        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+        {
+          // performOperation(monitor);
+        }
+
+      } );
+    }
+    catch( InvocationTargetException e )
+    {
+      return false;
+    }
+    catch( InterruptedException e )
+    {
+      // User canceled, so stop but don’t close wizard.
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Answer the selected source location
+   */
+  public IPath getSourceLocation( )
+  {
+    return mPage.getSourceLocation();
+  }
 
 }

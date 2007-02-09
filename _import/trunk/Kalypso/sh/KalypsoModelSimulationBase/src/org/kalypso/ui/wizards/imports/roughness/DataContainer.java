@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -22,11 +23,17 @@ public class DataContainer
 
   private CS_CoordinateSystem m_coordinateSystem;
   
-  private GMLWorkspace m_workspace;
+  private RoughnessPolygonCollection m_feature;
   
   private HashMap<String, String> m_roughnessStaticCollectionMap;
   
   private HashMap<String, String> m_roughnessShapeStaticRelationMap;
+  
+  private String m_roughnessDatabaseLocation;
+  
+  private String m_ProjectBaseFolder;
+  
+  private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
   private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
 
@@ -83,16 +90,6 @@ public class DataContainer
       return m_coordinateSystem;
   }
 
-  public final GMLWorkspace getWorkspace( )
-  {
-    return m_workspace;
-  }
-
-  public final void setWorkspace( GMLWorkspace workspace )
-  {
-    m_workspace = workspace;
-  }
-
   public final HashMap<String, String> getRoughnessStaticCollectionMap( )
   {
     return m_roughnessStaticCollectionMap;
@@ -103,4 +100,37 @@ public class DataContainer
     return m_roughnessShapeStaticRelationMap;
   }
 
+  public final RoughnessPolygonCollection getRoughnessPolygonCollection( )
+  {
+    return m_feature;
+  }
+
+  public final void setRoughnessPolygonCollection( RoughnessPolygonCollection collection )
+  {
+    m_feature = collection;
+  }
+
+  public final String getRoughnessDatabaseLocation( )
+  {
+    return m_roughnessDatabaseLocation;
+  }
+  
+  public final URL getRoughnessDatabaseLocationURL() throws MalformedURLException{
+    return new URL("file:"+m_AbsolutePath+"/"+m_ProjectBaseFolder+m_roughnessDatabaseLocation);
+  }
+
+  public final void setRoughnessDatabaseLocation( String roughnessDatabaseLocation )
+  {
+    m_roughnessDatabaseLocation = roughnessDatabaseLocation;
+  }
+
+  public final String getProjectBaseFolder( )
+  {
+    return m_ProjectBaseFolder;
+  }
+
+  public final void setProjectBaseFolder( String projectBaseFolder )
+  {
+    m_ProjectBaseFolder = projectBaseFolder;
+  }
 }

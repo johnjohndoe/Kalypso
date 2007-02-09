@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,6 +23,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
 
@@ -78,11 +80,12 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
     catch( Exception e )
     {
       e.printStackTrace();
+      return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
     }
     return Status.OK_STATUS;
   }
 
-  public void prepare( boolean resetMap ) throws GmlSerializeException
+  public void prepare( boolean resetMap ) throws Exception
   {
     if( resetMap )
       m_data.getRoughnessShapeStaticRelationMap().clear();
@@ -92,7 +95,7 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
     final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
     Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
     List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
-    RoughnessPolygonCollection roughnessPolygonCollection = new RoughnessPolygonCollection( m_data.getWorkspace().getRootFeature(), IRoughnessPolygon.class, m_RootPropertyMemberQName );
+    RoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
     IRoughnessPolygon roughnessPolygon = null;
     Feature shapeFeature = null;
     for( int i = 0; i < shapeFeatureList.size(); i++ )
@@ -111,24 +114,29 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
     }
     isDataPrepared = true;
   }
-  
-  private void setSelectedRoughnessChoice() throws Exception
+
+  private void setSelectedRoughnessChoice( ) throws Exception
   {
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST, null );
-    for(String key:m_data.getRoughnessShapeStaticRelationMap().keySet())
+    GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
+    GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
+    for( String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
     {
-      Feature f = m_data.getWorkspace().getFeature( key );
-//      IRoughnessPolygon roughnessPolygon = (RoughnessPolygon) m_data.getWorkspace().getFeature( key );
-      Feature linkedFeature = workspace.getFeature(m_data.getRoughnessShapeStaticRelationMap().get( key ));
-      f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
-//      roughnessPolygon.setRoughnessClassMember( linkedFeature );
+      Feature f = myWorkspace.getFeature( key );
+      Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
+      XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation() + "#"
+          + linkedFeature.getId(), "", "", "", "", "" );
+      f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
     }
   }
-  
+
   private void serialize( ) throws IOException, GmlSerializeException
   {
-    FileWriter writer = new FileWriter( m_data.getWorkspace().getContext().getPath() );
-    GmlSerializer.serializeWorkspace( writer, m_data.getWorkspace() );
+    GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
+    String relPath = myWorkspace.getContext().getPath().toString();
+    relPath = relPath.substring( 9 ); // trimming "/resource"
+    String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+    FileWriter writer = new FileWriter( absPath );
+    GmlSerializer.serializeWorkspace( writer, myWorkspace );
     writer.close();
   }
 }

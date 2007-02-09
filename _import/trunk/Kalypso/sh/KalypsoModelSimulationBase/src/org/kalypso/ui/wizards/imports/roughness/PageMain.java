@@ -268,12 +268,13 @@ public class PageMain extends WizardPage implements Listener
       try
       {
         ((TransformerShapeToIRoughnessCollection)((ImportWizard)getWizard()).m_operation).prepare(true);
+        ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
       }
-      catch( GmlSerializeException e )
+      catch( Exception e )
       {
         e.printStackTrace();
+        ((ImportWizard)getWizard()).performCancel();
       }
-      ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
     }
   }
 

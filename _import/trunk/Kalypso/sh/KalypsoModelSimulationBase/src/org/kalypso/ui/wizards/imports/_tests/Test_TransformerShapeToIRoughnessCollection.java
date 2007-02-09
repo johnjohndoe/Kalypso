@@ -24,7 +24,7 @@ public class Test_TransformerShapeToIRoughnessCollection extends TestCase
     URL outputFileURL = new URL( "file:D:/Eclipse/TESTS_RESULTS/rauheitstest.gml" );
     GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( m_RootFeatureQName, outputFileURL, GmlSerializer.DEFAULT_FACTORY );
     DataContainer data = new DataContainer();
-    data.setWorkspace( workspace );
+//    data.setWorkspace( workspace );
 
     data.setInputFile( "D:/Eclipse/Test/Roughness/rauheitstest.shp" );
     data.setShapeProperty( "RAUHEITSKL" );

@@ -1,14 +1,17 @@
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.util.HashMap;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.internal.resources.Folder;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -17,6 +20,7 @@ import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
 
@@ -43,20 +47,23 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     final ITerrainModel model = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
 
-    final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
-    
     final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( ROUGHNESS_IMPORT_WIZARD_ID );
-    final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
+    final INewWizardKalypsoImport wizard = (INewWizardKalypsoImport) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+
+    final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+    final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
+    final HashMap<String, Object> data = new HashMap<String, Object>();
+    data.put( "IRoughnessPolygonCollection", roughnessPolygonCollection );
+    data.put( "RoughnessDatabaseLocation", "/.metadata/roughness.gml" );
+    data.put( "ProjectBaseFolder", currentFolder.getFullPath().segment( 0 ) );
+    // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
+
     wizard.init( workbench, selection );
-    if( wizardDialog.open() != Window.OK )
-    {
-      return Status.CANCEL_STATUS;
-    }
-    else
-    {
+    wizard.initModelProperties( data );
+    if( wizardDialog.open() == Window.OK )
       return Status.OK_STATUS;
-    }
+    return Status.CANCEL_STATUS;
 
   }
 }

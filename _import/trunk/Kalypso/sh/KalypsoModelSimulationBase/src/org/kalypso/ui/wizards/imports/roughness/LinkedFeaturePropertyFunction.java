@@ -40,18 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.roughness;
 
+import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
  * @author antanas
- *
  */
 public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
 {
+  private final static QName m_clsMember = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" );
+
+  private final static QName m_name = new QName( NS.GML3, "name" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -62,15 +69,28 @@ public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
-    return "someValue";
+    Feature member = (Feature) feature.getProperty( m_clsMember );
+    if( member == null )
+      return "_DEFAULT_STYLE_";
+    else
+    {
+      Object object = member.getProperty( m_name );
+      if( object instanceof List )
+        return ((List<Object>) object).get( 0 );
+      else
+        return object;
+    }
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {

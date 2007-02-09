@@ -38,29 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.ui.wizards.imports;
 
-import javax.xml.namespace.QName;
+import java.util.HashMap;
 
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.eclipse.ui.INewWizard;
 
 /**
- * This is the root element of the terain-model.
+ * Interface used to forward model information to import wizards of type INewWizard
  * 
- * @author Gernot Belger
+ * @author antanas
+ *
  */
-public interface ITerrainModel extends IFeatureWrapper
+public interface INewWizardKalypsoImport extends INewWizard
 {
-  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
-
-  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerPolynomCollection" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
-
-  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
-
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
+  public void initModelProperties(HashMap<String, Object> map);
 }

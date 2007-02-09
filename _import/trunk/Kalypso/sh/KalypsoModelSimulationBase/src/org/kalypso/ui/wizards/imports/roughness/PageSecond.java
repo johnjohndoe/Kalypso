@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -15,8 +16,6 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
-
 public class PageSecond extends WizardPage
 {
   private DataContainer m_data;
@@ -24,14 +23,14 @@ public class PageSecond extends WizardPage
   private Combo[] m_comboRoughnessIDs;
 
   private ArrayList<String> m_shpNamesList;
-
+  
   protected PageSecond( DataContainer data ) throws Exception
   {
     super( "Select Files and Relate" );
     setTitle( "Select Files" );
     setDescription( "Select the source and Destination Files" );
     m_data = data;
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST, null );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
     IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
     for( int i = 0; i < collection.size(); i++ )
       m_data.getRoughnessStaticCollectionMap().put( collection.get( i ).getName(), collection.get( i ).getGmlID() );
@@ -42,15 +41,21 @@ public class PageSecond extends WizardPage
    */
   public void createControl( Composite parent )
   {
-    Composite composite = new Composite( parent, SWT.NULL );
+    ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.BORDER );
+    Composite composite = new Composite( sc, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
-    gridLayout.marginWidth = 40;
-    gridLayout.marginHeight = 50;
+    gridLayout.marginWidth = 30;
+    gridLayout.marginHeight = 10;
     gridLayout.verticalSpacing = 10;
     gridLayout.horizontalSpacing = 40;
     composite.setLayout( gridLayout );
-    composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
+    composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | SWT.VERTICAL ) );
+    composite.setSize( 400, 5000 );
+    sc.setExpandHorizontal( false );
+    sc.setExpandVertical( true );
+    sc.setMinSize( composite.computeSize( 400, 200 ) );
+    sc.setContent( composite );
     setControl( composite );
     setPageComplete( false );
   }
@@ -74,11 +79,12 @@ public class PageSecond extends WizardPage
         new Label( composite, SWT.NONE ).setText( map.get( key ) ); //$NON-NLS-1$
         m_comboRoughnessIDs[m_shpNamesList.size() - 1] = new Combo( composite, SWT.READ_ONLY );
         m_comboRoughnessIDs[m_shpNamesList.size() - 1].setLayoutData( gridDataID );
-        m_comboRoughnessIDs[m_shpNamesList.size() - 1].setItems(names);
+        m_comboRoughnessIDs[m_shpNamesList.size() - 1].setItems( names );
         // comboRoughnessIDs[m_shpNamesList.size() - 1].setText( "Selection" );
       }
     }
     composite.layout();
+    composite.getParent().layout();
     setPageComplete( true );
   }
 
@@ -91,7 +97,7 @@ public class PageSecond extends WizardPage
       for( String shpID : map.keySet() )
       {
         shpName = map.get( shpID );
-        dbName = m_comboRoughnessIDs[ m_shpNamesList.indexOf( shpName ) ].getText();
+        dbName = m_comboRoughnessIDs[m_shpNamesList.indexOf( shpName )].getText();
         map.put( shpID, m_data.getRoughnessStaticCollectionMap().get( dbName ) );
       }
     }

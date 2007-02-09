@@ -73,8 +73,10 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
     final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
     if( feature == null )
       return null;
-
-    return (IRoughnessPolygonCollection) feature.getAdapter( IRoughnessPolygonCollection.class );
+    
+    return new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
+//    return (IRoughnessPolygonCollection) feature.getAdapter( IRoughnessPolygonCollection.class );
+//    return (IRoughnessPolygonCollection) feature.getParent().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
   }
 
 }
