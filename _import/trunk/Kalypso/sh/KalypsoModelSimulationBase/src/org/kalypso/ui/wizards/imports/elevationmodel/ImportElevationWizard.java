@@ -55,7 +55,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.ui.wizards.imports.roughness.Messages;
+import org.kalypso.ui.wizards.imports.Messages;
 
 
 /**
