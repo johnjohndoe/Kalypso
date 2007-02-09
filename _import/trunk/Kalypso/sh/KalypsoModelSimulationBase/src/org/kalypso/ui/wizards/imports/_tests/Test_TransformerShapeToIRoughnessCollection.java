@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.tests;
+package org.kalypso.ui.wizards.imports._tests;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
