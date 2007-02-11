@@ -38,53 +38,62 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-
+package org.kalypso.commons.command;
 
 /**
- * @author doemming
+ * An empty command which does nothing.
+ * 
+ * @author Gernot Belger
  */
-public class VirtualIsoFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
+public class EmptyCommand implements ICommand
 {
-  public VirtualIsoFeatureTypePropertyHandler()
+  private final String m_description;
+  private final boolean m_isUndoable;
+
+  public EmptyCommand( final String description, final boolean isUndoable )
   {
-    super();
+    m_description = description;
+    m_isUndoable = isUndoable;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public boolean isDekoratorOf( IFeatureType ft )
+  public String getDescription( )
   {
-    return "http://elbe.wb.tu-harburg.de/2dModel".equals( ft.getNamespace() ) && "femMesh".equals( ft.getName() );
+    return m_description;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isDekoratorOf( IPropertyType ftp )
+  public boolean isUndoable( )
   {
-    return false;
+    return m_isUndoable;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.kalypso.commons.command.ICommand#process()
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
+  public void process( ) throws Exception
   {
-    return new VirtualFeatureTypeProperty[]
-    { new VirtualIsoFeatureTypeProperty() };
+    // does nothing
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
+   * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
+  public void redo( ) throws Exception
   {
-    return null;
+    // does nothing
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#undo()
+   */
+  public void undo( ) throws Exception
+  {
+    // does nothing
   }
 
 }

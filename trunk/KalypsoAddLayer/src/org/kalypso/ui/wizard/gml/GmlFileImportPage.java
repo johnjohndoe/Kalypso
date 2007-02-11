@@ -59,6 +59,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
@@ -197,7 +198,7 @@ public class GmlFileImportPage extends WizardPage
     m_sourceFileText.setEditable( false );
 
     final Button browseButton = new Button( group, SWT.PUSH );
-    browseButton.setText( "Durchsuchen..." );
+    browseButton.setText( "&Durchsuchen..." );
     browseButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
@@ -264,6 +265,8 @@ public class GmlFileImportPage extends WizardPage
     // need to expand in order to load all elements into the treeviewers
     // cache
     m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
+    m_treeViewer.getTree().setFocus();
+    m_treeViewer.setSelection( new StructuredSelection( m_workspace.getRootFeature() ) );
   }
 
   protected void setWorkspace( final CommandableWorkspace workspace, final String source )
