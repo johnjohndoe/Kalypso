@@ -10,16 +10,8 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.ui.IFileEditorMapping;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Adapter Factory for feature in the simBase namespace
@@ -52,9 +44,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 	}
 	
 		
-	private final Class[] ADAPTER_LIST=
-				{IFE1D2DNode.class};
-	
 	private Map<Class, AdapterConstructor> constructors= 
 											createConstructorMap();
 	
@@ -94,7 +83,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 	 */
 	public Class[] getAdapterList()
 	{
-		return ADAPTER_LIST;
+      return constructors.keySet().toArray( new Class[constructors.size()] );
 	}
 
 	private final Map<Class, AdapterConstructor> createConstructorMap()
@@ -153,6 +142,19 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         };
         cMap.put(IFE1D2DEdge.class, cTor);
         
+        // Element1D  
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+                  return new Element1D( feature );     
+            }
+        };
+        cMap.put(IFEDiscretisationModel1d2d.class, cTor);
+
         //1d2d element
         cTor = new AdapterConstructor()
         {
@@ -168,6 +170,12 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
                 {
                   return new FE1D2DContinuityLine(feature);     
                 }
+                // TODO: what is the purpose of these (similar below) strange else's
+                // Why not register FE1D2D_2DElement? Please comment!
+                
+                // TODO: probably the idea here is to fix the substitution-problem. But this solution
+                // is no good, because we do not know in advance which substitutions may occur.
+                // Even if we did we would have to add all possibilities here as if/elses...
                 else
                 {
                   return new FE1D2D_2DElement(feature);
@@ -175,7 +183,20 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFE1D2DElement.class, cTor);
-		
+
+        //element1d
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+                  return new Element1D( feature );     
+            }
+        };
+        cMap.put(IElement1D.class, cTor);
+        
         //1d2d complex element
         cTor = new AdapterConstructor()
         {
@@ -204,8 +225,22 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFE1D2DComplexElement.class, cTor);
+ 
+        // RiverChannel1D
+        cTor = new AdapterConstructor()
+        {
+            public Object constructAdapter(
+                                        Feature feature, 
+                                        Class cls) 
+                                        throws IllegalArgumentException
+            {
+               return new RiverChannel1D( feature );     
+            }
+        };
+        cMap.put(IRiverChannel1D.class, cTor);
+ 
         
-        ///////////////
+        // DiscretisationModel  
         cTor = new AdapterConstructor()
         {
             public Object constructAdapter(
@@ -227,7 +262,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(IFEDiscretisationModel1d2d.class, cTor);
-        
         
 		return Collections.unmodifiableMap(cMap);
 	}

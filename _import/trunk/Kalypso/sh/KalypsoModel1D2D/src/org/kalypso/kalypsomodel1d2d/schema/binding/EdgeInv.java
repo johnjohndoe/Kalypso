@@ -302,4 +302,43 @@ public class EdgeInv implements IEdgeInv
     throw new UnsupportedOperationException(
                       "adding node to inv not supported");
   }
+
+  // TODO: The methods below should better be implemented by extending 'AbstractFeatureBinder'
+  // Sadly, this is not so easily possible because of the second constructor of this class...
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  public String getDescription( )
+  {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( String desc )
+  {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
+  }
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -94,13 +93,13 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
     addedEdge=model.findEdge( addedNode1, addedNode2 );
     if(addedEdge==null)
     {
-      addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-      String edgeGmlID = addedEdge.getGmlID();
-      addedEdge.addNode( addedNode1.getGmlID() );
-      addedNode1.addContainer( edgeGmlID );
-      //
-      addedEdge.addNode( addedNode2.getGmlID() );
-      addedNode2.addContainer( edgeGmlID );
+    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    String edgeGmlID = addedEdge.getGmlID();
+    addedEdge.addNode( addedNode1.getGmlID() );
+    addedNode1.addContainer( edgeGmlID );
+    //
+    addedEdge.addNode( addedNode2.getGmlID() );
+    addedNode2.addContainer( edgeGmlID );
     }
     
     
@@ -157,7 +156,7 @@ public class AddEdgeCommand implements IDiscrMode1d2dlChangeCommand
     buf.append( node2Command );
     buf.append( ']' );
     return buf.toString();
-  }
+}
   public AddNodeCommand getNode1Command( )
   {
     return node1Command;

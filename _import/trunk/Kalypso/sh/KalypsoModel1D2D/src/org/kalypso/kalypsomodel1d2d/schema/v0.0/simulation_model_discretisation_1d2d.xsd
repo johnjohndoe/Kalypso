@@ -312,6 +312,9 @@
 		<!--xs:complexContent> 
 			<xs:restriction 
 				base="simBase:FEDirectedEdgePropertyType"-->
+				<!--  TODO: the above comment says this property is ment as reference.
+				But here, also inline-features are allowed.
+				TODO: change min- and max-Occurs to 0  to allow only refernced egdes. -->
 				<xs:sequence>
 					<xs:element ref="simBase:_FEEdge"/>
 				</xs:sequence>
@@ -379,6 +382,9 @@
 		<!--xs:complexContent>
 			<xs:restriction 
 				base="simBase:FEEdgesPropertyType"-->
+				<!--  TODO: this is the definition of the property inside the disc-model.
+				Probably only inlined features are allowed there, if yes, change
+				minOccurs to 1 and remove the associationGroup -->
 				<xs:sequence>
 					<xs:element 
 						ref="wb1d2d:Edge"
@@ -408,7 +414,6 @@
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
-	
 	
 	<!-- =================================================================
 			FEComplexElementsPropertyType
@@ -501,17 +506,12 @@
 		type="wb1d2d:Element1DPropertyType"/>
 		
 	<xs:complexType name="Element1DPropertyType">
-		<!-- xs:complexContent>
-			<xs:restriction 
-				base="simBase:FEComplexElementPropertyType"-->
-				<xs:sequence>
-					<xs:element 
-						ref="wb1d2d:element1D"
-						minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-			<!--/xs:restriction>
-		</xs:complexContent-->
+		<xs:sequence>
+			<xs:element 
+				ref="wb1d2d:Element1D"
+				minOccurs="0" maxOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 	
 	<!-- =================================================================
@@ -621,7 +621,7 @@
 			<xs:documentation>
 				An 2D fe element is defined by 3 or 4 edges.
 				singular edges cannot be used.
-				the edges must build a close kurve.				
+				the edges must build a closed kurve.				
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -650,7 +650,7 @@
 	<xs:complexType name="Element2DType">
 		<xs:annotation>
 			<xs:documentation>
-				An 2D fe element is defined by 4 edges.
+				An 2D fe element is defined by edges.
 				singular edges cannot be used.
 				the edges must build a close kurve.				
 			</xs:documentation>

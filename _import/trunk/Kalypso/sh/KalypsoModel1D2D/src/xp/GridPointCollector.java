@@ -751,7 +751,7 @@ class GridPointCollector implements IGeometryBuilder
     }    
   }
   
-  private final void  addElements(
+  private final void addElements(
       IFEDiscretisationModel1d2d model,
       AddNodeCommand[][] newNodesArray2D,
       ChangeDiscretiationModelCommand compositeCommand,

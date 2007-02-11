@@ -40,24 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge;
-import org.kalypsodeegree.model.geometry.GM_Curve;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 
 /**
- * @author Patrice Congo
+ * @author Gernot Belger
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge<CT, ET>
+public interface IElement1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
-  public GM_Curve getCurve( );
+  public static final QName QNAME = Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D;
 
-  public void addContainer( String containerID );
+  /**
+   * Returns the current edge of this 1d-element.
+   * 
+   * @return null, if no edge is currently associated.
+   */
+  public ET getEdge( );
 
-  // TODO: BAD STYLE: why access node via index??
-  // TODO where to get the number of nodes from?
-  public ET getNode( int index ) throws IndexOutOfBoundsException;
-
-  // TODO: why not addNode( FE1D2DNode ) and get the id in the implementation?
-  // TODO: comment: is the back reference handled here or must it be handled from outside?
-  // TODO: also invalidate the edge-feature-envelope here
-  public void addNode( String nodeID );
+  /**
+   * Sets (the reference to) the edge of this 1d-element.
+   * <p>
+   * Also makes sure that:
+   * <ul>
+   * <li>the back reference from the edge to this element is set/updated</li>
+   * <li>the envelope of this element is invalidated</li>
+   * </ul>
+   */
+  public void setEdge( final ET edge );
 }

@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.viewer;
 
-import javax.xml.rpc.holders.IntegerWrapperHolder;
-
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 
 /**
  * Stateless {@link IStructuredContentProvider} for 

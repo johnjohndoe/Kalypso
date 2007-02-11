@@ -41,16 +41,15 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author congo
  *
  */
-public interface IFEDiscretisationModel1d2d extends IFeatureWrapper
+public interface IFEDiscretisationModel1d2d extends IFeatureWrapper2
 {
 
   /**
@@ -103,6 +102,9 @@ public interface IFEDiscretisationModel1d2d extends IFeatureWrapper
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
   
+  /**
+   * TODO comment 
+   */
   public IFE1D2DNode createNode(
                       GM_Point nodeLocation,
                       boolean[] alreadyExists  );

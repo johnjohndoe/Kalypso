@@ -64,6 +64,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   }
 
   //why not in the isimulation interface
+  // because: see ISimulationMonitor#setFinishInfo
 /**
  * @return true if the job was succesfully executed otherwise false
  */

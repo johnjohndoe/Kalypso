@@ -42,10 +42,6 @@ package org.kalypso.kalypsomodel1d2d.geom;
 
 import java.util.List;
 
-import javax.imageio.spi.RegisterableService;
-
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
@@ -108,7 +104,6 @@ public class ModelGeometryBuilder
    */
   static public GM_Object computeElementGeometry(
               IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element) 
-              throws GM_Exception
   {
       try
       {

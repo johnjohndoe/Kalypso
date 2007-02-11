@@ -41,7 +41,8 @@
 package org.kalypso.kalypso1d2d.pjt.views;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypso.commons.command.ICommand;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
@@ -55,6 +56,7 @@ public interface ISzenarioDataProvider
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  public abstract IFeatureWrapper getModel( final Class wrapperClass ) throws CoreException;
+  public IFeatureWrapper2 getModel( final Class wrapperClass ) throws CoreException;
 
+  public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception;
 }

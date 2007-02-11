@@ -83,7 +83,7 @@ public class UtilMap
                     featureType, 
                     Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )
         {
-          return (IKalypsoFeatureTheme)ftheme;
+          return ftheme;
           //m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
         }
       }

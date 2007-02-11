@@ -14,16 +14,17 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.model.IWorkflowData;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -48,7 +49,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
   {
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
-    LOCATION_MAP.put( IFeatureWrapper.class, "simulation.gml" );
+    LOCATION_MAP.put( IFeatureWrapper2.class, "simulation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, "discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, "terrain.gml" );
     // TODO: add other model types here
@@ -127,7 +128,19 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  public IFeatureWrapper getModel( final Class wrapperClass ) throws CoreException
+  public IFeatureWrapper2 getModel( final Class wrapperClass ) throws CoreException
+  {
+    final CommandableWorkspace workspace = getModelWorkspace( wrapperClass );
+    return (IFeatureWrapper2) workspace.getRootFeature().getAdapter( wrapperClass );
+  }
+
+  public void postCommand( final Class wrapperClass, final ICommand command ) throws Exception
+  {
+    final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
+    modelWorkspace.postCommand( command );
+  }
+  
+  private CommandableWorkspace getModelWorkspace( final Class wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
       throw new IllegalArgumentException( "No gml-file defined for wrapper class: " + wrapperClass );
@@ -138,10 +151,10 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     if( key == null )
       return null;
 
-    final GMLWorkspace workspace = (GMLWorkspace) pool.getObject( key );
-    return (IFeatureWrapper) workspace.getRootFeature().getAdapter( wrapperClass );
+    final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
+    return workspace;
   }
-
+  
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
