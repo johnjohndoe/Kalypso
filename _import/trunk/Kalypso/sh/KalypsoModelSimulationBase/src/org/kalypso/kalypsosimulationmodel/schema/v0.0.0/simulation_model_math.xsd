@@ -55,6 +55,7 @@
 	<!-- ======================================================================
 			_Polynom element
 	======================================================================= -->
+	<!-- TODO: substitute _Feature -->
 	<xs:element
 		name="_Polynomial"
 		type="simBase:AbstractPolynomialType">

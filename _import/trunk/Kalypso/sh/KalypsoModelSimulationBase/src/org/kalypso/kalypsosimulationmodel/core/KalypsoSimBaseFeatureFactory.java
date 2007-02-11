@@ -57,9 +57,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 	}
 	
 		
-	private final Class[] ADAPTER_LIST=
-				{IPolynomial1D.class,IPolynomial2D.class};
-	
 	private Map<Class, AdapterConstructor> constructors= 
 											createConstructorMap();
 	
@@ -99,7 +96,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 	 */
 	public Class[] getAdapterList()
 	{
-		return ADAPTER_LIST;
+      return constructors.keySet().toArray( new Class[constructors.size()] );
 	}
 
 	private final Map<Class, AdapterConstructor> createConstructorMap()
@@ -120,7 +117,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
             }
         };
         cMap.put(ITerrainModel.class, cTor);
-
         
 		//polynomial 1d
 		cTor= new AdapterConstructor()
@@ -130,7 +126,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 										Class cls) 
 										throws IllegalArgumentException
 			{
-				
 				return new Polynomial1D(feature);
 			}
 		};

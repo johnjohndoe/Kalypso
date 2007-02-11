@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Base tagging interface  for all classes abstracting a finite
@@ -10,7 +10,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public interface IFENode <CT extends IFEEdge> extends IFeatureWrapper
+public interface IFENode <CT extends IFEEdge> extends IFeatureWrapper2
 {
 	//empty
 	public  IFeatureWrapperCollection<CT> getContainers();

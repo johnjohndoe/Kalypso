@@ -155,7 +155,6 @@
             id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"
             name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"/>
       <command
-            category="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"
             categoryId="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands"
             defaultHandler="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler"
             description="Opens the map view on a resource"

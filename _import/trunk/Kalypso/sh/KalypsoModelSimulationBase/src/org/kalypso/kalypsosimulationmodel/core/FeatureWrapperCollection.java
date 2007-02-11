@@ -170,6 +170,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
                                        featureList,
 			                           featureMemberProp, 
                                        newChildType);
+			 // TODO (see also below): how about instead of giving the child-qname the caller must provide the
+			 // child-class, and we can easily adapt to that. The qname may then be obtained from the generated feature.
+             // we can also check by reflection if the given class inhertis from fwClass
 			FWCls wrapper = (FWCls) feature.getAdapter(fwClass);
             
             /* TODO: substitution is a bit trickky here:
@@ -188,7 +191,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 						+ "\n\tfeatureType=" + newChildType
 						+ "\n\tadapatble type=" + fwClass);
 			}
-//			featureList.add(feature);
+            // Feature was already added by Util.create..., so dont add it again
+			// featureList.add(feature);
 			return wrapper;
 		} catch (GMLSchemaException e) {
 			throw new IllegalArgumentException(

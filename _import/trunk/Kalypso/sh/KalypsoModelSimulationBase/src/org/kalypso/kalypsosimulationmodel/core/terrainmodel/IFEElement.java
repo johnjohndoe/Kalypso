@@ -1,7 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Base interface  for all classes abstracting a finite
@@ -10,9 +10,15 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * @author Patrice Congo
  */public interface IFEElement<	CT extends IFEComplexElement,
  								ET extends IFEEdge> 
- 					extends IFeatureWrapper
+ 					extends IFeatureWrapper2
 {
-	 public IFeatureWrapperCollection<CT> getContainers();
+   // TODO: This binding class correspondg to the gml-type: 'simBase:_FEElement'
+   // But '_FEElement' does not contains container or edges
+   // why does the interface do?
+   // TODO: move getContainers and getEdges to the binding classes where
+   // they are first definged in their corresponding gml-types
+
+   public IFeatureWrapperCollection<CT> getContainers();
 	 
-	 public IFeatureWrapperCollection<ET> getEdges();
+   public IFeatureWrapperCollection<ET> getEdges();
 }

@@ -33,6 +33,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  *	&lt/xs:complexType&gt
  * </pre>
  * 
+ * 
  * @author Patrice Congo
  */
 public interface IPolynomial1D extends IPolynomial,IFeatureWrapper	
@@ -44,7 +45,8 @@ public interface IPolynomial1D extends IPolynomial,IFeatureWrapper
 	 * e.g. a 1D dimentional polynom as one order; 
 	 * a 2D polynom has 2 (can be view as order in x and
 	 * in y direction)
-	 *   
+	 *
+     *   TODO: fix comment
 	 * @param oderIndex -- the oder index of the polynom
 	 * 
 	 * @return the order corresponding the given index.

@@ -54,6 +54,8 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
@@ -85,8 +87,8 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
     final IFolder szenarioPath = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
 
     final ITerrainModel terrainModel = (ITerrainModel) modelProvider.getModel( ITerrainModel.class );
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( ITerrainModel.class );
-    
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) modelProvider.getModel( IFEDiscretisationModel1d2d.class );
+
     /* Open map with fe-net */
     final IFile file = szenarioPath.getFile( new Path( "maps/fenet.gmt" ) );
     if( file.exists() )
@@ -103,16 +105,29 @@ public class ImportWSPMHandler extends WorkflowCommandHandler
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
-    if( dialog.open() == Window.OK )
-      return Status.OK_STATUS;
+    if( dialog.open() != Window.OK )
+      return Status.CANCEL_STATUS;
+
+    /* post empty command(s) in order to make pool dirty. */
+    try
+    {
+      final ICommand discCommand = new EmptyCommand( "WSPM Import", false );
+      modelProvider.postCommand( IFEDiscretisationModel1d2d.class, discCommand );
+
+      final ICommand terrainCommand = new EmptyCommand( "WSPM Import", false );
+      modelProvider.postCommand( ITerrainModel.class, terrainCommand );
+    }
+    catch( final Exception e )
+    {
+      // will never happen
+      e.printStackTrace();
+    }
 
     /* Add new layer to profile-collection-map */
     // TODO: add a new layer containing the new profiles in the profile-network map
-    
-    /* Zoom to new elements in fe-map?  */
-    
+    /* Zoom to new elements in fe-map? */
 
-    return Status.CANCEL_STATUS;
+    return Status.OK_STATUS;
   }
 
 }

@@ -452,7 +452,7 @@
 	<xs:element 
 		name="_FEComplexElement"
 		abstract="true"
-		type="simBase:FEAbstractComplexElementType">
+		type="simBase:FEAbstractComplexElementType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
 				An element grouping finite elements, which together
@@ -477,7 +477,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension 
-				base="gml:AbstractTopologyType">
+				base="gml:AbstractFeatureType">
 				<xs:sequence>
 				</xs:sequence>
 			</xs:extension>

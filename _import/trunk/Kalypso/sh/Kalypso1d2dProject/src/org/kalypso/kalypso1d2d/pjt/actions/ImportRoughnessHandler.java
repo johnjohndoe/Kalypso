@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
