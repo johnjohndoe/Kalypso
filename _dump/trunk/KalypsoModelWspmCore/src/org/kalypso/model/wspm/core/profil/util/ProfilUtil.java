@@ -381,21 +381,49 @@ public class ProfilUtil
 
   public static Double getMinValueFor( final IProfil profil, final IProfilPoint.POINT_PROPERTY property )
   {
+    final IProfilPoint minPoint = getMinPoint( profil, property );
+    if( minPoint == null )
+      return null;
+    
+    try
+    {
+      return minPoint.getValueFor( property );
+    }
+    catch( final ProfilDataException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  /**
+   * Return the profile-point of the given profile with the minimum value at the given property.
+   */
+  public static IProfilPoint getMinPoint( final IProfil profil, final POINT_PROPERTY property )
+  {
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points.isEmpty() )
       return null;
+
     Double minValue = Double.MAX_VALUE;
-    for( IProfilPoint point : points )
+    IProfilPoint minPoint = null;
+    for( final IProfilPoint point : points )
     {
       try
       {
-        minValue = Math.min( minValue, point.getValueFor( property ) );
+        final double value = point.getValueFor( property );
+        if( value < minValue )
+        {
+          minValue = value;
+          minPoint = point;
+        }
       }
-      catch( ProfilDataException e )
+      catch( final ProfilDataException e )
       {
+        e.printStackTrace();
         return null;
       }
     }
-    return minValue;
+    return minPoint;
   }
 }

@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
- * @author thuel2
+ * @author Monika Thül
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
