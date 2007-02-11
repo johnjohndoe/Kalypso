@@ -50,12 +50,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
 {
-
-  public VirtualAssociationFeatureTypePropertyHandler( )
-  {
-    super();
-  }
-
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */

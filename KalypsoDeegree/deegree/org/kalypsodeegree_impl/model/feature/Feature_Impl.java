@@ -211,6 +211,22 @@ public class Feature_Impl extends AbstractFeature implements Feature
   public void invalidEnvelope( )
   {
     m_envelope = INVALID_ENV;
+    
+    /* Invalidate geo-index of all feature-list which contains this feature. */
+    // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
+    // invalidated.
+    // TODO: This code is probably not very performant. How to improve this?
+    // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
+    final Feature parent = getParent();
+    if( parent == null )
+      return;
+
+    final IRelationType rt = getParentRelation();
+    if( rt != null && rt.isList() )
+    {
+      final FeatureList list = (FeatureList) parent.getProperty( rt );
+      list.invalidate( this );
+    }
   }
 
   /**
@@ -233,25 +249,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
     m_properties[pos] = fsh.setValue( this, pt, value );
 
     if( fsh.invalidateEnvelope( pt ) )
-    {
       invalidEnvelope();
-
-      /* Invalidate geo-index of all feature-list which contains this feature. */
-      // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
-      // invalidated.
-      // TODO: This code is probably not very performant. How to improve this?
-      // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
-      final Feature parent = getParent();
-      if( parent == null )
-        return;
-
-      final IRelationType rt = getParentRelation();
-      if( rt != null && rt.isList() )
-      {
-        final FeatureList list = (FeatureList) parent.getProperty( rt );
-        list.invalidate( this );
-      }
-    }
   }
 
   /**
