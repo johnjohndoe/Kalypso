@@ -97,8 +97,8 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
   {
     /*
      * The empty image is needed, if the ok_image is not to be displayed. There must be an image set, otherwise, if the
-     * image in the label is null and you are trying to set a new image it will result somehow in an error. And now
-     * image is set anymore for this label.
+     * image in the label is null and you are trying to set a new image it will result somehow in an error. And no image
+     * is set anymore for this label.
      */
     ImageDescriptor imgdesc = org.kalypso.ui.ImageProvider.IMAGE_FEATURE_VALIDATION_EMPTY;
     image_empty = imgdesc.createImage();
