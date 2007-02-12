@@ -40,31 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.baseMap;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
  * @author Madanagopal
  */
-public class ImportBaseMapWizard extends Wizard implements INewWizard
+public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
 {
   private IStructuredSelection initialSelection;
 
   private BaseMapMainPage mPage;
+
+  private String m_scenarioFolder;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
   public ImportBaseMapWizard( )
   {
+    super();
   }
 
   /**
@@ -76,11 +86,21 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     initialSelection = selection;
+    setNeedsProgressMonitor( true );
+    setWindowTitle( Messages.getString( "BaseMapWizard.0" ) );
   }
 
+  /**
+   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
+   */
+  public void initModelProperties( HashMap<String, Object> map )
+  {
+    m_scenarioFolder = (String) map.get( "ScenarioFolder" );
+  }
+
+  @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "BaseMapWizard.0" ) );
     mPage = new BaseMapMainPage();
     addPage( mPage );
     mPage.init( initialSelection );
@@ -89,30 +109,76 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
+  @Override
   public boolean performFinish( )
   {
+    String dstFilePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + m_scenarioFolder + File.separator;
+    final File srcFileTif = new File( mPage.getSourceLocation().toOSString() );
+    final File srcFileTfw = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
+    final File dstFileTif = new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
+    final File dstFileTfw = new File( dstFilePath + mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
+    
+//    long lengthKB = (srcFileTif.length() + srcFileTfw.length())/1024;
+    
+    copy(srcFileTif, dstFileTif, null);
+    copy(srcFileTfw, dstFileTfw, null);
 
     try
     {
-      getContainer().run( true, true, new IRunnableWithProgress()
-      {
-        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
-        {
-          // performOperation(monitor);
-        }
-
-      } );
+      ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( InvocationTargetException e )
+    catch( CoreException e )
     {
-      return false;
+      e.printStackTrace();
     }
-    catch( InterruptedException e )
-    {
-      // User canceled, so stop but don’t close wizard.
-      return false;
-    }
+    
+    // try
+    // {
+    // getContainer().run( true, true, new IRunnableWithProgress()
+    // {
+    // public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+    // {
+    // // performOperation(monitor);
+    // }
+    //
+    // } );
+    // }
+    // catch( InvocationTargetException e )
+    // {
+    // return false;
+    // }
+    // catch( InterruptedException e )
+    // {
+    // // User canceled, so stop but don’t close wizard.
+    // return false;
+    // }
     return true;
+  }
+  
+  private boolean copy(File src, File dst, ProgressMonitorDialog monitor)
+  {
+    InputStream in;
+    OutputStream out;
+    try
+    {
+      in = new FileInputStream( src );
+      out = new FileOutputStream( dst );
+
+      byte[] buf = new byte[1024];
+      int len;
+      while( (len = in.read( buf )) > 0 )
+      {
+        out.write( buf, 0, len );
+      }
+      in.close();
+      out.close();
+      return true;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   /**

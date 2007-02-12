@@ -103,9 +103,9 @@ public class BaseMapMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "tiff" ) );
-    fileExtensions.add( new String( "jpg" ) );
-    fileExtensions.add( new String( "gml" ) );
+    fileExtensions.add( new String( "tif" ) );
+//    fileExtensions.add( new String( "jpg" ) );
+//    fileExtensions.add( new String( "gml" ) );
 
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();

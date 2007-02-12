@@ -109,21 +109,6 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     m_data.getRoughnessPolygonCollection().clear();
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
-    
-//    try
-//    {
-//      MapUtils mapUtils = new MapUtils();
-//      mapUtils.createMap( true );
-//    }
-//    catch( IOException e1 )
-//    {
-//      e1.printStackTrace();
-//    }
-//    catch( JAXBException e1 )
-//    {
-//      e1.printStackTrace();
-//    }
-    
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );

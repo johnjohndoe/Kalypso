@@ -135,6 +135,9 @@
 		      </activeWhen>-->
 		   </handler>
      <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.ImportBaseMapHandler"
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad"/>
+     <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportRoughnessHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughLoad"/>
      <handler

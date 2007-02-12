@@ -25,8 +25,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
-import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
-
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
  * 
@@ -35,8 +33,6 @@ import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
 public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWithProgress
 {
   private DataContainer m_data;
-
-  private static final QName m_RootPropertyMemberQName = KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON;
 
   private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
 
