@@ -48,10 +48,18 @@ import java.util.Set;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.ProfilDataException;
+import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * State object for create main channel widget and composite.
@@ -61,6 +69,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class CreateChannelData
 {
   private IKalypsoFeatureTheme m_profileTheme;
+
+  private IKalypsoFeatureTheme m_bankTheme;
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
 
@@ -76,6 +86,11 @@ public class CreateChannelData
     return m_profileTheme;
   }
 
+  public IKalypsoFeatureTheme getBankTheme( )
+  {
+    return m_bankTheme;
+  }
+
   public void setProfileTheme( final IKalypsoFeatureTheme profileTheme )
   {
     m_profileTheme = profileTheme;
@@ -83,9 +98,23 @@ public class CreateChannelData
     // TODO: event handling
   }
 
+  public void setBankTheme( final IKalypsoFeatureTheme bankTheme )
+  {
+    m_bankTheme = bankTheme;
+
+    // TODO: event handling
+  }
+
+  /**
+   * Gets the WSPM profile themes in the Kalypso theme list
+   */
   public IKalypsoFeatureTheme[] getProfileThemes( )
   {
-    final IKalypsoTheme[] allThemes = m_widget.getPanel().getMapModell().getAllThemes();
+    final IMapModell mapModell = m_widget.getPanel().getMapModell();
+    if( mapModell == null )
+      return new IKalypsoFeatureTheme[0];
+    
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
 
     final List<IKalypsoFeatureTheme> goodThemes = new ArrayList<IKalypsoFeatureTheme>();
 
@@ -104,23 +133,70 @@ public class CreateChannelData
     return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
   }
 
+  /**
+   * Gets the linestring themes in the Kalypso theme list
+   */
+  public IKalypsoFeatureTheme[] getBankThemes( )
+  {
+    final IKalypsoTheme[] allThemes = m_widget.getPanel().getMapModell().getAllThemes();
+
+    final List<IKalypsoFeatureTheme> goodThemes = new ArrayList<IKalypsoFeatureTheme>();
+
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
+        final IFeatureType featureType = fTheme.getFeatureType();
+
+        if( featureType == null )
+          return new IKalypsoFeatureTheme[0];
+        final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+        // choose only the linestrings
+        // just take the first found property
+        if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( GeometryUtilities.QN_LINE_STRING_PROPERTY ) )
+          goodThemes.add( fTheme );
+      }
+    }
+    return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
+  }
+
   public void addSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.addAll( Arrays.asList( profileFeatures ) );
 
-    m_widget.getPanel().invalidate();
+    m_widget.update();
   }
 
   public void removeSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.removeAll( Arrays.asList( profileFeatures ) );
 
-    m_widget.getPanel().invalidate();
+    m_widget.update();
   }
 
   public Feature[] getSelectedProfiles( )
   {
     return m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
+  }
+
+  public IProfilEventManager getProfilEventManager( )
+  {
+    if( m_selectedProfiles.size() == 0 )
+      return new ProfilEventManager( null, null );
+
+    try
+    {
+      final Feature profileFeature = m_selectedProfiles.iterator().next();
+      final IProfil profil = ProfileFeatureFactory.toProfile( profileFeature );
+      final ProfilEventManager pem = new ProfilEventManager( profil, null );
+      return pem;
+    }
+    catch( final ProfilDataException e )
+    {
+      e.printStackTrace();
+    }
+    return new ProfilEventManager( null, null );
   }
 
 }

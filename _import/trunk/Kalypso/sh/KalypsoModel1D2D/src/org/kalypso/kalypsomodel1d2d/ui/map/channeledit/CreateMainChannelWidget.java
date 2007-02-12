@@ -83,7 +83,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    */
   public Control createControl( final Composite parent )
   {
-    m_composite = new CreateMainChannelComposite( parent, SWT.BORDER, m_data, this );
+    m_composite = new CreateMainChannelComposite( parent, SWT.NONE, m_data, this );
     return m_composite;
   }
 
@@ -103,18 +103,18 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   {
     if( m_delegateWidget != null )
       m_delegateWidget.finish();
-    
+
     m_delegateWidget = delegateWdget;
 
     if( m_delegateWidget != null )
       m_delegateWidget.activate( getCommandTarget(), getMapPanel() );
   }
-  
+
   public MapPanel getPanel( )
   {
     return super.getMapPanel();
   }
-  
+
   /**
    * @param g
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
@@ -125,9 +125,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     final Feature[] selectedProfiles = m_data.getSelectedProfiles();
     for( final Feature feature : selectedProfiles )
     {
-      final WspmProfile profile = new WspmProfile(feature);
+      final WspmProfile profile = new WspmProfile( feature );
       final GM_Curve line = profile.getLine();
-      
+
       try
       {
         final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -140,25 +140,24 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         e.printStackTrace();
       }
     }
-    
+
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
   }
-  
+
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
-    super.activate(commandPoster, mapPanel);
+    super.activate( commandPoster, mapPanel );
   }
-  
-  /*************
-   * 
+
+  /*********************************************************************************************************************
    * Delegate methods for m_delegateWidget
-   * 
-   *************/
+   ********************************************************************************************************************/
 
   /**
    * @param selection
@@ -232,6 +231,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param e
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
+  @Override
   public void keyPressed( KeyEvent e )
   {
     if( m_delegateWidget != null )
@@ -313,6 +313,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
+  @Override
   public void middleReleased( Point p )
   {
     if( m_delegateWidget != null )
@@ -345,6 +346,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
+  @Override
   public void rightPressed( Point p )
   {
     if( m_delegateWidget != null )
@@ -355,6 +357,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
+  @Override
   public void rightReleased( Point p )
   {
     if( m_delegateWidget != null )
@@ -365,10 +368,24 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    * @param selection
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
+  @Override
   public void setSelection( ISelection selection )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.setSelection( selection );
+  }
+
+  public void update( )
+  {
+    m_composite.getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        m_composite.updateControl();
+      }
+    } );
+
+    getPanel().invalidate();
   }
 
 }

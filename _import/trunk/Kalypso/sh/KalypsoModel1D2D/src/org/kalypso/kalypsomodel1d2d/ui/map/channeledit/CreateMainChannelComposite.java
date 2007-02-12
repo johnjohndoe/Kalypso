@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -54,6 +56,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -64,9 +76,15 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  */
 public class CreateMainChannelComposite extends Composite
 {
+  private final ProfilViewData m_viewData = new ProfilViewData();
+
+  private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay() );
+
   private final CreateChannelData m_data;
 
   private final CreateMainChannelWidget m_widget;
+
+  private Section m_profilSection;
 
   public CreateMainChannelComposite( final Composite parent, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -89,42 +107,228 @@ public class CreateMainChannelComposite extends Composite
   {
     /* Retrieve data */
     final IKalypsoFeatureTheme[] profileThemes = m_data.getProfileThemes();
+    final IKalypsoFeatureTheme[] bankThemes = m_data.getBankThemes();
 
     /* Create gui */
-    setLayout( new GridLayout( 2, false ) );
+    this.setLayout( new GridLayout( 1, false ) );
 
-    final ComboViewer viewer = new ComboViewer( this, SWT.DROP_DOWN | SWT.READ_ONLY );
-    viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new LabelProvider() );
+    /* Create Profile control */
+    final Control profileSection = createProfileSelectionSection( this, profileThemes );
+    GridData gridDataProf = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    profileSection.setLayoutData( gridDataProf );
 
-    final IKalypsoFeatureTheme profileTheme = m_data.getProfileTheme();
+    /* Create Bank control */
+    final Control bankSection = createBankSelectionSection( this, bankThemes );
+    GridData gridDataBank = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    bankSection.setLayoutData( gridDataBank );
 
-    final IKalypsoFeatureTheme themeToSelect;
-    if( profileThemes.length == 0 )
+    /* Create segment switch control */
+    final Control segmentSwitchSection = createSegmentSwitchSection( this );
+    GridData gridDataSegmentSwitch = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    segmentSwitchSection.setLayoutData( gridDataSegmentSwitch );
+
+    /* Create profile control */
+    final Control profilSection = createProfilSection( this );
+    GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
+    profilSection.setLayoutData( gridDataProfileControl );
+
+    updateControl();
+  }
+
+  private Control createProfilSection( Composite parent )
+  {
+    m_profilSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+
+    return m_profilSection;
+  }
+
+  private Control createSegmentSwitchSection( Composite parent )
+  {
+    Section SegmentSwitchSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    Composite sectionClient = new Composite( SegmentSwitchSection, SWT.NONE );
+    sectionClient.setLayout( new GridLayout( 3, false ) );
+    SegmentSwitchSection.setClient( sectionClient );
+    SegmentSwitchSection.setText( "Segmentliste" );
+    SegmentSwitchSection.setExpanded( false );
+    SegmentSwitchSection.setDescription( "Wählen Sie das gewünschte Segment" );
+
+    return SegmentSwitchSection;
+  }
+
+  private Control createBankSelectionSection( Composite parent, IKalypsoFeatureTheme[] bankThemes )
+  {
+    Section bankSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    Composite sectionClient = new Composite( bankSection, SWT.NONE );
+    sectionClient.setLayout( new GridLayout( 3, false ) );
+    bankSection.setClient( sectionClient );
+    bankSection.setText( "Uferlinien" );
+    bankSection.setExpanded( true );
+    bankSection.setDescription( "Wählen Sie Ihre Uferlinienthemen und ggf. hieraus einzelne Linien" );
+
+    final ComboViewer combviewerBank1 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerBank1.setContentProvider( new ArrayContentProvider() );
+    combviewerBank1.setLabelProvider( new LabelProvider() );
+    final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme();
+
+    final IKalypsoFeatureTheme themeToBankSelect;
+    if( bankThemes.length == 0 )
     {
-      viewer.getControl().setEnabled( false );
-      String msg = "<kein Profilthema in Karte vorhanden>";
-      viewer.setInput( new String[] { msg } );
-      viewer.setSelection( new StructuredSelection( msg ) );
-      themeToSelect = null;
+      combviewerBank1.getControl().setEnabled( false );
+      String msg = "<kein Uferlinienthema in Karte vorhanden>";
+      combviewerBank1.setInput( new String[] { msg } );
+      combviewerBank1.setSelection( new StructuredSelection( msg ) );
+      themeToBankSelect = null;
     }
     else
     {
-      viewer.setInput( profileThemes );
+      combviewerBank1.setInput( bankThemes );
 
-      if( profileTheme != null )
-        themeToSelect = profileTheme;
+      if( bankTheme != null )
+        themeToBankSelect = bankTheme;
       else
-        themeToSelect = profileThemes[0];
+        themeToBankSelect = bankThemes[0];
 
-      viewer.setSelection( new StructuredSelection( themeToSelect ) );
+      combviewerBank1.setSelection( new StructuredSelection( themeToBankSelect ) );
     }
 
-    if( profileTheme != themeToSelect )
-      m_data.setProfileTheme( themeToSelect );
+    if( bankTheme != themeToBankSelect )
+      m_data.setBankTheme( themeToBankSelect );
 
-    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    combviewerBank1.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        m_data.setBankTheme( (IKalypsoFeatureTheme) selection.getFirstElement() );
+      }
+    } );
+
+    /* Button for the first bank selection */
+    final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
+    // chooseProfilesButton.setLayoutData( gridData );
+    chooseFirstBankButton.setText( "Uferlinie 1 wählen..." );
+
+    /* Button for the first bank drawing */
+    final Button drawFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
+    // chooseProfilesButton.setLayoutData( gridData );
+    drawFirstBankButton.setText( "zeichnen" );
+
+    /* ComboBox for the second bank line theme selection */
+    final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerBank2.setContentProvider( new ArrayContentProvider() );
+    combviewerBank2.setLabelProvider( new LabelProvider() );
+    final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme();
+
+    final IKalypsoFeatureTheme themeToBank2Select;
+    if( bankThemes.length == 0 )
+    {
+      combviewerBank2.getControl().setEnabled( false );
+      String msg = "<kein Uferlinienthema in Karte vorhanden>";
+      combviewerBank2.setInput( new String[] { msg } );
+      combviewerBank2.setSelection( new StructuredSelection( msg ) );
+      themeToBank2Select = null;
+    }
+    else
+    {
+      combviewerBank2.setInput( bankThemes );
+
+      if( bankTheme2 != null )
+        themeToBank2Select = bankTheme2;
+      else
+        themeToBank2Select = bankThemes[0];
+
+      combviewerBank2.setSelection( new StructuredSelection( themeToBank2Select ) );
+    }
+
+    if( bankTheme2 != themeToBank2Select )
+      m_data.setBankTheme( themeToBank2Select );
+
+    combviewerBank2.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        m_data.setBankTheme( (IKalypsoFeatureTheme) selection.getFirstElement() );
+      }
+    } );
+
+    /* Button for the first bank selection */
+    final Button chooseSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
+    // chooseProfilesButton.setLayoutData( gridData );
+    chooseSecondBankButton.setText( "Uferlinie 2 wählen..." );
+
+    /* Button for the second bank drawing */
+    final Button drawSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
+    // chooseProfilesButton.setLayoutData( gridData );
+    drawSecondBankButton.setText( "zeichnen" );
+
+    Label bankLabel = new Label( sectionClient, SWT.NULL );
+    bankLabel.setText( "Anzahl der Stützstellen pro Uferlinie (global):" );
+    final GridData gridData = new GridData();
+    gridData.horizontalSpan = 2;
+    bankLabel.setLayoutData( gridData );
+
+    final Spinner spinNumBankIntersections = new Spinner( sectionClient, SWT.NONE );
+
+    spinNumBankIntersections.setDigits( 0 );
+    spinNumBankIntersections.setMinimum( 2 );
+    spinNumBankIntersections.setMaximum( 100 );
+    spinNumBankIntersections.setSelection( 6 );
+    spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein." );
+
+    final GridData gridDataSpinner = new GridData();
+    gridDataSpinner.horizontalAlignment = SWT.END;
+    spinNumBankIntersections.setLayoutData( gridDataSpinner );
+
+    return bankSection;
+  }
+
+  private Control createProfileSelectionSection( final Composite parent, IKalypsoFeatureTheme[] profileThemes )
+  {
+    /* profile selection expandable section */
+    Section mysection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    Composite sectionClient = new Composite( mysection, SWT.NONE );
+    sectionClient.setLayout( new GridLayout( 2, false ) );
+    mysection.setClient( sectionClient );
+    mysection.setText( "Profile" );
+    mysection.setExpanded( true );
+    mysection.setDescription( "Wählen Sie Ihr Profilthema und ggf. hieraus einzelne Profile" );
+
+    /* add combo-box for the wspm-profile theme selection */
+    final ComboViewer combviewerProfiles = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    combviewerProfiles.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerProfiles.setContentProvider( new ArrayContentProvider() );
+    combviewerProfiles.setLabelProvider( new LabelProvider() );
+
+    final IKalypsoFeatureTheme profileTheme = m_data.getProfileTheme();
+
+    final IKalypsoFeatureTheme themeToProfileSelect;
+    if( profileThemes.length == 0 )
+    {
+      combviewerProfiles.getControl().setEnabled( false );
+      String msg = "<kein Profilthema in Karte vorhanden>";
+      combviewerProfiles.setInput( new String[] { msg } );
+      combviewerProfiles.setSelection( new StructuredSelection( msg ) );
+      themeToProfileSelect = null;
+    }
+    else
+    {
+      combviewerProfiles.setInput( profileThemes );
+
+      if( profileTheme != null )
+        themeToProfileSelect = profileTheme;
+      else
+        themeToProfileSelect = profileThemes[0];
+
+      combviewerProfiles.setSelection( new StructuredSelection( themeToProfileSelect ) );
+    }
+
+    if( profileTheme != themeToProfileSelect )
+      m_data.setProfileTheme( themeToProfileSelect );
+
+    combviewerProfiles.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -133,8 +337,13 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    final Button chooseProfilesButton = new Button( this, SWT.TOGGLE );
-    chooseProfilesButton.setText( "Profile auswählen..." );
+    /* Button for the wspm-profile selection */
+    GridData gridData = new GridData();
+    gridData.horizontalAlignment = SWT.FILL;
+
+    final Button chooseProfilesButton = new Button( sectionClient, SWT.TOGGLE );
+    chooseProfilesButton.setLayoutData( gridData );
+    chooseProfilesButton.setText( "Profile wählen..." );
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -153,6 +362,65 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
+    new Label( sectionClient, SWT.NULL ).setText( "Anzahl der Stützstellen pro Profil (global):" );
+
+    final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
+
+    spinNumProfIntersections.setDigits( 0 );
+    spinNumProfIntersections.setMinimum( 2 );
+    spinNumProfIntersections.setMaximum( 100 );
+    spinNumProfIntersections.setSelection( 6 );
+    spinNumProfIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Profil ein." );
+
+    final GridData gridDataSpinner = new GridData();
+    gridDataSpinner.horizontalAlignment = SWT.END;
+    spinNumProfIntersections.setLayoutData( gridDataSpinner );
+
+    return mysection;
+  }
+
+  public void updateControl( )
+  {
+    updateProfilSection();
+  }
+
+  private void updateProfilSection( )
+  {
+    final Control client = m_profilSection.getClient();
+    if( client != null && !client.isDisposed() )
+      client.dispose();
+
+    final Composite sectionClient = new Composite( m_profilSection, SWT.NONE );
+    sectionClient.setLayout( new GridLayout( 1, false ) );
+
+    m_profilSection.setClient( sectionClient );
+    m_profilSection.setText( "Profilansicht" );
+    m_profilSection.setDescription( "Bearbeiten Sie die Profilunterteilungen" );
+
+    final IProfilEventManager pem = m_data.getProfilEventManager();
+    final IProfil profil = pem.getProfil();
+    if( profil == null )
+    {
+      final Label label = new Label( sectionClient, SWT.NONE );
+      label.setText( "Kein Profil selektiert" );
+    }
+    else
+    {
+      final ProfilChartView profilChartView = new ProfilChartView( pem, m_viewData, m_colorRegistry );
+
+      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
+      manager.createControl( sectionClient );
+
+      final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
+      profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+      for( final ProfilChartActionsEnum action : ProfilChartActionsEnum.values() )
+        manager.add( ProfilChartActionsEnum.createAction( profilChartView, action ) );
+
+      manager.update( true );
+    }
+
+    m_profilSection.setExpanded( profil != null );
   }
 
 }
