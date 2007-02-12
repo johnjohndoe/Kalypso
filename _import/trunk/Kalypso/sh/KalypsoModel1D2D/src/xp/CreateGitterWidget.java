@@ -350,12 +350,13 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
       CommandableWorkspace workspace = theme.getWorkspace();
       try
       {
-        //TODO add elements to model from the 4 lines
         ICommand command = 
           gridPointCollector.getAddToModelCommand( 
               model1d2d,workspace );
         
         workspace.postCommand( command );
+        reinit();//gridPointCollector.reset( mapModel.getCoordinatesSystem() );
+        
         
         System.out.println("GridCommand posted");
       }

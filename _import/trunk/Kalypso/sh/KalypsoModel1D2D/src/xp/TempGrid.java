@@ -42,18 +42,13 @@ package xp;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 //TODO model grid mechanism to here
@@ -70,7 +65,7 @@ public class TempGrid
    */
   private int m_cnt_points;
 
-  private final CS_CoordinateSystem m_crs;
+  private CS_CoordinateSystem m_crs;
   
   private int[][] drawPoints;
   
@@ -87,21 +82,15 @@ public class TempGrid
    * @param targetCrs
    *          The target coordinate system.
    */
-  public TempGrid(final CS_CoordinateSystem targetCrs )
+  public TempGrid()
   {
-       m_crs = targetCrs;
+       //yes it is empty
   }
 
 
-
-  /**
-   * This function creates the geometry (GM_Curve).
-   */
-  private GM_Object createGeometry( 
-                        final GM_Position[] poses ) 
-                        throws GM_Exception
+  public void setCoodinateSystem (final CS_CoordinateSystem targetCrs )
   {
-    return GeometryFactory.createGM_Curve( poses, m_crs );
+       this.m_crs = targetCrs;
   }
 
   /**
@@ -110,8 +99,7 @@ public class TempGrid
    */
   public void paint( 
                   final Graphics g, 
-                  final GeoTransform projection, 
-                  final Point currentPoint )
+                  final GeoTransform projection)
   {
     
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
@@ -121,51 +109,20 @@ public class TempGrid
     {
       
         //draw a line
-        final int[][] points = getPointArrays( projection, currentPoint );
+        final int[][] points = getPointArrays( projection);
         final int[] arrayX = points[0];
         final int[] arrayY = points[1];
   
         /* Paint a linestring. */
-        g.drawPolyline( arrayX, arrayY, arrayX.length );
+//        g.drawPolyline( arrayX, arrayY, arrayX.length );
         drawHandles( g, arrayX, arrayY, pointRectSize);        
         drawPoints=points;   
     }
       
   }
-  
-  private static final int[][] toPolygonPoints(
-                                      int[][] originalPoint,
-                                      int deltaY)
-  {
-    if(originalPoint==null)
-    {
-      Assert.throwIAEOnNull( originalPoint, null );
-    }
-    
-    int SIZE=originalPoint[0].length;
-    if(SIZE==0)
-    {
-      return new int[][]{};
-    }
-    else
-    {
-      int[][] polyPoints= new int[2][SIZE+SIZE];
-      
-      for(int i=0, opposite=SIZE+SIZE-1;i<SIZE;i++, opposite--)
-      {
-        polyPoints[0][i]=originalPoint[0][i];
-        polyPoints[1][i]=originalPoint[1][i]+deltaY;
-        
-        polyPoints[0][opposite]=originalPoint[0][i];
-        polyPoints[1][opposite]=originalPoint[1][i]-deltaY;        
-      }
-      return polyPoints;
-    }
-  }
 
   private int[][] getPointArrays( 
-                      final GeoTransform projection, 
-                      final Point currentPoint )
+                      final GeoTransform projection )
   {
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
@@ -185,11 +142,7 @@ public class TempGrid
       }
     }
 
-    if( currentPoint != null )
-    {
-      xArray.add( currentPoint.x );
-      yArray.add( currentPoint.y );
-    }
+    
 
     final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
     final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
@@ -210,32 +163,35 @@ public class TempGrid
     
     for( int i = 0; i < y.length; i++ )
     {
-      g.drawRect( 
-            x[i] - halfRectWidth, 
-            y[i] - halfRectWidth, 
+//      g.drawRect( 
+//            x[i] - halfRectWidth, 
+//            y[i] - halfRectWidth, 
+//            pointRectWidth, 
+//            pointRectWidth );
+      g.fill3DRect( 
+            x[i]-halfRectWidth, 
+            y[i]-halfRectWidth, 
             pointRectWidth, 
-            pointRectWidth );
+            pointRectWidth, 
+            true//raised
+            );
     }    
     g.setColor( oldColor );    
   }
   
-  /**
-   * removes all points in this {@link LineGeometryBuilder} 
-   * 
-   */
-  void clear()  
-  {
    
-  }
-  
-  void resetTempGrid()
+  void resetTempGrid(CS_CoordinateSystem crs)
   {
     gridPoints= new GM_Point[0][0];
+    m_crs=crs;
   }
   
-  void setTempGrid()
+  void setTempGrid(GM_Point[][] gridPoints)
   {
-    
+    Assert.throwIAEOnNullParam( gridPoints, "gridPoint" );
+    this.gridPoints=gridPoints;
+    drawPoints=null;
   }
+  
   
 }

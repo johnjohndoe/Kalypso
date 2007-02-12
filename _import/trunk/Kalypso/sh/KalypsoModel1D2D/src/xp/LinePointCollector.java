@@ -62,9 +62,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * This class is a geometry builder for a line.
  * 
- * @author Holger Albert
+ * @author Patrice Congo
  */
-public class LineGeometryBuilder implements IGeometryBuilder
+public class LinePointCollector
 {
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
@@ -73,7 +73,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   private List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
 
-  private final CS_CoordinateSystem m_crs;
+  private CS_CoordinateSystem m_crs;
   
   private boolean isFinished=false;
   private boolean isSelected=false;
@@ -93,7 +93,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    * @param targetCrs
    *          The target coordinate system.
    */
-  public LineGeometryBuilder( 
+  public LinePointCollector( 
               final int cnt_points, 
               final CS_CoordinateSystem targetCrs )
   {
@@ -105,9 +105,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
     m_crs = targetCrs;
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
     if(!(p instanceof MutableGMPoint))
@@ -127,9 +124,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
     }
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
-   */
   public GM_Object finish( ) throws Exception
   {
     int size=m_points.size();
@@ -140,18 +134,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
       return null;
     }
     
-    if( (m_points.size() == m_cnt_points) || (m_cnt_points == 0) )
+    if( ((m_points.size() == m_cnt_points) && m_cnt_points!=0) || (m_cnt_points == 0) )
     {
       m_cnt_points=m_points.size();
-//      final GeoTransformer transformer = new GeoTransformer( m_crs );
-//
-//      final GM_Position[] poses = new GM_Position[m_points.size()];
-//      for( int i = 0; i < poses.length; i++ )
-//      {
-//        final GM_Point transformedPoint = 
-//                (GM_Point) transformer.transform( m_points.get( i ) );
-//        poses[i] = transformedPoint.getPosition();
-//      }
       isFinished=true;
       return getLastPoint();
       //FIXME changed to prevent the curve geometry not to be drawn
@@ -348,6 +333,15 @@ public class LineGeometryBuilder implements IGeometryBuilder
     isFinished=false;
   }
   
+  void reset(CS_CoordinateSystem crs)
+  {
+    m_points.clear();
+    isFinished=false;
+    isSelected=false;
+    m_cnt_points=0;
+    m_crs=crs;
+  }
+  
   void removeLastPoint(boolean doDelFirstPoint)
   {
     int index=m_points.size()-1;
@@ -373,9 +367,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
    * number of point and coordinate reference system
    * @param return a new builder
    */
-  public LineGeometryBuilder getNewBuilder()
+  public LinePointCollector getNewBuilder()
   {
-    return new LineGeometryBuilder(m_cnt_points,m_crs);
+    return new LinePointCollector(m_cnt_points,m_crs);
   }
   
   /**

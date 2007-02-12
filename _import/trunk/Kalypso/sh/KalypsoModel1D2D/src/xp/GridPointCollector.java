@@ -65,15 +65,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import test.org.kalypso.kalypsomodel1d2d.TestWorkspaces;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 
 @SuppressWarnings("unchecked")
-class GridPointCollector implements IGeometryBuilder
+class GridPointCollector /*implements IGeometryBuilder*/
 {
   private static final Logger logger=
         Logger.getLogger( GridPointCollector.class.getName() );
@@ -84,70 +82,40 @@ class GridPointCollector implements IGeometryBuilder
   public static final int SIDE_LEFT=1;
   public static final int SIDE_RIGHT=3;
   
-//  private LineGeometryBuilder builder;
-  
   private int actualSideKey;
   
   private boolean hasAllSides=false;
   
-  private LineGeometryBuilder sides[] = new LineGeometryBuilder[SIDE_MAX_NUM];
+  private LinePointCollector sides[] = new LinePointCollector[SIDE_MAX_NUM];
   
   private Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
   
-  private GM_Curve[] oppossites= new GM_Curve[2]; 
+  private TempGrid tempGrid= new TempGrid();
   
   public GridPointCollector()
   {
     
   }
   
-//  public void setSideToBuild(int sideKey, CS_CoordinateSystem targetCrs)
-//  {
-//    checkSideKey( sideKey );
-//    actualSideKey=sideKey;
-////    builder = new LineGeometryBuilder( 0, targetCrs );     
-//    sides[actualSideKey]=new LineGeometryBuilder( 0, targetCrs );//builder;
-//  }
-  
-//  public void resetSideToBuild(CS_CoordinateSystem targetCrs)
-//  {
-//    builder = new LineGeometryBuilder( 0, targetCrs );      
-//  }
   
   public void reset(CS_CoordinateSystem targetCrs)
   {
-    
-//    builder = new LineGeometryBuilder( 0, targetCrs );
-//    setSideToBuild( 0, targetCrs );
-    for(LineGeometryBuilder b:sides)
+    for(LinePointCollector b:sides)
     {
       if(b!=null)
       {
-        b.clear();
+        b.reset( targetCrs );        
       }
     }
     actualSideKey=0;
+    tempGrid.resetTempGrid(targetCrs);
     if(sides[actualSideKey]==null)
     {
-      sides[actualSideKey]=new LineGeometryBuilder( 0, targetCrs );
+      sides[actualSideKey]=new LinePointCollector( 0, targetCrs );
     }
     
   }
   
-//  private final void checkSideKey(int sideKey)
-//  {
-//    if(sideKey<0 || sideKey>=SIDE_MAX_NUM)
-//    {
-//      throw new IllegalArgumentException(
-//          "Legal value for sides are 0,1,2,3 but this value passsed:"+sideKey);
-//    }
-//  }
-  
-  
-  
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
     if(actualSideKey>=SIDE_MAX_NUM)
@@ -226,30 +194,7 @@ class GridPointCollector implements IGeometryBuilder
     return sides[actualSideKey].getLastPoint();
   }
   
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#finish()
-   */
-  public GM_Object finish( ) throws Exception
-  {
-    return null;
-//    Assert.throwIAEOnNull( 
-//            builder, 
-//            "builder not available" );
-//          
-//    GM_Object gmObject=builder.finish();
-//    sides[actualSideKey]=(GM_Curve)gmObject;
-//    
-//    if(actualSideKey<(SIDE_MAX_NUM-1))
-//    {
-//      actualSideKey++;
-//      builder=
-//        new LineGeometryBuilder( 0, gmObject.getCoordinateSystem());      
-//    }
-//    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
-//                "\n\tactualSide="+actualSideKey );
-//    return gmObject;      
-  }
-  
+ 
   public GM_Object finishSide( ) throws Exception
   {
     Assert.throwIAEOnNull( 
@@ -259,34 +204,40 @@ class GridPointCollector implements IGeometryBuilder
     {
       return null;
     }
-    LineGeometryBuilder oldBuilder=sides[actualSideKey];      
+    LinePointCollector oldBuilder=sides[actualSideKey];      
     GM_Object gmObject=sides[actualSideKey].finish();
-    
+    if(gmObject==null)
+    {
+      //not finish
+      return null;
+    }
     actualSideKey++;
     if(actualSideKey<SIDE_MAX_NUM)
     {
       //actualSideKey++;
-      LineGeometryBuilder newSide=sides[actualSideKey];
+      LinePointCollector newSide=sides[actualSideKey];
       if(newSide==null)
       {
         newSide=oldBuilder.getNewBuilder();
-        sides[actualSideKey]= newSide;
-        GM_Point lastP=oldBuilder.getLastPoint();  
-        newSide.setCntPoints( computeSize() );
-        if(lastP!=null)
-        {
-          newSide.addPoint( lastP );
-        }
-        else
-        {
-          logger.warning( "Last point is null" );
-        }
-        
+        sides[actualSideKey]= newSide;        
+      }
+      
+      GM_Point lastP=oldBuilder.getLastPoint();  
+      newSide.setCntPoints( computeSize() );
+      if(lastP!=null)
+      {
+        newSide.addPoint( lastP );
+      }
+      else
+      {
+        logger.warning( "Last point is null" );
       }
     }
     else
     {
       hasAllSides=true;
+      tempGrid.setTempGrid( computeMesh() );
+      
     }
 //    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
 //                "\n\tactualSide="+actualSideKey );
@@ -318,7 +269,7 @@ class GridPointCollector implements IGeometryBuilder
    */
   public void paint( Graphics g, GeoTransform projection, Point currentPoint )
   {
-    LineGeometryBuilder builder=null;
+    LinePointCollector builder=null;
     if(actualSideKey<SIDE_MAX_NUM)
     {
       builder=sides[actualSideKey];
@@ -330,7 +281,7 @@ class GridPointCollector implements IGeometryBuilder
     final Color curColor=g.getColor();
     
     int i=0;
-    for(LineGeometryBuilder b:sides)
+    for(LinePointCollector b:sides)
     {
         if(b==null)
         {
@@ -350,6 +301,7 @@ class GridPointCollector implements IGeometryBuilder
     }
     
     g.setColor( curColor );
+    tempGrid.paint( g, projection);
    
   }  
   
@@ -360,11 +312,11 @@ class GridPointCollector implements IGeometryBuilder
       return ;
     }
     
-    LineGeometryBuilder builder=
+    LinePointCollector builder=
                   sides[actualSideKey];
     if(actualSideKey>0)
     {
-      LineGeometryBuilder previousBuilder=sides[actualSideKey-1];
+      LinePointCollector previousBuilder=sides[actualSideKey-1];
       if(previousBuilder!=null)
       {
         GM_Point point=previousBuilder.getLastPoint();
@@ -387,7 +339,7 @@ class GridPointCollector implements IGeometryBuilder
   
   public void gotoPreviousSide()
   {
-    LineGeometryBuilder curBuilder;
+    LinePointCollector curBuilder;
     if(actualSideKey>=SIDE_MAX_NUM)
     {
       //empty
@@ -414,7 +366,7 @@ class GridPointCollector implements IGeometryBuilder
       actualSideKey=SIDE_MAX_NUM-1;
     }
     
-    LineGeometryBuilder builder=
+    LinePointCollector builder=
                   sides[actualSideKey];
     
     builder.removeLastPoint( actualSideKey==0 );   
@@ -427,22 +379,12 @@ class GridPointCollector implements IGeometryBuilder
       return;
     }
     //TODO check going to previous side
-    LineGeometryBuilder builder=
+    LinePointCollector builder=
                   sides[actualSideKey];
     
     builder.replaceLastPoint( point );   
   }
   
-  /**
-   * Tells this classes that to given curves are opposed
-   * 
-   */
-  public void setOpossites(GM_Curve curve1, GM_Curve curve2)
-  {
-    //Checks opposites
-    oppossites[0]=curve1;
-    oppossites[1]=curve2;
-  }
   
   public void selectNext()
   {
@@ -469,12 +411,13 @@ class GridPointCollector implements IGeometryBuilder
     }
   }
   
-  public void changeSelectedPoint(  GM_Point newPosition )
+  public void changeSelectedPoint(  GM_Point newPosition ) throws GM_Exception
   {
     
     if(actualSideKey<SIDE_MAX_NUM)
     {
       sides[actualSideKey].changeSelected( newPosition );
+      tempGrid.setTempGrid( computeMesh() );
     }
     else
     {
@@ -509,20 +452,6 @@ class GridPointCollector implements IGeometryBuilder
   
   private final GM_Point[][] computeMesh() throws GM_Exception
   {
-//    GM_Point[][] points= new GM_Point[4][3];
-//    for(int i=0;i<4;i++)
-//    {
-//      for(int j=0;j<3;j++)
-//      {
-//        points[i][j]= 
-//          org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( 
-//                i, j, TestWorkspaces.getGaussKrueger() );
-//      }
-//    }
-//    if(true)
-//    {
-//      return points;
-//    }
     //GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( sides[0] );
     final LineString bottomLine = pointToLineString( sides[2] );
@@ -585,14 +514,14 @@ class GridPointCollector implements IGeometryBuilder
         compositeCommand, points2D );    
     
     //add edges
-    AddEdgeCommand addEdgeH2D[][]= 
-      new AddEdgeCommand[DIM_X][DIM_Y];
-    AddEdgeCommand addEdgeV2D[][]= 
-          new AddEdgeCommand[DIM_X][DIM_Y];
-    AddEdgeInvCommand addEdgeH2DInv[][]= 
-      new AddEdgeInvCommand[DIM_X][DIM_Y];
-    AddEdgeInvCommand addEdgeV2DInv[][]= 
-          new AddEdgeInvCommand[DIM_X][DIM_Y];
+//    AddEdgeCommand addEdgeH2D[][]= 
+//      new AddEdgeCommand[DIM_X][DIM_Y];
+//    AddEdgeCommand addEdgeV2D[][]= 
+//          new AddEdgeCommand[DIM_X][DIM_Y];
+//    AddEdgeInvCommand addEdgeH2DInv[][]= 
+//      new AddEdgeInvCommand[DIM_X][DIM_Y];
+//    AddEdgeInvCommand addEdgeV2DInv[][]= 
+//          new AddEdgeInvCommand[DIM_X][DIM_Y];
     
 //    addEdgesH( 
 //        model, newNodesArray2D, 
@@ -882,7 +811,7 @@ class GridPointCollector implements IGeometryBuilder
   }
   
   private LineString pointToLineString(
-                LineGeometryBuilder lineGeometryBuilder)
+                LinePointCollector lineGeometryBuilder)
   {
     final int SIZE=lineGeometryBuilder.getCurrentPointCnt();
       Coordinate coordinates[] = new Coordinate[SIZE];
