@@ -44,6 +44,11 @@
             name="%org.kalypso.ui.wizard.raster.name"
             id="org.kalypso.ui.wizard.raster"/>
       <wizard
+            class="org.kalypso.ui.wizard.roughness.ImportRoughnessSourceWizard"
+            icon="icon/kalypso_gmt.gif"
+            id="org.kalypso.ui.wizard.roughness"
+            name="%org.kalypso.ui.wizard.roughness.name"/>
+      <wizard
             icon="icon/file_image.gif"
             class="org.kalypso.ui.wizard.image.ImportImageSourceWizard"
             name="%org.kalypso.ui.wizard.image.name"
