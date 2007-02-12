@@ -67,7 +67,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
   /**
    * This variable stores the label itself.
    */
-  private Label m_label;
+  protected Label m_label;
 
   /**
    * This variable stores the rules, that should be applied for the property_type.
@@ -87,7 +87,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   private static Image image_warning;
 
-  private static Image image_error;
+  protected static Image image_error;
 
   private final boolean m_showWarning;
 
