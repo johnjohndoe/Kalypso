@@ -590,6 +590,9 @@ public class TypeHandlerUtilities
         @Override
         public File convertToJavaValue( String xmlString )
         {
+          if( (xmlString == null) || (xmlString.equals( "" )) )
+            return null;
+
           return new File( xmlString );
         }
 
@@ -599,6 +602,9 @@ public class TypeHandlerUtilities
         @Override
         public String convertToXMLString( File value )
         {
+          if( value == null )
+            return "";
+
           return value.getAbsolutePath();
         }
       } );
@@ -612,6 +618,9 @@ public class TypeHandlerUtilities
         @Override
         public File convertToJavaValue( String xmlString )
         {
+          if( (xmlString == null) || (xmlString.equals( "" )) )
+            return null;
+
           return new File( xmlString );
         }
 
@@ -621,6 +630,9 @@ public class TypeHandlerUtilities
         @Override
         public String convertToXMLString( File value )
         {
+          if( value == null )
+            return "";
+
           return value.getAbsolutePath();
         }
       } );
