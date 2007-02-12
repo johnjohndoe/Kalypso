@@ -52,6 +52,7 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   public void init( IWorkbench iWorkbench, IStructuredSelection iSelection )
   {
     setWindowTitle( "Shape import" );
+    selection = iSelection;
   }
 
   /**
@@ -93,9 +94,19 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
   @Override
   public boolean performCancel( )
   {
-    m_data.getRoughnessPolygonCollection().clear();
+//    m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
+    try
+    {
+      IResource resource = (IResource)selection.getFirstElement();
+      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+//      ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     return true;
   }
 
@@ -111,9 +122,10 @@ public class ImportWizard extends Wizard implements INewWizardKalypsoImport
     m_data.getRoughnessStaticCollectionMap().clear();
     try
     {
-      ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      IResource resource = (IResource)selection.getFirstElement();
+      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( CoreException e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }

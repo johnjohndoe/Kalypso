@@ -49,7 +49,6 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -125,9 +124,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 
     try
     {
-      ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      IResource resource = (IResource)initialSelection.getFirstElement();
+      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( CoreException e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
