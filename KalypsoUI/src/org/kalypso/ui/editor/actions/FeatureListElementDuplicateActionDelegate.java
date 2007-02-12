@@ -104,7 +104,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
           final IFeatureSelectionManager selectionManager = m_selection.getSelectionManager();
           final Feature newFeature = FeatureHelper.cloneFeature( parent, rt, m_selectedFeature );
           final int pos = list.indexOf( m_selectedFeature ) + 1;
-          final AddFeatureCommand command = new AddFeatureCommand( m_workspace, parent, rt, pos, newFeature, selectionManager );
+          final AddFeatureCommand command = new AddFeatureCommand( m_workspace, parent, rt, pos, newFeature, selectionManager, true, false );
           
           m_workspace.postCommand( command );
         }
