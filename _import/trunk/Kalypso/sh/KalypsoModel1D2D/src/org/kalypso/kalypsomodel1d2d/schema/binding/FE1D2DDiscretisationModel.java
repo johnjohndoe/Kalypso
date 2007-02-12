@@ -47,13 +47,17 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.sun.org.apache.xpath.internal.axes.NodeSequence;
 
 /**
  * Provide a implementation of {@link IFEDiscretisationModel1d2d} to
@@ -62,6 +66,7 @@ import com.sun.org.apache.xpath.internal.axes.NodeSequence;
  * @author Gernot Belger
  * @author Patrice Congo
  */
+@SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel 
                             extends AbstractFeatureBinder 
                             implements IFEDiscretisationModel1d2d
@@ -214,29 +219,71 @@ public class FE1D2DDiscretisationModel
   }
   
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(org.deegree.model.geometry.GM_Point)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(GM_Point, boolean[], double)
    */
   public IFE1D2DNode createNode( 
                           GM_Point nodeLocation,
-                          boolean[] alreadyExists
-                          )
+                          boolean[] alreadyExists,
+                          double searchRectWidth)
   { 
-    List<Feature> foundNodes= new ArrayList<Feature>();
-    m_nodes.getWrappedList().query(
-                    nodeLocation.getEnvelope(),
-                    foundNodes);
-    if(foundNodes.isEmpty())
+    Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" );
+    
+    IFE1D2DNode node=null;
+    if(searchRectWidth>=0)
     {
-      System.out.println("NodeFound!");
-      IFE1D2DNode node = 
-        m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      node.setPoint( nodeLocation );
-      alreadyExists[0]=false;
+      //donot search if rect width is negative
+      node=findNode( nodeLocation, searchRectWidth );
+    }
+    if(node!=null)
+    {
+      if(alreadyExists!=null)
+      {
+        if(alreadyExists.length>0)
+        {
+          alreadyExists[0]=false;
+        }
+      }
       return node;
     }
     else
     {
-      double min=-1, curDist;
+      FeatureList nodeList=m_nodes.getWrappedList();
+      
+      node =  m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      node.setPoint( nodeLocation );
+      alreadyExists[0]=false;
+      return node;      
+    }
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point, double)
+   */
+  public IFE1D2DNode findNode( GM_Point nodeLocation, double searchRectWidth )
+  {
+    List<Feature> foundNodes= new ArrayList<Feature>();
+    FeatureList nodeList=m_nodes.getWrappedList();
+    final double nodeX = nodeLocation.getX();
+    final double nodeY = nodeLocation.getY();
+    final double searchWidthHalf=searchRectWidth/2; 
+    
+    GM_Position minPos = 
+        GeometryFactory.createGM_Position( nodeX-searchWidthHalf, nodeY-searchWidthHalf );
+    
+    GM_Position maxPos =
+      GeometryFactory.createGM_Position(nodeX+searchWidthHalf, nodeY+searchWidthHalf );
+    
+    GM_Envelope reqEnvelope = 
+      GeometryFactory.createGM_Envelope( minPos, maxPos );
+    foundNodes=nodeList.query(reqEnvelope,foundNodes);
+    if(foundNodes.isEmpty())
+    {
+      System.out.println("Node not found Found:"+reqEnvelope);
+      return null;
+    }
+    else
+    {
+      double min=Double.MAX_VALUE, curDist;
       IFE1D2DNode nearest=null, curNode; 
       for(Feature feature:foundNodes)
       {
@@ -248,7 +295,6 @@ public class FE1D2DDiscretisationModel
           min=curDist;          
         }
       }
-      alreadyExists[0]=true;
       return nearest;
     }
   }

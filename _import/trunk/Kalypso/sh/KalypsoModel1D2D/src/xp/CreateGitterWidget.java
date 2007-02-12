@@ -352,7 +352,7 @@ public class CreateGitterWidget extends AbstractWidget //implements IWidgetWithO
       {
         ICommand command = 
           gridPointCollector.getAddToModelCommand( 
-              model1d2d,workspace );
+              mapPanel,model1d2d,workspace );
         
         workspace.postCommand( command );
         reinit();//gridPointCollector.reset( mapModel.getCoordinatesSystem() );

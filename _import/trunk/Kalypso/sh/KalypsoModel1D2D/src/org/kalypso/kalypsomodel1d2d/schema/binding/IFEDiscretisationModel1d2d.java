@@ -102,11 +102,14 @@ public interface IFEDiscretisationModel1d2d extends IFeatureWrapper2
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
   
+  public IFE1D2DNode findNode(GM_Point nodeLocation, double searchRectWidth);
+  
   /**
    * TODO comment 
    */
   public IFE1D2DNode createNode(
                       GM_Point nodeLocation,
-                      boolean[] alreadyExists  );
+                      boolean[] alreadyExists,
+                      double searchRectWidth);
 
 }

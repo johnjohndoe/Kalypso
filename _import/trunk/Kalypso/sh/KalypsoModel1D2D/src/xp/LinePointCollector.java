@@ -49,6 +49,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -626,6 +628,13 @@ public class LinePointCollector
     {
       selection=-1;
     }
+  }
+  
+  public double getHandleWidthAsWorldDistance(
+                                      MapPanel mapPanel)
+  {
+    return MapUtilities.calculateWorldDistance( 
+                mapPanel, m_points.get( 0 ), pointRectSize );
   }
   
   

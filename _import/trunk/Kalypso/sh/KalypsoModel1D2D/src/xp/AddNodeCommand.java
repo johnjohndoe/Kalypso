@@ -63,8 +63,12 @@ public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
   private GM_Point nodePoint;
   private IFEDiscretisationModel1d2d discretisationModel;
   private boolean notCreated[]= new boolean[1];
+  private double searchRectWidth;
   
-  public AddNodeCommand(IFEDiscretisationModel1d2d model, GM_Point nodePoint)
+  public AddNodeCommand(
+              IFEDiscretisationModel1d2d model, 
+              GM_Point nodePoint,
+              double searchRectWidth)
   {
     this.discretisationModel=model;
     //FIXME point z coordinate causes problem
@@ -73,6 +77,7 @@ public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
               nodePoint.getX(),
               nodePoint.getY(),
               nodePoint.getCoordinateSystem());
+    this.searchRectWidth=searchRectWidth;
   }
   
   /**
@@ -96,8 +101,8 @@ public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void process( ) throws Exception
   {
-    addedNode=discretisationModel.createNode( nodePoint, notCreated );
-    System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
+    addedNode=discretisationModel.createNode( nodePoint, notCreated,searchRectWidth );
+//    <System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
   }
 
   /**

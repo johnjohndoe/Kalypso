@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -487,6 +488,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
   
   
   public ICommand getAddToModelCommand(
+      MapPanel mapPanel,
       IFEDiscretisationModel1d2d model,
       CommandableWorkspace commandableWorkspace) 
       throws GM_Exception
@@ -511,7 +513,9 @@ class GridPointCollector /*implements IGeometryBuilder*/
     addNodesFromPoints( 
         model, 
         newNodesArray2D, 
-        compositeCommand, points2D );    
+        compositeCommand, 
+        points2D,
+        sides[0].getHandleWidthAsWorldDistance( mapPanel )*2);    
     
     //add edges
 //    AddEdgeCommand addEdgeH2D[][]= 
@@ -546,7 +550,8 @@ class GridPointCollector /*implements IGeometryBuilder*/
       IFEDiscretisationModel1d2d model,
       AddNodeCommand[][] newNodesArray2D,
       ChangeDiscretiationModelCommand compositeCommand,
-      GM_Point[][] points2D)
+      GM_Point[][] points2D,
+      double searchRectWidth)
   {
     for(int i=0;i<points2D.length;i++)
     {
@@ -559,8 +564,9 @@ class GridPointCollector /*implements IGeometryBuilder*/
         //TODO check node for existance
         AddNodeCommand nodeCommand=
           new AddNodeCommand(
-            model,
-            points1D[j]);
+                model,
+                points1D[j], 
+                searchRectWidth );
         newNodesArray2D[i][j]=nodeCommand;//newNodesArray1D[j]=nodeCommand;
         compositeCommand.addCommand( nodeCommand );
       }
