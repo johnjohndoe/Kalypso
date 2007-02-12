@@ -170,6 +170,10 @@ cipk APR96 save data to a scratch file
           !nis,sep06,com: Control output
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL,LABL
           qrandb=qf!EFa Dec06
+          !nis,feb07,testing
+          WRITE(*,*) 'Randbedingung ist: ', qrandb
+          pause
+          !-
 
           !nis,sep06,com: Power Station control, not for standard inflow
 CIPK AUG01   ADD FOR POWER STATION RECYCLING

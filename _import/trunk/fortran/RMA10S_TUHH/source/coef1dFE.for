@@ -1,4 +1,3 @@
-C     Last change:  ST   22 Jan 2007   10:50 am
 cipk  last update may 23 2006 fix error incorrect reference to NR, should be MAT
 cipk  last update mar 07 2006 fix undefined for ice parameters
 CIPK  LAST UPDATE SEP 26 2004  ADD MAH AND MAT OPTION
@@ -247,13 +246,16 @@ C-
         else
           xl(1)=0
           yl(1)=0
-          xl(3)=ABS(kmx(n1)-kmx(n3))
+          !nis,feb07: Scaling for using meters
+          !xl(3)=ABS(kmx(n1)-kmx(n3))
+          xl(3)=ABS(kmx(n1)-kmx(n3))*1000
+          !-
           yl(3)=0
         end if
-        vel(1,n1)=sqrt(vel(1,n1)**2+vel(2,n1)**2)
+        vel(1,n1) = sqrt(vel(1,n1)**2 + vel(2,n1)**2)
   100 CONTINUE
-      xl(2)=xl(3)/2
-      yl(2)=yl(3)/2
+      xl(2) = xl(3)/2
+      yl(2) = yl(3)/2
 CIPK JAN03
       EINA=EINX(NN)*CX+EINY(NN)*SA
 
@@ -288,49 +290,106 @@ CIPK MAY04 RESET ELEMENT INFLOW
       end if
 
       !EFa Nov06, Berechnung der Fläche, des Durchflusses, des Reibungsgefälles und der zugehörigen Ableitungen
-      ah(n1)=0
-      ah(n3)=0
-      qh(n1)=0
-      qh(n3)=0
-      hdif(n1)=0
-      hdif(n3)=0
-      sbot(nn)=ABS(ao(n3)-ao(n1))/xl(3)
+      ah(n1) = 0.0
+      ah(n3) = 0.0
+      qh(n1) = 0.0
+      qh(n3) = 0.0
+      hdif(n1) = 0.0
+      hdif(n3) = 0.0
+      sbot(nn) = ABS(ao(n3)-ao(n1))/xl(3)
       do k=1,13
-        pbei(n1,k)=0
-        pbei(n3,k)=0
+        pbei(n1,k) = 0.0
+        pbei(n3,k) = 0.0
       end do
       do j=1,4
-        pdif(n1,j)=0
-        pdif(n3,j)=0
+        pdif(n1,j) = 0.0
+        pdif(n3,j) = 0.0
       end do
       do k=1,13
-        ah(n1)=ah(n1)+apoly(n1,k)*h1**(k-1)
-        ah(n3)=ah(n3)+apoly(n3,k)*h3**(k-1)
-        qh(n1)=qh(n1)+qpoly(n1,k)*h1**(k-1)
-        qh(n3)=qh(n3)+qpoly(n3,k)*h3**(k-1)
+        ah(n1) = ah(n1) + apoly(n1,k) * h1**(k-1)
+        ah(n3) = ah(n3) + apoly(n3,k) * h3**(k-1)
+        qh(n1) = qh(n1) + qpoly(n1,k) * h1**(k-1)
+        qh(n3) = qh(n3) + qpoly(n3,k) * h3**(k-1)
       end do
+      !nis,feb07,testing
+      !if (nn == 8) then
+      !  WRITE(*,*) 'h  = ', h1, h3
+      !  WRITE(*,*) 'ah = ', ah(n1), ah(n3)
+      !  WRITE(*,*) 'qh = ', qh(n1), qh(n3)
+      !endif
+      !-
       if (icyc.le.0.or.maxn.eq.1) then
-        qhalt(nn,1)=qh(n1)
-        qhalt(nn,2)=qh(n3)
+        !qhalt(nn,1) = qh(n1)
+        !qhalt(nn,2) = qh(n3)
+        qhalt(nn,1) = qrandb
+        qhalt(nn,2) = qrandb
       else
-        qhalt(nn,1)=vel(1,n1)*ah(n1)
-        qhalt(nn,2)=vel(1,n3)*ah(n3)
+        qhalt(nn,1) = vel(1,n1) * ah(n1)
+        qhalt(nn,2) = vel(1,n3) * ah(n3)
       end if
       if (icyc.le.0) then
-        sfnod(n1)=sfwicht(n1)*qrandb*ABS(qrandb)/(qh(n1)**2)*
-     +            qgef(n1)
-        sfnod(n3)=sfwicht(n3)*qrandb*ABS(qrandb)/(qh(n3)**2)*
-     +            qgef(n3)
+        sfnod(n1) = sfwicht(n1) * qrandb * ABS(qrandb)/(qh(n1)**2) *
+     +              qgef(n1)
+        sfnod(n3) = sfwicht(n3) * qrandb * ABS(qrandb)/(qh(n3)**2) *
+     +              qgef(n3)
       else
-        sfnod(n1)=sfwicht(n1)*qhalt(nn,1)*ABS(qhalt(nn,1))/(qh(n1)**2)*
-     +            qgef(n1)
-        sfnod(n3)=sfwicht(n3)*qhalt(nn,2)*ABS(qhalt(nn,2))/(qh(n3)**2)*
-     +            qgef(n3)
+        !nis,feb07,testing
+        !WRITE(*,*) 'Abflüsse: ', qhalt(nn,1), qhalt(nn,2)
+        !PAUSE
+        !-
+        sfnod(n1) = sfwicht(n1) * qhalt(nn,1)
+     +              * ABS(qhalt(nn,1)) / (qh(n1)**2) * qgef(n1)
+        sfnod(n3) = sfwicht(n3) * qhalt(nn,2)
+     +              * ABS(qhalt(nn,2)) / (qh(n3)**2) * qgef(n3)
       endif
+
+      !nis,feb07,testing: Arbitrary node 8 chosen!
+      !if (nn == 8) then
+      !  WRITE(*,*) sfnod(n1), sfwicht(n1), qrandb, qh(n1), qgef(n1)
+      !  pause
+      !ndif
+      !-
       if (icyc.le.0.OR.(icyc.gt.0.and.maxn.eq.1)) then
-        vel(1,n1)=qh(n1)/ah(n1)
-        vel(1,n3)=qh(n3)/ah(n3)
+        !vel(1,n1) = qh(n1) / ah(n1)
+        !vel(1,n3) = qh(n3) / ah(n3)
+        !nis,feb07,testing
+        !if (nn == 29) then
+        !  WRITE(*,*) 'Geschwindigkeitsupdate pruefen'
+        !  WRITE(*,*) vel(1,n3), vel(2,n3)
+        !endif
+        !-
+        vel(1,n1) = qrandb / ah(n1)
+        vel(1,n3) = qrandb / ah(n3)
+        !nis,feb07,testing
+        !if (nn == 29) then
+        !  WRITE(*,*) 'Geschwindigkeitsupdate pruefen'
+        !  WRITE(*,*) vel(1,n), vel(2,n3)
+        !endif
+        !-
       end if
+
+      !nis,feb07,testing
+      !WRITE(*,*) 'Knoten: ', n1
+      !WRITE(*,*) 'Fläche, Abfluss und Geschwindigkeit: '
+      if (nn /= 49) then
+        WRITE(Lout,*) n1,': ',ah(n1), qh(n1), qh(n1)/ah(n1),
+     +                qrandb/ah(n1), h1
+      else
+        WRITE(lout,*) n1,': ',ah(n1), qh(n1), qh(n1)/ah(n1),
+     +                qrandb/ah(n1), h1
+        WRITE(lout,*) n3,': ',ah(n3), qh(n3), qh(n3)/ah(n3),
+     +                qrandb/ah(n1), h3
+      endif
+      !WRITE(*,*) 'Knoten: ', n3
+      !WRITE(*,*) 'Fläche, Abfluss und Geschwindigkeit: '
+      !WRITE(*,*) ah(n3), qh(n3), qh(n3)/ah(n3)
+      !if (n1 == 7) then
+      !  write (*,*) 'Berechnungshöhe ist: ', h1
+      !  write (*,*) (apoly(n1,k),k=1,13)
+      !  write (*,*) (qpoly(n1,k),k=1,13)
+      !  pause
+      !end if
+      !-
 
 
       if (ntx.eq.1) then
@@ -343,6 +402,7 @@ CIPK MAY04 RESET ELEMENT INFLOW
         WRITE(*,*)'Schiessen an Knoten ',n3
       end if
 
+      !nis,feb07,com: unsteady
       if (icyc.gt.0) then
         if (maxn.eq.1) then
           dhdtaltzs(nn,1)=dhht(nn,1)
@@ -358,6 +418,7 @@ CIPK MAY04 RESET ELEMENT INFLOW
      +           dhdtaltzs(nn,2)
       end if
 
+      !nis,feb07,com: unsteady
       if (icyc.gt.0) then
         if (maxn.eq.1) then
           dqdtaltzs(nn,1)=dqqt(nn,1)
@@ -403,64 +464,64 @@ CIPK MAY04 RESET ELEMENT INFLOW
       dqhdh(n1)=0
       dqhdh(n3)=0
       do k=2,13
-        dahdh(n1)=dahdh(n1)+(k-1)*apoly(n1,k)*h1**(k-2)
-        dahdh(n3)=dahdh(n3)+(k-1)*apoly(n3,k)*h1**(k-2)
-        dqhdh(n1)=dqhdh(n1)+(k-1)*qpoly(n1,k)*h1**(k-2)
-        dqhdh(n3)=dqhdh(n3)+(k-1)*qpoly(n3,k)*h1**(k-2)
+        dahdh(n1) = dahdh(n1) + (k-1) * apoly(n1,k)*h1**(k-2)
+        dahdh(n3) = dahdh(n3) + (k-1) * apoly(n3,k)*h1**(k-2)
+        dqhdh(n1) = dqhdh(n1) + (k-1) * qpoly(n1,k)*h1**(k-2)
+        dqhdh(n3) = dqhdh(n3) + (k-1) * qpoly(n3,k)*h1**(k-2)
         dsfnoddh(n1)=-2*(sfnod(n1)/qh(n1))*dqhdh(n1)
         dsfnoddh(n3)=-2*(sfnod(n3)/qh(n3))*dqhdh(n3)
       end do
       if (icyc.le.0) then
-        dsfnoddq(n1)=2*sfnod(n1)/qrandb
-        dsfnoddq(n3)=2*sfnod(n3)/qrandb
+        dsfnoddq(n1)=2*sfnod(n1) / qrandb
+        dsfnoddq(n3)=2*sfnod(n3) / qrandb
       else
-        dsfnoddq(n1)=2*sfnod(n1)/qhalt(nn,1)
-        dsfnoddq(n3)=2*sfnod(n3)/qhalt(nn,2)
+        dsfnoddq(n1)=2*sfnod(n1) / qhalt(nn,1)
+        dsfnoddq(n3)=2*sfnod(n3) / qhalt(nn,2)
       endif
-      d2ahdh(n1)=0
-      d2ahdh(n3)=0
-      d2qhdh(n1)=0
-      d2qhdh(n3)=0
+      d2ahdh(n1) = 0.0
+      d2ahdh(n3) = 0.0
+      d2qhdh(n1) = 0.0
+      d2qhdh(n3) = 0.0
       do k=3,13
-        d2ahdh(n1)=d2ahdh(n1)+(n-1)*(k-2)*apoly(n1,k)*h1**(k-3)
-        d2ahdh(n3)=d2ahdh(n3)+(n-1)*(k-2)*apoly(n3,k)*h1**(k-3)
-        d2qhdh(n1)=d2qhdh(n1)+(n-1)*(k-2)*apoly(n1,k)*h1**(k-3)
-        d2qhdh(n3)=d2qhdh(n3)+(n-1)*(k-2)*apoly(n3,k)*h1**(k-3)
+        d2ahdh(n1) = d2ahdh(n1) + (k-1) * (k-2) * apoly(n1,k)*h1**(k-3)
+        d2ahdh(n3) = d2ahdh(n3) + (k-1) * (k-2) * apoly(n3,k)*h1**(k-3)
+        d2qhdh(n1) = d2qhdh(n1) + (k-1) * (k-2) * apoly(n1,k)*h1**(k-3)
+        d2qhdh(n3) = d2qhdh(n3) + (k-1) * (k-2) * apoly(n3,k)*h1**(k-3)
       end do
 
       !EFa Nov06, Bereich für Wasserspiegel Bordvoll (nur Hauptgerinne)
       if (h1.le.hbordv(n1)) then
-        bei(n1)=1
-        dbeidh(n1)=0
-        d2beidh(n1)=0
-        pbei(n1,1)=1
+        bei(n1)      = 1.0
+        dbeidh(n1)   = 0.0
+        d2beidh(n1)  = 0.0
+        pbei(n1,1)   = 1.0
         do k=2,13
-          pbei(n1,k)=0
+          pbei(n1,k) = 0.0
         end do
       end if
 
       if (h3.le.hbordv(n3)) then
-        bei(n3)=1
-        dbeidh(n3)=0
-        d2beidh(n3)=0
-        pbei(n3,1)=1
+        bei(n3)      = 1.0
+        dbeidh(n3)   = 0.0
+        d2beidh(n3)  = 0.0
+        pbei(n3,1)   = 1.0
         do k=2,13
-          pbei(n3,k)=0
+          pbei(n3,k) = 0.0
         end do
       end if
 
       !EFa Nov06, Bereich für Höhen zwischen dem unteren Grenzwert als Wasserspiegel Bordvoll
       !           und dem oberen Grenzwert des Übergangspolynoms
       if (h1.gt.hbordv(n1).and.h1.lt.hdif(n1)) then
-        bei(n1)=0
+        bei(n1)      = 0.0
         do k=1,4
-          bei(n1)=bei(n1)+pdif(n1,k)*h1**(k-1)
-          pbei(n1,k)=pdif(n1,k)
+          bei(n1)    = bei(n1) + pdif(n1,k)*h1**(k-1)
+          pbei(n1,k) = pdif(n1,k)
         end do
         do k=5,13
-          pbei(n1,k)=0
+          pbei(n1,k) = 0.0
         end do
-        dbeizdh(n1)=0
+        dbeizdh(n1)  = 0.0
         do k=2,4
           dbeizdh(n1)=dbeizdh(n1)+(k-1)*pdif(n1,k)*h1**(k-2)          !1. Ableitung
         end do
@@ -529,30 +590,40 @@ CIPK MAY04 RESET ELEMENT INFLOW
       end if
 
       !EFa Nov06, wenn ohne Beiwerte gerechnet werden soll oder die Eingabe von beient fehlerhaft ist
-      if ((beient.eq.0).OR.(beient.ne.2).AND.(beient.ne.1))then
-        bei(n1)=1
-        dbeidh(n1)=0
-        d2beidh(n1)=0
-        pbei(n1,1)=1
+      if ((beient .eq. 0) .OR. (beient.ne.2).AND.(beient.ne.1))then
+        !nis,feb07,testing
+        !WRITE(*,*) 'Hier wird was gemacht'
+        !pause
+        !-
+        bei(n1)      = 1.0
+        dbeidh(n1)   = 0.0
+        d2beidh(n1)  = 0.0
+        pbei(n1,1)   = 1.0
         do k=2,13
-          pbei(n1,k)=0
+          pbei(n1,k) = 0.0
         end do
-        pdif(n1,1)=1
+        pdif(n1,1)   = 1.0
         do k=2,4
-          pdif(n1,k)=0
+          pdif(n1,k) = 0.0
         end do
-        bei(n3)=1
-        dbeidh(n3)=0
-        d2beidh(n3)=0
-        pbei(n1,3)=1
+        bei(n3)      = 1.0
+        dbeidh(n3)   = 0.0
+        d2beidh(n3)  = 0.0
+        pbei(n1,3)   = 1.0
         do k=2,13
-          pbei(n3,k)=0
+          pbei(n3,k) = 0.0
         end do
-        pdif(n3,1)=1
+        pdif(n3,1)   = 1.0
         do k=2,4
-          pdif(n3,k)=0
+          pdif(n3,k) = 0.0
         end do
       endif
+
+      !nis,feb07,testing
+      !WRITE(*,*) 'Beiwerttestung:'
+      !WRITE(*,*) bei(n1), bei(n3), beient
+      !-
+
 
       !EFa Nov06, fiktive Breite
       bnode(n1)=ah(n1)/h1
@@ -561,8 +632,15 @@ CIPK MAY04 RESET ELEMENT INFLOW
       ENDIF !ntx=1
 
       
+      !nis,feb07,com: Start of loop over Gauss-nodes
       DO 500 I = 1, NGP
+      !nis,feb07,testing
+      !WRITE(*,*) dnal (2,i), dnal(3,i), i
+      !WRITE(*,*) xl(2), xl(3)
+      !pause
+      !-
       TEMP=(DNAL(2,I)*XL(2)+DNAL(3,I)*XL(3))
+
 C-
 C......DEFINE SHAPE FUNCTIONS
 C-
@@ -585,10 +663,10 @@ C-
           DNX(J)=DNX(J)/TFR
   240   CONTINUE
       ENDIF
-      XM(1)=1.-AFACT(I)
-      XM(2)=AFACT(I)
-      DMX(1)=-1./TEMP
-      DMX(2)=1./TEMP
+      XM(1)  = 1.0 - AFACT(I)
+      XM(2)  = AFACT(I)
+      DMX(1) = -1.0 / TEMP
+      DMX(2) = 1. / TEMP
 
       IF(NTX .NE. 0) THEN
         H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2)
@@ -603,31 +681,69 @@ cipk nov97
 
 
       !EFa Nov06, hoehelem(nn)
-      hhint(nn,i)=h1*xm(1)+h3*xm(2)
-      dhhintdx(nn,i)=h1*dmx(1)+h3*dmx(2)
-      dhintdt(nn,i)=xm(1)*dhht(nn,1)+xm(2)*dhht(nn,2)
+      hhint(nn,i)    = h1 * xm(1) + h3 * xm(2)
+      dhhintdx(nn,i) = h1 * dmx(1) + h3 * dmx(2)
+      dhintdt(nn,i)  = xm(1) *dhht(nn,1) + xm(2) * dhht(nn,2)
 
       !EFa Nov06, flowelem(nn)
-      qqint(nn,i)=qhalt(nn,1)*xm(1)+qhalt(nn,2)*xm(2)
-      qqintdx(nn,i)=qhalt(nn,1)*dmx(1)+qhalt(nn,2)*dmx(2)
-      dqintdt(nn,i)=dqqt(nn,1)*xm(1)+dqqt(nn,2)*xm(2)
+      qqint(nn,i)   = qhalt(nn,1) * xm(1) + qhalt(nn,2) * xm(2)
+      qqintdx(nn,i) = qhalt(nn,1) * dmx(1) + qhalt(nn,2) * dmx(2)
+      dqintdt(nn,i) = dqqt(nn,1) * xm(1) + dqqt(nn,2) * xm(2)
+
+      !nis,feb07,testing
+      !if (nn == 8) then
+      !  WRITE(*,*) qqint(nn,i), qqintdx(nn,i)
+      !  WRITE(*,*) qhalt(nn,1), qhalt(nn,2)
+      !  WRITE(*,*) dmx(1), dmx(2), xm(1), xm(2)
+      !endif
+      !-
 
       !EFa Nov06, areaelem(nn)
-      areaint(nn,i)=ah(n1)*xm(1)+ah(n3)*xm(2)
-      dareaintdh(nn,i)=dahdh(n1)*xm(1)+dahdh(n3)*xm(2)
-      d2areaintdh(nn,i)=d2ahdh(n1)*xm(1)+d2ahdh(n3)*xm(2)
-      daintdx(nn,i)=dmx(1)*ah(n1)+xm(1)*dahdh(n1)*dhhintdx(nn,i)+
-     +              dmx(2)*ah(n3)+xm(2)*dahdh(n3)*dhhintdx(nn,i)
-      d2aintdx(nn,i)=dhhintdx(nn,i)*(2*dmx(1)*dahdh(n1)+xm(1)*
-     +               d2ahdh(n1)*dhhintdx(nn,i)+2*dmx(2)*dahdh(n3)+
-     +               xm(2)*d2ahdh(n3)*dhhintdx(nn,i))
-      d2aidhdx(nn,i)=dmx(1)*dahdh(n1)+xm(1)*d2ahdh(n1)*dhhintdx(nn,i)+
-     +               dmx(2)*dahdh(n3)+xm(2)*d2ahdh(n3)*dhhintdx(nn,i)
-      daintdt(nn,i)=(xm(1)*dahdh(n1)+xm(2)*dahdh(n3))*dhintdt(nn,i)
+      areaint(nn,i)     = ah(n1) * xm(1) + ah(n3) * xm(2)
+
+      dareaintdh(nn,i)  = dahdh(n1) * xm(1) + dahdh(n3) * xm(2)
+
+      d2areaintdh(nn,i) = d2ahdh(n1) * xm(1) + d2ahdh(n3) * xm(2)
+
+      daintdx(nn,i)     = dmx(1) * ah(n1) + xm(1) * dahdh(n1)
+     +                  * dhhintdx(nn,i) + dmx(2) * ah(n3)
+     +                  + xm(2) * dahdh(n3) * dhhintdx(nn,i)
+
+!      daintdx(nn,i)     = dmx(1) * (ah(n1) + h1 * ( xm(1) * dahdh(n1)
+!     +                  + xm(2) * dahdh(n3)))
+!     +                  + dmx(2) * (ah(n3) + h3 * ( xm(1) * dahdh(n1)
+!     +                  + xm(2) * dahdh(n3)))
+
+      d2aintdx(nn,i)    = dhhintdx(nn,i) * (2*dmx(1) * dahdh(n1)
+     +                  + xm(1) * d2ahdh(n1) * dhhintdx(nn,i)
+     +                  + 2 * dmx(2) * dahdh(n3)
+     +                  + xm(2) * d2ahdh(n3) * dhhintdx(nn,i))
+
+      d2aidhdx(nn,i)    = dmx(1) * dahdh(n1) + xm(1) * d2ahdh(n1)
+     +                  * dhhintdx(nn,i) + dmx(2) * dahdh(n3)
+     +                  + xm(2)*d2ahdh(n3) * dhhintdx(nn,i)
+
+      daintdt(nn,i)     = (xm(1) * dahdh(n1) + xm(2) * dahdh(n3))
+     +                  * dhintdt(nn,i)
+
+      !nis,feb07,testing
+      !if (nn == 8) then
+      !  WRITE(*,*) ah(n1), ah(n3), dahdh(n1), dahdh(n3)
+      !  WRITE(*,*) areaint(nn,i)
+      !  WRITE(*,*) dareaintdh(nn,i)
+      !  WRITE(*,*) d2areaintdh(nn,i)
+      !  WRITE(*,*) daintdx(nn,i)
+      !  WRITE(*,*) d2aintdx(nn,i)
+      !  WRITE(*,*) d2aidhdx(nn,i)
+      !  WRITE(*,*) daintdt(nn,i)
+      !  pause
+      !end if
+      !-
 
       !EFa Dec06, Fließgeschwindigkeit
-      vflowint(nn,i)=qqint(nn,i)/areaint(nn,i)
-      dvintdx(nn,i)=dmx(1)*qhalt(nn,1)/ah(n1)+dmx(2)*qhalt(nn,2)/ah(n3)
+      vflowint(nn,i) = qqint(nn,i) / areaint(nn,i)
+      dvintdx(nn,i)  = dmx(1) * qhalt(nn,1) / ah(n1)
+     +               + dmx(2) * qhalt(nn,2) / ah(n3)
 
       !EFa Nov06, Testen ob Schießen im Element vorliegt
       froudeint(nn,i)=qqint(nn,i)/(areaint(nn,i)*sqrt(grav*hhint(nn,i)))
@@ -636,13 +752,15 @@ cipk nov97
       end if
 
       !EFa Nov06, schkelem(nn)
-      qschint(nn,i)=xm(1)*qh(n1)+xm(2)*qh(n3)
-      dqsintdh(nn,i)=dqhdh(n1)*xm(1)+dqhdh(n3)*xm(2)
-      d2qsidh(nn,i)=d2qhdh(n1)*xm(1)+d2qhdh(n3)*xm(2)
-      dqsintdx(nn,i)=dmx(1)*qh(n1)+xm(1)*dqhdh(n1)*dhhintdx(nn,i)+
-     +               dmx(2)*qh(n3)+xm(2)*dqhdh(n3)*dhhintdx(nn,i)
-      d2qsidhdx(nn,i)=dmx(1)*dqhdh(n1)+xm(1)*d2qhdh(n1)*dhhintdx(nn,i)+
-     +                dmx(2)*dqhdh(n3)+xm(2)*d2qhdh(n3)*dhhintdx(nn,i)
+      qschint(nn,i)   = xm(1) * qh(n1) + xm(2) * qh(n3)
+      dqsintdh(nn,i)  = dqhdh(n1) * xm(1) + dqhdh(n3) * xm(2)
+      d2qsidh(nn,i)   = d2qhdh(n1) * xm(1) + d2qhdh(n3) * xm(2)
+      dqsintdx(nn,i)  =
+     +      dmx(1) * qh(n1) + xm(1) * dqhdh(n1) * dhhintdx(nn,i)
+     +    + dmx(2) * qh(n3) + xm(2) * dqhdh(n3) * dhhintdx(nn,i)
+      d2qsidhdx(nn,i) =
+     +      dmx(1) * dqhdh(n1) + xm(1)*d2qhdh(n1) * dhhintdx(nn,i)
+     +    + dmx(2) * dqhdh(n3) + xm(2)*d2qhdh(n3) * dhhintdx(nn,i)
 
       !EFa Nov06, fricelem(nn)
       s0schint(nn,i)=qgef(n1)*xm(1)+qgef(n3)*xm(2)
@@ -652,6 +770,11 @@ cipk nov97
 
       !EFa Nov06, beiwelem(nn)
       beiint(nn,i)=xm(1)*bei(n1)+xm(2)*bei(n3)
+      !nis,feb07,testing
+      !if (nn == 8) then
+      !  WRITE(*,*) bei(n1), bei(n3), beiint(nn,i)
+      !end if
+      !-
       dbeiintdh(nn,i)=xm(1)*dbeiodh(n1)+xm(2)*dbeiodh(n3)
       d2beiintdh(nn,i)=xm(1)*d2beiodh(n1)+xm(2)*d2beiodh(n3)
       dbeiintdx(nn,i)=dmx(1)*bei(n1)+xm(1)*dbeiodh(n1)*dhhintdx(nn,i)+
@@ -663,6 +786,21 @@ cipk nov97
       !EFa Nov06, fiktive Breite
       bint(nn,i)=areaint(nn,i)/hhint(nn,i)
 
+      !nis,feb07,testing
+      !if (nn == 8) then
+      !  WRITE(*,*) 'Teste Ableitung dF/dv'
+      !  WRITE(*,*) 'Gauss-Punkt: ', i
+      !  WRITE(*,*) dqintdt(nn,i)
+      !  WRITE(*,*) qqint(nn,i)**2/areaint(nn,i)*dbeiintdx(nn,i)
+      !  WRITE(*,*) 2*beiint(nn,i)*vflowint(nn,i)*qqintdx(nn,i)
+      !  WRITE(*,*) beiint(nn,i)*vflowint(nn,i)**2*daintdx(nn,i)
+      !  WRITE(*,*) 'Details:', beiint(nn,i),vflowint(nn,i),daintdx(nn,i)
+      !  WRITE(*,*) grav*areaint(nn,i)*dhhintdx(nn,i)
+      !  WRITE(*,*) grav*areaint(nn,i)*sfint(nn,i)
+      !  WRITE(*,*) grav*areaint(nn,i)*sbot(nn)
+      !  pause
+      !endif
+      !-
 
       !EFa Nov06, Impulsgleichung                                                               
       if (icyc.le.0) then
@@ -715,6 +853,30 @@ cipk nov97
         ia=1
         ib=3
       end if
+
+      !nis,feb07,testing
+!      if (nn == 8) then
+!        WRITE(*,*) 'Teste Ableitung dF/dh'
+!        WRITE(*,*) 'Gauss-Punkt: ', i
+!        WRITE(*,*) xm(1)*qqint(nn,i)**2/areaint(nn,i)**2*               !Term b
+!     +             (areaint(nn,i)*d2beiintdhdx(nn,i)-dbeiintdx(nn,i)*
+!     +             daintdx(nn,i))
+!        WRITE(*,*) xm(1)*2*qqint(nn,i)/areaint(nn,i)**2*qqintdx(nn,i)*   !Term c
+!     +             (areaint(nn,i)*dbeiintdh(nn,i)-beiint(nn,i)*
+!     +             dareaintdh(nn,i))
+!        WRITE(*,*) -xm(1)*(qqint(nn,i)**2/areaint(nn,i)**2)*             !Term d
+!     +             (dbeiintdh(nn,i)*daintdx(nn,i)+beiint(nn,i)*
+!     +             d2aidhdx(nn,i)-2*beiint(nn,i)/areaint(nn,i)*
+!     +             dareaintdh(nn,i)*daintdx(nn,i))
+!        WRITE(*,*) grav*(xm(1)*dareaintdh(nn,i)*dhhintdx(nn,i)+          !Term e
+!     +             areaint(nn,i)*dmx(1))
+!        WRITE(*,*) grav*xm(1)*(sfint(nn,i)*dareaintdh(nn,i)+             !Term f
+!     +             areaint(nn,i)*dsfintdh1(nn,i))
+!        WRITE(*,*) -grav*xm(1)*sbot(nn)*dareaintdh(nn,i)                 !Term g
+!        pause
+!      endif
+      !-
+
       estifm(ia,ib)=estifm(ia,ib)+xm(1)*hfact(i)*xl(3)/2*                 !Wichtungsfunktion
      +              (xm(1)*qqint(nn,i)**2/areaint(nn,i)**2*               !Term b
      +              (areaint(nn,i)*d2beiintdhdx(nn,i)-dbeiintdx(nn,i)*
@@ -915,10 +1077,32 @@ cipk nov97
 
 C...... Compute boundary forces
 C-
+
+      !nis,feb07,testing
+      if (nn == 49) then
+        WRITE(*,*) 'Erreiche die Stelle'
+      end if
+      !-
       !EFa Nov06, Anpassung an 1D-Teschke-Elemente
       DO 650 L=1,NCN,2
       N1=NCON(L)
+      !nis,feb07,testing
+      !if (nn == 49 .or. nn == 1) then
+      !  WRITE(*,*) 'Knoten: ', n1
+      !  WRITE(*,*) 'nfix(n1) ', nfix(n1)
+      !  WRITE(*,*) 'nfix(n3) ', nfix(n3)
+      !  pause
+      !end if
+      !-
+
       IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
+
+        !nis,feb07,testing
+        !WRITE(*,*) 'Randbedingungsknoten: ', n1
+        !WRITE(*,*) (spec(n1,iii),iii=1,3)
+        !pause
+        !-
+
         XHT=ELEV-AO(N1)
         NA=(L-1)*NDF+1
         RHO=DEN(N1)
@@ -935,9 +1119,9 @@ C-
           mm=2
         end if
         vel(3,n1)=spec(n1,3)
-        if (icyc.le.0.or.maxn.eq.1) then
-          vel(1,n1)=qh(n1)/ah(n1)
-          vel(2,n1)=0
+        if (icyc.le.0 .or. maxn.eq.1) then
+          vel(1,n1) = qrandb/ah(n1)
+          vel(2,n1) = 0.0
         end if
         if (icyc.le.0) then
           do kk=1,nef
@@ -978,7 +1162,6 @@ C-
       ENDIF
   650 CONTINUE
 
-
       !EFa Dec06, keine Berechnung der RB Q für stationären Fall, deaktiviert nach Test
       if (icyc.le.0) then
         GO TO 1305
@@ -994,6 +1177,12 @@ C-
 C...... Test for and then retrieve stage flow constants
 C-
       IF(NFIX(M)/1000.LT.13) GO TO 1300
+      !nis,feb07,testing
+      !WRITE(*,*) 'Erreiche diese Fließ-Randbedingung'
+      !WRITE(*,*) 'Knoten: ', M
+      !WRITE(*,*) spec(m,1), spec(m,2)
+      !pause
+      !-
       IRW=(N-1)*NDF+1
       IRH=IRW+2
       CX=COS(ALFA(M))
@@ -1015,6 +1204,17 @@ C-
       IF(JA.EQ.0) GO TO 1050
       R1(JA)=R1(JA)+F(IA)
  1050 CONTINUE
+
+      !nis,feb07,testing
+!      if (nn == 8 .or. nn == 9) then
+!      WRITE(*,*) 'Element: ', nn
+!      WRITE(*, '(A3,1x,i4, 3f8.3)') 'Kn:', nop(nn,1),
+!     +           estifm( 3,3), estifm( 3,11), f( 3)
+!      WRITE(*, '(A3,1x,i4, 3f8.3)') 'Kn:', nop(nn,3),
+!     +           estifm(11,3), estifm(11,11), f(11)
+!        pause
+!      ENDIF
+      !-
       RETURN
 *-
 *...... Special case for junction element

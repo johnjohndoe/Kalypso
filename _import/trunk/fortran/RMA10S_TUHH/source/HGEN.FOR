@@ -3,6 +3,9 @@ CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
       SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL)
       USE BLK10MOD
+      !nis,feb07,testing
+      use paraflow1dfe
+      !-
 CIPK DEC97 calling sequence changed
       SAVE
 C-
@@ -41,6 +44,16 @@ cipk dec97 change j to jj
 CIPK AUG00
         IF(ISWTH .EQ. 0  .OR.  MAX .EQ. 1) THEN
           SPEC(NA,3)=HREQ
+          !nis,feb07,testing
+          if (qrandb == 0.0) then
+            do iii = 1, 13
+              qrandb = qrandb + qpoly(na,iii) * (hreq-ao(na))**(iii-1)
+            enddo
+          endif
+          WRITE(*,*) qrandb, hreq-ao(na), na
+          WRITE(*,*) (qpoly(na,iii),iii=1,13)
+          pause
+          !-
         ELSE
           FACT=DISTS(NA,NST)/CONLEN
           SPEC(NA,3)=HREQ+FACT*(HREQ2-HREQ)
@@ -76,6 +89,14 @@ CIPK AUG00  END CHANGES
         ENDIF
         IF(ICYC .GT. 0) CALL BFORM(NA)
   300 CONTINUE
+
+      !nis,feb07,testing
+      WRITE(*,*) 'Setze h-Randbedingung'
+      WRITE(*,*) 'Knoten: ', na
+      WRITE(*,*) spec(na,3)
+      WRITE(*,*) nfix(na), nfix1(na)
+      pause
+      !-
 c
 cipk dec97 add logic for HCN
 c

@@ -254,24 +254,17 @@ END SUBROUTINE check_Kalypso
       !nis,dec06: Using module that includes the definition of the continuity lines
       USE BLK10MOD
       !-
-      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
-      USE ParaReord
-      !-
 
-      PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
+      PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
                                                                         
 !NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
-      !nis,dec06: Integrating the LineTransitions into the reordering schema, the kntimel field width has to be increased to the maximum
-      !number of nodes being connected to the node-line connection. Not to make it too big, the array is newly defined dynmaic
-      !INTEGER kntimel (MaxE, 8), qlist (2, 160), knot, elem
-      INTEGER              :: qlist (2, 160), knot, elem
-       !Nis,dec06: Reordering array newly in module
-       !INTEGER, ALLOCATABLE :: kntimel (:,:)
-       !-
-      INTEGER              :: maxsize
-      !-
-      INTEGER icon (MaxP, maxcn)
-                                                                        
+      !array kntimel must be allocatable, because the size is vacant while calling the reordering sequence
+      INTEGER, ALLOCATABLE ::  kntimel (:,:)
+      integer :: qlist (2, 160), knot, elem
+      INTEGER :: icon (MaxP, maxcn)
+      !maxsize shows the maximum size of the kntimel allocation, so the largest element
+      INTEGER :: maxsize
+
 !NiS,mar06: the common blocks are replaced with modules dealing with allocatable arrays. These modules are inserted above and allocated below.
 !      COMMON / blkasteph / mpq, nepem, nr, nc, nprt, mist, mlist (500),
 !      msn (mnd), icol (100, 5000), nadm (5000), inum (mnd), alpha (mnd)
@@ -279,22 +272,22 @@ END SUBROUTINE check_Kalypso
 !      paxis (mel)
 !-
 
-WRITE(*,*) 'Reordering started'
-WRITE(*,*) 'Reordering started'
-WRITE(*,*) 'Reordering started'
-
 !nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
 !           connected to a Transition line
       !test for all possible line transitions
-      if (MaxLT.ne.0) then
+      if (MaxLT /= 0) then
+        !get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the
+        !transitioning 1D part
         maxsize = 0
+        !the longest continuity line is taken into account
         do i = 1, 50
-          if (lmt(i).gt.maxsize) maxsize = lmt(i)
+          if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
         end do
-        !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
-        ALLOCATE (kntimel(MaxE,MaxSize+2))
+       !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
+        ALLOCATE (kntimel (MaxE, MaxSize))
       else
-        ALLOCATE (kntimel(MaxE,8))
+        !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
+        ALLOCATE (kntimel (MaxE, 8))
       endif
 !-
 
@@ -315,84 +308,70 @@ WRITE(*,*) 'Reordering started'
 
       ne = elem 
       np = knot 
-                                                                        
-!nis,dec06: kntimel can be from larger size, if there's a 1D-2D-Line-Transition
-!      DO 10 i = 1, ne
-!        k = 3
-!        IF (nop (i, 7) .gt.0) k = 4
-!        DO 10 j = 1, k
-!          l = 2 * j - 1
-!          kntimel (i, j) = nop (i, l)
-!   10 CONTINUE
-      Throughelements: DO i = 1, ne
-!nis,jan07: This part has to be reworked!!! It is the connectivity information for reordering
-!
-!        WRITE(*,*) ne, np, i
-!        WRITE(*,*) nop(i,1)
-!        WRITE(*,*) nop(i,3)
-!
-!        if (nop(i,1).eq.0 .or. nop(i,3).eq.0) CYCLE Throughelements
-!
-!        if ((Transmember(nop(i,1)).ne.0 .or. Transmember(nop(i,3)).ne.0)) then
-!
-!          !error fishing:
-!          if (ncorn(i).ne.3) STOP 'error - non-1D-element is transitioning element in 1D-2D-transition'
-!          ConnNode = 0
-!
-!          !Find the connecting node to 1D-2D-TransitionLine
-!          ConnNode = TransLines(
-!          if (ConnNode.eq.nop(i,1)) then
-!            NonConnNode = nop(i,3)
-!          else
-!            NonConnNode = nop(i,1)
-!          end if
-!
-!          !find the connected CCL wich represents the 1D-2D-Transitionline
-!          findline: do j = 1, MaxLT
-!            if (i.eq.TransLines(j,1)) then
-!              ConnLine = TransLines(j,2)
-!              EXIT findline
-!            endif
-!            !Error-message
-!            stop 'ERROR - no line connected'
-!          end do findline
-!
-!          !insert the 1D-sided node of the transitioning 1D-element
-!          kntimel(i,1) = NonConnNode
-!          !if the connecting 1D-node is not member of the transition line, store it in the second slot of kntimel
-!          if (Transmember(ConnNode).eq.2) kntimel(i,2) = ConnNode
-!            !depending on whether the connecting node is member of the line or not, the nodes of the lines are stored in the
-!            !rest of the slot starting at slot 2 (if 1Dnode is part of line) or at slot 3 (if 1Dnode is not part of line)
-!            do j = 1, lmt(ConnLine)
-!              kntimel(i,j+TransMember(ConnNode)) = line(ConnLine,j)
-!            end do
-!
-!        !enter kntimel entries to all the other elements, i.e. to 2D-elements and 1D-elements
-!        else
-          k = 3
-          IF (nop (i, 7) .gt.0) k = 4
-          DO j = 1, k
-            l = 2 * j - 1
-            kntimel (i, j) = nop (i, l)
-          enddo
-!        endif
-!-
-      ENDDO Throughelements
+
+!nis,feb07,testing
+WRITE(*,*) 'Reordering started'
+pause
 !-
 
-      maxc = maxcn
-!nis,dec06: Size is given automatically later on
-!!nis,dec06: The size might be bigger then 8, if there are 1D-2D-LineTransitions
-!      !ncn = 8
-!      if (MaxLT.ne.0) then
-!        ncn = maxsize
-!      else
-!        ncn = 8
-!      end if
-!!-
+!get the node numbers into temporary memory
+DO i = 1, ne
+  !node number (corner nodes) is 2 for 1D elements
+  k = 2
+  !if it is a triangular element increase number of corner nodes to 3
+  IF (nop (i, 5) > 0) k = 3
+  !if it is a quadrilateral element increase number of corner nodes to 4
+  if (nop (i, 7) > 0) k = 4
+  !save the node numbers
+  DO j = 1, k
+    l = 2 * j - 1
+    kntimel (i, j) = nop (i, l)
+  enddo
+
+  !nis,feb07,testing
+  !WRITE(*,*) maxlt
+  !WRITE(*,*) 'Element: ',(kntimel(i,j), j=1, k)
+  !-
+
+  !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel
+  if (maxlt > 0 .and. k == 2) then
+    !first the correct line has to be found, by running through all possible lines
+    FindLine: do j = 1, MaxLT
+      !stop, if it is the correct line
+      if (TransLines (j, 1) == i) then
+        !run through line defintion and transfer nodes to kntimel
+        do l = 1, lmt( TransLines (j,2))
+          !copy line node into kntimel. If it is the connecting node, jump over, because it is only allowed to occur once
+          IF (line (TransLines (j,2), l) /= nop (i, 3)) kntimel (i, l+2) = line( TransLines (j,2), l)
+        enddo
+        EXIT FindLine
+      end if
+    end do FindLine
+    !WRITE(*,*) i, (kntimel(i,l),l=1,lmt(TransLines(j,2)))
+    !pause
+
+  end if
+enddo
+!nis,feb07,testing
+!pause
 !-
 
-      ierr = 0 
+maxc = maxcn
+
+!The size is in general 4, but if there was a line transition in the network, this number increases to maxsize
+if (MaxLT /= 0) then
+  ncn = maxsize
+else
+  ncn  = 4
+end if
+
+!nis,feb07,testing
+WRITE(*,*) ncn, 'maximale Elementgroesse'
+pause
+!-
+
+ierr = 0
+
 !tm Thomas Maurer, 15.05,1998                                           
 !tm in folgender Zeile befindet sich eine Variable idx,                 
 !tm die nie initialisiert wurde und sonst im gesamten Programm          
@@ -403,62 +382,58 @@ WRITE(*,*) 'Reordering started'
 !SR Da nprt nicht genutzt wird, ist auch idx hinfaellig: deaktiviert 09.
 !SR      nprt = idx-1                                                   
 !SR                                                                     
-      DO 400 n = 1, np 
-        DO 400 m = 1, maxc 
-          icon (n, m) = 0 
-  400 CONTINUE 
-      DO 500 n = 1, ne
 
-!nis,jan07: Reordering scheme has to be reworked
-!        !nis,dec06: Problem of connected node numbers
-!        if (nop(n,1).ne.0 .and. nop(n,3).ne.0) then
-!          if (Transmember(nop(n,1)).ne.0 .or. Transmember(nop(n,3)).ne.0) then
-!          !find the connected CCL which represents the 1D-2D-Transitionline
-!          findlineagain: do j = 1, MaxLT
-!            if (n.eq.TransLines(j,1)) then
-!              !get the number of connected nodes; connectivity of transition element
-!              ncn = lmt(TransLines(j,2)) + Transmember(ConnectNode(n))
-!              EXIT findlineagain
-!            endif
-!          end do findlineagain
-!          else
-!            if (ncorn(n).eq.3) then
-!              ncn = 2
-!            else
-!              ncn = ncorn(n)/2
-!            endif
-!          end if
-!        else
-!            if (ncorn(n).eq.3) then
-!              ncn = 2
-!            else
-!              ncn = ncorn(n)/2
-!            endif
-!        end if
-!        !testing
-!        WRITE(*,*) n, ncn
-!        !-
-!-
+!Initialize array which shows nodes connected to others
+DO n = 1, np
+  DO m = 1, maxc
+    icon (n, m) = 0
+  enddo
+enddo
 
-        DO 470 m = 1, ncn
-          i = kntimel (n, m) 
-          IF (i.eq.0) goto 500 
-          DO 465 k = 1, ncn 
-            l = kntimel (n, k) 
-            IF (l.eq.i) goto 465 
-            DO 450 j = 1, maxc 
-              IF (icon (i, j) .eq.0) goto 460 
-              IF (icon (i, j) .eq.l) goto 465
-  450       END DO 
-            ierr = 1 
-!NiS,mar06: unit name changed; changed iout to Lout
-            WRITE (Lout, 6090) maxc, i
+!This loop fills in all nodes, that have direct connection to others into icon array.
+ConnectsOuter: DO n = 1, ne
+
+
+  DO m = 1, ncn
+    !Get the reference node
+    i = kntimel (n, m)
+
+    !if node is zero go to next element
+    IF (i == 0) CYCLE ConnectsOuter
+    !run through all nodes of the actual element
+    ConnectsInner: DO k = 1, ncn
+
+      !get a node of the element's definition list
+      l = kntimel (n, k)
+!      WRITE(*,*) m, i, l
+!      pause
+
+      !cycle process if the the second node choice is the same as the first one. They don't need to be connected
+      IF (l == i) CYCLE ConnectsInner
+
+      !Check, whether node is either not zero nor the same as already inserted in the connection matrix (icon); if not fill in the actual node
+      !number connection
+      GetConnection: DO j = 1, maxc
+        IF (icon (i, j) == 0) exit GetConnection
+        IF (icon (i, j) == l) CYCLE ConnectsInner
+        if (j == maxc) then
+          ierr = 1
+          !NiS,mar06: unit name changed; changed iout to Lout
+          WRITE (Lout, 6090) maxc, i
+        ENDIF
+      END DO GetConnection
+      icon (i, j) = l
+      !write(*,*) 'Weise Knoten ', i, 'Knoten ', l, 'zu'
+    END DO ConnectsInner
+  END DO
+
+END DO ConnectsOuter
+!pause
+
  6090 FORMAT( // 10x, '***error-more than',i5,  ' nodes connected to node', i5 )
-  460       icon (i, j) = l 
-  465     END DO 
-  470   END DO 
-  500 END DO 
-      IF (ierr.eq.1) stop 5 
+
+IF (ierr.eq.1) stop 5
+
       nepem = 0 
       DO 510 n = 1, np 
         IF (icon (n, 1) .gt.0) nepem = nepem + 1 
@@ -471,10 +446,7 @@ WRITE(*,*) 'Reordering started'
         is = 0 
         DO 530 m = 1, mp 
           IF (n.eq.list (m) ) is = 1
-!nis,dec06: This makes no sense, because list(m+1) doesn't have a value, changing the definition order
-!          IF (is.eq.1) list (m) = list (m + 1)
-          IF (is.eq.1) list (m+1) = list (m)
-!-
+          IF (is.eq.1) list (m) = list (m + 1)
   530   END DO 
         IF (is.eq.1) mp = mp - 1 
         DO 600 j = 1, maxc 
@@ -512,16 +484,19 @@ WRITE(*,*) 'Reordering started'
         DO 780 j = 1, maxc 
   780 icon (i, j) = iabs (icon (i, j) ) 
 
-!nis,dec06: kntimel becomes global, so no overgiving necessary
-!      CALL order (idxx, kntimel, qlist, icon)
-      CALL order_Kalyps (idxx, qlist, icon)
-!-
+      CALL order (idxx, kntimel, qlist, icon) 
 
       DO 785 k = 1, 160 
         qlist (1, k) = qlist (2, k) 
   785 END DO 
 !                                                                       
       IF (idxx.lt.99999) goto 790 
+
+      !nis,feb07,testing
+      WRITE(*,*) mpp, mpq
+      WRITE(*,*) 'vor Fehler'
+      pause
+      !-
       IF (mpp.le.mpq) stop 6 
       DO 810 n = 1, nepem 
         iel (n) = msn (n) 
@@ -591,9 +566,6 @@ WRITE(*,*) 'Reordering started'
       DEALLOCATE (ihold)
       DEALLOCATE (paxis)
 !-
-!nis,dec06: Deallocate the kntimel-array
-      deallocate (kntimel)
-!-
 
       RETURN
       END SUBROUTINE reord_Kalyps
@@ -602,9 +574,7 @@ WRITE(*,*) 'Reordering started'
                                                                         
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!nis,dec06: kntimel becomes global, so no overgiving necessary
-!      SUBROUTINE order (n, kntimel, qlist, icon)
-      SUBROUTINE order_Kalyps (n, qlist, icon)
+      SUBROUTINE order (n, kntimel, qlist, icon)
 !-
       !NiS,mar06: change the module-access for global variables to the RMA10S-construction
       !INCLUDE "common.cfg"
@@ -614,17 +584,10 @@ WRITE(*,*) 'Reordering started'
       USE BLK2
       USE BLKASTEPH
 !-
-      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
-      USE ParaReord
-      !-
-
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8), qlist (2, 160)
- !nis,dec06:Reordering array in module
- !      INTEGER kntimel (MaxE, 8), qlist (2, 160)
-       integer :: qlist (2, 160)
- !-
-!-
+      INTEGER kntimel (MaxE, 8), qlist (2, 160) 
+                                                                        
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
                                                                         
 !NiS,mar06: name of variable has changed in RMA10S
@@ -695,10 +658,7 @@ WRITE(*,*) 'Reordering started'
       nadm (nr) = 100 
       DO 600 m = 1, mp 
         ii = list (m) 
-!nis,dec06: kntimel becomes global, so no overgiving necessary
-!        CALL adjpt (ii, m, kntimel, icon)
-        CALL adjpt_Kalyps (ii, m, icon)
-!-
+        CALL adjpt (ii, m, kntimel, icon) 
   600 END DO 
  1000 m = icol (1, 1) 
 !      print *,'m=',m                                                   
@@ -732,9 +692,9 @@ WRITE(*,*) 'Reordering started'
  1070 CONTINUE 
 !     add to column adjacent point of eliminated point                  
 !                                                                       
-      DO 270 j = 1, maxc 
-        !nis,dec06,testing
-        !WRITE(*,*) n
+      DO 270 j = 1, maxc
+        !nis,feb07,testing
+        WRITE(*,*) j, ii, icon(n,j)
         !-
         ii = icon (n, j) 
         IF (ii.le.0) goto 270 
@@ -772,15 +732,12 @@ WRITE(*,*) 'Reordering started'
         msn (n) = iel (n) 
  1400 END DO 
       RETURN 
-      END SUBROUTINE order_Kalyps
+      END SUBROUTINE order                          
                                                                         
                                                                         
                                                                         
 !-----------------------------------------------------------------------
-!nis,dec06: kntimel becomes global, so no overgiving necessary
-!      SUBROUTINE adjpt (ii, m, kntimel, icon)
-      SUBROUTINE adjpt_Kalyps (ii, m, icon)
-!-
+      SUBROUTINE adjpt (ii, m, kntimel, icon)
 !                                                                       
 !     Hier wird ???  WP                                                 
 !                                                                       
@@ -794,16 +751,10 @@ WRITE(*,*) 'Reordering started'
       USE BLK2
       USE BLKASTEPH
 !-
-      !nis,dec06: Module for Reordering purposes, problem is that size of arrays have to be overgiven
-      USE ParaReord
-      !-
-
 
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8) 
- !nis,dec06: Reordering array newly in module
- !     INTEGER kntimel (MaxE, 8)
- !-
+      INTEGER kntimel (MaxE, 8)
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
 !      INTEGER icon (mnd, maxcn)
       INTEGER icon (MaxP, maxcn)
@@ -836,7 +787,7 @@ WRITE(*,*) 'Reordering started'
       icol (nr, nc) = m 
   400 CONTINUE 
       RETURN 
-      END SUBROUTINE adjpt_Kalyps
+      END SUBROUTINE adjpt                          
                                                                         
                                                                         
                                                                         
@@ -2214,9 +2165,9 @@ WRITE ( * , 105)
 105 format (1X, 'Reordering has to be done.')
 
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
-!CALL start_node (qlist, k, np)
+CALL start_node (qlist, k, np)
 !CALL reord (np, ne, qlist)
-!CALL reord_Kalyps (np, ne, qlist)
+CALL reord_Kalyps (np, ne, qlist)
 !-
 
 
@@ -2636,14 +2587,6 @@ SUBROUTINE start_node (qlist, k, n)
 USE BLK10MOD
 
 INTEGER qlist (2, 160)
-
-
-!nis,dec06: Initializing qlist
-do i = 1,160
-  qlist(1,i) = 0
-  qlist(2,i) = 0
-enddo
-!-
 
 
 IF (lmt (1) .gt.0) then

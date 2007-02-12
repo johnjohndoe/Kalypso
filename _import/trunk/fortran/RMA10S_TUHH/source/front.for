@@ -568,11 +568,11 @@ CIPK FEB04
             !                the factor is .eq. 1.0, if the node is not in a line-Connection
             fac(temp_nbn) = EqScale(nop(n,node),degree)
             !testing
-            if (fac(temp_nbn).ne.1.0) then
-              WRITE(*,*) 'Factor wird angewendet:'
-              WRITE(*,*) fac(temp_nbn), nop(n,node), n, degree
-              WRITE(*,*) 'Faktor, Knoten, Element, freiheitsgrad'
-            end if
+            !if (fac(temp_nbn).ne.1.0) then
+            !  WRITE(*,*) 'Factor wird angewendet:'
+            !  WRITE(*,*) fac(temp_nbn), nop(n,node), n, degree
+            !  WRITE(*,*) 'Faktor, Knoten, Element, freiheitsgrad'
+            !end if
             !-
           enddo
         end do

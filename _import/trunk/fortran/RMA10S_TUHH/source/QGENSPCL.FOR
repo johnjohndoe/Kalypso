@@ -164,7 +164,10 @@ C
             DY =-(CORD(NC,2)-CORD(NA,2))
             !EFa Nov06, Sonderfall für Teschke-1D-Elemente mit Kilometrierung
             if (kmx(na).NE.-1.and.kmx(nc).NE.-1) then
-              xl=ABS(kmx(na)-kmx(nc))
+              !nis,feb07: Scaling kilometers to meters
+              !xl=ABS(kmx(na)-kmx(nc))
+              xl=ABS(kmx(na)-kmx(nc)) * 1000
+              !-
             else
               XL=SQRT(DX**2+DY**2)
             end if

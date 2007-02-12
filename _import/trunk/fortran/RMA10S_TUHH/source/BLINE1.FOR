@@ -656,6 +656,10 @@ C-
 !nis,nov06: Test for 1D-2D-line-transitions
         ELSEIF (ncrn(n).eq.3) then
 
+          !if there is no line transition cycle
+          if (MaxLT == 0) CYCLE angulardiffs
+
+          !find the correct line transition number
           findtranselt: do j = 1, MaxLT
             !if the element n is part of any transition go on with the dirAdjustment-loop
             if (TransLines(j,1) .eq. n) then

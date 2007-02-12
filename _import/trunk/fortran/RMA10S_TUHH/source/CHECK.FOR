@@ -269,6 +269,13 @@ cipk feb01  skip out for zero lines
               do i = 1, 13
                 TempArea = TempArea + APoly(NA,i) * vel(3,na)**(i-1)
               end do
+              !nis,feb07,testing
+              if (j == 30) then
+                WRITE(*,*) vel(1,na), vel(2,na)
+                WRITE(*,*) 'Beim update'
+                pause
+              end if
+              !-
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
 
             !nis,feb07,com: Original trapezoidal cross sections
