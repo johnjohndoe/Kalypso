@@ -59,7 +59,7 @@ public class Perspective implements IPerspectiveFactory
     rightTop.addView( MapView.ID );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
-    // TODO: secondary id does not work here: gives assertion
+    // TODO: secondary id does not work here: gives assertion failed
 //    layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );
     layout.addNewWizardShortcut( Kalypso1D2DNewProjectWizard.ID );
