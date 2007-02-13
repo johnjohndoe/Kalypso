@@ -63,4 +63,11 @@ public interface ITerrainModel extends IFeatureWrapper2
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
 
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
+  
+  /**
+   * Return the terrain elevation system of this terrain model
+   * @return the terrain elevation system of this model
+   */
+  public ITerrainElevationModelSystem getTerrainElevationModelSystem();
+  
 }

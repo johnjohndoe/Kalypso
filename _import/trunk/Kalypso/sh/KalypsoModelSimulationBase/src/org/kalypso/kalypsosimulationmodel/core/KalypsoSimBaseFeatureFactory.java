@@ -15,10 +15,13 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
@@ -214,7 +217,48 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		  }
 		};
 		cMap.put(IRiverProfileNetwork.class, cTor);
+        
+//      ITerrainElevationModelSystem
+        cTor= new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            return new TerrainElevationModelSystem(feature);
+          }
+        };
+        cMap.put(ITerrainElevationModelSystem.class, cTor);
 		
+//      ITerrainElevationModel
+        cTor= new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            return new TerrainElevationModel(feature);
+          }
+        };
+        cMap.put(ITerrainElevationModel.class, cTor);
+        
+        
+        
+//      ITerrainModel
+        cTor= new AdapterConstructor()
+        {
+          public Object constructAdapter(
+              Feature feature, 
+              Class cls) 
+          throws IllegalArgumentException
+          {
+            return new TerrainModel(feature);
+          }
+        };
+        cMap.put(ITerrainModel.class, cTor);
+
 		return Collections.unmodifiableMap(cMap);
 	}
 }

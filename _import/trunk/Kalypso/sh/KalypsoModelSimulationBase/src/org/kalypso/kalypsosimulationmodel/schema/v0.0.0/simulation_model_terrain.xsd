@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--  
-	Provide schema elements to model flow relationships
+	Provide schema elements to model terrain
 	
 	@author Patrice Congo
 -->
@@ -43,24 +43,6 @@
 		schemaLocation="gml_imitations.xsd"
 		/>
 	
-	<xs:element 
-		name="Coverage"
-		type="simBase:CoverageType"
-		substitutionGroup="gml:_Coverage"/>
-	<xs:complexType 
-		name="CoverageType"
-		abstract="false">
-		<xs:annotation>
-			<xs:documentation>
-				coverage to get arround the parsing limitation
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractCoverageType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	
 	<!-- =================================================================
 		terrainModel
@@ -284,33 +266,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- ================================================================
-			triangulatedIrregularNetwork
-	================================================================= -->
-	<xs:element 
-		name="triangulatedIrregularNetwork" 
-		type="simBase:TriangulatedIrregularNetworkPropertyType"/>
-	<xs:complexType name="TriangulatedIrregularNetworkPropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:TriangulatedIrregularNetwork"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
 	
-	<!-- =================================================================
-		TriangulatedIrregularNetwork
-	================================================================== -->
-	<xs:element 
-		name="TriangulatedIrregularNetwork" 
-		type="simBase:TriangulatedIrregularNetworkType" 
-		substitutionGroup="gml:Surface"/>
-
-	<xs:complexType 
-		name="TriangulatedIrregularNetworkType">
-		<xs:complexContent>
-			<xs:extension base="gml:TinType"/>
-		</xs:complexContent>
-	</xs:complexType>
+	
+	
 	
 	<!-- =================================================================
 	roughnessLayerPolynomCollection property

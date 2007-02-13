@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -48,9 +49,12 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
 {
+ 
+  
   public TerrainModel( final Feature featureToBind )
   {
     super( featureToBind, QNAME_TERRAIN_MODEL );
+    
   }
 
   /**
@@ -77,6 +81,23 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
     return new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
 //    return (IRoughnessPolygonCollection) feature.getAdapter( IRoughnessPolygonCollection.class );
 //    return (IRoughnessPolygonCollection) feature.getParent().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
+  }
+  
+  public ITerrainElevationModelSystem getTerrainElevationModelSystem()
+  {
+    final Feature feature = 
+          (Feature) getFeature().getProperty( 
+              KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS);
+    
+    if( feature == null )
+    {
+      return null;
+    }
+    else
+    {
+      return (ITerrainElevationModelSystem) 
+          feature.getAdapter( ITerrainElevationModelSystem.class );
+    }
   }
 
 }

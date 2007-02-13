@@ -85,4 +85,24 @@ public class KalypsoModelSimulationBaseConsts
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
 				"Polynomial2D");
+    
+    public static final QName SIM_BASE_PROP_TERRAIN_ELE_SYS = 
+        new QName(
+                UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+                "terrainElevationModelSystem");
+    
+    public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = 
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+              "terrainElevationModel");
+    
+    public static final QName SIM_BASE_F_TERRAIN_ELE_SYS = 
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+              "TerrainElevationModelSystem");
+    
+    public static final QName SIM_BASE_F_TERRAIN_ELE_MODEL = 
+      new QName(
+              UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
+              "TerrainElevationModel");
 }
