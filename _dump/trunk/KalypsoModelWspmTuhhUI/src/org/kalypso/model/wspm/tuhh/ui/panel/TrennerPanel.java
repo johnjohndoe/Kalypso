@@ -115,7 +115,7 @@ public class TrennerPanel extends AbstractProfilView
 
   public TrennerPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
   }
 
   @Override

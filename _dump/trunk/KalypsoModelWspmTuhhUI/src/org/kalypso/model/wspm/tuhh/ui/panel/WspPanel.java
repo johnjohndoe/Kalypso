@@ -67,7 +67,7 @@ public class WspPanel extends AbstractProfilView
 
   public WspPanel( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult result )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
 
     m_result = result;
   }

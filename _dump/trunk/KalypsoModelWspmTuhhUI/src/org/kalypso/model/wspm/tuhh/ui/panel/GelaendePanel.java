@@ -63,7 +63,7 @@ public class GelaendePanel extends AbstractProfilView
 {
   public GelaendePanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
   }
 
   /**

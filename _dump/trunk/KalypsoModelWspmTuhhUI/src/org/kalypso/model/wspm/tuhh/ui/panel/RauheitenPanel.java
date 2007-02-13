@@ -93,7 +93,7 @@ public class RauheitenPanel extends AbstractProfilView
 
   public RauheitenPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
   }
 
   /**

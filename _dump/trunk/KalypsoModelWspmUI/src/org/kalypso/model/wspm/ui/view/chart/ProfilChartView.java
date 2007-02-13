@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -107,9 +106,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private AxisRange m_valueRangeRight;
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
   {
-    super( pem, viewdata, results );
+    super( pem, viewdata );
 
     m_colorRegistry = colorRegistry;
   }
@@ -143,9 +142,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
       if( provider == null )
         return;
-      
+
       // call provider
-      final IProfilChartLayer[] layers = provider.createLayer( this, profil, getResults(), m_domainRange, m_valueRangeLeft, m_valueRangeRight,m_colorRegistry );
+      final IProfilChartLayer[] layers = provider.createLayer( this, profil, getResults(), m_domainRange, m_valueRangeLeft, m_valueRangeRight, m_colorRegistry );
       for( final IProfilChartLayer layer : layers )
         addLayer( layer, visibility );
     }
@@ -182,9 +181,12 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     // TODO: move this to layer provider
     // or even better: let layer provider create layers and then retrieve domain/value axes from layers
-    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true,5,1.0 );
-    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+    m_domainRange = new AxisRange( "", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+    m_valueRangeLeft = new AxisRange( "", SwitchDelegate.VERTICAL, true, 5, 1.0 );
+    m_valueRangeRight = new AxisRange( "", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+//    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+//    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
+//    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
     final IAxisRenderer domainrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
     final IAxisRenderer leftrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, false );
@@ -193,7 +195,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_chart.setAxisRenderer( m_domainRange, domainrenderer );
     m_chart.setAxisRenderer( m_valueRangeLeft, leftrenderer );
     m_chart.setAxisRenderer( m_valueRangeRight, rightrenderer );
-    m_chart.setFixAspectRatio(null );
+    m_chart.setFixAspectRatio( null );
     try
     {
       createLayer();
@@ -358,11 +360,11 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           m_chart.repaint();
           break;
         case FIX_RATIO_2:
-          m_chart.setFixAspectRatio( 2.0);
+          m_chart.setFixAspectRatio( 2.0 );
           m_chart.repaint();
           break;
         case FIX_RATIO_3:
-          m_chart.setFixAspectRatio( 10.0);
+          m_chart.setFixAspectRatio( 10.0 );
           m_chart.repaint();
           break;
 

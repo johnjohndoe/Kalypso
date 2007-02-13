@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
 
-
 /**
  * @author belger
  */
@@ -59,21 +58,18 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
   private Control m_control;
 
-  private final IStationResult[] m_results;
- 
-  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results )
+  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
     m_pem = pem;
     m_viewdata = viewdata;
-    m_results = results == null ? new IStationResult[0] : results;
-    
+
     if( m_pem != null )
       m_pem.addProfilListener( this );
-    
+
     if( m_viewdata != null )
       m_viewdata.addProfilViewDataListener( this );
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#dispose()
    */
@@ -97,14 +93,14 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     return m_control;
   }
 
-  public final Control getControl()
+  public final Control getControl( )
   {
     if( m_control == null )
       throw new IllegalStateException( "createControl not yet called" );
-    
+
     return m_control;
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()
    */
@@ -120,16 +116,17 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
     return m_viewdata;
   }
-  
+
   public IStationResult[] getResults( )
   {
-    return m_results;
+    final IStationResult[] results = m_pem.getResults();
+    return results == null ? new IStationResult[0] : results;
   }
 
   public void onProfilViewDataChanged( )
   {
   }
-  
+
   public IProfilEventManager getProfilEventManager( )
   {
     return m_pem;

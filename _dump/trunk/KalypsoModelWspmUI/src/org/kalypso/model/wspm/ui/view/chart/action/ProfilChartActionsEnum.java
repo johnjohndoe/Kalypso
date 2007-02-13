@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.action;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 public enum ProfilChartActionsEnum
 {
@@ -117,4 +119,29 @@ public enum ProfilChartActionsEnum
   {
     return m_label;
   }
+
+  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction )
+  {
+    final int style = chartAction.getStyle();
+    final String label = chartAction.toString();
+    
+    final IAction action = new Action( label, style )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#run()
+       */
+      @Override
+      public void run( )
+      {
+        profilView.runChartAction( chartAction );
+      }
+    };
+
+    action.setToolTipText( chartAction.getTooltip() );
+    action.setImageDescriptor( chartAction.getEnabledImage() );
+    action.setDisabledImageDescriptor( chartAction.getDisabledImage() );
+
+    return action;
+  }
+
 }

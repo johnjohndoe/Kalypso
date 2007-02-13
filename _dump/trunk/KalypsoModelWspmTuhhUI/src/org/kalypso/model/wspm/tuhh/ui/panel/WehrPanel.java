@@ -248,7 +248,7 @@ public class WehrPanel extends AbstractProfilView
 
   public WehrPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
     m_deviderLines = new LinkedList<DeviderLine>();
     m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
     m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();

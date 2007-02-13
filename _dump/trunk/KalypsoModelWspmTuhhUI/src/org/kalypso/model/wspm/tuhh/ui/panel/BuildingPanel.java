@@ -107,7 +107,7 @@ public class BuildingPanel extends AbstractProfilView
 
   public BuildingPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
 
     m_building = getProfil().getBuilding();
   }

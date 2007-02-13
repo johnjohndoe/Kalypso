@@ -182,7 +182,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       // PROFIL_PROPERTY.KOMMENTAR );
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
-      m_chartview = new ProfilChartView( m_pem, m_viewdata, m_pem.getResults(), m_profilColorRegistry );
+      m_chartview = new ProfilChartView( m_pem, m_viewdata, m_profilColorRegistry );
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
 

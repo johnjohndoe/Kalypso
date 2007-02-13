@@ -184,7 +184,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 
   public ProfilSWTTableView( final IProfilEventManager pem, final ProfilViewData viewdata, final IFile file )
   {
-    super( pem, viewdata, null );
+    super( pem, viewdata );
     m_file = file;
 
     createActions();
