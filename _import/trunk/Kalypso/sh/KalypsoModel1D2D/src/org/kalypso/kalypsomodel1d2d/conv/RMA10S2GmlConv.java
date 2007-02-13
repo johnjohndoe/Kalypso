@@ -165,17 +165,21 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   static public  void toDiscretisationModel(
                                   InputStream rma10sModelInput, 
                                   IFEDiscretisationModel1d2d targetModel,
-                                  CS_CoordinateSystem coordinateSystem,
+                                  IPositionProvider positionProvider,
                                   IModelElementIDProvider idProvider) throws IllegalStateException, IOException
   {
+    
     IRMA10SModelReader reader= new RMA10S2GmlConv();
     
     IRMA10SModelElementHandler handler= 
                  new DiscretisationModel1d2dHandler(
-                                 targetModel, coordinateSystem, idProvider);
+                                           targetModel, 
+                                           positionProvider, 
+                                           idProvider);
     reader.setModelElementIDProvider( idProvider );
     reader.setRMA10SModelElementHandler( handler );
     reader.parse( rma10sModelInput );
+    
     return;
   }
   

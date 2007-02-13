@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.EdgeInv;
@@ -51,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -72,7 +74,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private IFeatureWrapperCollection<IFE1D2DNode> modelNodes;
   private IFeatureWrapperCollection<IFE1D2DEdge> modelEdges;
   private IFeatureWrapperCollection<IFE1D2DElement> modelElements;
-  private CS_CoordinateSystem coordinateSystem;
+//  private CS_CoordinateSystem coordinateSystem;
   private GMLWorkspace workspace;
   
   /**
@@ -87,12 +89,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private IModelElementIDProvider modelElementIDProvider;
   
+  private IPositionProvider positionProvider;
   /**
    * 
    */
   public DiscretisationModel1d2dHandler(
                              IFEDiscretisationModel1d2d model,
-                             CS_CoordinateSystem coordinateSystem,
+                             IPositionProvider positionProvider,
                              IModelElementIDProvider modelElementIDProvider)
   {
     this.model=model;
@@ -100,7 +103,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     modelNodes=model.getNodes();
     modelEdges=model.getEdges();
     modelElements=model.getElements();
-    this.coordinateSystem=coordinateSystem;
+    this.positionProvider=positionProvider;
     this.modelElementIDProvider=modelElementIDProvider;
   }
 
@@ -280,6 +283,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                 double northing, 
                 double elevation )
   {
+    //TODO use model.createNode to create from position
        String gmlID=
            modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
        if(workspace.getFeature( gmlID ) !=null)
@@ -291,12 +295,19 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
                      modelNodes.addNew( 
                            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
                            gmlID );
-       node.setPoint( 
-           GeometryFactory.createGM_Point(
-                             easting+35*100000,
-                             northing+35*100000,
-                             elevation,
-                             coordinateSystem ));
+//       node.setPoint( 
+//           GeometryFactory.createGM_Point(
+//                             easting+35*100000,
+//                             northing+35*100000,
+//                             elevation,
+//                             coordinateSystem ));
+       GM_Point newLocation =   
+             positionProvider.getGMPoint( 
+                  easting,//nativeX, 
+                  northing/*nativeY*/, 
+                  elevation//nativeZ 
+                  );
+       node.setPoint( newLocation );
        
   }
 

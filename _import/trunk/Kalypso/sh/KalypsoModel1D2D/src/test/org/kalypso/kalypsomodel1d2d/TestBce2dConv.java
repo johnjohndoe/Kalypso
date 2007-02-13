@@ -46,8 +46,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
+import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.TypeIdAppendIdProvider;
+import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -111,10 +113,16 @@ public class TestBce2dConv extends TestCase
     }
     try
     {
+      IPositionProvider positionProvider=
+              new XYZOffsetPositionProvider(
+                          TestWorkspaces.getGaussKrueger(),
+                          35*100000,
+                          35*100000,
+                          0);
       RMA10S2GmlConv.toDiscretisationModel( 
                               aggerStream, 
                               targetModel,
-                              TestWorkspaces.getGaussKrueger(),
+                              positionProvider,
                               new TypeIdAppendIdProvider() );
     }
     catch(Throwable th)
@@ -123,7 +131,12 @@ public class TestBce2dConv extends TestCase
     }
     try
     {
-      File gmlFile= new File("D:\\Eclipse\\TESTS_RESULTS\\agger_modell.gml");
+      String fileName="C:\\tmp\\agger_modell.gml";
+      File gmlFile= new File(fileName);
+      if(!gmlFile.getParentFile().exists())
+      {
+        return; 
+      }
       
       OutputStreamWriter writer= 
             new OutputStreamWriter(
