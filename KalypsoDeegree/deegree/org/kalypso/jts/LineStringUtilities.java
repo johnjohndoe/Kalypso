@@ -58,11 +58,11 @@ import com.vividsolutions.jts.geom.LineString;
 public class LineStringUtilities
 {
 
-  public static LineString changeOrientation( LineString InputLine )
+  public static LineString changeOrientation( LineString inputLine )
   {
     // TODO Auto-generated method stub
  
-    Coordinate[] coordinatesInputLine = InputLine.getCoordinates();
+    Coordinate[] coordinatesInputLine = inputLine.getCoordinates();
     LinkedList<Coordinate> newCoordinates = new LinkedList<Coordinate>(); 
 
     for (int i = coordinatesInputLine.length -1; i >=0; i--) 
@@ -70,7 +70,7 @@ public class LineStringUtilities
       newCoordinates.add( coordinatesInputLine[i] );
     }
     
-    GeometryFactory factory = new GeometryFactory(InputLine.getPrecisionModel(), InputLine.getSRID());
+    GeometryFactory factory = new GeometryFactory(inputLine.getPrecisionModel(), inputLine.getSRID());
     LineString flippedLine = factory.createLineString( newCoordinates.toArray( new Coordinate[]{} ) );
 
     return flippedLine;
