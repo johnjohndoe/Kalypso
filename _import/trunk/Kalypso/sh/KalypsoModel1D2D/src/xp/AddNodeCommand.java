@@ -101,7 +101,8 @@ public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
    */
   public void process( ) throws Exception
   {
-    addedNode=discretisationModel.createNode( nodePoint, notCreated,searchRectWidth );
+    addedNode=discretisationModel.createNode( 
+                    nodePoint,searchRectWidth, notCreated );
 //    <System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
   }
 

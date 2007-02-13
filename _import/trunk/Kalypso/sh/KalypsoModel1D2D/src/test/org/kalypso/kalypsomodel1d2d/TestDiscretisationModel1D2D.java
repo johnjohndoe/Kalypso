@@ -136,7 +136,7 @@ public class TestDiscretisationModel1D2D extends TestCase
         GM_Point nodePoint =
           GeometryFactory.createGM_Point( 
                         i10, j*10, GAUSS_KRUEGER );
-        nodes[i][j]=model.createNode( nodePoint, alreadyExists,5 );
+        nodes[i][j]=model.createNode( nodePoint,5, alreadyExists );
         assertFalse( 
             "Points not cannot be in model but already exists",
             alreadyExists[0] );

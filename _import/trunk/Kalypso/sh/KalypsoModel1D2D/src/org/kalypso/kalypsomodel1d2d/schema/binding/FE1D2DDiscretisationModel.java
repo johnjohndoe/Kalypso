@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -110,7 +111,10 @@ public class FE1D2DDiscretisationModel
 //    System.out.println("Model event added");
     
   }
-
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findEdge(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode, org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode)
+   */
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
 //    final List edgeList = 
@@ -147,7 +151,39 @@ public class FE1D2DDiscretisationModel
         }
         else
         {
-          return new EdgeInv(edge,this);
+          //TODO find inv edge
+          GM_Envelope env=edge.getCurve().getEnvelope();
+          IEdgeInv foundEdgeInv=null;
+                            
+          for(Feature edgeFeature:(List<Feature>)m_edges.getWrappedList().query( env, null))
+          {
+            if(GMLSchemaUtilities.substitutes( 
+                            edgeFeature.getFeatureType(),
+                            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV))
+            {
+              IEdgeInv tempEdgeInv= (IEdgeInv)edgeFeature.getAdapter( IEdgeInv.class );
+              if(tempEdgeInv==null)
+              {
+                throw new NullPointerException(
+                    "Could not adapt to inv edge:"+edgeFeature);
+              }
+              if( edge.equals( tempEdgeInv.getInverted()))
+              {
+                foundEdgeInv=tempEdgeInv;
+              }
+                
+                
+            }
+          }
+          if(foundEdgeInv==null)
+          {
+            return foundEdgeInv;
+          }
+          else 
+          {
+            return new EdgeInv(edge,this);
+          }
+          
         }
       }
       else if(size==0)
@@ -219,12 +255,12 @@ public class FE1D2DDiscretisationModel
   }
   
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(GM_Point, boolean[], double)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#createNode(GM_Point, double, boolean[])
    */
   public IFE1D2DNode createNode( 
                           GM_Point nodeLocation,
-                          boolean[] alreadyExists,
-                          double searchRectWidth)
+                          double searchRectWidth,
+                          boolean[] alreadyExists)
   { 
     Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" );
     
@@ -247,7 +283,7 @@ public class FE1D2DDiscretisationModel
     }
     else
     {
-      FeatureList nodeList=m_nodes.getWrappedList();
+//      FeatureList nodeList = m_nodes.getWrappedList();
       
       node =  m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       node.setPoint( nodeLocation );
@@ -298,6 +334,4 @@ public class FE1D2DDiscretisationModel
       return nearest;
     }
   }
-
-  
 }

@@ -206,6 +206,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
             modelElementIDProvider.rma10sToGmlID( 
                         ERma10sModelElementKey.FE, elementRightID);
           IFE1D2DElement eleRight=getElement2D(gmlID);
+          //TODO remove dependencies to the inv edge use find node instead
+          //change the api to get the whether is was newly created or not
           IEdgeInv inv= new EdgeInv(edge,model);
           int size=eleRight.getEdges().size();
           eleRight.addEdge( inv.getGmlID() );
