@@ -45,14 +45,18 @@ import java.util.List;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for some geometry operations.
@@ -409,5 +413,18 @@ public class JTSUtilities
   {
     LineSegment segment = new LineSegment( coordinateOne, coordinateTwo );
     return segment.getLength();
+  }
+
+  /** Creates a jts-polygon from a deegree-envelope */
+  public static Polygon convertGMEnvelopeToPolygon(final GM_Envelope envelope, final GeometryFactory gf )
+  {
+    final Coordinate minCoord = JTSAdapter.export( envelope.getMin() );
+    final Coordinate maxCoord = JTSAdapter.export( envelope.getMax() );
+    final Coordinate tmp1Coord = new Coordinate( minCoord.x, maxCoord.y );
+    final Coordinate tmp2Coord = new Coordinate( maxCoord.x, minCoord.y );
+    
+    final Coordinate[] coordinates = new Coordinate[] {minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
+    final LinearRing linearRing = gf.createLinearRing( coordinates );
+    return gf.createPolygon( linearRing, null );
   }
 }

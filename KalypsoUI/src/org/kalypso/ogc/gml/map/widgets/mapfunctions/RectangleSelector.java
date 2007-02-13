@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.mapfunctions;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Stroke;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -94,7 +99,14 @@ public class RectangleSelector
     if( rectangle != null )
     {
       if( rectangle.width != 0 && rectangle.height != 0 )
+      {
+        // TODO: set color/line width and so on
+        // TODO 2: configure g at a central point
+        final Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke( new BasicStroke() );
+        g2.setColor( new Color( 255, 0, 0 ) );
         g.drawRect( rectangle.x, rectangle.y, rectangle.width, rectangle.height );
+      }
     }
   }
 
