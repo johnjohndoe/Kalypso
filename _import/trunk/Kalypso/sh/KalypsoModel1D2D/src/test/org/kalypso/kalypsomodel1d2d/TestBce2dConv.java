@@ -123,7 +123,7 @@ public class TestBce2dConv extends TestCase
     }
     try
     {
-      File gmlFile= new File("C:\\tmp\\agger_modell.gml");
+      File gmlFile= new File("D:\\Eclipse\\TESTS_RESULTS\\agger_modell.gml");
       
       OutputStreamWriter writer= 
             new OutputStreamWriter(
