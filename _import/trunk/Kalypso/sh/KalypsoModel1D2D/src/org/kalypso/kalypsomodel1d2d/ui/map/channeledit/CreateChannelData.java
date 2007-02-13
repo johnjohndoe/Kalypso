@@ -42,8 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -73,7 +75,9 @@ public class CreateChannelData
   private IKalypsoFeatureTheme m_bankTheme;
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
-
+  
+  private Map<Feature, Boolean> m_selectedBanks = new HashMap<Feature, Boolean>();
+  
   private final CreateMainChannelWidget m_widget;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
@@ -199,4 +203,41 @@ public class CreateChannelData
     return new ProfilEventManager( null, null );
   }
 
+  /**
+   * @param side false: left, true: right
+   */
+  public void addSelectedBanks( final Feature[] bankFeatures, final boolean side )
+  {
+    for( final Feature feature : bankFeatures )
+      m_selectedBanks.put( feature, side );
+
+    m_widget.update();
+  }
+  
+  public Feature[] getSelectedBanks( final boolean side )
+  {
+    final List<Feature> result = new ArrayList<Feature>();
+    
+    for( final Map.Entry<Feature, Boolean> entry : m_selectedBanks.entrySet() )
+    {
+      final Feature bankFeature = entry.getKey();
+      final Boolean value = entry.getValue();
+      if( value.booleanValue() == side )
+        result.add( bankFeature );
+    }
+    
+    return result.toArray( new Feature[result.size()] );
+  }
+  
+  public void removeSelectedBanks( final Feature[] bankFeatures )
+  {
+    for( final Feature feature : bankFeatures )
+      m_selectedBanks.remove( feature );
+
+    m_widget.update();
+    
+    m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
+
+    m_widget.update();
+  }
 }

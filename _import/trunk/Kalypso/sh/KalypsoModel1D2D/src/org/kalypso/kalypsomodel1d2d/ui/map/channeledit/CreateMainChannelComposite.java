@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -85,6 +88,16 @@ public class CreateMainChannelComposite extends Composite
   private final CreateMainChannelWidget m_widget;
 
   private Section m_profilSection;
+ 
+  /** m_buttonList *
+   * Following buttons are present in the Schlauchgenerator:
+   * Profile wählen
+   * Uferlinie 1 wählen
+   * Uferlinie 1 wählen
+   * Uferlinie 2 wählen
+   * Uferlinie 2 zeichnen
+   */
+  private final List<Button> m_buttonList = new ArrayList<Button>();
 
   public CreateMainChannelComposite( final Composite parent, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -132,6 +145,8 @@ public class CreateMainChannelComposite extends Composite
     GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
     profilSection.setLayoutData( gridDataProfileControl );
 
+    
+    
     updateControl();
   }
 
@@ -206,14 +221,35 @@ public class CreateMainChannelComposite extends Composite
 
     /* Button for the first bank selection */
     final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // chooseProfilesButton.setLayoutData( gridData );
+    m_buttonList.add( chooseFirstBankButton ); 
     chooseFirstBankButton.setText( "Uferlinie 1 wählen..." );
+    chooseFirstBankButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( chooseFirstBankButton.getSelection() )
+        {
+          buttonGuard ( chooseFirstBankButton );
+          final boolean side = true;
+          final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function );
+          m_widget.setDelegate( selectBankWidget );
+        }
+        else
+        {
+          m_widget.setDelegate( null );
+        }
+      }
+    } );
 
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // chooseProfilesButton.setLayoutData( gridData );
+    m_buttonList.add( drawFirstBankButton );
     drawFirstBankButton.setText( "zeichnen" );
 
+    
+    
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -254,14 +290,33 @@ public class CreateMainChannelComposite extends Composite
       }
     } );
 
-    /* Button for the first bank selection */
+    /* Button for the second bank selection */
     final Button chooseSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // chooseProfilesButton.setLayoutData( gridData );
+    m_buttonList.add( chooseSecondBankButton );
     chooseSecondBankButton.setText( "Uferlinie 2 wählen..." );
-
+    chooseSecondBankButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( chooseSecondBankButton.getSelection() )
+        {
+          buttonGuard ( chooseSecondBankButton );
+          final boolean side = false;
+          final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function );
+          m_widget.setDelegate( selectBankWidget );
+        }
+        else
+        {
+          m_widget.setDelegate( null );
+        }
+      }
+    } );
+    
     /* Button for the second bank drawing */
     final Button drawSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // chooseProfilesButton.setLayoutData( gridData );
+    m_buttonList.add( drawSecondBankButton );
     drawSecondBankButton.setText( "zeichnen" );
 
     Label bankLabel = new Label( sectionClient, SWT.NULL );
@@ -342,6 +397,7 @@ public class CreateMainChannelComposite extends Composite
     gridData.horizontalAlignment = SWT.FILL;
 
     final Button chooseProfilesButton = new Button( sectionClient, SWT.TOGGLE );
+    m_buttonList.add( chooseProfilesButton );
     chooseProfilesButton.setLayoutData( gridData );
     chooseProfilesButton.setText( "Profile wählen..." );
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
@@ -351,6 +407,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( chooseProfilesButton.getSelection() )
         {
+          buttonGuard ( chooseProfilesButton );
           final IRectangleMapFunction function = new ProfileSelectorFunction( m_data );
           final IWidget selectProfileWidget = new SelectionWidget( "", "", function );
           m_widget.setDelegate( selectProfileWidget );
@@ -423,4 +480,19 @@ public class CreateMainChannelComposite extends Composite
     m_profilSection.setExpanded( profil != null );
   }
 
+  
+  /**
+   * simulates a radio button set
+   */
+  private void buttonGuard ( Button activatedButton )
+  {
+    for( int i = 0; i < m_buttonList.size(); i++ )
+    {
+      final Button currentButton = m_buttonList.get( i );
+      if ( !activatedButton.equals( currentButton ))
+          {
+            currentButton.setSelection( false );
+          }
+    }
+  }
 }

@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -57,10 +60,13 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 
 /**
  * @author Thomas Jung
@@ -123,6 +129,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   public void paint( final Graphics g )
   {
     final Feature[] selectedProfiles = m_data.getSelectedProfiles();
+
     for( final Feature feature : selectedProfiles )
     {
       final WspmProfile profile = new WspmProfile( feature );
@@ -130,8 +137,10 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
       try
       {
-        final LineSymbolizer symb = new LineSymbolizer_Impl();
+        final LineSymbolizer symb = getProfilLineSymbolizer();
+
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+
         de.paint( g, getMapPanel().getProjection() );
       }
       catch( final IncompatibleGeometryTypeException e )
@@ -141,8 +150,55 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       }
     }
 
+    paintBanks( g, true, new Color( 0, 0, 255 ) );
+    paintBanks( g, false, new Color( 0, 255, 0 ) );
+
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
+  }
+
+  private void paintBanks( final Graphics g, final boolean side, final Color color )
+  {
+    final Feature[] selectedBanks = m_data.getSelectedBanks( side );
+    for( final Feature feature : selectedBanks )
+    {
+      final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
+
+      try
+      {
+        final LineSymbolizer symb = new LineSymbolizer_Impl();
+        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+
+        Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+        
+        defaultstroke = symb.getStroke();
+          
+        stroke.setWidth( 3 );
+        stroke.setStroke( color );
+        symb.setStroke( stroke );
+
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+        de.paint( g, getMapPanel().getProjection() );
+        
+        //TODO: Set the Stroke back to default
+        symb.setStroke( defaultstroke );
+        
+      }
+      catch( final IncompatibleGeometryTypeException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private LineSymbolizer getProfilLineSymbolizer( )
+  {
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    stroke.setWidth( 1 );
+    symb.setStroke( stroke );
+    return symb;
   }
 
   /**

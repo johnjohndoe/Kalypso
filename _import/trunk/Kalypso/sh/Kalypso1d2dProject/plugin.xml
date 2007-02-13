@@ -148,7 +148,7 @@
         <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
            <parameter
                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
-                 value="maps/base.gmt"/>
+                 value="maps/fenet.gmt"/>
         </class>
      </handler>
 	</extension>
