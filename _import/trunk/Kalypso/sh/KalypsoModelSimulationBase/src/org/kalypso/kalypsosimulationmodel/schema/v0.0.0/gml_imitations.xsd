@@ -217,6 +217,25 @@
 	</xs:complexType>
 	
 	<xs:element 
+		name="surfaceCoverage"
+		type="wbGml:SurfaceCoveragePropertyType"/>
+		
+	<xs:complexType name="SurfaceCoveragePropertyType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">				
+			</xs:documentation>			
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element 
+				ref="wbGml:SurfaceCoverage"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+	<!-- ==================================================================
+	==================================================================== -->
+	
+	<xs:element 
 		name="multiSurfaceDomain"
 		type="wbGml:MultiSurfaceDomainPropertyType"/>
 		
@@ -232,4 +251,6 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
+	
+	
 </xs:schema>
