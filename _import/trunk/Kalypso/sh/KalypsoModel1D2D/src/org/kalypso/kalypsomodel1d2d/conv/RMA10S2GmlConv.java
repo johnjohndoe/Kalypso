@@ -47,7 +47,6 @@ import java.io.LineNumberReader;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provides algorithm to convert between a bce2d model and
@@ -61,6 +60,8 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 //  private IModelElementIDProvider idProvider;
   
   private IRMA10SModelElementHandler handler;
+  
+  public static boolean verboseMode = true; 
   
 
   /**
@@ -97,7 +98,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
             line!=null;
             line=reader.readLine())
         {
-//          System.out.println(line);
+//          if(verboseMode) System.out.println(line);
           length=line.length();
           if(line.length()<2)
           {
@@ -128,7 +129,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           }
           else
           {
-            System.out.println("Unsupported section:"+line);
+            if(verboseMode) System.out.println("Unsupported section:"+line);
           }
         }
         
@@ -190,7 +191,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   {
     if(length==72)
     {
-      System.out.println(line+"["+line.substring( 3-1, 12 )+"]");
+      if(verboseMode) System.out.println(line+"["+line.substring( 3-1, 12 )+"]");
       int id = 
                 Integer.parseInt( line.substring( 3-1, 12 ).trim() );
       double easting =

@@ -30,7 +30,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWithProgress
+public class Transformer implements ICoreRunnableWithProgress
 {
   private DataContainer m_data;
 
@@ -38,7 +38,7 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
 
   private boolean isDataPrepared = false;
 
-  public TransformerShapeToIRoughnessCollection( DataContainer data )
+  public Transformer( DataContainer data )
   {
     m_data = data;
   }
@@ -50,9 +50,9 @@ public class TransformerShapeToIRoughnessCollection implements ICoreRunnableWith
     {
       if( hasMonitor )
       {
-        monitor.beginTask( Messages.getString( "ShapeToIRoughnessCollection.0" ), 100 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.0" ), 100 ); //$NON-NLS-1$
         monitor.worked( 10 );
-        monitor.subTask( Messages.getString( "ShapeToIRoughnessCollection.1" ) ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.1" ) ); //$NON-NLS-1$
       }
       try
       {

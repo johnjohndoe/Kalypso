@@ -38,9 +38,9 @@ public class BaseMapMainPage extends WizardPage
 
   public BaseMapMainPage( )
   {
-    super( Messages.getString( "BaseMapWizard.0" ) );
-    setTitle( Messages.getString( "BaseMapWizard.1" ) );
-    setDescription( Messages.getString( "BaseMapWizard.2" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.0" ) );
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.1" ) );
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.2" ) );
   }
 
   /**
@@ -62,12 +62,12 @@ public class BaseMapMainPage extends WizardPage
     final GridData gridData = new GridData();
     gridData.horizontalSpan = 3;
     label.setLayoutData( gridData );
-    label.setText( Messages.getString( "BaseMapWizard.3" ) );
+    label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_END );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "BaseMapWizard.4" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.4" ) );
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -154,7 +154,7 @@ public class BaseMapMainPage extends WizardPage
     if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "BaseMapWizard.5" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5" ) );
       return;
     }
     setPageComplete( true );

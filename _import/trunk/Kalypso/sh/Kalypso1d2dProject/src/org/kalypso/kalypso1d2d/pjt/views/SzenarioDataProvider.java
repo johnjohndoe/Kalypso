@@ -50,6 +50,7 @@ public class SzenarioDataProvider implements IPoolListener, ISzenarioDataProvide
     // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
     // simulation model gets its own wrapper.
     LOCATION_MAP.put( IFeatureWrapper2.class, "simulation.gml" );
+//    LOCATION_MAP.put( IDiscretisationModel.class, "discretisation.gml" );
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, "discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, "terrain.gml" );
     // TODO: add other model types here

@@ -46,13 +46,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * An offset based position provider with the following 
- * translation scheme:
+ * An offset based position provider with the following translation scheme:
  * <ul>
- *      <li/>target.x=native.x+offsetX
- *      <li/>target.y=native.y+offsetY
- *      <li/>target.z=native.z+offsetZ
- * </ul> 
+ * <li/>target.x=native.x+offsetX <li/>target.y=native.y+offsetY <li/>target.z=native.z+offsetZ
+ * </ul>
  * This implementaion ignores the coordinate system issues.
  * 
  * @author Patrice Congo
@@ -60,53 +57,57 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class XYZOffsetPositionProvider implements IPositionProvider
 {
   /**
-   * The x offset to add to the native x-coordinate to get the target
-   * coordinate
+   * The x offset to add to the native x-coordinate to get the target coordinate
    */
   private double xOffset;
-  
+
   /**
-   * The y offset to add to the native y-coordinate to get the target
-   * coordinate
+   * The y offset to add to the native y-coordinate to get the target coordinate
    */
   private double yOffset;
-  
+
   /**
-   * The z offset to add to the native z-coordinate to get the target
-   * coordinate
+   * The z offset to add to the native z-coordinate to get the target coordinate
    */
   private double zOffset;
-  
+
   /**
    * coordinate reference system of the target points
    */
   private CS_CoordinateSystem crs;
-  
+
+  public XYZOffsetPositionProvider( double xoffset, double yoffset, CS_CoordinateSystem coordinateSystem )
+  {
+    Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" );
+    xOffset = xoffset;
+    yOffset = yoffset;
+    zOffset = 0.0;
+    this.crs = coordinateSystem;
+  }
+
   /**
-   * Creates a native coordinate system with the specified 
-   * target coordinate system and the given coordinate offsets
-   * @param xOffset the x offset
-   * @param yOffset the y offset
-   * @param zOffset the z offset
-   * @param crs the target coordinate system
+   * Creates a native coordinate system with the specified target coordinate system and the given coordinate offsets
    * 
+   * @param xOffset
+   *          the x offset
+   * @param yOffset
+   *          the y offset
+   * @param zOffset
+   *          the z offset
+   * @param crs
+   *          the target coordinate system
    */
-  public XYZOffsetPositionProvider(
-                            CS_CoordinateSystem crs,
-                            double xOffset,
-                            double yOffset,
-                            double zOffset)
-                            throws IllegalArgumentException
+  public XYZOffsetPositionProvider( CS_CoordinateSystem crs, double xOffset, double yOffset, double zOffset ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( crs, "crs" );
-    
-    this.xOffset=xOffset;
-    this.yOffset=yOffset;
-    this.zOffset=zOffset;
-    this.crs=crs;
-    
+
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
+    this.zOffset = zOffset;
+    this.crs = crs;
+
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getCoordinateSystem()
    */
@@ -118,50 +119,37 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getGMPoint(double, double, double)
    */
-  public GM_Point getGMPoint( 
-                      double nativeX, 
-                      double nativeY, 
-                      double nativeZ )
+  public GM_Point getGMPoint( double nativeX, double nativeY, double nativeZ )
   {
-    
-    return GeometryFactory.createGM_Point( 
-                              nativeX+xOffset, 
-                              nativeY+yOffset, 
-                              nativeZ+zOffset, 
-                              crs );
+
+    return GeometryFactory.createGM_Point( nativeX + xOffset, nativeY + yOffset, nativeZ + zOffset, crs );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeX(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public double getNativeX( 
-                      GM_Point point ) 
-                      throws IllegalArgumentException
+  public double getNativeX( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" );
-    return point.getX()-xOffset;
+    return point.getX() - xOffset;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeY(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public double getNativeY( 
-                      GM_Point point ) 
-                      throws IllegalArgumentException
+  public double getNativeY( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" );
-    return point.getY()-yOffset;
+    return point.getY() - yOffset;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getNativeZ(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public double getNativeZ( 
-                        GM_Point point ) 
-                        throws IllegalArgumentException
+  public double getNativeZ( GM_Point point ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( point, "point" );
-    return point.getZ()-zOffset;
+    return point.getZ() - zOffset;
   }
-  
+
 }

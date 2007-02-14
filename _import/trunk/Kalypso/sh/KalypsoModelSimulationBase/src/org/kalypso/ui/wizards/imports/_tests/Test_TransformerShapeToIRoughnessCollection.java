@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.imports.roughness.DataContainer;
-import org.kalypso.ui.wizards.imports.roughness.TransformerShapeToIRoughnessCollection;
+import org.kalypso.ui.wizards.imports.roughness.Transformer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -29,7 +29,7 @@ public class Test_TransformerShapeToIRoughnessCollection extends TestCase
     data.setInputFile( "D:/Eclipse/Test/Roughness/rauheitstest.shp" );
     data.setShapeProperty( "RAUHEITSKL" );
 
-    TransformerShapeToIRoughnessCollection t = new TransformerShapeToIRoughnessCollection( data );
+    Transformer t = new Transformer( data );
     t.execute( null );
   }
 

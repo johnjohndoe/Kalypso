@@ -1,10 +1,9 @@
-package org.kalypso.ui.wizards.imports.roughness;
+package org.kalypso.wizards.import1d2d;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -17,9 +16,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
@@ -30,8 +27,6 @@ public class PageMain extends WizardPage implements Listener
   private DataContainer m_data;
 
   // widgets on this page
-  Combo cmb_ShapeProperty;
-
   Combo cmb_CoordinateSystem;
 
   Text txt_InputFile;
@@ -46,14 +41,14 @@ public class PageMain extends WizardPage implements Listener
    */
   public PageMain( DataContainer data )
   {
-    this( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.0" ), data );//$NON-NLS-1$
+    this( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.0" ), data );//$NON-NLS-1$
   }
 
   protected PageMain( final String name, DataContainer data )
   {
     super( name );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.1" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.2" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.2" ) ); //$NON-NLS-1$
     msg_StatusLine = new Status( IStatus.OK, "not_used", 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_data = data;
   }
@@ -72,7 +67,7 @@ public class PageMain extends WizardPage implements Listener
     composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
 
     // Input shape file
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.5" ) ); //$NON-NLS-1$
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.5" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( composite, SWT.BORDER );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -80,25 +75,16 @@ public class PageMain extends WizardPage implements Listener
     // gd.horizontalSpan = ncol - 1;
     txt_InputFile.setLayoutData( gd );
     btn_inputFileBrowse = new Button( composite, SWT.PUSH );
-    btn_inputFileBrowse.setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.6" ) ); //$NON-NLS-1$
+    btn_inputFileBrowse.setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.6" ) ); //$NON-NLS-1$
     gd = new GridData( GridData.END );
     // gd.horizontalSpan = ncol;
     btn_inputFileBrowse.setLayoutData( gd );
     // createLine(composite, ncol);
 
-    // Roughness parameter combo box
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.7" ) ); //$NON-NLS-1$
-    cmb_ShapeProperty = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-    cmb_ShapeProperty.setEnabled( false );
-    cmb_ShapeProperty.setLayoutData( gd );
-
     createLine( composite, ncol );
 
     // Coordinate system combo box
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.8" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
     final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
@@ -121,7 +107,6 @@ public class PageMain extends WizardPage implements Listener
     btn_inputFileBrowse.addListener( SWT.MouseDown, this );
     btn_inputFileBrowse.addListener( SWT.KeyDown, this );
     txt_InputFile.addListener( SWT.Modify, this );
-    cmb_ShapeProperty.addListener( SWT.Selection, this );
   }
 
   /**
@@ -134,49 +119,52 @@ public class PageMain extends WizardPage implements Listener
     msg_StatusLine = status;
     if( event.widget == btn_inputFileBrowse )
     {
-      txt_InputFile.setText( getFilenameFromDialog( null, new String[] { "*.shp" }, null ) ); //$NON-NLS-1$
+      txt_InputFile.setText( getFilenameFromDialog( null, new String[] { "*.2d" }, null ) ); //$NON-NLS-1$
     }
-    else if( event.widget == txt_InputFile )
-    {
-      try
-      {
-        if( isTextNonEmpty( txt_InputFile ) )
-        {
-          File file = new File( txt_InputFile.getText() );
-          if( file.exists() && file.isFile() && file.canRead() )
-          {
-            ShapeFile shape = new ShapeFile( FileUtilities.nameWithoutExtension( txt_InputFile.getText() ) );
-            String[] propertyNames = shape.getProperties();
-            shape.close();
-            cmb_ShapeProperty.setItems( propertyNames );
-            cmb_ShapeProperty.select( 0 );
-            cmb_ShapeProperty.setEnabled( true );
-          }
-          else
-          {
-            cmb_ShapeProperty.setEnabled( false );
-          }
-        }
-        else
-        {
-          cmb_ShapeProperty.setEnabled( false );
-        }
-      }
-      catch( Exception e )
-      {
-        StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.9" ) ); //$NON-NLS-1$
-        sb.append( txt_InputFile.getText().substring( txt_InputFile.getText().lastIndexOf( File.separator ) + 1 ) );
-        sb.append( "\n" ).append( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        status = new Status( IStatus.ERROR, "not_used", 0, sb.toString(), null ); //$NON-NLS-1$
-        msg_StatusLine = status;
-        e.printStackTrace();
-      }
-    }
+//    else if( event.widget == txt_InputFile )
+//    {
+//      try
+//      {
+//        if( isTextNonEmpty( txt_InputFile ) )
+//        {
+//          File file = new File( txt_InputFile.getText() );
+//          if( file.exists() && file.isFile() && file.canRead() )
+//          {
+//          }
+//          else
+//          {
+//            cmb_ShapeProperty.setEnabled( false );
+//          }
+//        }
+//        else
+//        {
+//          cmb_ShapeProperty.setEnabled( false );
+//        }
+//      }
+//      catch( Exception e )
+//      {
+//        StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.9" ) ); //$NON-NLS-1$
+//        sb.append( txt_InputFile.getText().substring( txt_InputFile.getText().lastIndexOf( File.separator ) + 1 ) );
+//        sb.append( "\n" ).append( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+//        status = new Status( IStatus.ERROR, "not_used", 0, sb.toString(), null ); //$NON-NLS-1$
+//        msg_StatusLine = status;
+//        e.printStackTrace();
+//      }
+//    }
     // Show the most serious error
     applyToStatusLine( msg_StatusLine );
     getWizard().getContainer().updateButtons();
   }
-
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+   */
+  @Override
+  public boolean isPageComplete( )
+  {
+    return isTextNonEmpty( txt_InputFile );
+  }
+  
   String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
@@ -244,36 +232,12 @@ public class PageMain extends WizardPage implements Listener
     line.setLayoutData( gridData );
   }
 
-  @Override
-  public boolean canFlipToNextPage( )
-  {
-    return cmb_ShapeProperty.isEnabled();
-  }
-
-  @Override
-  public IWizardPage getNextPage( )
-  {
-    saveDataToModel();
-    return ((ImportWizard)getWizard()).m_pageSecond;
-  }
-
   protected void saveDataToModel( )
   {
     if( isCurrentPage() )
     {
       m_data.setInputFile( txt_InputFile.getText() );
-      m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
-      try
-      {
-        ((Transformer)((ImportWizard)getWizard()).m_operation).prepare(true);
-        ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        ((ImportWizard)getWizard()).performCancel();
-      }
     }
   }
 

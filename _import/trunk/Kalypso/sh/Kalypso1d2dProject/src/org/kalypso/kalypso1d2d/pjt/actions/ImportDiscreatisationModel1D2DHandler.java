@@ -17,6 +17,9 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 
 import de.renew.workflow.WorkflowCommandHandler;
@@ -26,9 +29,9 @@ import de.renew.workflow.WorkflowCommandHandler;
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportBaseMapHandler extends WorkflowCommandHandler
+public class ImportDiscreatisationModel1D2DHandler extends WorkflowCommandHandler
 {
-  private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard";
+  private static final String WIZARD_ID = "org.kalypso.wizards.import1d2d.ImportWizard";
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
@@ -43,17 +46,21 @@ public class ImportBaseMapHandler extends WorkflowCommandHandler
       final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
       selection = new StructuredSelection(currentFolder);
     }
+    
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbench workbench = (workbenchWindow).getWorkbench();
+
+    final ISzenarioDataProvider szenarioDataProvider = (ISzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
 
     final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
     final INewWizardKalypsoImport wizard = (INewWizardKalypsoImport) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
-    
+
     final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
     final HashMap<String, Object> data = new HashMap<String, Object>();
-    data.put( "ScenarioFolder", currentFolder.getFullPath().toOSString() );
-    // data.put( "ActiveSimulationModelBaseFolder", currentFolder.getFullPath() );
+    data.put( "IFEDiscretisationModel1d2d", model );
+    data.put( "ProjectBaseFolder", currentFolder.getFullPath().segment( 0 ) );
 
     wizard.init( workbench, selection );
     wizard.initModelProperties( data );

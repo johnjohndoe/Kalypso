@@ -196,4 +196,13 @@
        		</action>  
         </viewContribution>
      </extension>
+     <extension
+           point="org.eclipse.ui.newWizards">
+        <wizard
+              class="org.kalypso.wizards.import1d2d.ImportWizard"
+              icon="icons/elcl16/1d2d_edit_protocol_view.gif"
+              id="org.kalypso.wizards.import1d2d.ImportWizard"
+              name="Import 1D2D"
+              project="false"/>
+     </extension>
 </plugin>
