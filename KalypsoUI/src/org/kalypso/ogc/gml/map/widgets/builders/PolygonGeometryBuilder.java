@@ -139,7 +139,13 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
      * REMARK: Need a cloned point, otherwise changes to one point affects the other two, if the workspace containing
      * the feature is not completely reloaded.
      */
-    GM_Position newPoint = GeometryFactory.createGM_Position( poses[0].getAsArray() );
+    double[] asArray = poses[0].getAsArray();
+    double[] newArray = new double[asArray.length];
+
+    for( int i = 0; i < asArray.length; i++ )
+      newArray[i] = asArray[i];
+
+    GM_Position newPoint = GeometryFactory.createGM_Position( newArray );
     pos[poses.length] = newPoint;
 
     return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], null, m_crs );
