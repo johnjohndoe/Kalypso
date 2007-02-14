@@ -202,11 +202,11 @@
 	the file extension
 	======================================================================= -->
 	<xs:element 
-		name="NativeTerrainModelWrapper"
-		type="simBase:NativeTerrainModelWrapperType"
+		name="NativeTerrainElevationModelWrapper"
+		type="simBase:NativeTerrainElevationModelWrapperType"
 		substitutionGroup="simBase:_TerrainElevationModel"/>
 	<xs:complexType 
-		name="NativeTerrainModelWrapperType">
+		name="NativeTerrainElevationModelWrapperType">
 		<xs:annotation>
 			<xs:documentation>
 				Native terrain elevation wrapper; the elevation type is 
