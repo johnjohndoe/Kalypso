@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Patrice Congo
  */
-public class AddNodeCommand implements IDiscrMode1d2dlChangeCommand
+public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 {
   
   private IFE1D2DNode<IFE1D2DEdge>  addedNode;

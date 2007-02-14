@@ -89,15 +89,27 @@ class GridPointCollector /*implements IGeometryBuilder*/
   
   private LinePointCollector sides[] = new LinePointCollector[SIDE_MAX_NUM];
   
-  private Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+  private LinePointCollectorConfig lpcConfigs[]= new LinePointCollectorConfig[SIDE_MAX_NUM];
+  
+  
   
   private TempGrid tempGrid= new TempGrid();
   
   public GridPointCollector()
   {
-    
+    initLPCConfigs();
   }
   
+  private final void initLPCConfigs()
+  {
+    Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+    for(int i=0;i<sides.length;i++)
+    {
+      lpcConfigs[i]= 
+        new LinePointCollectorConfig("Linie "+i,colors[i],sides[i]);
+      
+    }
+  }
   
   public void reset(CS_CoordinateSystem targetCrs)
   {
@@ -106,6 +118,10 @@ class GridPointCollector /*implements IGeometryBuilder*/
       if(b!=null)
       {
         b.reset( targetCrs );        
+      }
+      else
+      {
+        b=new LinePointCollector(0,targetCrs);
       }
     }
     actualSideKey=0;
@@ -288,7 +304,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
         {
           continue;
         }
-        g.setColor( colors[i]);
+        g.setColor( lpcConfigs[i].getColor());
         if(b!=builder)
         {
           b.paint( g, projection, null);
@@ -702,10 +718,10 @@ class GridPointCollector /*implements IGeometryBuilder*/
         final int LAST_INDEX_J=addEdgeH2D[0].length-2;
         for(int j=0;j<=LAST_INDEX_J/*j<aeHCnds0.length-1*/;j++)
         {
-          IDiscrMode1d2dlChangeCommand edge0 = addEdgeH2D[i][j];
-          IDiscrMode1d2dlChangeCommand edge1 = addEdgeV2D[i+1][j+1];
-          IDiscrMode1d2dlChangeCommand edge2 = addEdgeH2DInv[i][j];
-          IDiscrMode1d2dlChangeCommand edge3 = 
+          IDiscrModel1d2dChangeCommand edge0 = addEdgeH2D[i][j];
+          IDiscrModel1d2dChangeCommand edge1 = addEdgeV2D[i+1][j+1];
+          IDiscrModel1d2dChangeCommand edge2 = addEdgeH2DInv[i][j];
+          IDiscrModel1d2dChangeCommand edge3 = 
                         (j==0)?addEdgeV2D[i][j]:addEdgeV2DInv[i][j];
           if(edge0==null || edge1==null || edge2==null|| edge3==null )
           {
@@ -715,7 +731,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
           AddElementCommand addElementCommand=
             new AddElementCommand(
                 model,
-                new IDiscrMode1d2dlChangeCommand[]{edge0,edge1,edge2,edge3});
+                new IDiscrModel1d2dChangeCommand[]{edge0,edge1,edge2,edge3});
           compositeCommand.addCommand( addElementCommand );
         }
       }
@@ -834,4 +850,11 @@ class GridPointCollector /*implements IGeometryBuilder*/
       geometryFactory.createLineString( coordinates );
     return lineString;
   }
+  
+  public LinePointCollectorConfig[] getSideconfigsAsArray()
+  {
+    LinePointCollectorConfig[] cloneCollectorConfigs = lpcConfigs.clone();
+    return cloneCollectorConfigs;
+  }
+  
 }

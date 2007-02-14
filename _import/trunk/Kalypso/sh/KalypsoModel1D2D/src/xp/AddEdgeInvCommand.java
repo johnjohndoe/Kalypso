@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public class AddEdgeInvCommand implements IDiscrMode1d2dlChangeCommand
+public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
 {
   private AddEdgeCommand edgeCommand;
   private IFEDiscretisationModel1d2d model;

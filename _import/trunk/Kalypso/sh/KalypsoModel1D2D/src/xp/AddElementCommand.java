@@ -59,12 +59,12 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
+public class AddElementCommand implements IDiscrModel1d2dChangeCommand
 {
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
   
-  private IDiscrMode1d2dlChangeCommand elementEdgeCmds[];
+  private IDiscrModel1d2dChangeCommand elementEdgeCmds[];
   
   private IFEDiscretisationModel1d2d model;
   
@@ -76,11 +76,11 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
    */
   public AddElementCommand(
               IFEDiscretisationModel1d2d model,
-              IDiscrMode1d2dlChangeCommand[] elementEdgeCmds)
+              IDiscrModel1d2dChangeCommand[] elementEdgeCmds)
   {
     Assert.throwIAEOnNullParam( model, "model" );
     Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
-    for(IDiscrMode1d2dlChangeCommand cmd:elementEdgeCmds)
+    for(IDiscrModel1d2dChangeCommand cmd:elementEdgeCmds)
     {
       if(   !(
               (cmd instanceof AddEdgeCommand) || 
@@ -122,7 +122,7 @@ public class AddElementCommand implements IDiscrMode1d2dlChangeCommand
     {
       List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
       IFE1D2DEdge curEdge;
-      for(IDiscrMode1d2dlChangeCommand edgeCmd:elementEdgeCmds)
+      for(IDiscrModel1d2dChangeCommand edgeCmd:elementEdgeCmds)
       {
           curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
           if(curEdge!=null)

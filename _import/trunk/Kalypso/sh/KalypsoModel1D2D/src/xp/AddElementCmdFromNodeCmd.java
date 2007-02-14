@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public class AddElementCmdFromNodeCmd implements IDiscrMode1d2dlChangeCommand
+public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
 {
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
@@ -79,7 +79,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrMode1d2dlChangeCommand
   {
     Assert.throwIAEOnNullParam( model, "model" );
     Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
-    for(IDiscrMode1d2dlChangeCommand cmd:elementNodeCmds)
+    for(IDiscrModel1d2dChangeCommand cmd:elementNodeCmds)
     {
       if(  cmd==null  )
       {

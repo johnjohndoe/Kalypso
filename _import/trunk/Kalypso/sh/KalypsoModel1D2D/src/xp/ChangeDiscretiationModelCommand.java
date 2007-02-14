@@ -72,8 +72,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
   
   private CommandableWorkspace commandableWorkspace;
   
-  private List<IDiscrMode1d2dlChangeCommand> commands = 
-                      new ArrayList<IDiscrMode1d2dlChangeCommand>();
+  private List<IDiscrModel1d2dChangeCommand> commands = 
+                      new ArrayList<IDiscrModel1d2dChangeCommand>();
   private boolean isUndoable=true;
 
 
@@ -122,7 +122,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   public void process( ) throws Exception
   {
     List<Feature> changedFeatures= new ArrayList<Feature>();
-    for(IDiscrMode1d2dlChangeCommand command:commands)
+    for(IDiscrModel1d2dChangeCommand command:commands)
     {
       try
       {
@@ -165,7 +165,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    for(IDiscrMode1d2dlChangeCommand command:commands)
+    for(IDiscrModel1d2dChangeCommand command:commands)
     {
       try
       {
@@ -185,7 +185,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   {
     
 //  reverse order  is taken because of eventual dependencies
-    IDiscrMode1d2dlChangeCommand command;
+    IDiscrModel1d2dChangeCommand command;
     for(int index=commands.size()-1;index>=0;index-- )
     {
       command=commands.get( index );
@@ -201,7 +201,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     
   }
   
-  public void addCommand(IDiscrMode1d2dlChangeCommand command)
+  public void addCommand(IDiscrModel1d2dChangeCommand command)
   {
     Assert.throwIAEOnNullParam( command, "command" );
     commands.add( command );
