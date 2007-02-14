@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core;
+package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Madanagopal
  *
  */
-public class TerrainElevationModel 
+public abstract class TerrainElevationModel 
                     extends AbstractFeatureBinder 
                     implements ITerrainElevationModel
 {
@@ -63,22 +63,14 @@ public class TerrainElevationModel
          featureToBind, 
          KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL);
   }
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
-  public double getElevation( GM_Point location )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
 
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
   public String getDescription( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    
+    return super.getDescription();
   }
 
   /**
@@ -86,8 +78,8 @@ public class TerrainElevationModel
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    
+    return super.getName();
   }
 
   /**
@@ -95,8 +87,7 @@ public class TerrainElevationModel
    */
   public void setDescription( String desc )
   {
-    // TODO Auto-generated method stub
-
+    super.setDescription( desc );
   }
 
   /**
@@ -104,7 +95,7 @@ public class TerrainElevationModel
    */
   public void setName( String name )
   {
-    // TODO Auto-generated method stub
+    super.setName( name );
 
   }
 
@@ -113,8 +104,8 @@ public class TerrainElevationModel
    */
   public String getGmlID( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    
+    return super.getGmlID();
   }
 
   /**
@@ -122,8 +113,8 @@ public class TerrainElevationModel
    */
   public Feature getWrappedFeature( )
   {
-    // TODO Auto-generated method stub
-    return null;
+
+    return super.getFeature();
   }
 
 }

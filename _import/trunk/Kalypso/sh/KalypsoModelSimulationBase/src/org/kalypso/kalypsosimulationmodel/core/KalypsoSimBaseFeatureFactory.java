@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
