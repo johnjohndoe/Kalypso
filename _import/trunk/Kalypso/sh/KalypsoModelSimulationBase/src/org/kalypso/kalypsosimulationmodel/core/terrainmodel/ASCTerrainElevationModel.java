@@ -42,44 +42,60 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.File;
 
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
-import org.kalypsodeegree.model.feature.Feature;
+import org.deegree.model.geometry.GM_Envelope;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Provide the implementaion of {@link ITerrainElevationModel} for 
- * simBase:NativeTerrainElevationModelWrapper model.
- * This class colaboratewith ... 
+ * An elevation provider base on ASC file
  * 
  * @author Madanagopal
- * @author Patrice Congo
+ * @author Patrice Congo 
  *
  */
-public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
+public class ASCTerrainElevationModel implements IElevationProvider
 {
-
-  ITerrainElevationModel wrappedNativeTerrainElevationModel;
-  
-  public NativeTerrainElevationModelWrapper( Feature featureToBind )
-  {
-    super( featureToBind );
-    
-  }
   /**
-   * Return the file property of the terrain elevation model
+   * the ascFile file containing the elevation info 
    */
-  private final File getFile()
-  {
-    return null;
-  }
+  private File ascFile;
+  
+  //TODO check using polygons
+  /**
+   * The envelop if the reagion of interest
+   */
+  private GM_Envelope regionOfInterest;
   
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
+   * Create an elevation provider based on the given asc file, in the specified 
+   * region of interest. if the regionInterest is null the file elevation 
+   * information is computed and therefore available
+   * @param ascFile the asc file containing the native terrain model
+   * @param regionOfInterest the {@link GM_Envelope} of region of interest
+   * @throws IllegalArgumentException if asc file is null or is a directory or does not exist
+   *        or is not accesible (cannot be read)
+   * 
+   */
+  public ASCTerrainElevationModel(
+              File ascFile,
+              GM_Envelope regionOfInterest)
+              throws IllegalArgumentException
+  {
+    Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
+//    Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
+    this.regionOfInterest=regionOfInterest;
+    this.ascFile=ascFile;
+  }
+  
+  
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public double getElevation( GM_Point location )
   {
+    //TODO implement me
     return 0;
   }
 
-  
 }

@@ -240,7 +240,8 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
               Class cls) 
           throws IllegalArgumentException
           {
-            return new TerrainElevationModel(feature);
+            //TODO provide adapaterfac method for the elevation model
+            return null;//new TerrainElevationModel(feature);
           }
         };
         cMap.put(ITerrainElevationModel.class, cTor);

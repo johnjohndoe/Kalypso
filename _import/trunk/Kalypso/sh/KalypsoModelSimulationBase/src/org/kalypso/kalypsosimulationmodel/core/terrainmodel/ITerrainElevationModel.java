@@ -41,7 +41,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Interface to be implemented by class representing 
@@ -51,16 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  *@author Patrice Congo
  *
  */
-public interface ITerrainElevationModel extends IFeatureWrapper2
+public interface ITerrainElevationModel extends IFeatureWrapper2, IElevationProvider
 {
-  /**
-   * Get the elevation provides by this model
-   * for the specified location
-   * @param location the location for which an elevation is
-   *        to be computed
-   * @return the elevation if the model covered this position or
-   *    NaN if not
-   */
-  public double getElevation(GM_Point location);
   
 }

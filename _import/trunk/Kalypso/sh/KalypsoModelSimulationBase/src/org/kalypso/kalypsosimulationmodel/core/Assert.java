@@ -1,5 +1,7 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.io.File;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchema;
@@ -157,4 +159,30 @@ public class Assert
 					"; the current type is:"+feature.getFeatureType().getQName());
 		}
 	}
+    
+    public static final void throwIAEOnNulOrIsDirOrNotExistsOrNotReadable(
+                                              File file)
+                                               throws IllegalArgumentException
+    {
+      if(file==null)
+      {
+        throw new IllegalArgumentException("file must not be null");
+      }
+      
+      if(file.isDirectory())
+      {
+        throw new IllegalArgumentException("File must not be a directory:"+file);      
+      }
+      
+      if(!file.exists())
+      {
+        throw new IllegalArgumentException("file must exist:"+file);
+      }
+      
+      if(!file.canRead())
+      {
+        throw new IllegalArgumentException("File cannot be read:"+file);
+      }
+      
+    }
 }

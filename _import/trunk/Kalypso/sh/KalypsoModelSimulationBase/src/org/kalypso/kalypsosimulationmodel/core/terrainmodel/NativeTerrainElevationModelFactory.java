@@ -42,44 +42,45 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.File;
 
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 
-/**
- * Provide the implementaion of {@link ITerrainElevationModel} for 
- * simBase:NativeTerrainElevationModelWrapper model.
- * This class colaboratewith ... 
- * 
- * @author Madanagopal
- * @author Patrice Congo
- *
- */
-public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
+public class NativeTerrainElevationModelFactory
 {
-
-  ITerrainElevationModel wrappedNativeTerrainElevationModel;
   
-  public NativeTerrainElevationModelWrapper( Feature featureToBind )
+  private NativeTerrainElevationModelFactory()
   {
-    super( featureToBind );
+    //yes empty
+  }
+  
+  public IElevationProvider getTerrainElevationModel(
+                                        File nativeTerrainModelFile)
+                                        throws IllegalArgumentException
+  {
+    Assert.throwIAEOnNullParam( nativeTerrainModelFile, "nativeTerrainModelFile" );
+    if(nativeTerrainModelFile.isDirectory())
+    {
+      throw new IllegalArgumentException("File must not be a directory:"+nativeTerrainModelFile);      
+    }
+    if(!nativeTerrainModelFile.exists())
+    {
+      throw new IllegalArgumentException("file must exist:"+nativeTerrainModelFile);
+    }
+    return resolveTerrainElevationModel( nativeTerrainModelFile);
     
   }
-  /**
-   * Return the file property of the terrain elevation model
-   */
-  private final File getFile()
-  {
-    return null;
-  }
   
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
-  public double getElevation( GM_Point location )
+  private final IElevationProvider resolveTerrainElevationModel(
+                                                      File ascFile)
   {
-    return 0;
+    String filePath=ascFile.getAbsolutePath();
+    if(filePath.endsWith( ".asc" ))
+    {
+      return new ASCTerrainElevationModel(ascFile,null);
+    }
+    else
+    {
+      throw new RuntimeException("Cannot handle this type of:"+filePath);
+    }
   }
-
   
 }
