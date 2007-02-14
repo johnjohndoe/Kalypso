@@ -188,35 +188,33 @@ COMMON / wehr2 / beiw, rkw, lw, wart
 
 
 
-      REAL hgrw (maxw), q_w (maxw) 
+REAL :: hgrw (maxw), q_w (maxw) 
                                                                         
 
+! ------------------------------------------------------------------
+! Uebergabegroessen der Geometrieberechnung:
+! ------------------------------------------------------------------
+REAL :: auew (maxw), huew (maxw), wl (maxw), hwmin (maxw) 
+REAL :: a_uw (maxw), h_uw (maxw), wl_uw (maxw), hwmin_uw (maxw) 
                                                                         
+REAL cq (maxw) 
 
-      ! ------------------------------------------------------------------
-      ! Uebergabegroessen der Geometrieberechnung:
-      ! ------------------------------------------------------------------
-      REAL auew (maxw), huew (maxw), wl (maxw), hwmin (maxw) 
+CHARACTER(LEN=1) :: idr1 
                                                                         
-      REAL a_uw (maxw), h_uw (maxw), wl_uw (maxw), hwmin_uw (maxw) 
-                                                                        
-      REAL cq (maxw) 
+!HW ------------------------------------------------------------------
+!HW Kennziffer der Ueberfallart:                                      
+!HW iueart = 0     - vollkommener Ueberfall                           
+!HW iueart = 1     - unvollkommener Ueberfall                         
+!HW iueart = 2     - Ueberstroemen                                    
+!HW  ------------------------------------------------------------------
+!HW Ueberfallart der einzelnen Felder vektoriell zusammengefasst      
 
-      CHARACTER(1) idr1 
-                                                                        
-!     ------------------------------------------------------------------
-!     Kennziffer der Ueberfallart:                                      
-!HW   iueart = 0     - vollkommener Ueberfall                           
-!HW   iueart = 1     - unvollkommener Ueberfall                         
-!HW   iueart = 2     - Ueberstroemen                                    
-!     ------------------------------------------------------------------
-!HW   Ueberfallart der einzelnen Felder vektoriell zusammengefasst      
-!                                                                       
-      REAL iueartfd (maxw) 
-      CHARACTER(12) uearttxt 
-!     ******************************************************************
-!                      Programmanfang                                   
-!     ******************************************************************
+INTEGER :: iueartfd (maxw) 
+CHARACTER(LEN=12) :: uearttxt 
+
+! ******************************************************************
+! Programmanfang                                   
+! ******************************************************************
                                                                         
 !HW    SCHREIBEN IN KONTROLLFILE                                        
       WRITE (UNIT_OUT_LOG, '(/,''Programmstart Subroutine w_ber'')')
@@ -461,7 +459,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         DO 2010 j = 1, nwfd
                                                                         
           !HW    SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '(/,''Berechnung šberfallmenge fr alle Wehrfelder'')')
+          WRITE (UNIT_OUT_LOG, '(/,''Berechnung Ueberfallmenge fuer alle Wehrfelder'')')
           WRITE (UNIT_OUT_LOG, '(''Wsp. im Wehrscheitel: huew = '',f8.4)') huew (j)
 
                                                                         
@@ -587,12 +585,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
                 WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
                 WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
-                !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                                          !
-                ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &                    !
-                !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                                 !
-                                                                                                                                    !
-                taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &                     !
-                              &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                                              !
+                !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                                   
+                ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &             
+                !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                          
+                                                                                                                            
+                taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &               
+                              &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                                      
 
                 !HW    SCHREIBEN IN KONTROLLFILE
                 WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
@@ -795,12 +793,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
               WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
-              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                          !                !  !
-              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &    !                !  !
-              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                 !                !  !
-                                                                                                                       !                !  !
-              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &      !                !  !
-                             &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                              !                !  !
+              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                       
+              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) & 
+              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                              
+                                                                                                              
+              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &   
+                             &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                         
 
 
 !HW    SCHREIBEN IN KONTROLLFILE                                        
@@ -949,12 +947,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
               WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
 
 
-              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                                            !
-              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &                     !
-              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                                  !
-                                                                                                                                        !
-              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &                       !
-                            &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                                               !
+              !MD   FEHLER IN DER FORMEL --> KORRIGIERT                                                          
+              ! taugrenz = SQRT ( (1 + hwmin (j) / hgrw (j) ) **2 + 2 + 1  / g * (v_uw**2 / hgrw (j) ) **2) &    
+              !             &  - v_uw**2 / (g * hgrw (j)) - hwmin (j) / hgrw (j)                                 
+                                                                                                                 
+              taugrenz = SQRT ( (1 + (hwmin (j) / hgrw (j))) **2 + 2 + (v_uw**2 / (hgrw (j) * g)) **2)    &      
+                            &  - (v_uw**2 / (g * hgrw (j))) - (hwmin (j) / hgrw (j))                             
 
 
 !HW    SCHREIBEN IN KONTROLLFILE                                        

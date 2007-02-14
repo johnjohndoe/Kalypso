@@ -1014,7 +1014,7 @@ DO 15 WHILE(difi.gt.0.01)
   !JK   ------------------------------------------------------------------
   !UT   bf = MITWIRKENDE FLUSSCHLAUCHBREITE 1= LINKE TRENNFL., 2 = RECHTS
 
-  70 CONTINUE
+  !WP  70 CONTINUE  Never used
 
   IF (itere1.le.1.and.itere2.le.1) then
 
@@ -1176,7 +1176,7 @@ DO 15 WHILE(difi.gt.0.01)
   psi = 0.
 
   !JK   BERECHNUNG psi FUER LINKES VORLAND
-  110 continue
+  !WP 110 continue !Never Used
 
   !WP 19.04.2005
   !write (*,9010)
@@ -1222,7 +1222,7 @@ DO 15 WHILE(difi.gt.0.01)
 
   !JK   BERECHNUNG psi FUER FLUSSSCHLAUCH
   !JK        ERWEITERUNG FUER MAEANDRIERUNG
-  170 CONTINUE
+  !WP 170 CONTINUE ! Never Used
   !      if (maean_ber.eq.'bwk') then
   !               psi=psi+a_hg*((r_hg/l_hgm)**0.5)
   !JK        ENDE ERWEITERUNG
@@ -1494,7 +1494,7 @@ psion = 0
 !HB   Boussinesq-Beiwertes (ohne Flaeche A) fuer Zaehler und Nenner
 !HB   nach FORMEL 15, BWK1/99, S.19 (psi_o_li)
 
-210 CONTINUE
+!WP 210 CONTINUE ! Never Used
 
 DO ii = ischl, itrli - 1
   IF (l_ks (ii) .gt.1.e-6) then
@@ -1555,7 +1555,7 @@ END DO
 !HB   Flusschl. nach FORMEL 14, BWK1/99, S.19 (phi_o_fl und phi_u_fl)
 !HB   sowie Berechnung Zaehler und Nenner des Boussinesq-Beiwertes fuer
 !HB   Flusschlauch nach FORMEL 15, BWK1/99, S.19 (psi_o_fl)
-260 CONTINUE
+!WP 260 CONTINUE Never Used
 
 phi_o_fl = a_hg * ( (r_hg / l_hg) **1.5)
 phi_u_fl = a_hg * ( (r_hg / l_hg) **0.5)

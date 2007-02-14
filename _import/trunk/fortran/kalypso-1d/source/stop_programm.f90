@@ -55,43 +55,44 @@ INTEGER :: istat
 INTEGER :: selected
 
 
-if (fehlnr > 0 ) then
-
-  if (RUN_MODUS /= 'KALYPSO') then
-
-    ! If WSPWIN-GUI is used, pop-up windows
-    ! may appear to show some hints.
-    call Check_Dialog(fehlnr, selected)
-
-    if (selected ==0) then
-      call close_units()
-      WRITE ( *, 1000) VERSIONNR
-      stop
-    else
-      RETURN
-    end if
-
-  else
-
-    ! if KALYPSO-Framework is used, no pop-up windows
-    ! should appear!
-    WRITE ( *, 1000) VERSIONNR
-    stop
-
-  end if
-
-else if (fehlnr == 0) then
+!if (fehlnr > 0 ) then
+!
+!  if (RUN_MODUS /= 'KALYPSO') then
+!
+!    ! If WSPWIN-GUI is used, pop-up windows
+!    ! may appear to show some hints.
+!    call Check_Dialog(fehlnr, selected)
+!
+!    if (selected ==0) then
+!      call close_units()
+!      WRITE ( *, 1000) VERSIONNR
+!      stop
+!    else
+!      RETURN
+!    end if
+!
+!  else
+!
+!    ! if KALYPSO-Framework is used, no pop-up windows
+!    ! should appear!
+!    call close_units()
+!    WRITE ( *, 1000) VERSIONNR
+!    stop
+!
+!  end if
+!
+!else if (fehlnr == 0) then
 
   call close_units()
   WRITE ( *, 1000) VERSIONNR
   stop
 
-else
-
-  ! Fall FEHLNR kleiner 0, dann werden nur alle offenen Datein geschlossen
-  call close_units()
-
-end if
+!else
+!
+!  ! Fall FEHLNR kleiner 0, dann werden nur alle offenen Datein geschlossen
+!  call close_units()
+!
+!end if
 
 1000 FORMAT (//1X, 'Berechnung mit ', A29, ' wurde abgebrochen.',//     &
              & 1X, 'BITTE PRUEFEN SIE DIE FEHLERMELDUNGEN!!!', //)

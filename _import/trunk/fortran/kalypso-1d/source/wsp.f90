@@ -1553,22 +1553,22 @@ if (RUN_MODUS /= 'KALYPSO') then
     1306 continue
 
     write ( * , 2000)
-    2000 FORMAT  (// &
-      &, 1X, '*************************************************',/, &
-      &, 1X, '*          --------------------------------     *',/, &
-      &, 1X, '*            ART DES WIDERSTANDGESETZES         *',/, &
-      &, 1X, '*          --------------------------------     *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*     Bitte waehlen Sie zwischen (1) und (2)    *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*       -  COLEBROOK-WHITE (ROHRSTROEMG.) (1)   *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*       -  COLEBROOK-WHITE MIT                  *',/, &
-      &, 1X, '*          FORMEINFLUSS                   (2)   *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*                                               *',/, &
-      &, 1X, '*************************************************')
+    2000 FORMAT  (//, &
+      & 1X, '*************************************************',/, &
+      & 1X, '*          --------------------------------     *',/, &
+      & 1X, '*            ART DES WIDERSTANDGESETZES         *',/, &
+      & 1X, '*          --------------------------------     *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*     Bitte waehlen Sie zwischen (1) und (2)    *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*       -  COLEBROOK-WHITE (ROHRSTROEMG.) (1)   *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*       -  COLEBROOK-WHITE MIT                  *',/, &
+      & 1X, '*          FORMEINFLUSS                   (2)   *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*                                               *',/, &
+      & 1X, '*************************************************')
 
     ! ---------------------------------------------------------------------------------
     ! 14. Zeile in BAT.001
@@ -1728,8 +1728,8 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
              & 1X, 'VERZOEGERUNGSVERLUST = ', A4, /, &
              & 1X, 'ITERATIONSART        = ', A5, /, &
              & 1X, 'REIBUNGSVERLUST      = ', A6, //, &
-             & 1X, 'MIT_BRUECKEN = ', L, /, &
-             & 1X, 'MIT_WEHREN   = ', L, //, &
+             & 1X, 'MIT_BRUECKEN = ', L1,/, &
+             & 1X, 'MIT_WEHREN   = ', L1, //, &
              & 1X, 'ABFLUSSEREIGNIS = ', A, /, &
              & 1X, 'EINZELVERLUSTE  = ', A, //, &
              & 1X, 'MIN_Q   = ', F10.4, /, &

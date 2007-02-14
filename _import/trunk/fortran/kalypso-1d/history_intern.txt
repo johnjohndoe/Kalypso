@@ -843,3 +843,12 @@ Kalypso 1.2 RC1   11. Dezember 2006
 
                                                     Wolf Plöger, 11.12.2006
 
+Kalypso 1.3      14. Februar 2007
+---------------------------------
+1.)  Umstieg auf G95 Compiler und Photran in Eclipse.
+
+2.)  Auskommentieren der WiSK Popup Dialoge, da nicht verfügbar in G95.
+
+3.)  Kleinere Anpassungen im Code, keine Auswirkungen auf Berechnung.
+
+                                                    Wolf Plöger, 14.02.2007

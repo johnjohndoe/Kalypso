@@ -208,11 +208,11 @@ REAL alg (maxkla)
 !**   ------------------------------------------------------------------
                                                                         
    65 FORMAT(1h ,/,'berechnungsparameter profil',i5,2x,'schritt',i5,/) 
-   66 FORMAT(1h ,1x,'fÅr jeden bereich',/,                              &
+   66 FORMAT(1h ,1x,'fuer jeden bereich',/,                              &
      & '   nr     rk        f         u         ra        br    ',      &
      & '   ts1       ts2        v         q',/,102('-'))                
    67 FORMAT(1x,i5,7f10.3,2f10.5) 
-   68 FORMAT(1h ,/,'fÅr das profil:',/,                                 &
+   68 FORMAT(1h ,/,'fuer das profil:',/,                                 &
      &'    hr        qges       c1          rg         c2',             &
      &'            hv',/,70('-'))                                       
    69 FORMAT(1x,2(f10.3,1x),2(f10.6,1x),2(f12.6,1x)) 

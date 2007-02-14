@@ -157,7 +157,7 @@ COMMON / vort / hborda, heins, horts
 ! Local variables
 INTEGER, PARAMETER  :: itmax_newton = 25        ! Max. Anzahl der iterationsschritte
 
-INTEGER :: izz, jsch, jen       ! Schleifenzaehler
+INTEGER :: jsch, jen       ! Schleifenzaehler
 INTEGER :: ifehlg               ! Fehlervariable
 REAL :: hrneu, hra, hrb         ! Wasserspiegelhöhe
 REAL :: delt                    ! Grenzbedingung
@@ -173,7 +173,7 @@ REAL :: hvsta, hvstb		! Geschwindigkeitsverlust
 ! VORBELEGUNGEN
 ! ------------------------------------------------------------------
 
-izz = 0
+
 ifehl = 0
 dx = 0.05
 

@@ -1250,7 +1250,7 @@ Hauptschleife: DO i = 1, maxger
 
 
       !**    SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '('' ianf='',i3,'' iend='',i3,)') ianf, iend
+      WRITE (UNIT_OUT_LOG, '('' ianf='',i3,'' iend='',i3)' ) ianf, iend
 
       boli = h1 (ianf)
       bore = h1 (iend)

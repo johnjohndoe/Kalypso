@@ -273,7 +273,7 @@ CHARACTER(LEN=nch80) :: unit5
 
 INTEGER :: istat
 
-INTEGER :: i
+INTEGER :: i, erlen
 INTEGER :: np (ipro)
 INTEGER :: int (merg)
 INTEGER :: indfl, indmax

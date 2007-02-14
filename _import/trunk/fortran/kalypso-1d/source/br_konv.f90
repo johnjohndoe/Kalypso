@@ -674,7 +674,7 @@ write (UNIT_OUT_LOG, 34) he1, he3, hr3, hea, heb
          & 1X, 'HE3 (Energiehoehe am Profil 3):     ', F12.5, /, &
          & 1X, 'HR3 (=hr, Wasserspiegel am Profil): ', F12.5, /, &
          & 1X, 'HEA (Energiehoehe am Profil A):     ', F12.5, /, &
-         & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5, )
+         & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5 )
 
 
 ibiter = 0

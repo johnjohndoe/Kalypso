@@ -92,7 +92,7 @@ USE IO_UNITS
 COMMON / flaechen / ad, aue, apl, apg, hss, hue, hpl, hpg
 
 REAL m, mi, ma, mb
-REAL ms (100)
+!WP REAL ms (100) never used
 REAL x1 (maxkla), h1 (maxkla)
                                                                         
 
@@ -107,13 +107,13 @@ REAL x1 (maxkla), h1 (maxkla)
       delta = 0.01 
       difopt = 10000. 
       dx = 0.05 
-      difa = 10000. 
+      !WP difa = 10000. Never used
                                                                         
       IF (hr.le.hsohl) then 
         hr = 4. * dx + hsohl 
       ENDIF 
                                                                         
-      ischnitt = 0 
+      !WP ischnitt = 0  Never used
       vm = q / a 
 
    11 CONTINUE 

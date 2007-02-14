@@ -53,89 +53,89 @@ subroutine Check_Dialog(fehlnr, selected)
 !                              Wolf Ploeger, 12.03.2006
 ! ----------------------------------------------------------------------------
 
-USE WINTERACTER
-
-IMPLICIT NONE
-
-INTEGER, INTENT(IN)  :: fehlnr
-INTEGER, INTENT(OUT) :: selected
-
-! Probleme bei Wehren
-INTEGER, PARAMETER :: IDD_WEHR1  =   101
-INTEGER, PARAMETER :: IDD_WEHR2  =   102
-
-! Probleme bei der Geometrie
-INTEGER, PARAMETER :: IDD_BV1    =   111
-
-TYPE(WIN_STYLE)   :: MAIN_WINDOW
-TYPE(WIN_MESSAGE) :: MESSAGE
-
-INTEGER           :: ITYPE
-
-!  Initialise WiSK and open the main window.
-!  This will also activate the main menu for the program.
-
-CALL WInitialise('')
-MAIN_WINDOW%FLAGS  = SysMenuOn + MinButton + MaxButton + HideRoot
-MAIN_WINDOW%X      = -1
-MAIN_WINDOW%Y      = -1
-MAIN_WINDOW%WIDTH  = 0
-MAIN_WINDOW%HEIGHT = 0
-MAIN_WINDOW%MENUID = 0
-MAIN_WINDOW%TITLE  = 'KALYPSO-1D Dialog Fenster'
-
-CALL WindowOpen(MAIN_WINDOW)
-
-select case (fehlnr)
-
-  case (1)
-
-    CALL WDialogLoad(IDD_WEHR1)
-    CALL WDialogSelect(IDD_WEHR1)
-    CALL WDialogShow(-1,-1,0,Modal)
-    IF (WInfoDialog(ExitButton) == IDOK) THEN
-      selected = 1
-      CALL WindowClose()
-      RETURN
-    ELSE
-      selected = 0
-      CALL WindowClose()
-      RETURN
-    END IF                                    
-
-  case (2)
-
-    CALL WDialogLoad(IDD_WEHR2)
-    CALL WDialogSelect(IDD_WEHR2)
-    CALL WDialogShow(-1,-1,0,Modal)
-    IF (WInfoDialog(ExitButton) == IDOK) THEN
-      selected = 1
-      CALL WindowClose()
-      RETURN
-    ELSE
-      selected = 0
-      CALL WindowClose()
-      RETURN
-    END IF                                    
-
-  case (11)
-
-    CALL WDialogLoad(IDD_BV1)
-    CALL WDialogSelect(IDD_BV1)
-    CALL WDialogShow(-1,-1,0,Modal)
-    IF (WInfoDialog(ExitButton) == IDOK) THEN
-      selected = 1
-      CALL WindowClose()
-      RETURN
-    ELSE
-      selected = 0
-      CALL WindowClose()
-      RETURN
-    END IF                                    
-
-  case default
-
-end select
+!USE WINTERACTER
+!
+!IMPLICIT NONE
+!
+!INTEGER, INTENT(IN)  :: fehlnr
+!INTEGER, INTENT(OUT) :: selected
+!
+!! Probleme bei Wehren
+!INTEGER, PARAMETER :: IDD_WEHR1  =   101
+!INTEGER, PARAMETER :: IDD_WEHR2  =   102
+!
+!! Probleme bei der Geometrie
+!INTEGER, PARAMETER :: IDD_BV1    =   111
+!
+!TYPE(WIN_STYLE)   :: MAIN_WINDOW
+!TYPE(WIN_MESSAGE) :: MESSAGE
+!
+!INTEGER           :: ITYPE
+!
+!!  Initialise WiSK and open the main window.
+!!  This will also activate the main menu for the program.
+!
+!CALL WInitialise('')
+!MAIN_WINDOW%FLAGS  = SysMenuOn + MinButton + MaxButton + HideRoot
+!MAIN_WINDOW%X      = -1
+!MAIN_WINDOW%Y      = -1
+!MAIN_WINDOW%WIDTH  = 0
+!MAIN_WINDOW%HEIGHT = 0
+!MAIN_WINDOW%MENUID = 0
+!MAIN_WINDOW%TITLE  = 'KALYPSO-1D Dialog Fenster'
+!
+!CALL WindowOpen(MAIN_WINDOW)
+!
+!select case (fehlnr)
+!
+!  case (1)
+!
+!    CALL WDialogLoad(IDD_WEHR1)
+!    CALL WDialogSelect(IDD_WEHR1)
+!    CALL WDialogShow(-1,-1,0,Modal)
+!    IF (WInfoDialog(ExitButton) == IDOK) THEN
+!      selected = 1
+!      CALL WindowClose()
+!      RETURN
+!    ELSE
+!      selected = 0
+!      CALL WindowClose()
+!      RETURN
+!    END IF                                    
+!
+!  case (2)
+!
+!    CALL WDialogLoad(IDD_WEHR2)
+!    CALL WDialogSelect(IDD_WEHR2)
+!    CALL WDialogShow(-1,-1,0,Modal)
+!    IF (WInfoDialog(ExitButton) == IDOK) THEN
+!      selected = 1
+!      CALL WindowClose()
+!      RETURN
+!    ELSE
+!      selected = 0
+!      CALL WindowClose()
+!      RETURN
+!    END IF                                    
+!
+!  case (11)
+!
+!    CALL WDialogLoad(IDD_BV1)
+!    CALL WDialogSelect(IDD_BV1)
+!    CALL WDialogShow(-1,-1,0,Modal)
+!    IF (WInfoDialog(ExitButton) == IDOK) THEN
+!      selected = 1
+!      CALL WindowClose()
+!      RETURN
+!    ELSE
+!      selected = 0
+!      CALL WindowClose()
+!      RETURN
+!    END IF                                    
+!
+!  case default
+!
+!end select
 
 
 end subroutine Check_Dialog

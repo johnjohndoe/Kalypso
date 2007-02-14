@@ -453,8 +453,8 @@ SUBROUTINE rlinetxt (j, n, nfil)
 !WP 01.02.2005
 USE DIM_VARIABLEN
                                                                         
-CHARACTER(30) lintex (10, idim)
-INTEGER ilintex (10), ianztext (10), imaxtl, ipt (10, idim), ltfla
+CHARACTER(LEN=30) :: lintex (10, idim)
+INTEGER :: ilintex (10), ianztext (10), imaxtl, ipt (10, idim), ltflag
 COMMON / lin1 / ilintex, ianztext, lintex, ipt, imaxtl, ltflag
                                                                         
 !     ==================================================================

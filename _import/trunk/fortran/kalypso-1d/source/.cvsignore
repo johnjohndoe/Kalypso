@@ -1,3 +1,8 @@
 AUTOMAKE.DEP
 AUTOMAKE.RSP
 resource.RES
+Kalypso-1D.pl
+Makefile
+*.mod
+*.o
+KALYPSO-1D.exe

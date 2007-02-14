@@ -127,7 +127,7 @@ if (mark == 1) then
 
   ! Oeffnen der laengsschnitt.txt-Datei
   open (unit = UNIT_OUT_LAENGS, file = NAME_OUT_LAENGS, status = 'REPLACE', ACTION='WRITE', IOSTAT = ierr)
-  IF (ierr / = 0) then
+  IF (ierr /= 0) then
     WRITE (*,*) 'ZEILA: Fehler beim Oeffnen von Laengsschnitt.txt'
     GOTO 9801
   ENDIF                                                                                               
@@ -140,7 +140,7 @@ UNIT_OUT_QB1 = ju0gfu ()
 !write (*,*) 'In ZEILA. unit5 = ', unit5
                                                                         
 OPEN (unit = UNIT_OUT_QB1, file = unit5, status = 'REPLACE', IOSTAT = ierr)
-IF (ierr / = 0) then
+IF (ierr /= 0) then
      PRINT * , 'ZEILA: Fehler beim Oeffnen von ', unit5
      GOTO 9801
 ENDIF
@@ -154,7 +154,7 @@ IF (mark.eq.2.or.mark.eq.4) then
      UNIT_OUT_QB2 = ju0gfu ()
      !write (*,*) 'In ZEILA. pfad2 = ', pfad2
      OPEN (unit = UNIT_OUT_QB2, file = pfad2, status = 'REPLACE', IOSTAT = ierr)
-     IF (ierr / = 0) then
+     IF (ierr /= 0) then
           PRINT * , 'ZEILA: Fehler beim Oeffnen von ', pfad2
           GOTO 9801
      ENDIF
@@ -1012,7 +1012,7 @@ ELSEIF (mark.gt.1) then
                       + 4), xss ( (m - 1) * 8 + 4), nopwx ( (m - 1) * 8 + 5), xss ( (m - 1) * 8 + 5), nopwx ( (m - 1) * 8 + 6)&
                       , xss ( (m - 1) * 8 + 6), nopwx ( (m - 1) * 8 + 7), xss ( (m - 1) * 8 + 7), nopwx ( (m - 1) * 8 + 8), &
                       xss ( (m -  1) * 8 + 8)
-               IF (ierr / = 0) then
+               IF (ierr /= 0) then
                     WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (XSS(i):', ierr
                     STOP
                ENDIF
@@ -1020,7 +1020,7 @@ ELSEIF (mark.gt.1) then
           END DO
 
           WRITE (UNIT = UNIT_OUT_QB1, FMT = 20, IOSTAT = ierr) (nopwx (jj), xss (jj), jj = (vzeil * 8 + 1), nprof)
-          IF (ierr / = 0) then
+          IF (ierr /= 0) then
                WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (XSS(i):', ierr
                STOP
           ENDIF
@@ -1032,7 +1032,7 @@ ELSEIF (mark.gt.1) then
                       4), yss ( (m - 1) * 8 + 4), nopwx ( (m - 1) * 8 + 5), yss ( (m - 1) * 8 + 5), nopwx ( (m - 1) * 8 + 6),&
                       yss ( (m - 1) * 8 + 6), nopwx ( (m - 1) * 8 + 7), yss ( (m - 1) * 8 + 7), nopwx ( (m - 1) * 8 + 8), yss &
                       ( (m - 1) * 8 + 8)
-               IF (ierr / = 0) then
+               IF (ierr /= 0) then
                      WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (YSS(i):',ierr
                      STOP                                                                                                        
                ENDIF
@@ -1041,7 +1041,7 @@ ELSEIF (mark.gt.1) then
           END DO
                                                                         
           WRITE (UNIT = UNIT_OUT_QB1, FMT = 15, IOSTAT = ierr) (nopwx (jj), yss (jj), jj = (vzeil * 8 + 1), nprof)
-          IF (ierr / = 0) then
+          IF (ierr /= 0) then
                WRITE ( * , * ) 'Fehler bei Datenausgabe in ZEILA (YSS(i):', ierr
                STOP
           ENDIF

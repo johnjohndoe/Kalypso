@@ -259,3 +259,9 @@ Kalypso 1.2 RC1   11. Dezember 2006
 
                                                     Wolf Plöger, 11.12.2006
 
+Kalypso 1.3    14. Febvruar 2007
+--------------------------------
+1.)  Umstieg auf freien G95 Compiler.
+
+                                                    Wolf Plöger, 11.12.2006
+

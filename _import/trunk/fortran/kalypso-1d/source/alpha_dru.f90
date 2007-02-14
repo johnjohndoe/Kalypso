@@ -138,7 +138,7 @@ COMMON / h_trenn / trenn_li, trenn_re
                                                                         
 !HB   Berechnung des benetzten Gesamtumfangs je Profil                  
 !HB   d.h. (Vorland_links+Fluss+Vorland_rechts; noch ohne Trennflaechen)
-      DO 100i_zaehl = 1, 3 
+      DO 100 i_zaehl = 1, 3 
       umfang_g (i) = umfang_g (i) + up (i, i_zaehl) 
 !          PRINT*,'umfang:',umfang_g(i)                                 
   100 CONTINUE 

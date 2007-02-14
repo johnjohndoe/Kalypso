@@ -63,8 +63,8 @@ f = f / 2.
 
 !WP write (*,1002) f
 
-1000 format (1X, 'I: ', I3, ' X(I): ', F10.4, ' Y(I): ', F10.4)
-1001 format (1X, 'Flaeche nach ',I3,' Punkten: ', F10.4)
-1002 format (1X, 'Flaeche am Ende von FLAE_INH: ', F10.4/)
+!1000 format (1X, 'I: ', I3, ' X(I): ', F10.4, ' Y(I): ', F10.4)
+!1001 format (1X, 'Flaeche nach ',I3,' Punkten: ', F10.4)
+!1002 format (1X, 'Flaeche am Ende von FLAE_INH: ', F10.4/)
 
 END SUBROUTINE flae_inh
