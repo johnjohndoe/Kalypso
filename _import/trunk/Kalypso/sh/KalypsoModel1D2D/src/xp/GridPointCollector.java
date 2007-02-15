@@ -43,6 +43,8 @@ package xp;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,6 +94,9 @@ class GridPointCollector /*implements IGeometryBuilder*/
   
   private TempGrid tempGrid= new TempGrid();
   
+  private List<IGridPointCollectorStateListener> stateListeners=
+        new ArrayList<IGridPointCollectorStateListener>();
+  
   public GridPointCollector()
   {
     initLPCConfigs();
@@ -127,6 +132,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     {
       sides[actualSideKey]=new LinePointCollector( 0, targetCrs );
       lpcConfigs[actualSideKey].setConfigLinePointCollector( sides[actualSideKey] );
+      fireStateChanged();
     }
     
   }
@@ -149,6 +155,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     }
     else
     {
+      fireStateChanged();
       return lastAdded;//(autocompleted==null)?lastAdded:autocompleted;
     }
     
@@ -234,7 +241,8 @@ class GridPointCollector /*implements IGeometryBuilder*/
       if(newSide==null)
       {
         newSide=oldBuilder.getNewBuilder();
-        sides[actualSideKey]= newSide;        
+        sides[actualSideKey]= newSide;     
+        lpcConfigs[actualSideKey].setConfigLinePointCollector(newSide);
       }
       
       GM_Point lastP=oldBuilder.getLastPoint();  
@@ -256,6 +264,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     }
 //    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
 //                "\n\tactualSide="+actualSideKey );
+    fireStateChanged();
     return gmObject;      
   }
   
@@ -371,6 +380,8 @@ class GridPointCollector /*implements IGeometryBuilder*/
     {
       actualSideKey--;
     }
+    
+    fireStateChanged();
   }
   
   public void removeLastPoint()
@@ -385,6 +396,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
                   sides[actualSideKey];
     
     builder.removeLastPoint( actualSideKey==0 );   
+    fireStateChanged(  );
   }
   
   public void replaceLastPoint(GM_Point point)
@@ -410,6 +422,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     
     actualSideKey=(actualSideKey+1) %SIDE_MAX_NUM;
     sides[actualSideKey].setSelected( true );
+    fireStateChanged();
   }
   
   public void selectPoint(
@@ -867,4 +880,33 @@ class GridPointCollector /*implements IGeometryBuilder*/
     }
   }
   
+  public void addGridPointCollectorStateChangeListener(
+                              IGridPointCollectorStateListener listener)
+  {
+    Assert.throwIAEOnNullParam( listener, "listener" );
+    if(stateListeners.contains( listener ))
+    {
+      return;
+    }
+    else
+    {
+      stateListeners.add( listener );
+    }
+  }
+  
+  private final void fireStateChanged(GridPointColectorChangeEvent event)
+  {
+    for(IGridPointCollectorStateListener listener:stateListeners)
+    {
+      listener.stateChanged( event );
+    }    
+  }
+  
+  private final void fireStateChanged()
+  {
+    for(IGridPointCollectorStateListener listener:stateListeners)
+    {
+      listener.stateChanged(null);
+    }    
+  }
 }

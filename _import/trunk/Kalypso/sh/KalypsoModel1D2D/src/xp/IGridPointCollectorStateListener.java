@@ -41,17 +41,12 @@
 package xp;
 
 /**
+ * Interface to listen to grid point collector state changes
  * 
  * @author Patrice Congo
+ *
  */
-public class GridPointColectorChangeEvent
+public interface IGridPointCollectorStateListener
 {
-  public enum EVENT_TYPE
-  {
-    POINT_ADDED,
-    LINE_COLECTOR_CHANGED,
-    
-  };
-  
-  
+    public void stateChanged(GridPointColectorChangeEvent changeEvent);
 }

@@ -56,8 +56,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -209,9 +211,33 @@ class GridWidgetFace
   }
 
     //    private CreateGridWidget m_widget;
+    private IGridPointCollectorStateListener tableUpdater=
+      new IGridPointCollectorStateListener()
+    {
+
+      public void stateChanged( GridPointColectorChangeEvent changeEvent )
+      {
+        Display display=rootPanel.getDisplay();
+        display.syncExec(
+            new Runnable() {
+              public void run()
+              {
+                tableViewer.setInput( gridPointCollector );
+                tableViewer.setItemCount( 4 );
+                tableViewer.setSelection( 
+                    new StructuredSelection(
+                        gridPointCollector.getCurrentLPCConfig()));
+              }
+            });
+      }
+      
+    };
     private Composite rootPanel;
     private FormToolkit toolkit;
     private TableViewer tableViewer;
+    private GridPointCollector gridPointCollector;
+    
+    
     public GridWidgetFace(CreateGridWidget widget)
     {
 //      m_widget = widget;      
@@ -239,8 +265,9 @@ class GridWidgetFace
                   toolkit.createSection( 
                       scrolledForm.getBody(), 
                       Section.TREE_NODE | Section.CLIENT_INDENT | 
-                        Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      workStatus.setText( "Aktuelle bearbeitung Status" );
+                        Section.TWISTIE | Section.DESCRIPTION | 
+                        Section.TITLE_BAR);
+      workStatus.setText( "Aktuelle Bearbeitungsstatus" );
       TableWrapData tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       workStatus.setLayoutData(tableWrapData );
@@ -252,11 +279,11 @@ class GridWidgetFace
               scrolledForm.getBody(), 
               Section.TREE_NODE | Section.CLIENT_INDENT | 
                 Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      config.setText( "Configuration" );
+      config.setText( "Konfiguration" );
       tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       config.setLayoutData(tableWrapData );
-      config.setExpanded( true );
+      config.setExpanded( false );
       
       
       createWorkStatus( workStatus );
@@ -271,11 +298,12 @@ class GridWidgetFace
       workStatusSection.setLayout( new FillLayout() );
       
       Composite clientComposite = 
-              toolkit.createComposite( workStatusSection );
+              toolkit.createComposite( workStatusSection , SWT.FLAT);
       workStatusSection.setClient( clientComposite );
       clientComposite.setLayout( new GridLayout() );
       Table table = toolkit.createTable( clientComposite, SWT.FILL );
-      final int WIDTH=clientComposite.getClientArea().width;
+      
+//      final int WIDTH=clientComposite.getClientArea().width;
       GridData gridData = new GridData(GridData.FILL_BOTH);
       gridData.grabExcessVerticalSpace = true;
       gridData.grabExcessHorizontalSpace = true;
@@ -283,21 +311,29 @@ class GridWidgetFace
 //      gridData.horizontalSpan = 1;
       table.setLayoutData(gridData);
         
-      TableColumn lineColumn= new TableColumn(table,SWT.LEFT, 0);
+      TableColumn lineColumn= new TableColumn(table,SWT.LEFT);
        lineColumn.setText( "Linie" ); 
        lineColumn.setWidth( 100/1 );
-      TableColumn actualPointNum= new TableColumn(table,SWT.LEFT,1);
-      actualPointNum.setText( "Aktuelle Punkten Anzahl" ); 
+       
+      TableColumn actualPointNum= new TableColumn(table,SWT.LEFT);
+      actualPointNum.setText( "Akt. PunktAnzahl" ); 
     actualPointNum.setWidth( 100/2 );  
       
-      TableColumn targetPointNum= new TableColumn(table,SWT.LEFT, 2);
-      targetPointNum.setText( "ZielPunktenAnzahl" );
+      TableColumn targetPointNum= new TableColumn(table,SWT.LEFT|SWT.WRAP);
+      targetPointNum.setText( "Ziel Punktanzahl" );
       targetPointNum.setWidth( 100/2 );
       targetPointNum.setResizable( true );
+      
+      table.setHeaderVisible( true );
+      table.setLinesVisible( true );
+      
+      
       tableViewer = new TableViewer(table);         
       tableViewer.setContentProvider( 
                     getTableContentProvider());
       tableViewer.setLabelProvider( getTableLabelProvider() );
+      
+      
       
     }
     
@@ -313,17 +349,28 @@ class GridWidgetFace
     
     public void setInput(Object input)
     {
-      tableViewer.setInput( input );
-      if(input instanceof GridPointCollector)
+      Object oldInput = tableViewer.getInput();
+      if(oldInput==input)
       {
-        LinePointCollectorConfig currentLPCConfig = 
-              ((GridPointCollector)input).getCurrentLPCConfig();
-        if(currentLPCConfig!=null)
-        {
-          tableViewer.setSelection( new StructuredSelection(currentLPCConfig) );
-        }
+        tableViewer.refresh();
       }
-//      tableViewer.getTable().layout( true );
+      else
+      {
+        tableViewer.setInput( input );
+        if(input instanceof GridPointCollector)
+        {
+          LinePointCollectorConfig currentLPCConfig = 
+                ((GridPointCollector)input).getCurrentLPCConfig();
+          if(currentLPCConfig!=null)
+          {
+            tableViewer.setSelection( 
+                new StructuredSelection(currentLPCConfig) );
+          }
+          this.gridPointCollector=(GridPointCollector)input;
+          this.gridPointCollector.addGridPointCollectorStateChangeListener( tableUpdater );
+        }
+        
+      }
     }
     
     
