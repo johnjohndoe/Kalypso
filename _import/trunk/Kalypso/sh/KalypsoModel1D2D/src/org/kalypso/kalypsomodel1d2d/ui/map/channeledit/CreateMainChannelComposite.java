@@ -88,14 +88,10 @@ public class CreateMainChannelComposite extends Composite
   private final CreateMainChannelWidget m_widget;
 
   private Section m_profilSection;
- 
-  /** m_buttonList *
-   * Following buttons are present in the Schlauchgenerator:
-   * Profile wählen
-   * Uferlinie 1 wählen
-   * Uferlinie 1 wählen
-   * Uferlinie 2 wählen
-   * Uferlinie 2 zeichnen
+
+  /*********************************************************************************************************************
+   * m_buttonList Following buttons are present in the Schlauchgenerator: Profile wählen Uferlinie 1 wählen Uferlinie 1
+   * zeichnen Uferlinie 2 wählen Uferlinie 2 zeichnen
    */
   private final List<Button> m_buttonList = new ArrayList<Button>();
 
@@ -116,6 +112,9 @@ public class CreateMainChannelComposite extends Composite
     }
   }
 
+  /**
+   * initialisation
+   */
   private void init( )
   {
     /* Retrieve data */
@@ -145,11 +144,13 @@ public class CreateMainChannelComposite extends Composite
     GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
     profilSection.setLayoutData( gridDataProfileControl );
 
-    
-    
     updateControl();
   }
 
+  /**
+   * in the profil section the crosssections will be displayed. the data filling is done in the function
+   * "updateProfilSection" (see below)
+   */
   private Control createProfilSection( Composite parent )
   {
     m_profilSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
@@ -157,6 +158,9 @@ public class CreateMainChannelComposite extends Composite
     return m_profilSection;
   }
 
+  /**
+   * in the segment section you can switch between the channel segments
+   */
   private Control createSegmentSwitchSection( Composite parent )
   {
     Section SegmentSwitchSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
@@ -170,6 +174,10 @@ public class CreateMainChannelComposite extends Composite
     return SegmentSwitchSection;
   }
 
+  /**
+   * in the bank section you can select / draw your banks (left / right) and specify the number of instersections (at
+   * first global for all bank segments)
+   */
   private Control createBankSelectionSection( Composite parent, IKalypsoFeatureTheme[] bankThemes )
   {
     Section bankSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
@@ -221,7 +229,7 @@ public class CreateMainChannelComposite extends Composite
 
     /* Button for the first bank selection */
     final Button chooseFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
-    m_buttonList.add( chooseFirstBankButton ); 
+    m_buttonList.add( chooseFirstBankButton );
     chooseFirstBankButton.setText( "Uferlinie 1 wählen..." );
     chooseFirstBankButton.addSelectionListener( new SelectionAdapter()
     {
@@ -230,8 +238,8 @@ public class CreateMainChannelComposite extends Composite
       {
         if( chooseFirstBankButton.getSelection() )
         {
-          buttonGuard ( chooseFirstBankButton );
-          final boolean side = true;
+          buttonGuard( chooseFirstBankButton );
+          final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
           final IWidget selectBankWidget = new SelectionWidget( "", "", function );
           m_widget.setDelegate( selectBankWidget );
@@ -248,15 +256,12 @@ public class CreateMainChannelComposite extends Composite
     m_buttonList.add( drawFirstBankButton );
     drawFirstBankButton.setText( "zeichnen" );
 
-    
-    
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     combviewerBank2.setContentProvider( new ArrayContentProvider() );
     combviewerBank2.setLabelProvider( new LabelProvider() );
     final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme();
-
     final IKalypsoFeatureTheme themeToBank2Select;
     if( bankThemes.length == 0 )
     {
@@ -301,8 +306,8 @@ public class CreateMainChannelComposite extends Composite
       {
         if( chooseSecondBankButton.getSelection() )
         {
-          buttonGuard ( chooseSecondBankButton );
-          final boolean side = false;
+          buttonGuard( chooseSecondBankButton );
+          final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
           final IWidget selectBankWidget = new SelectionWidget( "", "", function );
           m_widget.setDelegate( selectBankWidget );
@@ -313,7 +318,7 @@ public class CreateMainChannelComposite extends Composite
         }
       }
     } );
-    
+
     /* Button for the second bank drawing */
     final Button drawSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
     m_buttonList.add( drawSecondBankButton );
@@ -331,7 +336,20 @@ public class CreateMainChannelComposite extends Composite
     spinNumBankIntersections.setMinimum( 2 );
     spinNumBankIntersections.setMaximum( 100 );
     spinNumBankIntersections.setSelection( 6 );
+    m_data.setNumBankIntersections( 6 );
     spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein." );
+    spinNumBankIntersections.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final int selection = spinNumBankIntersections.getSelection();
+        m_data.setNumBankIntersections( selection );
+      }
+    } );
 
     final GridData gridDataSpinner = new GridData();
     gridDataSpinner.horizontalAlignment = SWT.END;
@@ -340,6 +358,10 @@ public class CreateMainChannelComposite extends Composite
     return bankSection;
   }
 
+  /**
+   * in the profile section you can select / draw your profiles (WSPM-profiles) and specify the number of instersections
+   * (global for all profiles)
+   */
   private Control createProfileSelectionSection( final Composite parent, IKalypsoFeatureTheme[] profileThemes )
   {
     /* profile selection expandable section */
@@ -407,7 +429,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( chooseProfilesButton.getSelection() )
         {
-          buttonGuard ( chooseProfilesButton );
+          buttonGuard( chooseProfilesButton );
           final IRectangleMapFunction function = new ProfileSelectorFunction( m_data );
           final IWidget selectProfileWidget = new SelectionWidget( "", "", function );
           m_widget.setDelegate( selectProfileWidget );
@@ -441,6 +463,9 @@ public class CreateMainChannelComposite extends Composite
     updateProfilSection();
   }
 
+  /**
+   * displays the selected crosssections -> data filling for the profil section
+   */
   private void updateProfilSection( )
   {
     final Control client = m_profilSection.getClient();
@@ -480,19 +505,18 @@ public class CreateMainChannelComposite extends Composite
     m_profilSection.setExpanded( profil != null );
   }
 
-  
   /**
    * simulates a radio button set
    */
-  private void buttonGuard ( Button activatedButton )
+  private void buttonGuard( Button activatedButton )
   {
     for( int i = 0; i < m_buttonList.size(); i++ )
     {
       final Button currentButton = m_buttonList.get( i );
-      if ( !activatedButton.equals( currentButton ))
-          {
-            currentButton.setSelection( false );
-          }
+      if( !activatedButton.equals( currentButton ) )
+      {
+        currentButton.setSelection( false );
+      }
     }
   }
 }

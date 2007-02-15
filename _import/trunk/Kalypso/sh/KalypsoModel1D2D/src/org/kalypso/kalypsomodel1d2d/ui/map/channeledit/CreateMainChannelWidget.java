@@ -61,6 +61,7 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -150,14 +151,18 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       }
     }
 
-    paintBanks( g, true, new Color( 0, 0, 255 ) );
-    paintBanks( g, false, new Color( 0, 255, 0 ) );
-
+    paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
+    paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
+    
+    
+    final MapPanel mapPanel = getMapPanel();
+    m_data.paintAllSegments( g, mapPanel );
+    
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
   }
-
-  private void paintBanks( final Graphics g, final boolean side, final Color color )
+  
+  private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )
   {
     final Feature[] selectedBanks = m_data.getSelectedBanks( side );
     for( final Feature feature : selectedBanks )
@@ -177,7 +182,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         stroke.setStroke( color );
         symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
         de.paint( g, getMapPanel().getProjection() );
         
         //TODO: Set the Stroke back to default
@@ -438,6 +443,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       public void run( )
       {
         m_composite.updateControl();
+        //check if all needed data is specified
+        m_data.completationCheck();
       }
     } );
 

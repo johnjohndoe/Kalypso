@@ -40,16 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
@@ -57,11 +61,19 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.model.wspm.ui.action.FeatureComparator;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * State object for create main channel widget and composite.
@@ -70,20 +82,34 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CreateChannelData
 {
+  public enum SIDE
+  {
+    LEFT,
+    RIGHT;
+  }
+
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme m_bankTheme;
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
-  
-  private Map<Feature, Boolean> m_selectedBanks = new HashMap<Feature, Boolean>();
-  
+
+  private Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
+
   private final CreateMainChannelWidget m_widget;
+
+  private boolean datacomplete;
+
+  private int m_numBankSelections;
+
+  private List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
     m_widget = widget;
   }
+
+  /* --------------------- Theme handling ---------------------------------- */
 
   public IKalypsoFeatureTheme getProfileTheme( )
   {
@@ -117,7 +143,7 @@ public class CreateChannelData
     final IMapModell mapModell = m_widget.getPanel().getMapModell();
     if( mapModell == null )
       return new IKalypsoFeatureTheme[0];
-    
+
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
 
     final List<IKalypsoFeatureTheme> goodThemes = new ArrayList<IKalypsoFeatureTheme>();
@@ -165,6 +191,8 @@ public class CreateChannelData
     return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
   }
 
+  /* --------------------- selection handling ---------------------------------- */
+
   public void addSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.addAll( Arrays.asList( profileFeatures ) );
@@ -183,6 +211,47 @@ public class CreateChannelData
   {
     return m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
   }
+
+  /**
+   * @param side
+   *          false: left, true: right
+   */
+  public void addSelectedBanks( final Feature[] bankFeatures, final SIDE side )
+  {
+    for( final Feature feature : bankFeatures )
+      m_selectedBanks.put( feature, side );
+
+    m_widget.update();
+  }
+
+  public Feature[] getSelectedBanks( final SIDE side )
+  {
+    final List<Feature> result = new ArrayList<Feature>();
+
+    for( final Map.Entry<Feature, SIDE> entry : m_selectedBanks.entrySet() )
+    {
+      final Feature bankFeature = entry.getKey();
+      final SIDE value = entry.getValue();
+      if( value == side )
+        result.add( bankFeature );
+    }
+
+    return result.toArray( new Feature[result.size()] );
+  }
+
+  public void removeSelectedBanks( final Feature[] bankFeatures )
+  {
+    for( final Feature feature : bankFeatures )
+      m_selectedBanks.remove( feature );
+
+    m_widget.update();
+
+    m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
+
+    m_widget.update();
+  }
+
+  /* --------------------- profile chart handling ---------------------------------- */
 
   public IProfilEventManager getProfilEventManager( )
   {
@@ -203,41 +272,108 @@ public class CreateChannelData
     return new ProfilEventManager( null, null );
   }
 
+  /* --------------------- workflow handling ---------------------------------- */
+
   /**
-   * @param side false: left, true: right
+   * check, if all necessary data is specified (profiles, bank lines...).
    */
-  public void addSelectedBanks( final Feature[] bankFeatures, final boolean side )
+  public void completationCheck( )
   {
-    for( final Feature feature : bankFeatures )
-      m_selectedBanks.put( feature, side );
 
-    m_widget.update();
-  }
-  
-  public Feature[] getSelectedBanks( final boolean side )
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    
-    for( final Map.Entry<Feature, Boolean> entry : m_selectedBanks.entrySet() )
+    // TODO: check for left and right banks and the selected profiles
+    datacomplete = false;
+    if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
     {
-      final Feature bankFeature = entry.getKey();
-      final Boolean value = entry.getValue();
-      if( value.booleanValue() == side )
-        result.add( bankFeature );
+        datacomplete = true;
     }
-    
-    return result.toArray( new Feature[result.size()] );
+    else if( m_selectedProfiles.size() <= 1 )
+    {
+      m_segmentList.clear();
+    }
+    if( datacomplete == true )
+      intersectBanksWithProfs();
   }
-  
-  public void removeSelectedBanks( final Feature[] bankFeatures )
+
+  /**
+   * all selected banks will be intersected by the selected profiles Input: all selected banks and profiles Output:
+   * intersected banks as linestrings (including the intersection point)
+   */
+  private void intersectBanksWithProfs( )
   {
-    for( final Feature feature : bankFeatures )
-      m_selectedBanks.remove( feature );
-
-    m_widget.update();
+    /* at first -> clear the segment list! */
+    m_segmentList.clear();
     
-    m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
 
-    m_widget.update();
+    final Feature[] profileFeatures = m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
+
+    if( profileFeatures.length == 0 )
+      return;
+
+    final IPropertyType stationProperty = profileFeatures[0].getFeatureType().getProperty( WspmProfile.QNAME_STATION );
+    Arrays.sort( profileFeatures, new FeatureComparator( stationProperty ) );
+
+    // TODO: intersect all selected profiles and banks and store it into a linkedList of SegmentData.
+
+    // loop over all profiles
+    // take two neighbouring profiles create a segment for them
+
+    WspmProfile lastProfile = null;
+    for( final Feature profileFeature : profileFeatures )
+    {
+
+      // get the profile line
+      final WspmProfile profile = new WspmProfile( profileFeature );
+      final GM_Curve profCurve = profile.getLine();
+
+      if( lastProfile != null )
+      {
+        // behandle das segment
+        final SegmentData segment = new SegmentData( lastProfile, profile, m_selectedBanks );
+        // add to list
+        m_segmentList.add( segment );
+      }
+      else
+      {
+        // tu nix
+      }
+      lastProfile = profile;
+    }
+  }
+
+  private void calculateSegment( int segNumB )
+  {
+
+  }
+
+  private void calculateAllSegment( )
+  {
+
+  }
+
+  public void setNumBankIntersections( final int numBankSelections )
+  {
+    m_numBankSelections = numBankSelections;
+
+    // TODO update gui???
+  }
+
+  public void paintAllSegments( final Graphics g, final MapPanel mapPanel )
+  {
+    // loop over all segments
+    final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
+    for( final SegmentData segment : datas )
+    {
+      if( segment != null )
+        try
+        {
+          segment.paintSegment( g, mapPanel );
+        }
+        catch( GM_Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+    }
+
   }
 }

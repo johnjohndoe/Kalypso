@@ -74,9 +74,9 @@ import com.vividsolutions.jts.geom.Polygon;
 public class BankSelectorFunction implements IRectangleMapFunction
 {
   private final CreateChannelData m_data;
-  private final boolean m_side;
+  private final CreateChannelData.SIDE m_side;
 
-  public BankSelectorFunction( final CreateChannelData data, final boolean side)
+  public BankSelectorFunction( final CreateChannelData data, final CreateChannelData.SIDE side)
   {
     m_data = data;
     m_side = side;
@@ -94,7 +94,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
     if( bankTheme == null )
       return;
 
-    // search profile within rectangle
+    // search bank within rectangle
     final FeatureList featureList = bankTheme.getFeatureList();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
     
@@ -122,7 +122,6 @@ public class BankSelectorFunction implements IRectangleMapFunction
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
     }
     
     if( list.size() == 0 )

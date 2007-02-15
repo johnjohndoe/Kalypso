@@ -42,10 +42,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -53,8 +55,15 @@ import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author jung
@@ -88,11 +97,33 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     final Set<Feature> selectedProfileSet = new HashSet<Feature>( Arrays.asList( selectedProfiles ) );
 
     final List list = featureList.query( envelope, null );
+    
+    final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
+    for( final Iterator iter = list.iterator(); iter.hasNext(); )
+    {
+      final Object o = iter.next();
+      final Feature feature = FeatureHelper.getFeature( workspace, o );
+      
+      final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
+      try
+      {
+        final LineString jtsLine = (LineString) JTSAdapter.export( line );
+        if( !jtsLine.intersects( rectanglePoly ) )
+          iter.remove();
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
     if( list.size() == 0 )
     {
       // empty selection: remove selection
       // TODO: maybe extra button for that?
       m_data.removeSelectedProfiles( selectedProfiles );
+      
     }
     else
     {
