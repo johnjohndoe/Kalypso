@@ -205,14 +205,18 @@ public class JTSUtilities
    */
   public static LineString createLineSegment( Geometry line, Point start, Point end )
   {
-    // if( !line.crosses( start ) )
-    // return null;
-    //
-    // if( !line.crosses( end ) )
-    // return null;
+    /* Check if both points are lying on the line. */
+    if( (line.distance( start ) >= 10E-08) || (line.distance( start ) >= 10E-08) )
+      return null;
 
     if( line instanceof LineString )
+    {
+      /* Check the orientation of the line. */
+      if( !getLineOrientation( (LineString) line, start, end ) )
+        return createLineSegmentFromLine( (LineString) line, end, start );
+
       return createLineSegmentFromLine( (LineString) line, start, end );
+    }
     else if( line instanceof MultiLineString )
       return createLineSegmentFromMultiLine( (MultiLineString) line, start, end );
 
@@ -233,10 +237,9 @@ public class JTSUtilities
   public static boolean getLineOrientation( LineString line, Point start, Point end )
   {
     /* Check if both points are lying on the line. */
-    if(( line.distance( start ) >= 10E-08 ) || ( line.distance( start ) >= 10E-08 ) ){
-      throw new IllegalArgumentException("One of the two points does not lie on the given line ...");
-    }
-    
+    if( (line.distance( start ) >= 10E-08) || (line.distance( start ) >= 10E-08) )
+      throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
+
     boolean first = false;
 
     for( int i = 0; i < line.getNumPoints() - 1; i++ )
@@ -255,7 +258,7 @@ public class JTSUtilities
         /* The direction is inverse. */
         if( !first )
           return false;
-        
+
         break;
       }
     }
@@ -265,7 +268,10 @@ public class JTSUtilities
 
   /**
    * This function creates a LineString (JTS) of a LineString from a given start point to an end point, including all
-   * points on the given LineString.
+   * points on the given LineString. However it does not check the orientation of the start and end point. This must be
+   * done before calling this method. Use {@link JTSUtilities#getLineOrientation(LineString, Point, Point)} for this
+   * operation. Both points should have the same orientation than the line, otherwise the new line has only two points,
+   * namly the start and end point.
    * 
    * @param line
    *          The original LineString.
@@ -320,7 +326,8 @@ public class JTSUtilities
   /**
    * This function creates a LineString (JTS) of a MultiLineString from a given start point to an end point, including
    * all points on the given MultiLineString. Gaps between the different LineStrings will be connected in the result, if
-   * it should contain more than one LineString of the original MultiLineString.<br>
+   * it should contain more than one LineString of the original MultiLineString. However it does not check the
+   * orientation of the start and end point.<br>
    * <br>
    * KNOWN ISSUE:<br>
    * It is possible that this function produce errors, if the start or the end point lies in a gap between two
