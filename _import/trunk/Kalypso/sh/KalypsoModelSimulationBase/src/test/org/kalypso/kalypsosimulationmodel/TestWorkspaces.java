@@ -106,6 +106,10 @@ public class TestWorkspaces
 	public static final String REL_RES_ROUGHNESS_POLYGON=
 							"data/roughness_polygon.xml";
 	
+    public static final URL URL_ROUGHNESS_POLYGON_COLLECTION;
+    public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION =
+                            "data/terrain.gml";
+    
 	public static final URL URL_COL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
 							"data/collection_of_roughness_cls_correction.xml";
@@ -165,6 +169,10 @@ public class TestWorkspaces
 					REL_RES_ROUGHNESS_POLYGON,
 					TestWorkspaces.class.getResource(
 								REL_RES_ROUGHNESS_POLYGON));
+            urlMap.put(
+                REL_RES_ROUGHNESS_POLYGON_COLLECTION,
+                TestWorkspaces.class.getResource(
+                            REL_RES_ROUGHNESS_POLYGON_COLLECTION));
 			urlMap.put(
 					REL_RES_SHAPE_2_ROUGHNESS_POLYGON,
 					TestWorkspaces.class.getResource(
@@ -205,6 +213,8 @@ public class TestWorkspaces
 			
 			URL_ROUGHNESS_POLYGON=
 				urlMap.get(REL_RES_ROUGHNESS_POLYGON);
+            URL_ROUGHNESS_POLYGON_COLLECTION=
+                urlMap.get(REL_RES_ROUGHNESS_POLYGON_COLLECTION);
 			URL_SHAPE_2_ROUGHNESS_POLYGON=
                 urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
 
