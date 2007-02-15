@@ -45,12 +45,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -67,6 +70,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   private BaseMapMainPage mPage;
 
   private String m_scenarioFolder;
+  ProgressMonitorDialog monitor;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -116,11 +120,30 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     final File srcFileTfw = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
     final File dstFileTif = new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
     final File dstFileTfw = new File( dstFilePath + mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
-    
+   
+    try {
+      getContainer().run(true, true, new IRunnableWithProgress() {
+         public void run(IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException
+         {
+           copy(srcFileTif, dstFileTif, monitor);
+           copy(srcFileTfw, dstFileTfw, monitor);         }
+
+         
+      });
+   }
+   catch (InvocationTargetException e) {
+      return false;
+   }
+   catch (InterruptedException e) {
+      // User canceled, so stop but don’t close wizard.
+      return false;
+   }
+  
 //    long lengthKB = (srcFileTif.length() + srcFileTfw.length())/1024;
+
     
-    copy(srcFileTif, dstFileTif, null);
-    copy(srcFileTfw, dstFileTfw, null);
+
 
     try
     {
@@ -155,7 +178,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
     return true;
   }
   
-  private boolean copy(File src, File dst, ProgressMonitorDialog monitor)
+  boolean copy(File src, File dst, IProgressMonitor monitor2)
   {
     InputStream in;
     OutputStream out;
@@ -166,10 +189,14 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
 
       byte[] buf = new byte[1024];
       int len;
+      int lens = ((int)src.length()/1024+1);
+      monitor2.beginTask( "Copying..", lens );
       while( (len = in.read( buf )) > 0 )
       {
+        monitor2.worked(1);
         out.write( buf, 0, len );
       }
+      monitor2.done();
       in.close();
       out.close();
       return true;
