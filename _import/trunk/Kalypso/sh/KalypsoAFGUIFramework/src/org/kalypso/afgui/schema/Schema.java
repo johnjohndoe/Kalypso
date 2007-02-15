@@ -1,8 +1,6 @@
 package org.kalypso.afgui.schema;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
@@ -44,7 +42,6 @@ import org.kalypso.afgui.model.impl.TaskSeq;
 import org.kalypso.afgui.model.impl.WorkflowData;
 import org.kalypso.afgui.model.impl.WorkflowImpl;
 import org.kalypso.afgui.model.impl.WorkflowPartSeq;
-
 
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;

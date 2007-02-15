@@ -11,6 +11,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
@@ -81,13 +82,10 @@ public class WorkflowView extends ViewPart
 
     public void activeProjectChanged( IProject newProject, IProject oldProject, IWorkflowDB oldDB, IWorkflowSystem oldWorkflowSystem )
     {
-      IWorkflow workflow = activeWorkContext.getCurrentWorkflow();
+      final IWorkflow workflow = activeWorkContext.getCurrentWorkflow();
       LOGGER.info( "New Workflow:" + workflow );
       workflowControl.setWorkflow( workflow );
-      workflowControl.setActiveProject( newProject );
-      workflowControl.setVisible( false );
-      setCurrentSzenario( null, null );
-
+      workflowControl.setActiveProject( newProject );           
     }
 
   };
@@ -95,7 +93,7 @@ public class WorkflowView extends ViewPart
   private ISelectionListener workflowDataSelectionListener = new ISelectionListener()
   {
 
-    public void selectionChanged( IWorkbenchPart part, ISelection selection )
+    public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
     {
       if( part instanceof SimulationModelDBView )
       {
@@ -145,15 +143,25 @@ public class WorkflowView extends ViewPart
 
     activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
     workflowControl = new WorkflowControl( activeWorkContext.getCurrentWorkflow() );
-    workflowControl.createControl( parent );
-    workflowControl.setVisible( false );
-    setCurrentSzenario( null, null );
-    ISelectionService selServ = getSite().getWorkbenchWindow().getSelectionService();
-    selServ.addPostSelectionListener( workflowDataSelectionListener );
-    getSite().getWorkbenchWindow().getPartService().addPartListener( partListener );
-
+    workflowControl.createControl( parent );    
+    final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
+    workbenchWindow.getSelectionService().addPostSelectionListener( workflowDataSelectionListener );
+    workbenchWindow.getPartService().addPartListener( partListener );
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    activeWorkContext.removeActiveContextChangeListener( workContextChangeListener );
+    final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
+    workbenchWindow.getSelectionService().removePostSelectionListener( workflowDataSelectionListener );
+    workbenchWindow.getPartService().removePartListener( partListener );
+    super.dispose();
+  }
+  
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */

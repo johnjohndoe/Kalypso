@@ -128,8 +128,9 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
             if( themeToActivate != null )
             {
-              logger.info( themeToActivate.getName() + " theme activated with feature type " + m_featureType );
+              logger.info( themeToActivate + " theme activated with feature type " + m_featureType );
               mapModell.activateTheme( themeToActivate );
+              mapView.setCustomName( themeToActivate.getName() );
             }
             else
             {
@@ -140,7 +141,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
         }
       };
       job.setUser( true );
-      job.schedule( 500 );
+      job.schedule( );
 
     }
     return Status.OK_STATUS;
