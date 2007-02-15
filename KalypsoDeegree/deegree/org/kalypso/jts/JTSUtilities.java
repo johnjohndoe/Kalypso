@@ -220,6 +220,50 @@ public class JTSUtilities
   }
 
   /**
+   * Evaluates the two given points and returns true, if the direction is equal of that from line (its points).
+   * 
+   * @param line
+   *          The original LineString.
+   * @param start
+   *          The start point of the new line (it has to be one point that lies on the original LineString).
+   * @param end
+   *          The end point of the new line (it has to be one point that lies on the original LineString).
+   * @return True, if the first found point of the line is nearer to the start point, than to the end point.
+   */
+  public static boolean getLineOrientation( LineString line, Point start, Point end )
+  {
+    /* Check if both points are lying on the line. */
+    if(( line.distance( start ) >= 10E-08 ) || ( line.distance( start ) >= 10E-08 ) ){
+      throw new IllegalArgumentException("One of the two points does not lie on the given line ...");
+    }
+    
+    boolean first = false;
+
+    for( int i = 0; i < line.getNumPoints() - 1; i++ )
+    {
+      Point pointN = line.getPointN( i );
+      Point pointN1 = line.getPointN( i + 1 );
+
+      /* Build a line with the two points to check the flag. */
+      LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+
+      if( testLine.distance( start.getCoordinate() ) < 10E-08 )
+        first = true;
+
+      if( testLine.distance( end.getCoordinate() ) < 10E-08 )
+      {
+        /* The direction is inverse. */
+        if( !first )
+          return false;
+        
+        break;
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * This function creates a LineString (JTS) of a LineString from a given start point to an end point, including all
    * points on the given LineString.
    * 
@@ -416,14 +460,14 @@ public class JTSUtilities
   }
 
   /** Creates a jts-polygon from a deegree-envelope */
-  public static Polygon convertGMEnvelopeToPolygon(final GM_Envelope envelope, final GeometryFactory gf )
+  public static Polygon convertGMEnvelopeToPolygon( final GM_Envelope envelope, final GeometryFactory gf )
   {
     final Coordinate minCoord = JTSAdapter.export( envelope.getMin() );
     final Coordinate maxCoord = JTSAdapter.export( envelope.getMax() );
     final Coordinate tmp1Coord = new Coordinate( minCoord.x, maxCoord.y );
     final Coordinate tmp2Coord = new Coordinate( maxCoord.x, minCoord.y );
-    
-    final Coordinate[] coordinates = new Coordinate[] {minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
+
+    final Coordinate[] coordinates = new Coordinate[] { minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
     final LinearRing linearRing = gf.createLinearRing( coordinates );
     return gf.createPolygon( linearRing, null );
   }
