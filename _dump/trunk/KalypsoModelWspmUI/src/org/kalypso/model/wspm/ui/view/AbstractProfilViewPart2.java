@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContr
  */
 public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilViewPart2, IProfilViewDataListener, IProfilListener, IProfilProviderListener, IAdapterEater
 {
-  private final ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
+  private ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( IProfilProvider2.class, this, new EditorFirstAdapterFinder(), new EditorFirstAdapterFinder() );
 
@@ -80,6 +80,22 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
+
+  /**
+   * Standard constructor.
+   */
+  public AbstractProfilViewPart2( )
+  {
+    m_actionContributor = new ProfilChartViewActionBarContributor();
+  }
+
+  /**
+   * Constructor to add an own ActionContributor.
+   */
+  public AbstractProfilViewPart2( ProfilChartViewActionBarContributor actionContributor )
+  {
+    m_actionContributor = actionContributor;
+  }
 
   @Override
   public void init( final IViewSite site ) throws PartInitException

@@ -64,12 +64,21 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( ProfilChartView.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private final List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
+  private List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
 
   public ProfilChartViewActionBarContributor( )
   {
     for( final ProfilChartActionsEnum actionDesc : ProfilChartActionsEnum.values() )
       m_chartActions.add( new ChartAction( actionDesc ) );
+  }
+
+  /**
+   * Constructor for adding some, but not all ChartActions.
+   */
+  public ProfilChartViewActionBarContributor( List<ChartAction> chartActions )
+  {
+    if( chartActions != null )
+      m_chartActions = chartActions;
   }
 
   /**
@@ -165,7 +174,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
    */
   public void init( final IWorkbenchPage page )
   {
-    m_adapterPartListener.init(page);
+    m_adapterPartListener.init( page );
   }
 
   /**
@@ -174,7 +183,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final ProfilChartView chartView = (ProfilChartView) adapter;
-    
+
     m_statusPosItem.setChartView( chartView );
 
     for( final ChartAction action : m_chartActions )

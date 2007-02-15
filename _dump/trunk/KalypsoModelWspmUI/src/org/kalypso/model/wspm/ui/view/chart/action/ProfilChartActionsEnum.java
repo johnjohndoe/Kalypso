@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 public enum ProfilChartActionsEnum
 {
-  ZOOM_OUT("Verkleinern", "Ausschnit verkleinern", KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
+  ZOOM_OUT("Verkleinern", "Ausschnitt verkleinern", KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
   ZOOM_IN("Vergrössern", "Ausschnitt vergrössern", KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON),
   PAN("Verschieben", "Ausschnitt verschieben", KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON),
 
@@ -59,7 +59,7 @@ public enum ProfilChartActionsEnum
   FIX_RATIO_3("1:5", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
 
   EDIT("Editeren", "Daten editieren", KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_CHECK_BOX),
-  MAXIMIZE("Maximieren", "Ausschnit maximieren", KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
+  MAXIMIZE("Maximieren", "Ausschnitt maximieren", KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
   EXPORT_IMAGE("Bild exportieren...", "Aktuellen Ausschnitt als Bild speichern", KalypsoModelWspmUIImages.ID_CHART_EXPORT, null, IAction.AS_PUSH_BUTTON);
 
   private final String m_label;

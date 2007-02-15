@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
 import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
+import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
 
 /**
  * @author Gernot Belger
@@ -57,6 +58,16 @@ public class ChartView extends AbstractProfilViewPart2
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView";
 
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
+
+  public ChartView( )
+  {
+    super();
+  }
+
+  public ChartView( ProfilChartViewActionBarContributor actionContributor )
+  {
+    super( actionContributor );
+  }
 
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
@@ -72,7 +83,7 @@ public class ChartView extends AbstractProfilViewPart2
       editorID = part.getSite().getId();
     else
       editorID = null;
-    
+
     m_profilPart.setProfil( getProfilEventManager(), getFile(), editorID );
 
     return control;
