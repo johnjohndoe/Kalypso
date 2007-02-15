@@ -293,6 +293,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
           m_theme.addModellListener( this );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
+
+          // TODO is this really necessary?
           fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
           for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
             addStyle( style );
@@ -341,9 +343,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     // ModellEvent event = new ModellEvent( this,null ) ;
     // ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
     if( m_theme != null )
+    {
       m_theme.fireModellEvent( null );
+    }
     else
+    {
       fireModellEvent( null );
+    }
+    fireKalypsoThemeEvent( new KalypsoThemeEvent( this, KalypsoThemeEvent.CONTEXT_CHANGED ) );
   }
 
   /**
@@ -478,5 +485,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Change label, showing if dirty or not
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
+   */
+  @Override
+  public String getContext( )
+  {
+    final IFeatureType featureType = getFeatureType();
+    if( featureType != null )
+      return featureType.getQName().toString();
+    else
+      return super.getContext();
   }
 }

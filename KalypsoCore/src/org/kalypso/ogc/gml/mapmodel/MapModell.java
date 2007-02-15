@@ -104,8 +104,6 @@ public class MapModell implements IMapModell
 
   public void addTheme( final IKalypsoTheme theme )
   {
-    if( m_activeTheme == null )
-      m_activeTheme = theme;
 
     m_themes.add( theme );
 
@@ -114,6 +112,9 @@ public class MapModell implements IMapModell
     theme.addModellListener( this );
 
     fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
+
+    if( m_activeTheme == null )
+      activateTheme( theme );
   }
 
   public void enableTheme( final IKalypsoTheme theme, final boolean status )
@@ -193,9 +194,11 @@ public class MapModell implements IMapModell
     theme.removeModellListener( this );
     m_themes.remove( theme );
     m_enabledThemeStatus.remove( theme );
-    if( m_activeTheme == theme )
-      m_activeTheme = null;
+
     fireModellEvent( null );
+
+    if( m_activeTheme == theme )
+      activateTheme( theme );
   }
 
   public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception

@@ -61,6 +61,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -70,6 +71,7 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -174,15 +176,19 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
+  private final MapModellContextSwitcher m_contextSwitcher;
+
   private String m_message = "";
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager, final IContextService contextService )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
+    m_contextSwitcher = new MapModellContextSwitcher( contextService );
 
     // set empty Modell:
-    setMapModell( new MapModell( crs, null ) );
+    final IMapModell mapModell = new MapModell( crs, null );
+    setMapModell( mapModell );
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
@@ -208,6 +214,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // TODO: where is this ma panel still referenced from?
     m_selectionListeners.clear();
     m_mapImage = null;
+
+    m_contextSwitcher.dispose();
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -368,12 +376,18 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public void setMapModell( final IMapModell modell )
   {
     if( m_model != null )
+    {
       m_model.removeModellListener( this );
+      m_model.removeModellListener( m_contextSwitcher );
+    }
 
     m_model = modell;
 
     if( m_model != null )
+    {
       m_model.addModellListener( this );
+      m_model.addModellListener( m_contextSwitcher );
+    }
   }
 
   /**
@@ -441,13 +455,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       return;
 
     // TODO: introduce a trace option for this
-//    final StringBuffer dump = new StringBuffer();
-//    dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-//    dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-//    dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-//    dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-//    dump.append( "\n" );
-//    System.out.println( dump.toString() );
+    // final StringBuffer dump = new StringBuffer();
+    // dump.append( "MinX:" + m_boundingBox.getMin().getX() );
+    // dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
+    // dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
+    // dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
+    // dump.append( "\n" );
+    // System.out.println( dump.toString() );
 
     m_projection.setSourceRect( m_boundingBox );
 
@@ -625,6 +639,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @deprecated
    */
+  @Deprecated
   public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode, final boolean useOnlyFirstChoosen )
   {
     final GeoTransform transform = getProjection();
@@ -695,6 +710,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   /**
    * @deprecated Does not belong into the MapPanel. Use {@link IFeatureSelectionChanger} instead.
    */
+  @Deprecated
   private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
     // nothing was choosen by the user, clear selection

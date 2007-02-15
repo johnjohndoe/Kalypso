@@ -48,7 +48,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -57,7 +56,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
@@ -67,10 +65,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author doemming
  */
-public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme, ModellEventListener
+public class KalypsoLegendTheme extends AbstractKalypsoTheme implements IKalypsoTheme, ModellEventListener
 {
-  private ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
-
   private Image m_Image = null;
 
   private Color backColor = new Color( 240, 240, 240 );
@@ -79,41 +75,19 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
 
   private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
 
-  private String m_name;
-
-  private final IMapModell m_mapModell;
-
   public KalypsoLegendTheme( final IMapModell mapModell )
   {
-    m_mapModell = mapModell;
-    m_mapModell.addModellListener( this );
-    m_name = "Legende";
+    super( "Legende", KalypsoLegendTheme.class.getName(), mapModell );
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
+  @Override
   public void dispose( )
   {
-    m_mapModell.removeModellListener( this );
-
-    m_eventProvider.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
-   */
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
-   */
-  public void setName( String name )
-  {
-    m_name = name;
+    getMapModell().removeModellListener( this );
+    super.dispose();
   }
 
   /**
@@ -139,24 +113,10 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
     }
   }
 
-  public void addModellListener( final ModellEventListener listener )
-  {
-    m_eventProvider.addModellListener( listener );
-  }
-
-  public void fireModellEvent( final ModellEvent event )
-  {
-    m_eventProvider.fireModellEvent( event );
-  }
-
-  public void removeModellListener( ModellEventListener listener )
-  {
-    m_eventProvider.removeModellListener( listener );
-  }
-
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     if( modellEvent != null && modellEvent.isType( ModellEvent.LEGEND_UPDATED ) )
@@ -168,14 +128,14 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
   private void updateLegend( int widthPerLegend, final int hMax )
   {
     final List<Image> stylesCol = new ArrayList<Image>();
-
-    final int maxThems = m_mapModell.getThemeSize();
+    final IMapModell mapModell = getMapModell();
+    final int maxThems = mapModell.getThemeSize();
     final List<IKalypsoFeatureTheme> visibleThemes = new ArrayList<IKalypsoFeatureTheme>();
     for( int i = 0; i < maxThems; i++ )
     {
-      final IKalypsoTheme theme = m_mapModell.getTheme( i );
+      final IKalypsoTheme theme = mapModell.getTheme( i );
 
-      if( m_mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
+      if( mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
         visibleThemes.add( (IKalypsoFeatureTheme) theme );
     }
     final int legendSize = visibleThemes.size();
@@ -249,7 +209,7 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
     g.setColor( Color.DARK_GRAY );
     g.drawRect( 0, 0, xMax * widthPerLegend - 1, yMax * heightPerLegend - 1 );
     m_Image = tmpImage;
-    fireModellEvent( new ModellEvent( null, ModellEvent.LEGEND_UPDATED ) );
+    fireModellEvent( new ModellEvent( this, ModellEvent.LEGEND_UPDATED ) );
   }
 
   private Image getLegend( IFeatureType ft, UserStyle style, int width, int height )
@@ -284,21 +244,5 @@ public class KalypsoLegendTheme extends PlatformObject implements IKalypsoTheme,
   public GM_Envelope getBoundingBox( )
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
-   */
-  public String getType( )
-  {
-    return "";
-  }
-  
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
-   */
-  public IMapModell getMapModell( )
-  {
-    return m_mapModell;
   }
 }

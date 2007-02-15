@@ -65,6 +65,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   private final ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
 
+  private final KalypsoThemeEventProviderAdapter m_themeEventProvider = new KalypsoThemeEventProviderAdapter();
+
   private final IMapModell m_mapModel;
 
   public AbstractKalypsoTheme( final String name, final IMapModell mapModel )
@@ -79,14 +81,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_type = type;
     m_mapModel = mapModel;
   }
-  
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
-   */
-  public void dispose( )
-  {
-    m_eventProvider.dispose();
-  }
 
   public String getName( )
   {
@@ -96,7 +90,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
    */
-  public final void setName( final String name )
+  public void setName( final String name )
   {
     m_name = name;
     fireModellEvent( null );
@@ -110,17 +104,17 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     fireModellEvent( modellEvent );
   }
 
-  public final void addModellListener( ModellEventListener listener )
+  public void addModellListener( ModellEventListener listener )
   {
     m_eventProvider.addModellListener( listener );
   }
 
-  public final void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( ModellEvent event )
   {
     m_eventProvider.fireModellEvent( event );
   }
 
-  public final void removeModellListener( ModellEventListener listener )
+  public void removeModellListener( ModellEventListener listener )
   {
     m_eventProvider.removeModellListener( listener );
   }
@@ -140,12 +134,58 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     m_type = type;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
    */
   public IMapModell getMapModell( )
   {
     return m_mapModel;
+  }
+
+  /**
+   * Returns the type of the theme by default. Override if needed.
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
+   */
+  public String getContext( )
+  {
+    return getType();
+  }
+
+  /**
+   * @param listener
+   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   */
+  public void addKalypsoThemeListener( IKalypsoThemeListener listener )
+  {
+    m_themeEventProvider.addKalypsoThemeListener( listener );
+  }
+
+  /**
+   * @param listener
+   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   */
+  public void removeKalypsoThemeListener( IKalypsoThemeListener listener )
+  {
+    m_themeEventProvider.removeKalypsoThemeListener( listener );
+  }
+
+  /**
+   * @param event
+   * @see org.kalypso.ogc.gml.KalypsoThemeEventProviderAdapter#fireKalypsoThemeEvent(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   */
+  public void fireKalypsoThemeEvent( KalypsoThemeEvent event )
+  {
+    m_themeEventProvider.fireKalypsoThemeEvent( event );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   */
+  public void dispose( )
+  {
+    m_eventProvider.dispose();
+    m_themeEventProvider.dispose();
   }
 }

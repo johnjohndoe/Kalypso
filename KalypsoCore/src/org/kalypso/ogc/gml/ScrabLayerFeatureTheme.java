@@ -34,7 +34,6 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -59,7 +58,7 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author kuepfer
  */
-public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFeatureTheme
+public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
   public static final String STYLE_NAME = "ScrabLayerStyle";
 
@@ -71,16 +70,16 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
 
   public static final String FEATURE_MEMBER = "scrabLayerMember";
 
+  private static final String CONTEXT = ScrabLayerFeatureTheme.class.getName();
+
   private final IKalypsoFeatureTheme m_scrabLayerTheme;
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final IMapModell m_mapModel;
-
   public ScrabLayerFeatureTheme( final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
+    super( "", mapModel );
     m_selectionManager = selectionManager;
-    m_mapModel = mapModel;
     final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
@@ -99,7 +98,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
     }
 
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager, m_mapModel );
+    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, FEATURE_MEMBER, "Skizzier-Thema", selectionManager, mapModel );
     // add styles for visualisation
     ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), POINT_GEOM_PROP_NAME ) );
@@ -193,10 +192,12 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
+  @Override
   public void dispose( )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.dispose();
+    super.dispose();
   }
 
   /**
@@ -214,6 +215,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
+  @Override
   public String getName( )
   {
     if( m_scrabLayerTheme != null )
@@ -222,20 +224,22 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
-   */
-  public String getType( )
-  {
-    return "";
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
    */
+  @Override
   public void setName( String name )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.setName( name );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
+   */
+  @Override
+  public String getContext( )
+  {
+    return CONTEXT;
   }
 
   /**
@@ -251,6 +255,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
+  @Override
   public void addModellListener( ModellEventListener listener )
   {
     if( m_scrabLayerTheme != null )
@@ -260,6 +265,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
+  @Override
   public void removeModellListener( ModellEventListener listener )
   {
     if( m_scrabLayerTheme != null )
@@ -269,6 +275,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void fireModellEvent( ModellEvent event )
   {
     if( m_scrabLayerTheme != null )
@@ -278,6 +285,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
+  @Override
   public void onModellChange( ModellEvent modellEvent )
   {
     if( m_scrabLayerTheme != null )
@@ -300,15 +308,7 @@ public class ScrabLayerFeatureTheme extends PlatformObject implements IKalypsoFe
       return m_selectionManager;
     return null;
   }
-  
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
-   */
-  public IMapModell getMapModell( )
-  {
-    return m_mapModel;
-  }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
