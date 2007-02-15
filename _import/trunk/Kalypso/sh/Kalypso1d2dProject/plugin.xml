@@ -112,27 +112,36 @@
       point="org.eclipse.ui.handlers">
 		   <handler
 		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#PolyElement">
-		      <!--can hide functionality based on active context-->
-		      <!--<activeWhen>   
+		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element2D">
+		      <activeWhen>   
 		         <with variable="activeContexts">
 		            <iterate operator="or">
-		               <equals value="PolyElement"/>
+		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
 		            </iterate>
 		         </with>
-		      </activeWhen>-->
+		      </activeWhen>
 		   </handler>
 		   <handler
 		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
-		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Edge">
-		      <!--can hide functionality based on active context-->
-		      <!--<activeWhen>   
+		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Element1D">
+		      <activeWhen>   
 		         <with variable="activeContexts">
 		            <iterate operator="or">
-		               <equals value="Edge"/>
+		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
 		            </iterate>
 		         </with>
-		      </activeWhen>-->
+		      </activeWhen>
+		   </handler>
+		   <handler
+		         class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
+		         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#ContinuityLine">
+		      <activeWhen>   
+		         <with variable="activeContexts">
+		            <iterate operator="or">
+		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		            </iterate>
+		         </with>
+		      </activeWhen>
 		   </handler>
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportBaseMapHandler"
@@ -152,6 +161,29 @@
            <parameter
                  name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
                  value="maps/fenet.gmt"/>
+           <parameter
+                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
+        </class>
+     </handler>
+     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Edit1DRivElts">
+        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+           <parameter
+                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+                 value="maps/fenet.gmt"/>
+           <parameter
+                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+        </class>
+     </handler>
+     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RBLineDef">
+        <class class="org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler">
+           <parameter
+                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
+                 value="maps/fenet.gmt"/>
+           <parameter
+                 name="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+                 value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
         </class>
      </handler>
 	</extension>
@@ -170,6 +202,10 @@
                id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource"
                name="Resource"
                optional="false"/>
+         <commandParameter
+               id="org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.layer"
+               name="Layer"
+               optional="true"/>
       </command>
    </extension>
     <extension

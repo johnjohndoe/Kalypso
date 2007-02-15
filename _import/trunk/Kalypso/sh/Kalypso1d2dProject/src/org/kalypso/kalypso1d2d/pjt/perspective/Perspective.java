@@ -56,7 +56,7 @@ public class Perspective implements IPerspectiveFactory
     // rightTop.addView(IPageLayout.ID_RES_NAV);
     // rightMiddle.addView(ActivitiesView.ID);
     leftBottom.addView( SimulationModelDBView.ID );
-    rightTop.addView( MapView.ID );
+    rightTop.addPlaceholder( MapView.ID );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
     // TODO: secondary id does not work here: gives assertion failed

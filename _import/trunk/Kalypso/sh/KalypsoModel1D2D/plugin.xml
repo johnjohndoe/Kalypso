@@ -43,17 +43,17 @@
   			<action
 	           icon="icons/elcl16/edit1d2d.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEElementDelegate"               
-	           label="Element hinzufügen"
+	           label="FE-Element hinzufügen"
 	           style="radio"
 	           toolbarPath="karte/edit"
-	           tooltip="Ein neues FE Element erzeugen">
+	           tooltip="Ein neues FE-Element erzeugen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="PolyElement"/>
+	                     	value="Element2D"/>
 	       			</class>
 			</action>
          <action               
@@ -61,14 +61,14 @@
                label="Kontinuitätslinie definieren"
                style="radio"
                toolbarPath="karte/edit"
-               tooltip="eine neue Kontinuitätslinie definieren">
+               tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget"/>
  	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Edge"/>
+	                     	value="ContinuityLine"/>
 	       			</class>
          </action>
          <!--action
@@ -81,18 +81,18 @@
                	tooltip="1d 2d zeichen element activieren"/-->
         <action
                	id="xp.CreateGridDelegate"
-               	label="builde element automatisch in einem 4eck-bereich"
+               	label="FE-Elementgitter erzeugen"
                	style="radio"
                	toolbarPath="karte/edit"
 				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-               	tooltip="1d 2d zeichen element activieren">
+               	tooltip="Ein FE-Elementgitter innerhalb von vier Punkten erzeugen">
 	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="xp.CreateGridWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="PolyElement"/>
+	                     	value="Element2D"/>
 	       			</class>
        	</action>            
         <action
@@ -147,20 +147,20 @@
         <viewContribution
               id="org.kalypso.ui.views.mapView.widgets1d2d"
               targetID="org.kalypso.ui.views.mapView">
-           <action
+         	<action
 	           icon="icons/elcl16/edit1d2d.gif"
 	           id="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEElementDelegate"               
-	           label="Element hinzufügen"
+	           label="FE-Element hinzufügen"
 	           style="radio"
 	           toolbarPath="karte/edit"
-	           tooltip="Ein neues FE Element erzeugen">
+	           tooltip="Ein neues FE-Element erzeugen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="PolyElement"/>
+	                     	value="Element2D"/>
 	       			</class>
 			</action>
          	<action               
@@ -168,32 +168,32 @@
                label="Kontinuitätslinie definieren"
                style="radio"
                toolbarPath="karte/edit"
-               tooltip="eine neue Kontinuitätslinie definieren">
+               tooltip="Eine neue Kontinuitätslinie definieren">
                		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget"/>
  	                  	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Edge"/>
+	                     	value="ContinuityLine"/>
 	       			</class>
-     		</action>
-    		<action
+         	</action>
+        	<action
                	id="xp.CreateGridDelegate"
-               	label="builde element automatisch in einem 4eck-bereich"
+               	label="FE-Elementgitter erzeugen"
                	style="radio"
                	toolbarPath="karte/edit"
 				icon="icons/elcl16/1d2d_edit_protocol_view.gif"
-               	tooltip="1d 2d zeichen element activieren">
+               	tooltip="Ein FE-Elementgitter innerhalb von vier Punkten erzeugen">
 	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="xp.CreateGitterWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="PolyElement"/>
+	                     	value="Element2D"/>
 	       			</class>
-       		</action>  
+       		</action>      
         </viewContribution>
      </extension>
      <extension
