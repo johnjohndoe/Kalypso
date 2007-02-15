@@ -92,8 +92,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private List<PluginMapOutlineActionDelegate> m_actionDelegates = null;
 
-  private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
-
   public GisMapOutlineViewer getModellView( )
   {
     return m_modellView;
@@ -130,12 +128,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     if( m_modellView != null )
     {
-      m_modellView.removeDoubleClickListener( this );
-      IMapModell mapModell = m_modellView.getMapModell();
-      if( mapModell != null )
-      {
-        mapModell.removeModellListener( m_mapModellContextSwitcher );
-      }
+      m_modellView.removeDoubleClickListener( this );      
       m_modellView.dispose();
     }
 
@@ -271,13 +264,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
   public void setMapModell( final IMapModell modell )
-  {
-    if( m_modellView.getMapModell() != null )
-      m_modellView.getMapModell().removeModellListener( m_mapModellContextSwitcher );
-
-    m_modellView.setMapModell( modell );
-    if( modell != null )
-      modell.addModellListener( m_mapModellContextSwitcher );
+  {   
+    m_modellView.setMapModell( modell );   
   }
 
   /**

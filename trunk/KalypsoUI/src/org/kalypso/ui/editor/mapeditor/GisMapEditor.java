@@ -57,10 +57,12 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -107,7 +109,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private GisMapOutlinePage m_outlinePage = null;
 
-  private final MapPanel m_mapPanel;
+  private MapPanel m_mapPanel;
 
   private GisTemplateMapModell m_mapModell;
 
@@ -140,9 +142,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   public GisMapEditor( )
   {
-    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
-    m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
   }
 
   /**
@@ -180,7 +179,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( adapter == Control.class )
       return m_composite;
-    
+
     return super.getAdapter( adapter );
   }
 
@@ -253,6 +252,20 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     m_composite = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
   }
 
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   */
+  @Override
+  public void init( IEditorSite site, IEditorInput input )
+  {
+    super.init( site, input );
+
+    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+    final IContextService service = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
+    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager, service );
+    m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
+  }
+
   @Override
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
@@ -284,8 +297,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( !m_disposed )
     {
-      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
+      final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
       setMapModell( mapModell );
+      mapModell.createFromTemplate( gisview );
 
       GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
 
@@ -302,7 +316,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     m_mapModell = mapModell;
 
-    m_mapPanel.setMapModell( m_mapModell );
+    if( m_mapPanel != null )
+      m_mapPanel.setMapModell( m_mapModell );
+
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
   }

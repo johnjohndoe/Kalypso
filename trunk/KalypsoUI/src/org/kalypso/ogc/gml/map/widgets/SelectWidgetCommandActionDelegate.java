@@ -68,11 +68,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -100,7 +104,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * <activeWhen> <with variable="activeContexts"> <iterate operator="or"> <equals value="MyContext"/> </iterate> </with>
  * </activeWhen> </handler> </blockcode>
  */
-public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener
+public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
+    IActionDelegate2
 {
   private static final String COMMAND_ID = "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand";
 
@@ -114,26 +119,25 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
 
   private String widgetClass = null;
 
-  private ParameterizedCommand parameterizedCommand = null;
+  private String pluginId;
 
-  private IHandlerService handlerService = null;
+  private ParameterizedCommand m_parameterizedCommand = null;
+
+  private IHandlerService m_handlerService = null;
 
   private IAction m_action;
 
-  private String pluginId;
-
-  // private IToolBarManager m_toolBarManager;
-  //
-  // private IMenuManager m_menuManager;
+  private IActionBars m_actionBars;
 
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
   public void dispose( )
   {
-    handlerService = null;
-    parameterizedCommand = null;
+    m_handlerService = null;
+    m_parameterizedCommand = null;
     m_action = null;
+    m_actionBars = null;
   }
 
   /**
@@ -141,15 +145,15 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
    */
   public void run( IAction action )
   {
-    if( handlerService == null )
+    if( m_handlerService == null )
     {
       return;
     }
-    if( parameterizedCommand != null )
+    if( m_parameterizedCommand != null )
     {
       try
       {
-        handlerService.executeCommand( parameterizedCommand, null );
+        m_handlerService.executeCommand( m_parameterizedCommand, null );
       }
       catch( final Exception e )
       {
@@ -193,28 +197,40 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void init( IWorkbenchWindow window )
+  public void init( final IWorkbenchWindow window )
   {
-    init( null, window );
+    if( m_handlerService != null )
+    {
+      // already initialized
+      return;
+    }
+
+    final IWorkbench workbench = window.getWorkbench();
+    m_handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    final Command command = createCommand( commandService );
+    updateActionState( command );
   }
 
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
-  public void init( IViewPart view )
+  public void init( final IViewPart view )
   {
-    init( null, view.getSite().getWorkbenchWindow() );
+    m_actionBars = view.getViewSite().getActionBars();
+    init( view.getSite().getWorkbenchWindow() );
   }
 
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     if( targetEditor != null )
     {
-      init( action, targetEditor.getSite().getWorkbenchWindow() );
+      m_actionBars = targetEditor.getEditorSite().getActionBars();
+      init( targetEditor.getSite().getWorkbenchWindow() );
     }
   }
 
@@ -222,38 +238,40 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
-  public void setActivePart( IAction action, IWorkbenchPart targetPart )
+  public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     if( targetPart != null )
     {
-      init( action, targetPart.getSite().getWorkbenchWindow() );
+      init( targetPart.getSite().getWorkbenchWindow() );
     }
   }
 
   /**
    * @see org.eclipse.core.commands.ICommandListener#commandChanged(org.eclipse.core.commands.CommandEvent)
    */
-  public void commandChanged( CommandEvent commandEvent )
+  public void commandChanged( final CommandEvent commandEvent )
   {
     if( m_action != null )
     {
-      updateActionState( m_action, commandEvent.getCommand() );
+      updateActionState( commandEvent.getCommand() );
     }
   }
 
-  private void init( IAction action, IWorkbenchWindow window )
+  /**
+   * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
+   */
+  public void init( final IAction action )
   {
-    if( handlerService != null )
-    {
-      // already initialized
-      return;
-    }
-
-    handlerService = (IHandlerService) window.getService( IHandlerService.class );
-    ICommandService commandService = (ICommandService) window.getService( ICommandService.class );
-    Command cmd = createCommand( commandService );
-    updateActionState( action, cmd );
     m_action = action;
+    updateActionState( null );
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
+   */
+  public void runWithEvent( IAction action, Event event )
+  {
+    run( action );
   }
 
   private Command createCommand( final ICommandService commandService )
@@ -266,9 +284,9 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
       {
         final Command selectWidgetCmd = commandService.getCommand( COMMAND_ID );
         cmd.define( cmdName, cmdName, selectWidgetCmd.getCategory(), selectWidgetCmd.getParameters() );
-      }
+      }      
       cmd.addCommandListener( this );
-      parameterizedCommand = new ParameterizedCommand( cmd, new Parameterization[] { new Parameterization( cmd.getParameter( PARAM_WIDGET_CLASS ), widgetClass ),
+      m_parameterizedCommand = new ParameterizedCommand( cmd, new Parameterization[] { new Parameterization( cmd.getParameter( PARAM_WIDGET_CLASS ), widgetClass ),
           new Parameterization( cmd.getParameter( PARAM_PLUGIN_ID ), pluginId ) } );
     }
     catch( final NotDefinedException e )
@@ -278,31 +296,27 @@ public class SelectWidgetCommandActionDelegate implements IWorkbenchWindowAction
     return cmd;
   }
 
-  private void updateActionState( IAction action, Command cmd )
+  private void updateActionState( final Command command )
   {
-    // if( m_toolBarManager == null )
-    // {
-    // m_toolBarManager =
-    // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getActionBars().getToolBarManager();
-    // }
-    // if( m_menuManager == null )
-    // {
-    // m_menuManager =
-    // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getActionBars().getMenuManager();
-    // }
-    // final IContributionItem toolbarContribution = m_toolBarManager.find( action.getId() );
+    final boolean enabledState = command != null ? command.isEnabled() : false;
+
+    m_action.setEnabled( enabledState );
+
+    // final String actionId = m_action.getId();
+    // final IContributionManager toolBarManager = m_actionBars.getToolBarManager();
+    // final IContributionManager menuManager = m_actionBars.getMenuManager();
+    // final IContributionItem toolbarContribution = toolBarManager.find( actionId );
     // if( toolbarContribution != null )
     // {
-    // System.out.println(toolbarContribution.getClass().getName());
-    // toolbarContribution.setVisible( cmd.isEnabled() );
-    // m_toolBarManager.update( true );
+    // toolbarContribution.setVisible( enabledState );
+    // toolBarManager.update( true );
     // }
-    // final IContributionItem menuContribution = m_menuManager.find( action.getId() );
+    // final IContributionItem menuContribution = menuManager.find( actionId );
     // if( menuContribution != null )
     // {
-    // menuContribution.setVisible( cmd.isEnabled() );
-    // m_menuManager.update( menuContribution.getId() ); //not tested
+    // menuContribution.setVisible( enabledState );
+    // menuManager.update( true );
     // }
-    action.setEnabled( cmd.isEnabled() );
+    // m_actionBars.updateActionBars();
   }
 }

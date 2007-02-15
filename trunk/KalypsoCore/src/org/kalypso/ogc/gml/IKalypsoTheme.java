@@ -51,24 +51,28 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
-public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IAdaptable
+public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener, IKalypsoThemeEventProvider, IAdaptable
 {
-  public void dispose();
+  public void dispose( );
 
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected );
 
   /**
    * returns the name of the layer
    */
-  public String getName();
+  public String getName( );
 
-  public String getType();
+  public String getType( );
 
   public void setName( final String name );
 
-  public GM_Envelope getBoundingBox();
-  
-  public IMapModell getMapModell();
+  public GM_Envelope getBoundingBox( );
+
+  public IMapModell getMapModell( );
+
+  /**
+   * Returns the context id that this theme represents.
+   */
+  public String getContext( );
 }

@@ -49,6 +49,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
@@ -59,6 +60,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -97,9 +99,21 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
             @Override
             protected void execute( final IProgressMonitor monitor ) throws CoreException
             {
-              final GisMapEditor editor = (GisMapEditor) part.getPart();
-              if( editor != null )
+              final IWorkbenchPart workbenchPart = part.getPart();
+              if( workbenchPart == null )
+              {
+                return;
+              }
+              else if( workbenchPart instanceof GisMapEditor )
+              {
+                final GisMapEditor editor = (GisMapEditor) workbenchPart;
                 editor.saveTheme( theme, monitor );
+              }
+              else if( workbenchPart instanceof MapView )
+              {
+                final MapView mapView = (MapView) workbenchPart;
+                mapView.saveTheme( theme, monitor );
+              }
             }
           };
 

@@ -40,12 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -62,6 +63,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
@@ -75,6 +77,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -101,7 +104,11 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class MapView extends ViewPart implements ICommandTarget, IMapPanelListener
 {
+  private static final String MEMENTO_FILE = "file";
+
   public static final String ID = "org.kalypso.ui.views.mapView";
+
+  public static final String JOB_FAMILY = "mapViewJobFamily";
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -121,7 +128,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
   protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
-  private final MapPanel m_mapPanel;
+  private MapPanel m_mapPanel;
 
   private GisTemplateMapModell m_mapModell;
 
@@ -131,22 +138,17 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
   private Control m_control;
 
-  private IStorage m_storage;
+  IFile m_file;
 
   private String m_partName;
 
-  private StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+  @SuppressWarnings("restriction")
+  StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   private GisMapOutlinePage m_outlinePage = null;
 
   public MapView( )
   {
-    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
-
-    /* Register this view at the mapPanel. */
-    m_mapPanel.addMapPanelListener( this );
-
     m_partName = null;
   }
 
@@ -158,9 +160,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   {
     m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, getSite() );
 
-    if( m_storage != null )
+    if( m_file != null )
     {
-      final IStorage storage = m_storage;
+      final IFile storage = m_file;
       loadMap( storage );
     }
   }
@@ -178,10 +180,18 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
+  @SuppressWarnings("restriction")
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
+
+    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+    final IContextService service = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
+    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager, service );
+
+    /* Register this view at the mapPanel. */
+    m_mapPanel.addMapPanelListener( this );
 
     m_statusBar.setText( "< Welcome to the MapView. >" );
 
@@ -189,12 +199,17 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     actionBars.getStatusLineManager().add( m_statusBar );
     actionBars.updateActionBars();
 
-    final String fullPath = memento == null ? null : memento.getString( "file" );
-    if( fullPath != null )
+    if( memento != null )
     {
-      final IPath path = Path.fromPortableString( fullPath );
-      m_storage = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+      final String fullPath = memento.getString( MEMENTO_FILE );
+      if( fullPath != null )
+      {
+        final IPath path = Path.fromPortableString( fullPath );
+        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+      }
     }
+
+    site.setSelectionProvider( m_mapPanel );
   }
 
   /**
@@ -205,23 +220,50 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   {
     super.saveState( memento );
 
-    final IPath fullPath = m_storage.getFullPath();
-    if( fullPath != null )
-      memento.putString( "file", fullPath.toPortableString() );
+    if( m_file != null )
+    {
+      final IPath fullPath = m_file.getFullPath();
+      if( fullPath != null )
+        memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
+    }
+
+    final Job disposeJob = new Job( "Saving map state..." )
+    {
+
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          doSaveInternal( monitor, m_file );
+        }
+        catch( final CoreException e )
+        {
+          return StatusUtilities.statusFromThrowable( e );
+        }
+        return Status.OK_STATUS;
+      }
+    };
+    disposeJob.setUser( true );
+    disposeJob.schedule();
   }
 
   /**
    * Loads a map (i.e. a .gmv file) from a storage insdie a {@link Job}.
    * <p>
-   * The method returns immediately, but starts a (user-)job, which loads the map.
+   * The method starts a (user-)job, which loads the map.
    * </p>.
+   * 
+   * @param waitFor
+   *          <code>true</code> if this method should return when the job has finished, if <code>false</code>
+   *          returns immediately
    */
-  public void loadMap( final IStorage storage )
+  public Job loadMap( final IFile storage )
   {
     final Job job = new Job( "Karte laden: " + storage.getName() )
     {
       @Override
-      protected IStatus run( final IProgressMonitor monitor )
+      public IStatus run( final IProgressMonitor monitor )
       {
         try
         {
@@ -233,15 +275,25 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
         }
         return Status.OK_STATUS;
       }
+
+      /**
+       * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+       */
+      @Override
+      public boolean belongsTo( final Object family )
+      {
+        return MapView.JOB_FAMILY.equals( family );
+      }
     };
     job.setUser( true );
     job.schedule();
+    return job;
   }
 
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public void loadMap( final IStorage storage, final IProgressMonitor monitor ) throws CoreException
+  void loadMap( final IFile storage, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
@@ -250,7 +302,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     {
       // prepare for exception
       setMapModell( null );
-      m_storage = storage;
+      m_file = storage;
       partName = FileUtilities.nameWithoutExtension( storage.getName() );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
@@ -258,21 +310,14 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 
       final URL context;
       final IProject project;
-      if( storage instanceof IFile )
-      {
-        context = ResourceUtilities.createURL( (IResource) storage );
-        project = ((IFile) storage).getProject();
-      }
-      else
-      {
-        context = null;
-        project = null;
-      }
+      context = ResourceUtilities.createURL( storage );
+      project = storage.getProject();
 
       if( !m_disposed )
       {
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
         setMapModell( mapModell );
+        mapModell.createFromTemplate( gisview );
 
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
         m_mapPanel.setBoundingBox( env );
@@ -296,7 +341,6 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
           }
         };
         job.schedule();
-
       }
     }
     catch( final Throwable e )
@@ -304,10 +348,10 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
       setMapModell( null );
-      m_storage = null;
+      m_file = null;
 
       partName = null;
-
+      e.printStackTrace(); // TODO remove
       throw new CoreException( status );
     }
     finally
@@ -326,6 +370,65 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
         }
       } );
     }
+  }
+
+  void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
+  {
+    if( m_mapModell == null )
+      return;
+
+    ByteArrayInputStream bis = null;
+    try
+    {
+      monitor.beginTask( "Kartenvorlage speichern", 2000 );
+      final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+      final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
+
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+      GisTemplateHelper.saveGisMapView( modellTemplate, bos, file.getCharset() );
+
+      bis = new ByteArrayInputStream( bos.toByteArray() );
+      bos.close();
+      monitor.worked( 1000 );
+
+      if( file.exists() )
+        file.setContents( bis, false, true, monitor );
+      else
+        file.create( bis, false, monitor );
+    }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Throwable e )
+    {
+      System.out.println( e.getLocalizedMessage() );
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+    }
+    finally
+    {
+      monitor.done();
+
+      if( bis != null )
+        try
+        {
+          bis.close();
+        }
+        catch( IOException e1 )
+        {
+          // never occurs with a byteinputstream
+          e1.printStackTrace();
+        }
+    }
+  }
+
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
+  {
+    m_mapModell.saveTheme( theme, monitor );
   }
 
   private void setMapModell( final GisTemplateMapModell mapModell )
@@ -350,8 +453,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     setMapModell( null );
 
     /* Remove this view from the mapPanel. */
-    m_mapPanel.removeMapPanelListener( this );
-
+    m_mapPanel.removeMapPanelListener( MapView.this );
     m_mapPanel.dispose();
 
     if( m_outlinePage != null )
@@ -406,6 +508,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     display.asyncExec( new Runnable()
     {
 
+      @SuppressWarnings("restriction")
       public void run( )
       {
         m_statusBar.setText( message );

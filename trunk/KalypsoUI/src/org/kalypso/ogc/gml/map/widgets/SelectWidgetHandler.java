@@ -3,8 +3,10 @@ package org.kalypso.ogc.gml.map.widgets;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.osgi.framework.Bundle;
@@ -23,7 +25,9 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler
     final String widgetParameter = event.getParameter( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS );
     final String pluginParameter = event.getParameter( SelectWidgetCommandActionDelegate.PARAM_PLUGIN_ID );
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
-    final MapPanel mapPanel = (MapPanel) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getAdapter( MapPanel.class );
+    final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart workbenchPart = (IWorkbenchPart) applicationContext.getVariable( ISources.ACTIVE_PART_NAME );    
+    final MapPanel mapPanel = (MapPanel) workbenchPart.getAdapter( MapPanel.class );
     if( mapPanel != null && widget != null )
     {
       mapPanel.getWidgetManager().setActualWidget( widget );

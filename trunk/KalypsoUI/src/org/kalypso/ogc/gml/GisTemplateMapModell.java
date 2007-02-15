@@ -75,8 +75,7 @@ public class GisTemplateMapModell implements IMapModell
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs,
-      final IProject project, final IFeatureSelectionManager selectionManager )
+  public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
@@ -87,19 +86,22 @@ public class GisTemplateMapModell implements IMapModell
     enableTheme( legendTheme, false );
     // layer 2 is scrablayer
     final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-    //    m_modell.addModellListener( m_scrabLayer );
+    // m_modell.addModellListener( m_scrabLayer );
     addTheme( scrabLayer );
+  }
 
+  public void createFromTemplate( final Gismapview gisview )
+  {
     final Layers layerListType = gisview.getLayers();
     final List<StyledLayerType> layerList = layerListType.getLayer();
 
-    final LayerType activeLayer = (LayerType)layerListType.getActive();
+    final LayerType activeLayer = (LayerType) layerListType.getActive();
 
     for( int i = 0; i < layerList.size(); i++ )
     {
       final StyledLayerType layerType = layerList.get( i );
 
-      final IKalypsoTheme theme = loadTheme( layerType, context );
+      final IKalypsoTheme theme = loadTheme( layerType, m_context );
       if( theme != null )
       {
         addTheme( theme );
@@ -123,7 +125,7 @@ public class GisTemplateMapModell implements IMapModell
     return theme;
   }
 
-  public void dispose()
+  public void dispose( )
   {
     if( m_modell != null )
       m_modell.dispose();
@@ -143,8 +145,7 @@ public class GisTemplateMapModell implements IMapModell
     {
       String source = layerType.getHref();
       String layerName = layerType.getName();
-      return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem(), this );
+      return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), this );
     }
     return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
   }
@@ -153,7 +154,7 @@ public class GisTemplateMapModell implements IMapModell
   public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName )
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
-    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory(); 
+    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
     //
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
@@ -174,8 +175,8 @@ public class GisTemplateMapModell implements IMapModell
 
     gismapview.setLayers( layersType );
 
-    //    Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
-    //    final List layerList = (List)gismapview.getLayers(); //CK
+    // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
+    // final List layerList = (List)gismapview.getLayers(); //CK
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
@@ -186,8 +187,8 @@ public class GisTemplateMapModell implements IMapModell
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
-        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
-            .isThemeEnabled( kalypsoTheme ) );
+        ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell //$NON-NLS-1$
+        .isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
 
       }
@@ -195,26 +196,25 @@ public class GisTemplateMapModell implements IMapModell
       {
         String name = kalypsoTheme.getName();
         GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), //$NON-NLS-1$
-            (KalypsoWMSTheme)kalypsoTheme );
+        (KalypsoWMSTheme) kalypsoTheme );
         layerList.add( layer );
       }
       else if( kalypsoTheme instanceof KalypsoPictureTheme )
       {
-        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
+        ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) ); //$NON-NLS-1$
         layerList.add( layer );
       }
-      if( m_modell.isThemeActivated( kalypsoTheme ) && !( kalypsoTheme instanceof KalypsoLegendTheme )
-          && !( kalypsoTheme instanceof ScrabLayerFeatureTheme ) )
+      if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
         layersType.setActive( layer );
     }
 
     try
     {
       // is this code still used?
-      //      GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
+      // GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
       /* GM_Envelope env = */
-      //      gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
-      //System.out.println( env );
+      // gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      // System.out.println( env );
     }
     catch( Exception e )
     {
@@ -249,22 +249,22 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.fireModellEvent( event );
   }
 
-  public IKalypsoTheme getActiveTheme()
+  public IKalypsoTheme getActiveTheme( )
   {
     return m_modell.getActiveTheme();
   }
 
-  public IKalypsoTheme[] getAllThemes()
+  public IKalypsoTheme[] getAllThemes( )
   {
     return m_modell.getAllThemes();
   }
 
-  public CS_CoordinateSystem getCoordinatesSystem()
+  public CS_CoordinateSystem getCoordinatesSystem( )
   {
     return m_modell.getCoordinatesSystem();
   }
 
-  public GM_Envelope getFullExtentBoundingBox()
+  public GM_Envelope getFullExtentBoundingBox( )
   {
     return m_modell.getFullExtentBoundingBox();
   }
@@ -274,7 +274,7 @@ public class GisTemplateMapModell implements IMapModell
     return m_modell.getTheme( pos );
   }
 
-  public int getThemeSize()
+  public int getThemeSize( )
   {
     return m_modell.getThemeSize();
   }
@@ -304,8 +304,7 @@ public class GisTemplateMapModell implements IMapModell
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
    *      double, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
     m_modell.paint( g, p, bbox, scale, selected );
   }
@@ -334,12 +333,12 @@ public class GisTemplateMapModell implements IMapModell
   public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
   {
     if( theme instanceof GisTemplateFeatureTheme )
-      ( (GisTemplateFeatureTheme)theme ).saveFeatures( monitor );
+      ((GisTemplateFeatureTheme) theme).saveFeatures( monitor );
     // TODO save WMS and Picture Theme
-    //    else if( theme instanceof KalypsoWMSTheme )
-    //      ( (KalypsoWMSTheme)theme ).saveTheme( monitor );
-    //    else if (theme instanceof KalypsoPictureTheme )
-    //      ((KalypsoPictureTheme)theme).saveTheme(monitor);
+    // else if( theme instanceof KalypsoWMSTheme )
+    // ( (KalypsoWMSTheme)theme ).saveTheme( monitor );
+    // else if (theme instanceof KalypsoPictureTheme )
+    // ((KalypsoPictureTheme)theme).saveTheme(monitor);
     else
       throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() ); //$NON-NLS-1$
   }
@@ -352,12 +351,12 @@ public class GisTemplateMapModell implements IMapModell
     fireModellEvent( modellEvent );
   }
 
-  public URL getContext()
+  public URL getContext( )
   {
     return m_context;
   }
 
-  public IMapModell getModell()
+  public IMapModell getModell( )
   {
     return m_modell;
   }
@@ -365,7 +364,7 @@ public class GisTemplateMapModell implements IMapModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
-  public IProject getProject()
+  public IProject getProject( )
   {
     return m_modell.getProject();
   }
@@ -373,7 +372,7 @@ public class GisTemplateMapModell implements IMapModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
    */
-  public IKalypsoFeatureTheme getScrabLayer()
+  public IKalypsoFeatureTheme getScrabLayer( )
   {
     return m_modell.getScrabLayer();
   }
