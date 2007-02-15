@@ -768,7 +768,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     selectionManager2.changeSelection( toRemove, toAdd );
   }
 
-  private final void fireSelectionChanged( )
+  public final void fireSelectionChanged( )
   {
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 

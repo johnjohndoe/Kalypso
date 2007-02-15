@@ -106,6 +106,8 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
 {
   private static final String MEMENTO_FILE = "file";
 
+  private static final String MEMENTO_PARTNAME = "partName";
+
   public static final String ID = "org.kalypso.ui.views.mapView";
 
   public static final String JOB_FAMILY = "mapViewJobFamily";
@@ -165,6 +167,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
       final IFile storage = m_file;
       loadMap( storage );
     }
+
+    getSite().setSelectionProvider( m_mapPanel );
+    m_mapPanel.fireSelectionChanged();
   }
 
   /**
@@ -207,9 +212,9 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
         final IPath path = Path.fromPortableString( fullPath );
         m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
       }
+      final String partName = memento.getString( MEMENTO_PARTNAME );
+      m_partName = partName;
     }
-
-    site.setSelectionProvider( m_mapPanel );
   }
 
   /**
@@ -225,6 +230,11 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
       final IPath fullPath = m_file.getFullPath();
       if( fullPath != null )
         memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
+    }
+
+    if( m_partName != null )
+    {
+      memento.putString( MEMENTO_PARTNAME, m_partName );
     }
 
     final Job disposeJob = new Job( "Saving map state..." )
@@ -297,13 +307,13 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
-    String partName = null;
+    String fileName = null;
     try
     {
       // prepare for exception
       setMapModell( null );
       m_file = storage;
-      partName = FileUtilities.nameWithoutExtension( storage.getName() );
+      fileName = FileUtilities.nameWithoutExtension( storage.getName() );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -350,23 +360,22 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
       setMapModell( null );
       m_file = null;
 
-      partName = null;
-      e.printStackTrace(); // TODO remove
+      fileName = null;
+
       throw new CoreException( status );
     }
     finally
     {
       monitor.done();
 
-      final String name = partName;
+      final String partName = m_partName == null ? fileName : m_partName;
       // must set part name in ui thread
       getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
         @SuppressWarnings("synthetic-access")
         public void run( )
         {
-          if( m_partName == null )
-            setPartName( name );
+          setPartName( partName );
         }
       } );
     }
@@ -404,9 +413,6 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     }
     catch( final Throwable e )
     {
-      System.out.println( e.getLocalizedMessage() );
-      e.printStackTrace();
-
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
     }
     finally
@@ -516,13 +522,16 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     } );
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#setPartName(java.lang.String)
-   */
-  @Override
-  public void setPartName( String partName )
+  public void setCustomName( final String name )
   {
-    m_partName = partName;
-    super.setPartName( partName );
+    m_partName = name;
+    getSite().getShell().getDisplay().asyncExec( new Runnable()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void run( )
+      {
+        setPartName( m_partName );
+      }
+    } );
   }
 }
