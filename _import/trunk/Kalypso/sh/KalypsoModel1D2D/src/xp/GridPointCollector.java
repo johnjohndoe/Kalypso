@@ -66,6 +66,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
+import sun.security.krb5.internal.al;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -129,6 +131,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     if(sides[actualSideKey]==null)
     {
       sides[actualSideKey]=new LinePointCollector( 0, targetCrs );
+      lpcConfigs[actualSideKey].setConfigLinePointCollector( sides[actualSideKey] );
     }
     
   }
@@ -855,6 +858,18 @@ class GridPointCollector /*implements IGeometryBuilder*/
   {
     LinePointCollectorConfig[] cloneCollectorConfigs = lpcConfigs.clone();
     return cloneCollectorConfigs;
+  }
+  
+  public LinePointCollectorConfig getCurrentLPCConfig()
+  {
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      return lpcConfigs[actualSideKey];
+    }
+    else
+    {
+      return null;
+    }
   }
   
 }

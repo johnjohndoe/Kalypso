@@ -8,33 +8,15 @@ import java.awt.event.KeyEvent;
 
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -60,11 +42,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  
  * @author Patrice Congo
  */
-public class CreateGitterWidget extends AbstractWidget implements IWidgetWithOptions
+public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private Point m_currentPoint = null;
   //private LineGeometryBuilder m_builder;//s[3] = new Linenull;
-  private GridPointCollector gridPointCollector= 
+  GridPointCollector gridPointCollector= 
                                         new GridPointCollector();
   private boolean isActivated=false;
   
@@ -72,7 +54,7 @@ public class CreateGitterWidget extends AbstractWidget implements IWidgetWithOpt
   
   
   
-  public CreateGitterWidget( )
+  public CreateGridWidget( )
   {
     super( 
         "New Grid complex element", 
@@ -441,212 +423,16 @@ public class CreateGitterWidget extends AbstractWidget implements IWidgetWithOpt
   }
 
   
-  class GridWidgetFace
-  {
-    private Composite rootPanel;
-    private FormToolkit toolkit;
-    
-    public GridWidgetFace()
-    {
-      
-    }
-    
-    public Control createControl( Composite parent )
-    {
-      parent.setLayout( new FillLayout() );
-      rootPanel=new Composite(parent, SWT.FILL);
-      rootPanel.setLayout( new FillLayout() );
-      toolkit= new FormToolkit(parent.getDisplay());
-      ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
-      
-      scrolledForm.getBody().setLayout(new TableWrapLayout() );
-      
-//      FormData fd;
-//
-//      fd = new FormData();
-//      //fd.width = 270;// TODO check how not to use width
-//      fd.left = new FormAttachment( 0, 0 );
-//      fd.bottom = new FormAttachment( 100, 0 );
-//      fd.top = new FormAttachment( 0, 0 );
-      
-      Section workStatus = 
-                  toolkit.createSection( 
-                      scrolledForm.getBody(), 
-                      Section.TREE_NODE | Section.CLIENT_INDENT | 
-                        Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      workStatus.setText( "Aktuelle bearbeitung Status" );
-      workStatus.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1) );
-      workStatus.setExpanded( true );
-      
-      
-      Section config = 
-          toolkit.createSection( 
-              scrolledForm.getBody(), 
-              Section.TREE_NODE | Section.CLIENT_INDENT | 
-                Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      config.setText( "Configuration" );
-      config.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1) );
-      config.setExpanded( true );
-      
-      
-      createWorkStatus( workStatus );
-      
-      
-      return rootPanel;
-    }
-    
-    private final void createWorkStatus(Section workStatusSection)
-    {
-      
-//      workStatusSection.setLayout( new FillLayout() );
-      
-      Composite clientComposite = 
-              toolkit.createComposite( workStatusSection );
-      workStatusSection.setClient( clientComposite );
-      clientComposite.setLayout( new GridLayout() );
-      Table table = toolkit.createTable( clientComposite, 0 );
-      table.setLayoutData( new GridData() );
-        
-      TableColumn lineColumn= new TableColumn(table,SWT.NONE);
-        
-      TableColumn actualPointNum= new TableColumn(table,SWT.NONE);
-        
-      TableColumn targetPointNum= new TableColumn(table,SWT.NONE);
-      TableViewer tableViewer = new TableViewer(table);
-      tableViewer.setContentProvider( 
-                    getTableContentProvider());
-      //TODO set imput
-            tableViewer.setInput(gridPointCollector);
-      
-//        IBaseLabelProvider labelProvider;
-//        tableViewer.setLabelProvider( labelProvider );
-//        
-    }
-    
-    public void disposeControl( )
-    {
-      if(!rootPanel.isDisposed())
-      {
-        rootPanel.dispose();
-        toolkit.dispose();
-      }
-      
-    }
-    
-    private IContentProvider getTableContentProvider()
-    {
-      return new IStructuredContentProvider()
-      {
-
-        public Object[] getElements( Object inputElement )
-        {
-          if(inputElement instanceof GridPointCollector)
-          {
-            return ((GridPointCollector)
-                        inputElement).getSideconfigsAsArray();
-          }
-          else
-          {
-            return new Object[]{};
-          }
-        }
-
-        public void dispose( )
-        {
-          
-        }
-
-        public void inputChanged( 
-                        Viewer viewer, 
-                        Object oldInput, 
-                        Object newInput )
-        {
-          
-        }
-        
-      };
-    }
-    
-    private ITableLabelProvider getTableLabelProvider()
-    {
-      return new ITableLabelProvider()
-      {
-
-        public Image getColumnImage( Object element, int columnIndex )
-        {
-          return null;
-        }
-
-        public String getColumnText( Object element, int columnIndex )
-        {
-          if(element instanceof LinePointCollectorConfig)
-          {
-            return getColumnText( (LinePointCollectorConfig)element, columnIndex ); 
-          }
-          else
-          {
-            return element.toString();
-          }
-        }
-
-        private  String getColumnText( 
-                        LinePointCollectorConfig elementConfig, 
-                        int columnIndex )
-        {
-          switch(columnIndex)
-          {
-            case 0:
-            {
-              return elementConfig.getName();
-            }
-            case 1:
-            {
-              int curPointCnt=
-                elementConfig.getConfigLinePointCollector().getCurrentPointCnt();
-              return String.valueOf( curPointCnt );
-            }
-            default:
-            {
-              return ""+elementConfig+"_"+columnIndex;
-            }
-          }
-          
-        }
-        
-        public void addListener( ILabelProviderListener listener )
-        {
-          
-        }
-
-        public void dispose( )
-        {
-          
-        }
-
-        public boolean isLabelProperty( Object element, String property )
-        {
-          return false;
-        }
-
-        public void removeListener( ILabelProviderListener listener )
-        {
-          
-        }
-        
-      };
-    }
-  }
-  
-  
-  
-  private GridWidgetFace gridWidgetFace = new GridWidgetFace();
+  private GridWidgetFace gridWidgetFace = new GridWidgetFace(this);
   
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
   public Control createControl( Composite parent )
   {
-    return gridWidgetFace.createControl( parent );
+     Control control = gridWidgetFace.createControl( parent );
+     gridWidgetFace.setInput( gridPointCollector );
+     return control;
   }
   
   /**
