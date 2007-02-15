@@ -428,7 +428,8 @@ public class TupleResult implements List<IRecord>
 
   public void fireValuesChanged( final ValueChange[] changes )
   {
-    for( final ITupleResultChangedListener l : m_listeners )
+    final ITupleResultChangedListener[] listeners = m_listeners.toArray( new ITupleResultChangedListener[m_listeners.size()] );
+    for( final ITupleResultChangedListener l : listeners )
     {
       try
       {
@@ -444,7 +445,8 @@ public class TupleResult implements List<IRecord>
 
   public void fireRecordsChanged( final IRecord[] records, final TYPE type )
   {
-    for( final ITupleResultChangedListener l : m_listeners )
+    final ITupleResultChangedListener[] listeners = m_listeners.toArray( new ITupleResultChangedListener[m_listeners.size()] );
+    for( final ITupleResultChangedListener l : listeners )
     {
       try
       {
@@ -460,7 +462,8 @@ public class TupleResult implements List<IRecord>
 
   public void fireComponentsChanged( final IComponent[] components, final TYPE type )
   {
-    for( final ITupleResultChangedListener l : m_listeners )
+    final ITupleResultChangedListener[] listeners = m_listeners.toArray( new ITupleResultChangedListener[m_listeners.size()] );
+    for( final ITupleResultChangedListener l : listeners )
     {
       try
       {
