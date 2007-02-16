@@ -47,6 +47,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -55,6 +56,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -62,6 +64,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -451,9 +454,23 @@ public class CreateMainChannelComposite extends Composite
     spinNumProfIntersections.setSelection( 6 );
     spinNumProfIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Profil ein." );
 
+    spinNumProfIntersections.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
+      }
+    } );
+
     final GridData gridDataSpinner = new GridData();
     gridDataSpinner.horizontalAlignment = SWT.END;
     spinNumProfIntersections.setLayoutData( gridDataSpinner );
+    m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
 
     return mysection;
   }

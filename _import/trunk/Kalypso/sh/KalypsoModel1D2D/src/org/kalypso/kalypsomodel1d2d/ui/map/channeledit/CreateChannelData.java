@@ -88,11 +88,19 @@ public class CreateChannelData
     RIGHT;
   }
 
+  public enum PROF
+  {
+    UP,
+    DOWN;
+  }
+  
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme m_bankTheme;
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
+  
+  private int m_numbProfileIntersections;
 
   private Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
 
@@ -247,6 +255,7 @@ public class CreateChannelData
     m_widget.update();
 
     m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
+    intersectBanksWithProfs();
 
     m_widget.update();
   }
@@ -328,9 +337,9 @@ public class CreateChannelData
       if( lastProfile != null )
       {
         // behandle das segment
-        final SegmentData segment = new SegmentData( lastProfile, profile, m_selectedBanks );
+        final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks );
         // add to list
-        m_segmentList.add( segment );
+        m_segmentList.add( segment );   
       }
       else
       {
@@ -376,4 +385,16 @@ public class CreateChannelData
     }
 
   }
+  
+  public void setNumProfileIntersections ( int numProfileIntersections)
+  {
+    m_numbProfileIntersections = numProfileIntersections;
+  }
+
+  public int getNumProfileIntersections ()
+  {
+    final int numProfileIntersections = m_numbProfileIntersections;
+    return numProfileIntersections;
+  }
+  
 }
