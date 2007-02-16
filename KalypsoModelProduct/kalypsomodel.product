@@ -115,6 +115,7 @@
       <plugin id="org.junit4"/>
       <plugin id="org.kalypso.auth"/>
       <plugin id="org.kalypso.chart"/>
+      <plugin id="org.kalypso.chart.ui"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
       <plugin id="org.kalypso.contribs.eclipsercp"/>
@@ -124,8 +125,10 @@
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.deegree"/>
       <plugin id="org.kalypso.featureview"/>
+      <plugin id="org.kalypso.gml.processes"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
+      <plugin id="org.kalypso.layerprovider"/>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.product"/>
       <plugin id="org.kalypso.model.wspm.core"/>
