@@ -368,6 +368,7 @@ public class MapView extends ViewPart implements ICommandTarget, IMapPanelListen
     {
       monitor.done();
 
+// TODO: call setCustomName here
       final String partName = m_partName == null ? fileName : m_partName;
       // must set part name in ui thread
       getSite().getShell().getDisplay().asyncExec( new Runnable()
