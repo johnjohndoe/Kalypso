@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -273,7 +274,8 @@ class GridWidgetFace
                         Section.TWISTIE | Section.DESCRIPTION | 
                         Section.TITLE_BAR);
       workStatus.setText( "Aktuelle Bearbeitungsstatus" );
-      TableWrapData tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
+      TableWrapData tableWrapData = 
+            new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       workStatus.setLayoutData(tableWrapData );
       workStatus.setExpanded( true );
@@ -285,11 +287,24 @@ class GridWidgetFace
               Section.TREE_NODE | Section.CLIENT_INDENT | 
                 Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
       config.setText( "Konfiguration" );
-      tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
+      tableWrapData = 
+          new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
+      tableWrapData.align=TableWrapData.FILL_GRAB;
       config.setLayoutData(tableWrapData );
       config.setExpanded( false );
       
+      //help
+      Section helpSection = 
+        toolkit.createSection( 
+            scrolledForm.getBody(), 
+            Section.TREE_NODE | Section.CLIENT_INDENT | 
+              Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+      helpSection.setText( "Hilfe" );
+      tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
+      tableWrapData.grabHorizontal=true;
+      helpSection.setLayoutData(tableWrapData );
+      helpSection.setExpanded( false );
       
       createWorkStatus( workStatus );
       
@@ -383,6 +398,28 @@ class GridWidgetFace
       }
     }
     
+    private void createConfigSection(Section configSection)
+    {
+      configSection.setLayout( new FillLayout() );
+      
+      Composite clientComposite = 
+              toolkit.createComposite( configSection , SWT.FLAT);
+      configSection.setClient( clientComposite );
+      clientComposite.setLayout( new GridLayout() );
+      IntegerFieldEditor handleWidth=
+        new IntegerFieldEditor("name","Handle Breite", clientComposite);
+//      toolkit.adapt( handleWidth.get, true, true );
+      
+//      Table table = toolkit.createTable( clientComposite, SWT.FILL );
+//      
+////      final int WIDTH=clientComposite.getClientArea().width;
+//      GridData gridData = new GridData(GridData.FILL_BOTH);
+//      gridData.grabExcessVerticalSpace = true;
+//      gridData.grabExcessHorizontalSpace = true;
+////      gridData.widthHint=200;
+////      gridData.horizontalSpan = 1;
+//      table.setLayoutData(gridData);
+    }
     
     private IContentProvider getTableContentProvider()
     {
