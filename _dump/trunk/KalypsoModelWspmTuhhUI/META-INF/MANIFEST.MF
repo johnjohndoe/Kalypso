@@ -12,5 +12,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.simulation.ui,
  org.kalypso.model.wspm.ui,
  org.kalypso.ui,
- org.kalypso.model.wspm.tuhh.schema
+ org.kalypso.model.wspm.tuhh.schema,
+ org.kalypso.chart.ui,
+ org.kalypso.layerprovider
 Eclipse-LazyStart: true
