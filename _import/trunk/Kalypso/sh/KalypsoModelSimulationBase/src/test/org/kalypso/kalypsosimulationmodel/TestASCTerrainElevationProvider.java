@@ -72,7 +72,14 @@ public class TestASCTerrainElevationProvider extends TestCase
       GM_Point point = 
         GeometryFactory.createGM_Point( 
           0, 0, TestWorkspaces.getGaussKrueger() );
+      
       assertEquals(32144.0,ascModel.getElevation( point  ));
+      
+      GM_Point point_2 = 
+        GeometryFactory.createGM_Point( 
+          1, 1, TestWorkspaces.getGaussKrueger() );
+      
+      assertEquals(32144.0,ascModel.getElevation( point_2  ));
     }
     catch (Throwable th) 
     {
