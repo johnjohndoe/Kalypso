@@ -127,18 +127,23 @@ class GridPointCollector /*implements IGeometryBuilder*/
       }
     }
     actualSideKey=0;
+    hasAllSides=false;
     tempGrid.resetTempGrid(targetCrs);
     if(sides[actualSideKey]==null)
     {
       sides[actualSideKey]=new LinePointCollector( 0, targetCrs );
       lpcConfigs[actualSideKey].setConfigLinePointCollector( sides[actualSideKey] );
-      fireStateChanged();
     }
-    
+    fireStateChanged();    
   }
   
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
+    if(hasAllSides)
+    {
+      System.out.println("Trying to add point but hasAllsides");
+      return null;
+    }
     if(actualSideKey>=SIDE_MAX_NUM)
     {
       return null;
@@ -259,13 +264,22 @@ class GridPointCollector /*implements IGeometryBuilder*/
     else
     {
       hasAllSides=true;
-      tempGrid.setTempGrid( computeMesh() );
-      
+      updateTempGrid();
     }
 //    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
 //                "\n\tactualSide="+actualSideKey );
     fireStateChanged();
     return gmObject;      
+  }
+  
+  private final void updateTempGrid() throws GM_Exception
+  {
+    tempGrid.setTempGrid( 
+        sides[SIDE_TOP],
+        sides[SIDE_BOTTOM], 
+        sides[SIDE_LEFT], 
+        sides[SIDE_RIGHT] );
+    
   }
   
   private final int computeSize()
@@ -358,6 +372,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
         }
       }
     }
+    hasAllSides=false;
    
   }
   
@@ -445,7 +460,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     if(actualSideKey<SIDE_MAX_NUM)
     {
       sides[actualSideKey].changeSelected( newPosition );
-      tempGrid.setTempGrid( computeMesh() );
+      updateTempGrid();
     }
     else
     {
@@ -473,132 +488,15 @@ class GridPointCollector /*implements IGeometryBuilder*/
     return hasAllSides;
   }
   
-  public void enableOnTheFlyMesh()
-  {
-    
-  }
-  
-  private final GM_Point[][] computeMesh() throws GM_Exception
-  {
-    //GeometryFactory geometryFactory= new GeometryFactory();
-    final LineString topLine = pointToLineString( sides[0] );
-    final LineString bottomLine = pointToLineString( sides[2] );
-    final LineString leftLine = pointToLineString( sides[1] );
-    final LineString rightLine = pointToLineString( sides[3] );
-    
-    //compute mesh points
-    JTSQuadMesher mesher= 
-    new JTSQuadMesher(
-            topLine,
-            bottomLine,
-            leftLine,
-            rightLine);
-    Coordinate[][] coordinates=mesher.calculateMesh();
-    GeometryFactory geometryFactory= new GeometryFactory();
-    GM_Point points2D[][] = new GM_Point[coordinates.length][]; 
-    for(int i=0;i<coordinates.length;i++)
-    {
-      Coordinate[] line=coordinates[i];
-      GM_Point[] points1D= 
-              new GM_Point[line.length];
-      points2D[i]=points1D;
-      for(int j=0;j<line.length;j++)
-      {
-        Coordinate coord=line[j];
-        points1D[j]=    
-          (GM_Point)JTSAdapter.wrap( 
-                  geometryFactory.createPoint(coord));
-      }
-    }
-    return points2D;
-  }
+//  public void enableOnTheFlyMesh()
+//  {
+//    
+//  }
+//  
   
   
-  public ICommand getAddToModelCommand(
-      MapPanel mapPanel,
-      IFEDiscretisationModel1d2d model,
-      CommandableWorkspace commandableWorkspace) 
-      throws GM_Exception
-  {
-    ChangeDiscretiationModelCommand compositeCommand = 
-          new ChangeDiscretiationModelCommand(
-              commandableWorkspace,
-              model);// new CompositeCommand("Grid Command");
-    //compute Points
-    GM_Point[][] points2D=computeMesh();
-    final int DIM_X=points2D.length;
-    if(DIM_X==0)
-    {
-      System.out.println("DimX is null");
-      return compositeCommand;
-    }
-    
-    final int DIM_Y=points2D[0].length;
-    //add nodes
-    AddNodeCommand[][] newNodesArray2D= 
-       new AddNodeCommand[DIM_X][DIM_Y];
-    addNodesFromPoints( 
-        model, 
-        newNodesArray2D, 
-        compositeCommand, 
-        points2D,
-        sides[0].getHandleWidthAsWorldDistance( mapPanel )*2);    
-    
-    //add edges
-//    AddEdgeCommand addEdgeH2D[][]= 
-//      new AddEdgeCommand[DIM_X][DIM_Y];
-//    AddEdgeCommand addEdgeV2D[][]= 
-//          new AddEdgeCommand[DIM_X][DIM_Y];
-//    AddEdgeInvCommand addEdgeH2DInv[][]= 
-//      new AddEdgeInvCommand[DIM_X][DIM_Y];
-//    AddEdgeInvCommand addEdgeV2DInv[][]= 
-//          new AddEdgeInvCommand[DIM_X][DIM_Y];
-    
-//    addEdgesH( 
-//        model, newNodesArray2D, 
-//        compositeCommand, 
-//        addEdgeH2D, addEdgeH2DInv);
-//    addEdgesV( 
-//        model, 
-//        newNodesArray2D, compositeCommand, 
-//        addEdgeV2D, addEdgeV2DInv );
-    
-    //add elements
-//     addElements( 
-//         model, newNodesArray2D, 
-//         compositeCommand, 
-//         addEdgeH2D, addEdgeH2DInv, 
-//         addEdgeV2D, addEdgeV2DInv );
-    addElementsFromNodes( model, newNodesArray2D, compositeCommand );
-    return compositeCommand;
-  }
   
-  private final void  addNodesFromPoints(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand,
-      GM_Point[][] points2D,
-      double searchRectWidth)
-  {
-    for(int i=0;i<points2D.length;i++)
-    {
-      GM_Point[] points1D=points2D[i];
-//      AddNodeCommand[] newNodesArray1D= 
-//              new AddNodeCommand[points1D.length];
-//      newNodesArray2D[i]=newNodesArray1D;
-      for(int j=0;j<points1D.length;j++)
-      {
-        //TODO check node for existance
-        AddNodeCommand nodeCommand=
-          new AddNodeCommand(
-                model,
-                points1D[j], 
-                searchRectWidth );
-        newNodesArray2D[i][j]=nodeCommand;//newNodesArray1D[j]=nodeCommand;
-        compositeCommand.addCommand( nodeCommand );
-      }
-    }
-  }
+  
   
 
   
@@ -611,256 +509,123 @@ class GridPointCollector /*implements IGeometryBuilder*/
   //TODO on the fly meching plus displaying
   //TODO get the map to be redrawn after last point
  
-  private final void  addEdgesH(
+//  private final void  addEdgesH(
+//      IFEDiscretisationModel1d2d model,
+//      AddNodeCommand[][] newNodesArray2D,
+//      ChangeDiscretiationModelCommand compositeCommand,
+//      AddEdgeCommand[][] addEdgeH2D,
+//      AddEdgeInvCommand[][] addEdgeH2DInv
+//      )
+//  {
+//    final int LAST_INDEX_I=newNodesArray2D.length-1;
+//    for(int i=0;i<newNodesArray2D.length;i++)
+//    {
+//      final int LAST_INDEX_J=newNodesArray2D[0].length-2;
+//      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
+//      for(int j=0; j<=LAST_INDEX_J;j++)
+//      {
+//        //horidonzal edges
+//        
+//        if(i==0 )
+//        {//first line only one direction
+//          AddEdgeCommand edgeCommand=
+//              new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeH2D[i][j]=edgeCommand;
+//        }
+//        else if(i==LAST_INDEX_I)
+//        {//last line back direction
+//          AddEdgeCommand edgeCommand=
+//                    new AddEdgeCommand(
+//                        model,addNodeLine1[j+1], addNodeLine1[j]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeH2D[i][j]=edgeCommand;
+//        }            
+//        else
+//        {
+//          AddEdgeCommand edgeCommand=
+//                new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeH2D[i][j]=edgeCommand;
+//          
+//          ////create inverted
+//            AddEdgeInvCommand edgeInvCommand = 
+//                  new AddEdgeInvCommand(model,edgeCommand);
+//            addEdgeH2DInv[i][j] =edgeInvCommand;
+//            compositeCommand.addCommand( edgeInvCommand );
+//        }          
+//      }
+//    }    
+//  }
+  
+//  private final void  addEdgesV(
+//                  IFEDiscretisationModel1d2d model,
+//                  AddNodeCommand[][] newNodesArray2D,
+//                  ChangeDiscretiationModelCommand compositeCommand,
+//                  AddEdgeCommand[][] addEdgeV2D,
+//                  AddEdgeInvCommand[][] addEdgeV2DInv)
+//  {
+//    for(int i=0;i<newNodesArray2D.length-1;i++)
+//    {
+//      final int LENGTH = newNodesArray2D[0].length;
+//      final int LAST_INDEX=LENGTH-1;
+//      for(int j=0; j<LENGTH;j++)
+//      {
+//              
+//        if(j==0 )
+//        {
+//          AddEdgeCommand edgeCommand=
+//            new AddEdgeCommand(
+//                model, 
+//                newNodesArray2D[i+1][j],
+//                newNodesArray2D[i][j]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeV2D[i][j]=edgeCommand;
+//        }
+//        else if(j==LAST_INDEX)
+//        {
+//          AddEdgeCommand edgeCommand=
+//                      new AddEdgeCommand(
+//                          model,
+//                          newNodesArray2D[i][j], 
+//                          newNodesArray2D[i+1][j]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeV2D[i][j]=edgeCommand;
+//        }            
+//        else
+//        {
+//          AddEdgeCommand edgeCommand=
+//            new AddEdgeCommand(
+//                model, 
+//                newNodesArray2D[i][j],
+//                newNodesArray2D[i+1][j]);
+//          compositeCommand.addCommand( edgeCommand );
+//          addEdgeV2D[i][j]=edgeCommand;
+//          
+//          //create inverted
+//          AddEdgeInvCommand edgeInvCommand=
+//            new AddEdgeInvCommand(model, edgeCommand);
+//          addEdgeV2DInv[i][j] =edgeInvCommand;
+//          compositeCommand.addCommand( edgeInvCommand );
+//        }          
+//      }
+//    }    
+//  }
+  
+  public ICommand getAddToModelCommand(
+      MapPanel mapPanel,
       IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand,
-      AddEdgeCommand[][] addEdgeH2D,
-      AddEdgeInvCommand[][] addEdgeH2DInv
-      )
+      CommandableWorkspace commandableWorkspace) throws GM_Exception
   {
-    final int LAST_INDEX_I=newNodesArray2D.length-1;
-    for(int i=0;i<newNodesArray2D.length;i++)
-    {
-      final int LAST_INDEX_J=newNodesArray2D[0].length-2;
-      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
-      for(int j=0; j<=LAST_INDEX_J;j++)
-      {
-        //horidonzal edges
-        
-        if(i==0 )
-        {//first line only one direction
-          AddEdgeCommand edgeCommand=
-              new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeH2D[i][j]=edgeCommand;
-        }
-        else if(i==LAST_INDEX_I)
-        {//last line back direction
-          AddEdgeCommand edgeCommand=
-                    new AddEdgeCommand(
-                        model,addNodeLine1[j+1], addNodeLine1[j]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeH2D[i][j]=edgeCommand;
-        }            
-        else
-        {
-          AddEdgeCommand edgeCommand=
-                new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeH2D[i][j]=edgeCommand;
-          
-          ////create inverted
-            AddEdgeInvCommand edgeInvCommand = 
-                  new AddEdgeInvCommand(model,edgeCommand);
-            addEdgeH2DInv[i][j] =edgeInvCommand;
-            compositeCommand.addCommand( edgeInvCommand );
-        }          
-      }
-    }    
-  }
-  private final void  addEdgesV(
-                  IFEDiscretisationModel1d2d model,
-                  AddNodeCommand[][] newNodesArray2D,
-                  ChangeDiscretiationModelCommand compositeCommand,
-                  AddEdgeCommand[][] addEdgeV2D,
-                  AddEdgeInvCommand[][] addEdgeV2DInv)
-  {
-    for(int i=0;i<newNodesArray2D.length-1;i++)
-    {
-      final int LENGTH = newNodesArray2D[0].length;
-      final int LAST_INDEX=LENGTH-1;
-      for(int j=0; j<LENGTH;j++)
-      {
-              
-        if(j==0 )
-        {
-          AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(
-                model, 
-                newNodesArray2D[i+1][j],
-                newNodesArray2D[i][j]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeV2D[i][j]=edgeCommand;
-        }
-        else if(j==LAST_INDEX)
-        {
-          AddEdgeCommand edgeCommand=
-                      new AddEdgeCommand(
-                          model,
-                          newNodesArray2D[i][j], 
-                          newNodesArray2D[i+1][j]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeV2D[i][j]=edgeCommand;
-        }            
-        else
-        {
-          AddEdgeCommand edgeCommand=
-            new AddEdgeCommand(
-                model, 
-                newNodesArray2D[i][j],
-                newNodesArray2D[i+1][j]);
-          compositeCommand.addCommand( edgeCommand );
-          addEdgeV2D[i][j]=edgeCommand;
-          
-          //create inverted
-          AddEdgeInvCommand edgeInvCommand=
-            new AddEdgeInvCommand(model, edgeCommand);
-          addEdgeV2DInv[i][j] =edgeInvCommand;
-          compositeCommand.addCommand( edgeInvCommand );
-        }          
-      }
-    }    
+    double searchRectWidth = sides[0].getHandleWidthAsWorldDistance( mapPanel );
+    ICommand addGridCommand=
+      tempGrid.getAddToModelCommand( 
+                      mapPanel, model, 
+                      commandableWorkspace, 
+                      searchRectWidth );
+    return addGridCommand;
   }
   
-  private final void addElements(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand,
-      AddEdgeCommand[][] addEdgeH2D,
-      AddEdgeInvCommand[][] addEdgeH2DInv,
-      AddEdgeCommand[][] addEdgeV2D,
-      AddEdgeInvCommand[][] addEdgeV2DInv)
-  {
-      final int LAST_INDEX_I = addEdgeH2D.length-2;
-      for(int i=0; i<=LAST_INDEX_I/*i<addEdgeH2D.length-1*/;i++)
-      {
-        AddEdgeCommand[] aeHCnds0=addEdgeH2D[i];
-        final int LAST_INDEX_J=addEdgeH2D[0].length-2;
-        for(int j=0;j<=LAST_INDEX_J/*j<aeHCnds0.length-1*/;j++)
-        {
-          IDiscrModel1d2dChangeCommand edge0 = addEdgeH2D[i][j];
-          IDiscrModel1d2dChangeCommand edge1 = addEdgeV2D[i+1][j+1];
-          IDiscrModel1d2dChangeCommand edge2 = addEdgeH2DInv[i][j];
-          IDiscrModel1d2dChangeCommand edge3 = 
-                        (j==0)?addEdgeV2D[i][j]:addEdgeV2DInv[i][j];
-          if(edge0==null || edge1==null || edge2==null|| edge3==null )
-          {
-            System.out.println("An edge is null");
-            continue;
-          }
-          AddElementCommand addElementCommand=
-            new AddElementCommand(
-                model,
-                new IDiscrModel1d2dChangeCommand[]{edge0,edge1,edge2,edge3});
-          compositeCommand.addCommand( addElementCommand );
-        }
-      }
-  }
-  
-  private final void  addElementsFromNodes(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand)
-  {
-      final int LAST_INDEX_I = newNodesArray2D.length-2;
-      for(int i=0; i<=LAST_INDEX_I/*i<addEdgeH2D.length-1*/;i++)
-      {
-        final int LAST_INDEX_J=newNodesArray2D[0].length-2;
-        for(int j=0;j<=LAST_INDEX_J;j++)
-        {
-          AddNodeCommand node0 = newNodesArray2D[i][j];
-          AddNodeCommand node1 = newNodesArray2D[i][j+1];
-          AddNodeCommand node2 = newNodesArray2D[i+1][j+1];
-          AddNodeCommand node3 = newNodesArray2D[i+1][j];
-          AddNodeCommand node4 = newNodesArray2D[i][j];
-          
-          AddElementCmdFromNodeCmd addElementCommand=
-            new AddElementCmdFromNodeCmd(
-                model,
-                new AddNodeCommand[]{node0,node1,node2,node3, node4});
-          compositeCommand.addCommand( addElementCommand );
-        }
-      }
-  }
-  public void getAddToModelVV(
-                      IFEDiscretisationModel1d2d model) 
-                      throws GM_Exception
-  {
-    GeometryFactory geometryFactory= new GeometryFactory();
-    final LineString topLine = pointToLineString( sides[0] );
-    final LineString bottomLine = pointToLineString( sides[2] );
-    final LineString leftLine = pointToLineString( sides[1] );
-    final LineString rightLine = pointToLineString( sides[3] );
-    
-    JTSQuadMesher mesher= 
-              new JTSQuadMesher(
-                        topLine,
-                        bottomLine,
-                        leftLine,
-                        rightLine);
-    Coordinate[][] coordinates=mesher.calculateMesh();  
-    IFE1D2DNode[][] newNodesArray2D= 
-                   new IFE1D2DNode[coordinates.length][];
-    IFeatureWrapperCollection<IFE1D2DNode> nodes = model.getNodes();
-   
-    //Create the nodes
-    for(int i=0;i<coordinates.length;i++)
-    {
-      Coordinate[] line=coordinates[i];
-      IFE1D2DNode[] newNodesArray1D= 
-                        new IFE1D2DNode[line.length];
-      newNodesArray2D[i]=newNodesArray1D;
-      for(int j=0;j<line.length;j++)
-      {
-        Coordinate coord=line[j];
-        //TODO check node for existance
-        IFE1D2DNode node=
-          nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-        
-        node.setPoint( 
-              (GM_Point)JTSAdapter.wrap( 
-                  geometryFactory.createPoint(coord)));
-        newNodesArray1D[j]=node;
-      }
-    }
-      
-//  add edges
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
-    for(int i=0;i<newNodesArray2D.length;i++)
-    {
-      IFE1D2DNode[] nodeLine1=newNodesArray2D[i];
-      IFE1D2DNode[] nodeLine2=
-        (i+1<newNodesArray2D.length)?newNodesArray2D[i+1]:null;
-      for(int j=0; j<nodeLine1.length-1;j++)
-      {
-        //horidonzal edges
-        IFE1D2DEdge edge = edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-        //todo add vertical edge
-        edge.addNode( nodeLine1[j].getGmlID() );
-        edge.addNode( nodeLine1[j+1].getGmlID() );
-        
-        if(nodeLine2!=null)
-        {
-//          edge=edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-//          edge.addNode( nodeLine2[j].getGmlID() );
-//          edge.addNode( nodeLine2[j+1].getGmlID() );
-        }
-        
-      }
-    }
-    model.getWrappedFeature().getWorkspace().fireModellEvent( null );
-    
-  }
-  
-  private LineString pointToLineString(
-                LinePointCollector lineGeometryBuilder)
-  {
-    final int SIZE=lineGeometryBuilder.getCurrentPointCnt();
-      Coordinate coordinates[] = new Coordinate[SIZE];
-      for(int i=0;i<SIZE;i++)
-      {
-        coordinates[i]=
-          JTSAdapter.export(  
-                lineGeometryBuilder.getPointAt( i ).getPosition());
-      }
-//    CoordinateSequence 
-//    JTSAdapter
-    GeometryFactory geometryFactory=new GeometryFactory();
-    LineString lineString=
-      geometryFactory.createLineString( coordinates );
-    return lineString;
-  }
   
   public LinePointCollectorConfig[] getSideconfigsAsArray()
   {

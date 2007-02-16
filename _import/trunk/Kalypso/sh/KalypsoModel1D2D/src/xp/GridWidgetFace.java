@@ -224,9 +224,14 @@ class GridWidgetFace
               {
                 tableViewer.setInput( gridPointCollector );
                 tableViewer.setItemCount( 4 );
-                tableViewer.setSelection( 
-                    new StructuredSelection(
-                        gridPointCollector.getCurrentLPCConfig()));
+                LinePointCollectorConfig currentLPCConfig = 
+                      gridPointCollector.getCurrentLPCConfig();
+                if(currentLPCConfig!=null)
+                {
+                  tableViewer.setSelection( 
+                      new StructuredSelection(
+                          ));
+                }
               }
             });
       }
@@ -339,6 +344,11 @@ class GridWidgetFace
     
     public void disposeControl( )
     {
+      if(rootPanel==null)
+      {
+        System.out.println("Disposing null root panel");
+        return;
+      }
       if(!rootPanel.isDisposed())
       {
         rootPanel.dispose();

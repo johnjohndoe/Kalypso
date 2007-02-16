@@ -95,6 +95,16 @@
 	                     	value="Element2D"/>
 	       			</class>
        	</action>            
+       	
+        <action
+              class="xp.CreateGridActionDelegate"
+              id="x.createGrid"
+              label="Grid"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Grid draw tool"/>
+              
         <action
               class="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
               id="KalypsoModel1D2D.action1"

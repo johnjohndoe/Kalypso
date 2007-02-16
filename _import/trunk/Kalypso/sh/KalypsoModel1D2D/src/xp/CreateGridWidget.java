@@ -76,7 +76,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     // find the right themes to edit i.e. the discretisation model
     if(isActivated==false)
     {
-      
       reinit();
       isActivated=true;
     }
@@ -317,18 +316,31 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     char typed=e.getKeyChar();
     MapPanel mapPanel=getMapPanel();
+    
+    if(e.isActionKey())
+    {
+      System.out.println("e:"+e);
+    }
     if(typed==ESC)
     {
-      gridPointCollector.clearCurrent();
-      //mapPanel.getMapModell().addModellListener( listener )
-      //TODO get the geometry redrawn
-      mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
+      if(e.isShiftDown())
+      {
+        reinit();
+        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
+      }
+      else
+      {
+        gridPointCollector.clearCurrent();
+        //mapPanel.getMapModell().addModellListener( listener )
+        //TODO get the geometry redrawn
+        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );//paint();
+      }
       
     }
     else if(typed=='\b')
     {
       
-      if(e.getModifiers()==InputEvent.SHIFT_MASK)
+      if(e.isShiftDown())//e.getModifiers()==InputEvent.SHIFT_MASK)
       {
        gridPointCollector.gotoPreviousSide(); 
        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
@@ -377,6 +389,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     }
     else
     {
+      
       System.out.println("Char="+typed);
     }
     
@@ -410,7 +423,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     System.out.println("FINISH");
    super.finish();
-   isActivated=false;
+   //isActivated=false;
   }
 
   /**
