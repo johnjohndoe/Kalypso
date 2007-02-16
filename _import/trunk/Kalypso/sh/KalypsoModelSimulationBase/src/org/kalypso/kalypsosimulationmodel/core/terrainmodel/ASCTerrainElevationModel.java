@@ -66,9 +66,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class ASCTerrainElevationModel implements IElevationProvider
 {
   /**
-   * the ascFile file containing the elevation info 
+   * the asc data source File or URL containing the elevation info 
    */
-  private File ascFile;
+  private Object ascSource;
   
   //TODO check using polygons
   /**
@@ -100,7 +100,7 @@ public class ASCTerrainElevationModel implements IElevationProvider
     Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
 //    Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
     this.regionOfInterest=regionOfInterest;
-    this.ascFile=ascFile;
+    this.ascSource=ascFile;
     parse( ascFile );
   }
   
@@ -109,63 +109,13 @@ public class ASCTerrainElevationModel implements IElevationProvider
       GM_Envelope regionOfInterest)
       throws IllegalArgumentException, IOException
   {
-//    Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
-    //Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
     this.regionOfInterest=regionOfInterest;
-//    this.ascFile=ascFile;
     parse( ascFileURL.openStream() );
   }
   
   private final void parse( File asciiFile  ) throws FileNotFoundException
   {
-    FileInputStream fileInputStream= new FileInputStream(asciiFile);
-//    BufferedReader br = null;
-//    try
-//    {
-//      br = new BufferedReader( new FileReader( asciiFile ) );
-//      final String[] data = new String[6];
-//      String line;
-//      //reading header data
-//      for( int i = 0; i < 6; i++ )
-//      {
-//        line = br.readLine();
-//        final int index = line.indexOf( " " ); //$NON-NLS-1$
-//        final String subString = line.substring( index );
-//        data[i] = subString.trim();
-//      }
-//      N_COLS = Integer.parseInt( data[0] );
-//      N_ROWS = Integer.parseInt( data[1] );
-//      cellSize=Integer.parseInt( data[4] );
-//      double noDataValue = Double.parseDouble( data[5] );
-//      double currentValue;
-//
-//      elevations = new double[N_ROWS][N_COLS];
-//
-//      String[] strRow;
-//      for(int y=0; y<N_ROWS; y++)
-//      {
-//        strRow = br.readLine().trim().split( " " );
-//        for(int x=0; x<N_COLS; x++)
-//        {
-//          currentValue = Double.parseDouble( strRow[x] );
-//          elevations[y][x] = (currentValue != noDataValue)?currentValue:Double.NaN;
-//        }
-//      }
-////      br.close();
-//    }
-//    catch( NumberFormatException e )
-//    {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
-//    catch( IOException e )
-//    {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
-//    finally {
-//      IOUtils.closeQuietly( br );
-//    }
+    FileInputStream fileInputStream = new FileInputStream(asciiFile);
   }
   
 private void parse(InputStream inputStream)
@@ -224,11 +174,11 @@ private void parse(InputStream inputStream)
    */
   public double getElevation( GM_Point location )
   {
-    int col = (int)Math.ceil( location.getX()/cellSize );
-    int row = (int)Math.ceil( location.getY()/cellSize );
+    int col = (int)Math.floor( location.getX()/cellSize );
+    int row = (int)Math.floor( location.getY()/cellSize );
     if(col<N_COLS && row<N_ROWS)
     {
-      System.out.println(row +" , "+ col);
+//      System.out.println(row +" , "+ col);
       //return Double.NaN;
       return elevations[row][col];
     }

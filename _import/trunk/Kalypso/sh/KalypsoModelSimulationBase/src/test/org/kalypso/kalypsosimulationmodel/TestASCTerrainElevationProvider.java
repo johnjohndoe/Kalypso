@@ -58,6 +58,36 @@ import junit.framework.TestCase;
 public class TestASCTerrainElevationProvider extends TestCase
 {
 
+  private void makedata()
+  {
+    double elevationsData[]=
+      {
+        32144, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
+        -9999, 1.000, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
+        -9999, -9999, 2.000, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
+        -9999, -9999, -9999, 3.000, -9999, -9999, -9999, -9999, -9999, -9999, 
+        -9999, -9999, -9999, -9999, 4.000, -9999, -9999, -9999, -9999, -9999, 
+        -9999, -9999, -9999, -9999, -9999, 5.000, -9999, -9999, -9999, -9999, 
+        -9999, -9999, -9999, -9999, -9999, -9999, 6.000, -9999, -9999, -9999, 
+        -9999, -9999, -9999, -9999, -9999, -9999, -9999, 7.000, -9999, -9999, 
+        -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 8.000, -9999, 
+        -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999};
+    for(int i=0;i<10;i++)
+    {
+      for(int j=0;j<10;j++)
+      {
+        if(i==j)
+        {
+          GM_Point point = 
+            GeometryFactory.createGM_Point( 
+              5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+          
+        }
+      }
+    }
+    
+  }
+  
   public void testLoadSmallAscFile()
   {
     try
@@ -69,17 +99,44 @@ public class TestASCTerrainElevationProvider extends TestCase
         new ASCTerrainElevationModel(
             TestWorkspaces.URL_SMALL_ASC, null);
       
-      GM_Point point = 
-        GeometryFactory.createGM_Point( 
-          0, 0, TestWorkspaces.getGaussKrueger() );
+//      GM_Point point = 
+//        GeometryFactory.createGM_Point( 
+//          0, 0, TestWorkspaces.getGaussKrueger() );
+//      
+//      assertEquals(32144.0,ascModel.getElevation( point  ));
+//      
+//      GM_Point point_2 = 
+//        GeometryFactory.createGM_Point( 
+//          1, 1, TestWorkspaces.getGaussKrueger() );
+//      
+//      assertEquals(32144.0,ascModel.getElevation( point_2  ));
       
-      assertEquals(32144.0,ascModel.getElevation( point  ));
+      for(int i=0;i<10;i++)
+      {
+        for(int j=0;j<10;j++)
+        {
+          if(i==j)
+          {
+            GM_Point curPoint = 
+              GeometryFactory.createGM_Point( 
+                5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+            double ele=ascModel.getElevation( curPoint  );
+            assertEquals(
+                "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);
+            
+          }
+          else
+          {
+            GM_Point curPoint = 
+              GeometryFactory.createGM_Point( 
+                5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+            double ele=ascModel.getElevation( curPoint  );
+            assertEquals(
+                "i="+i+" j="+j+" ele="+ele,Double.NaN,ele);
+          }
+        }
+      }
       
-      GM_Point point_2 = 
-        GeometryFactory.createGM_Point( 
-          1, 1, TestWorkspaces.getGaussKrueger() );
-      
-      assertEquals(32144.0,ascModel.getElevation( point_2  ));
     }
     catch (Throwable th) 
     {

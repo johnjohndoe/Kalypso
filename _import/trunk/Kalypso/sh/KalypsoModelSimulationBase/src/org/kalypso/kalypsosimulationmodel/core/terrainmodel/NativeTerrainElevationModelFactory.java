@@ -41,6 +41,7 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 
@@ -54,7 +55,7 @@ public class NativeTerrainElevationModelFactory
   
   public IElevationProvider getTerrainElevationModel(
                                         File nativeTerrainModelFile)
-                                        throws IllegalArgumentException
+                                        throws IllegalArgumentException, FileNotFoundException
   {
     Assert.throwIAEOnNullParam( nativeTerrainModelFile, "nativeTerrainModelFile" );
     if(nativeTerrainModelFile.isDirectory())
@@ -70,7 +71,7 @@ public class NativeTerrainElevationModelFactory
   }
   
   private final IElevationProvider resolveTerrainElevationModel(
-                                                      File ascFile)
+                                                      File ascFile) throws IllegalArgumentException, FileNotFoundException
   {
     String filePath=ascFile.getAbsolutePath();
     if(filePath.endsWith( ".asc" ))
