@@ -450,6 +450,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.loader.IPooledObject#isLoaded()
    */
+  @Override
   public boolean isLoaded( )
   {
     for( final Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )

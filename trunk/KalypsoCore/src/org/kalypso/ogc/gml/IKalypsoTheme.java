@@ -75,4 +75,9 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener,
    * Returns the context id that this theme represents.
    */
   public String getContext( );
+
+  /**
+   * Returns true if this theme is fully loaded
+   */
+  public boolean isLoaded( );
 }

@@ -65,15 +65,16 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
  * ActionOptionsView is a view on the selected widget of an active map view. It provides a panel where the selected
  * widgets can place GUI elements for their options.
  */
-public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener, IPartListener,
-    IWidgetChangeListener
+public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener, IPartListener, IWidgetChangeListener
 {
+  public static final String ID = "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView";
+
   /**
    * top level composite of view
    */
@@ -101,10 +102,9 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   private boolean m_modeForce = false;
 
   /*
-   * 
    * @author doemming TODO update view when model changes (on selected modellevents)
    */
-  public ActionOptionsView()
+  public ActionOptionsView( )
   {
     super();
     // register as windowlistener at workbench
@@ -112,7 +112,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     workbench.addWindowListener( this );
     m_registries.add( workbench );
     final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    //     set initial things
+    // set initial things
     windowOpened( activeWorkbenchWindow );
 
     final IWorkbenchPage[] pages = activeWorkbenchWindow.getPages();
@@ -120,13 +120,13 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     {
       final IWorkbenchPage workbenchPage = pages[i];
       pageOpened( workbenchPage );
-      final IEditorPart activeEditor = workbenchPage.getActiveEditor();
-      if( activeEditor != null )
+      final IWorkbenchPart activePart = workbenchPage.getActivePart();
+      if( activePart != null )
       {
-        partActivated( activeEditor );
-        if( activeEditor instanceof GisMapEditor )
+        partActivated( activePart );
+        if( activePart instanceof AbstractMapPart )
         {
-          final GisMapEditor editor = (GisMapEditor)activeEditor;
+          final AbstractMapPart editor = (AbstractMapPart) activePart;
           m_activeWidget = editor.getMapPanel().getWidgetManager().getActualWidget();
         }
       }
@@ -137,9 +137,9 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -147,7 +147,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void windowActivated( IWorkbenchWindow window )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -155,7 +155,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void windowDeactivated( IWorkbenchWindow window )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -163,7 +163,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void pageActivated( IWorkbenchPage page )
   {
-  //  nothing
+    // nothing
   }
 
   /**
@@ -207,9 +207,9 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partActivated( IWorkbenchPart part )
   {
-    if( part instanceof GisMapEditor )
+    if( part instanceof AbstractMapPart )
     {
-      GisMapEditor editor = (GisMapEditor)part;
+      AbstractMapPart editor = (AbstractMapPart) part;
       if( m_topLevel != null && !m_topLevel.isDisposed() )
         m_topLevel.setVisible( true );
       final WidgetManager widgetManager = editor.getMapPanel().getWidgetManager();
@@ -229,9 +229,9 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partDeactivated( IWorkbenchPart part )
   {
-    if( part instanceof GisMapEditor )
+    if( part instanceof AbstractMapPart )
     {
-      final GisMapEditor editor = (GisMapEditor)part;
+      final AbstractMapPart editor = (AbstractMapPart) part;
       final WidgetManager widgetManager = editor.getMapPanel().getWidgetManager();
       widgetManager.removeWidgetChangeListener( this );
       m_registries.remove( widgetManager );
@@ -243,7 +243,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -251,7 +251,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partClosed( IWorkbenchPart part )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -259,7 +259,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partOpened( IWorkbenchPart part )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -292,7 +292,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_group.setText( "Optionen" );
     m_group.setLayoutData( datag );
     m_topLevel.layout();
-//    m_topLevel.pack();
+    // m_topLevel.pack();
 
     // update content
     m_modeForce = true;
@@ -311,7 +311,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     // dispose old
     if( m_activeWidget != null && m_activeWidget instanceof IWidgetWithOptions )
     {
-      final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
+      final IWidgetWithOptions widget = (IWidgetWithOptions) m_activeWidget;
       widget.disposeControl();
     }
 
@@ -329,10 +329,10 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
         m_group.setToolTipText( tooltip );
         if( newWidget instanceof IWidgetWithOptions )
         {
-          final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
+          final IWidgetWithOptions widget = (IWidgetWithOptions) m_activeWidget;
           final Control control = widget.createControl( m_group );
           control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-          
+
           m_group.layout();
         }
       }
@@ -343,12 +343,12 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     // dispose inner controls
     if( m_activeWidget != null && m_activeWidget instanceof IWidgetWithOptions )
     {
-      ( (IWidgetWithOptions)m_activeWidget ).disposeControl();
+      ((IWidgetWithOptions) m_activeWidget).disposeControl();
       m_activeWidget = null;
     }
     // dispose my controls
@@ -359,13 +359,13 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     {
       final Object registry = iter.next();
       if( registry instanceof WidgetManager )
-        ( (WidgetManager)registry ).removeWidgetChangeListener( this );
+        ((WidgetManager) registry).removeWidgetChangeListener( this );
       if( registry instanceof IWorkbench )
-        ( (IWorkbench)registry ).removeWindowListener( this );
+        ((IWorkbench) registry).removeWindowListener( this );
       if( registry instanceof IWorkbenchWindow )
-        ( (IWorkbenchWindow)registry ).removePageListener( this );
+        ((IWorkbenchWindow) registry).removePageListener( this );
       if( registry instanceof IWorkbenchPage )
-        ( (IWorkbenchPage)registry ).removePartListener( this );
+        ((IWorkbenchPage) registry).removePartListener( this );
     }
     super.dispose();
   }

@@ -52,6 +52,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
@@ -76,7 +77,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  * 
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory
+public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory, IEditorPart
 {
   protected Frame m_diagFrame = null;
 

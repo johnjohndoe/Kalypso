@@ -66,8 +66,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -108,7 +108,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractEditorPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
 {
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
@@ -228,7 +228,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   }
 
   @Override
-  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
+  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception
   {
     if( !(input instanceof IFileEditorInput) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
