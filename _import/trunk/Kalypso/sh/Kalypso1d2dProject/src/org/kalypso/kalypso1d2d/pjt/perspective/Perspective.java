@@ -6,6 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.views.map.MapView;
 
 public class Perspective implements IPerspectiveFactory
@@ -13,14 +14,14 @@ public class Perspective implements IPerspectiveFactory
 
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
 
-  public void createInitialLayout( IPageLayout layout )
+  public void createInitialLayout( final IPageLayout layout )
   {
 
     // Get the editor area.
-    String editorArea = layout.getEditorArea();
+    final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
 
-    IFolderLayout leftTop = layout.createFolder( "leftTop", IPageLayout.LEFT, 0.3f,// 0.2f,
+    final IFolderLayout leftTop = layout.createFolder( "leftTop", IPageLayout.LEFT, 0.3f,// 0.2f,
     editorArea );
 
     // with left middle and bottom
@@ -33,7 +34,7 @@ public class Perspective implements IPerspectiveFactory
     //		 
 
     // only leftbottom
-    IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, 0.7f, "leftTop" );
+    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, 0.7f, "leftTop" );
 
     // IFolderLayout bottom =
     // layout.createFolder(
@@ -41,7 +42,9 @@ public class Perspective implements IPerspectiveFactory
     // IPageLayout.BOTTOM,
     // 0.80f,
     // editorArea);
-    IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );
+    final IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );
+    
+    final IFolderLayout veryRight = layout.createFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
 
     // IFolderLayout rightMiddle = layout.createFolder( "rightMiddle", IPageLayout.BOTTOM, 0.5f, "rightTop" );
 
@@ -57,6 +60,8 @@ public class Perspective implements IPerspectiveFactory
     // rightMiddle.addView(ActivitiesView.ID);
     leftBottom.addView( SimulationModelDBView.ID );
     rightTop.addPlaceholder( MapView.ID );
+    veryRight.addPlaceholder( ActionOptionsView.ID );
+    layout.getViewLayout( ActionOptionsView.ID ).setMoveable( false );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( SimulationModelDBView.ID ).setCloseable( false );
     // TODO: secondary id does not work here: gives assertion failed

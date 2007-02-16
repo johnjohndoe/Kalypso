@@ -26,6 +26,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeListener;
+import org.kalypso.ogc.gml.KalypsoThemeEvent;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
@@ -37,7 +39,7 @@ import de.renew.workflow.WorkflowCommandHandler;
  * 
  * @author Stefan Kurzbach
  */
-public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension
+public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements IHandler, IExecutableExtension, IKalypsoThemeListener
 {
 
   private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource";
@@ -47,6 +49,10 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
   private String m_resource;
 
   String m_featureType;
+
+  IMapModell m_mapModell;
+
+  private MapView m_mapView;
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -80,68 +86,51 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
           workbenchPage.hideView( reference );
         }
       }
-      final MapView mapView = (MapView) workbenchPage.showView( MapView.ID );
+      m_mapView = (MapView) workbenchPage.showView( MapView.ID );
 
       // final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable(
       // SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
       // TODO check dirty-state of workspace and ask if editor should be saved
 
-      final Job loadMapJob = mapView.loadMap( file );
-      final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
-      final Job job = new Job( "Activate layer..." )
+      m_mapView.startLoadJob( file );
+
+      final MapPanel mapPanel = (MapPanel) m_mapView.getAdapter( MapPanel.class );
+      if( m_featureType != null )
       {
-
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
+        final Job job = new Job( "Activate layer..." )
         {
-          try
+          @Override
+          protected IStatus run( final IProgressMonitor monitor )
           {
-            Job.getJobManager().join( MapView.JOB_FAMILY, monitor );
-          }
-          catch( final OperationCanceledException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
-          catch( final InterruptedException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
+            try
+            {
+              Job.getJobManager().join( MapView.JOB_FAMILY, monitor );
+            }
+            catch( final OperationCanceledException e )
+            {
+              return StatusUtilities.statusFromThrowable( e );
+            }
+            catch( final InterruptedException e )
+            {
+              return StatusUtilities.statusFromThrowable( e );
+            }
 
-          final IMapModell mapModell = mapPanel.getMapModell();
-          if( m_featureType != null )
-          {
-            final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-            IKalypsoTheme themeToActivate = null;
-
+            m_mapModell = mapPanel.getMapModell();
+            final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
             for( IKalypsoTheme theme : allThemes )
             {
-              final String themeContext = theme.getContext();
-              if( m_featureType.equals( themeContext ) )
-              {
-                if( themeToActivate != null )
-                {
-                  logger.warning( theme.getName() + " theme found. More than one theme with the same feature type: " + m_featureType );
-                }
-                themeToActivate = theme;
+              if( !theme.isLoaded() ) {
+                theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+              } else {
+                maybeActivateTheme( theme );
               }
             }
-
-            if( themeToActivate != null )
-            {
-              logger.info( themeToActivate + " theme activated with feature type " + m_featureType );
-              mapModell.activateTheme( themeToActivate );
-              mapView.setCustomName( themeToActivate.getName() );
-            }
-            else
-            {
-              logger.warning( "Could not activate theme with feature type " + m_featureType + ". Not found in " + file );
-            }
+            return Status.OK_STATUS;
           }
-          return Status.OK_STATUS;
-        }
-      };
-      job.setUser( true );
-      job.schedule( );
+        };
+        job.setUser( true );
+        job.schedule();
+      }
 
     }
     return Status.OK_STATUS;
@@ -182,5 +171,29 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
     // {
     // return false;
     // }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
+   */
+  public void kalypsoThemeChanged( final KalypsoThemeEvent event )
+  {
+    if( event.isType( KalypsoThemeEvent.CONTEXT_CHANGED ) )
+    {
+      final IKalypsoTheme themeToActivate = event.getSource();
+      maybeActivateTheme( themeToActivate );
+      themeToActivate.removeKalypsoThemeListener( this );
+    }
+  }
+
+  void maybeActivateTheme( final IKalypsoTheme themeToActivate )
+  {
+    final String themeContext = themeToActivate.getContext();
+    if( m_featureType.equals( themeContext ) )
+    {
+      logger.info( themeToActivate + " theme activated with feature type " + m_featureType );
+      m_mapModell.activateTheme( themeToActivate );
+      m_mapView.setCustomName( themeToActivate.getName() );
+    }
   }
 }

@@ -56,7 +56,7 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
 {
   private WorkflowConnector m_connector;
 
-  protected static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
+  public static Logger logger = Logger.getLogger( WorkflowCommandHandler.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 
@@ -98,6 +98,7 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
       throw new ExecutionException( "Problem in internal execution: " + t.toString(), t );
     }
 
