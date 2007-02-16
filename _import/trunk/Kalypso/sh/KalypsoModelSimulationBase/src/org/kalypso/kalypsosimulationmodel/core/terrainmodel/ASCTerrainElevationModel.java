@@ -40,9 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.deegree.model.geometry.GM_Envelope;
+import org.eclipse.ui.internal.misc.TestPartListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -66,6 +76,12 @@ public class ASCTerrainElevationModel implements IElevationProvider
    */
   private GM_Envelope regionOfInterest;
   
+  private double cellSize;
+  
+  private double elevations[][]; 
+  private int N_COLS;
+  private int N_ROWS;
+  
   /**
    * Create an elevation provider based on the given asc file, in the specified 
    * region of interest. if the regionInterest is null the file elevation 
@@ -79,23 +95,147 @@ public class ASCTerrainElevationModel implements IElevationProvider
   public ASCTerrainElevationModel(
               File ascFile,
               GM_Envelope regionOfInterest)
-              throws IllegalArgumentException
+              throws IllegalArgumentException, FileNotFoundException
   {
     Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
 //    Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
     this.regionOfInterest=regionOfInterest;
     this.ascFile=ascFile;
+    parse( ascFile );
   }
   
+  public ASCTerrainElevationModel(
+      URL ascFileURL,
+      GM_Envelope regionOfInterest)
+      throws IllegalArgumentException, IOException
+  {
+//    Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
+    //Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
+    this.regionOfInterest=regionOfInterest;
+//    this.ascFile=ascFile;
+    parse( ascFileURL.openStream() );
+  }
   
+  private final void parse( File asciiFile  ) throws FileNotFoundException
+  {
+    FileInputStream fileInputStream= new FileInputStream(asciiFile);
+//    BufferedReader br = null;
+//    try
+//    {
+//      br = new BufferedReader( new FileReader( asciiFile ) );
+//      final String[] data = new String[6];
+//      String line;
+//      //reading header data
+//      for( int i = 0; i < 6; i++ )
+//      {
+//        line = br.readLine();
+//        final int index = line.indexOf( " " ); //$NON-NLS-1$
+//        final String subString = line.substring( index );
+//        data[i] = subString.trim();
+//      }
+//      N_COLS = Integer.parseInt( data[0] );
+//      N_ROWS = Integer.parseInt( data[1] );
+//      cellSize=Integer.parseInt( data[4] );
+//      double noDataValue = Double.parseDouble( data[5] );
+//      double currentValue;
+//
+//      elevations = new double[N_ROWS][N_COLS];
+//
+//      String[] strRow;
+//      for(int y=0; y<N_ROWS; y++)
+//      {
+//        strRow = br.readLine().trim().split( " " );
+//        for(int x=0; x<N_COLS; x++)
+//        {
+//          currentValue = Double.parseDouble( strRow[x] );
+//          elevations[y][x] = (currentValue != noDataValue)?currentValue:Double.NaN;
+//        }
+//      }
+////      br.close();
+//    }
+//    catch( NumberFormatException e )
+//    {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+//    catch( IOException e )
+//    {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+//    finally {
+//      IOUtils.closeQuietly( br );
+//    }
+  }
+  
+private void parse(InputStream inputStream)
+{
+  BufferedReader br = null;
+  try
+  {
+    br = new BufferedReader( new InputStreamReader(inputStream) );
+    final String[] data = new String[6];
+    String line;
+    //reading header data
+    for( int i = 0; i < 6; i++ )
+    {
+      line = br.readLine();
+      final int index = line.indexOf( " " ); //$NON-NLS-1$
+      final String subString = line.substring( index );
+      data[i] = subString.trim();
+    }
+    N_COLS = Integer.parseInt( data[0] );
+    N_ROWS = Integer.parseInt( data[1] );
+    cellSize=Integer.parseInt( data[4] );
+    double noDataValue = Double.parseDouble( data[5] );
+    double currentValue;
+
+    elevations = new double[N_ROWS][N_COLS];
+
+    String[] strRow;
+    for(int y=0; y<N_ROWS; y++)
+    {
+      strRow = br.readLine().trim().split( " " );
+      for(int x=0; x<N_COLS; x++)
+      {
+        currentValue = Double.parseDouble( strRow[x] );
+        elevations[y][x] = (currentValue != noDataValue)?currentValue:Double.NaN;
+      }
+    }
+//    br.close();
+  }
+  catch( NumberFormatException e )
+  {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+  }
+  catch( IOException e )
+  {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+  }
+  finally {
+    IOUtils.closeQuietly( br );
+  }
+}
   
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public double getElevation( GM_Point location )
   {
-    //TODO implement me
-    return 0;
+    int col = (int)Math.ceil( location.getX()/cellSize );
+    int row = (int)Math.ceil( location.getY()/cellSize );
+    if(col<N_COLS && row<N_ROWS)
+    {
+      System.out.println(row +" , "+ col);
+      //return Double.NaN;
+      return elevations[row][col];
+    }
+    else
+    {
+      return Double.NaN;
+    }
   }
 
 }
