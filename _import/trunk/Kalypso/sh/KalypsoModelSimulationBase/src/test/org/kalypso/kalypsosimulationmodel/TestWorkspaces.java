@@ -125,8 +125,11 @@ public class TestWorkspaces
 	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
     
     public static final URL URL_SMALL_ASC;
-    public static final String REL_RES_SMALL_ASC="data/test_file_small_acs.asc";
+    public static final String REL_RES_SMALL_ASC="data/test_file_small_asc.asc";
     
+    
+    public static final URL URL_GC_SMALL_ASC;
+    public static final String REL_RES_GC_SMALL_ASC="data/gc_elevation_model.xml";
     
 	static 
 	{
@@ -191,6 +194,10 @@ public class TestWorkspaces
                 REL_RES_SMALL_ASC,
                 TestWorkspaces.class.getResource(
                         REL_RES_SMALL_ASC));
+            urlMap.put(
+                REL_RES_GC_SMALL_ASC,
+                TestWorkspaces.class.getResource(
+                        REL_RES_GC_SMALL_ASC));
 		}
 		catch(Throwable th)
 		{
@@ -229,6 +236,8 @@ public class TestWorkspaces
                 urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
             URL_SMALL_ASC=
               urlMap.get(REL_RES_SMALL_ASC);
+            URL_GC_SMALL_ASC=
+              urlMap.get(REL_RES_GC_SMALL_ASC);
 
         }
 	}
