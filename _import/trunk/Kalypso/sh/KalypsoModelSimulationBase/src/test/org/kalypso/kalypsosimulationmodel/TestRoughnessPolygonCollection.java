@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -71,7 +73,8 @@ public class TestRoughnessPolygonCollection extends TestCase
   {
 
     GMLWorkspace workspace = null;
-    GM_Point point = GeometryFactory.createGM_Point( 0.17174177831912307, 0.7929354445797808, cs );
+    // GM_Point point = GeometryFactory.createGM_Point( 0.17174177831912307, 0.7929354445797808, cs );
+    GM_Point point = GeometryFactory.createGM_Point( 0.1, 0.53, cs );
     IRoughnessPolygonCollection m_polygonCollection;
 
     workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION, null );
@@ -80,8 +83,34 @@ public class TestRoughnessPolygonCollection extends TestCase
       fail( "aaa" );
 
     m_polygonCollection = new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
-    IRoughnessPolygon[] polygons = m_polygonCollection.select( point );
-//    System.out.println();
+    IRoughnessPolygon[] polygons = m_polygonCollection.getSelectedPolygons( point );
+    System.out.println( "" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION);
+    System.out.println( "******************************************************************" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "* TEST: select                                                   *" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "Point (x,y): (" + point.getX() + ", " + point.getY() + ")" );
+    System.out.println( "is contained in:" );
+    for( int i = 0; i < polygons.length; i++ )
+      System.out.println( (i + 1) + ". - " + polygons[i].getGmlID() );
+    if(polygons.length == 0)
+      System.out.println( " - no polygons contains this point" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "" );
+
+    List<IRoughnessPolygon> polygonsList = m_polygonCollection.getOverlappedPolygons();
+    System.out.println( "******************************************************************" );
+    System.out.println( "* TEST: checksOverlapping                                        *" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "Overlapping polygons:" );
+    for( int i = 0; i < polygonsList.size(); i++ )
+      System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() );
+    if(polygonsList.size() == 0)
+      System.out.println( " - no overlapping" );
+    System.out.println( "******************************************************************" );
+    System.out.println( "" );
   }
 
 }

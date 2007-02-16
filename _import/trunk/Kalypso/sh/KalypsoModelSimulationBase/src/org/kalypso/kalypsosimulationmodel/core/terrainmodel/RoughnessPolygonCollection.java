@@ -7,12 +7,14 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * The default implementation of {@link IRoughnessPolygonCollection} based on {@link FeatureWrapperCollection}
@@ -33,36 +35,164 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     super( parentFeature, childQName, featureMemberProp, fwClass );
   }
 
-  public List<IRoughnessPolygon[]> checksOverlapping( )
-  {
-
-    return null;
-  }
-
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon )
   {
+    // TODO: to be implemented
     return null;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
+   */
+  @SuppressWarnings("unchecked")
+  public boolean checkOverlapping( )
+  {
+    List<Feature> srcPolygonsList = getWrappedList();
+    Feature feature1, feature2;
+    Polygon polygon1, polygon2;
+    try
+    {
+      for( int i = 0; i < srcPolygonsList.size(); i++ )
+      {
+        feature1 = srcPolygonsList.get( i );
+        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
+        for( int j = i + 1; j < srcPolygonsList.size(); j++ )
+        {
+          feature2 = srcPolygonsList.get( j );
+          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
+          final Geometry jtsIntersection = polygon1.intersection( polygon2 );
+          if( jtsIntersection.getArea() > 0 )
+          {
+            return true;
+          }
+        }
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<IRoughnessPolygon> getOverlappedPolygons( )
+  {
+    List<Feature> srcPolygonsList = getWrappedList();
+    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+    int[] containsList = getEmptyList( srcPolygonsList.size() );
+    IRoughnessPolygon roughnessPolygon1, roughnessPolygon2;
+    Feature feature1, feature2;
+    Polygon polygon1, polygon2;
+    try
+    {
+      for( int i = 0; i < srcPolygonsList.size(); i++ )
+      {
+        feature1 = srcPolygonsList.get( i );
+        roughnessPolygon1 = new RoughnessPolygon( feature1 );
+        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
+        for( int j = i + 1; j < srcPolygonsList.size(); j++ )
+        {
+          feature2 = srcPolygonsList.get( j );
+          roughnessPolygon2 = new RoughnessPolygon( feature2 );
+          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
+          final Geometry jtsIntersection = polygon1.intersection( polygon2 );
+          if( jtsIntersection.getArea() > 0 )
+          {
+            if(!isInside( containsList, i ))
+            {
+              dstPolygonsList.add( roughnessPolygon1 );
+              addToList( containsList, i );
+            }
+            if(!isInside( containsList, j ))
+            {
+              dstPolygonsList.add( roughnessPolygon2 );
+              addToList( containsList, j );
+            }
+          }
+        }
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    return dstPolygonsList;
   }
 
   @SuppressWarnings("unchecked")
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
-    Object object = getWrappedFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
-    return (List<IRoughnessPolygon>) getWrappedFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
+    List<Feature> srcPolygonsList = getWrappedList();
+    List<IRoughnessPolygon> dstPolygonsList = new ArrayList<IRoughnessPolygon>();
+    Iterator<Feature> iterator = srcPolygonsList.listIterator();
+    while( iterator.hasNext() )
+    {
+      dstPolygonsList.add( new RoughnessPolygon( iterator.next() ) );
+    }
+    return dstPolygonsList;
   }
 
   @SuppressWarnings("unchecked")
-  public IRoughnessPolygon[] select( GM_Point point )
+  public IRoughnessPolygon[] getSelectedPolygons( GM_Point location )
   {
-    GM_Position position = GeometryFactory.createGM_Position( point.getX(), point.getY() );
-    List<Feature> selectedPolygonsList = getWrappedList().query( position, null );
-    IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[selectedPolygonsList.size()];
-    Iterator<Feature> iterator = selectedPolygonsList.listIterator();
-    int i = 0;
-    while(iterator.hasNext()){
-      dstPolygonsArray[i++] = new RoughnessPolygon(iterator.next());
+    List<Feature> srcPolygonsList = getWrappedList();
+    List<Feature> dstPolygonsList = new ArrayList<Feature>();
+    Iterator<Feature> iterator = srcPolygonsList.listIterator();
+    Feature polygon = null;
+    while( iterator.hasNext() )
+    {
+      polygon = iterator.next();
+      if( polygon.getDefaultGeometryProperty().contains( location ) )
+        dstPolygonsList.add( polygon );
     }
-    return dstPolygonsArray;
+    if( dstPolygonsList.size() > 0 )
+    {
+      IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[dstPolygonsList.size()];
+      for( int i = 0; i < dstPolygonsList.size(); i++ )
+        dstPolygonsArray[i] = new RoughnessPolygon( dstPolygonsList.get( i ) );
+      return dstPolygonsArray;
+    }
+    else
+      return null;
+
+    // /*
+    // * Mark from Dejan: The following code does not work correctly,
+    // * it checks if ENVELOPE contains point! GM_Position
+    // */
+    // position = GeometryFactory.createGM_Position( point.getX(), point.getY() );
+    // List<Feature> selectedPolygonsList = getWrappedList().query( position, null );
+    // IRoughnessPolygon[] dstPolygonsArray = new IRoughnessPolygon[selectedPolygonsList.size()];
+    // Iterator<Feature> iterator = selectedPolygonsList.listIterator();
+    // int i = 0;
+    // while(iterator.hasNext()){
+    // dstPolygonsArray[i++] = new RoughnessPolygon(iterator.next());
+    // }
+    // return dstPolygonsArray;
+
+  }
+  
+  private int[] getEmptyList(int size)
+  {
+    int[] list = new int[size];
+    for(int i=0; i<size; i++)
+      list[i] = -1;
+    return list;
+  }
+  
+  private boolean isInside(int[] list, int member)
+  {
+    for(int i=0; i<list.length; i++)
+      if(list[i] == member)
+        return true;
+    return false;
+  }
+  
+  private int[] addToList(int[] list, int member){
+    for(int i=0; i<list.length; i++)
+      if(list[i] == -1)
+        list[i] = member;
+    return list;
   }
 
 }

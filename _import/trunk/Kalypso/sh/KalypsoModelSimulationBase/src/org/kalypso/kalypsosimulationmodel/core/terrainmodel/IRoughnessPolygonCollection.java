@@ -7,26 +7,24 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
- * The interface to be implmented by classes which instances represents a simBase:RoughnessCollectionElement
+ * The interface implemented by classes representing simBase:RoughnessCollectionElement
  * 
- * @author Dejan Antanaskovic, Patrice Congo
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a> 
+ * @author Patrice Congo
  */
 public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<IRoughnessPolygon>
 {
   /**
-   * Select the roughness polygon containing this point. Since the point may be on the border there can be several
-   * polygon containing the specified point.
+   * Selects all roughness polygons containing this point. 
+   * Since the point may be on the border, there might be several polygons as a result.
    * 
-   * @param location
-   *          the location where to find the roughness polygon
-   * @return the rougness polygons which at the given location
+   * @param point the location where to find the roughness polygon
+   * @return array if rougness polygons containing given point
    */
-  public IRoughnessPolygon[] select( GM_Point location );
+  public IRoughnessPolygon[] getSelectedPolygons( GM_Point point );
 
   /**
-   * Get all roughness polygons in this collection
-   * 
-   * @return
+   * Gets all roughness polygons in this collection
    */
   public List<IRoughnessPolygon> getRoughnessPolygons( );
 
@@ -40,9 +38,14 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
 
   /**
    * Checks if there is overlapping between roughness polygons
+   */
+  public boolean checkOverlapping( );
+
+  /**
+   * Returns a list of overlapped polygons
    * 
    * @return List of overlapped polygons
    */
-  public List<IRoughnessPolygon[]> checksOverlapping( );
+  public List<IRoughnessPolygon> getOverlappedPolygons( );
 
 }

@@ -110,7 +110,7 @@ public class TestWorkspaces
 	
     public static final URL URL_ROUGHNESS_POLYGON_COLLECTION;
     public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION =
-                            "data/terrain.gml";
+                            "data/terrain_buggy.gml";
     
 	public static final URL URL_COL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=

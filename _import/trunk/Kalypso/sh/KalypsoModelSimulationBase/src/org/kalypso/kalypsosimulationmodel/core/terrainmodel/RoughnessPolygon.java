@@ -5,7 +5,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.relation.RelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
