@@ -59,8 +59,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypso.ui.views.map.MapView;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -104,15 +103,10 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
               {
                 return;
               }
-              else if( workbenchPart instanceof GisMapEditor )
+              else if( workbenchPart instanceof AbstractMapPart )
               {
-                final GisMapEditor editor = (GisMapEditor) workbenchPart;
+                final AbstractMapPart editor = (AbstractMapPart) workbenchPart;
                 editor.saveTheme( theme, monitor );
-              }
-              else if( workbenchPart instanceof MapView )
-              {
-                final MapView mapView = (MapView) workbenchPart;
-                mapView.saveTheme( theme, monitor );
               }
             }
           };
@@ -148,7 +142,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
     final WidgetActionPart part = getPart();
     if( part != null )
     {
-      final GisMapEditor editor = (GisMapEditor) part.getPart();
+      final AbstractMapPart editor = (AbstractMapPart) part.getPart();
       if( editor != null )
       {
         final IMapModell mapModell = editor.getMapPanel().getMapModell();

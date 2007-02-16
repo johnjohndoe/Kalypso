@@ -28,8 +28,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 /**
  * @author Küpferle
  */
-public class GmlEditor extends AbstractEditorPart implements ICommandTarget
+public class GmlEditor extends AbstractEditorPart implements IEditorPart, ICommandTarget
 {
   public static final String ID = "org.kalypso.ui.editor.GmlEditor";
 
@@ -102,7 +102,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   }
 
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception, CoreException
   {
     monitor.beginTask( "Vorlage wird geladen", 1000 );
     try

@@ -61,7 +61,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -71,7 +71,6 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -176,15 +175,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
 
-  private final MapModellContextSwitcher m_contextSwitcher;
-
   private String m_message = "";
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager, final IContextService contextService )
+  IWorkbenchPartSite m_site;
+
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
-    m_contextSwitcher = new MapModellContextSwitcher( contextService );
 
     // set empty Modell:
     final IMapModell mapModell = new MapModell( crs, null );
@@ -215,7 +213,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_selectionListeners.clear();
     m_mapImage = null;
 
-    m_contextSwitcher.dispose();
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -378,7 +375,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( m_model != null )
     {
       m_model.removeModellListener( this );
-      m_model.removeModellListener( m_contextSwitcher );
     }
 
     m_model = modell;
@@ -386,7 +382,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( m_model != null )
     {
       m_model.addModellListener( this );
-      m_model.addModellListener( m_contextSwitcher );
     }
   }
 

@@ -188,4 +188,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_eventProvider.dispose();
     m_themeEventProvider.dispose();
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
+   */
+  public boolean isLoaded( )
+  {   
+    return true;
+  }
 }

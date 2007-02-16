@@ -122,7 +122,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   {
     return m_part;
   }
-  
+
   protected ISelection getSelection( )
   {
     return m_selection;
@@ -132,13 +132,16 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   {
     return m_action;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshAction( m_action, m_selection );
+    if( m_action != null )
+    {
+      refreshAction( m_action, m_selection );
+    }
   }
 
   /**
