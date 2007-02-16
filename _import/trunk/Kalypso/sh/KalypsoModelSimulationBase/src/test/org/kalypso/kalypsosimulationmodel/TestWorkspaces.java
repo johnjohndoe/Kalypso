@@ -53,7 +53,9 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -122,6 +124,10 @@ public class TestWorkspaces
 	public static final URL URL_SHAPE_2_ROUGHNESS_POLYGON;
 	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
     
+    public static final URL URL_SMALL_ASC;
+    public static final String REL_RES_SMALL_ASC="data/test_file_small_acs.asc";
+    
+    
 	static 
 	{
 		Map<String ,URL> urlMap=new Hashtable<String, URL>();
@@ -181,6 +187,10 @@ public class TestWorkspaces
                 REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST,
                 TestWorkspaces.class.getResource(
                         REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST));
+            urlMap.put(
+                REL_RES_SMALL_ASC,
+                TestWorkspaces.class.getResource(
+                        REL_RES_SMALL_ASC));
 		}
 		catch(Throwable th)
 		{
@@ -217,6 +227,8 @@ public class TestWorkspaces
                 urlMap.get(REL_RES_ROUGHNESS_POLYGON_COLLECTION);
 			URL_SHAPE_2_ROUGHNESS_POLYGON=
                 urlMap.get(REL_RES_SHAPE_2_ROUGHNESS_POLYGON);
+            URL_SMALL_ASC=
+              urlMap.get(REL_RES_SMALL_ASC);
 
         }
 	}
@@ -249,4 +261,13 @@ public class TestWorkspaces
     
 		return modelWorkspace;
 	}
+    
+    public static final CS_CoordinateSystem getGaussKrueger()
+    {
+      CS_CoordinateSystem cs= 
+        ConvenienceCSFactory.getInstance().getOGCCSByName( 
+                            TestWorkspaces.CS_KEY_GAUSS_KRUEGER );
+      return cs;
+        
+    }
 }
