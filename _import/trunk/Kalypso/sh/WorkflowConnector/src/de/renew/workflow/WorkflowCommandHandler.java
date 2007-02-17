@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -71,7 +71,6 @@ public abstract class WorkflowCommandHandler extends AbstractHandler
    * 
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public final Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final String commandId = event.getCommand().getId();
