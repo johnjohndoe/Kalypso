@@ -109,11 +109,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * </p>
  * <p>
  * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
- * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
+ * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgeführt
  * </p>
  * 
  * @author Stefan Kurzbach
  */
+// TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider, IMapPanelListener
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
