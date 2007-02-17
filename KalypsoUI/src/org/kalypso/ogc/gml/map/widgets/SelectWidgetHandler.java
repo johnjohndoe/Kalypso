@@ -26,7 +26,6 @@ import org.osgi.framework.Bundle;
 public class SelectWidgetHandler extends AbstractHandler implements IHandler
 {
 
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final String widgetParameter = event.getParameter( SelectWidgetCommandActionDelegate.PARAM_WIDGET_CLASS );
