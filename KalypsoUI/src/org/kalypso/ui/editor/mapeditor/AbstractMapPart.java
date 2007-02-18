@@ -49,6 +49,7 @@ import java.net.URL;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -65,6 +66,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -132,7 +134,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private Control m_control;
 
   @SuppressWarnings("restriction")
-  StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+  private StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   private boolean m_disposed = false;
 
@@ -176,6 +178,19 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     super.init( site, input );
     initMapPanel( site );
+    
+    if( input instanceof IStorageEditorInput )
+    {
+      try
+      {
+        startLoadJob( ((IStorageEditorInput)input).getStorage() );
+      }
+      catch( CoreException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -266,26 +281,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-   * @see org.eclipse.ui.IViewPart#saveState(org.eclipse.ui.IMemento)
-   */
-  public void saveState( IMemento memento )
-  {
-    // does nothing by default
-  }
-
-  /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IStorageEditorInput)
    */
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
-    final IFile file = input.getFile();
-    loadMap( monitor, file );
+    if( m_mapPanel != null )
+      loadMap( monitor, input.getStorage() );
   }
 
   /**
-   * Loads a map (i.e. a .gmv file) from a storage insdie a {@link Job}.
+   * Loads a map (i.e. a .gmv file) from a storage inside a {@link Job}.
    * <p>
    * The method starts a (user-)job, which loads the map.
    * </p>.
@@ -294,7 +301,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    *          <code>true</code> if this method should return when the job has finished, if <code>false</code>
    *          returns immediately
    */
-  public void startLoadJob( final IFile storage )
+  public void startLoadJob( final IStorage storage )
   {
     final Job job = new Job( "Karte laden: " + storage.getName() )
     {
@@ -329,7 +336,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public void loadMap( final IProgressMonitor monitor, final IFile storage ) throws CoreException
+  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
@@ -346,8 +353,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       final URL context;
       final IProject project;
-      context = ResourceUtilities.createURL( storage );
-      project = storage.getProject();
+      if( storage instanceof IFile )
+      {
+        context = ResourceUtilities.createURL( (IFile) storage );
+        project = ((IFile) storage).getProject();
+      }
+      else
+      {
+        context = null;
+        project = null;
+      }
 
       if( !m_disposed )
       {
@@ -475,7 +490,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
   }
 
-  public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
+  protected void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( m_mapModell == null )
       return;

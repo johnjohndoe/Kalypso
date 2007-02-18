@@ -40,9 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.template.gistableview.Gistableview.Layer;
 
 /**
  * <p>
@@ -54,19 +52,4 @@ import org.kalypso.template.gistableview.Gistableview.Layer;
 public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor";
-
-  public GisMapEditor( )
-  {
-    super();
-  }
-
-  /**
-   *
-   */
-  public void showProperties( final Layer layer )
-  {
-    // TODO Is this method used anywhere?
-    MessageDialog.openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
-    layer.getClass();
-  }
 }
