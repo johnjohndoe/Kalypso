@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -102,7 +103,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   }
 
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     monitor.beginTask( "Vorlage wird geladen", 1000 );
     try

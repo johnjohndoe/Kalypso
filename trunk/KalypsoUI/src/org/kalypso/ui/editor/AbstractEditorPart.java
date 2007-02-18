@@ -51,9 +51,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -61,9 +59,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -72,13 +68,12 @@ import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.part.EditorActionBarContributor;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -91,12 +86,12 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    * The property id for <code>isDirty</code>.
    */
   public static final int PROP_DIRTY = IWorkbenchPartConstants.PROP_DIRTY;
-  
+
   /**
    * Editor input, or <code>null</code> if none.
    */
   private IEditorInput editorInput = null;
-  
+
   private final Runnable m_dirtyRunnable = new Runnable()
   {
     public void run( )
@@ -122,31 +117,30 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
-  
-  /* (non-Javadoc)
-   * Method declared on IEditorPart.
+
+  /*
+   * (non-Javadoc) Method declared on IEditorPart.
    */
-  public IEditorInput getEditorInput() {
-      return editorInput;
+  public IEditorInput getEditorInput( )
+  {
+    return editorInput;
   }
-  
-  /* (non-Javadoc)
-   * Method declared on IEditorPart.
+
+  /*
+   * (non-Javadoc) Method declared on IEditorPart.
    */
-  public IEditorSite getEditorSite() {
-      return (IEditorSite) getSite();
+  public IEditorSite getEditorSite( )
+  {
+    return (IEditorSite) getSite();
   }
-  
-  /* (non-Javadoc)
-   * Returns whether the contents of this editor should be saved when the editor
-   * is closed.
-   * <p>
-   * This method returns <code>true</code> if and only if the editor is dirty 
-   * (<code>isDirty</code>).
-   * </p>
+
+  /*
+   * (non-Javadoc) Returns whether the contents of this editor should be saved when the editor is closed. <p> This
+   * method returns <code>true</code> if and only if the editor is dirty (<code>isDirty</code>). </p>
    */
-  public boolean isSaveOnCloseNeeded() {
-      return isDirty();
+  public boolean isSaveOnCloseNeeded( )
+  {
+    return isDirty();
   }
 
   @Override
@@ -160,7 +154,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-   */  
+   */
   public final void doSave( final IProgressMonitor monitor )
   {
     // save only possible when input is a file
@@ -206,19 +200,19 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    */
   private IStatusLineManager getStatusLineManager( )
   {
-//    final IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
-//    if( !(contributor instanceof EditorActionBarContributor) )
-//      return null;
-//
-//    final IActionBars actionBars = ((EditorActionBarContributor) contributor).getActionBars();
-//    if( actionBars == null )
-//      return null;
-    
-    final IActionBars actionBars = getActionBars(getSite());
+    // final IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
+    // if( !(contributor instanceof EditorActionBarContributor) )
+    // return null;
+    //
+    // final IActionBars actionBars = ((EditorActionBarContributor) contributor).getActionBars();
+    // if( actionBars == null )
+    // return null;
+
+    final IActionBars actionBars = getActionBars( getSite() );
 
     return actionBars.getStatusLineManager();
   }
-  
+
   protected IActionBars getActionBars( final IWorkbenchPartSite site )
   {
     final IActionBars actionBars;
@@ -235,7 +229,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#isDirty()
-   */  
+   */
   public boolean isDirty( )
   {
     return m_commandTarget.isDirty();
@@ -259,7 +253,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-   */  
+   */
   public void doSaveAs( )
   {
     final Shell shell = getSite().getShell();
@@ -309,7 +303,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-   */  
+   */
   public void init( final IEditorSite site, final IEditorInput input )
   {
     setSite( site );
@@ -319,7 +313,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
-   */  
+   */
   public boolean isSaveAsAllowed( )
   {
     return true;
@@ -327,57 +321,44 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   /**
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
-   */  
+   */
   protected final void setInput( final IEditorInput input )
   {
+    if( !(input instanceof IStorageEditorInput) )
+      throw new IllegalArgumentException( "input must be instanceof IStorageEditorInput" );
+
     editorInput = input;
     load();
   }
 
   protected final void load( )
   {
-    new Job( "Dokument laden" )
+    final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
+    try
     {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
+      loadInternal( new NullProgressMonitor(), input );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getSite().getShell(), getPartName(), "Fehler beim Laden", status );
+    }
+
+    m_commandTarget.resetDirty();
+
+    getSite().getShell().getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
       {
-        final IFileEditorInput input = (IFileEditorInput) getEditorInput();
-        try
-        {
-          loadInternal( monitor, input );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-
-          monitor.done();
-          return e.getStatus();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-
-          monitor.done();
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Ansicht", e );
-        }
-
-        m_commandTarget.resetDirty();
-
-        getSite().getShell().getDisplay().syncExec( new Runnable()
-        {
-          public void run( )
-          {
-            setDocumentTitle( input );
-          }
-        } );
-
-        monitor.done();
-        return Status.OK_STATUS;
+        setDocumentTitle( input );
       }
-    }.schedule();
+    } );
   }
 
-  protected abstract void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception, CoreException;
+  protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException;
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
@@ -414,7 +395,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   @Override
   public void createPartControl( final Composite parent )
   {
-    final IActionBars actionBars = getActionBars(getSite());
+    final IActionBars actionBars = getActionBars( getSite() );
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
@@ -464,7 +445,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   {
     if( adapter == ICommandTarget.class )
       return m_commandTarget;
-    
-    return super.getAdapter(adapter);
+
+    return super.getAdapter( adapter );
   }
 }

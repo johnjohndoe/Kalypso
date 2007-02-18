@@ -80,12 +80,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   public static final String JOB_FAMILY = "mapViewJobFamily";
 
-  IFile m_file;
-
-  public MapView( )
-  {
-    super();
-  }
+  private IFile m_file;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -127,11 +122,8 @@ public class MapView extends AbstractMapPart implements IViewPart
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
-  @Override
   public void saveState( final IMemento memento )
   {
-    super.saveState( memento );
-
     if( m_file != null )
     {
       final IPath fullPath = m_file.getFullPath();
@@ -147,7 +139,6 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     final Job disposeJob = new Job( "Saving map state..." )
     {
-
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {

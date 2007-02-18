@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -136,7 +136,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {
     monitor.beginTask( "Vorlage laden", IProgressMonitor.UNKNOWN );
 
