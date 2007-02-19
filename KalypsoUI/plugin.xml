@@ -930,6 +930,9 @@
 		         id="org.kalypso.ogc.gml.map.widgets.category"
 		         name="Widgets">
 		    </category>
+      <category
+            id="org.kalypso.ui.commands.default"
+            name="Default"/>
 		    <command
 		         categoryId="org.kalypso.ogc.gml.map.widgets.category"
 		         description="Select a widget"
