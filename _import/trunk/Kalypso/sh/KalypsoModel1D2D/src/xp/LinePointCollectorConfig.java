@@ -42,9 +42,6 @@ package xp;
 
 import java.awt.Color;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-
 
 
 /**
