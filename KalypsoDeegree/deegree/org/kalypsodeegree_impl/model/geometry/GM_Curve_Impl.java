@@ -148,12 +148,17 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
       double[] min = positions[0].getAsArray().clone();
       double[] max = min.clone();
-
+      final int DIM=min.length;//envelop dim from first position
+      
       for( int i = 1; i < positions.length; i++ )
       {
         double[] pos = positions[i].getAsArray();
-
-        for( int j = 0; j < pos.length; j++ )
+        
+        //DIM used to cope case where point with different dimention are 
+        //in the curve, 
+        //eg mixing 2d and 3d points 2d point will not contribute
+        //to min max of third dim
+        for( int j = 0; j < pos.length && j<DIM; j++ )
         {
           if( pos[j] < min[j] )
           {
