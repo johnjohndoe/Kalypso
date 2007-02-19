@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
@@ -57,11 +59,9 @@ public abstract class TerrainElevationModel
                     implements ITerrainElevationModel
 {
 
-  public TerrainElevationModel(Feature featureToBind )
+  public TerrainElevationModel(Feature featureToBind,QName qNameToBind )
   {
-    super( 
-         featureToBind, 
-         KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL);
+    super(featureToBind,qNameToBind);
   }
 
   /**
