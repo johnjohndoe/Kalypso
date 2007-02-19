@@ -88,22 +88,28 @@
     		id="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBViewActionsContrib" 
     		targetID="org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView">
     		<action
-	            class="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
 	            icon="icons/nuvola_select/edit_add.png"
 	            id="org.kalypso.kalypso1d2d.pjt.actions.AddNewSimulationModelActionDelegate"
 	            label="AddSM"
 	            menubarPath="1d2d"
 	            toolbarPath="1d2d"
 	            tooltip="Add simulation modell"> 
+	            <class class="org.kalypso.ui.GenericCommandActionDelegate">
+	            	<parameter name="commandId" 
+                         value="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
+	            </class>
              </action>
-             <action
-	            class="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
+             <action	            
 	            icon="icons/nuvola_select/edit_remove.png"
 	            id="org.kalypso.kalypso1d2d.pjt.actions.RemoveWorkflowData"
 	            label="Remove model Data"
 	            menubarPath="1d2d"
 	            toolbarPath="1d2d"
 	            tooltip="Remove model data"> 
+	            <class class="org.kalypso.ui.GenericCommandActionDelegate">
+	            	<parameter name="commandId" 
+                         value="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"/>
+	            </class>
              </action>
         </viewContribution>
      </extension>
@@ -143,6 +149,13 @@
 		         </with>
 		      </activeWhen>
 		   </handler>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
+           commandId="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"/>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
+           commandId="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario">
+     </handler>
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportBaseMapHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad"/>
