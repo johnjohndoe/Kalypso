@@ -84,6 +84,7 @@ public class SimulationModelDBView extends ViewPart
         final IWorkflowData scenario = activeWorkContext.getWorkflowDB().getWorkflowDataById( m_scenarioFromMemento );        
         final IStructuredSelection selection = new StructuredSelection( scenario );
         tv.setSelection( selection, true );
+        activeWorkContext.selectScenario( m_scenarioFromMemento );
         m_scenarioFromMemento = null;
       }
       // TODO: this is for debugging purposes, remove later? Looks good to me (stefan)
