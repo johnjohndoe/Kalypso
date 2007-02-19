@@ -42,6 +42,9 @@ package xp;
 
 import java.awt.Color;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+
 
 
 /**
@@ -51,8 +54,11 @@ import java.awt.Color;
  */
 public class LinePointCollectorConfig
 {
+  
+  
   private String name;
   private Color color;
+  private int pointRectSize;
   private LinePointCollector configLinePointCollector;
   
   public LinePointCollectorConfig(
@@ -64,6 +70,8 @@ public class LinePointCollectorConfig
     this.configLinePointCollector = configLinePointCollector;
     this.color=color;
   }
+  
+  
 
   public Color getColor( )
   {
@@ -95,6 +103,14 @@ public class LinePointCollectorConfig
     this.name = name;
   }
   
-  
+   public int getPointRectSize( )
+  {
+    return pointRectSize;
+  }
+   
+  public void setPointRectSize( int pointRectSize )
+  {
+    this.pointRectSize = pointRectSize;
+  }
   
 }

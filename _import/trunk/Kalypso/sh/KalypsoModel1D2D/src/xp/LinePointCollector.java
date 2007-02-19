@@ -82,7 +82,7 @@ public class LinePointCollector
   
   private int[][] drawPoints;
   private int highlightDeltaX=1;
-  private int pointRectSize = 6;
+//  private int pointRectSize = 6;
 
   private int selection=-1;
   
@@ -170,7 +170,8 @@ public class LinePointCollector
   public void paint( 
                   final Graphics g, 
                   final GeoTransform projection, 
-                  final Point currentPoint )
+                  final Point currentPoint,
+                  final int pointRectSize)
   {
     
 //    Color curColor=g.getColor();
@@ -630,8 +631,10 @@ public class LinePointCollector
     }
   }
   
+  //TODO move this method to the grid colector
   public double getHandleWidthAsWorldDistance(
-                                      MapPanel mapPanel)
+                                      MapPanel mapPanel,
+                                      int pointRectSize)
   {
     return MapUtilities.calculateWorldDistance( 
                 mapPanel, m_points.get( 0 ), pointRectSize );

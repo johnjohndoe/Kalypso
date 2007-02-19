@@ -40,7 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package xp;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.prefs.Preferences;
+
+
+
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.ColorSelector;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -50,8 +70,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -61,14 +83,23 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+
+import sun.beans.editors.ColorEditor;
+import sun.security.krb5.internal.crypto.e;
+
+import com.sun.java_cup.internal.internal_error;
 
 class GridWidgetFace
   {
+  
+  
 /**
    * @author Patrice Congo
    *
@@ -242,7 +273,11 @@ class GridWidgetFace
     private FormToolkit toolkit;
     private TableViewer tableViewer;
     private GridPointCollector gridPointCollector;
-    
+    static private IPreferenceStore preferenceStore = 
+          KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
+    private IPropertyChangeListener storePropertyChangeListener=
+                                                 createPropertyChangeLis();
+    private ColorFieldEditor lineColorFieldEditor[] = new ColorFieldEditor[4];
     
     public GridWidgetFace(CreateGridWidget widget)
     {
@@ -251,6 +286,9 @@ class GridWidgetFace
     
     public Control createControl( Composite parent )
     {
+      preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
+      initStoreDefaults();
+      
       parent.setLayout( new FillLayout() );
       rootPanel=new Composite(parent, SWT.FILL);
       rootPanel.setLayout( new FillLayout() );
@@ -281,18 +319,18 @@ class GridWidgetFace
       workStatus.setExpanded( true );
       
       
-      Section config = 
+      Section configSection = 
           toolkit.createSection( 
               scrolledForm.getBody(), 
               Section.TREE_NODE | Section.CLIENT_INDENT | 
                 Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      config.setText( "Konfiguration" );
+      configSection.setText( "Konfiguration" );
       tableWrapData = 
           new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       tableWrapData.align=TableWrapData.FILL_GRAB;
-      config.setLayoutData(tableWrapData );
-      config.setExpanded( false );
+      configSection.setLayoutData(tableWrapData );
+      configSection.setExpanded( false );
       
       //help
       Section helpSection = 
@@ -304,10 +342,12 @@ class GridWidgetFace
       tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       helpSection.setLayoutData(tableWrapData );
-      helpSection.setExpanded( false );
+      helpSection.setExpanded( true );
       
+      
+      createConfigSection( configSection );
       createWorkStatus( workStatus );
-      
+      createHelp( helpSection );
       
       return rootPanel;
     }
@@ -359,6 +399,7 @@ class GridWidgetFace
     
     public void disposeControl( )
     {
+      preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
       if(rootPanel==null)
       {
         System.out.println("Disposing null root panel");
@@ -366,6 +407,8 @@ class GridWidgetFace
       }
       if(!rootPanel.isDisposed())
       {
+        handleWidth.setPropertyChangeListener( null );
+        handleWidth.store();
         rootPanel.dispose();
         toolkit.dispose();
       }
@@ -398,6 +441,101 @@ class GridWidgetFace
       }
     }
     
+    private IntegerFieldEditor handleWidth;
+    public static final String HANDLE_WIDTH_NAME="x.handleWidth";
+    public static final String LINE_COLOR_0="LINE_COLOR_0";
+    public static final String LINE_COLOR_1="LINE_COLOR_1";
+    public static final String LINE_COLOR_2="LINE_COLOR_2";
+    public static final String LINE_COLOR_3="LINE_COLOR_3";
+    
+    private void initStoreDefaults()
+    {
+      
+      if(!preferenceStore.contains( HANDLE_WIDTH_NAME ))
+      {
+        preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
+        preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
+      }
+      String[] keys =
+        new String[]{LINE_COLOR_0, LINE_COLOR_1,LINE_COLOR_2,LINE_COLOR_3};
+      java.awt.Color colors[] =
+          new java.awt.Color[]{
+          java.awt.Color.BLUE, java.awt.Color.DARK_GRAY, 
+          java.awt.Color.RED, java.awt.Color.GREEN};
+      
+      for(int i=0;i<keys.length;i++)
+      {
+        if(!preferenceStore.contains( keys[i]))
+        {
+          RGB rgb= new RGB(
+                      colors[i].getRed(),
+                      colors[i].getGreen(), 
+                      colors[i].getBlue());
+          PreferenceConverter.setDefault( 
+                preferenceStore, 
+                LINE_COLOR_0, 
+                rgb );
+          PreferenceConverter.setValue( 
+              preferenceStore, 
+              LINE_COLOR_0, 
+              rgb );
+          
+        }
+      }
+    }
+    
+    public static java.awt.Color[] getLineColors()
+    {
+      if(!preferenceStore.contains( HANDLE_WIDTH_NAME ))
+      {
+        preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
+        preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
+      }
+      String[] keys =
+        new String[]{LINE_COLOR_0, LINE_COLOR_1,LINE_COLOR_2,LINE_COLOR_3};
+      java.awt.Color colors[] =
+          new java.awt.Color[]{
+          java.awt.Color.BLUE, java.awt.Color.DARK_GRAY, 
+          java.awt.Color.RED, java.awt.Color.GREEN};
+      
+      for(int i=0;i<keys.length;i++)
+      {
+        if(!preferenceStore.contains( keys[i]))
+        {
+          RGB rgb= new RGB(
+                      colors[i].getRed(),
+                      colors[i].getGreen(), 
+                      colors[i].getBlue());
+          PreferenceConverter.setDefault( 
+                preferenceStore, 
+                LINE_COLOR_0, 
+                rgb );
+          PreferenceConverter.setValue( 
+              preferenceStore, 
+              LINE_COLOR_0, 
+              rgb );
+          
+        }
+      }
+      
+      return new java.awt.Color[]{
+         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_0 ) ),
+         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_1 ) ),
+         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_2 ) ),
+         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_3 ) )
+          };
+    }
+    
+    public static final int getPointRectSize()
+    {
+      if(!preferenceStore.contains( HANDLE_WIDTH_NAME ))
+      {
+        preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
+        preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
+      }
+      return preferenceStore.getInt( HANDLE_WIDTH_NAME );
+    }
+    
     private void createConfigSection(Section configSection)
     {
       configSection.setLayout( new FillLayout() );
@@ -406,8 +544,31 @@ class GridWidgetFace
               toolkit.createComposite( configSection , SWT.FLAT);
       configSection.setClient( clientComposite );
       clientComposite.setLayout( new GridLayout() );
-      IntegerFieldEditor handleWidth=
-        new IntegerFieldEditor("name","Handle Breite", clientComposite);
+      
+     handleWidth=
+        new IntegerFieldEditor(HANDLE_WIDTH_NAME,"Handle Breite", clientComposite);
+     handleWidth.setPreferenceStore( preferenceStore ); 
+     handleWidth.load();
+     handleWidth.setPropertyChangeListener( storePropertyChangeListener );
+      
+     lineColorFieldEditor[0]=
+       new ColorFieldEditor(LINE_COLOR_0,"Farbe Linie0",clientComposite);
+     lineColorFieldEditor[1]=
+       new ColorFieldEditor(LINE_COLOR_1,"Farbe Linie1",clientComposite);
+     lineColorFieldEditor[2]=
+       new ColorFieldEditor(LINE_COLOR_2,"Farbe Linie2",clientComposite);
+     lineColorFieldEditor[3]=
+       new ColorFieldEditor(LINE_COLOR_3,"Farbe Linie3",clientComposite);
+     
+     for(ColorFieldEditor colorFieldEditor:lineColorFieldEditor)
+     {
+       colorFieldEditor.setPreferenceStore( preferenceStore );
+       colorFieldEditor.setPropertyChangeListener( storePropertyChangeListener );
+       colorFieldEditor.getColorSelector().addListener( storePropertyChangeListener );
+       colorFieldEditor.load();
+     }
+     
+     
 //      toolkit.adapt( handleWidth.get, true, true );
       
 //      Table table = toolkit.createTable( clientComposite, SWT.FILL );
@@ -419,6 +580,39 @@ class GridWidgetFace
 ////      gridData.widthHint=200;
 ////      gridData.horizontalSpan = 1;
 //      table.setLayoutData(gridData);
+    }
+    
+    private void createHelp(Section helpSection)
+    {
+      helpSection.setLayout( new FillLayout());
+      
+      Composite clientComposite = 
+              toolkit.createComposite( helpSection , SWT.FLAT);
+      helpSection.setClient( clientComposite );
+//      TableWrapData gridData = new TableWrapData();
+//      gridData.grabHorizontal = true;
+//      gridData.grabVertical = true;
+//      gridData.colspan=TableWrapData.FILL_GRAB;
+//      gridData.rowspan=TableWrapData.FILL;
+//      clientComposite.setLayoutData( gridData );
+      clientComposite.setLayout( new FillLayout() );
+      Browser browser= new Browser(clientComposite,SWT.FLAT|SWT.FILL_EVEN_ODD);
+      
+//    browser.setLayoutData( gridData );
+    toolkit.adapt( browser );
+      try
+      {
+        URL htmlURL=GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
+        browser.setUrl( FileLocator.toFileURL(  htmlURL ).toExternalForm());
+        
+        System.out.println("URI="+htmlURL.toURI().toASCIIString());
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      
+      
     }
     
     private IContentProvider getTableContentProvider()
@@ -459,5 +653,62 @@ class GridWidgetFace
     {
       return new GridWorkStatusCnCProvider();
     }
+    
+    private IPropertyChangeListener createPropertyChangeLis( )
+    {
+      return new IPropertyChangeListener ()
+      {
+
+        public void propertyChange( PropertyChangeEvent event )
+        {
+          Object source=event.getSource();
+          String property = event.getProperty();
+          
+          if(source instanceof FieldEditor)
+          {
+            ((FieldEditor)source).store();
+          }
+          else if(source instanceof ColorSelector)
+          {
+//            ColorFieldEditor edi=null;
+//            
+//            ((ColorSelector)source).
+          }
+          else if(LINE_COLOR_0.equals( property ))
+          {
+            gridPointCollector.setColor( 0, makeAWTColor((RGB) event.getNewValue() ) );
+          }
+          else if(LINE_COLOR_1.equals( property ))
+          {
+            gridPointCollector.setColor( 1, makeAWTColor((RGB) event.getNewValue() ) );
+          }
+          else if(LINE_COLOR_2.equals( property ))
+          {
+            gridPointCollector.setColor( 2, makeAWTColor((RGB) event.getNewValue() ) );
+          }
+          else if(LINE_COLOR_3.equals( property ))
+          {
+            gridPointCollector.setColor( 3, makeAWTColor((RGB) event.getNewValue() ) );
+          }
+          else if( HANDLE_WIDTH_NAME.equals( property ) )
+          {
+            gridPointCollector.setPointRectSize( (Integer)event.getNewValue() );           
+          }
+          else
+          {
+            System.out.println("Property changed="+event.getProperty()+
+                " "+event.getNewValue()+" "+source.getClass());
+          }
+        }
+        
+      };
+    }
+    
+    static private final java.awt.Color makeAWTColor(RGB rgb)
+    {
+      
+      return new java.awt.Color(rgb.red, rgb.green, rgb.blue);
+    }
+    
 
   }

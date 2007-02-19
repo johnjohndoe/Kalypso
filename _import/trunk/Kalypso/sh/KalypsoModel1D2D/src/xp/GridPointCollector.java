@@ -45,11 +45,16 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -104,14 +109,18 @@ class GridPointCollector /*implements IGeometryBuilder*/
   
   private final void initLPCConfigs()
   {
-    Color colors[] = {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+    Color colors[] = GridWidgetFace.getLineColors();//{Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+    int pointRectSize = GridWidgetFace.getPointRectSize();
     for(int i=0;i<sides.length;i++)
     {
       lpcConfigs[i]= 
         new LinePointCollectorConfig("Linie "+i,colors[i],sides[i]);
-      
+      lpcConfigs[i].setPointRectSize( pointRectSize );
     }
   }
+  
+  
+  
   
   public void reset(CS_CoordinateSystem targetCrs)
   {
@@ -326,20 +335,21 @@ class GridPointCollector /*implements IGeometryBuilder*/
           continue;
         }
         g.setColor( lpcConfigs[i].getColor());
+        int pointRectSize=lpcConfigs[i].getPointRectSize();
         if(b!=builder)
         {
-          b.paint( g, projection, null);
+          b.paint( g, projection, null,pointRectSize);
           
         }
         else
         {
-          b.paint( g, projection, currentPoint );
+          b.paint( g, projection, currentPoint,pointRectSize );
         }
         i++;
     }
     
     g.setColor( curColor );
-    tempGrid.paint( g, projection);
+    tempGrid.paint( g, projection,lpcConfigs[0].getPointRectSize());
    
   }  
   
@@ -617,7 +627,9 @@ class GridPointCollector /*implements IGeometryBuilder*/
       IFEDiscretisationModel1d2d model,
       CommandableWorkspace commandableWorkspace) throws GM_Exception
   {
-    double searchRectWidth = sides[0].getHandleWidthAsWorldDistance( mapPanel );
+    int pointRectSize=lpcConfigs[0].getPointRectSize();
+    double searchRectWidth = 
+        sides[0].getHandleWidthAsWorldDistance( mapPanel,pointRectSize);
     ICommand addGridCommand=
       tempGrid.getAddToModelCommand( 
                       mapPanel, model, 
@@ -673,5 +685,26 @@ class GridPointCollector /*implements IGeometryBuilder*/
     {
       listener.stateChanged(null);
     }    
+  }
+  
+  public void setPointRectSize(int pointRectSize)
+  {
+    if(pointRectSize<=0)
+    {
+      throw new IllegalArgumentException("pointrectSize must positive:"+pointRectSize);
+    }
+    else
+    {
+      for(LinePointCollectorConfig config:lpcConfigs)
+      {
+       config.setPointRectSize( pointRectSize ) ;
+      }
+    }
+  }
+  
+  public void setColor(int lineIndex, Color lineColor)
+  {
+    lpcConfigs[lineIndex].setColor( lineColor );
+    fireStateChanged();
   }
 }

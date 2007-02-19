@@ -82,7 +82,7 @@ public class TempGrid
   
   private GM_Point[][] gridPoints;
   
-  private int pointRectSize = 6;
+//  private int pointRectSize = 6;
   
   /**
    * The constructor.
@@ -110,7 +110,8 @@ public class TempGrid
    */
   public void paint( 
                   final Graphics g, 
-                  final GeoTransform projection)
+                  final GeoTransform projection,
+                  final int pointRectSize)
   {
     
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
