@@ -350,7 +350,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 				return it.hasNext();
 			}
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "synthetic-access" })
 			public FWCls next() {
 				final Feature f = FeatureHelper.getFeature(featureCol
 						.getWorkspace(), it.next());

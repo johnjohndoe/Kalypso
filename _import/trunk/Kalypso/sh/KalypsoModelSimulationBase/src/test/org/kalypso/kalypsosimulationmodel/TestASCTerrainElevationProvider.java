@@ -43,6 +43,8 @@ package test.org.kalypso.kalypsosimulationmodel;
 import java.io.File;
 
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ASCTerrainElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -58,68 +60,32 @@ import junit.framework.TestCase;
 public class TestASCTerrainElevationProvider extends TestCase
 {
 
-  private void makedata()
-  {
-    double elevationsData[]=
-      {
-        32144, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
-        -9999, 1.000, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
-        -9999, -9999, 2.000, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 
-        -9999, -9999, -9999, 3.000, -9999, -9999, -9999, -9999, -9999, -9999, 
-        -9999, -9999, -9999, -9999, 4.000, -9999, -9999, -9999, -9999, -9999, 
-        -9999, -9999, -9999, -9999, -9999, 5.000, -9999, -9999, -9999, -9999, 
-        -9999, -9999, -9999, -9999, -9999, -9999, 6.000, -9999, -9999, -9999, 
-        -9999, -9999, -9999, -9999, -9999, -9999, -9999, 7.000, -9999, -9999, 
-        -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 8.000, -9999, 
-        -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999};
-    for(int i=0;i<10;i++)
-    {
-      for(int j=0;j<10;j++)
-      {
-        if(i==j)
-        {
-          GM_Point point = 
-            GeometryFactory.createGM_Point( 
-              5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
-          
-        }
-      }
-    }
-    
-  }
+ 
   
   public void testLoadSmallAscFile()
   {
     try
     {
       
-     File ascFile= new File(TestWorkspaces.URL_SMALL_ASC.toURI().normalize().getPath());//);
-     // File ascFile = new File("F:\\Eclipse007\\eclipse\\workspace_kaly\\KalypsoModelSimulationBase\\src\\test\\org\\kalypso\\kalypsosimulationmodel\\data\\test_file_small_acs.asc");
-      ASCTerrainElevationModel ascModel=
-        new ASCTerrainElevationModel(
-            TestWorkspaces.URL_SMALL_ASC, null);
-      
-//      GM_Point point = 
-//        GeometryFactory.createGM_Point( 
-//          0, 0, TestWorkspaces.getGaussKrueger() );
-//      
-//      assertEquals(32144.0,ascModel.getElevation( point  ));
-//      
-//      GM_Point point_2 = 
-//        GeometryFactory.createGM_Point( 
-//          1, 1, TestWorkspaces.getGaussKrueger() );
-//      
-//      assertEquals(32144.0,ascModel.getElevation( point_2  ));
+   //  File ascFile= new File(TestWorkspaces.URL_SMALL_ASC.toURI().normalize().getPath());
+   File ascFile= new File("files\\test_file_small_asc.asc");
+   File locatedFile= 
+     new File(
+       FileLocator.resolve( TestWorkspaces.URL_SMALL_ASC).getFile() );  
+    
+      ASCTerrainElevationModel ascModel=new ASCTerrainElevationModel(TestWorkspaces.URL_SMALL_ASC, null);
       
       for(int i=0;i<10;i++)
       {
         for(int j=0;j<10;j++)
         {
+          double x=5*i+1+13;
+          double y=5*j+1+154;
           if(i==j)
           {
             GM_Point curPoint = 
               GeometryFactory.createGM_Point( 
-                5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+                x, y, TestWorkspaces.getGaussKrueger() );
             double ele=ascModel.getElevation( curPoint  );
             assertEquals(
                 "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);
@@ -129,7 +95,7 @@ public class TestASCTerrainElevationProvider extends TestCase
           {
             GM_Point curPoint = 
               GeometryFactory.createGM_Point( 
-                5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+                x,y, TestWorkspaces.getGaussKrueger() );
             double ele=ascModel.getElevation( curPoint  );
             assertEquals(
                 "i="+i+" j="+j+" ele="+ele,Double.NaN,ele);

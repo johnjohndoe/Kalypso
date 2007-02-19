@@ -3,11 +3,14 @@
  */
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
@@ -19,11 +22,13 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
 import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
@@ -220,17 +225,17 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 		cMap.put(IRiverProfileNetwork.class, cTor);
         
 //      ITerrainElevationModelSystem
-        cTor= new AdapterConstructor()
-        {
-          public Object constructAdapter(
-              Feature feature, 
-              Class cls) 
-          throws IllegalArgumentException
-          {
-            return new TerrainElevationModelSystem(feature);
-          }
-        };
-        cMap.put(ITerrainElevationModelSystem.class, cTor);
+//        cTor= new AdapterConstructor()
+//        {
+//          public Object constructAdapter(
+//              Feature feature, 
+//              Class cls) 
+//          throws IllegalArgumentException
+//          {
+//            return new TerrainElevationModelSystem(feature);
+//          }
+//        };
+//        cMap.put(ITerrainElevationModelSystem.class, cTor);
 		
 //      ITerrainElevationModel
         cTor= new AdapterConstructor()
@@ -241,10 +246,52 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           throws IllegalArgumentException
           {
             //TODO provide adapaterfac method for the elevation model
-            return null;//new TerrainElevationModel(feature);
+            if(GMLSchemaUtilities.substitutes( 
+                        feature.getFeatureType(), 
+                        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER
+                        ))
+            {
+              try
+              {
+                return new NativeTerrainElevationModelWrapper(feature);
+              }
+              catch( Throwable th )
+              {
+                throw new IllegalArgumentException(
+                    "Could not create adapter for:"+
+                      "\n\t featue="+feature+
+                      "\n\t adaptaer type="+cls,
+                    th);
+              }
+              
+            }
+            else if(GMLSchemaUtilities.substitutes( 
+                feature.getFeatureType(), 
+                KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS
+                ))
+            {
+              try
+              {
+                return new TerrainElevationModelSystem(feature);
+              }
+              catch( Throwable th )
+              {
+                throw new IllegalArgumentException(
+                    "Could not create adapter for:"+
+                      "\n\t featue="+feature+
+                      "\n\t adaptaer type="+cls,
+                    th);
+              }
+              
+            }
+            else
+            {
+              return null;//new TerrainElevationModel(feature);
+            }
           }
         };
         cMap.put(ITerrainElevationModel.class, cTor);
+        cMap.put(ITerrainElevationModelSystem.class, cTor);
         
         
         

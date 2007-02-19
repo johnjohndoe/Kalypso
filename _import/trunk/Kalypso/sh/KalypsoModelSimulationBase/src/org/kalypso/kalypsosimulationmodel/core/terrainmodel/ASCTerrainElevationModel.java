@@ -41,10 +41,6 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,8 +48,6 @@ import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.model.geometry.GM_Envelope;
-import org.eclipse.ui.internal.misc.TestPartListener;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -81,6 +75,8 @@ public class ASCTerrainElevationModel implements IElevationProvider
   private double elevations[][]; 
   private int N_COLS;
   private int N_ROWS;
+  private double xllcorner;
+  private double yllcorner;
   
   /**
    * Create an elevation provider based on the given asc file, in the specified 
@@ -92,17 +88,17 @@ public class ASCTerrainElevationModel implements IElevationProvider
    *        or is not accesible (cannot be read)
    * 
    */
-  public ASCTerrainElevationModel(
-              File ascFile,
-              GM_Envelope regionOfInterest)
-              throws IllegalArgumentException, FileNotFoundException
-  {
-    Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
-//    Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
-    this.regionOfInterest=regionOfInterest;
-    this.ascSource=ascFile;
-    parse( ascFile );
-  }
+//  public ASCTerrainElevationModel(
+//              File ascFile,
+//              GM_Envelope regionOfInterest)
+//              throws IllegalArgumentException, FileNotFoundException
+//  {
+//    Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
+////    Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
+//    this.regionOfInterest=regionOfInterest;
+//    this.ascSource=ascFile;
+//    parse( ascFile );
+//  }
   
   public ASCTerrainElevationModel(
       URL ascFileURL,
@@ -113,10 +109,7 @@ public class ASCTerrainElevationModel implements IElevationProvider
     parse( ascFileURL.openStream() );
   }
   
-  private final void parse( File asciiFile  ) throws FileNotFoundException
-  {
-    FileInputStream fileInputStream = new FileInputStream(asciiFile);
-  }
+
   
 private void parse(InputStream inputStream)
 {
@@ -136,6 +129,8 @@ private void parse(InputStream inputStream)
     }
     N_COLS = Integer.parseInt( data[0] );
     N_ROWS = Integer.parseInt( data[1] );
+    xllcorner= Double.parseDouble( data[2] );
+    yllcorner= Double.parseDouble( data[3] );
     cellSize=Integer.parseInt( data[4] );
     double noDataValue = Double.parseDouble( data[5] );
     double currentValue;
@@ -174,12 +169,10 @@ private void parse(InputStream inputStream)
    */
   public double getElevation( GM_Point location )
   {
-    int col = (int)Math.floor( location.getX()/cellSize );
-    int row = (int)Math.floor( location.getY()/cellSize );
-    if(col<N_COLS && row<N_ROWS)
+    int col = (int)Math.floor( (location.getX()-xllcorner)/cellSize );
+    int row = (int)Math.floor( (location.getY()-yllcorner)/cellSize );
+    if(col<N_COLS && row<N_ROWS && col>=0 && row>=0)
     {
-//      System.out.println(row +" , "+ col);
-      //return Double.NaN;
       return elevations[row][col];
     }
     else

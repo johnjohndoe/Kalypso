@@ -41,8 +41,15 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -58,18 +65,57 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
 {
 
-  ITerrainElevationModel wrappedNativeTerrainElevationModel;
+  private IElevationProvider elevationProvider;
+  private URL sourceURL;
   
-  public NativeTerrainElevationModelWrapper( Feature featureToBind )
+  public NativeTerrainElevationModelWrapper( Feature featureToBind ) throws IllegalArgumentException, IOException, URISyntaxException
   {
-    super( featureToBind );
+    super( 
+        featureToBind,
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+   String sourceName=
+     (String)featureToBind.getProperty(KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME);
+   if(sourceName==null)
+   {
+     throw new IllegalArgumentException("No native file property set");
+   }
+   sourceURL=makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
+   File nativeTerrainModelFile= new File(FileLocator.resolve( sourceURL).getFile());
+   elevationProvider = 
+     NativeTerrainElevationModelFactory.getTerrainElevationModel( 
+                                                     nativeTerrainModelFile );
+   
+  }
+  
+  private final URL makeSourceURL(String sourceName, URL worspaceContex) throws URISyntaxException, MalformedURLException
+  {
     
+    try
+    {
+      URL sourceUrl= new URL(sourceName);
+      URI uri=sourceUrl.toURI();
+      if(uri.isAbsolute())
+      {
+        return uri.toURL();
+      }
+      else
+      {
+        URL absURL=new URL(worspaceContex,sourceName);
+        return absURL;
+      }
+    }
+    catch( MalformedURLException e )
+    {
+//      e.printStackTrace();
+      return new URL(worspaceContex,sourceName);
+    }
   }
   /**
    * Return the file property of the terrain elevation model
    */
   private final File getFile()
   {
+    
     return null;
   }
   
@@ -78,7 +124,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
    */
   public double getElevation( GM_Point location )
   {
-    return 0;
+    return elevationProvider.getElevation( location );
   }
 
   

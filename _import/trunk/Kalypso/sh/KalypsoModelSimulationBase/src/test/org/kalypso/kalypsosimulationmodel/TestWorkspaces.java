@@ -131,6 +131,13 @@ public class TestWorkspaces
     public static final URL URL_GC_SMALL_ASC;
     public static final String REL_RES_GC_SMALL_ASC="data/gc_elevation_model.xml";
     
+    public static final URL URL_NATIVE_TEM_WRAPPER;
+    public static final String REL_RES_NATIVE_TEM_WRAPPER=
+                                "data/native_terrain_elevation_model_wrapper.xml";
+    public static final URL URL_TEM_SYSREM;
+    public static final String REL_RES_TEM_SYSTEM=
+                                "data/native_terrain_elevation_model_system.xml";
+    
 	static 
 	{
 		Map<String ,URL> urlMap=new Hashtable<String, URL>();
@@ -198,6 +205,14 @@ public class TestWorkspaces
                 REL_RES_GC_SMALL_ASC,
                 TestWorkspaces.class.getResource(
                         REL_RES_GC_SMALL_ASC));
+            urlMap.put(
+                REL_RES_NATIVE_TEM_WRAPPER,
+                TestWorkspaces.class.getResource(
+                        REL_RES_NATIVE_TEM_WRAPPER));
+            urlMap.put(
+                REL_RES_TEM_SYSTEM,
+                TestWorkspaces.class.getResource(
+                        REL_RES_TEM_SYSTEM));
 		}
 		catch(Throwable th)
 		{
@@ -238,6 +253,11 @@ public class TestWorkspaces
               urlMap.get(REL_RES_SMALL_ASC);
             URL_GC_SMALL_ASC=
               urlMap.get(REL_RES_GC_SMALL_ASC);
+            
+            URL_NATIVE_TEM_WRAPPER=
+              urlMap.get(REL_RES_NATIVE_TEM_WRAPPER);
+            URL_TEM_SYSREM=
+              urlMap.get(REL_RES_TEM_SYSTEM);
 
         }
 	}
