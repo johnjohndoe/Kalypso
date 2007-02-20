@@ -270,6 +270,8 @@ public class FeatureHelper
     final IFeatureType featureType = featureToClone.getFeatureType();
 
     final Feature newFeature = newParentFeature.getWorkspace().createFeature( newParentFeature, relation, featureType );
+    // TODO: this is no good to add it here....
+    // For example we cannot give a position where to add the new feature... 
     if( relation.isList() )
       newParentFeature.getWorkspace().addFeatureAsComposition( newParentFeature, relation, -1, newFeature );
     else
