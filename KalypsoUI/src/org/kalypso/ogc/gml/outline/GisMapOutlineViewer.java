@@ -258,7 +258,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   {
     if( m_viewer == null )
       return null;
-    
+
     return m_viewer.getSelection();
   }
 
@@ -302,7 +302,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
    */
   public void removeDoubleClickListener( IDoubleClickListener listener )
   {
-    m_viewer.removeDoubleClickListener( listener );
+    if( m_viewer != null )
+      m_viewer.removeDoubleClickListener( listener );
   }
 
   /**
