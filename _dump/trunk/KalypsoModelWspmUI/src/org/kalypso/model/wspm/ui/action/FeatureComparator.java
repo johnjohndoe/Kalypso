@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Gernot Belger
  */
-public class FeatureComparator implements Comparator
+public class FeatureComparator implements Comparator<Feature>
 {
   private final IPropertyType m_pt;
 
@@ -62,15 +62,13 @@ public class FeatureComparator implements Comparator
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Object o1, final Object o2 )
+  @SuppressWarnings("unchecked")
+  public int compare( final Feature f1, final Feature f2 )
   {
-    final Feature f1 = (Feature) o1;
-    final Feature f2 = (Feature) o2;
-
     // TODO: handle list properties
 
-    final Comparable c1 = (Comparable) f1.getProperty( m_pt );
-    final Comparable c2 = (Comparable) f2.getProperty( m_pt );
+    final Comparable<Object> c1 = (Comparable<Object>) f1.getProperty( m_pt );
+    final Comparable<Object> c2 = (Comparable<Object>) f2.getProperty( m_pt );
 
     if( c1 == null && c2 == null )
       return 0;
