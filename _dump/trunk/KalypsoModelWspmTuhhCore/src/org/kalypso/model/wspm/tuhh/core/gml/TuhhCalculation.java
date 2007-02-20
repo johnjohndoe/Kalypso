@@ -353,7 +353,9 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   public IObservation<TupleResult> getRunOffEvent( )
   {
     final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
-
+    if( runOffEvent == null )
+      return null;
+    
     return ObservationFeatureFactory.toObservation( runOffEvent );
   }
 

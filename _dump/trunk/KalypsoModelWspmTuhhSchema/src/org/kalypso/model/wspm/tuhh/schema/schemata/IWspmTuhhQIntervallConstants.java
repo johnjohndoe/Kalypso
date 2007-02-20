@@ -38,26 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.featureview;
+package org.kalypso.model.wspm.tuhh.schema.schemata;
 
-import java.util.Properties;
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
+ * Constants for the use of the QIntervall-Schema
+ * 
  * @author Gernot Belger
+ *
  */
-public class ReachSegmentsFeatureviewControlFactory implements IFeatureviewControlFactory
+public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
-   */
-  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
-  {
-    return new ReachSegmentFeatureControl( feature, pt );
-  }
+  public static final QName QNAME_F_QIntervallResultCollection = new QName( NS_WSPM_TUHH, "QIntervallResultCollection" );
+
+  public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( NS_WSPM_TUHH, "resultMember" );
+  
+  
+  
+  public static final QName QNAME_F_QIntervallResult = new QName( NS_WSPM_TUHH, "QIntervallResult" );
+  
+  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
+
+  public static final QName QNAME_P_QIntervallResult_station = new QName( NS_WSPM_TUHH, "station" );
+  
+  
 }

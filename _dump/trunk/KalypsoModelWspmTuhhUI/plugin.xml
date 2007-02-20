@@ -64,7 +64,7 @@
                      style="push"
                      tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
 		         <action
-		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
+		               class="org.kalypso.model.wspm.tuhh.ui.actions.CreateDeviderMapThemeAction"
 		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
 		               label="Fließzonen erzeugen"
 		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
@@ -196,5 +196,11 @@
             id="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
             provider="org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh"/>
+   </extension>
+   <extension
+         point="org.kalypso.ui.featureViewExtensionControl">
+      <extensionControl
+            class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
+            id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
    </extension>
 </plugin>

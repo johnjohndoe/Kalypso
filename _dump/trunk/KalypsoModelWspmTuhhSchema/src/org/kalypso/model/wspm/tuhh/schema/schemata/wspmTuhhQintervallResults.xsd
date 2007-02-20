@@ -1,26 +1,54 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
-	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" version="0.1">
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 		<documentation>
-			This is the gml-application schema wich describes the types for results of a 
-			Q-Intervall calculation ('ungleichförmige Bordvollberechnung') of the TUHH-WSPM modell (Kalypso1D-Rechenkern)
+			This is the gml-application schema wich describes the types for results of a Q-Intervall calculation ('ungleichförmige Bordvollberechnung') of the TUHH-WSPM modell (Kalypso1D-Rechenkern)
 		</documentation>
 	</annotation>
-	<import namespace="org.kalypso.model.wspm"/>
-	<import namespace="org.kalypso.model.wspmcommon"/>
-	<import namespace="org.kalypso.model.wspmprofile"/>
-	<import namespace="http://www.opengis.net/gml"/>
-	
+	<import namespace="org.kalypso.model.wspm" />
+	<import namespace="org.kalypso.model.wspmcommon" />
+	<import namespace="org.kalypso.model.wspmprofile" />
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.opengis.net/om" />
+
+	<element name="QIntervallResultCollection" type="tuhh:QIntervallCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Ergebnisse</name>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Results</name>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="QIntervallCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="resultMember" type="tuhh:QIntervallResultPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ergebnis</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Result</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
 	<complexType name="QIntervallResultPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="tuhh:QIntervallResult"/>
+			<element ref="tuhh:QIntervallResult" />
 		</sequence>
 	</complexType>
 
@@ -28,24 +56,28 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Ergebnis</name>
-				<label>${property:org.kalypso.model.wspm.tuhh#station;-</label>
-				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-</tooltip>
-				<description><![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-]]></description>
+				<label>${property:org.kalypso.model.wspm.tuhh#station;-}</label>
+				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+				<description>
+					<![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Result</name>
-				<label>${property:org.kalypso.model.wspm.tuhh#station;-</label>
-				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-</tooltip>
-				<description><![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-]]></description>
+				<label>${property:org.kalypso.model.wspm.tuhh#station;-}</label>
+				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+				<description>
+					<![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-}]]>
+				</description>
 			</documentation>
 		</annotation>
 	</element>
-	
+
 	<complexType name="QIntervallType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="station" type="wspm:station">
+					<element name="station" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Station</label>
@@ -59,7 +91,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profileMember" type="double">
+					<element name="profileMember" type="tuhh:QIntervallProfilePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profil</label>
@@ -73,9 +105,34 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="pointsMember" type="tuhh:WPointsPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Punkte</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Points</label>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	
+
+	<!-- Reference to Profile -->
+	<complexType name="QIntervallProfilePropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="prof:Profile" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- Reference to an Observation -->
+	<complexType name="WPointsPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="om:Observation" />
+		</sequence>
+	</complexType>
+
 </schema>

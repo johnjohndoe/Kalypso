@@ -8,6 +8,8 @@
 	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes" uri="dict_profile_building_types.gml" />
 
 	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents" uri="dict_profile_building.gml" />
+
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents" uri="dict_qintervall_points.gml" />
 	
 	<catalog:public publicId="urn:ogc:gml:featuretype:http___www.opengis.net_swe:ItemDefinition:annotation:label:de" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
 	

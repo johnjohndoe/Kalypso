@@ -21,6 +21,9 @@
 		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
 	<!-- TODO: KALYPSO-Header einfügen -->
+	
+	<include schemaLocation="wspmTuhhQintervallResults.xsd"/>
+	
 	<!-- 
 	_________________________________________________________________________________________
 	ELEMENTS

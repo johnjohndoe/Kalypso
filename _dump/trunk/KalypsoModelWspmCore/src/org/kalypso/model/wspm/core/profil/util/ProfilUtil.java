@@ -169,7 +169,6 @@ public class ProfilUtil
 
   public static IProfilPoint findNearestPoint( final IProfil profil, final double breite )
   {
-
     final LinkedList<IProfilPoint> points = profil.getPoints();
     IProfilPoint pkt = points.getFirst();
     for( final IProfilPoint point : points )

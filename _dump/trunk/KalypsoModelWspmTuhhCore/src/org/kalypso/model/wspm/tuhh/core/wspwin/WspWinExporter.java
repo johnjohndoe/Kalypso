@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -196,7 +197,8 @@ public class WspWinExporter
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
     write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile );
-    write1DTuhhRunOff( calculation.getRunOffEvent(), isDirectionUpstreams, qwtFile );
+    if( calculation.getCalcMode() == MODE.WATERLEVEL )
+      write1DTuhhRunOff( calculation.getRunOffEvent(), isDirectionUpstreams, qwtFile );
   }
 
   private static void write1DTuhhRunOff( final IObservation<TupleResult> runOffEvent, final boolean isDirectionUpstreams, final File qwtFile ) throws IOException
