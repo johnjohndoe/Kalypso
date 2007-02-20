@@ -172,12 +172,14 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   {
     double[] min = m_exteriorRing[0].getAsArray().clone();
     double[] max = min.clone();
-
+    final int ENV_DIM=min.length;//dim taken from first position
+    
     for( int i = 1; i < m_exteriorRing.length; i++ )
     {
       double[] pos = m_exteriorRing[i].getAsArray();
-
-      for( int j = 0; j < pos.length; j++ )
+      
+      //j<ENV_DIM allows cohabitation of point with differen dimention 
+      for( int j = 0; j < pos.length && j<ENV_DIM; j++ )
       {
         if( pos[j] < min[j] )
         {
