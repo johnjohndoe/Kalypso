@@ -230,7 +230,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       /* find sohlpunkt */
       final IProfil profil = profileMember.getProfil();
       final IProfilPoint sohlPoint = ProfilUtil.getMinPoint( profil, IProfilPoint.POINT_PROPERTY.HOEHE );
-      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( sohlPoint );
+      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
       /* add node and remember it */
       final IFE1D2DNode node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
