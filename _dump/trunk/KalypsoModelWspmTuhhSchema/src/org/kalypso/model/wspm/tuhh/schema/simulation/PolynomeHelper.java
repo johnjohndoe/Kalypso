@@ -244,7 +244,7 @@ public class PolynomeHelper
     /* Read results */
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature resultCollectionFeature = workspace.getRootFeature();
-    final Map<Double, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, log );
+    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, log );
 
     if( log.checkCanceled() )
       return;
@@ -253,7 +253,7 @@ public class PolynomeHelper
     GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "UTF-8" );
   }
 
-  private static Map<Double, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final LogHelper log )
+  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final LogHelper log )
   {
     final GMLWorkspace workspace = resultCollectionFeature.getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
@@ -264,7 +264,7 @@ public class PolynomeHelper
 
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
 
-    final Map<Double, Feature> results = new HashMap<Double, Feature>();
+    final Map<BigDecimal, Feature> results = new HashMap<BigDecimal, Feature>();
 
     /* Read w-points first: PROFxxx.xxxx.txt files */
     final FilenameFilter filter = new PrefixSuffixFilter( "PROF", ".txt" );
