@@ -43,6 +43,7 @@ package org.kalypso.gis.doubleraster.grid;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -71,7 +72,7 @@ public class AsciiGrid implements DoubleGrid
     BufferedReader br = null;
     try
     {
-      br = new BufferedReader( new FileReader( asciiFileURL.getFile() ) );
+      br = new BufferedReader(new InputStreamReader(asciiFileURL.openStream()));// new FileReader( asciiFileURL.getFile() ) );
       final String[] data = new String[6];
       String line;
       //reading header data
