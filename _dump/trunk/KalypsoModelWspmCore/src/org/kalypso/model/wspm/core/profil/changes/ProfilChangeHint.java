@@ -45,9 +45,9 @@ package org.kalypso.model.wspm.core.profil.changes;
  */
 public class ProfilChangeHint
 {
-  private boolean m_buildingChanged = false;
+  private boolean m_objectChanged = false;
 
-  private boolean m_buildingDataChanged = false;
+  private boolean m_objectDataChanged = false;
 
   private boolean m_pointValuesChanged = false;
 
@@ -55,36 +55,36 @@ public class ProfilChangeHint
 
   private boolean m_pointsChanged = false;
 
-  private boolean m_deviderDataChanged = false;
+  private boolean m_markerDataChanged = false;
 
-  private boolean m_deviderMoved = false;
+  private boolean m_markerMoved = false;
 
   private boolean m_ProfilPropertyChanged = false;
 
   private boolean m_activePointChanged = false;
 
-  public void setBuildingChanged( )
+  public void setObjectChanged( )
   {
-    m_buildingChanged = true;
+    m_objectChanged = true;
   }
 
   /** true, if building was added or removed or replaced */
-  public boolean isBuildingChanged( )
+  public boolean isObjectChanged( )
   {
-    return m_buildingChanged;
+    return m_objectChanged;
   }
 
-  public void setBuildingDataChanged( )
+  public void setObjectDataChanged( )
   {
-    m_buildingDataChanged = true;
+    m_objectDataChanged = true;
   }
 
   /**
    * true, if data of the building was changed
    */
-  public boolean isBuildingDataChanged( )
+  public boolean isObjectDataChanged( )
   {
-    return m_buildingDataChanged;
+    return m_objectDataChanged;
   }
 
   public void setPointValuesChanged( )
@@ -126,30 +126,30 @@ public class ProfilChangeHint
     return m_pointsChanged;
   }
 
-  public void setDeviderMoved( )
+  public void setMarkerMoved( )
   {
-    m_deviderMoved = true;
+    m_markerMoved = true;
   }
 
   /**
    * true if one or more devider moved
    */
-  public boolean isDeviderMoved( )
+  public boolean isMarkerMoved( )
   {
-    return m_deviderMoved;
+    return m_markerMoved;
   }
 
-  public void setDeviderDataChanged( )
+  public void setMarkerDataChanged( )
   {
-    m_deviderDataChanged = true;
+    m_markerDataChanged = true;
   }
 
   /**
    * true if one or more devider changed properties
    */
-  public boolean isDeviderDataChanged( )
+  public boolean isMarkerDataChanged( )
   {
-    return m_deviderDataChanged;
+    return m_markerDataChanged;
   }
 
   /**

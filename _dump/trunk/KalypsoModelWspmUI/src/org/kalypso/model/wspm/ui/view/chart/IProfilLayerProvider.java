@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.eclipse.jface.resource.ColorRegistry;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.result.IStationResult;
-
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * A layer provider provides layers for the view, depending on the specific profile type.
@@ -53,5 +48,9 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public interface IProfilLayerProvider
 {
-  public IProfilChartLayer[] createLayer( final ProfilChartView view, final IProfil profil, final IStationResult[] results, final AxisRange domainRange, final AxisRange valueRangeLeft, final AxisRange valueRangeRight, final ColorRegistry registry );
+  public IProfilChartLayer[] createLayer(final ProfilChartView view,final String layerId);
+  public IProfilChartLayer[] getRequieredLayer(final ProfilChartView view);
+  public String[] getAddableLayers( final ProfilChartView view);
+  public IProfilChartLayer getLayer(final String layerId,final ProfilChartView view);
+  public boolean providesLayer(final String layerId);
 }

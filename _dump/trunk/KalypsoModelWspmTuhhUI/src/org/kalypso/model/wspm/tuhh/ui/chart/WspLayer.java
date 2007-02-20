@@ -54,9 +54,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.WspPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * Zeigt eine Konstante WSP Linie im Profil
@@ -82,12 +81,12 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
   private double m_height;
 
-  public WspLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final IStationResult result )
+  public WspLayer( final ProfilChartView pcv,final IStationResult result )
   {
-    super( pvp, domainRange, valueRange );
+    super(IWspmTuhhConstants.LAYER_WASSERSPIEGEL, pcv, pcv.getDomainRange(),pcv.getValueRangeLeft(),"Wasserspiegel");
 
-    m_profil = pvp.getProfil();
-    m_color = color;
+    m_profil = pcv.getProfil();
+    m_color = pcv.getColorRegistry().get( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
     m_result = result;
     final Number componentValue = result.getComponentValue( "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" );
     m_height = componentValue == null ? Double.NaN : componentValue.doubleValue();
@@ -150,8 +149,8 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
       try
       {
-        final double x = p.getValueFor( POINT_PROPERTY.BREITE );
-        final double y = p.getValueFor( POINT_PROPERTY.HOEHE );
+        final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+        final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
 
         final Point point = logical2screen( new Point2D.Double( x, y ) );
 

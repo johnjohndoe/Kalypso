@@ -61,28 +61,25 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.ProfilDeviderFactory;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.BuildingEdit;
-import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
-import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
-import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
-import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.VisibleDeviderEdit;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.profil.operation.changes.VisibleMarkerEdit;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
@@ -97,7 +94,7 @@ public class WehrPanel extends AbstractProfilView
 
   private class DeviderLine extends Composite
   {
-    protected IProfilDevider m_devider;
+    protected IProfilPointMarker m_devider;
 
     private int position;
 
@@ -147,7 +144,7 @@ public class WehrPanel extends AbstractProfilView
           if( !Double.isNaN( value ) )
           {
             final IProfilChange[] changes = new IProfilChange[2];
-            changes[0] = new DeviderEdit( m_devider, IProfilDevider.DEVIDER_PROPERTY.BEIWERT, value );
+            changes[0] = new PointMarkerEdit( m_devider, IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT, value );
             changes[1] = new ActiveObjectEdit( getProfil(), m_devider.getPoint(), null );
             final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfilEventManager(), changes, true );
             new ProfilOperationJob( operation ).schedule();
@@ -181,7 +178,7 @@ public class WehrPanel extends AbstractProfilView
             {
 
               final IProfilChange[] changes = new IProfilChange[2];
-              changes[0] = new DeviderMove( m_devider, point );
+              changes[0] = new PointMarkerSetPoint( m_devider, point );
               changes[1] = new ActiveObjectEdit( getProfil(), point, null );
               final ProfilOperation operation = new ProfilOperation( "Wehrfeld verschieben", getProfilEventManager(), changes, true );
               new ProfilOperationJob( operation ).schedule();
@@ -199,26 +196,23 @@ public class WehrPanel extends AbstractProfilView
         @Override
         public void widgetSelected( SelectionEvent e )
         {
-          final IProfilChange change = new DeviderRemove( getProfil(), m_devider );
+          final IProfilChange change = new PointMarkerRemove( getProfil(), m_devider );
           final ProfilOperation operation = new ProfilOperation( "Wehrfeld löschen", getProfilEventManager(), change, true );
           new ProfilOperationJob( operation ).schedule();
         }
       } );
     }
 
-    public void refresh( final IProfilDevider dev )
+    public void refresh( final IProfilPointMarker dev )
     {
       m_devider = dev;
-      final Double value = dev == null ? 0.0 : (Double) dev.getValueFor( IProfilDevider.DEVIDER_PROPERTY.BEIWERT );
-      m_beiwert.setText( value.toString() );
-      try
-      {
-        m_point.setText( Double.toString( dev.getPoint().getValueFor( POINT_PROPERTY.BREITE ) ) );
-      }
-      catch( final ProfilDataException e )
-      {
-        // do nothing
-      }
+      double value;
+      if( dev == null )
+        value = 0.0;
+      else
+        value = dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) == null ? 0.0 : (Double) dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT );
+      m_beiwert.setText( Double.toString( value ) );
+      m_point.setText( Double.toString( dev.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
     }
 
     @Override
@@ -275,7 +269,7 @@ public class WehrPanel extends AbstractProfilView
     panel.setLayout( gridLayout );
 
     // Wehrart ComboBox
-    final String tooltip = IProfilBuilding.BUILDING_PROPERTY.WEHRART.getTooltip();
+    final String tooltip = "";/* TODO:Kim getLabelProvider; */
     final Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label.setText( "Wehrart:" );
@@ -283,21 +277,21 @@ public class WehrPanel extends AbstractProfilView
     m_Wehrart = new Combo( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_Wehrart.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     m_Wehrart.setItems( new String[] { "Scharfkantig", "Rundkronig", "Breitkronig", "Überfallbeiwert" } );
-    m_Wehrart.setData( "Scharfkantig", IProfilConstants.WEHR_TYP_SCHARFKANTIG );
-    m_Wehrart.setData( "Rundkronig", IProfilConstants.WEHR_TYP_RUNDKRONIG );
-    m_Wehrart.setData( "Breitkronig", IProfilConstants.WEHR_TYP_BREITKRONIG );
-    m_Wehrart.setData( "Überfallbeiwert", IProfilConstants.WEHR_TYP_BEIWERT );
-    m_Wehrart.setData( IProfilConstants.WEHR_TYP_SCHARFKANTIG, "Scharfkantig" );
-    m_Wehrart.setData( IProfilConstants.WEHR_TYP_RUNDKRONIG, "Rundkronig" );
-    m_Wehrart.setData( IProfilConstants.WEHR_TYP_BREITKRONIG, "Breitkronig" );
-    m_Wehrart.setData( IProfilConstants.WEHR_TYP_BEIWERT, "Überfallbeiwert" );
+    m_Wehrart.setData( "Scharfkantig", IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
+    m_Wehrart.setData( "Rundkronig", IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG );
+    m_Wehrart.setData( "Breitkronig", IWspmTuhhConstants.WEHR_TYP_BREITKRONIG );
+    m_Wehrart.setData( "Überfallbeiwert", IWspmTuhhConstants.WEHR_TYP_BEIWERT );
+    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, "Scharfkantig" );
+    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, "Rundkronig" );
+    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, "Breitkronig" );
+    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_BEIWERT, "Überfallbeiwert" );
     m_Wehrart.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        IProfilChange change = new BuildingEdit( getProfil().getBuilding(), BUILDING_PROPERTY.WEHRART, m_Wehrart.getData( m_Wehrart.getText() ) );
+        IProfilChange change = new ProfileObjectEdit( getProfil().getProfileObject(), IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, m_Wehrart.getData( m_Wehrart.getText() ) );
         final ProfilOperation operation = new ProfilOperation( "Wehrart ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -336,7 +330,7 @@ public class WehrPanel extends AbstractProfilView
         final double value = NumberUtils.parseQuietDouble( m_kronenParameter.getText() );
         if( !Double.isNaN( value ) )
         {
-          final IProfilChange change = new BuildingEdit( getProfil().getBuilding(), BUILDING_PROPERTY.FORMBEIWERT, value );
+          final IProfilChange change = new ProfileObjectEdit( getProfil().getProfileObject(), IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, value );
           final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfilEventManager(), change, true );
           new ProfilOperationJob( operation ).schedule();
         }
@@ -351,28 +345,18 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        try
+        final IProfileObject building = getProfil().getProfileObject();
+        if( (building == null) || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
         {
-          final IProfilBuilding building = getProfil().getBuilding();
-          if( (building == null) || IProfilConstants.BUILDING_TYP_WEHR.compareTo( building.getTyp() ) != 0 )
-          {
-            return;
-          }
-          final double wehrParameter = (Double) building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT );
-          final IProfilDevider[] trennFl = getProfil().getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-          final IProfilPoint point = trennFl[0].getPoint();
-          final IProfilDevider devider = ProfilDeviderFactory.createDevider( IProfilConstants.DEVIDER_TYP_WEHR, point );
-          final IProfilChange[] changes = new IProfilChange[3];
-          changes[0] = new DeviderAdd( getProfil(), devider );
-          changes[1] = new DeviderEdit( devider, IProfilDevider.DEVIDER_PROPERTY.BEIWERT, wehrParameter );
-          changes[2] = new ActiveObjectEdit( getProfil(), point, null );
-          final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), changes, true );
-          new ProfilOperationJob( operation ).schedule();
+          return;
         }
-        catch( ProfilDataException ex )
-        {
-          // do nothing
-        }
+        final IProfilPointMarker[] trennFl = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final IProfilPoint point = trennFl[0].getPoint();
+        final IProfilChange[] changes = new IProfilChange[2];
+        changes[0] = new PointMarkerAdd( getProfil(), point, IWspmTuhhConstants.MARKER_TYP_WEHR );
+        changes[1] = new ActiveObjectEdit( getProfil(), point, null );
+        final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), changes, true );
+        new ProfilOperationJob( operation ).schedule();
       }
     } );
 
@@ -396,12 +380,13 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-        getViewData().setDeviderVisibility( IProfilConstants.DEVIDER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
-        IProfilChange change = new VisibleDeviderEdit( getProfil(), IProfilConstants.DEVIDER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
+        // getViewData().setMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
+        IProfilChange change = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() );
         final ProfilChangeHint hint = new ProfilChangeHint();
-        hint.setDeviderMoved();
-        getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
-        // getViewData().setDeviderVisibility( DEVIDER_TYP.WEHR, m_WehrfeldVisible.getSelection() );
+        hint.setMarkerMoved();
+        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern", getProfilEventManager(), change, true );
+        new ProfilOperationJob( operation ).schedule();
+        // getProfilEventManager().fireProfilChanged( hint, new IProfilChange[] { change } );
       }
     } );
 
@@ -412,45 +397,39 @@ public class WehrPanel extends AbstractProfilView
 
   protected void updateControls( )
   {
-    try
+
+    if( m_Wehrart.isDisposed() )
+      return;
+    final IProfileObject building = getProfil().getProfileObject();
+    if( building == null )
+      return;
+    // IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
+    m_Wehrart.select( m_Wehrart.indexOf( m_Wehrart.getData( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString() ).toString() ) );
+    m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    m_kronenParameter.setText( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ).toString() );
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
     {
-      if( m_Wehrart.isDisposed() )
-        return;
-      final IProfilBuilding building = getProfil().getBuilding();
-      if( building == null )
-        return;
-      // IProfil.WEHR_TYP wt = (IProfil.WEHR_TYP) building.getValueFor( BUILDING_PROPERTY.WEHRART );
-      m_Wehrart.select( m_Wehrart.indexOf( m_Wehrart.getData( building.getValueFor( BUILDING_PROPERTY.WEHRART ).toString() ).toString() ) );
-      m_WehrfeldVisible.setSelection( getViewData().getDeviderVisibility( IProfilConstants.DEVIDER_TYP_WEHR ) );
-      m_kronenParameter.setText( building.getValueFor( BUILDING_PROPERTY.FORMBEIWERT ).toString() );
-      final IProfilDevider[] deviders = getProfil().getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
+      while( m_deviderLines.size() < deviders.length )
       {
-        while( m_deviderLines.size() < deviders.length )
-        {
-          m_deviderLines.add( new DeviderLine( m_deviderLines.size() + 1 ) );
-        }
-        while( m_deviderLines.size() > deviders.length )
-        {
-          m_deviderLines.getLast().dispose();
-          m_deviderLines.removeLast();
-        }
-        int index = 0;
-        for( DeviderLine devl : m_deviderLines )
-        {
-          devl.refresh( deviders[index++] );
-        }
+        m_deviderLines.add( new DeviderLine( m_deviderLines.size() + 1 ) );
       }
-      m_deviderGroup.layout();
+      while( m_deviderLines.size() > deviders.length )
+      {
+        m_deviderLines.getLast().dispose();
+        m_deviderLines.removeLast();
+      }
+      int index = 0;
+      for( DeviderLine devl : m_deviderLines )
+      {
+        devl.refresh( deviders[index++] );
+      }
     }
-    catch( final ProfilDataException e )
-    {
-      // do nothing
-    }
+    m_deviderGroup.layout();
   }
 
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    if( hint.isBuildingDataChanged() || hint.isProfilPropertyChanged() || hint.isDeviderMoved() || hint.isDeviderDataChanged() )
+    if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )

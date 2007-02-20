@@ -43,9 +43,9 @@ package org.kalypso.model.wspm.core.util;
 import java.util.LinkedList;
 
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -95,8 +95,8 @@ public class WspmProfileHelper
     LinkedList<IProfilPoint> points = profile.getPoints();
     for( IProfilPoint point : points )
     {
-      double rechtsWert = point.getValueFor( POINT_PROPERTY.RECHTSWERT );
-      double hochWert = point.getValueFor( POINT_PROPERTY.HOCHWERT );
+      double rechtsWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
       {
@@ -114,7 +114,7 @@ public class WspmProfileHelper
     // END OF FINDING GEOREFERENCED POINTS
 
     /* It is assumed that all points and values share the same coordinate system. */
-    String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( geoReferencedPoints.get( 0 ).getValueFor( POINT_PROPERTY.RECHTSWERT ) ) );
+    String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( geoReferencedPoints.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
     final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
 
     /* Transform geo point into the coord-system of the line. */
@@ -130,12 +130,12 @@ public class WspmProfileHelper
     {
       /* We need a line string of the to neighbour points. */
       IProfilPoint tempPointOne = geoReferencedPoints.get( i );
-      double rechtsWertOne = tempPointOne.getValueFor( POINT_PROPERTY.RECHTSWERT );
-      double hochWertOne = tempPointOne.getValueFor( POINT_PROPERTY.HOCHWERT );
+      double rechtsWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
       IProfilPoint tempPointTwo = geoReferencedPoints.get( i + 1 );
-      double rechtsWertTwo = tempPointTwo.getValueFor( POINT_PROPERTY.RECHTSWERT );
-      double hochWertTwo = tempPointTwo.getValueFor( POINT_PROPERTY.HOCHWERT );
+      double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
       /* Build the line segment. */
       Coordinate geoCoordOne = new Coordinate( rechtsWertOne, hochWertOne );
@@ -155,8 +155,8 @@ public class WspmProfileHelper
     }
 
     /* Now we have a segment and a distance. The two points of the segment are used to interpolate. */
-    Coordinate geoCoordOne = new Coordinate( pointOne.getValueFor( POINT_PROPERTY.RECHTSWERT ), pointOne.getValueFor( POINT_PROPERTY.HOCHWERT ) );
-    Coordinate geoCoordTwo = new Coordinate( pointTwo.getValueFor( POINT_PROPERTY.RECHTSWERT ), pointTwo.getValueFor( POINT_PROPERTY.HOCHWERT ) );
+    Coordinate geoCoordOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    Coordinate geoCoordTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
     LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
 
     /* The point on the geo segment, which is closest to the comparePoint (originally geoPoint). */
@@ -166,8 +166,8 @@ public class WspmProfileHelper
     double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( geoCoordOne, geoCoordinate );
 
     /* Using Breite und Hoehe to build. */
-    Coordinate coordProfileOne = new Coordinate( pointOne.getValueFor( POINT_PROPERTY.BREITE ), pointOne.getValueFor( POINT_PROPERTY.HOEHE ) );
-    Coordinate coordProfileTwo = new Coordinate( pointTwo.getValueFor( POINT_PROPERTY.BREITE ), pointTwo.getValueFor( POINT_PROPERTY.HOEHE ) );
+    Coordinate coordProfileOne = new Coordinate( pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    Coordinate coordProfileTwo = new Coordinate( pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ), pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
     double segmentProfileLength = JTSUtilities.getLengthBetweenPoints( coordProfileOne, coordProfileTwo );
 

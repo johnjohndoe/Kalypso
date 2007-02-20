@@ -101,4 +101,5 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm", path );
   }
+
 }

@@ -43,10 +43,10 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -54,9 +54,9 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 
 import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
@@ -65,11 +65,11 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 {
   private final Color m_color;
 
-  public AbstractBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public AbstractBuildingLayer( final String layerId, final String label, final ProfilChartView pcv )
   {
-    super( pvp, domainRange, valueRange );
+    super( layerId, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), label );
 
-    m_color = color;
+    m_color = pcv.getColorRegistry().get( layerId) == null ? pcv.getColorRegistry().get( IProfilColorSet.COLOUR_) : pcv.getColorRegistry().get( layerId);
   }
 
   protected final Color getColor( )
@@ -77,9 +77,9 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
     return m_color;
   }
 
-  protected final IProfilBuilding getBuilding( )
+  protected final IProfileObject getBuilding( )
   {
-    return getProfil().getBuilding();
+    return getProfil().getProfileObject();
   }
 
   /**
@@ -110,7 +110,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 
   public void removeYourself( )
   {
-    final IProfilChange pc = new BuildingSet( getProfil(), null );
+    final IProfilChange pc = new ProfileObjectSet( getProfil(), (IProfileObject) null );
     final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfilEventManager(), pc, true );
     new ProfilOperationJob( operation ).schedule();
   }

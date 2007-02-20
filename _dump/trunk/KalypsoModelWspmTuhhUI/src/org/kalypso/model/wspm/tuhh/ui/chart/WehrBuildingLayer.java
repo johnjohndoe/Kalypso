@@ -40,25 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.Arrays;
+import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.changes.BuildingSet;
-import org.kalypso.model.wspm.core.profil.changes.DeviderRemove;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.WehrPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -67,6 +74,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
 
 /**
@@ -74,15 +82,157 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class WehrBuildingLayer extends AbstractPolyLineLayer
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHoverInfo( Point mousePos )
+  {
+    final EditInfo info = super.getHoverInfo( mousePos );
+    return info == null ? getDeviderInfo( mousePos ) : info;
+  }
+
+  private EditInfo getDeviderInfo( final Point mousePoint )
+  {
+    if( !getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      return null;
+    final AxisRange valueRange = getValueRange();
+    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+    final int top = valueRange.getScreenTo() + valueRange.getGapSpace() ;
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    int fieldNr = 0;
+    Double leftValue = (Double)getProfil().getProfileObject().getValueFor(  IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    for( final IProfilPointMarker devider : deviders )
+    {
+
+      final IProfilPoint deviderPos = devider.getPoint();
+      final double breite = deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final Point point = logical2screen( new Point2D.Double( breite, deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+      final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
+      final Double rightValue = (Double)devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT );
+      if( devRect.contains( mousePoint.x, mousePoint.y ) )
+      {
+        final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter",  "Feld " + Integer.toString( fieldNr + 1 ),
+            leftValue,"Feld "+Integer.toString( fieldNr + 2 ),rightValue } );
+
+        return new EditInfo( this, devRect, devider, text );
+      }
+      fieldNr++;
+      leftValue=rightValue;
+    }
+    return null;
+  }
+
+  @Override
+  public final void editProfil( final Point moveTo, final Object data )
+  {
+    if( data instanceof IProfilPointMarker )
+    {
+      editDevider( moveTo, (IProfilPointMarker) data );
+
+    }
+    else
+      super.editProfil( moveTo, data );
+  }
+
+  public final void editDevider( final Point point, IProfilPointMarker devider )
+  {
+    final IProfilPointMarker activeDevider = devider;
+
+    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
+
+    final IProfilPoint oldPos = activeDevider.getPoint();
+    if( oldPos != destinationPoint )
+    {
+      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
+      operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+      new ProfilOperationJob( operation ).schedule();
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
+   */
+  @Override
+  public void paint( GCWrapper gc )
+  {
+    super.paint( gc );
+    if( getViewData().getDeviderVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      paintDevider( gc );
+  }
+
+  private void paintDevider( final GCWrapper gc )
+  {
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+    int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+    for( IProfilPointMarker devider : deviders )
+    {
+      final IProfilPoint point = devider.getPoint();
+      final double leftvalue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final int left = (int) getDomainRange().logical2screen( leftvalue );
+      gc.drawLine( left, top, left, bottom );
+    }
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
+   *      org.eclipse.swt.graphics.Point, java.lang.Object)
+   */
+  @Override
+  public void paintDrag( GCWrapper gc, Point editing, Object data )
+  {
+    if( data instanceof IProfilPointMarker )
+    {
+      paintDragDevider( gc, editing );
+    }
+    else
+      super.paintDrag( gc, editing, data );
+
+  }
+
+  private void paintDragDevider( GCWrapper gc, Point editing )
+  {
+    gc.setLineStyle( SWT.LINE_DOT );
+    gc.setLineWidth( 1 );
+
+    final AxisRange valueRange = getValueRange();
+    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
+    int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+
+    try
+    {
+      final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
+      final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ), destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+      gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public List<IProfilPoint> getPoints( )
   {
-    return ProfilUtil.getInnerPoints( getProfil(), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    return ProfilUtil.getInnerPoints( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
   }
 
-  public WehrBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final List<Color> colors, final Color selectedcolor, final Color stationColor, final Color editColor )
+  public WehrBuildingLayer( final ProfilChartView pcv )
   {
-    super( pvp, domainRange, valueRange, colors, selectedcolor, stationColor, editColor, Arrays.asList( POINT_PROPERTY.OBERKANTEWEHR ), false, false, false );
+    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, }, false, false, false );
+    super.setColors( setColor( pcv.getColorRegistry() ) );
+  }
+
+  private final Color[] setColor( final ColorRegistry cr )
+  {
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_WEHR ) )
+    {
+      cr.put( IWspmTuhhConstants.LAYER_WEHR, new RGB( 255, 150, 0 ) );
+    }
+    return new Color[] { cr.get( IWspmTuhhConstants.LAYER_WEHR ), cr.get( IWspmTuhhConstants.LAYER_WEHR ) };
   }
 
   @Override
@@ -106,7 +256,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     drawStationline( gc, midx, midy, midx, bottom );
     gc.setLineWidth( 1 );
     gc.setLineStyle( SWT.LINE_SOLID );
-    gc.setForeground( m_colors.get( 0 ) );
+    gc.setForeground( m_colors[0] );
     gc.drawOval( midx - 2, midy - 2, 4, 4 );
     gc.drawLine( left, top, midx, midy );
     gc.drawLine( midx, midy, right, midy );
@@ -122,12 +272,14 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   public void removeYourself( )
   {
     final IProfilEventManager pem = getProfilEventManager();
-    final IProfilDevider[] deviders = pem.getProfil().getDevider( IProfilConstants.DEVIDER_TYP_WEHR );
-    final IProfilChange[] changes = new IProfilChange[deviders.length + 1];
-    changes[0] = new BuildingSet( pem.getProfil(), null );
+    final IProfil profile = pem.getProfil();
+    final IProfilPointMarker[] deviders = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final IProfilChange[] changes = new IProfilChange[deviders.length + 2];
+    changes[0] = new ProfileObjectSet( profile, (IProfileObject) null );
+    changes[1] = new PointPropertyRemove( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     for( int i = 0; i < deviders.length; i++ )
     {
-      changes[i + 1] = new DeviderRemove( pem.getProfil(), deviders[i] );
+      changes[i + 2] = new PointMarkerRemove( profile, deviders[i] );
     }
     final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
@@ -151,7 +303,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     final IProfil profil = getProfil();
     final LinkedList points = profil.getPoints();
     final int i = points.indexOf( point );
-    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( i < points.indexOf( deviders[0].getPoint() ) )
     {
       return false;

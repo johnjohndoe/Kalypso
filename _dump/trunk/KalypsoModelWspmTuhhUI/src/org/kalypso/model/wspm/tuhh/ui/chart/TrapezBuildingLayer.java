@@ -47,23 +47,21 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
  */
 public class TrapezBuildingLayer extends AbstractBuildingLayer
 {
-  public TrapezBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public TrapezBuildingLayer( final ProfilChartView pcv)
   {
-    super( pvp, domainRange, valueRange, color );
+    super(IWspmTuhhConstants.LAYER_TRAPEZ,"Trapez-Durchlaﬂ", pcv);
   }
 
   /**
@@ -108,7 +106,7 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
     {
       final Color background = gc.getBackground();
       gc.setBackground( getColor() );
-      
+
       final double[] trapezArray = createTrapez();
       final Rectangle2D trapezRect = new Rectangle2D.Double( trapezArray[0], trapezArray[1], trapezArray[2] - trapezArray[0], trapezArray[5] - trapezArray[1] );
       final Rectangle trapezScreen = logical2screen( trapezRect );
@@ -130,7 +128,7 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
       trapezScreenArray[7] = topLeftScreen.y;
 
       gc.fillPolygon( trapezScreenArray );
- 
+
       gc.setBackground( background );
     }
     catch( final ProfilDataException e )
@@ -143,12 +141,12 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
 
   private double[] createTrapez( ) throws ProfilDataException
   {
-    final IProfilBuilding building = getBuilding();
-    final double bezX = (Double) building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X );
-    final double bezY = (Double) building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y );
-    final double lang = (Double) building.getValueFor( BUILDING_PROPERTY.BREITE );
-    final double hoch = (Double) building.getValueFor( BUILDING_PROPERTY.HOEHE );
-    final double dx = hoch * ((Double) building.getValueFor( BUILDING_PROPERTY.STEIGUNG ) / 100);
+    final IProfileObject building = getBuilding();
+    final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
+    final double bezY = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
+    final double lang = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final double hoch = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
+    final double dx = hoch * ((Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) / 100);
 
     final double[] trapezArray = new double[8];
     trapezArray[0] = bezX - (lang / 2 - dx);

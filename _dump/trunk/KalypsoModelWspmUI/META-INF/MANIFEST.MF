@@ -7,7 +7,6 @@ Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui,
- org.kalypso.model.wspm.core,
  de.belger.swtchart.core;visibility:=reexport,
  org.eclipse.ui.forms,
  org.kalypso.featureview,
@@ -23,6 +22,7 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.profil,
  org.kalypso.model.wspm.ui.profil.dialogs.reducepoints,
  org.kalypso.model.wspm.ui.profil.operation,
+ org.kalypso.model.wspm.ui.profil.operation.changes,
  org.kalypso.model.wspm.ui.profil.validation,
  org.kalypso.model.wspm.ui.profil.widget,
  org.kalypso.model.wspm.ui.profil.wizard.pointsInsert,
@@ -32,4 +32,5 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view.chart.action,
  org.kalypso.model.wspm.ui.view.chart.color,
  org.kalypso.model.wspm.ui.view.legend,
- org.kalypso.model.wspm.ui.view.table
+ org.kalypso.model.wspm.ui.view.table,
+ org.kalypso.model.wspm.ui.wizard

@@ -47,20 +47,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-
 
 public class RuecksprungRule extends AbstractValidatorRule
 {
-  public void validate( final IProfil profil,
-      final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     if( profil == null )
       return;
@@ -75,34 +71,27 @@ public class RuecksprungRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
-          final double x1 = prevPoint.getValueFor( POINT_PROPERTY.BREITE );
-          final double x2 = point.getValueFor( POINT_PROPERTY.BREITE );
-          final double y1 = prevPoint.getValueFor( POINT_PROPERTY.HOEHE );
-          final double y2 = point.getValueFor( POINT_PROPERTY.HOEHE );
-          if( x2 - x1 < 0.0 )
-            collector.createProfilMarker( true,
-                "Gauss-Rücksprung bei Breite = "
-                    + String.format( IProfilConstants.FMT_STATION, x2 ), "",
-                profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString(), pluginId, null );
-          else if( (x2 - x1 < (Double) POINT_PROPERTY.BREITE
-              .getParameter( PARAMETER.PRECISION ))
-              && (y1 != y2) )
-            collector.createProfilMarker( false,
-                "Senkrechte Wand bei Breite = "
-                    + String.format( IProfilConstants.FMT_STATION, x2 ), "",
-                profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE
-                    .toString(), pluginId, null );
+          final double x1 = prevPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+          final double x2 = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+          final double y1 = prevPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+          final double y2 = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+          final IProfilPointProperty ppB = profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+          final IProfilPointProperty ppH = profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+          final double deltaX = ppB == null ? 0.0001 : ppB.getPrecision();
+          final double deltaY = ppB == null ? 0.0001 : ppH.getPrecision();
+          if( (x1 - x2  )> deltaX )
+            collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
+          else if( (Math.abs( x2 - x1 ) < deltaX) && (Math.abs( y2 - y1 ) > deltaY) )
+            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
         }
 
         prevPoint = point;
       }
     }
-    catch( final ProfilDataException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin
-          .getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
     }
   }
 

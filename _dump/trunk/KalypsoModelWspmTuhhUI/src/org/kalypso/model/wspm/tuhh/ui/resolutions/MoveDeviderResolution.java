@@ -44,11 +44,11 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.DeviderMove;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * @author kimwerner
@@ -83,8 +83,8 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( IProfil profil )
   {
-    final IProfilDevider[] deviders1 = profil.getDevider( m_deviderTyp );
-    final IProfilDevider devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
+    final IProfilPointMarker[] deviders1 = profil.getPointMarkerFor(  m_deviderTyp );
+    final IProfilPointMarker devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
     if( devider1 == null )
       return null;
     IProfilPoint point = null;
@@ -98,18 +98,18 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
     }
     else
     {
-      final IProfilDevider[] deviders2 = profil.getDevider( m_destination );
+      final IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( m_destination );
       if( deviders2 != null )
       {
         final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
-        final IProfilDevider devider2 = deviders2[deviderIndex2];
+        final IProfilPointMarker devider2 = deviders2[deviderIndex2];
         if( devider2 != null )
         {
           point = devider2.getPoint();
         }
       }
     }
-    return new IProfilChange[] { new DeviderMove( devider1, point ), new ActiveObjectEdit( profil, point, POINT_PROPERTY.BREITE ) };
+    return new IProfilChange[] { new PointMarkerSetPoint( devider1, point ), new ActiveObjectEdit( profil, point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) };
   }
 
 }

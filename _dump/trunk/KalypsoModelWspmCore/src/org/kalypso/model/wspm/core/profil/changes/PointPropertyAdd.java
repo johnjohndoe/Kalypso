@@ -45,31 +45,30 @@ import java.util.LinkedList;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
 
 public final class PointPropertyAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final POINT_PROPERTY m_property;
+  private final String m_property;
 
-  private final double[] m_values;
+  private final Double[] m_values;
 
-  public PointPropertyAdd( final IProfil profil, final POINT_PROPERTY property,
-      final double[] values )
+  public PointPropertyAdd( final IProfil profil, final String property,
+      final Double[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
 
-  public PointPropertyAdd( final IProfil profil, final POINT_PROPERTY property,
+  public PointPropertyAdd( final IProfil profil, final String property,
       final double defaultValue )
   {
     m_profil = profil;
     m_property = property;
-    m_values = new double[profil.getPoints().size()];
+    m_values = new Double[profil.getPoints().size()];
     for( int i = 0; i < m_values.length; i++ )
     {
       m_values[i] = defaultValue;
@@ -80,7 +79,7 @@ public final class PointPropertyAdd implements IProfilChange
   {
     if (hint!=null) hint.setPointPropertiesChanged();
     
-    m_profil.getProfilPoints().addProperty( m_property );
+    m_profil.addPointProperty( m_property );
     final LinkedList<IProfilPoint> points = m_profil.getPoints();
     int i = 0;
     for( IProfilPoint point : points )
@@ -102,7 +101,7 @@ public final class PointPropertyAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
     return m_property;
   }

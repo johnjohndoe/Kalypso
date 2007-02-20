@@ -47,13 +47,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 public class DoppelterPunktRule extends AbstractValidatorRule
@@ -72,15 +71,16 @@ public class DoppelterPunktRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
-          if( ProfilUtil.comparePoints( new POINT_PROPERTY[] { POINT_PROPERTY.BREITE, POINT_PROPERTY.HOEHE }, prevPoint, point ) )
+          if( ProfilUtil.comparePoints( new IProfilPointProperty[] { profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE ),
+              profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
           {
-            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IProfilConstants.FMT_STATION, point.getValueFor( POINT_PROPERTY.BREITE ) ), "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
+            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( IWspmTuhhConstants.FMT_STATION, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
           }
         }
         prevPoint = point;
       }
     }
-    catch( final ProfilDataException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );

@@ -190,7 +190,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     {
       final IFile file = m_provider == null ? null : m_provider.getFile();
 
-      m_view = new ProfilSWTTableView( pem, pvd, file );
+      m_view = new ProfilSWTTableView(pem, pvd, file );
 
       registerGlobalActions( m_view );
 
@@ -315,7 +315,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     // }
 
     m_pem = newPem;
-
+    
     if( m_control != null && !m_control.isDisposed() )
     {
       m_control.getDisplay().asyncExec( new Runnable()

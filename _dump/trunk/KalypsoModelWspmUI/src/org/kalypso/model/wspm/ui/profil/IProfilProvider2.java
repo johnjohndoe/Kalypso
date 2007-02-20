@@ -49,14 +49,14 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
  */
 public interface IProfilProvider2
 {
-  public IProfilEventManager getEventManager();
-  
-  public ProfilViewData getViewData();
-  
+  public IProfilEventManager getEventManager( );
+
+  public ProfilViewData getViewData( );
+
   public IFile getFile( );
 
   public void addProfilProviderListener( final IProfilProviderListener l );
-  
+
   public void removeProfilProviderListener( final IProfilProviderListener l );
 
   public void dispose( );

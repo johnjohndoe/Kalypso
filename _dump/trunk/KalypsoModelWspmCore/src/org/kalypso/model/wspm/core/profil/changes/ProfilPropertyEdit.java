@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.core.profil.changes;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 
 public final class ProfilPropertyEdit implements IProfilChange
 {
@@ -84,7 +83,7 @@ public final class ProfilPropertyEdit implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
        return null;
   }

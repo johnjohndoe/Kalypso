@@ -49,12 +49,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 
@@ -67,7 +66,7 @@ public class BrueckeRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getBuilding() == null) || (IProfilConstants.BUILDING_TYP_BRUECKE.compareTo( profil.getBuilding().getTyp() ) != 0) )
+    if( (profil == null) || (profil.getProfileObject() == null) || (IWspmTuhhConstants.BUILDING_TYP_BRUECKE.compareTo( profil.getProfileObject().getId() ) != 0) )
       return;
 
     try
@@ -85,18 +84,18 @@ public class BrueckeRule extends AbstractValidatorRule
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws Exception
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( devider.length < 2 )
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     if( devider[0].getPoint() != points.getFirst() )
     {
-      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, null ) } );
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, null ) } );
     }
     if( devider[devider.length - 1].getPoint() != points.getLast() )
     {
-      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, POINT_PROPERTY.BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( devider.length - 1, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, null ) } );
+      collector.createProfilMarker( true, "ungültiger durchströmter Bereich", "", 0, IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( devider.length - 1, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, null ) } );
     }
   }
 
@@ -106,13 +105,13 @@ public class BrueckeRule extends AbstractValidatorRule
     final List<IProfilPoint> points = profil.getPoints();
     for( final IProfilPoint point : points )
     {
-      final double h = point.getValueFor( POINT_PROPERTY.HOEHE );
-      final double b = point.getValueFor( POINT_PROPERTY.BREITE );
-      final double ok = point.getValueFor( POINT_PROPERTY.OBERKANTEBRUECKE );
-      final double uk = point.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
+      final double h = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+      final double b = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final double ok = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      final double uk = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
       if( (ok < h) || (uk < h) || (ok < uk) )
       {
-        collector.createProfilMarker( true, "ungültige Brückengeometrie [" + String.format( IProfilConstants.FMT_STATION, b ) + "]", "", profil.getPoints().indexOf( point ), POINT_PROPERTY.BREITE.toString(), pluginId, null );
+        collector.createProfilMarker( true, "ungültige Brückengeometrie [" + String.format( IWspmTuhhConstants.FMT_STATION, b ) + "]", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE.toString(), pluginId, null );
       }
     }
   }

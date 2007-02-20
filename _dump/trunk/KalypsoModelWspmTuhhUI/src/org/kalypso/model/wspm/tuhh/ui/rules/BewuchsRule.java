@@ -48,13 +48,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution;
@@ -74,9 +72,9 @@ public class BewuchsRule extends AbstractValidatorRule
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points == null )
       return;
-    if( !profil.getProfilPoints().propertyExists( POINT_PROPERTY.BEWUCHS_AX ) )
+    if( !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
       return;
-    final IProfilDevider[] devider = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
     final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length - 1].getPoint() : null;
     if( (leftP == null) || (rightP == null) )
@@ -95,18 +93,18 @@ public class BewuchsRule extends AbstractValidatorRule
         int i = leftIndex;
         for( IProfilPoint point : Flussschl )
         {
-          final double ax = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
-          final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
-          final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+          final double ax = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+          final double ay = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+          final double dp = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
           if( ax + ay + dp != 0 )
-            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch", "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
+            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch", "", i, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
           i++;
         }
         final int lastIndex = (leftIndex > 0) ? leftIndex - 1 : leftIndex;
-        if( points.get( lastIndex ).getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
-        if( rightP.getValueFor( POINT_PROPERTY.BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
+        if( points.get( lastIndex ).getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
+        if( rightP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
       }
     }
     catch( Exception e )
@@ -116,7 +114,7 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
-  private boolean validateArea( final IValidatorMarkerCollector collector, final List<IProfilPoint> subList, final int fromIndex, final String pluginId ) throws ProfilDataException, CoreException
+  private boolean validateArea( final IValidatorMarkerCollector collector, final List<IProfilPoint> subList, final int fromIndex, final String pluginId ) throws CoreException
   {
     boolean hasValues = false;
     if( subList.isEmpty() )
@@ -124,9 +122,9 @@ public class BewuchsRule extends AbstractValidatorRule
     int i = fromIndex;
     for( IProfilPoint point : subList )
     {
-      final double ax = point.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
-      final double ay = point.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
-      final double dp = point.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+      final double ax = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+      final double ay = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+      final double dp = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
       if( ax + ay + dp != 0.0 )
       {
         if( ax * ay * dp == 0.0 )
@@ -145,7 +143,7 @@ public class BewuchsRule extends AbstractValidatorRule
             stringBuffer.append( "dP" );
           }
           stringBuffer.append( ") fehlt" );
-          collector.createProfilMarker( true, stringBuffer.toString(), "", i, POINT_PROPERTY.BEWUCHS_AX.toString(), pluginId, null );
+          collector.createProfilMarker( true, stringBuffer.toString(), "", i, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, null );
         }
         else
           hasValues = true;

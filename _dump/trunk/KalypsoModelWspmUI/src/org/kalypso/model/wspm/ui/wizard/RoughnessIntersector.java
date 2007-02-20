@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -116,7 +115,7 @@ public class RoughnessIntersector
         if( !acceptPoint( profil, point ) )
           continue;
 
-        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( point );
+        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint(profil, point );
         if( geoPoint == null )
           continue;
         final Geometry jtsPoint = JTSAdapter.export( geoPoint );
@@ -158,12 +157,11 @@ public class RoughnessIntersector
 
             if( newValue != null )
             {
-              final POINT_PROPERTY pp = ProfileFeatureFactory.pointPropertyFromComponentId( componentId );
-              if( pp != null )
+              if( componentId != null )
               {
-                profil.addPointProperty( pp );
+                profil.addPointProperty( componentId );
 
-                point.setValueFor( pp, newValue );
+                point.setValueFor( componentId, newValue );
               }
             }
           }

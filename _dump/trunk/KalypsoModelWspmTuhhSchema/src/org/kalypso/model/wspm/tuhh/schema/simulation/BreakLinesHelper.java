@@ -63,9 +63,10 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -278,31 +279,31 @@ public class BreakLinesHelper implements IWspmConstants
     }
   }
 
-  private static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe ) throws ProfilDataException
+  private static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
   {
-    final LinkedList<POINT_PROPERTY> pointProperties = profil.getPointProperties( false );
-    final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
-    final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
-    if( ppRW == null || ppHW == null ) // ignore profile without geo-coordinates
+//    final IProfilPointProperty[] pointProperties = profil.getPointProperties(  );
+//    final POINT_PROPERTY ppRW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ? IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
+//    final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ? IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
+   if( !profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ||!profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore profile without geo-coordinates
       return new GM_Point[] {};
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final IProfilPoint firstPoint = points.getFirst();
     final IProfilPoint lastPoint = points.getLast();
 
-    final double firstX = firstPoint.getValueFor( POINT_PROPERTY.BREITE );
-    final double firstY = firstPoint.getValueFor( POINT_PROPERTY.HOEHE );
-    final double lastX = lastPoint.getValueFor( POINT_PROPERTY.BREITE );
-    final double lastY = lastPoint.getValueFor( POINT_PROPERTY.HOEHE );
+    final double firstX = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+    final double firstY = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+    final double lastX = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+    final double lastY = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
 
-    final double[] breiteValues = ProfilUtil.getValuesFor( profil, POINT_PROPERTY.BREITE );
+    final Double[] breiteValues = ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE );
 
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, POINT_PROPERTY.HOEHE ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ), 0.0001 );
 
     /* Same for RW and HW, but filter 0-values */
-    final PolyLine rwLine = createPolyline( profil, POINT_PROPERTY.BREITE, POINT_PROPERTY.RECHTSWERT );
-    final PolyLine hwLine = createPolyline( profil, POINT_PROPERTY.BREITE, POINT_PROPERTY.HOCHWERT );
+    final PolyLine rwLine = createPolyline( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+    final PolyLine hwLine = createPolyline( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
@@ -331,19 +332,21 @@ public class BreakLinesHelper implements IWspmConstants
     return poses;
   }
 
-  private static PolyLine createPolyline( final IProfil profil, final POINT_PROPERTY xProperty, final POINT_PROPERTY yProperty ) throws ProfilDataException
+  private static PolyLine createPolyline( final IProfil profil, final String xProperty, final String yProperty )
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
 
     final double[] xValues = new double[points.size()];
     final double[] yValues = new double[points.size()];
+    final IProfilPointProperty pp = profil.getPointProperty( yProperty );
+    final double dy = pp==null?0.001:pp.getPrecision();
     int count = 0;
     for( final IProfilPoint point : points )
     {
       final double x = point.getValueFor( xProperty );
       final double y = point.getValueFor( yProperty );
 
-      if( Math.abs( y ) > 0.001 )
+      if( Math.abs( y ) > dy )
       {
         xValues[count] = x;
         yValues[count] = y;

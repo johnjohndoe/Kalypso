@@ -41,36 +41,40 @@
 package org.kalypso.model.wspm.core.profil.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.impl.buildings.building.AbstractProfilBuilding;
-import org.kalypso.model.wspm.core.profil.impl.devider.DeviderComparator;
-import org.kalypso.model.wspm.core.profil.impl.devider.ProfilDevider;
-import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoints;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.impl.marker.PointMarkerComparator;
+import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class PlainProfil implements IProfilConstants, IProfil
+public class PlainProfil implements IProfil
 {
-  private IProfilBuilding m_building;
+  private IProfileObject m_building;
 
-  private final ArrayList<IProfilDevider> m_devider = new ArrayList<IProfilDevider>();
+  private final Map<String, List<IProfilPointMarker>> m_pointMarker = new HashMap<String, List<IProfilPointMarker>>();
 
-  private final ProfilPoints m_points;
+  private final LinkedList<IProfilPoint> m_points = new LinkedList<IProfilPoint>();
 
   private final Map<Object, Object> m_profilMetaData;
+
+  private final Map<String, IProfilPointProperty> m_pointProperties = new HashMap<String, IProfilPointProperty>();
 
   /**
    * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im Diagramm der zuletzt
@@ -78,7 +82,7 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   private IProfilPoint m_activePoint;
 
-  private POINT_PROPERTY m_activeProperty;
+  private IProfilPointProperty m_activeProperty;
 
   private double m_station = Double.NaN;
 
@@ -88,121 +92,222 @@ public class PlainProfil implements IProfilConstants, IProfil
   {
     m_type = type;
     m_profilMetaData = new HashMap<Object, Object>();
-    m_profilMetaData.put( IProfilConstants.RAUHEIT_TYP, DEFAULT_RAUHEIT_TYP );
-    m_points = new ProfilPoints();
-    m_points.addProperty( POINT_PROPERTY.BREITE );
-    m_points.addProperty( POINT_PROPERTY.HOEHE );
     m_building = null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.ProfilPoints#addPoint(double,double)
+   */
+  public void addPoint( final IProfilPoint point )
+  {
+    m_points.add( point );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#addDevider(org.kalypso.model.wspm.core.profil.IProfilPoint,
    *      org.kalypso.model.wspm.core.profil.IProfil.DEVIDER_TYP)
    */
-  public IProfilDevider addDevider( IProfilPoint point, String devider )
+  public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId )
   {
-    IProfilDevider pd = new ProfilDevider( devider, point );
-    addDevider( pd );
+    final IProfilPointMarkerProvider pmp = getMarkerProviderFor( markerId );
+    if( pmp == null )
+      return null;
+    final IProfilPointMarker marker = pmp.createMarker( markerId );
+    marker.setPoint( point );
+    List<IProfilPointMarker> markers = m_pointMarker.get( markerId );
+    if( markers == null )
+    {
+      markers = new ArrayList<IProfilPointMarker>();
+      markers.add( marker );
+      m_pointMarker.put( markerId, markers );
+    }
+    else
+      markers.add( marker );
+    return marker;
+  }
 
-    return pd;
+  public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker )
+  {
+    if( marker == null )
+      return new IProfilPointMarker[0];
+    final String markerId = marker.getMarkerId();
+    List<IProfilPointMarker> markers = m_pointMarker.get( markerId );
+    if( markers == null )
+    {
+      markers = new ArrayList<IProfilPointMarker>();
+      markers.add( marker );
+      m_pointMarker.put( markerId, markers );
+    }
+    else
+      markers.add( marker );
+    return markers.toArray( new IProfilPointMarker[0] );
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.ProfilPoints#addPoint(double,double)
-   */
-  public IProfilPoint addPoint( final double breite, final double hoehe )
-  {
-    return m_points.addPoint( breite, hoehe );
-  }
-
-  /**
-   * @return ein Array aller von der eigefügten PoinbtProperty abhängigen pointProperties
+   * @return ein Array aller von der eigefügten PointProperty abhängigen pointProperties
    * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
-  public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty )
+  public String[] addPointProperty( final String pointProperty )
   {
-    if( pointProperty == null )
-      return null;
+    final IProfilPointProperty property = m_pointProperties.get( pointProperty );
+    final List<String> depending = new ArrayList<String>();
+    depending.add( pointProperty );
+    depending.addAll( Arrays.asList( getDependenciesFor( pointProperty ) ) );
 
-    final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
+    if( property != null )
+      return depending.toArray( new String[0] );
 
-    for( POINT_PROPERTY pd : depending )
-      m_points.addProperty( pd );
+    final IProfilPointPropertyProvider ppp = getPropertyProviderFor( pointProperty );
+    if( ppp == null )
+      return new String[0];
 
-    return depending;
+    for( String pd : depending )
+    {
+      final IProfilPointProperty pp = ppp.getPointProperty( pd );
+      m_pointProperties.put( pd, pp );
+
+      for( IProfilPoint point : m_points )
+      {
+        point.addProperty( pd );
+      }
+    }
+    return depending.toArray( new String[0] );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createProfilPoint()
+   */
+  public IProfilPoint createProfilPoint( )
+  {
+    return new ProfilPoint( m_pointProperties.keySet().toArray( new String[0] ) );
+  }
+
+  /**
+   * @return Returns the activePoint.
+   */
+  public IProfilPoint getActivePoint( )
+  {
+    return m_activePoint;
+  }
+
+  public IProfilPointProperty getActiveProperty( )
+  {
+    return m_activeProperty;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getBuilding()
    */
-  public IProfilBuilding getBuilding( )
+  public IProfileObject getProfileObject( )
   {
     return m_building;
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getDevider(DEVIDER_TYP[])
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getDependenciesFor(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
    */
-  public IProfilDevider[] getDevider( final String[] deviderTypes )
+  public String[] getDependenciesFor( final String property )
   {
-    final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
-    for( IProfilDevider devider : m_devider )
-    {
-      for( String deviderTyp : deviderTypes )
-      {
-        if( deviderTyp.compareTo( devider.getTyp() ) == 0 )
-        {
-          deviderList.add( devider );
-        }
-      }
-    }
-
-    Collections.sort( deviderList, new DeviderComparator() );
-    return  deviderList.toArray( new IProfilDevider[0] );
-  }
-
-  public IProfilDevider[] getDevider( )
-  {
-    final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>( m_devider );
-    Collections.sort( deviderList, new DeviderComparator() );
-    return deviderList.toArray( new IProfilDevider[0] );
-  }
-
-  public IProfilDevider[] getDevider( final IProfilPoint point )
-  {
-    final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
-    for( IProfilDevider devider : m_devider )
-    {
-      if( devider.getPoint() == point )
-        deviderList.add( devider );
-    }
-    return deviderList.toArray( new IProfilDevider[0] );
-  }
-
-  public IProfilDevider[] getDevider( String deviderTyp )
-  {
-    return getDevider( new String[] { deviderTyp } );
+    final IProfilPointProperty pp = m_pointProperties.get( property );
+    return pp == null ? new String[0] : pp.getDependencies();
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getTableDataKeys()
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getMarkedPoints()
    */
-  public LinkedList<POINT_PROPERTY> getPointProperties( final boolean filterNonVisible )
+  public IProfilPoint[] getMarkedPoints( )
   {
-    if( filterNonVisible )
-      return m_points.getVisibleProperties();
-    return m_points.getExistingProperties();
+    ArrayList<IProfilPoint> pointList = new ArrayList<IProfilPoint>();
+    for( final List<IProfilPointMarker> markers : m_pointMarker.values() )
+    {
+      for( final IProfilPointMarker marker : markers )
+      {
+        if( !pointList.contains( marker.getPoint() ) )
+          pointList.add( marker.getPoint() );
+      }
+    }
+    return pointList.toArray( new IProfilPoint[0] );
+  }
+
+  public final IProfilPointMarkerProvider getMarkerProviderFor( final String markerId )
+  {
+    final IProfilPointMarkerProvider[] markerProviders = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_type );
+    for( final IProfilPointMarkerProvider pmp : markerProviders )
+    {
+      if( pmp.providesPointMarker( markerId ) )
+        return pmp;
+    }
+    return null;
+  }
+
+  public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point )
+  {
+    ArrayList<IProfilPointMarker> markerList = new ArrayList<IProfilPointMarker>();
+    for( final List<IProfilPointMarker> markers : m_pointMarker.values() )
+    {
+      for( final IProfilPointMarker marker : markers )
+      {
+        if( marker.getPoint() == point )
+          markerList.add( marker );
+      }
+    }
+    return markerList.toArray( new IProfilPointMarker[0] );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getDevider(MARKER_TYP[])
+   */
+  public IProfilPointMarker[] getPointMarkerFor( final String markerType )
+  {
+    final List<IProfilPointMarker> markerList = m_pointMarker.get( markerType );
+    if( markerList == null )
+      return new IProfilPointMarker[0];
+    Collections.sort( markerList, new PointMarkerComparator( IWspmConstants.POINT_PROPERTY_BREITE ) );
+    return markerList.toArray( new IProfilPointMarker[0] );
+  }
+
+  public String[] getPointMarkerTypes( )
+  {
+    return m_pointMarker.keySet().toArray( new String[0] );
+  }
+
+  // /**
+  // * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getTableDataKeys()
+  // */
+  public IProfilPointProperty[] getPointProperties( )
+  {
+    final List<IProfilPointProperty> props = new ArrayList<IProfilPointProperty>();
+    final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+    for( final IProfilPointPropertyProvider ppp : ppps )
+    {
+      final String[] pointProps = ppp.getPointProperties();
+      for( final String pointProp : pointProps )
+      {
+        if( m_pointProperties.containsKey( pointProp ) )
+        {
+          props.add( m_pointProperties.get( pointProp ) );
+        }
+      }
+    }
+    return props.toArray( new IProfilPointProperty[0] );
+
+    // return m_pointProperties.values().toArray( new IProfilPointProperty[0] );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointPropertiy(java.lang.String)
+   */
+  public IProfilPointProperty getPointProperty( String pointPrioperty )
+
+  {
+
+    return m_pointProperties.get( pointPrioperty );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getPoints()
    */
   public LinkedList<IProfilPoint> getPoints( )
-  {
-    return m_points.getPoints();
-  }
-
-  public IProfilPoints getProfilPoints( )
   {
     return m_points;
   }
@@ -212,38 +317,52 @@ public class PlainProfil implements IProfilConstants, IProfil
     return m_profilMetaData.get( key );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#moveDevider(org.kalypso.model.wspm.core.profildata.tabledata.DeviderKey,
-   *      org.kalypso.model.wspm.core.profilinterface.IProfilPoint)
-   */
-  public IProfilPoint moveDevider( IProfilDevider devider, IProfilPoint newPosition )
+  public final IProfilPointPropertyProvider getPropertyProviderFor( final String property )
   {
-    final IProfilPoint oldPkt = ((ProfilDevider) devider).setPoint( newPosition );
+    final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+    for( final IProfilPointPropertyProvider ppp : ppps )
+    {
+      if( ppp.providesPointProperty( property ) )
+        return ppp;
+    }
+    return null;
+  }
 
-    return oldPkt;
+  public double getStation( )
+  {
+    return m_station;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
+   */
+  public String getType( )
+  {
+    return m_type;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(java.lang.String)
+   */
+  public boolean hasPointProperty( String propertyId )
+  {
+    return m_pointProperties.containsKey( propertyId );
   }
 
   /**
    * @throws ProfilDataException
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
    */
-  public IProfilBuilding removeBuilding( ) throws ProfilDataException
+  public IProfileObject removeProfileObject( )
   {
-    final IProfilBuilding oldBuilding = m_building;
-    if( m_building instanceof AbstractProfilBuilding )
-      ((AbstractProfilBuilding) m_building).removeProfilProperties( this );
+    final IProfileObject oldBuilding = m_building;
+    final String[] properties = m_building.getPointProperties();
+    for( final String property : properties )
+    {
+      removePointProperty( property );
+    }
 
-    m_building = null;
-    
     return oldBuilding;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#removeDevider(org.kalypso.model.wspm.core.profil.IProfilDevider)
-   */
-  public IProfilDevider removeDevider( IProfilDevider devider )
-  {
-    return m_devider.remove( devider ) ? devider : null;
   }
 
   /**
@@ -251,33 +370,31 @@ public class PlainProfil implements IProfilConstants, IProfil
    */
   public boolean removePoint( final IProfilPoint point )
   {
-    for( IProfilDevider devider : m_devider )
-    {
-      if( devider.getPoint() == point )
-        return false;
-    }
-    return m_points.removePoint( point );
+    final IProfilPointMarker[] markers = getPointMarkerFor( point );
+    if( markers.length == 0 )
+      return m_points.remove( point );
+    else
+      return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removeDevider(org.kalypso.model.wspm.core.profil.IProfilDevider)
+   */
+  public IProfilPointMarker removePointMarker( final IProfilPointMarker pointMarker )
+  {
+    final List<IProfilPointMarker> markerList = m_pointMarker.get( pointMarker.getMarkerId() );
+    if( markerList == null )
+      return null;
+    return markerList.remove( pointMarker ) ? pointMarker : null;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removePointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
-  public boolean removePointProperty( final POINT_PROPERTY pointProperty )
+  public boolean removePointProperty( final String pointProperty )
   {
-
-    if( pointProperty == null )
-      return false;
-
-    return m_points.removeProperty( pointProperty );
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getDependenciesFor(org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY)
-   */
-  public POINT_PROPERTY[] getDependenciesFor( POINT_PROPERTY property )
-  {
-    return m_points.getDependenciesFor( property );
+    final IProfilPointProperty property = m_pointProperties.get( pointProperty );
+    return property == null ? false : m_pointProperties.remove( pointProperty ) != null;
   }
 
   /**
@@ -291,18 +408,40 @@ public class PlainProfil implements IProfilConstants, IProfil
 
   }
 
+  public void setActivePoint( final IProfilPoint point )
+  {
+    m_activePoint = point;
+  }
+
+  public void setActivePointProperty( final String activeProperty )
+  {
+    final IProfilPointProperty property = m_pointProperties.get( activeProperty );
+    if( property != null )
+      m_activeProperty = property;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IProfilPointProperty)
+   */
+  public void setActiveProperty( String pointProperty )
+  {
+    if( hasPointProperty( pointProperty ) )
+      m_activeProperty = m_pointProperties.get( pointProperty );
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setBuilding(org.kalypso.model.wspm.core.profil.IProfil.BUILDING_TYP)
    */
-  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException
+  public void setProfileObject( final IProfileObject building )
   {
     if( m_building != null )
-      removeBuilding();
-    
+      removeProfileObject();
     m_building = building;
-    
-    if( m_building instanceof AbstractProfilBuilding )
-      ((AbstractProfilBuilding) m_building).addProfilProperties( this );
+    final String[] properties = building == null ? new String[0] : m_building.getPointProperties();
+    for( final String property : properties )
+    {
+      addPointProperty( property );
+    }
   }
 
   /**
@@ -314,37 +453,6 @@ public class PlainProfil implements IProfilConstants, IProfil
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#addDevider(org.kalypso.model.wspm.core.profil.IProfilDevider)
-   */
-  public void addDevider( IProfilDevider devider )
-  {
-    m_devider.add( devider );
-  }
-
-  public POINT_PROPERTY getActiveProperty( )
-  {
-    return m_activeProperty;
-  }
-
-  public void setActiveProperty( POINT_PROPERTY activeProperty )
-  {
-    m_activeProperty = activeProperty;
-  }
-
-  public void setActivePoint( final IProfilPoint point )
-  {
-    m_activePoint = point;
-  }
-
-  /**
-   * @return Returns the activePoint.
-   */
-  public IProfilPoint getActivePoint( )
-  {
-    return m_activePoint;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setStation(double)
    */
   public void setStation( final double station )
@@ -352,16 +460,17 @@ public class PlainProfil implements IProfilConstants, IProfil
     m_station = station;
   }
 
-  public double getStation( )
-  {
-    return m_station;
-  }
-  
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getObjectProviderFor(java.lang.String)
    */
-  public String getType( )
+  public IProfileObjectProvider getObjectProviderFor( final String profileObjectId )
   {
-    return m_type;
+    final IProfileObjectProvider[] objectProviders = KalypsoModelWspmCoreExtensions.getObjectProviders( m_type );
+    for( final IProfileObjectProvider pop : objectProviders )
+    {
+      if( pop.providesProfileObject( profileObjectId ) )
+        return pop;
+    }
+    return null;
   }
 }

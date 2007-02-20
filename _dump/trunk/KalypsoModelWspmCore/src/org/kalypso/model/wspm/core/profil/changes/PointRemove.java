@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-
 
 /**
  * @author kimwerner
@@ -69,19 +66,22 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-      hint.setPointsChanged();
-
+    {
+       hint.setPointsChanged();
+    }
     m_pointBefore = ProfilUtil.getPointBefore( m_profil, m_point );
 
     if( m_profil.removePoint( m_point ) )
+    {
       return new PointAdd( m_profil, m_pointBefore, m_point );
+    }
     else
     {
-      final double b = m_point.getValueFor( POINT_PROPERTY.BREITE );
-      return new IllegalChange( "Punkt bei [" + String.format( IProfilConstants.FMT_STATION,  b ) + "] kann nicht gelöscht werden" );
+      final double b = m_point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      return new IllegalChange( "Punkt bei [" + String.format( IWspmConstants.FMT_STATION, b ) + "] kann nicht gelöscht werden" );
     }
   }
 
@@ -96,7 +96,7 @@ public class PointRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
     return null;
   }

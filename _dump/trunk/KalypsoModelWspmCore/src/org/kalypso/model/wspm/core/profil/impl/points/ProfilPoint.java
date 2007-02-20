@@ -40,23 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl.points;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-
 
 /**
  * @author kimwerner
  */
 public class ProfilPoint implements IProfilPoint
 {
-  private final HashMap<POINT_PROPERTY, Double> m_pointProperties = new HashMap<POINT_PROPERTY, Double>();
+  private final HashMap<String, Double> m_pointProperties = new HashMap<String, Double>();
 
-  public final void addProperty( final POINT_PROPERTY pointProperty )
+  public ProfilPoint( final String[] pointProperties )
+  {
+    for( final String property : pointProperties )
+    {
+      m_pointProperties.put( property, 0.0 );
+    }
+
+  }
+
+  public ProfilPoint( )
+  {
+
+  }
+
+  public final void addProperty( final String pointProperty )
   {
     m_pointProperties.put( pointProperty, new Double( 0 ) );
   }
@@ -67,22 +76,11 @@ public class ProfilPoint implements IProfilPoint
    */
   public IProfilPoint clonePoint( )
   {
-    final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<POINT_PROPERTY> tdkIt = m_pointProperties.keySet().iterator(); tdkIt
-        .hasNext(); )
+    final String[] properties = m_pointProperties.keySet().toArray( new String[0] );
+    final ProfilPoint point = new ProfilPoint( properties );
+    for( final String property : properties )
     {
-      final POINT_PROPERTY tdk = tdkIt.next();
-      point.addProperty( tdk );
-      try
-      {
-        point.setValueFor( tdk, getValueFor( tdk ) );
-
-      }
-      catch( ProfilDataException e )
-      {
-        return null;
-      }
-
+      point.setValueFor( property, m_pointProperties.get( property ) );
     }
     return point;
   }
@@ -90,35 +88,33 @@ public class ProfilPoint implements IProfilPoint
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPoint#getProperties()
    */
-  public Collection<POINT_PROPERTY> getProperties( )
+  public String[] getProperties( )
   {
-    return Collections.unmodifiableSet( m_pointProperties.keySet() );
+    return m_pointProperties.keySet().toArray( new String[0] );
   }
 
-  public final double getValueFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException
+  public final double getValueFor( final String pointProperty ) throws IllegalArgumentException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
-      throw new ProfilDataException( "Profileigenschaft existiert nicht: "
-          + pointProperty.toString() );
-
+      throw new IllegalArgumentException( "Profileigenschaft existiert nicht: " + pointProperty.toString() );
     return m_pointProperties.get( pointProperty ).doubleValue();
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfilPoint#hasTableData(org.kalypso.model.wspm.core.profildata.tabledata.TableDataKey)
    */
-  public boolean hasProperty( POINT_PROPERTY pointProperty )
+  public boolean hasProperty( String pointProperty )
   {
     return m_pointProperties.containsKey( pointProperty );
 
   }
 
-  public final void removeProperty( final POINT_PROPERTY pointProperty )
+  public final void removeProperty( final String pointProperty )
   {
     m_pointProperties.remove( pointProperty );
   }
 
-  public final boolean setValueFor( final POINT_PROPERTY pointProperty, final double value )
+  public final boolean setValueFor( final String pointProperty, final double value )
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
       return false;
@@ -127,4 +123,5 @@ public class ProfilPoint implements IProfilPoint
   }
 
   
+
 }

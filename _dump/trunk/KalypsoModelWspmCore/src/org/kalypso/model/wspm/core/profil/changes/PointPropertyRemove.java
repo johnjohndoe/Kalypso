@@ -42,30 +42,28 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
 public final class PointPropertyRemove implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final POINT_PROPERTY m_property;
+  private final String m_property;
 
-  public PointPropertyRemove( final IProfil profil, final POINT_PROPERTY property )
+  public PointPropertyRemove( final IProfil profil, final String property )
   {
     m_profil = profil;
     m_property = property;
 
   }
 
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint ) 
   {
     if( hint != null )
       hint.setPointPropertiesChanged();
 
-    final double[] oldValue = ProfilUtil.getValuesFor(m_profil, m_property );
-    m_profil.getProfilPoints().removeProperty( m_property );
+    final Double[] oldValue = ProfilUtil.getValuesFor(m_profil, m_property );
+    m_profil.removePointProperty( m_property );
 
     return new PointPropertyAdd( m_profil, m_property, oldValue );
   }
@@ -81,7 +79,7 @@ public final class PointPropertyRemove implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
     return m_property;
   }

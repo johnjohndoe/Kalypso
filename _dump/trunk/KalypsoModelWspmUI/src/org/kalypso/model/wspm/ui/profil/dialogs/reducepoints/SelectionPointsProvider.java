@@ -47,7 +47,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
 
@@ -76,8 +75,8 @@ public class SelectionPointsProvider implements IPointsProvider
 
     if( selection instanceof IStructuredSelection )
     {
-      try
-      {
+//      try
+//      {
         final IStructuredSelection structSel = (IStructuredSelection) selection;
 
         if( structSel.size() < 3 )
@@ -114,12 +113,12 @@ public class SelectionPointsProvider implements IPointsProvider
         m_errorMessage = null;
         m_points = points.toArray( new IProfilPoint[points.size()] );
         return;
-      }
-      catch( final ProfilDataException e )
-      {
-        m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
-        return;
-      }
+//      }
+//      catch( final ProfilDataException e )
+//      {
+//        m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
+//        return;
+//      }
     }
 
     m_errorMessage = "Ungültige Selektion.";

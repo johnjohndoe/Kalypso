@@ -32,5 +32,9 @@
                namespace="org.kalypso.model.wspm.tuhh"/>
       </listener>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution class="org.kalypso.model.wspm.tuhh.schema.WspmTuhhDictionaryCatalogContribution"/>
+   </extension>
    
 </plugin>

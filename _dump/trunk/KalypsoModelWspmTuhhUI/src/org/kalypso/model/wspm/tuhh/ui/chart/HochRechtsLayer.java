@@ -51,10 +51,9 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -64,7 +63,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -72,12 +70,12 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   private Color m_color;
 
-  public HochRechtsLayer( final ProfilChartView  pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public HochRechtsLayer( final ProfilChartView  pcv )
   {
-    super( pvp,domainRange, valueRange, false );
+    super(IWspmTuhhConstants.LAYER_GEOKOORDINATEN, pcv,pcv.getDomainRange(), pcv.getValueRangeLeft(),"Geokoordinaten", false );
 
-    m_pem = pvp.getProfilEventManager() ;
-    m_color = color;
+    m_pem = pcv.getProfilEventManager() ;
+    m_color = pcv.getColorRegistry().get(IWspmTuhhConstants.LAYER_GELAENDE);
   }
 
   @Override
@@ -89,8 +87,8 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[2];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), POINT_PROPERTY.HOCHWERT );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), POINT_PROPERTY.RECHTSWERT );
+    changes[0] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
+    changes[1] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
 
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
@@ -101,12 +99,12 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
     try
     {
       final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
-      final double x = p.getValueFor( POINT_PROPERTY.BREITE );
-      final double y = p.getValueFor( POINT_PROPERTY.HOEHE );
+      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
       final Point2D p2 = new Point2D.Double( x, y );
       return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
     }
-    catch( ProfilDataException e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return new Rectangle2D.Double( 0, 0, 0, 0 );

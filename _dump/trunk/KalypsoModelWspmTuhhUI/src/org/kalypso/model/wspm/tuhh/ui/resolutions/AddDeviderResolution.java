@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.changes.DeviderAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerAdd;
 
 /**
  * @author kimwerner
@@ -76,8 +76,8 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     final IProfilChange[] changes = new IProfilChange[2];
     final IProfilPoint firstP = profil.getPoints().getFirst();
     final IProfilPoint lastP = profil.getPoints().getLast();
-    changes[0] = new DeviderAdd( profil, m_deviderType, firstP );
-    changes[1] = new DeviderAdd( profil, m_deviderType, lastP );
+    changes[0] = new PointMarkerAdd( profil, firstP , m_deviderType);
+    changes[1] = new PointMarkerAdd( profil, lastP , m_deviderType);
     return changes;
   }
 

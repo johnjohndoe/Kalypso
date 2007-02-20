@@ -71,5 +71,6 @@ public abstract class TableViewDelegate implements IViewActionDelegate
 
   public void selectionChanged( final IAction action, final ISelection selection )
   {
+    
   }
 }

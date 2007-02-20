@@ -83,18 +83,20 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -293,10 +295,15 @@ public class ProfilSWTTableView extends AbstractProfilView
       public void widgetSelected( final SelectionEvent e )
       {
         final TableItem row = cursor.getRow();
-
-        // change the active point, but dont put it into the undo queue
+        final int col = cursor.getColumn();
+        
+              
+        
+        // change the active point and pointproperty, but dont put it into the undo queue
         final IProfilPoint point = (IProfilPoint) row.getData();
-        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), point, null ), true );
+        final IProfilPointProperty ppp = (IProfilPointProperty) m_viewer.getTable().getColumn( col).getData("columnKey");
+        
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), point, ppp.getId() ), true );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -359,8 +366,8 @@ public class ProfilSWTTableView extends AbstractProfilView
     {
       addColumn( struct, null ).setResizable( false );
 
-      final List<POINT_PROPERTY> tableDataKeys = profil.getPointProperties( true );
-      for( final POINT_PROPERTY key : tableDataKeys )
+      final IProfilPointProperty[] tableDataKeys = profil.getPointProperties();
+      for( final IProfilPointProperty key : tableDataKeys )
         addColumn( struct, key );
     }
 
@@ -371,9 +378,9 @@ public class ProfilSWTTableView extends AbstractProfilView
     packColumns();
   }
 
-  public TableColumn addColumn( final ColumnStruct struct, final POINT_PROPERTY columnKey )
+  public TableColumn addColumn( final ColumnStruct struct, final IProfilPointProperty columnKey )
   {
-    final String text = columnKey == null ? "" : columnKey.toString();
+    final String text = (columnKey == null) ? "" : columnKey.getLabel();
     final String id = columnKey == null ? "" : columnKey.toString();
 
     final Table table = m_viewer.getTable();
@@ -419,7 +426,7 @@ public class ProfilSWTTableView extends AbstractProfilView
       col.setImage( m_emptyImage );
     }
 
-    final POINT_PROPERTY key = (POINT_PROPERTY) column.getData( ProfilLabelProvider.COLUMN_KEY );
+    final IProfilPointProperty key = (IProfilPointProperty) column.getData( ProfilLabelProvider.COLUMN_KEY );
 
     final ProfilViewerSorter sorter;
     final Boolean newstate;
@@ -479,13 +486,14 @@ public class ProfilSWTTableView extends AbstractProfilView
 
         @SuppressWarnings("unchecked")
         final IProfilPoint[] pointsToDelete = (IProfilPoint[]) selection.toList().toArray( new IProfilPoint[selection.size()] );
-        final PointRemove[] changes = new PointRemove[pointsToDelete.length];
+        final IProfilChange[] changes = new IProfilChange[pointsToDelete.length +1 ];
+        final IProfilPoint thePointBefore = ProfilUtil.getPointBefore( getProfil(), pointsToDelete[0] );
         for( int i = 0; i < pointsToDelete.length; i++ )
         {
           final IProfilPoint point = pointsToDelete[i];
           changes[i] = new PointRemove( getProfil(), point );
         }
-
+        changes[pointsToDelete.length] = new ActiveObjectEdit(getProfil(),thePointBefore,IWspmConstants.POINT_PROPERTY_BREITE);
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, false );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -503,14 +511,15 @@ public class ProfilSWTTableView extends AbstractProfilView
         }
 
         final TableItem row = getCursor().getRow();
-        // if( row == null )
-        // return;
-
+        
+        final IProfil profile = getProfil();
         final IProfilPoint thePointBefore = (row == null) ? null : (IProfilPoint) row.getData();
-
-        // final PointInsert change = new PointInsert( getProfil(), thePointBefore );
-        final PointAdd change = new PointAdd( getProfil(), thePointBefore, null );
-        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), change, true );
+        final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( profile, thePointBefore );
+        IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( profile, thePointBefore, thePointAfter );
+        final IProfilChange[] changes = new IProfilChange[2];
+        changes[0] = new PointAdd( profile, thePointBefore, thePoint );
+        changes[1] = new ActiveObjectEdit(profile,thePoint,IWspmConstants.POINT_PROPERTY_BREITE);
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), changes, true );
         new ProfilOperationJob( operation ).schedule();
       }
     } );
@@ -577,7 +586,7 @@ public class ProfilSWTTableView extends AbstractProfilView
           @SuppressWarnings("unchecked")
           final Object element = iter.next();
           if( element != aktiveElement )
-            changes.add( new PointPropertyEdit( (IProfilPoint) element, ProfilCellModifier.propertyForID( getProfil(), property ), value ) );
+            changes.add( new PointPropertyEdit( (IProfilPoint) element, property, value ) );
         }
 
         final PointPropertyEdit[] profilChanges = changes.toArray( new PointPropertyEdit[changes.size()] );
@@ -625,7 +634,7 @@ public class ProfilSWTTableView extends AbstractProfilView
           return;
         }
 
-        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isDeviderMoved() )
+        if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isMarkerMoved() )
           refresh();
 
         if( hint.isActivePointChanged() )
@@ -645,7 +654,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     if( activePoint == null )
       return;
 
-    final POINT_PROPERTY activeProperty = profil.getActiveProperty();
+    final IProfilPointProperty activeProperty = profil.getActiveProperty();
     final String propertyName = activeProperty == null ? null : activeProperty.toString();
 
     final Table table = m_viewer.getTable();
@@ -655,7 +664,7 @@ public class ProfilSWTTableView extends AbstractProfilView
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {
-      if( item.getData() == activePoint )
+      if( (IProfilPoint)item.getData() == activePoint )
       {
         final Object[] columnProperties = m_viewer.getColumnProperties();
 
@@ -698,7 +707,7 @@ public class ProfilSWTTableView extends AbstractProfilView
 
     if( rowItem == null )
       return null;
-      
+
     final int row = table.indexOf( rowItem );
     final int col = m_cursor.getColumn();
 
@@ -715,18 +724,18 @@ public class ProfilSWTTableView extends AbstractProfilView
 
     if( m_cursor == null || m_cursor.isDisposed() )
       return;
-    
+
     final Integer[] pos = (Integer[]) viewState;
-    
+
     final int columnCount = m_viewer.getTable().getColumnCount();
     final int rowCount = m_viewer.getTable().getItemCount();
-    
+
     final Integer row = Math.min( rowCount - 1, pos[0] );
     final Integer col = Math.min( columnCount - 1, pos[1] );
-    
+
     if( row == -1 || col == -1 )
       return;
-    
+
     m_cursor.setSelection( row, col, true );
     m_cursor.redraw();
   }

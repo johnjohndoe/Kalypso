@@ -182,7 +182,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
 
     if( profilLayer != null )
     {
-      group.setText( profilLayer.toString() );
+      group.setText( profilLayer.getLabel() );
 
       final ProfilChartView profilChartView = profilLayer.getProfilChartView();
       final IProfilView panel = profilLayer.createLayerPanel( profilChartView.getProfilEventManager(), profilChartView.getViewData() );

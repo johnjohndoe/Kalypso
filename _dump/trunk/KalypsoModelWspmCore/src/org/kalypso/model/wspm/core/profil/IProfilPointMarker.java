@@ -42,18 +42,30 @@ package org.kalypso.model.wspm.core.profil;
 
 import java.util.Collection;
 
-
 public interface IProfilPointMarker
 {
   public Object getValueFor( final String key );
-
-  public void setValueFor( final String key, final Object value )throws IllegalArgumentException;
   
-  public IProfilPoint getPoint();
+  public void setValueFor( final String key, final Object value ) throws IllegalArgumentException;
 
-  public void setPoint( final IProfilPoint point );
+  public Collection<String> getKeys( );
+
+  public IProfilPoint getPoint( );
+
+  public IProfilPoint setPoint( final IProfilPoint point );
+
+  /**
+   * Muss dictionary id sein (und zwar swe:ItemDefinition's)!
+   */
+  public String getMarkerId( );
   
-  public Collection<String> getKeys();
+  /**
+   * Returns the value of this marker as it should be written into gml. Must fit to the type defined in the component ItemDefinition
+   * @return May not return <code>null</code>.
+   * @see #getMarkerId()
+   */
+  public Object getGmlObject( );
 
-  public String getTyp( );
+  public String getMarkerLabel();
+
 }

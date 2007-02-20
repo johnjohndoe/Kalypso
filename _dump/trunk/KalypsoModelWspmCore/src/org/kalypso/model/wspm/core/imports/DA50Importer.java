@@ -63,8 +63,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -123,11 +121,6 @@ public class DA50Importer
       final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Zugriff auf die DA50 Datei" );
       throw new CoreException( status );
     }
-    catch( final ProfilDataException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Zuweisen der Geoposition am Profil" );
-      throw new CoreException( status );
-    }
     finally
     {
       IOUtils.closeQuietly( da50reader );
@@ -140,7 +133,7 @@ public class DA50Importer
    *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
    *          to the point with the breite-coordinate zero.
    */
-  private static void applyD50Entry( final IProfil profil, final DA50Entry entry, final boolean bRefFirst ) throws CoreException, ProfilDataException
+  private static void applyD50Entry( final IProfil profil, final DA50Entry entry, final boolean bRefFirst ) throws CoreException
   {
     final GM_Position startPos = entry.start.getPosition();
     final GM_Position endPos = entry.end.getPosition();
@@ -167,8 +160,8 @@ public class DA50Importer
       
     final IProfilPoint firstPP = points.getFirst();
     final IProfilPoint lastPP = points.getLast();
-    final double firstBreite = firstPP.getValueFor( POINT_PROPERTY.BREITE );
-    final double lastBreite = lastPP.getValueFor( POINT_PROPERTY.BREITE );
+    final double firstBreite = firstPP.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
+    final double lastBreite = lastPP.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
     
     double yOffset = 0;
     if( bRefFirst )
@@ -182,13 +175,13 @@ public class DA50Importer
     final double rwLast = startPos.getX() + yLast * vx;
     final double hwLast = startPos.getY() + yLast * vy;
 
-    profil.addPointProperty( POINT_PROPERTY.RECHTSWERT );
-    profil.addPointProperty( POINT_PROPERTY.HOCHWERT );
+    profil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    profil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     
-    firstPP.setValueFor( POINT_PROPERTY.RECHTSWERT, rwFirst );
-    firstPP.setValueFor( POINT_PROPERTY.HOCHWERT, hwFirst );
-    lastPP.setValueFor( POINT_PROPERTY.RECHTSWERT, rwLast );
-    lastPP.setValueFor( POINT_PROPERTY.HOCHWERT, hwLast );
+    firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwFirst );
+    firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, hwFirst );
+    lastPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwLast );
+    lastPP.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, hwLast );
   }
 
   private static DA50Entry[] readDA50( final LineNumberReader lnr ) throws IOException, CoreException

@@ -43,17 +43,17 @@ package org.kalypso.model.wspm.core.profil.changes;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 
 public class ActiveObjectEdit implements IProfilChange
 {
-  private final POINT_PROPERTY m_property;
+  private final String m_property;
 
   private final IProfilPoint m_point;
 
   private final IProfil m_profil;
 
-  public ActiveObjectEdit( final IProfil profil, final IProfilPoint point, final POINT_PROPERTY property )
+  public ActiveObjectEdit( final IProfil profil, final IProfilPoint point, final String property )
   {
     m_profil = profil;
     m_property = property;
@@ -65,14 +65,16 @@ public class ActiveObjectEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setActivePointChanged();
-    
+    if( hint != null )
+      hint.setActivePointChanged();
+
     final IProfilPoint oldPoint = m_profil.getActivePoint();
-    final POINT_PROPERTY oldProperty = m_profil.getActiveProperty();
+    final IProfilPointProperty oldProperty = m_profil.getActiveProperty();
+
     m_profil.setActivePoint( m_point );
     m_profil.setActiveProperty( m_property );
 
-    return new ActiveObjectEdit( m_profil, oldPoint, oldProperty );
+    return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty.toString() );
   }
 
   /**
@@ -80,15 +82,15 @@ public class ActiveObjectEdit implements IProfilChange
    */
   public Object getObject( )
   {
-        return m_point;
+    return m_point;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
-        return m_property;
+    return m_property.toString();
   }
 
   /**
@@ -96,6 +98,6 @@ public class ActiveObjectEdit implements IProfilChange
    */
   public Double getValue( )
   {
-       return null;
+    return null;
   }
 }

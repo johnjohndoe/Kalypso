@@ -42,147 +42,24 @@ package org.kalypso.model.wspm.core.profil;
 
 import java.util.LinkedList;
 
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-
 /**
  * @author kimwerner
  */
 public interface IProfil
 {
-  public static enum PROFIL_PROPERTY
-  {
-    /** ObjectTyp=List<String> */
-    KOMMENTAR,
-    /** ObjectTyp=String */
-    MEHRFELDBRUECKE,
-    /** ObjectTyp=List<String> */
-    METASTRINGS,
-    /** ObjectTyp=RAUHEIT_TYP */
-    RAUHEIT_TYP,
-    /** ObjectTyp=String */
-    STATUS,
-    /** ObjectTyp=String */
-    VERZWEIGUNGSKENNUNG,
-    /** ObjectTyp=String */
-    WASSERSPIEGEL
-  }
+  public void addPoint( final IProfilPoint point );
 
-  /**
-   * @param point
-   * @param devider
-   * @return IProfilDevider
-   */
-  public IProfilDevider addDevider( IProfilPoint point, String devider );
+  public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId );
 
-  public void addDevider( IProfilDevider devider );
-
-  public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY property );
-
-  public IProfilPoint addPoint( final double breite, final double hoehe );
+  public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker );
 
   /**
    * @param pointProperty
    * @return POINT_PROPERTY[] with all current pointproperties
    */
-  public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
+  public String[] addPointProperty( final String pointProperty );
 
-  /**
-   * @return the current building, maybe null
-   */
-  public IProfilBuilding getBuilding( );
-
-  /**
-   * @return IProfilDevider[] with all deviders linked with the given point
-   */
-  public IProfilDevider[] getDevider( final IProfilPoint point );
-
-  /**
-   * @return IProfilDevider[] with all deviders in this profil sort by POINT_PROPERTY.BREITE
-   */
-  public IProfilDevider[] getDevider( );
-
-  /**
-   * @param deviderTyp
-   * @return IProfilDevider[] with all deviders of deviderTyp sort by POINT_PROPERTY.BREITE
-   */
-  public IProfilDevider[] getDevider( final String deviderTyp );
-
-  /**
-   * @param deviderTypes
-   * @return IProfilDevider[] with all deviders of having deviderTyp in deviderTypes sort by POINT_PROPERTY.BREITE,
-   *         maybe null
-   */
-  public IProfilDevider[] getDevider( final String[] deviderTypes );
-
-  /**
-   * @param filterNonVisible
-   * @return LinkedList<POINT_PROPERTY>
-   */
-  public LinkedList<POINT_PROPERTY> getPointProperties( final boolean filterNonVisible );
-
-  public LinkedList<IProfilPoint> getPoints( );
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.impl.points
-   */
-  public IProfilPoints getProfilPoints( );
-
-  /**
-   * @param key
-   *          see IProfil.PROFIL_PROPERTY
-   */
-  public Object getProperty( Object key );
-
-  public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );
-
-  /**
-   * @return the extracted building, IProfil.getBuilding() will return null
-   * @throws ProfilDataException
-   */
-  public IProfilBuilding removeBuilding( ) throws ProfilDataException;
-
-  /**
-   * @param devider
-   * @return the extracted devider
-   */
-  public IProfilDevider removeDevider( final IProfilDevider devider );
-
-  /**
-   * @param point
-   *          to remove
-   */
-  public boolean removePoint( final IProfilPoint point );
-
-  /**
-   * @param pointProperty
-   *          to remove
-   */
-  public boolean removePointProperty( final POINT_PROPERTY pointProperty );
-
-  /**
-   * @param key
-   * @see IProfil.PROFIL_PROPERTY
-   */
-  public Object removeProperty( final Object key );
-
-  /**
-   * replace the current building
-   * 
-   * @see ProfilBuildingFactory
-   * @param building
-   * @throws ProfilDataException
-   */
-  public void setBuilding( final IProfilBuilding building ) throws ProfilDataException;
-
-  /**
-   * @param key
-   * @param value
-   * @throws ProfilDataException
-   * @see IProfil.PROFIL_PROPERTY
-   */
-  public void setProperty( final Object key, final Object value ) throws ProfilDataException;
-
-  public void setActivePoint( final IProfilPoint point );
+  public IProfilPoint createProfilPoint( );
 
   /**
    * @return Returns the active Point.
@@ -192,12 +69,49 @@ public interface IProfil
   /**
    * @return Returns the active Pointproperty.
    */
-  public POINT_PROPERTY getActiveProperty( );
+  public IProfilPointProperty getActiveProperty( );
 
-  public void setActiveProperty( POINT_PROPERTY activeProperty );
+  /**
+   * @return the current building, maybe null
+   */
+  public IProfileObject getProfileObject( );
 
-  public void setStation( final double station );
+  public String[] getDependenciesFor( final String property );
 
+  public IProfilPoint[] getMarkedPoints( );
+
+  public IProfilPointMarkerProvider getMarkerProviderFor( final String markerId );
+
+  public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point );
+
+  public IProfilPointMarker[] getPointMarkerFor( final String markerType );
+
+  public String[] getPointMarkerTypes( );
+
+  /**
+   * @param filterNonVisible
+   * @return LinkedList<POINT_PROPERTY>
+   */
+  public IProfilPointProperty[] getPointProperties( );
+
+  public IProfilPointProperty getPointProperty( final String pointPrioperty );
+
+  public LinkedList<IProfilPoint> getPoints( );
+
+  /**
+   * @param key
+   *          see IProfil.PROFIL_PROPERTY
+   */
+  public Object getProperty( Object key );
+
+  public IProfilPointPropertyProvider getPropertyProviderFor( final String property );
+
+  public IProfileObjectProvider getObjectProviderFor( final String profileObject );
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.impl.points
+   */
+  // public IProfilPoints getProfilPoints( );
   public double getStation( );
 
   /**
@@ -211,4 +125,75 @@ public interface IProfil
    * </ul>
    */
   public String getType( );
+
+  public boolean hasPointProperty( final String propertyId );
+
+  // public static enum PROFIL_PROPERTY
+  // {
+  // /** ObjectTyp=List<String> */
+  // KOMMENTAR,
+  // /** ObjectTyp=String */
+  // MEHRFELDBRUECKE,
+  // /** ObjectTyp=List<String> */
+  // METASTRINGS,
+  // /** ObjectTyp=RAUHEIT_TYP */
+  // RAUHEIT_TYP,
+  // /** ObjectTyp=String */
+  // STATUS,
+  // /** ObjectTyp=String */
+  // VERZWEIGUNGSKENNUNG,
+  // /** ObjectTyp=String */
+  // WASSERSPIEGEL
+  // }
+
+  /**
+   * @return the extracted building, IProfil.getBuilding() will return null
+   * @throws ProfilDataException
+   */
+  public IProfileObject removeProfileObject( ) throws ProfilDataException;
+
+  /**
+   * @param point
+   *          to remove
+   */
+  public boolean removePoint( final IProfilPoint point );
+
+  public IProfilPointMarker removePointMarker( final IProfilPointMarker pointMarker );
+
+  /**
+   * @param pointProperty
+   *          to remove
+   */
+  public boolean removePointProperty( final String pointProperty );
+
+  /**
+   * @param key
+   * @see IProfil.PROFIL_PROPERTY
+   */
+  public Object removeProperty( final Object key );
+
+  public void setActivePoint( final IProfilPoint point );
+
+  public void setActivePointProperty( final String activeProperty );
+
+  public void setActiveProperty( final String pointProperty );
+
+  /**
+   * replace the current building
+   * 
+   * @see ProfilBuildingFactory
+   * @param building
+   * @throws ProfilDataException
+   */
+  public void setProfileObject( final IProfileObject building ) throws ProfilDataException;
+
+  /**
+   * @param key
+   * @param value
+   * @throws ProfilDataException
+   * @see IProfil.PROFIL_PROPERTY
+   */
+  public void setProperty( final Object key, final Object value ) throws ProfilDataException;
+
+  public void setStation( final double station );
 }

@@ -41,15 +41,16 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 
 
 public interface IPointsTarget extends IExecutableExtension
 {
-  public void insertPoints( final IProfilEventManager pem, final IProfilPoints points ) throws InvocationTargetException;
+  public void insertPoints( final IProfilEventManager pem, final LinkedList<IProfilPoint> points ) throws InvocationTargetException;
 
   public String getLabel( );
 

@@ -55,22 +55,30 @@ import de.belger.swtchart.layer.AbstractChartLayer;
 
 public abstract class AbstractProfilChartLayer extends AbstractChartLayer implements IProfilChartLayer
 {
+
   private final ProfilChartView m_chartView;
+
   private boolean m_initialVisibility = true;
 
-  public AbstractProfilChartLayer( final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange )
+  private final String m_label;
+  
+  private final String m_id;
+
+  public AbstractProfilChartLayer( final String layerId,final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final String label )
   {
     super( domainRange, valueRange );
-
+    m_label = label;
     m_chartView = chartView;
+    m_id = layerId;
   }
 
-  public AbstractProfilChartLayer( final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final boolean initalVisibility )
+  public AbstractProfilChartLayer(final String layerId, final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final String label, final boolean initalVisibility )
   {
     super( domainRange, valueRange );
-    
+    m_label = label;
     m_chartView = chartView;
     m_initialVisibility = initalVisibility;
+    m_id = layerId;
   }
 
   /**
@@ -80,7 +88,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   {
     return m_initialVisibility;
   }
-  
+
   public final void edit( final Point point, final Object data )
   {
     editProfil( point, data );
@@ -165,5 +173,23 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   public ProfilChartView getProfilChartView( )
   {
     return m_chartView;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getId()
+   */
+  public String getId( )
+  {
+    
+    return m_id;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getLabel()
+   */
+  public String getLabel( )
+  {
+    
+    return m_label;
   }
 }

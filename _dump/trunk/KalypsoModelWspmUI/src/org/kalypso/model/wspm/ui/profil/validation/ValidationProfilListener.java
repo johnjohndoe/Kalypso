@@ -170,7 +170,7 @@ public class ValidationProfilListener implements IProfilListener
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     // only revalidate if rellay data has changed
-    if( hint.isBuildingChanged() || hint.isBuildingDataChanged() || hint.isDeviderDataChanged() || hint.isDeviderMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
+    if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
         || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
       revalidate();
   }

@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -76,9 +77,9 @@ public class KalypsoModelWspmUIExtensions
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( extensionPoint );
 
-//    elements[0].getAttribute( "id" );
-//    elements[0].createExecutableExtension( "class" );
-    
+    // elements[0].getAttribute( "id" );
+    // elements[0].createExecutableExtension( "class" );
+
     final Collection<T> targets = new ArrayList<T>( elements.length );
     for( int i = 0; i < elements.length; i++ )
     {
@@ -96,18 +97,19 @@ public class KalypsoModelWspmUIExtensions
     return targets.toArray( a );
   }
 
-  public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
+  public static IProfilLayerProvider[] createProfilLayerProvider( final String profiletype )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
+    final List<IProfilLayerProvider> layerProvider = new ArrayList<IProfilLayerProvider> ();
     for( final IConfigurationElement element : elements )
     {
       final String type = element.getAttribute( "profiletype" );
-      if( type.equals( profiletype ))
+      if( type.equals( profiletype ) )
       {
         try
         {
-          return (IProfilLayerProvider) element.createExecutableExtension( "provider" );
+          layerProvider.add((IProfilLayerProvider)  element.createExecutableExtension( "provider" ) );
         }
         catch( final CoreException e )
         {
@@ -115,11 +117,10 @@ public class KalypsoModelWspmUIExtensions
         }
       }
     }
-    
+    if( layerProvider.size() > 0 )
+      return layerProvider.toArray(new IProfilLayerProvider[0]);
     final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    
     return null;
   }
-  
 }

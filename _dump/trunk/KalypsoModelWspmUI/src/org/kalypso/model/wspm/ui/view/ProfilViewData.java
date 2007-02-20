@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +50,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -82,7 +80,9 @@ public class ProfilViewData
 
   protected boolean m_useDeviderValue = false;
 
-  private List<String> m_visibleDevider = new ArrayList<String>();
+  private List<String> m_visibleMarker = new ArrayList<String>();
+
+  private List<String> m_visiblePointProperties = new ArrayList<String>();
 
   private IChartLayer m_activeLayer;
 
@@ -105,12 +105,30 @@ public class ProfilViewData
     m_legendMemento = new XMLMemento( m_document, legendelement );
     final Element chartelement = m_document.createElement( "chartView" );
     m_chartMemento = new XMLMemento( m_document, chartelement );
-    m_visibleDevider.addAll( Arrays.asList( IProfilConstants.DEVIDER_TYPES ) );
   }
 
   public void dispose( )
   {
     m_listener.clear();
+  }
+
+  public boolean isVisible( final String pointProperty )
+  {
+    return m_visiblePointProperties.contains( pointProperty );
+  }
+
+  public void changeVisibility( final String pointProperty, final boolean visibility )
+  {
+    if( visibility )
+    {
+      if( !m_visiblePointProperties.contains( pointProperty ) )
+        m_visiblePointProperties.add( pointProperty );
+    }
+    else
+    {
+      if( m_visiblePointProperties.contains( pointProperty ) )
+        m_visiblePointProperties.remove( pointProperty );
+    }
   }
 
   public IMemento getLegendMemento( )
@@ -143,24 +161,24 @@ public class ProfilViewData
     m_edithorz = edithorz;
   }
 
-  public void setDeviderVisibility( final String deviderTyp, final boolean visible )
+  public void setMarkerVisibility( final String markerTyp, final boolean visible )
   {
     if( visible )
     {
-      if( !m_visibleDevider.contains( deviderTyp ) )
+      if( !m_visibleMarker.contains( markerTyp ) )
       {
-        m_visibleDevider.add( deviderTyp );
+        m_visibleMarker.add( markerTyp );
       }
 
     }
     else
-      m_visibleDevider.remove( deviderTyp );
+      m_visibleMarker.remove( markerTyp );
   }
 
   public boolean getDeviderVisibility( final String deviderTyp )
   {
 
-    return m_visibleDevider.contains( deviderTyp );
+    return m_visibleMarker.contains( deviderTyp );
 
   }
 

@@ -57,14 +57,12 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
-import org.kalypso.model.wspm.core.profil.changes.BuildingEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -80,36 +78,38 @@ public class BuildingPanel extends AbstractProfilView
 {
   private final Collection<Text> m_texts = new ArrayList<Text>( 8 );
 
-  private final IProfilBuilding m_building;
+  private final IProfileObject m_building;
 
-  private String getLabel( final BUILDING_PROPERTY property )
+  private String getLabel( final String property )
   {
-    if( property == BUILDING_PROPERTY.BREITE )
-    {
-      final String buildigTyp = m_building.getTyp();
-      if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_EI ) == 0 )
-      {
-        return "grösster Durchmesser [m]";
-      }
-      else if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_TRAPEZ ) == 0 )
-      {
-        return "lange Seite [m]";
-      }
-      else if( buildigTyp.compareTo( IProfilConstants.BUILDING_TYP_BRUECKE ) == 0 )
-      {
-        return "Breite in Fließrichtung [m]";
-      }
-      else
-        return property.toString();
-    }
-    return property.toString();
+    return m_building.getLabelFor( property );
+    // TODO: Kim return getLabelProvider.getCaptionFor(property);
+    // if( property == BUILDING_PROPERTY.BREITE )
+    // {
+    // final String buildigTyp = m_building.getTyp();
+    // if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
+    // {
+    // return "grösster Durchmesser [m]";
+    // }
+    // else if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+    // {
+    // return "lange Seite [m]";
+    // }
+    // else if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) == 0 )
+    // {
+    // return "Breite in Fließrichtung [m]";
+    // }
+    // else
+    // return property.toString();
+    // }
+    //return property;
   }
 
   public BuildingPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
     super( pem, viewdata );
 
-    m_building = getProfil().getBuilding();
+    m_building = getProfil().getProfileObject();
   }
 
   /**
@@ -130,9 +130,9 @@ public class BuildingPanel extends AbstractProfilView
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-    for( final BUILDING_PROPERTY buildingProperty : m_building.getBuildingProperties() )
+    for( final String buildingProperty : m_building.getObjectProperties() )
     {
-      final String tooltip = buildingProperty.getTooltip();
+      final String tooltip = ""; // TODO: Kim labelProvider.getTooltipFor(buildingProperty);
 
       final Label label = new Label( panel, SWT.NONE );
       label.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, true, false ) );
@@ -162,7 +162,7 @@ public class BuildingPanel extends AbstractProfilView
         {
           final double value = NumberUtils.parseQuietDouble( bldText.getText() );
           final IProfil profil = getProfil();
-          final IProfilBuilding building = profil.getBuilding();
+          final IProfileObject building = profil.getProfileObject();
           if( Double.isNaN( value ) || (building == null) )
           {
             updateControls();
@@ -173,11 +173,11 @@ public class BuildingPanel extends AbstractProfilView
             final double currentValue = (Double) building.getValueFor( buildingProperty );
             if( value == currentValue )
               return;
-            final BuildingEdit edit = new BuildingEdit( profil.getBuilding(), buildingProperty, value );
-            final ProfilOperation operation = new ProfilOperation( buildingProperty.getTooltip() + " ändern", getProfilEventManager(), edit, true );
+            final ProfileObjectEdit edit = new ProfileObjectEdit( profil.getProfileObject(), buildingProperty, value );
+            final ProfilOperation operation = new ProfilOperation( /* TODO: labelProvider */"" + " ändern", getProfilEventManager(), edit, true );
             new ProfilOperationJob( operation ).schedule();
           }
-          catch( ProfilDataException e1 )
+          catch( Exception e1 )
           {
             updateControls();
           }
@@ -198,12 +198,12 @@ public class BuildingPanel extends AbstractProfilView
       {
         if( !text.isDisposed() )
         {
-          text.setText( String.format( "%.2f", m_building.getValueFor( (BUILDING_PROPERTY) text.getData() ) ) );
+          text.setText( String.format( "%.2f", m_building.getValueFor( text.getData().toString() ) ) );
           if( text.isFocusControl() )
             text.selectAll();
         }
       }
-      catch( final ProfilDataException e )
+      catch( final Exception e )
       {
         text.setText( "Formatfehler" );
       }
@@ -212,7 +212,7 @@ public class BuildingPanel extends AbstractProfilView
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isBuildingChanged() || hint.isBuildingDataChanged() )
+    if( hint.isObjectChanged() || hint.isObjectDataChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )

@@ -47,13 +47,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 public class RauheitRule extends AbstractValidatorRule
@@ -62,9 +60,9 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-    if( !profil.getProfilPoints().propertyExists( POINT_PROPERTY.RAUHEIT ) )
+    if( !profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
       return;
-    final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
+    final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( points == null )
       return;
     int i = 0;
@@ -73,15 +71,15 @@ public class RauheitRule extends AbstractValidatorRule
     {
       try
       {
-        final double rh = point.getValueFor( POINT_PROPERTY.RAUHEIT );
+        final double rh = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, POINT_PROPERTY.RAUHEIT.toString(), pluginId, null );
+          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT.toString(), pluginId, null );
           break;
         }
         i++;
       }
-      catch( ProfilDataException e )
+      catch( CoreException e )
       {
         e.printStackTrace();
         throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );

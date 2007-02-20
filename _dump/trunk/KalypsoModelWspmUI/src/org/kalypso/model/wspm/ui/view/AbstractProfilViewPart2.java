@@ -138,7 +138,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_profilProviderPart = part;
 
     if( m_provider != null )
+    {
       m_provider.addProfilProviderListener( this );
+
+    }
 
     final IProfilEventManager newPem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData newViewData = m_provider == null ? null : m_provider.getViewData();
@@ -314,4 +317,5 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   protected abstract Control createContent( final Composite parent );
 
   protected abstract void saveState( );
+
 }

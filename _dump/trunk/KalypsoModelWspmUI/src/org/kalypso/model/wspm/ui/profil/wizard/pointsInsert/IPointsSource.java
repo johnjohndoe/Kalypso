@@ -41,17 +41,18 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 
 
 public interface IPointsSource extends IExecutableExtension
 {
-  public IProfilPoints getPoints( ) throws InvocationTargetException;
+  public LinkedList<IProfilPoint> getPoints( ) throws InvocationTargetException;
 
   public void createControl( final Composite parent );
 

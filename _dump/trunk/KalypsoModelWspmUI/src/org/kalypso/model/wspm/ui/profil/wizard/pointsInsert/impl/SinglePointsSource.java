@@ -41,12 +41,14 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 
+import java.util.LinkedList;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
 
 
@@ -68,7 +70,7 @@ public class SinglePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
-  public IProfilPoints getPoints( )
+  public LinkedList<IProfilPoint> getPoints( )
   {
     // ein einzelnen punkt interpolieren
     

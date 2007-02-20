@@ -40,27 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf.test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import junit.framework.TestCase;
-
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilBuildingFactory;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 
 /**
  * @author kimwerner
@@ -93,137 +73,137 @@ public class CreateProfilesTest extends TestCase
 
   }
 
-  public IProfil createWspWinProf( )
-  {
-    final IProfil p = createMinProf();
-    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-
-    p.addDevider( p.getPoints().get( 0 ), IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( p.getPoints().get( 4 ), IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( p.getPoints().get( 1 ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    p.addDevider( p.getPoints().get( 3 ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-
-    return p;
-  }
-
-  public IProfil createBruecke( ) throws ProfilDataException
-  {
-    final IProfil p = createMinProf();
-    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_BRUECKE ) );
-    final IProfilPoint pf = p.getPoints().getFirst();
-    final IProfilPoint pl = p.getPoints().getLast();
-    final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
-
-    p.addDevider( pf, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( pl, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( pm, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    final List<IProfilPoint> uList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    for( IProfilPoint pkt : oList )
-    {
-      pkt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, pf.getValueFor( POINT_PROPERTY.HOEHE ) );
-
-    }
-    for( IProfilPoint pkt : uList )
-    {
-      pkt.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, pm.getValueFor( POINT_PROPERTY.HOEHE ) );
-
-    }
-    return p;
-  }
-
-  public IProfil createDurchlass( String bt ) throws ProfilDataException
-  {
-    final IProfil p = createWspWinProf();
-    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( bt ) );
-    return p;
-  }
-
-  public IProfil createBewuchs( )
-  {
-    final IProfil p = createWspWinProf();
-    p.addPointProperty( POINT_PROPERTY.BEWUCHS_AX );
-    return p;
-  }
-
-  public IProfil createGeoCoord( )
-  {
-    final IProfil p = createWspWinProf();
-    p.addPointProperty( POINT_PROPERTY.HOCHWERT );
-    return p;
-  }
-
-  public IProfil createWehr( ) throws ProfilDataException
-  {
-    final IProfil p = createMinProf();
-    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
-    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IProfilConstants.BUILDING_TYP_WEHR ) );
-    final IProfilPoint pf = p.getPoints().getFirst();
-    final IProfilPoint pl = p.getPoints().getLast();
-    final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
-
-    p.addDevider( pf, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( pl, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE );
-    p.addDevider( pm, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
-
-    for( IProfilPoint pkt : oList )
-    {
-      pkt.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, pm.getValueFor( POINT_PROPERTY.HOEHE ) );
-    }
-    return p;
-  }
-
-  public void writePrf( ArrayList<IProfil> profs ) throws FileNotFoundException
-  {
-
-    final IProfilSink ps = new PrfSink();
-    Integer nr = 0;
-    for( IProfil p : profs )
-    {
-      p.setStation( nr );
-      final File outPrfFile = new File( dir + String.format( Locale.US, "%04d", nr++ ) + ".prf" );
-      final PrintWriter prfWriter = new PrintWriter( outPrfFile );
-      ps.write( p, prfWriter );
-    }
-  }
-
-  public void writeStr( ArrayList<IProfil> profs ) throws IOException
-  {
-    final FileWriter f = new FileWriter( dir + "ProfilTest.str" );
-    final Integer cnt = profs.size();
-
-    f.write( String.format( Locale.US, "%5d", cnt ) + String.format( Locale.US, "%5d", cnt - 1 ) + "      Test       Prf" );
-    for( Integer stat = 0; stat < cnt; stat++ )
-    {
-
-      f.write( "\nTest" + String.format( Locale.US, "%10d", stat ) + " 0         0   Ist        " + String.format( Locale.US, "%04d", stat ) + ".prf" );
-    }
-
-    for( Integer stat = 1; stat < cnt; stat++ )
-    {
-      f.write( "\n" + String.format( Locale.US, "%.6f", new Double( stat - 1 ) ) + String.format( Locale.US, "% .6f", new Double( stat ) ) + " 1.000 1.000 1.000 "
-          + String.format( Locale.US, "%04d", stat - 1 ) + ".prf " + String.format( Locale.US, "%04d", stat ) + ".prf" );
-    }
-
-    f.flush();
-    f.close();
-  }
-
-  public IProfil createMinProf( )
-  {
-    final IProfil p = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
-    p.addPoint( 0, 100 );
-    p.addPoint( 15, 70 );
-    p.addPoint( 35, 40 );
-    p.addPoint( 50, 20 );
-    p.addPoint( 65, 40 );
-    p.addPoint( 85, 70 );
-    p.addPoint( 100, 100 );
-    return p;
-  }
+//  public IProfil createWspWinProf( )
+//  {
+//    final IProfil p = createMinProf();
+//    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
+//
+//    p.addDevider( p.getPoints().get( 0 ), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( p.getPoints().get( 4 ), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( p.getPoints().get( 1 ), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    p.addDevider( p.getPoints().get( 3 ), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//
+//    return p;
+//  }
+//
+//  public IProfil createBruecke( ) throws ProfilDataException
+//  {
+//    final IProfil p = createMinProf();
+//    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
+//    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) );
+//    final IProfilPoint pf = p.getPoints().getFirst();
+//    final IProfilPoint pl = p.getPoints().getLast();
+//    final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
+//
+//    p.addDevider( pf, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( pl, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( pm, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    final List<IProfilPoint> uList = ProfilUtil.getInnerPoints( p, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    for( IProfilPoint pkt : oList )
+//    {
+//      pkt.setValueFor( POINT_PROPERTY.OBERKANTEBRUECKE, pf.getValueFor( POINT_PROPERTY.HOEHE ) );
+//
+//    }
+//    for( IProfilPoint pkt : uList )
+//    {
+//      pkt.setValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE, pm.getValueFor( POINT_PROPERTY.HOEHE ) );
+//
+//    }
+//    return p;
+//  }
+//
+//  public IProfil createDurchlass( String bt ) throws ProfilDataException
+//  {
+//    final IProfil p = createWspWinProf();
+//    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
+//    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( bt ) );
+//    return p;
+//  }
+//
+//  public IProfil createBewuchs( )
+//  {
+//    final IProfil p = createWspWinProf();
+//    p.addPointProperty( POINT_PROPERTY.BEWUCHS_AX );
+//    return p;
+//  }
+//
+//  public IProfil createGeoCoord( )
+//  {
+//    final IProfil p = createWspWinProf();
+//    p.addPointProperty( POINT_PROPERTY.HOCHWERT );
+//    return p;
+//  }
+//
+//  public IProfil createWehr( ) throws ProfilDataException
+//  {
+//    final IProfil p = createMinProf();
+//    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
+//    p.setBuilding( ProfilBuildingFactory.createProfilBuilding( IWspmTuhhConstants.BUILDING_TYP_WEHR ) );
+//    final IProfilPoint pf = p.getPoints().getFirst();
+//    final IProfilPoint pl = p.getPoints().getLast();
+//    final IProfilPoint pm = ProfilUtil.getPointAfter( p, pf );
+//
+//    p.addDevider( pf, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( pl, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    p.addDevider( pm, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    p.addDevider( ProfilUtil.getPointBefore( p, pl ), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    final List<IProfilPoint> oList = ProfilUtil.getInnerPoints( p, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//
+//    for( IProfilPoint pkt : oList )
+//    {
+//      pkt.setValueFor( POINT_PROPERTY.OBERKANTEWEHR, pm.getValueFor( POINT_PROPERTY.HOEHE ) );
+//    }
+//    return p;
+//  }
+//
+//  public void writePrf( ArrayList<IProfil> profs ) throws FileNotFoundException
+//  {
+//
+//    final IProfilSink ps = new PrfSink();
+//    Integer nr = 0;
+//    for( IProfil p : profs )
+//    {
+//      p.setStation( nr );
+//      final File outPrfFile = new File( dir + String.format( Locale.US, "%04d", nr++ ) + ".prf" );
+//      final PrintWriter prfWriter = new PrintWriter( outPrfFile );
+//      ps.write( p, prfWriter );
+//    }
+//  }
+//
+//  public void writeStr( ArrayList<IProfil> profs ) throws IOException
+//  {
+//    final FileWriter f = new FileWriter( dir + "ProfilTest.str" );
+//    final Integer cnt = profs.size();
+//
+//    f.write( String.format( Locale.US, "%5d", cnt ) + String.format( Locale.US, "%5d", cnt - 1 ) + "      Test       Prf" );
+//    for( Integer stat = 0; stat < cnt; stat++ )
+//    {
+//
+//      f.write( "\nTest" + String.format( Locale.US, "%10d", stat ) + " 0         0   Ist        " + String.format( Locale.US, "%04d", stat ) + ".prf" );
+//    }
+//
+//    for( Integer stat = 1; stat < cnt; stat++ )
+//    {
+//      f.write( "\n" + String.format( Locale.US, "%.6f", new Double( stat - 1 ) ) + String.format( Locale.US, "% .6f", new Double( stat ) ) + " 1.000 1.000 1.000 "
+//          + String.format( Locale.US, "%04d", stat - 1 ) + ".prf " + String.format( Locale.US, "%04d", stat ) + ".prf" );
+//    }
+//
+//    f.flush();
+//    f.close();
+//  }
+//
+//  public IProfil createMinProf( )
+//  {
+//    final IProfil p = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
+//    p.addPoint( 0, 100 );
+//    p.addPoint( 15, 70 );
+//    p.addPoint( 35, 40 );
+//    p.addPoint( 50, 20 );
+//    p.addPoint( 65, 40 );
+//    p.addPoint( 85, 70 );
+//    p.addPoint( 100, 100 );
+//    return p;
+//  }
 }

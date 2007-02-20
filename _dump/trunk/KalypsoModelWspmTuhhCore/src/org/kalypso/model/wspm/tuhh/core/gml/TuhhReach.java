@@ -57,8 +57,8 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -166,15 +166,15 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         continue;
 
       final IProfil profil = profileMember.getProfil();
-      final IProfilDevider[] deviders = profil.getDevider();
-      for( final IProfilDevider devider : deviders )
+      final IProfilPointMarker[] deviders = profil.getPointMarkerFor(profil.getType());
+      for( final IProfilPointMarker devider : deviders )
       {
         try
         {
-          final String typ = devider.getTyp();
+          final String typ = devider.getMarkerId();
           final IProfilPoint point = devider.getPoint();
           // REMARK: create the point before the marker because we may have an exception
-          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( point );
+          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint(profil, point );
 
           final TuhhMarker marker = createMarker( list );
           list.add( marker.getFeature() );

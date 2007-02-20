@@ -58,19 +58,16 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilDevider.DEVIDER_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.PARAMETER;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.changes.DeviderEdit;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -106,13 +103,14 @@ public class RauheitenPanel extends AbstractProfilView
     final GridLayout gridLayout = new GridLayout( 3, true );
     panel.setLayout( gridLayout );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final IProfilBuilding building = getProfil().getBuilding();
-    final POINT_PROPERTY[] pointProperties = (building == null) ? null : building.getPointProperties();
+    final IProfileObject building = getProfil().getProfileObject();
+    final String[] pointProperties = (building == null) ? null : building.getPointProperties();
     m_enablePanel = !((building != null) && (pointProperties == null));
     m_blockRauheit = new Button( panel, SWT.CHECK );
     m_blockRauheit.setSelection( getViewData().useDeviderValue() );
-    final IProfilDevider[] devs = (getProfil().getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } ));
-    m_blockRauheit.setEnabled( m_enablePanel && (devs.length == 4) );
+    final IProfilPointMarker[] devs1 = (getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE));
+    final IProfilPointMarker[] devs2 = (getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE  ));
+    m_blockRauheit.setEnabled( m_enablePanel && (devs1.length == 2) && (devs2.length == 2));
     m_blockRauheit.setText( "einfache Rauheiten verwenden" );
     final GridData blockData = new GridData();
     blockData.horizontalSpan = 3;
@@ -189,52 +187,54 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected void updateProperty( final IProfil p )
   {
-    final IProfilDevider[] deviders = p.getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } );
-    if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || deviders.length != 4 )
+    final IProfilPointMarker[] pmD = p.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE);
+    final IProfilPointMarker[] pmT = p.getPointMarkerFor(  IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || pmD.length != 2 || pmT.length != 2)
       return;
     final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
     final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
     final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
-    final Double d1 = (Double) deviders[0].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-    final Double d2 = (Double) deviders[1].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
-    final Double d3 = (Double) deviders[2].getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+    final Double d1 = (Double) pmD[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+    final Double d2 = (Double) pmT[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT);
+    final Double d3 = (Double) pmT[1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT);
     final Double oldvalue1 = d1 == null ? 0.0 : d1;
     final Double oldvalue2 = d2 == null ? 0.0 : d2;
     final Double oldvalue3 = d3 == null ? 0.0 : d3;
     final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
-    final Double prec = (Double) POINT_PROPERTY.RAUHEIT.getParameter( PARAMETER.PRECISION );
+    final IProfilPointProperty pp = p.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
+    final Double prec = pp.getPrecision();
 
     if( !value1.isNaN() && Math.abs( oldvalue1 - value1 ) > prec )
     {
-      changes.add( new DeviderEdit( deviders[0], DEVIDER_PROPERTY.RAUHEIT, value1 ) );
+      changes.add( new PointMarkerEdit( pmD[0], IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value1 ) );
     }
     if( !value2.isNaN() && Math.abs( oldvalue2 - value2 ) > prec )
     {
-      changes.add( new DeviderEdit( deviders[1], DEVIDER_PROPERTY.RAUHEIT, value2 ) );
+      changes.add( new PointMarkerEdit( pmT[0],  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value2 ) );
     }
     if( !value3.isNaN() && Math.abs( oldvalue3 - value3 ) > prec )
     {
-      changes.add( new DeviderEdit( deviders[2], DEVIDER_PROPERTY.RAUHEIT, value3 ) );
+      changes.add( new PointMarkerEdit( pmT[1],  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value3 ) );
     }
     Double currentValue = value1;
     for( IProfilPoint point : p.getPoints() )
     {
-      if( deviders[1].getPoint() == point )
+      if( pmT[0].getPoint() == point )
         currentValue = value2;
-      else if( deviders[2].getPoint() == point )
+      else if( pmT[1].getPoint() == point )
         currentValue = value3;
       Double oldvalue;
       try
       {
-        oldvalue = point.getValueFor( POINT_PROPERTY.RAUHEIT );
+        oldvalue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
       }
-      catch( ProfilDataException e )
+      catch( Exception e )
       {
         oldvalue = 0.0;
       }
       if( !currentValue.isNaN() && Math.abs( oldvalue - currentValue ) > prec )
       {
-        changes.add( new PointPropertyEdit( point, POINT_PROPERTY.RAUHEIT, currentValue ) );
+        changes.add( new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT, currentValue ) );
       }
 
     }
@@ -258,7 +258,8 @@ public class RauheitenPanel extends AbstractProfilView
   void updateControls( )
   {
 
-    final IProfilDevider[] devider = getProfil().getDevider( new String[] { IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE, IProfilConstants.DEVIDER_TYP_TRENNFLAECHE } );
+    final IProfilPointMarker[] pmD = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE);
+    final IProfilPointMarker[] pmT = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE  );
     Boolean isBlockSetting = getViewData().useDeviderValue();
     if( !m_blockRauheit.isDisposed() )
     {
@@ -267,32 +268,32 @@ public class RauheitenPanel extends AbstractProfilView
     if( !m_VL.isDisposed() )
     {
       m_VL.setEnabled( isBlockSetting && m_enablePanel );
-      if( devider.length > 0 )
-        setBlockValue( m_VL, devider[0] );
+      if( pmD.length > 0 )
+        setBlockValue( m_VL, pmD[0] );
     }
     if( !m_HF.isDisposed() )
     {
       m_HF.setEnabled( isBlockSetting && m_enablePanel );
-      if( devider.length > 1 )
-        setBlockValue( m_HF, devider[1] );
+      if( pmT.length > 0 )
+        setBlockValue( m_HF, pmT[0] );
     }
 
     if( !m_VR.isDisposed() )
     {
       m_VR.setEnabled( isBlockSetting && m_enablePanel );
-      if( devider.length > 2 )
-        setBlockValue( m_VR, devider[2] );
+      if( pmT.length > 1 )
+        setBlockValue( m_VR, pmT[1] );
     }
   }
 
-  private void setBlockValue( final Text text, final IProfilDevider devider )
+  private void setBlockValue( final Text text, final IProfilPointMarker devider )
   {
-    final Double value = (Double) devider.getValueFor( DEVIDER_PROPERTY.RAUHEIT );
+    final Double value = (Double) devider.getValueFor(  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
     try
     {
-      text.setText( String.format( "%.2f", (value == null) ? devider.getPoint().getValueFor( POINT_PROPERTY.RAUHEIT ) : value ) );
+      text.setText( String.format( "%.2f", (value == null) ? devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : value ) );
     }
-    catch( ProfilDataException e )
+    catch( Exception e )
     {
       text.setText( "" );
     }
@@ -304,7 +305,7 @@ public class RauheitenPanel extends AbstractProfilView
   {
     final Control control = getControl();
 
-    if( hint.isDeviderMoved() && getViewData().useDeviderValue() )
+    if( hint.isMarkerMoved() && getViewData().useDeviderValue() )
     {
       if( control != null && !control.isDisposed() )
       {

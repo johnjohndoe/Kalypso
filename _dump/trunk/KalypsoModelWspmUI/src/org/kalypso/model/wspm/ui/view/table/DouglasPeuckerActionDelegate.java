@@ -85,11 +85,12 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
       m_selection = selectionProvider.getSelection();
 
     // get profilpoints from selection and view
+    // TODO: this does not work any more
     final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
     if( pem == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, "Profil ausdünnnen", "Die aktive Ansicht untersttz diese Aktion nicht." );
+      MessageDialog.openError( viewShell, "Profil ausdünnnen", "Die aktive Ansicht unterstütz diese Aktion nicht." );
       return;
     }
 

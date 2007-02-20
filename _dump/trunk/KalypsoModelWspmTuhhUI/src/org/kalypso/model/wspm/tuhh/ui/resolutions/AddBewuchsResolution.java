@@ -46,12 +46,10 @@ import java.util.ListIterator;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * @author kimwerner
@@ -73,12 +71,12 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     {
       return null;
     }
-    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if (deviders.length < 2) 
     {
       return null;
     }
-    IProfilDevider devider = null;
+    IProfilPointMarker devider = null;
     IProfilPoint point = null;
     final double[] params = new double[] { 0.0, 0.0, 0.0 };
     try
@@ -98,9 +96,9 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
         point = pt;
         try
         {
-          final Double ax = pt.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
-          final Double ay = pt.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
-          final Double dp = pt.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+          final Double ax = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+          final Double ay = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+          final Double dp = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
           if( ax != 0.0 )
           {
             params[0] = ax;
@@ -114,7 +112,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
             params[2] = dp;
           }
         }
-        catch( ProfilDataException e )
+        catch( Exception e )
         {
           point = null;
         }
@@ -130,9 +128,9 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
         pt = rightPts.next();
         try
         {
-          final double ax = pt.getValueFor( POINT_PROPERTY.BEWUCHS_AX );
-          final double ay = pt.getValueFor( POINT_PROPERTY.BEWUCHS_AY );
-          final double dp = pt.getValueFor( POINT_PROPERTY.BEWUCHS_DP );
+          final double ax = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+          final double ay = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+          final double dp = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
           if( params[0] == 0.0 )
           {
             params[0] = ax;
@@ -146,7 +144,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
             params[2] = dp;
           }
         }
-        catch( ProfilDataException e )
+        catch( Exception e )
         {
           point = null;
         }
@@ -161,9 +159,9 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       return null;
     }
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AX, params[0] );
-    changes[1] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AY, params[1] );
-    changes[2] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_DP, params[2] );
+    changes[0] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, params[0] );
+    changes[1] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, params[1] );
+    changes[2] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, params[2] );
     return changes;
   }
 

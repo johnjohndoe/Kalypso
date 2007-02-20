@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
+import java.util.LinkedList;
+
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 
 /**
  * @author kimwerner
@@ -63,19 +62,39 @@ public class PointAdd implements IProfilChange
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
-    m_point = (point == null) ? ProfilUtil.getProfilPoint( profil, pointBefore, null ) : point;
+    m_point = point;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws ProfilDataException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
+
     if( hint != null )
+    {
       hint.setPointsChanged();
-    final IProfilPoints points = m_profil.getProfilPoints();
-    m_point = points.insertPoint( m_pointBefore, m_point );
-    return new PointRemove( m_profil, m_point );
+    }
+    IProfilPoint pointToAdd=null;
+    if( m_point != null )
+      pointToAdd = m_point;
+    else if( m_pointBefore != null )
+      pointToAdd = m_pointBefore.clonePoint();
+    if( pointToAdd == null )
+      return new IllegalChange( "Profilpunkt existiert nicht." );
+    final LinkedList<IProfilPoint> points = m_profil.getPoints();
+    if( m_pointBefore == null )
+    {
+      points.addFirst( m_point );
+    }
+    else
+    {
+      final int i = points.indexOf( m_pointBefore );
+      if( i < 0 )
+        return new IllegalChange( "Profilpunkt existiert nicht." );
+      points.add( i + 1, pointToAdd );
+    }
+    return new PointRemove( m_profil, pointToAdd );
   }
 
   /**
@@ -89,7 +108,7 @@ public class PointAdd implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
    */
-  public POINT_PROPERTY getPointProperty( )
+  public String getInfo( )
   {
     return null;
   }

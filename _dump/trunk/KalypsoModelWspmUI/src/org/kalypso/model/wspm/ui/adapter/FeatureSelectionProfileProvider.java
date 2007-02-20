@@ -95,7 +95,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   private Feature m_feature;
 
   private CommandableWorkspace m_workspace;
-  
+
   /** Flag to prevent update when source of modell change is this */
   private boolean m_lockNextModelChange = false;
 
@@ -144,7 +144,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
-    
+
     IProfil profile = null;
     WspmProfile profileMember = null;
     IStationResult[] results = null;
@@ -177,7 +177,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final WspmWaterBody water = profileMember.getWater();
     if( water == null )
       return new IStationResult[] {};
-    
+
     final GMLWorkspace workspace = water.getFeature().getWorkspace();
 
     final List<IStationResult> results = new ArrayList<IStationResult>();
@@ -235,7 +235,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     {
       try
       {
-        if( hint.isBuildingChanged() || hint.isBuildingDataChanged() || hint.isDeviderDataChanged() || hint.isDeviderMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
+        if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
             || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
         {
           final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profil, m_feature );
@@ -265,7 +265,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       m_lockNextModelChange = false;
       return;
     }
-    
+
     // do no react to my own event, beware of recursion
     if( m_feature == null )
       return;
@@ -274,7 +274,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     {
       // TODO: this causes all profile controls to completely be re-created
       // even, if the change originally came from one of those...
-      
+
       try
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
@@ -311,4 +311,5 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     fireOnProfilProviderChanged( this, oldPem, m_pem, m_viewData, m_viewData );
   }
+
 }

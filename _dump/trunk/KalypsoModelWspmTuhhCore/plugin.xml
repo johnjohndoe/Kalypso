@@ -22,5 +22,26 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandProfilePointFilter"
             name="nur Vorländer"/>
    </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilPointMarkerProvider">
+      <pointMarkerProvider
+            id="org.kalypso.model.wspm.tuhh.core.profile.DeviderProvider"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.DeviderProvider"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilPointPropertyProvider">
+      <pointPropertyProvider
+            id="org.kalypso.model.wspm.tuhh.core.profile.pointPropertyproviderTUHH"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profileObjectProvider">
+      <objectProvider
+            id="KalypsoModelWspmTuhhCore.objectProviderTUHH"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.BuildingProvider"/>
+   </extension>
 
 </plugin>

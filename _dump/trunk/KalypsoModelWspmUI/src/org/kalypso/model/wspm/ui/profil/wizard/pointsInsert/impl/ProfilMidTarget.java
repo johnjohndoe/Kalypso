@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
-import java.util.Collection;
+import java.util.LinkedList;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -63,35 +62,36 @@ public class ProfilMidTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
-  public void insertPoints( final IProfilEventManager pem, final IProfilPoints points )
+  public void insertPoints( final IProfilEventManager pem, final LinkedList<IProfilPoint> points )
   {
-    final int pointsCount = points.getPoints().size();
-    final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );
+    final int pointsCount = points.size();
+    final IProfilPointProperty[] existingProps = pem.getProfil().getPointProperties();
     
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
       final IProfilPoint activePkt = pem.getProfil().getActivePoint();
       final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
-      final double deltaX = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE ) - targetPkt.getValueFor( POINT_PROPERTY.BREITE );
-      final double deltaY = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - targetPkt.getValueFor( POINT_PROPERTY.HOEHE );
+      final double deltaX = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double deltaY = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       int i = changes.length - 1;
-      for( IProfilPoint point : points.getPoints() )
+      for( IProfilPoint point : points )
       {
         final IProfilPoint newPoint = targetPkt.clonePoint();
-        newPoint.setValueFor(POINT_PROPERTY.BREITE , point.getValueFor( POINT_PROPERTY.BREITE ) - deltaX);
-        newPoint.setValueFor(POINT_PROPERTY.HOEHE , point.getValueFor( POINT_PROPERTY.HOEHE ) - deltaY );
-        for( POINT_PROPERTY prop : existingProps )
+        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_BREITE , point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX);
+        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_HOEHE , point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
+        for(IProfilPointProperty prop : existingProps )
         {
-          if( points.propertyExists( prop ) && (prop != POINT_PROPERTY.BREITE)&& (prop != POINT_PROPERTY.HOEHE))
+          final String propId = prop.toString();
+          if( pem.getProfil().hasPointProperty(propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId )&& !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId))
            {
-            newPoint.setValueFor( prop, point.getValueFor( prop ) );
+            newPoint.setValueFor( propId, point.getValueFor( propId ) );
           }
         }
         changes[i--] = new PointAdd( pem.getProfil(), targetPkt,  newPoint );
       }
     }
-    catch( ProfilDataException e )
+    catch( Exception e )
     {
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;

@@ -195,12 +195,6 @@
       <profilLayerProvider
             id="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.ui.chart.TuhhProfilLayerProvider"/>
-   </extension>
-   <extension
-         point="org.kalypso.ui.featureViewExtensionControl">
-      <extensionControl
-            class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
-            id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
+            provider="org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh"/>
    </extension>
 </plugin>

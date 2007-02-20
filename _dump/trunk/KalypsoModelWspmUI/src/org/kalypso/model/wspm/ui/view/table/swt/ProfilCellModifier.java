@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.swt;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
@@ -49,7 +47,7 @@ import org.eclipse.swt.widgets.Item;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -75,7 +73,7 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     if( pem == null )
       return false;
 
-    return propertyForID( pem.getProfil(), property ) != null;
+    return pem.getProfil().hasPointProperty( property);
   }
 
   /**
@@ -103,11 +101,10 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     else
       point = null;
 
-    final POINT_PROPERTY col = propertyForID( pem.getProfil(), property );
 
     try
     {
-      final double oldValue = point.getValueFor( col );
+      final double oldValue = point.getValueFor( property);
       /* Null values are not allowed for the profile. */
       if( value == null || isValid( value ) != null )
         return;
@@ -116,7 +113,7 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
 
       if( Double.compare( oldValue, newValue ) != 0 )
       {
-        final PointPropertyEdit[] profilChanges = new PointPropertyEdit[] { new PointPropertyEdit( point, col, newValue ) };
+        final PointPropertyEdit[] profilChanges = new PointPropertyEdit[] { new PointPropertyEdit( point,property, newValue ) };
         final ProfilOperation operation = new ProfilOperation( "", pem, profilChanges, true );
         new ProfilOperationJob( operation ).schedule();
       }
@@ -136,29 +133,29 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
     return new Double( value.toString().replace( ',', '.' ) );
   }
 
-  public static POINT_PROPERTY propertyForID( final IProfil profil, final String idstr )
-  {
-    final List<POINT_PROPERTY> columnKeys = profil.getPointProperties( true );
-    for( final POINT_PROPERTY key : columnKeys )
-    {
-      final POINT_PROPERTY pointProperty = key;
-      final String id = pointProperty.toString();
-      if( id.equals( idstr ) )
-        return pointProperty;
-    }
-
-    return null;
-  }
+//  public static IProfilPointProperty propertyForID( final IProfil profil, final String idstr )
+//  {
+//    final IProfilPointProperty[] columnKeys = profil.getPointProperties();
+//    for( final IProfilPointProperty key : columnKeys )
+//    {
+//      final IProfilPointProperty pointProperty = key;
+//      final String id = pointProperty.toString();
+//      if( id.equals( idstr ) )
+//        return pointProperty;
+//    }
+//
+//    return null;
+//  }
 
   public double getValueAsDouble( final Object element, final String property )
   {
     final IProfilPoint row = (IProfilPoint) element;
-    final IProfilEventManager pem = (IProfilEventManager) m_viewer.getInput();
-    final POINT_PROPERTY col = propertyForID( pem.getProfil(), property );
+//    final IProfilEventManager pem = (IProfilEventManager) m_viewer.getInput();
+//    final IProfilPointProperty col = propertyForID( pem.getProfil(), property );
 
     try
     {
-      return row.getValueFor( col );
+      return row.getValueFor( property );
     }
     catch( final Exception e )
     {

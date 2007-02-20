@@ -46,8 +46,7 @@ import java.util.logging.Logger;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 
 
@@ -57,11 +56,11 @@ import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
  */
 public class ProfilViewerSorter extends ViewerSorter
 {
-  private final POINT_PROPERTY m_columnKey;
+  private final IProfilPointProperty m_columnKey;
 
   private final int m_direction;
 
-  public ProfilViewerSorter( final POINT_PROPERTY key, final boolean direction )
+  public ProfilViewerSorter( final IProfilPointProperty key, final boolean direction )
   {
     m_columnKey = key;
     m_direction = direction ? -1 : 1;
@@ -94,15 +93,15 @@ public class ProfilViewerSorter extends ViewerSorter
 
     try
     {
-      final double v1 = point1.getValueFor( m_columnKey );
-      final double v2 = point2.getValueFor( m_columnKey );
+      final double v1 = point1.getValueFor( m_columnKey.toString() );
+      final double v2 = point2.getValueFor( m_columnKey.toString() );
 
       if( v1 < v2 )
         return -1 * m_direction;
       else if( v1 > v2 )
         return 1 * m_direction;
     }
-    catch( final ProfilDataException e )
+    catch( final Exception e )
     {
       Logger.getLogger( getClass().getName() ).log( Level.SEVERE, "Fehler beim Zugriff auf Punktdaten", e );
     }

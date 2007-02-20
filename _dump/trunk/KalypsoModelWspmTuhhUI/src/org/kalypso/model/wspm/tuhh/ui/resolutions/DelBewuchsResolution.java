@@ -45,11 +45,10 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * @author kimwerner
@@ -71,7 +70,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
   protected IProfilChange[] resolve( IProfil profil )
   {
     final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilDevider[] deviders = profil.getDevider( IProfilConstants.DEVIDER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( deviders.length < 1 )
     {
       return null;
@@ -88,9 +87,9 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
     for( IProfilPoint point : fluss )
     {
       final int i = index * 3;
-      changes[i] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AX, 0.0 );
-      changes[i + 1] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_AY, 0.0 );
-      changes[i + 2] = new PointPropertyEdit( point, POINT_PROPERTY.BEWUCHS_DP, 0.0 );
+      changes[i] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, 0.0 );
+      changes[i + 1] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, 0.0 );
+      changes[i + 2] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, 0.0 );
       index++;
     }
     return changes;

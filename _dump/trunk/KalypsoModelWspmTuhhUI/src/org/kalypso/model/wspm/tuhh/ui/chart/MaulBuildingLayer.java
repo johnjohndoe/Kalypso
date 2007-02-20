@@ -47,27 +47,22 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
- * 
  */
 public class MaulBuildingLayer extends AbstractBuildingLayer
 {
-  public MaulBuildingLayer( final ProfilChartView pvp,
-      final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public MaulBuildingLayer( final ProfilChartView pcv )
   {
-    super( pvp, domainRange, valueRange, color );
+    super(IWspmTuhhConstants.LAYER_MAUL,"Maul-Durchlaﬂ",pcv );
   }
- 
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
@@ -80,8 +75,7 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
     }
     catch( Exception e )
     {
-      return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN,
-          Double.NaN );
+      return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN, Double.NaN );
     }
   }
 
@@ -92,13 +86,13 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
   public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
-    
+
     final Color background = gc.getBackground();
-    
+
     gc.setBackground( getColor() );
     gc.fillOval( clipping.x + 2, clipping.y + 7, clipping.width - 4, clipping.height - 14 );
     gc.drawOval( clipping.x + 2, clipping.y + 7, clipping.width - 4, clipping.height - 14 );
-    
+
     gc.setBackground( background );
   }
 
@@ -115,10 +109,9 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
       final Rectangle2D oval = createOval();
 
       final Rectangle ovalScreen = logical2screen( oval );
-      gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
-          ovalScreen.height );
-    //  gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
-    //      ovalScreen.height );
+      gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
+      // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
+      // ovalScreen.height );
 
       gc.setBackground( background );
     }
@@ -132,45 +125,36 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
 
   private Rectangle2D createOval( ) throws ProfilDataException
   {
-    final IProfilBuilding building = getBuilding();
-    final double bezX = (Double)building
-        .getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X );
-    final double bezY = (Double)building
-        .getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y );
-    final double durchmesser = (Double)building
-        .getValueFor( BUILDING_PROPERTY.BREITE );
-    final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY);
+    final IProfileObject building = getBuilding();
+    final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
+    final double bezY = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
+    final double durchmesser = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
     final double w = durchmesser;
-    final double h = (Double)building
-    .getValueFor( BUILDING_PROPERTY.HOEHE );
-    final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft
-        .getY(), w, h );
+    final double h = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
+    final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft.getY(), w, h );
     return oval;
   }
-  @Override
-  public String toString( )
-  {
-    return "Maulprofil";
-  }
 
-
+  
   /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
   protected void editProfil( Point point, Object data )
   {
-    
+
   }
 
-
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    
+
   }
- 
+
 }

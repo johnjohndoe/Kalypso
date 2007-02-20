@@ -48,23 +48,22 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfil.PROFIL_PROPERTY;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -93,13 +92,19 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 
   private IProfilEventManager m_pem;
 
-  public RauheitLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color, final Color fillColor )
+  public RauheitLayer( final ProfilChartView pcv )
   {
-    super( pvp, domainRange, valueRange, false );
+    super( IWspmTuhhConstants.LAYER_RAUHEIT, pcv, pcv.getDomainRange(), pcv.getValueRangeRight(), "Rauheit", false );
 
-    m_pem = pvp.getProfilEventManager();
-    m_color = color;
-    m_fillColor = fillColor;
+    m_pem = pcv.getProfilEventManager();
+    final ColorRegistry cr = pcv.getColorRegistry();
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    {
+      cr.put( IWspmTuhhConstants.LAYER_RAUHEIT, new RGB( 220, 220, 220 ) );
+      cr.put( IWspmTuhhConstants.LAYER_RAUHEIT_COLOR_BACKGROUND, new RGB( 220, 220, 220 ) );
+    }
+    m_color = cr.get( IWspmTuhhConstants.LAYER_RAUHEIT );
+    m_fillColor = pcv.getColorRegistry().get( IWspmTuhhConstants.LAYER_RAUHEIT_COLOR_BACKGROUND );
 
   }
 
@@ -116,9 +121,9 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     {
       for( final IProfilPoint p : points )
       {
-        final double x = p.getValueFor( POINT_PROPERTY.BREITE );
+        final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
 
-        final double rauheit = p.getValueFor( POINT_PROPERTY.RAUHEIT );
+        final double rauheit = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
         final Rectangle2D area = new Rectangle2D.Double( x, rauheit, 0, 0 );
 
         if( bounds == null )
@@ -146,38 +151,65 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    IProfilDevider[] deviders = profil.getDevider( new String[] { IProfilConstants.DEVIDER_TYP_TRENNFLAECHE, IProfilConstants.DEVIDER_TYP_DURCHSTROEMTE } );
+    IProfilPointMarker[] deviders1 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+
     List<IProfilPoint> points = new ArrayList<IProfilPoint>();
-    double[] values;
-    if( getViewData().useDeviderValue() && deviders.length == 4 )
+    Double[] values;
+    if( getViewData().useDeviderValue() && deviders1.length == 2 && deviders2.length == 2 )
     {
-      values = new double[4];
-      int i = 0;
-      for( IProfilDevider dev : deviders )
+      values = new Double[4];
+
+      values[0] = (Double) deviders1[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      values[1] = (Double) deviders2[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      values[2] = (Double) deviders2[1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      values[3] = (Double) deviders1[1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+
+      try
       {
-        final Double value = (Double) dev.getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT );
-        try
-        {
-          values[i++] = value == null ? dev.getPoint().getValueFor( IProfilPoint.POINT_PROPERTY.RAUHEIT ) : value;
-        }
-        catch( ProfilDataException e )
-        {
-          values[i++] = 0.0;
-        }
-        points.add( dev.getPoint() );
+        values[0] = values[0] == null ? deviders1[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : values[0];
       }
+      catch( Exception e )
+      {
+        values[0] = 0.0;
+      }
+      points.add( deviders1[0].getPoint() );
+
+      try
+      {
+        values[1] = values[1] == null ? deviders2[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : values[1];
+      }
+      catch( Exception e )
+      {
+        values[1] = 0.0;
+      }
+      points.add( deviders2[0].getPoint() );
+
+      try
+      {
+        values[2] = values[2] == null ? deviders2[1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : values[2];
+      }
+      catch( Exception e )
+      {
+        values[2] = 0.0;
+      }
+      points.add( deviders2[1].getPoint() );
+
+      try
+      {
+        values[3] = values[3] == null ? deviders1[1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : values[3];
+      }
+      catch( Exception e )
+      {
+        values[3] = 0.0;
+      }
+      points.add( deviders1[1].getPoint() );
     }
+
     else
     {
       points = getProfil().getPoints();
-      try
-      {
-        values = ProfilUtil.getValuesFor( getProfil(), POINT_PROPERTY.RAUHEIT );
-      }
-      catch( ProfilDataException e )
-      {
-        values = new double[points.size()];
-      }
+      values = ProfilUtil.getValuesFor( getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
     }
 
     IProfilPoint lastP = null;
@@ -188,23 +220,15 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 
       if( lastP != null )
       {
-        try
-        {
-          final double x1 = lastP.getValueFor( POINT_PROPERTY.BREITE );
-          final double x2 = p.getValueFor( POINT_PROPERTY.BREITE );
-          // final double y1 = 0;
-          // final double y2 = lastP.getValueFor( POINT_PROPERTY.RAUHEIT );
-          final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, values[i++] ) );
-          box.width += 1;
-          fillRectangle( gc, box );
-        }
-        catch( final ProfilDataException e )
-        {
-          // sollte nie passieren
-        }
+        final double x1 = lastP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+        final double x2 = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+        // final double y1 = 0;
+        // final double y2 = lastP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
+        final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, values[i++] ) );
+        box.width += 1;
+        fillRectangle( gc, box );
       }
       lastP = p;
-
     }
     gc.setBackground( background );
   }
@@ -225,7 +249,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   public EditInfo getHoverInfo( final Point point )
   {
     final IProfil profil = getProfil();
-    final Point2D[] points = ProfilUtil.getPoints2D( profil, POINT_PROPERTY.RAUHEIT );
+    final Point2D[] points = ProfilUtil.getPoints2D( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
     if( points == null || points.length < 2 )
       return null;
     Rectangle hover = null;
@@ -237,8 +261,13 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
 
       hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, baseLine - lp.y );
       if( hover.contains( point ) )
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, POINT_PROPERTY.RAUHEIT ), String.format( "%.4f[" + profil.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ).toString()
-            + "]", points[i].getY() ) );
+      {
+        final Object rTyp = profil.getProperty( IWspmTuhhConstants.RAUHEIT_TYP );
+        String text = "";
+        if( rTyp != null )
+          text = IWspmTuhhConstants.RAUHEIT_TYP_KS.equals( rTyp ) ? "ks" : "kst";
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
+      }
     }
     return null;
   }
@@ -258,9 +287,11 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
   @Override
   public String toString( )
   {
-    final Object rw = m_pem.getProfil().getProperty( PROFIL_PROPERTY.RAUHEIT_TYP );
-    if (IProfilConstants.RAUHEIT_TYP_KS.equals( rw))return "Rauheit Typ ks";
-    if (IProfilConstants.RAUHEIT_TYP_KST.equals( rw))return "Rauheit Typ kst";
+    final Object rw = m_pem.getProfil().getProperty( IWspmTuhhConstants.RAUHEIT_TYP );
+    if( IWspmTuhhConstants.RAUHEIT_TYP_KS.equals( rw ) )
+      return "Rauheit Typ ks";
+    if( IWspmTuhhConstants.RAUHEIT_TYP_KST.equals( rw ) )
+      return "Rauheit Typ kst";
     return "Rauheit Typ unbekannt";
   }
 
@@ -285,7 +316,7 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
    */
   public void removeYourself( )
   {
-    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), POINT_PROPERTY.RAUHEIT );
+    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
 
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, change, true );
     new ProfilOperationJob( operation ).schedule();
@@ -312,8 +343,8 @@ public class RauheitLayer extends AbstractProfilChartLayer implements IProfilCha
     if( !hint.isPointValuesChanged() )
       return;
     final AxisRange valueRange = getValueRange();
-    final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
-    final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), POINT_PROPERTY.RAUHEIT );
+    final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
+    final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
     if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
       valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
   }

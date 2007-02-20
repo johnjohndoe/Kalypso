@@ -45,7 +45,6 @@ import java.util.LinkedList;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 
@@ -57,7 +56,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
 {
   final private int m_index;
 
-  final private POINT_PROPERTY m_property;
+  final private String m_property;
 
   final private double m_value;
 
@@ -67,7 +66,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    * @param deviderTyp,deviderIndex
    *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public EditPointResolution( final int index, final POINT_PROPERTY property, final double value )
+  public EditPointResolution( final int index, final String property, final double value )
   {
     super( "Ändern der Eigenschaft " + property.toString() + " auf einen gültigen Wert", null, null );
     m_index = index;

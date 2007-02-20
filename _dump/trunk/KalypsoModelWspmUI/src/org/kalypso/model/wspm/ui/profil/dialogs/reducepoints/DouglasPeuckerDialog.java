@@ -74,13 +74,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilDevider;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilPoint.POINT_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -457,10 +456,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final IProfil profil = m_pem.getProfil();
 
     // reduce points
-    final IProfilDevider[] deviders = profil.getDevider();
-    final IProfilPoint[] pointsToKeep = new IProfilPoint[deviders.length];
-    for( int i = 0; i < pointsToKeep.length; i++ )
-      pointsToKeep[i] = deviders[i].getPoint();
+
+    final IProfilPoint[] pointsToKeep = profil.getMarkedPoints();
     final IProfilPoint[] pointsToRemove;
     try
     {
@@ -568,14 +565,14 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     return reduced;
   }
 
-  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint ) throws ProfilDataException
+  private double calcDistance( final IProfilPoint beginPoint, final IProfilPoint endPoint, final IProfilPoint middlePoint ) 
   {
-    final double bx = beginPoint.getValueFor( POINT_PROPERTY.BREITE );
-    final double by = beginPoint.getValueFor( POINT_PROPERTY.HOEHE );
-    final double ex = endPoint.getValueFor( POINT_PROPERTY.BREITE );
-    final double ey = endPoint.getValueFor( POINT_PROPERTY.HOEHE );
-    final double mx = middlePoint.getValueFor( POINT_PROPERTY.BREITE );
-    final double my = middlePoint.getValueFor( POINT_PROPERTY.HOEHE );
+    final double bx = beginPoint.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE);
+    final double by = beginPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final double ex = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double ey = endPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final double mx = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double my = middlePoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final double f = (ey - by) / (ex - bx);
 

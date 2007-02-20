@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -106,23 +107,29 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private AxisRange m_valueRangeRight;
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
   {
-    super( pem, viewdata );
-
+    super( pem, viewdata, results );
     m_colorRegistry = colorRegistry;
   }
-
+  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata,  final ColorRegistry colorRegistry )
+  {
+    super( pem, viewdata, new IStationResult[0]  );
+    m_colorRegistry = colorRegistry;
+  }
   public void addChartPosListener( final IChartPosListener l )
   {
     m_poslisteners.add( l );
   }
 
-  private void addLayer( final IProfilChartLayer layer, final Map<String, Boolean> visibility )
+  private void addLayer( final IProfilChartLayer[] layers, final Map<String, Boolean> visibility )
   {
-    final Boolean visible = visibility.get( layer.toString() );
-    final boolean defaultVisibility = layer.getInitialVisibility();
-    m_chart.addLayer( layer, visible == null ? defaultVisibility : visible );
+    for( final IProfilChartLayer layer : layers )
+    {
+      final Boolean visible = visibility.get( layer.getId() );
+      final boolean defaultVisibility = layer.getInitialVisibility();
+      m_chart.addLayer( layer, visible == null ? defaultVisibility : visible );
+    }
   }
 
   @SuppressWarnings("boxing")
@@ -131,7 +138,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     // get visibility
     final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
     for( final IChartLayer layer : m_chart.getLayers() )
-      visibility.put( layer.toString(), m_chart.isVisible( layer ) );
+      visibility.put( layer.getId(), m_chart.isVisible( layer ) );
 
     m_chart.clearLayers();
 
@@ -139,14 +146,18 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( profil != null )
     {
       final String profiletype = profil.getType();
-      final IProfilLayerProvider provider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
-      if( provider == null )
+      final IProfilLayerProvider[] providers = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profiletype );
+      if( providers == null )
         return;
+      for( final IProfilLayerProvider provider : providers )
+      {
+        if( provider == null )
+          return;
 
-      // call provider
-      final IProfilChartLayer[] layers = provider.createLayer( this, profil, getResults(), m_domainRange, m_valueRangeLeft, m_valueRangeRight, m_colorRegistry );
-      for( final IProfilChartLayer layer : layers )
-        addLayer( layer, visibility );
+        // call provider
+
+        addLayer( provider.getRequieredLayer( this ), visibility );
+      }
     }
   }
 
@@ -181,12 +192,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     // TODO: move this to layer provider
     // or even better: let layer provider create layers and then retrieve domain/value axes from layers
-    m_domainRange = new AxisRange( "", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-    m_valueRangeLeft = new AxisRange( "", SwitchDelegate.VERTICAL, true, 5, 1.0 );
-    m_valueRangeRight = new AxisRange( "", SwitchDelegate.VERTICAL, true, 0, 0.2 );
-//    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
-//    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
-//    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
+    m_domainRange = new AxisRange( "[m]", SwitchDelegate.HORIZONTAL, false, 5, 1.0 );
+    m_valueRangeLeft = new AxisRange( "[m+NN]", SwitchDelegate.VERTICAL, true, 5, 1.0 );
+    m_valueRangeRight = new AxisRange( "[KS]", SwitchDelegate.VERTICAL, true, 0, 0.2 );
 
     final IAxisRenderer domainrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, true );
     final IAxisRenderer leftrenderer = new TickRenderer( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ), m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_BACKGROUND ), AXIS_WIDTH, TICK_LENGTH, TICK_INSETS, 3, LABEL_INSETS, null, false );
@@ -238,12 +246,56 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     return m_chart;
   }
 
+  public ColorRegistry getColorRegistry( )
+  {
+    return m_colorRegistry;
+  }
+
+  public AxisRange getDomainRange( )
+  {
+    return m_domainRange;
+  }
+
   /**
    * @see org.eclipse.ui.IPersistableElement#getFactoryId()
    */
   public String getFactoryId( )
   {
     return null;
+  }
+
+  public AxisRange getValueRangeLeft( )
+  {
+    return m_valueRangeLeft;
+  }
+
+  public AxisRange getValueRangeRight( )
+  {
+    return m_valueRangeRight;
+  }
+
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    m_chart.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        if( hint.isPointPropertiesChanged() || hint.isObjectChanged() )
+        {
+          createLayer();
+          return;
+        }
+        if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
+        {
+          for( final IChartLayer layer : m_chart.getLayers() )
+          {
+            if( layer instanceof IProfilChartLayer )
+              ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+          }
+        }
+        redrawChart();
+      }
+    } );
   }
 
   /**
@@ -299,47 +351,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     }
 
     m_actions.restoreState( memento, MEM_ACTION_CHECK );
-  }
-
-  /**
-   * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
-   */
-  public void saveState( final IMemento memento )
-  {
-    if( m_chart == null )
-      return;
-
-    for( final IChartLayer layer : m_chart.getLayers() )
-    {
-      final IMemento layermem = memento.createChild( MEM_LAYER_VIS, layer.toString() );
-      layermem.putTextData( "" + m_chart.isVisible( layer ) );
-    }
-
-    m_actions.saveState( memento, MEM_ACTION_CHECK );
-  }
-
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    m_chart.getDisplay().syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        if( hint.isPointPropertiesChanged() || hint.isBuildingChanged() )
-        {
-          createLayer();
-          return;
-        }
-        if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isBuildingDataChanged() || hint.isDeviderMoved() || hint.isProfilPropertyChanged() || hint.isActivePointChanged() )
-        {
-          for( final IChartLayer layer : m_chart.getLayers() )
-          {
-            if( layer instanceof IProfilChartLayer )
-              ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-          }
-        }
-        redrawChart();
-      }
-    } );
   }
 
   public void runChartAction( final ProfilChartActionsEnum chartAction )
@@ -398,5 +409,23 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   private void saveChartAsImage( final ChartCanvas chart )
   {
     new SaveChartAsAction( chart ).run();
+  }
+
+  /**
+   * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
+   */
+  public void saveState( final IMemento memento )
+  {
+    if( m_chart == null )
+      return;
+
+    for( final IChartLayer layer : m_chart.getLayers() )
+    {
+      final IMemento layermem = memento.createChild( MEM_LAYER_VIS, layer.toString() );
+      layermem.putTextData( "" + m_chart.isVisible( layer ) );
+    }
+
+    if( m_actions != null )
+      m_actions.saveState( memento, MEM_ACTION_CHECK );
   }
 }

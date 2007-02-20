@@ -111,7 +111,6 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     gridLayout.marginWidth = 0;
     gridLayout.marginHeight = 0;
     m_control.setLayout( gridLayout );
-
     m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
 
     updateControl();

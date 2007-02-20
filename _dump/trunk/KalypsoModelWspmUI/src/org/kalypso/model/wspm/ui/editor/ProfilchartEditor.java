@@ -235,7 +235,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       final IFile file = (IFile) editorInput.getAdapter( IFile.class );
 
       final StringWriter prfWriter = new StringWriter();
-      
+
       final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
       prfSink.write( getProfil(), prfWriter );
       prfWriter.close();
@@ -371,7 +371,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     // TODO: get profiletype from input (possible if input represents a 'Zustand').
     // Use pasche as default.
     final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
-    
+
     final IStationResult[] results = (IStationResult[]) input.getAdapter( IStationResult[].class );
     setResults( results );
 
@@ -408,7 +408,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           final IProfilSource source = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
           if( source == null )
             throw new Exception( "No Profil-Source found for type 'prf'." );
-          
+
           final IProfil profil = ProfilFactory.createProfil( profiletype );
           if( !source.read( profil, reader ) )
           {
@@ -610,7 +610,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   {
     m_results = results;
   }
-  
+
   public IStationResult[] getResults( )
   {
     return m_results;
@@ -764,4 +764,5 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     for( final IProfilProviderListener l : m_profilProviderListener )
       l.onProfilProviderChanged( this, oldPem, newPem, oldViewData, newViewData );
   }
+
 }

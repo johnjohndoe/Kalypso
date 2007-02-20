@@ -47,23 +47,21 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-import org.kalypso.model.wspm.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-
-import de.belger.swtchart.axis.AxisRange;
 
 /**
  * @author kimwerner
  */
 public class EiBuildingLayer extends AbstractBuildingLayer
 {
-  public EiBuildingLayer( final ProfilChartView pvp, final AxisRange domainRange, final AxisRange valueRange, final Color color )
+  public EiBuildingLayer( final ProfilChartView pcv )
   {
-    super( pvp, domainRange, valueRange, color );
+    super(IWspmTuhhConstants.LAYER_EI,"Ei-Durchlaﬂ",pcv);
   }
 
   /**
@@ -126,13 +124,13 @@ public class EiBuildingLayer extends AbstractBuildingLayer
 
   private Rectangle2D createOval( ) throws ProfilDataException
   {
-    final IProfilBuilding building = getBuilding();
-    final double bezX = (Double) building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_X );
-    final double bezY = (Double) building.getValueFor( BUILDING_PROPERTY.BEZUGSPUNKT_Y );
-    final double durchmesser = (Double) building.getValueFor( BUILDING_PROPERTY.BREITE );
+    final IProfileObject building = getBuilding();
+    final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
+    final double bezY = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
+    final double durchmesser = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
     final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
     final double w = durchmesser;
-    final double h = (Double) building.getValueFor( BUILDING_PROPERTY.HOEHE );
+    final double h = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
     final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft.getY(), w, h );
     return oval;
   }

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.LinkedList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -59,7 +60,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoints;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
@@ -74,7 +75,7 @@ public class FilePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
-  public IProfilPoints getPoints( )
+  public LinkedList<IProfilPoint> getPoints( )
   {
     final File f = new File( m_fileName.getText() );
     final FileReader fr;
@@ -95,7 +96,7 @@ public class FilePointsSource extends AbstractPointsSource
       // change this later to let the user choose how to read
       final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
       if( prfS.read( profil, fr ) )
-        return profil.getProfilPoints();
+        return profil.getPoints();
     }
     catch( final CoreException e )
     {

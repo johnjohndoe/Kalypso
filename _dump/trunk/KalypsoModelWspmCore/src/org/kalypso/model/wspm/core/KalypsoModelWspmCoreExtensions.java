@@ -3,6 +3,7 @@ package org.kalypso.model.wspm.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -12,9 +13,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.impl.marker.ProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -26,7 +28,11 @@ public class KalypsoModelWspmCoreExtensions
 
   private static IProfilePointFilter[] PROFILE_POINT_FILTER = null;
 
-  private static Map<String, IProfilPointMarker> PROFILE_POINT_MARKER = null;
+  private static Map<String, List<IProfilPointMarkerProvider>> THE_MARKER_PROVIDER_MAP = null;
+
+  private static Map<String, List<IProfilPointPropertyProvider>> THE_PROPERTY_PROVIDER_MAP = null;
+
+  private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
   public static IProfilReparator[] createReaparatorRules( )
   {
@@ -76,7 +82,8 @@ public class KalypsoModelWspmCoreExtensions
   }
 
   /**
-   * @param fileExtension File extension without '.'
+   * @param fileExtension
+   *          File extension without '.'
    */
   public static IProfilSource createProfilSource( final String fileExtension ) throws CoreException
   {
@@ -161,25 +168,126 @@ public class KalypsoModelWspmCoreExtensions
     return PROFILE_POINT_FILTER;
   }
 
-  public static Map<String, IProfilPointMarker> getProfilePointMarker( )
+  public static IProfilPointMarkerProvider[] getMarkerProviders( final String profilType )
   {
-    if( PROFILE_POINT_MARKER != null )
-      return PROFILE_POINT_MARKER;
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] markers = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointMarker" );
-    PROFILE_POINT_MARKER = new HashMap<String, IProfilPointMarker>( markers.length );
-    for( int i = 0; i < markers.length; i++ )
-    {
-      final IConfigurationElement marker = markers[i];
+    final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
+    final List<IProfilPointMarkerProvider> list = map.get( profilType );
+    if( list == null )
+      return new IProfilPointMarkerProvider[0];
 
-      final IConfigurationElement[] markerParam = marker.getChildren( "parameter" );
-      final String[] params = new String[markerParam.length];
-      for( int k = 0; k < markerParam.length; k++ )
-      {
-        params[k] = markerParam[k].getAttribute( "key" );
-      }
-      PROFILE_POINT_MARKER.put( marker.getAttribute( "id" ), new ProfilPointMarker( marker.getAttribute( "id" ), params ) );
-    }
-    return PROFILE_POINT_MARKER;
+    return list.toArray( new IProfilPointMarkerProvider[list.size()] );
   }
+
+  private static synchronized Map<String, List<IProfilPointMarkerProvider>> getMarkerProviders( )
+  {
+    if( THE_MARKER_PROVIDER_MAP != null )
+      return THE_MARKER_PROVIDER_MAP;
+
+    THE_MARKER_PROVIDER_MAP = new HashMap<String, List<IProfilPointMarkerProvider>>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] markerProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointMarkerProvider" );
+    for( final IConfigurationElement configurationElement : markerProvider )
+    {
+      try
+      {
+        final String profilType = configurationElement.getAttribute( "profiletype" );
+        final Object protoProvider = configurationElement.createExecutableExtension( "provider" );
+        final IProfilPointMarkerProvider provider = (IProfilPointMarkerProvider) protoProvider;
+
+        if( !THE_MARKER_PROVIDER_MAP.containsKey( profilType ) )
+          THE_MARKER_PROVIDER_MAP.put( profilType, new ArrayList<IProfilPointMarkerProvider>() );
+
+        THE_MARKER_PROVIDER_MAP.get( profilType ).add( provider );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    return THE_MARKER_PROVIDER_MAP;
+  }
+  public static IProfileObjectProvider[] getObjectProviders( final String profilType )
+  {
+    final Map<String, List<IProfileObjectProvider>> map = getObjectProviders();
+    final List<IProfileObjectProvider> list = map.get( profilType );
+    if( list == null )
+      return new IProfileObjectProvider[0];
+
+    return list.toArray( new IProfileObjectProvider[list.size()] );
+  }
+  private static synchronized Map<String, List<IProfileObjectProvider>> getObjectProviders( )
+  {
+    if( THE_OBJECT_PROVIDER_MAP != null )
+      return THE_OBJECT_PROVIDER_MAP;
+
+    THE_OBJECT_PROVIDER_MAP = new HashMap<String, List<IProfileObjectProvider>>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] objectProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileObjectProvider" );
+    for( final IConfigurationElement configurationElement : objectProvider )
+    {
+      try
+      {
+        final String profilType = configurationElement.getAttribute( "profiletype" );
+        final Object protoProvider = configurationElement.createExecutableExtension( "provider" );
+        final IProfileObjectProvider provider = (IProfileObjectProvider) protoProvider;
+
+        if( !THE_OBJECT_PROVIDER_MAP.containsKey( profilType ) )
+          THE_OBJECT_PROVIDER_MAP.put( profilType, new ArrayList<IProfileObjectProvider>() );
+
+        THE_OBJECT_PROVIDER_MAP.get( profilType ).add( provider );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    return THE_OBJECT_PROVIDER_MAP;
+  }
+
+  public static IProfilPointPropertyProvider[] getPointPropertyProviders( final String profilType )
+  {
+    final Map<String, List<IProfilPointPropertyProvider>> map = getPointPropertyProviders();
+    final List<IProfilPointPropertyProvider> list = map.get( profilType );
+    if( list == null )
+      return new IProfilPointPropertyProvider[0];
+
+    return list.toArray( new IProfilPointPropertyProvider[list.size()] );
+  }
+
+  private static synchronized Map<String, List<IProfilPointPropertyProvider>> getPointPropertyProviders( )
+  {
+    if( THE_PROPERTY_PROVIDER_MAP != null )
+      return THE_PROPERTY_PROVIDER_MAP;
+
+    THE_PROPERTY_PROVIDER_MAP = new HashMap<String, List<IProfilPointPropertyProvider>>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] markerProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointPropertyProvider" );
+    for( final IConfigurationElement configurationElement : markerProvider )
+    {
+      try
+      {
+        // TODO: eventuell nur die elemente des gewünschten typs erzeugen und in map merken
+        final String profilType = configurationElement.getAttribute( "profiletype" );
+        final Object protoProvider = configurationElement.createExecutableExtension( "provider" );
+        final IProfilPointPropertyProvider provider = (IProfilPointPropertyProvider) protoProvider;
+
+        if( !THE_PROPERTY_PROVIDER_MAP.containsKey( profilType ) )
+          THE_PROPERTY_PROVIDER_MAP.put( profilType, new ArrayList<IProfilPointPropertyProvider>() );
+
+        THE_PROPERTY_PROVIDER_MAP.get( profilType ).add( provider );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    return THE_PROPERTY_PROVIDER_MAP;
+  }
+
 }

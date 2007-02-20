@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -66,13 +67,12 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilConstants;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
@@ -81,6 +81,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -145,10 +146,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     final Shell shell = event.display.getActiveShell();
 
     /* open file dialog and choose profile files */
-    final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
-    final boolean isList = fate.getAssociationTypeProperty().isList();
-
-    final File[] files = askForFiles( shell, isList );
+    final File[] files = askForFiles( shell );
     if( files == null || files.length == 0 )
       return;
 
@@ -192,10 +190,10 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
         final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
 
-        profil.setProperty( IProfilConstants.PROFIL_PROPERTY_NAME, "Import" );
+        profil.setProperty( IWspmConstants.PROFIL_PROPERTY_NAME, "Import" );
 
         final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
-        profil.setProperty( IProfilConstants.PROFIL_PROPERTY_KOMMENTAR, description );
+        profil.setProperty( IWspmConstants.PROFIL_PROPERTY_KOMMENTAR, description );
 
         profiles.add( profil );
       }
@@ -220,13 +218,12 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     return prfReadStatus;
   }
 
-  private File[] askForFiles( final Shell shell, final boolean isList )
+  private File[] askForFiles( final Shell shell )
   {
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() );
     final String initialFilterPath = dialogSettings.get( SETTINGS_FILTER_PATH );
 
-    final int style = isList ? SWT.OPEN | SWT.MULTI : SWT.OPEN | SWT.SINGLE;
-    final FileDialog dialog = new FileDialog( shell, style );
+    final FileDialog dialog = new FileDialog( shell, SWT.OPEN | SWT.MULTI );
     dialog.setText( ".prf Import" );
     dialog.setFilterExtensions( new String[] { "*.prf", "*.*" } );
     dialog.setFilterPath( initialFilterPath );
@@ -257,13 +254,11 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     {
       private Feature[] m_addedFeatures = null;
 
+      private FeatureList m_profileList = null;
+
       private GMLWorkspace m_workspace;
 
-      private Feature m_parentFeature;
-
-      private IRelationType m_rt;
-
-      private Object m_oldValue;
+      private Feature m_waterFeature;
 
       public String getDescription( )
       {
@@ -277,27 +272,19 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
       public void process( ) throws Exception
       {
-        m_parentFeature = fate.getParentFeature();
-        m_rt = fate.getAssociationTypeProperty();
+        m_waterFeature = fate.getParentFeature();
+        m_profileList = (FeatureList) m_waterFeature.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
 
-        if( !m_rt.isList() )
-          m_oldValue = m_parentFeature.getProperty( m_rt );
-
+        final WspmWaterBody water = new WspmWaterBody( m_waterFeature );
         final List<Feature> newFeatureList = new ArrayList<Feature>();
-        final GMLWorkspace workspace = m_parentFeature.getWorkspace();
-        final IFeatureType ftProfile = workspace.getGMLSchema().getFeatureType( WspmProfile.QNAME_PROFILE );
         try
         {
           for( final IProfil profile : profiles )
           {
-            final Feature profileFeature = workspace.createFeature( m_parentFeature, m_rt, ftProfile );
-            workspace.addFeatureAsComposition( m_parentFeature, m_rt, -1, profileFeature );
+            final WspmProfile gmlProfile = water.createNewProfile();
+            ProfileFeatureFactory.toFeature( profile, gmlProfile.getFeature() );
 
-            /* Fill new feature with profile values */
-            ProfileFeatureFactory.toFeature( profile, profileFeature );
-
-            /* Remember new feature for undo */
-            newFeatureList.add( profileFeature );
+            newFeatureList.add( gmlProfile.getFeature() );
           }
         }
         catch( final GMLSchemaException e )
@@ -309,8 +296,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         finally
         {
           m_addedFeatures = newFeatureList.toArray( new Feature[newFeatureList.size()] );
-          m_workspace = workspace;
-          final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+          m_workspace = m_waterFeature.getWorkspace();
+          final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
           m_workspace.fireModellEvent( event );
         }
       }
@@ -318,25 +305,16 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       @SuppressWarnings("unchecked")
       public void redo( ) throws Exception
       {
-        for( Object feature : m_addedFeatures )
-          m_workspace.addFeatureAsComposition( m_parentFeature, m_rt, -1, (Feature) feature );
-
-        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        m_profileList.addAll( Arrays.asList( m_addedFeatures ) );
+        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         m_workspace.fireModellEvent( event );
       }
 
       @SuppressWarnings("unchecked")
       public void undo( ) throws Exception
       {
-        if( m_rt.isList() )
-        {
-          for( Object feature : m_addedFeatures )
-            m_workspace.removeLinkedAsCompositionFeature( m_parentFeature, m_rt, (Feature) feature );
-        }
-        else
-          m_parentFeature.setProperty( m_rt, m_oldValue );
-
-        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+        m_profileList.removeAll( Arrays.asList( m_addedFeatures ) );
+        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
         m_workspace.fireModellEvent( event );
       }
     };

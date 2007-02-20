@@ -58,18 +58,26 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
   private Control m_control;
 
-  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata )
+  private final IStationResult[] m_results;
+
+  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results )
   {
     m_pem = pem;
     m_viewdata = viewdata;
+    m_results = results == null ? new IStationResult[0] : results;
 
     if( m_pem != null )
       m_pem.addProfilListener( this );
 
     if( m_viewdata != null )
       m_viewdata.addProfilViewDataListener( this );
+    
+    
   }
-
+  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata )
+  {
+    this(pem,  viewdata, new IStationResult[0] );
+  }
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#dispose()
    */
@@ -119,8 +127,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
   public IStationResult[] getResults( )
   {
-    final IStationResult[] results = m_pem.getResults();
-    return results == null ? new IStationResult[0] : results;
+    return m_results;
   }
 
   public void onProfilViewDataChanged( )
