@@ -491,11 +491,11 @@ class GridWidgetFace
                       colors[i].getBlue());
           PreferenceConverter.setDefault( 
                 preferenceStore, 
-                LINE_COLOR_0, 
+                keys[i],//LINE_COLOR_0, 
                 rgb );
           PreferenceConverter.setValue( 
               preferenceStore, 
-              LINE_COLOR_0, 
+              keys[i],//LINE_COLOR_0, 
               rgb );
           
         }
