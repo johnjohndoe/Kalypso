@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -54,7 +55,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Holger Albert, Thomas Jung
@@ -175,5 +178,105 @@ public class WspmProfileHelper
     double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * segmentProfileLength;
 
     return coordProfileOne.x + toProfilePointLength;
+  }
+
+  
+  /**
+   * returns the geographic coordinates (x, y, z) for an given width coordinate as GM_Point.
+   * Input: width coordinate (double), profile (Iprofil)
+   * Output: point (GM_Point)
+   */
+  public static GM_Point getGeoPosition( double width, IProfil profile ) throws Exception
+  {
+    /* List for storing points of the profile, which have a geo reference. */
+    LinkedList<IProfilPoint> geoReferencedPoints = new LinkedList<IProfilPoint>();
+
+    LinkedList<IProfilPoint> points = profile.getPoints();
+    for( IProfilPoint point : points )
+    {
+      double rechtsWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+      if( rechtsWert > 0.0 || hochWert > 0.0 )
+      {
+        /* Memorize the point, because it has a geo reference. */
+        geoReferencedPoints.add( point );
+      }
+      // else
+      // System.out.print( "The point " + point.toString() + " has no RECHTSWERT or HOCHWERT or is missing both.\n" );
+    }
+
+    /* If no or only one geo referenced points are found, return. */
+    if( geoReferencedPoints.size() <= 1 )
+      return null;
+
+    // END OF FINDING GEOREFERENCED POINTS
+
+    /* No we have a list with fully geo referenced points of a profile. */
+    for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
+    {
+      /* We need a line string of the to neighbour points. */
+      IProfilPoint tempPointOne = geoReferencedPoints.get( i );
+      double widthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      double heigthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      double rechtsWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+      IProfilPoint tempPointTwo = geoReferencedPoints.get( i + 1 );
+      double widthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      double heigthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+      /* find the right segment with the neighbouring points */
+      if( widthValueOne < width & widthValueTwo > width )
+      {
+        /* calculate the georeference */
+        final double x = ((width - widthValueOne) * (rechtsWertTwo - rechtsWertOne) / (widthValueTwo - widthValueOne)) + rechtsWertOne;
+        final double y = ((width - widthValueOne) * (hochWertTwo - hochWertOne) / (widthValueTwo - widthValueOne)) + hochWertOne;
+        final double z = ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
+        
+       
+        Coordinate geoCoord = new Coordinate( x, y, z );
+        GeometryFactory factory = new GeometryFactory();
+
+        Point point = factory.createPoint( geoCoord );
+        GM_Object object = JTSAdapter.wrap( point );
+
+        return (GM_Point) object;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * returns the corresponding heigth for an giben width coordinate.
+   * Input: width coordinate (double), profile (Iprofil)
+   * Output: heigth (double)
+   */
+  public static Double getHeigthPositionByWidth( double width, IProfil profile ) throws Exception
+  {
+    LinkedList<IProfilPoint> points = profile.getPoints();
+
+    for( int i = 0; i < points.size() - 1; i++ )
+    {
+      /* We need a line string of the to neighbour points. */
+      IProfilPoint tempPointOne = points.get( i );
+      double widthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      double heigthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+      IProfilPoint tempPointTwo = points.get( i + 1 );
+      double widthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      double heigthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+      /* searching for the rigth segment */
+      if( widthValueOne < width & widthValueTwo > width )
+      {
+        /* calculate the heigth */
+        final double heigth = ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
+        return heigth;
+      }
+    }
+    return null;
   }
 }
