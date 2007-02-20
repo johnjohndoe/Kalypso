@@ -68,11 +68,29 @@ public class IntersPointData
     return m_point;
   }
 
+  public CreateChannelData.PROF getProf( )
+  {
+    return m_prof;
+  }
+  
+  public CreateChannelData.SIDE getSide( )
+  {
+    return m_side;
+  }
+  
   public boolean isLeft( )
   {
     if( m_side == SIDE.LEFT )
       return true;
 
+    return false;
+  }
+
+  public boolean isRight( )
+  {
+    if( m_side == SIDE.RIGHT )
+      return true;
+    
     return false;
   }
 
@@ -83,4 +101,13 @@ public class IntersPointData
 
     return false;
   }
+  
+  public boolean isDown( )
+  {
+    if( m_prof == PROF.DOWN )
+      return true;
+    
+    return false;
+  }
+
 }
