@@ -82,14 +82,44 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class WehrBuildingLayer extends AbstractPolyLineLayer
 {
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
-   */
-  @Override
-  public EditInfo getHoverInfo( Point mousePos )
+  public WehrBuildingLayer( final ProfilChartView pcv )
   {
-    final EditInfo info = super.getHoverInfo( mousePos );
-    return info == null ? getDeviderInfo( mousePos ) : info;
+    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, }, false, false, false );
+    super.setColors( setColor( pcv.getColorRegistry() ) );
+  }
+
+  @Override
+  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  {
+    return new WehrPanel( pem, viewData );
+  }
+
+  public final void editDevider( final Point point, IProfilPointMarker devider )
+  {
+    final IProfilPointMarker activeDevider = devider;
+
+    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
+
+    final IProfilPoint oldPos = activeDevider.getPoint();
+    if( oldPos != destinationPoint )
+    {
+      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
+      operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+      new ProfilOperationJob( operation ).schedule();
+    }
+  }
+
+  @Override
+  public final void editProfil( final Point moveTo, final Object data )
+  {
+    if( data instanceof IProfilPointMarker )
+    {
+      editDevider( moveTo, (IProfilPointMarker) data );
+
+    }
+    else
+      super.editProfil( moveTo, data );
   }
 
   private EditInfo getDeviderInfo( final Point mousePoint )
@@ -123,32 +153,50 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
+   */
   @Override
-  public final void editProfil( final Point moveTo, final Object data )
+  public EditInfo getHoverInfo( Point mousePos )
   {
-    if( data instanceof IProfilPointMarker )
-    {
-      editDevider( moveTo, (IProfilPointMarker) data );
-
-    }
-    else
-      super.editProfil( moveTo, data );
+    final EditInfo info = super.getHoverInfo( mousePos );
+    return info == null ? getDeviderInfo( mousePos ) : info;
   }
 
-  public final void editDevider( final Point point, IProfilPointMarker devider )
+  @Override
+  public List<IProfilPoint> getPoints( )
   {
-    final IProfilPointMarker activeDevider = devider;
+    return ProfilUtil.getInnerPoints( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+  }
 
-    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
-
-    final IProfilPoint oldPos = activeDevider.getPoint();
-    if( oldPos != destinationPoint )
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer#isPointVisible(org.kalypso.model.wspm.core.profil.IProfilPoint)
+   */
+  @Override
+  protected boolean isPointVisible( IProfilPoint point )
+  {
+    final IProfil profil = getProfil();
+    final LinkedList points = profil.getPoints();
+    final int i = points.indexOf( point );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( i < points.indexOf( deviders[0].getPoint() ) )
     {
-      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
-      operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
-      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
-      new ProfilOperationJob( operation ).schedule();
+      return false;
     }
+    if( i > points.indexOf( deviders[deviders.length - 1].getPoint() ) )
+    {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
   }
 
   /**
@@ -215,33 +263,6 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public List<IProfilPoint> getPoints( )
-  {
-    return ProfilUtil.getInnerPoints( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-  }
-
-  public WehrBuildingLayer( final ProfilChartView pcv )
-  {
-    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, }, false, false, false );
-    super.setColors( setColor( pcv.getColorRegistry() ) );
-  }
-
-  private final Color[] setColor( final ColorRegistry cr )
-  {
-    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_WEHR ) )
-    {
-      cr.put( IWspmTuhhConstants.LAYER_WEHR, new RGB( 255, 150, 0 ) );
-    }
-    return new Color[] { cr.get( IWspmTuhhConstants.LAYER_WEHR ), cr.get( IWspmTuhhConstants.LAYER_WEHR ) };
-  }
-
-  @Override
-  public String toString( )
-  {
-    return "Wehr";
-  }
-
-  @Override
   public void paintLegend( GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
@@ -263,12 +284,6 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   }
 
-  @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
-  {
-    return new WehrPanel( pem, viewData );
-  }
-
   public void removeYourself( )
   {
     final IProfilEventManager pem = getProfilEventManager();
@@ -285,33 +300,18 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     new ProfilOperationJob( operation ).schedule();
   }
 
-  /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
-   *      com.bce.eind.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  private final Color[] setColor( final ColorRegistry cr )
   {
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_WEHR ) )
+    {
+      cr.put( IWspmTuhhConstants.LAYER_WEHR, new RGB( 0, 128, 0 ) );
+    }
+    return new Color[] { cr.get( IWspmTuhhConstants.LAYER_WEHR ), cr.get( IWspmTuhhConstants.LAYER_WEHR ) };
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer#isPointVisible(org.kalypso.model.wspm.core.profil.IProfilPoint)
-   */
   @Override
-  protected boolean isPointVisible( IProfilPoint point )
+  public String toString( )
   {
-    final IProfil profil = getProfil();
-    final LinkedList points = profil.getPoints();
-    final int i = points.indexOf( point );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( i < points.indexOf( deviders[0].getPoint() ) )
-    {
-      return false;
-    }
-    if( i > points.indexOf( deviders[deviders.length - 1].getPoint() ) )
-    {
-      return false;
-    }
-    return true;
+    return "Wehr";
   }
 }

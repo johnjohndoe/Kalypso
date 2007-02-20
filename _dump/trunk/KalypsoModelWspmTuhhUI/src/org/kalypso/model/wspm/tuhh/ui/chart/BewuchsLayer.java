@@ -87,7 +87,6 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     if (!cr.getKeySet().contains(IWspmTuhhConstants.LAYER_BEWUCHS ))
       cr.put( IWspmTuhhConstants.LAYER_BEWUCHS, new RGB( 0, 255, 0 ) );
     m_color = cr.get( IWspmTuhhConstants.LAYER_BEWUCHS );
-
   }
 
   @Override

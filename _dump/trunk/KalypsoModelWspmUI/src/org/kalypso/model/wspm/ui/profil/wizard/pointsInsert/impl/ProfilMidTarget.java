@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 
-
 /**
  * @author Belger
  */
@@ -66,7 +65,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
   {
     final int pointsCount = points.size();
     final IProfilPointProperty[] existingProps = pem.getProfil().getPointProperties();
-    
+
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
@@ -78,17 +77,18 @@ public class ProfilMidTarget extends AbstractPointsTarget
       for( IProfilPoint point : points )
       {
         final IProfilPoint newPoint = targetPkt.clonePoint();
-        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_BREITE , point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX);
-        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_HOEHE , point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
-        for(IProfilPointProperty prop : existingProps )
+        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX );
+        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
+        for( IProfilPointProperty prop : existingProps )
         {
           final String propId = prop.toString();
-          if( pem.getProfil().hasPointProperty(propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId )&& !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId))
-           {
-            newPoint.setValueFor( propId, point.getValueFor( propId ) );
+          if( pem.getProfil().hasPointProperty( propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId ) )
+          {
+            if( point.hasProperty( propId ) )
+              newPoint.setValueFor( propId, point.getValueFor( propId ) );
           }
         }
-        changes[i--] = new PointAdd( pem.getProfil(), targetPkt,  newPoint );
+        changes[i--] = new PointAdd( pem.getProfil(), targetPkt, newPoint );
       }
     }
     catch( Exception e )

@@ -40,13 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -68,8 +71,10 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   public AbstractBuildingLayer( final String layerId, final String label, final ProfilChartView pcv )
   {
     super( layerId, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), label );
-
-    m_color = pcv.getColorRegistry().get( layerId) == null ? pcv.getColorRegistry().get( IProfilColorSet.COLOUR_) : pcv.getColorRegistry().get( layerId);
+    final ColorRegistry cr = pcv.getColorRegistry();
+    if( !cr.getKeySet().contains( layerId ) )
+      cr.put( layerId, new RGB( 220, 220, 0 ) );
+    m_color = cr.get( layerId);
   }
 
   protected final Color getColor( )

@@ -98,11 +98,11 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
    
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP ) )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP , new RGB(255, 150, 0 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP , new RGB(0, 128, 0 ));
     }
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM) )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM, new RGB(255, 150, 0 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM, new RGB(0, 128,179 ));
     }
     return new Color[]{cr.get(  IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP ),cr.get( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM )};
   }

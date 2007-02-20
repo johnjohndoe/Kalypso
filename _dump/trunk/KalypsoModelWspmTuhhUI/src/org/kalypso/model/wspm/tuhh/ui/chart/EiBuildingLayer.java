@@ -101,8 +101,7 @@ public class EiBuildingLayer extends AbstractBuildingLayer
    */
   public void paint( final GCWrapper gc )
   {
-    try
-    {
+    
       final Color background = gc.getBackground();
       gc.setBackground( getColor() );
 
@@ -113,16 +112,11 @@ public class EiBuildingLayer extends AbstractBuildingLayer
       // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
 
       gc.setBackground( background );
-    }
-    catch( final ProfilDataException e )
-    {
-      // sollte nie passieren
-      e.printStackTrace();
-      throw new IllegalStateException( e );
-    }
+  
+    
   }
 
-  private Rectangle2D createOval( ) throws ProfilDataException
+  private Rectangle2D createOval( )
   {
     final IProfileObject building = getBuilding();
     final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );

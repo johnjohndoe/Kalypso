@@ -52,13 +52,12 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 
-
 /**
  * @author Belger
  */
 public class ProfilEndTarget extends AbstractPointsTarget
 {
-  
+
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
@@ -68,7 +67,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
 
     final int pointsCount = points.size();
     final IProfilPointProperty[] existingProps = pem.getProfil().getPointProperties();
-    
+
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
@@ -80,70 +79,73 @@ public class ProfilEndTarget extends AbstractPointsTarget
       for( IProfilPoint point : points )
       {
         final IProfilPoint newPoint = targetPkt.clonePoint();
-        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_BREITE , point.getValueFor(IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX);
-        newPoint.setValueFor(IWspmConstants.POINT_PROPERTY_HOEHE , point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
+        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX );
+        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
         for( IProfilPointProperty prop : existingProps )
         {
-          final String propId =  prop.toString();
-          if( pem.getProfil().hasPointProperty( propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId )&&  !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId ))
-           {
-            newPoint.setValueFor( propId, point.getValueFor( propId ) );
+          final String propId = prop.getId();
+          if( pem.getProfil().hasPointProperty( propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId ) )
+          {
+            if( point.hasProperty( propId ) )
+              newPoint.setValueFor( propId, point.getValueFor( propId ) );
           }
         }
-        changes[i--] = new PointAdd( pem.getProfil(), targetPkt,  newPoint );
+        changes[i--] = new PointAdd( pem.getProfil(), targetPkt, newPoint );
       }
     }
-    catch(Exception e )
+    catch( Exception e )
     {
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
     final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
     new ProfilOperationJob( operation ).schedule();
-    
-//    
-//    
-//    final int pointsCount = points.getPoints().size();
-//
-//    final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );
-//    final Collection<POINT_PROPERTY> newProps = points.getPoints().getFirst().getProperties();
-//    Collection<POINT_PROPERTY> propsToAdd = new ArrayList<POINT_PROPERTY>();
-//    for( POINT_PROPERTY prop : newProps )
-//    {
-//      if( !existingProps.contains( prop ) )
-//        propsToAdd.add( prop );
-//    }
-//    final IProfilChange[] changes = new IProfilChange[pointsCount + propsToAdd.size()];
-//    int ii = 0;
-//    for( POINT_PROPERTY prop : existingProps )
-//    {
-//      points.addProperty( prop );
-//    }
-//    for( POINT_PROPERTY prop : propsToAdd )
-//    {
-//      changes[ii++] = new PointPropertyAdd( pem.getProfil(), prop, 0.0 );
-//    }
-//    try
-//    {
-//
-//      final IProfilPoint targetPkt = pem.getProfil().getPoints().getLast(); 
-//      final double deltaX = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE ) - targetPkt.getValueFor( POINT_PROPERTY.BREITE );
-//      final double deltaY = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - targetPkt.getValueFor( POINT_PROPERTY.HOEHE );
-//      int i = changes.length - 1;
-//      for( IProfilPoint point : points.getPoints() )
-//      {
-//        point.setValueFor( POINT_PROPERTY.BREITE, point.getValueFor( POINT_PROPERTY.BREITE ) - deltaX );
-//        point.setValueFor( POINT_PROPERTY.HOEHE, point.getValueFor( POINT_PROPERTY.HOEHE ) - deltaY );
-//        changes[i--] = new PointAdd( pem.getProfil(), targetPkt, point );
-//      }
-//    }
-//    catch( ProfilDataException e )
-//    {
-//      // should never happen, raise NullPointerException in ProfilOperation.doChange
-//      changes[0] = null;
-//    }
-//    final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes );
-//    new ProfilOperationJob( operation ).schedule();
+
+    //    
+    //    
+    // final int pointsCount = points.getPoints().size();
+    //
+    // final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );
+    // final Collection<POINT_PROPERTY> newProps = points.getPoints().getFirst().getProperties();
+    // Collection<POINT_PROPERTY> propsToAdd = new ArrayList<POINT_PROPERTY>();
+    // for( POINT_PROPERTY prop : newProps )
+    // {
+    // if( !existingProps.contains( prop ) )
+    // propsToAdd.add( prop );
+    // }
+    // final IProfilChange[] changes = new IProfilChange[pointsCount + propsToAdd.size()];
+    // int ii = 0;
+    // for( POINT_PROPERTY prop : existingProps )
+    // {
+    // points.addProperty( prop );
+    // }
+    // for( POINT_PROPERTY prop : propsToAdd )
+    // {
+    // changes[ii++] = new PointPropertyAdd( pem.getProfil(), prop, 0.0 );
+    // }
+    // try
+    // {
+    //
+    // final IProfilPoint targetPkt = pem.getProfil().getPoints().getLast();
+    // final double deltaX = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE ) - targetPkt.getValueFor(
+    // POINT_PROPERTY.BREITE );
+    // final double deltaY = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - targetPkt.getValueFor(
+    // POINT_PROPERTY.HOEHE );
+    // int i = changes.length - 1;
+    // for( IProfilPoint point : points.getPoints() )
+    // {
+    // point.setValueFor( POINT_PROPERTY.BREITE, point.getValueFor( POINT_PROPERTY.BREITE ) - deltaX );
+    // point.setValueFor( POINT_PROPERTY.HOEHE, point.getValueFor( POINT_PROPERTY.HOEHE ) - deltaY );
+    // changes[i--] = new PointAdd( pem.getProfil(), targetPkt, point );
+    // }
+    // }
+    // catch( ProfilDataException e )
+    // {
+    // // should never happen, raise NullPointerException in ProfilOperation.doChange
+    // changes[0] = null;
+    // }
+    // final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes );
+    // new ProfilOperationJob( operation ).schedule();
 
   }
 }
