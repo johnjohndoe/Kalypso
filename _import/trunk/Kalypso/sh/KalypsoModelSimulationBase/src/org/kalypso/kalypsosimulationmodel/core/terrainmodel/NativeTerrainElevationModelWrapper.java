@@ -47,7 +47,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.FileLocator;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
@@ -68,7 +72,76 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
   private IElevationProvider elevationProvider;
   private URL sourceURL;
   
-  public NativeTerrainElevationModelWrapper( Feature featureToBind ) throws IllegalArgumentException, IOException, URISyntaxException
+  /**
+   * Crate a new {@link NativeTerrainElevationModelWrapper} as child of the
+   * given parent Feature and link to it bei a property of the guven QName.
+   * the name of the source (file) containing the native terrain model is
+   * given must be also specified
+   * @param parentFeature the parent feature
+   * @param propQName the {@link QName} of the property linking the parent 
+   *        feature to the new {@link NativeTerrainElevationModelWrapper}
+   * @param sourceName the name of the source. It can be a relative path in the parent
+   *    feature workspace context or an absoute path
+   *         
+   */
+  public NativeTerrainElevationModelWrapper( 
+                            Feature parentFeature,
+                            QName propQName,
+                            String sourceName) 
+                            throws IllegalArgumentException, IOException, URISyntaxException
+  {
+    this(
+        createFeature( parentFeature, propQName, sourceName ));
+  }
+  
+  /**
+   * Creates a new {@link NativeTerrainElevationModelWrapper}
+   * as child of the given parent and link to it by the prop
+   * of the given name.
+   * The native source path is also set
+   */
+  private static final Feature createFeature(
+                    Feature parentFeature,
+                    QName propQName,
+                    String sourceName)
+  {
+    Assert.throwIAEOnNullParam( parentFeature, "parentFeature" );
+    Assert.throwIAEOnNullParam( propQName, "propQName" );
+    sourceName=Assert.throwIAEOnNullOrEmpty( sourceName );
+    
+    Feature newFeature=
+      Util.createFeatureAsProperty( 
+        parentFeature, 
+        propQName, 
+        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+    newFeature.setProperty( 
+        KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, sourceName );
+    return newFeature;    
+  }
+  
+  public NativeTerrainElevationModelWrapper( 
+      ITerrainElevationModelSystem terrainElevationModelSystem,
+      String sourceName) 
+      throws IllegalArgumentException, IOException, URISyntaxException
+  {
+    this(
+        createFeatureForTEMSystem( 
+            terrainElevationModelSystem, sourceName ));
+  }
+  
+  private static final Feature createFeatureForTEMSystem(
+                                    ITerrainElevationModelSystem terrainElevationModelSystem,
+                                    String sourceName)
+  {
+    return createFeature( 
+              terrainElevationModelSystem.getWrappedFeature(), 
+              KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL, 
+              sourceName);
+  }
+  
+  public NativeTerrainElevationModelWrapper( 
+                                  Feature featureToBind ) 
+                                  throws IllegalArgumentException, IOException, URISyntaxException
   {
     super( 
         featureToBind,
@@ -106,6 +179,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
       return new URL(worspaceContex,sourceName);
     }
   }
+  
   /**
    * Return the file property of the terrain elevation model
    */

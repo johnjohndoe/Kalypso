@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
@@ -345,15 +346,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper> extends Abs
 	public Iterator<FWCls> iterator() {
 		return new Iterator<FWCls>() {
 			private final Iterator it = featureList.iterator();
-
+			private final GMLWorkspace workspace=featureCol.getWorkspace();
 			public boolean hasNext() {
 				return it.hasNext();
 			}
 
 			@SuppressWarnings({ "unchecked", "synthetic-access" })
 			public FWCls next() {
-				final Feature f = FeatureHelper.getFeature(featureCol
-						.getWorkspace(), it.next());
+				final Feature f = FeatureHelper.getFeature( workspace, it.next());
 
 				FWCls wrapper = (FWCls) f.getAdapter(fwClass);
 				if (wrapper == null) {

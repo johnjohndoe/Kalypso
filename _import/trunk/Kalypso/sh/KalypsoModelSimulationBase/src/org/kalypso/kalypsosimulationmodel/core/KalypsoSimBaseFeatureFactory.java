@@ -286,6 +286,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
             }
             else
             {
+              System.out.println("Could not adapt="+feature+" to"+cls);
               return null;//new TerrainElevationModel(feature);
             }
           }

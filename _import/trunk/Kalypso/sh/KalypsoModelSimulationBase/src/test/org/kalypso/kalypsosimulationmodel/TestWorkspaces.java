@@ -137,7 +137,11 @@ public class TestWorkspaces
     public static final URL URL_TEM_SYSREM;
     public static final String REL_RES_TEM_SYSTEM=
                                 "data/native_terrain_elevation_model_system.xml";
-    
+   
+    public static final URL URL_TEM_EMPTY_TER_MODEL;
+    public static final String REL_RES_TEM_EMPTY_TER_MODEL=
+                                "data/test_terrain_model_without_tem_system.xml";
+   
 	static 
 	{
 		Map<String ,URL> urlMap=new Hashtable<String, URL>();
@@ -213,6 +217,10 @@ public class TestWorkspaces
                 REL_RES_TEM_SYSTEM,
                 TestWorkspaces.class.getResource(
                         REL_RES_TEM_SYSTEM));
+            urlMap.put(
+                REL_RES_TEM_EMPTY_TER_MODEL,
+                TestWorkspaces.class.getResource(
+                        REL_RES_TEM_EMPTY_TER_MODEL));
 		}
 		catch(Throwable th)
 		{
@@ -258,6 +266,8 @@ public class TestWorkspaces
               urlMap.get(REL_RES_NATIVE_TEM_WRAPPER);
             URL_TEM_SYSREM=
               urlMap.get(REL_RES_TEM_SYSTEM);
+            URL_TEM_EMPTY_TER_MODEL=
+              urlMap.get(REL_RES_TEM_EMPTY_TER_MODEL);
 
         }
 	}

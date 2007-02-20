@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -82,7 +85,39 @@ public class TerrainElevationModelSystem
             KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL);
     
   }
+  
+  
+  public TerrainElevationModelSystem(
+                          ITerrainModel terrainModel)
+                          throws IllegalArgumentException
+  {
+    this(createTEMSysForTerrainModel(terrainModel));
+  }
 
+  /**
+   * Creates or return a new feature for the give n terrian model
+   */
+  private static final Feature createTEMSysForTerrainModel(ITerrainModel terrainModel)
+  {
+    Assert.throwIAEOnNullParam( terrainModel, "terrainModel" );
+     ITerrainElevationModelSystem temSys=terrainModel.getTerrainElevationModelSystem();
+     if(temSys!=null)
+     {
+       return temSys.getWrappedFeature();
+     }
+     else
+     {
+      Feature parentFeature = terrainModel.getWrappedFeature();
+      Feature newFeature=
+        Util.createFeatureAsProperty( 
+                          parentFeature, 
+                          KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS, 
+                          KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS);
+     
+      return newFeature;
+     }
+  }
+  
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem#getTerrainElevationModels()
    */

@@ -290,13 +290,28 @@ public class Util
 	    
 	    try
 	    {
-	       Feature feature=
-             FeatureHelper.addFeature( 
-	          parentFeature, 
-	          propQName, 
-	          featureQName);
+           IPropertyType property = 
+               parentFeature.getFeatureType().getProperty( propQName );
+           if(property.isList())
+           {
+    	       Feature feature=
+                 FeatureHelper.addFeature( 
+    	          parentFeature, 
+    	          propQName, 
+    	          featureQName);
+               
+               return feature;
+           }
+           else
+           {
+             GMLWorkspace workspace = parentFeature.getWorkspace();
+             IFeatureType newFeatureType = 
+                     workspace.getGMLSchema().getFeatureType( featureQName );
+             Feature feature=
+               workspace.createFeature( parentFeature, (IRelationType)property, newFeatureType );
+             return feature;
+           }
            
-           return feature;
 	    }
 	    catch(GMLSchemaException ex)
 	    {
