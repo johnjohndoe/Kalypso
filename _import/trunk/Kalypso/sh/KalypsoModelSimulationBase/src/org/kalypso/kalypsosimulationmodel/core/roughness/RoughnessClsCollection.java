@@ -43,7 +43,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
     super( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER, IRoughnessCls.class );
   }
 
-  public String getName( )
+  public String getName()
   {
     Feature wrappedFeature = getWrappedFeature();
     return Util.getFirstName( wrappedFeature );

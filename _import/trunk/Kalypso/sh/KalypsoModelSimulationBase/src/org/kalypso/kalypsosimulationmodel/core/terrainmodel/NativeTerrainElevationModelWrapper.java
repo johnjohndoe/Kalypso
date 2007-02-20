@@ -81,15 +81,11 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
    }
    sourceURL=makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
    File nativeTerrainModelFile= new File(FileLocator.resolve( sourceURL).getFile());
-   elevationProvider = 
-     NativeTerrainElevationModelFactory.getTerrainElevationModel( 
-                                                     nativeTerrainModelFile );
-   
+   elevationProvider = NativeTerrainElevationModelFactory.getTerrainElevationModel(nativeTerrainModelFile);   
   }
   
   private final URL makeSourceURL(String sourceName, URL worspaceContex) throws URISyntaxException, MalformedURLException
-  {
-    
+  {    
     try
     {
       URL sourceUrl= new URL(sourceName);
@@ -114,8 +110,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
    * Return the file property of the terrain elevation model
    */
   private final File getFile()
-  {
-    
+  {    
     return null;
   }
   

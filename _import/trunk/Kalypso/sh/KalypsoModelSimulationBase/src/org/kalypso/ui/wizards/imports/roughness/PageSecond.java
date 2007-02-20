@@ -60,7 +60,7 @@ public class PageSecond extends WizardPage
     setPageComplete( false );
   }
 
-  public void delayedCreateControl( )
+  public void delayedCreateControl()
   {
     String[] names = new String[m_data.getRoughnessStaticCollectionMap().size()];
     int i = 0;

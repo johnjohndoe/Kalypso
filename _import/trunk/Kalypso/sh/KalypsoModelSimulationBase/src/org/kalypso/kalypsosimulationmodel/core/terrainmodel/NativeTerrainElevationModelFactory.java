@@ -62,13 +62,11 @@ public class NativeTerrainElevationModelFactory
     if(nativeTerrainModelFile.isDirectory())
     {
       throw new IllegalArgumentException("File must not be a directory:"+nativeTerrainModelFile);      
-    }
-    
+    }    
     if(!nativeTerrainModelFile.exists())
     {
       throw new IllegalArgumentException("file must exist:"+nativeTerrainModelFile);
-    }
-    
+    }    
     return resolveTerrainElevationModel( nativeTerrainModelFile);    
   }
   
