@@ -79,7 +79,8 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
   
   public GeometryToStructUpdater()
   {
-    System.out.println("================GEOM_STRUCT_UPDATER================");
+    // TODO: please use something configurable instead (e.g. tracing)
+//    System.out.println("================GEOM_STRUCT_UPDATER================");
   }
   
   
@@ -100,7 +101,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    */
   public void init( GMLWorkspace workspace )
   {
-    System.out.println("WorkspaceInit="+workspace);
+//    System.out.println("WorkspaceInit="+workspace);
     this.workspace=workspace;
   }
 
@@ -109,8 +110,10 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    System.out.println("modellEvent="+modellEvent+
-            "\nSource="+modellEvent.getEventSource());
+    // TODO: please use something configurable instead (e.g. tracing)
+
+//    System.out.println("modellEvent="+modellEvent+
+//            "\nSource="+modellEvent.getEventSource());
     try
     {
       if(modellEvent==null)

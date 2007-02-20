@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +77,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
@@ -229,7 +229,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       /* find sohlpunkt */
       final IProfil profil = profileMember.getProfil();
-      final IProfilPoint sohlPoint = ProfilUtil.getMinPoint( profil, IProfilPoint.POINT_PROPERTY.HOEHE );
+      final IProfilPoint sohlPoint = ProfilUtil.getMinPoint( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
       /* add node and remember it */
