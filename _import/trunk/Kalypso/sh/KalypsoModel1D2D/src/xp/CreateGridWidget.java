@@ -185,7 +185,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
                   p, 
                   gridPointCollector.getSelectedPoint(),
                   m_radius*2, 
-                  getMapPanel().getProjection() ) )
+                  getMapPanel().getProjection() ) || true )//TODO remove true
         {
           System.out.println("HasAllSides:dragged change posted");
             GM_Point nextPoint=
@@ -289,11 +289,22 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       gridPointCollector.paint( g, getMapPanel().getProjection(), currentPoint );
       //TODO check what it is doing
+      LinePointCollectorConfig currentLPCConfig = 
+        gridPointCollector.getCurrentLPCConfig();
+      if(currentLPCConfig==null)
+      {
+        currentLPCConfig=gridPointCollector.getSideconfigsAsArray()[0];
+      }
+      
+      int pointRectSize = 
+          currentLPCConfig.getPointRectSize();
+      int pointRectSizeHalf=pointRectSize/2;
       g.drawRect( 
-          (int) currentPoint.getX() - 10, 
-          (int) currentPoint.getY() - 10, 
-          20, 
-          20 );
+          (int) currentPoint.getX() - pointRectSizeHalf, 
+          (int) currentPoint.getY() - pointRectSizeHalf, 
+          pointRectSize, 
+          pointRectSize );
+      
     }
     
   }

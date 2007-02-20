@@ -64,25 +64,35 @@ import com.vividsolutions.jts.geom.LineString;
 
 //TODO model grid mechanism to here
 /**
- * This class is the container for the grid points calculated 
- * on the fly.
+ * This class provide the mechanism to calculate the grid finit element model
+ * node and to display them.
+ * The point are supposed to be in the same coordinate reference system so that no
+ * no reference system convertion is done
  * 
  * @author Patrice Congo
  */
 public class TempGrid 
 {
-  /**
-   * Stores the count of points which this geometry must have. If it is 0, there is no rule.
-   */
-  private int m_cnt_points;
+//  /**
+//   * Stores the count of points which this geometry must have. If it is 0, there is no rule.
+//   */
+//  private int m_cnt_points;
 
+  /**
+   * The target coodinate reference system for the created grid point 
+   */
   private CS_CoordinateSystem m_crs;
   
+  /**
+   * Cache for screen point coordinate
+   */
   private int[][] drawPoints;
   
+  /**
+   * Cache for grid computed grid points
+   */
   private GM_Point[][] gridPoints;
   
-//  private int pointRectSize = 6;
   
   /**
    * The constructor.
@@ -99,14 +109,26 @@ public class TempGrid
   }
 
 
+  /**
+   * Set the target {@link CS_CoordinateSystem}. All points this grid is coping
+   * with are required to reside in that system and no reference system conversion 
+   * made in by the {@link TempGrid}
+   * @param targetCrs the target {@link CS_CoordinateSystem}
+   * @throws IllegalArgumentException is targetCrs is null
+   */
   public void setCoodinateSystem (final CS_CoordinateSystem targetCrs )
+                                  throws IllegalArgumentException
   {
+      Assert.throwIAEOnNullParam( targetCrs, "targetCrs" );
        this.m_crs = targetCrs;
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * Class this to display the {@link TempGrid} on the screen.
+   * @param g the display graphic context
+   * @param projection the geoprojection for projecting {@link GM_Point} to
+   *    screen points
+   * @param pointRectSize the side lengtth for square representing the points
    */
   public void paint( 
                   final Graphics g, 
@@ -128,14 +150,24 @@ public class TempGrid
         /* Paint a linestring. */
 //        g.drawPolyline( arrayX, arrayY, arrayX.length );
         drawHandles( g, arrayX, arrayY, pointRectSize);        
+        
+        //cache draw points
         drawPoints=points;   
     }
       
   }
 
+  /**
+   * compute screen points from gm points
+   */
   private int[][] getPointArrays( 
                       final GeoTransform projection )
   {
+    if(drawPoints!=null)
+    {
+      return drawPoints;
+    }
+    
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
@@ -162,6 +194,9 @@ public class TempGrid
     return new int[][] { xs, ys };
   }
 
+  /**
+   * draws the temp grid point on the screen
+   */
   private static final void drawHandles( 
                             final Graphics g, 
                             final int[] x, 
@@ -191,20 +226,38 @@ public class TempGrid
     g.setColor( oldColor );    
   }
   
-   
+  /**
+   * Reset this {@link TempGrid}.
+   * It is empty, i.e. contains no points after reset
+   * @param crs the target coordinate reference system for the grid
+   * @see #setCoodinateSystem(CS_CoordinateSystem)
+   * @throws IllegalArgumentException if crs is null
+   */ 
   void resetTempGrid(CS_CoordinateSystem crs)
+                    throws IllegalArgumentException
   {
     gridPoints= new GM_Point[0][0];
     m_crs=crs;
   }
   
+  /**
+   * config the with its side points.
+   * @param topSidePoints the collector containing the top side points
+   * @param bottomSidePoints the collector containing the bottom side points
+   * @param leftSidePoints the collector containing the to left side points
+   * @param rightSidePoints the collector containing the to right side points
+   * @throws IllegalArgumentException if one the the side point collector is null
+   */
   void setTempGrid(
           LinePointCollector topSidePoints, 
           LinePointCollector bottomSidePoints, 
           LinePointCollector leftSidePoints, 
           LinePointCollector rightSidePoints) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( gridPoints, "gridPoint" );
+    Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" );
+    Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" );
+    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" );
+    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" );
     this.gridPoints=
         computeMesh( 
               topSidePoints, 
@@ -213,6 +266,9 @@ public class TempGrid
     drawPoints=null;
   }
   
+  /**
+   * Computes the grid points from its side points
+   */
   private final GM_Point[][] computeMesh(
                           LinePointCollector topSidePoints, 
                           LinePointCollector bottomSidePoints, 
@@ -253,7 +309,10 @@ public class TempGrid
     return points2D;
   }
   
-  
+  /**
+   * To get an {@link ICommand} that can be use to hat the temp
+   * grid to the model
+   */
   public ICommand getAddToModelCommand(
       MapPanel mapPanel,
       IFEDiscretisationModel1d2d model,
@@ -288,7 +347,9 @@ public class TempGrid
     addElementsFromNodes( model, newNodesArray2D, compositeCommand );
     return compositeCommand;
   }
-  
+  /**
+   * Make the add node command
+   */
   private final void  addNodesFromPoints(
       IFEDiscretisationModel1d2d model,
       AddNodeCommand[][] newNodesArray2D,
@@ -316,6 +377,9 @@ public class TempGrid
     }
   }
   
+  /**
+   * make the add element command. element are added based on their nodes
+   */
   private final void  addElementsFromNodes(
       IFEDiscretisationModel1d2d model,
       AddNodeCommand[][] newNodesArray2D,
@@ -342,7 +406,9 @@ public class TempGrid
       }
   }
   
-  
+  /**
+   * get the {@link LinePointCollector} points as {@link LineString}
+   */
   private LineString pointToLineString(
       LinePointCollector lineGeometryBuilder)
   {
