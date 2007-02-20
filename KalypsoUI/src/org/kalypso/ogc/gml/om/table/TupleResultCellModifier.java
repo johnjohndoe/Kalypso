@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.om.table;
 
 import java.text.ParseException;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -81,12 +82,20 @@ public class TupleResultCellModifier implements ICellModifier
     final TableItem item = (TableItem) element;
     final IRecord record = (IRecord) item.getData();
     final IComponent component = modifyRecord( record, property, value );
+    if( component == null )
+      return;
 
     final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, value ) };
     m_provider.getResult().fireValuesChanged( changes );
   }
 
-  /** Does not inform any listeners */
+  /**
+   * Does not inform any listeners.
+   * <p>
+   * Only changes the record if the new value is different frmo the current value.
+   * 
+   * @return the component whichs was modified, <code>null</code> if the record was not changed.
+   */
   public IComponent modifyRecord( final IRecord record, final String property, final Object value )
   {
     final IComponent component = m_provider.getComponent( property );
@@ -99,7 +108,10 @@ public class TupleResultCellModifier implements ICellModifier
       {
         final Object valueToSet = value == null ? null : handler.parseType( value.toString() );
 
-        /* Set value and inform listeners */
+        final Object oldValue = record.getValue( component );
+        if( ObjectUtils.equals( valueToSet, oldValue ) )
+          return null;
+
         record.setValue( component, valueToSet );
       }
       else
