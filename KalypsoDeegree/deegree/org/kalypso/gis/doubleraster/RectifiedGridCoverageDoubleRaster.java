@@ -1,6 +1,7 @@
 package org.kalypso.gis.doubleraster;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -94,13 +95,26 @@ public class RectifiedGridCoverageDoubleRaster extends AbstractDoubleRaster impl
           else if( mimeType.startsWith( "text/asc" ) )
           {
             final String fileName = file.getFileName();
+            URL fileURL= new URL(fileName);
             
-            final URL url = new URL( m_context, fileName );
-            m_grid = new AsciiGrid( url );
+            if(fileURL.toURI().isAbsolute())
+            {
+              m_grid = new AsciiGrid( fileURL );
+            }
+            else
+            {
+              URL url = new URL( m_context, fileName );
+             m_grid = new AsciiGrid( url );
+            }
           }
         }
         catch( MalformedURLException e )
         {
+          e.printStackTrace();
+        }
+        catch( URISyntaxException e )
+        {
+          e.printStackTrace();
         }
       }
 
