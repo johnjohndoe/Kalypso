@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-
 /**
  * A layer provider provides layers for the view, depending on the specific profile type.
  * 
@@ -48,9 +47,13 @@ package org.kalypso.model.wspm.ui.view.chart;
  */
 public interface IProfilLayerProvider
 {
-  public IProfilChartLayer[] createLayer(final ProfilChartView view,final String layerId);
-  public IProfilChartLayer[] getRequieredLayer(final ProfilChartView view);
-  public String[] getAddableLayers( final ProfilChartView view);
-  public IProfilChartLayer getLayer(final String layerId,final ProfilChartView view);
-  public boolean providesLayer(final String layerId);
+  public IProfilChartLayer[] createLayer( final ProfilChartView view, final String layerId );
+
+  public IProfilChartLayer[] getRequieredLayer( final ProfilChartView view );
+
+  public String[] getAddableLayers( final ProfilChartView view );
+
+  public IProfilChartLayer getLayer( final String layerId, final ProfilChartView view );
+
+  public boolean providesLayer( final String layerId );
 }

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+		<documentation>
+			This is the gml-application schema wich describes the types for results of a 
+			Q-Intervall calculation ('ungleichförmige Bordvollberechnung') of the TUHH-WSPM modell (Kalypso1D-Rechenkern)
+		</documentation>
+	</annotation>
+	<import namespace="org.kalypso.model.wspm"/>
+	<import namespace="org.kalypso.model.wspmcommon"/>
+	<import namespace="org.kalypso.model.wspmprofile"/>
+	<import namespace="http://www.opengis.net/gml"/>
+	
+	<complexType name="QIntervallResultPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="tuhh:QIntervallResult"/>
+		</sequence>
+	</complexType>
+
+	<element name="QIntervallResult" type="tuhh:QIntervallType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Ergebnis</name>
+				<label>${property:org.kalypso.model.wspm.tuhh#station;-</label>
+				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-</tooltip>
+				<description><![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-]]></description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Result</name>
+				<label>${property:org.kalypso.model.wspm.tuhh#station;-</label>
+				<tooltip>${property:org.kalypso.model.wspm.tuhh#station;-</tooltip>
+				<description><![CDATA[${property:org.kalypso.model.wspm.tuhh#station;-]]></description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<complexType name="QIntervallType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="station" type="wspm:station">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Station</label>
+								<tooltip>Station</tooltip>
+								<description>Station</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Station</label>
+								<tooltip>Station</tooltip>
+								<description>Station</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="profileMember" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Profil</label>
+								<tooltip>Referenz auf Profil</tooltip>
+								<description>Referenz auf Profil</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Profile</label>
+								<tooltip>Profile Reference</tooltip>
+								<description>Reference to profile</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+</schema>

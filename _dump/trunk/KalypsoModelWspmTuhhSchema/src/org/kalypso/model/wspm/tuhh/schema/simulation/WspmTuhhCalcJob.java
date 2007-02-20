@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
@@ -120,8 +123,8 @@ public class WspmTuhhCalcJob implements ISimulation
     InputStream zipInputStream = null;
     InputStream headerInputStream = null;
     InputStream footerInputStream = null;
-    FileOutputStream strmKernelLog = null;
-    FileOutputStream strmKernelErr = null;
+    OutputStream strmKernelLog = null;
+    OutputStream strmKernelErr = null;
     PrintWriter pwInParams = null;
     InputStream mapContentStream = null;
     PrintWriter mapWriter = null;
@@ -131,7 +134,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor );
       log.log( true, "Parsing GMLXPath: %s", calcXPath );
-      
+
       final GMLXPath calcpath = new GMLXPath( calcXPath );
 
       // load gml
@@ -153,7 +156,7 @@ public class WspmTuhhCalcJob implements ISimulation
       final TuhhCalculation calculation = new TuhhCalculation( calculationFeature );
 
       monitor.setProgress( 10 );
-      
+
       log.log( true, "Writing files for tuhh calculation-core..." );
 
       // write calculation to tmpDir
@@ -164,17 +167,18 @@ public class WspmTuhhCalcJob implements ISimulation
       dathDir.mkdirs();
 
       // unpack kernel into tmpDir
-      zipInputStream = WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" );
+      zipInputStream = new BufferedInputStream( WspmTuhhCalcJob.class.getResourceAsStream( "resources/rechenkern.zip" ) );
       ZipUtilities.unzip( zipInputStream, tmpDir, false );
+      zipInputStream.close();
 
       // prepare kernel logs (log and err)
       final File fleKernelLog = new File( tmpDir, "kernel.log" );
       resultEater.addResult( "KernelLog", fleKernelLog );
-      strmKernelLog = new FileOutputStream( fleKernelLog );
+      strmKernelLog = new BufferedOutputStream( new FileOutputStream( fleKernelLog ) );
 
       final File fleKernelErr = new File( tmpDir, "kernel.err" );
       resultEater.addResult( "KernelErr", fleKernelErr );
-      strmKernelErr = new FileOutputStream( fleKernelErr );
+      strmKernelErr = new BufferedOutputStream( new FileOutputStream( fleKernelErr ) );
 
       // TODO input.txt und start.bat sollen noch raus (nach Umstellung des Rechenkerns durch Wolf)
       // input.txt: n, prof/calc.properties
@@ -202,7 +206,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
       // start calculation
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
-      
+
       if( log.checkCanceled() )
         return;
 
@@ -216,7 +220,7 @@ public class WspmTuhhCalcJob implements ISimulation
       if( ctrlFile.exists() )
       {
         resultEater.addResult( "ControlFile", ctrlFile );
-        
+
         log.log( false, " - Kontroll-Datei erzeugt." );
       }
 
@@ -224,19 +228,19 @@ public class WspmTuhhCalcJob implements ISimulation
       if( beiwerteFile.exists() )
       {
         resultEater.addResult( "BeiwerteAus", beiwerteFile );
-        log.log( false,  " - Beiwerte-Datei erzeugt." );
+        log.log( false, " - Beiwerte-Datei erzeugt." );
       }
 
       final File lambdaFile = new File( dathDir, "lambda_i.txt" );
       if( lambdaFile.exists() )
       {
         resultEater.addResult( "LambdaI", lambdaFile );
-        log.log( false,  " - LambdaI-Datei erzeugt." );
+        log.log( false, " - LambdaI-Datei erzeugt." );
       }
 
       if( log.checkCanceled() )
         return;
-      
+
       MODE calcMode = calculation.getCalcMode();
       switch( calcMode )
       {
@@ -258,7 +262,7 @@ public class WspmTuhhCalcJob implements ISimulation
             if( mapFile.exists() )
             {
               resultEater.addResult( "OvwMap", mapFile );
-              log.log( false,  " - Übersichtskarte erzeugt." );
+              log.log( false, " - Übersichtskarte erzeugt." );
             }
           }
 
@@ -272,7 +276,7 @@ public class WspmTuhhCalcJob implements ISimulation
           if( lenSecFile.exists() )
           {
             resultEater.addResult( "LengthSection", lenSecFile );
-            log.log( false,  " - Längsschnitt erzeugt." );
+            log.log( false, " - Längsschnitt erzeugt." );
 
             // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
             // (without header) + new footer
@@ -299,7 +303,7 @@ public class WspmTuhhCalcJob implements ISimulation
             if( lengthSectionGmlFile.exists() )
             {
               resultEater.addResult( "LengthSectionGml", lengthSectionGmlFile );
-              log.log( false,  " - Längsschnitt (als GML) erzeugt." );
+              log.log( false, " - Längsschnitt (als GML) erzeugt." );
 
               // Read Length-Section GML
               final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
@@ -323,7 +327,7 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( diagFile.exists() )
                 {
                   resultEater.addResult( "LengthSectionDiag", diagFile );
-                  log.log( false,  " - Längsschnitt-Diagramm erzeugt." );
+                  log.log( false, " - Längsschnitt-Diagramm erzeugt." );
                 }
               }
               catch( final Exception e )
@@ -344,7 +348,7 @@ public class WspmTuhhCalcJob implements ISimulation
                 FileUtilities.makeFileFromUrl( tableUrl, tableFile, false );
 
                 resultEater.addResult( "LengthSectionTab", tableFile );
-                log.log( false,  " - Tabelle erzeugt." );
+                log.log( false, " - Tabelle erzeugt." );
               }
               catch( final Exception e )
               {
@@ -364,7 +368,7 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( breaklineFile.exists() )
                 {
                   resultEater.addResult( "Bruchkanten", breaklineFile );
-                  log.log( false,  " - Bruchkanten erzeugt." );
+                  log.log( false, " - Bruchkanten erzeugt." );
                 }
               }
               catch( final Exception e )
@@ -385,7 +389,7 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( file.exists() )
                 {
                   resultEater.addResult( "Modellgrenzen", file );
-                  log.log( false,  " - Modellgrenzen erzeugt." );
+                  log.log( false, " - Modellgrenzen erzeugt." );
                 }
               }
               catch( final Exception e )
@@ -406,18 +410,22 @@ public class WspmTuhhCalcJob implements ISimulation
                 if( file.exists() )
                 {
                   resultEater.addResult( "Ueberschwemmungslinie", file );
-                  log.log( false,  " - Überschwemmungslinie erzeugt." );
+                  log.log( false, " - Überschwemmungslinie erzeugt." );
                 }
               }
               catch( final Exception e )
               {
                 log.log( e, "Überschwemmungslinie konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
               }
-              
+
               if( log.checkCanceled() )
                 return;
 
             }
+          }
+          else
+          {
+            log.log( false, "Ergebnisdatei %s fehlt, vermutlich ein Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs.", lenSecFile.getName() );
           }
 
           // *.tab (-> fixed name "Ergebnis.list")
@@ -427,8 +435,8 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] );
-            
-            log.log( false,  " - Ergebnisliste erzeugt." );
+
+            log.log( false, " - Ergebnisliste erzeugt." );
           }
 
           break;
@@ -444,7 +452,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-            log.log( false,  " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
+            log.log( false, " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
           }
 
           // *.tab (-> fixed name "Ergebnis.list")
@@ -454,7 +462,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one TAB-file
             resultEater.addResult( "resultList", ergListFile[0] );
-            log.log( false,  " - Ergebnisliste erzeugt." );
+            log.log( false, " - Ergebnisliste erzeugt." );
           }
 
           break;
@@ -462,6 +470,12 @@ public class WspmTuhhCalcJob implements ISimulation
         case BF_NON_UNIFORM:
         {
           // bankfull nonuniform
+
+          final File polynomeTmpDir = new File( tmpDir, "polynome" );
+          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, lTimeout, resultEater );
+
+          // TODO :check everything below if it still makes sense?
+
           // *.qb2 = Q als Treppenfunktion, we don't fetch it
           // *.qb1 = bankfull-lengthsection
           final FileFilter qb1Filter = FileFilterUtils.suffixFileFilter( ".qb1" );
@@ -470,7 +484,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one QB1
             resultEater.addResult( "bfLengthSection", bfLenSecFile[0] );
-            log.log( false,  " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
+            log.log( false, " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
           }
 
           // *.km (W/Q-Tabelle für Kalinin-Miljukow)
@@ -480,7 +494,7 @@ public class WspmTuhhCalcJob implements ISimulation
           {
             // assumption: max. one KM
             resultEater.addResult( "wqKalMil", kmFiles[0] );
-            log.log( false,  " - W/Q-Tabelle zur Bestimmung der Kalinin-Miljukow-Parameter erzeugt." );
+            log.log( false, " - W/Q-Tabelle zur Bestimmung der Kalinin-Miljukow-Parameter erzeugt." );
           }
 
           // *.pro (W/Q-Tabellen für jedes Profil -> Verzeichnis)
@@ -491,15 +505,15 @@ public class WspmTuhhCalcJob implements ISimulation
           for( final File file : proFiles )
           {
             FileUtils.copyFileToDirectory( file, wqProProfilDir );
-            
+
             if( log.checkCanceled() )
               return;
           }
-          
+
           if( wqProProfilDir.exists() )
           {
             resultEater.addResult( "wqProProfil", wqProProfilDir );
-            log.log( false,  " - W/Q-Tabelle pro Profil erzeugt." );
+            log.log( false, " - W/Q-Tabelle pro Profil erzeugt." );
           }
 
           // *.tb (Ergebnislisten für jeden Abfluss -> Verzeichnis)
@@ -512,7 +526,7 @@ public class WspmTuhhCalcJob implements ISimulation
           if( resNonUniDir.exists() )
           {
             resultEater.addResult( "resultListsNonUni", resNonUniDir );
-            log.log( false,  " - Ergebnislisten pro Abfluss erzeugt." );
+            log.log( false, " - Ergebnislisten pro Abfluss erzeugt." );
           }
           break;
         }

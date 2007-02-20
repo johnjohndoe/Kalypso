@@ -66,23 +66,24 @@ import de.belger.swtchart.util.LogicalRange;
 
 /**
  * @author kimwerner
- * 
  */
 public class GelaendeLayer extends AbstractPolyLineLayer
 {
   public GelaendeLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_GELAENDE,"Gelände", pcv, pcv.getDomainRange(),pcv.getValueRangeLeft(), new String[]{ IWspmTuhhConstants.POINT_PROPERTY_HOEHE }, true, true, true );
-    setColors( setColor(pcv.getColorRegistry()));
+    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_HOEHE }, true, true, true );
+    setColors( setColor( pcv.getColorRegistry() ) );
   }
-private final Color[] setColor(final ColorRegistry cr)
-{
-  if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
+
+  private final Color[] setColor( final ColorRegistry cr )
   {
-    cr.put( IWspmTuhhConstants.LAYER_GELAENDE, new RGB(255, 150, 0 ));
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
+    {
+      cr.put( IWspmTuhhConstants.LAYER_GELAENDE, new RGB( 255, 150, 0 ) );
+    }
+    return new Color[] { cr.get( IWspmTuhhConstants.LAYER_GELAENDE ) };
   }
-  return new Color[]{cr.get( IWspmTuhhConstants.LAYER_GELAENDE )};
-}
+
   @Override
   public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
   {
@@ -96,12 +97,14 @@ private final Color[] setColor(final ColorRegistry cr)
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    if (!(hint.isPointValuesChanged()||hint.isPointsChanged() )) return;
+    if( !(hint.isPointValuesChanged() || hint.isPointsChanged()) )
+      return;
     final AxisRange domainRange = getDomainRange();
     final AxisRange valueRange = getValueRange();
 
@@ -109,20 +112,20 @@ private final Color[] setColor(final ColorRegistry cr)
     final double right = domainRange.getLogicalTo();
     final double top = valueRange.getLogicalTo();
     final double bottom = valueRange.getLogicalFrom();
-    for (IProfilChange change : changes)
+    for( IProfilChange change : changes )
     {
-      if ((change instanceof PointPropertyEdit)|| (change instanceof PointAdd))  
+      if( (change instanceof PointPropertyEdit) || (change instanceof PointAdd) )
       {
-        final IProfilPoint point = (IProfilPoint)change.getObject();
+        final IProfilPoint point = (IProfilPoint) change.getObject();
         try
         {
-          final double breite = point.getValueFor(IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-          final double hoehe =  point.getValueFor(IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+          final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+          final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
 
-          if ((breite > right)||(breite < left)||(hoehe > top)||(hoehe < bottom))
+          if( (breite > right) || (breite < left) || (hoehe > top) || (hoehe < bottom) )
           {
-            valueRange.setLogicalRange(new LogicalRange(Math.min(hoehe,bottom),Math.max(hoehe,top)));
-            domainRange.setLogicalRange(new LogicalRange(Math.min(breite,left),Math.max(breite,right)));
+            valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
+            domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
           }
         }
         catch( Exception e )
@@ -131,7 +134,7 @@ private final Color[] setColor(final ColorRegistry cr)
         }
       }
     }
-    
+
   }
 
   @Override
@@ -149,8 +152,8 @@ private final Color[] setColor(final ColorRegistry cr)
     drawStationline( gc, midx, midy, midx, bottom );
     gc.setLineWidth( 1 );
     gc.setLineStyle( SWT.LINE_SOLID );
-    gc.setForeground(m_colors[0] );
-    gc.drawOval( midx - 2, midy - 2, 4, 4);
+    gc.setForeground( m_colors[0] );
+    gc.drawOval( midx - 2, midy - 2, 4, 4 );
     gc.drawLine( left, top, midx, midy );
     gc.drawLine( midx, midy, right, midy );
   }

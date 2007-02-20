@@ -96,7 +96,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   protected final static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [m]";
 
-  protected  Color[] m_colors;
+  protected Color[] m_colors;
 
   private final Color m_stationColor;
 
@@ -112,15 +112,15 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   private final boolean m_mayEditVert;
 
-  public AbstractPolyLineLayer(final String layerId,final String label, final ProfilChartView pcv, final AxisRange domainRange, final AxisRange valueRange,  final String[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
+  public AbstractPolyLineLayer( final String layerId, final String label, final ProfilChartView pcv, final AxisRange domainRange, final AxisRange valueRange, final String[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
   {
-    super(layerId, pcv, domainRange, valueRange ,label);
-    m_selectedcolor = pcv.getColorRegistry().get(IProfilColorSet.COLOUR_GELAENDE_MARKED);
+    super( layerId, pcv, domainRange, valueRange, label );
+    m_selectedcolor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_GELAENDE_MARKED );
     m_drawStationLines = drawStationLines;
     m_markActivePoint = markActivePoint;
 
-    m_stationColor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_STATIONS);
-    m_editColor = pcv.getColorRegistry().get(IProfilColorSet.COLOUR_AXIS_FOREGROUND);
+    m_stationColor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_STATIONS );
+    m_editColor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_AXIS_FOREGROUND );
     m_lineProperties = lineProperties;
     m_mayEditVert = mayEditVert;
   }
@@ -174,7 +174,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   }
 
   @Override
-  public  void editProfil( final Point moveTo, final Object data )
+  public void editProfil( final Point moveTo, final Object data )
   {
     final EditData editData = (EditData) data;
 
@@ -274,8 +274,8 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
           final int index = getProfil().getPoints().indexOf( point );
           final IProfilPointProperty prop = getProfil().getPointProperty( property );
           final String text = prop == null ? property : prop.getLabel();
-          return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] {"Breite", points[i].getX(),text ,
-              points[i].getY() } ) ) : null;
+          return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", points[i].getX(), text, points[i].getY() } ) )
+              : null;
         }
       }
     }
@@ -309,7 +309,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         for( int line = m_lineProperties.length - 1; line > -1; line-- )
         {
           final String pprop = m_lineProperties[line];
-          final Color pcol = m_colors[line ];
+          final Color pcol = m_colors[line];
           final Point pt = logical2screen( ProfilUtil.getPoint2D( pp, pprop ) );
 
           drawSegment( gc, lastP[i], pt, lastPP != null && lastPP == activePoint, pcol );

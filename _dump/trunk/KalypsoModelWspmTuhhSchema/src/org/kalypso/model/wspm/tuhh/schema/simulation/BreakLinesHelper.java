@@ -266,14 +266,17 @@ public class BreakLinesHelper implements IWspmConstants
       for( final ListIterator<GM_Point> iter = rightPoints.listIterator( rightPoints.size() ); iter.hasPrevious(); )
         posList.add( iter.previous().getPosition() );
 
-      final GM_Point firstLeftPoint = leftPoints.getFirst();
-      /* We assume here that all points have the same crs */
-      final CS_CoordinateSystem crs = firstLeftPoint.getCoordinateSystem();
-      // add first point to close the ring
-      posList.add( firstLeftPoint.getPosition() );
+      if( !leftPoints.isEmpty() )
+      {
+        final GM_Point firstLeftPoint = leftPoints.getFirst();
+        /* We assume here that all points have the same crs */
+        final CS_CoordinateSystem crs = firstLeftPoint.getCoordinateSystem();
+        // add first point to close the ring
+        posList.add( firstLeftPoint.getPosition() );
 
-      final GM_Surface surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
-      rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface );
+        final GM_Surface surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
+        rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface );
+      }
 
       GmlSerializer.serializeWorkspace( file, workspace, WspmTuhhCalcJob.WSPMTUHH_CODEPAGE );
     }

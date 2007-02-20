@@ -307,16 +307,49 @@ public class ProfilUtil
 
   public static Double getMinValueFor( final IProfil profil, final String property )
   {
+    final IProfilPoint minPoint = getMinPoint( profil, property );
+    if( minPoint == null )
+      return null;
+
+    return minPoint.getValueFor( property );
+  }
+
+  /**
+   * Return the profile-point of the given profile with the minimum value at the given property.
+   */
+  public static IProfilPoint getMinPoint( final IProfil profil, final String property )
+  {
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points.isEmpty() )
       return null;
+
     Double minValue = Double.MAX_VALUE;
-    for( IProfilPoint point : points )
+    IProfilPoint minPoint = null;
+    for( final IProfilPoint point : points )
     {
-
-      minValue = Math.min( minValue, point.getValueFor( property ) );
-
+      final double value = point.getValueFor( property );
+      if( value < minValue )
+      {
+        minValue = value;
+        minPoint = point;
+      }
     }
-    return minValue;
+    return minPoint;
   }
+
+  /**
+   * return a valid ProfilPoint if operation succeeds, othwerwise null
+   * 
+   * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#addPoint(double, double)
+   */
+  public static final IProfilPoint addPoint( final IProfil profil, final double breite, final double hoehe )
+  {
+    final IProfilPoint point = profil.createProfilPoint();
+
+    point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, hoehe );
+    point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, breite );
+    profil.addPoint( point );
+    return point;
+  }
+
 }

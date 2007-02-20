@@ -157,17 +157,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    */
   public static GM_Point convertPoint(final IProfil profile, final IProfilPoint profilPoint ) throws Exception
   {
-//    final Collection<POINT_PROPERTY> pointProperties = profilPoint.getProperties();
-//    final POINT_PROPERTY ppRW = pointProperties.contains( POINT_PROPERTY.RECHTSWERT ) ? POINT_PROPERTY.RECHTSWERT : null;
-//    final POINT_PROPERTY ppHW = pointProperties.contains( POINT_PROPERTY.HOCHWERT ) ? POINT_PROPERTY.HOCHWERT : null;
-//    final POINT_PROPERTY ppH = POINT_PROPERTY.HOEHE;
-
     if( !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT )||!profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT )||!profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE))//||ppRW == null || ppHW == null || ppH == null )
       return null;
-
-//    final double rw = profilPoint.getValueFor( ppRW );
-//    final double hw = ppHW == null ? 0.0 : profilPoint.getValueFor(  IWspmConstants.POINT_PROPERTY_HOCHWERT  );
-//    final double h = profilPoint.getValueFor( ppH );
 
     return WspmGeometryUtilities.pointFromRrHw( profilPoint.getValueFor(  IWspmConstants.POINT_PROPERTY_RECHTSWERT  ), profilPoint.getValueFor(  IWspmConstants.POINT_PROPERTY_HOCHWERT  ), profilPoint.getValueFor(  IWspmConstants.POINT_PROPERTY_HOEHE  ));
   }
