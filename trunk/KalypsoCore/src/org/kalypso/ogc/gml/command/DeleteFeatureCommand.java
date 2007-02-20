@@ -177,7 +177,7 @@ public class DeleteFeatureCommand implements ICommand
       final IRelationType rt = wrapper.getParentFeatureProperty();
       final Feature featureToRemove = wrapper.getFeature();
       if( !workspace.contains( featureToRemove ) )
-        continue; // is allready remved
+        continue; // was already removed
 
       if( rt.isList() )
       {

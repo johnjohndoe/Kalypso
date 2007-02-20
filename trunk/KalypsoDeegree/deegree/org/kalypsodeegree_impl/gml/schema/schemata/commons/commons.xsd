@@ -7,8 +7,7 @@
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/gml"/>
 	<!-- utility schema for gml application schemas -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 
