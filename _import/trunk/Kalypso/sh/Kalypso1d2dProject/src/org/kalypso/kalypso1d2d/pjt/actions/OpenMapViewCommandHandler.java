@@ -74,7 +74,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
     logger.info( "Opening " + file );
 
-    if( file.exists() )
+    if( file.exists() && activeWorkbenchWindow != null)
     {
       final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
       final IViewReference[] viewReferences = workbenchPage.getViewReferences();
