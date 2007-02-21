@@ -58,6 +58,12 @@
             id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
             name="BaseMap"
             project="false"/>
+      <wizard
+            class="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"
+            id="org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"
+            name="ElevationWizard"
+            project="false"/>
+            
    </extension>
    <extension
          point="org.kalypso.deegree.functionProperty">

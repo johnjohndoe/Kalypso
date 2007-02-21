@@ -40,15 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.elevationmodel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Iterator;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
+import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.Messages;
 
 
@@ -57,11 +73,17 @@ import org.kalypso.ui.wizards.imports.Messages;
  *
  */
 public class ImportElevationWizard extends Wizard
-      implements INewWizard
+      implements INewWizardKalypsoImport
 {
    private IStructuredSelection initialSelection;
 
    private ElevationMainPage mPage;
+   
+   private IFolder modelFolder;
+   
+   private ITerrainModel terrainModel;
+   
+  private String m_scenarioFolder;
    
    /**
     * Construct a new instance and initialize the dialog settings
@@ -71,6 +93,12 @@ public class ImportElevationWizard extends Wizard
    }
    
    /**
+    * The required selection structure is:
+    * <ul>
+    *   <li/>Length=2
+    *   <li/>First element an instance of {@link ITerrainModel}
+    *   <li/>Seconde element an instance of {@link IFolder}
+    * </ul> 
     * 
     * @param workbench the current workbench
     * @param selection the current object selection
@@ -78,41 +106,109 @@ public class ImportElevationWizard extends Wizard
    public void init(IWorkbench workbench, IStructuredSelection selection)
    {
       initialSelection = selection;
+      Iterator selIterator=selection.iterator();
+      terrainModel = (ITerrainModel) selIterator.next();
+      modelFolder = (IFolder)selIterator.next();     
    }
-
-   public void addPages() {
-      setWindowTitle(Messages.getString( "ElevationWizard.0" ));
+   
+   @Override
+  public void addPages() {
+      setWindowTitle(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ));
       mPage = new ElevationMainPage();
       addPage(mPage);
       mPage.init(initialSelection);
    }
 
-   /**
-    * This method is called by the wizard framework when the user
-    * presses the Finish button.
-    */
-   public boolean performFinish() {
-
-      try {
-         getContainer().run(true, true, new IRunnableWithProgress() {
-            public void run(IProgressMonitor monitor)
-               throws InvocationTargetException, InterruptedException
-            {
-//               performOperation(monitor);
-            }
-
-            
-         });
-      }
-      catch (InvocationTargetException e) {
-         return false;
-      }
-      catch (InterruptedException e) {
-         // User canceled, so stop but don’t close wizard.
-         return false;
-      }
-      return true;
+  @Override
+  public boolean performFinish( )
+  {
+//    String dstFilePath = 
+//        ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + 
+//        File.separator + 
+//        m_scenarioFolder + File.separator;
+    final IPath sourcePath = mPage.getSourceLocation();//.toOSString();
+    try {
+      getContainer().run(true, true, new IRunnableWithProgress() {
+         public void run(IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException, IllegalArgumentException
+         {
+           try
+           {
+             File modelFolderFile = 
+               new File(FileLocator.toFileURL( modelFolder.getLocationURI().toURL()).getFile());
+              
+             final File srcFileTif = sourcePath.toFile();
+             final File dstFileTif = 
+               new File(modelFolderFile, sourcePath.lastSegment() );//new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
+             copy(srcFileTif, dstFileTif, monitor);
+             ITerrainElevationModelSystem temSys=
+               ImportElevationWizard.this.terrainModel.getTerrainElevationModelSystem();
+             if(temSys==null)
+             {
+               temSys= new TerrainElevationModelSystem(ImportElevationWizard.this.terrainModel);
+             }
+             String nativeTEMRelPath = modelFolderFile.toURI().relativize( dstFileTif.toURI() ).toString();
+              ITerrainElevationModel tem =
+                     new NativeTerrainElevationModelWrapper(temSys,nativeTEMRelPath);
+          }
+          catch( Exception e )
+          {
+            throw new InvocationTargetException(e);
+          }          
+           
+         }
+      });
    }
+   catch (InvocationTargetException e) {
+      return false;
+   }
+   catch (InterruptedException e) {
+      // User canceled, so stop but don’t close wizard.
+      return false;
+   }
+    
+   try
+    {
+     modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() ); 
+//     IResource resource = (IResource)initialSelection.getFirstElement();
+//      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return true;
+  }
+  
+  boolean copy(File src, File dst, IProgressMonitor monitor2)
+  {
+    InputStream in;
+    OutputStream out;
+    try
+    {
+      in = new FileInputStream( src );
+      out = new FileOutputStream( dst );
+
+      byte[] buf = new byte[1024];
+      int len;
+      int lens = ((int)src.length()/1024+1);
+      monitor2.beginTask( "Copying..", lens );
+      while( (len = in.read( buf )) > 0 )
+      {
+        monitor2.worked(1);
+        out.write( buf, 0, len );
+      }
+      monitor2.done();
+      in.close();
+      out.close();
+      return true;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
 
    /**
     * Answer the selected source location
@@ -120,5 +216,13 @@ public class ImportElevationWizard extends Wizard
    public IPath getSourceLocation() {
       return mPage.getSourceLocation();
    }
+
+  /**
+   * @see org.kalypso.ui.wizards.imports.INewWizardKalypsoImport#initModelProperties(java.util.HashMap)
+   */
+  public void initModelProperties( HashMap<String, Object> map )
+  {    
+    m_scenarioFolder = (String) map.get( "ScenarioFolder" );    
+  }
 
 }

@@ -99,6 +99,8 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   public void initModelProperties( HashMap<String, Object> map )
   {
     m_scenarioFolder = (String) map.get( "ScenarioFolder" );
+    System.out.println("FolderName :" +m_scenarioFolder);
+    
   }
 
   @Override

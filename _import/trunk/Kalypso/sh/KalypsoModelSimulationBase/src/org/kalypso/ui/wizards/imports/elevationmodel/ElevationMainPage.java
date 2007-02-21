@@ -36,8 +36,8 @@ public class ElevationMainPage extends WizardPage {
   List<String> fileExtensions = new LinkedList<String>();
 
   public ElevationMainPage() {
-     super(Messages.getString( "ElevationWizard.0" ));
-     setTitle(Messages.getString( "ElevationWizard.1" ));
+     super(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ));
+     setTitle(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ));
     // setDescription(Messages.getString( "ElevationWizard.2" ));
   }
 
@@ -60,13 +60,13 @@ public class ElevationMainPage extends WizardPage {
      final GridData gridData = new GridData();
      gridData.horizontalSpan = 3;
      label.setLayoutData(gridData);
-     label.setText(Messages.getString( "ElevationWizard.3" ));
+     label.setText(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ));
 
      final Label label_1 = new Label(container, SWT.NONE);
      final GridData gridData_1 =
         new GridData(GridData.HORIZONTAL_ALIGN_END);
      label_1.setLayoutData(gridData_1);
-     label_1.setText(Messages.getString( "ElevationWizard.4" ));
+     label_1.setText(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.2" ));
 
      sourceFileField = new Text(container, SWT.BORDER);
      sourceFileField.addModifyListener(new ModifyListener() {
@@ -96,7 +96,7 @@ public class ElevationMainPage extends WizardPage {
      if (!(selection instanceof IStructuredSelection))
         return;
      
-     fileExtensions.add( new String ("hmo") );
+     fileExtensions.add( new String ("asc") );
          
      // Find the first plugin.xml file.
      Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -143,7 +143,7 @@ public class ElevationMainPage extends WizardPage {
      IPath sourceLoc = getSourceLocation();
      if (sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() ))) {
         setMessage(null);
-        setErrorMessage(Messages.getString( "ElevationWizard.5" ));
+        setErrorMessage(Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ));
         return;
      }
      setPageComplete(true);
