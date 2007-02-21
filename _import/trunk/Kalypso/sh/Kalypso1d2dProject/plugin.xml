@@ -199,6 +199,9 @@
                  value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
         </class>
      </handler>
+     <handler
+           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>
 	</extension>
         <extension
          point="org.eclipse.ui.commands">

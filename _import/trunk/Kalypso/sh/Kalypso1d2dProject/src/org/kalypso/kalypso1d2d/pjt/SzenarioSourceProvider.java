@@ -17,6 +17,9 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   public static final String ACTIVE_SZENARIO_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
 
   public static final String ACTIVE_SZENARIO_FOLDER_NAME = "activeSimulationModelBaseFolder";
+  
+  public static final String ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME = 
+                                              "activeNativeTerrainElevationModelFolder";
 
   private static final Logger LOGGER = Logger.getLogger( SzenarioSourceProvider.class.getName() );
 
@@ -27,7 +30,11 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
       LOGGER.setUseParentHandlers( false );
   }
 
-  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_SZENARIO_FOLDER_NAME, ACTIVE_SZENARIO_DATA_PROVIDER_NAME };
+  private static final String[] PROVIDED_SOURCE_NAMES = 
+                                new String[] { 
+                                              ACTIVE_SZENARIO_FOLDER_NAME, 
+                                              ACTIVE_SZENARIO_DATA_PROVIDER_NAME,
+                                              ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME};
 
   protected ActiveWorkContext activeWorkContext;
 
@@ -82,6 +89,12 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
     return project == null ? null : project.getFolder( "szenario" );
   }
 
+  private IFolder getNativeTerrainElevationModelFolder( )
+  {
+    final IProject project = activeWorkContext.getActiveProject();
+    return project == null ? null : project.getFolder( "szenario/native_tem" );
+  }
+  
   private ISzenarioDataProvider getDataProvider( )
   {
     return activeWorkContext.getSzenarioDataProvider();
