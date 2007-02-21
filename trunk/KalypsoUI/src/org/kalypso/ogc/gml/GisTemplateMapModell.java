@@ -41,12 +41,23 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -54,6 +65,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.Gismapview.Layers.MapviewRef;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.StyledLayerType;
@@ -63,6 +75,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.xml.sax.InputSource;
 
 /**
  * @author Belger
@@ -90,26 +103,49 @@ public class GisTemplateMapModell implements IMapModell
     addTheme( scrabLayer );
   }
 
+  /**
+   * Adds layers based on Gismapview template. Resolves MapviewRefs if necessary.
+   */
   public void createFromTemplate( final Gismapview gisview )
   {
     final Layers layerListType = gisview.getLayers();
-    final List<StyledLayerType> layerList = layerListType.getLayer();
-
     final LayerType activeLayer = (LayerType) layerListType.getActive();
 
+    final List<Object> layerList = layerListType.getLayerOrMapviewRef();
     for( int i = 0; i < layerList.size(); i++ )
     {
-      final StyledLayerType layerType = layerList.get( i );
-
-      final IKalypsoTheme theme = loadTheme( layerType, m_context );
-      if( theme != null )
+      final Object layerElement = layerList.get( i );
+      if( layerElement instanceof StyledLayerType )
       {
-        addTheme( theme );
+        final StyledLayerType layerType = (StyledLayerType) layerElement;
 
-        enableTheme( theme, layerType.isVisible() );
+        final IKalypsoTheme theme = loadTheme( layerType, m_context );
+        if( theme != null )
+        {
+          addTheme( theme );
 
-        if( layerType == activeLayer )
-          activateTheme( theme );
+          enableTheme( theme, layerType.isVisible() );
+
+          if( layerType == activeLayer )
+            activateTheme( theme );
+        }
+      }
+      else if( layerElement instanceof MapviewRef )
+      {
+        final MapviewRef mapViewRef = (MapviewRef) layerElement;
+        final String relativeOrAbsoluteUrl = mapViewRef.getHref();
+        try
+        {
+          final URL url = new URL( m_context, relativeOrAbsoluteUrl );
+          final InputSource inputSource = new InputSource( ResourceUtilities.findFileFromURL( url ).getContents() );
+          final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );          
+          createFromTemplate( innerGisView );
+        }
+        catch( final Throwable e )
+        {
+          // TODO nothing to correct here
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -171,7 +207,7 @@ public class GisTemplateMapModell implements IMapModell
       gismapview.setExtent( extentType );
     }
 
-    final List<StyledLayerType> layerList = layersType.getLayer();
+    final List<Object> layerList = layersType.getLayerOrMapviewRef();
 
     gismapview.setLayers( layersType );
 
