@@ -347,6 +347,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     
     LinePointCollector builder=
                   sides[actualSideKey];
+    builder.clear();
     if(actualSideKey>0)
     {
       LinePointCollector previousBuilder=sides[actualSideKey-1];
@@ -368,7 +369,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
       }
     }
     hasAllSides=false;
-   
+    fireStateChanged();
   }
   
   public void gotoPreviousSide()
@@ -389,6 +390,7 @@ class GridPointCollector /*implements IGeometryBuilder*/
     if(actualSideKey>0)
     {
       actualSideKey--;
+      sides[actualSideKey].removeLastPoint( false );
     }
     
     fireStateChanged();

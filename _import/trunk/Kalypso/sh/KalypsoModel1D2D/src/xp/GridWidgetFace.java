@@ -245,7 +245,7 @@ class GridWidgetFace
                 {
                   tableViewer.setSelection( 
                       new StructuredSelection(
-                          ));
+                          currentLPCConfig));
                 }
               }
             });
