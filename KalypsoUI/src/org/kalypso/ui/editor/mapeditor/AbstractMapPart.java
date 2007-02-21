@@ -105,9 +105,10 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Abstract superclass for map editor and map view.
+ * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
+ * dirty, command target).
  * <p>
- * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen potentiell editiert werden
+ * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen können potentiell editiert werden
  * </p>
  * <p>
  * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
@@ -117,6 +118,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
+// (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
+// functionality (save when dirty, command target).
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider, IMapPanelListener
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
@@ -139,6 +142,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private boolean m_disposed = false;
 
   private String m_partName;
+  
+  protected IFile m_file;
 
   private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
   {
@@ -162,6 +167,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
   };
 
+  private static IContextService m_contextService;
+
   /**
    *
    */
@@ -178,12 +185,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     super.init( site, input );
     initMapPanel( site );
-    
+
     if( input instanceof IStorageEditorInput )
     {
       try
       {
-        startLoadJob( ((IStorageEditorInput)input).getStorage() );
+        startLoadJob( ((IStorageEditorInput) input).getStorage() );
       }
       catch( CoreException e )
       {
@@ -229,8 +236,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( this );
 
-    final IContextService contextService = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
-    m_contextSwitcher = new MapModellContextSwitcher( contextService );
+    if( m_contextService == null )
+    {
+      m_contextService = (IContextService) site.getWorkbenchWindow().getWorkbench().getService( IContextService.class );
+    }
+    m_contextSwitcher = new MapModellContextSwitcher( m_contextService );
   }
 
   /**
@@ -339,14 +349,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
-
-    String fileName = null;
+    
     try
     {
       // prepare for exception
       setMapModell( null );
-
-      fileName = FileUtilities.nameWithoutExtension( storage.getName() );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -355,7 +362,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final IProject project;
       if( storage instanceof IFile )
       {
-        context = ResourceUtilities.createURL( (IFile) storage );
+        m_file = (IFile) storage;
+        context = ResourceUtilities.createURL( m_file );
         project = ((IFile) storage).getProject();
       }
       else
@@ -409,7 +417,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       setMapModell( null );
 
-      fileName = null;
+      m_file = null;
 
       throw new CoreException( status );
     }
@@ -417,6 +425,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
+      final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
       final String partName = m_partName == null ? fileName : m_partName;
       // must set part name in ui thread
       getSite().getShell().getDisplay().asyncExec( new Runnable()
@@ -688,6 +697,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     setMapModell( null );
 
     m_contextSwitcher.dispose();
+    m_contextService = null;
 
     m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
     m_mapPanel.dispose();

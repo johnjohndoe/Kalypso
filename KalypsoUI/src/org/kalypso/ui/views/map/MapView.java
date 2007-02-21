@@ -80,8 +80,6 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   public static final String JOB_FAMILY = "mapViewJobFamily";
 
-  private IFile m_file;
-
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
