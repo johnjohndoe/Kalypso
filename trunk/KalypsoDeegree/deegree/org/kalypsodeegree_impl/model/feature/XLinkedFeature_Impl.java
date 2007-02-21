@@ -114,6 +114,7 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
     return feature;
   }
 
+  // TODO: this is potentially not thread-safe! Synchronize
   private IFeatureProvider getProvider( final GMLWorkspace workspace )
   {
     if( m_provider != null )
