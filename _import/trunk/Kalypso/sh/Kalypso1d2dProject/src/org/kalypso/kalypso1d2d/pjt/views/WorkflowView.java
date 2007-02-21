@@ -7,11 +7,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
@@ -38,9 +40,9 @@ public class WorkflowView extends ViewPart
       LOGGER.setUseParentHandlers( false );
   }
 
-  WorkflowControl workflowControl;
+  WorkflowControl m_workflowControl;
 
-  ActiveWorkContext activeWorkContext = ActiveWorkContext.getInstance();
+  ActiveWorkContext m_activeWorkContext = ActiveWorkContext.getInstance();
 
   private IPartListener partListener = new IPartListener()
   {
@@ -60,7 +62,7 @@ public class WorkflowView extends ViewPart
     {
       if( part instanceof SimulationModelDBView )
       {
-        workflowControl.setVisible( false );
+        m_workflowControl.setVisible( false );
         setCurrentSzenario( null, null );
       }
     }
@@ -82,10 +84,10 @@ public class WorkflowView extends ViewPart
 
     public void activeProjectChanged( IProject newProject, IProject oldProject, IWorkflowDB oldDB, IWorkflowSystem oldWorkflowSystem )
     {
-      final IWorkflow workflow = activeWorkContext.getCurrentWorkflow();
+      final IWorkflow workflow = m_activeWorkContext.getCurrentWorkflow();
       LOGGER.info( "New Workflow:" + workflow );
-      workflowControl.setWorkflow( workflow );
-      workflowControl.setActiveProject( newProject );           
+      m_workflowControl.setWorkflow( workflow );
+      m_workflowControl.setActiveProject( newProject );
     }
 
   };
@@ -100,7 +102,7 @@ public class WorkflowView extends ViewPart
         if( selection.isEmpty() )
         {
           {
-            workflowControl.setVisible( false );
+            m_workflowControl.setVisible( false );
             setCurrentSzenario( null, null );
           }
         }
@@ -109,15 +111,14 @@ public class WorkflowView extends ViewPart
           Object first = ((IStructuredSelection) selection).getFirstElement();
           if( first instanceof IWorkflowData )
           {
-            workflowControl.setVisible( true );
+            m_workflowControl.setVisible( true );
 
             final IWorkflowData data = (IWorkflowData) first;
-            setCurrentSzenario( activeWorkContext
-                .getActiveProject(), data );
+            setCurrentSzenario( m_activeWorkContext.getActiveProject(), data );
           }
           else
           {
-            workflowControl.setVisible( false );
+            m_workflowControl.setVisible( false );
             setCurrentSzenario( null, null );
           }
         }
@@ -132,18 +133,8 @@ public class WorkflowView extends ViewPart
    */
   @Override
   public void createPartControl( Composite parent )
-  {
-    // TODO change hard coding to test workflow
-    // logger.warn("Using SH Test workflow");
-    //		
-    // workflowControl=
-    // new WorkflowControl(TestRDFModel.getTesWorkflow());
-
-    // TODO: remove all listeners when disposing this view
-
-    activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
-    workflowControl = new WorkflowControl( activeWorkContext.getCurrentWorkflow() );
-    workflowControl.createControl( parent );    
+  {    
+    m_workflowControl.createControl( parent );
     final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
     workbenchWindow.getSelectionService().addPostSelectionListener( workflowDataSelectionListener );
     workbenchWindow.getPartService().addPartListener( partListener );
@@ -155,13 +146,34 @@ public class WorkflowView extends ViewPart
   @Override
   public void dispose( )
   {
-    activeWorkContext.removeActiveContextChangeListener( workContextChangeListener );
+    m_activeWorkContext.removeActiveContextChangeListener( workContextChangeListener );
     final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
     workbenchWindow.getSelectionService().removePostSelectionListener( workflowDataSelectionListener );
     workbenchWindow.getPartService().removePartListener( partListener );
     super.dispose();
   }
   
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+   */
+  @Override
+  public void init( final IViewSite site, final IMemento memento ) throws PartInitException
+  {
+    super.init(site, memento);
+    m_activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
+    m_workflowControl = new WorkflowControl( m_activeWorkContext.getCurrentWorkflow() );    
+    m_workflowControl.restoreState(memento);
+  }
+
+  /**
+   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+   */
+  @Override
+  public void saveState( final IMemento memento )
+  {
+    m_workflowControl.saveState( memento );
+  }
+
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
@@ -173,6 +185,6 @@ public class WorkflowView extends ViewPart
 
   void setCurrentSzenario( final IProject project, final IWorkflowData data )
   {
-    activeWorkContext.setCurrentSzenario( project, data );
+    m_activeWorkContext.setCurrentSzenario( project, data );
   }
 }

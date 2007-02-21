@@ -8,9 +8,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.Parameterization;
-import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -54,15 +52,9 @@ import de.renew.workflow.WorkflowConnector;
 
 public class WorkflowControl
 {
-  private static final String OPEN_MAP_VIEW_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommands";
-
   private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands";
 
-  private static final String MAP_VIEW_COMMAND_ID = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand";
-
-  private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenMapViewCommand.resource";
-
-  public static final Logger logger = Logger.getLogger( WorkflowControl.class.getName() );
+  private static final Logger logger = Logger.getLogger( WorkflowControl.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
 
@@ -72,271 +64,17 @@ public class WorkflowControl
       logger.setUseParentHandlers( false );
   }
 
-  public static final String KEY_GROUP_TASKS = "_GROUP_TASKS";
+  final static String KEY_ITASK_ACTIONS = "_KEY_ITASK_ACTIONS_";
 
-  public static final String KEY_GROUP_ACTIVITIES = "_GROUP_ACTIVITIES";
+  final static String KEY_IPHASE = IPhase.class.getName();
 
-  // ///////////////////////////////////////////////
-  class SectionListener implements IExpansionListener
-  {
+  final static String KEY_ITASKGROUP = ITaskGroup.class.getName();
 
-    private Section lastExpanded;
-
-    @SuppressWarnings("unchecked")
-    public void expansionStateChanged( ExpansionEvent e )
-    {
-      // Control controls[]=taskComposite.getChildren();
-      // if(controls!=null)
-      // {
-      // for(Control c:controls)
-      // {
-      // c.dispose();
-      // }
-      // }
-      // IContributionItem ci = null;// aTBMng.
-
-      tTBMng.removeAll();
-      aTBMng.removeAll();
-      if( e.getState() )
-      {
-        Object source = e.getSource();
-        if( source instanceof Control )
-        {
-          Control c = (Control) source;
-          List<TaskAction> actions = (List<TaskAction>) c.getData( KEY_ITASK_ACTIONS );
-          if( actions == null )
-          {
-            IPhase p = (IPhase) c.getData( KEY_IPHASE );
-            ArrayList<ITask> tasks = new ArrayList<ITask>();
-            if( p != null )
-            {
-              tasks.addAll( p.getTasks() );
-            }
-            ITaskGroup tg = (ITaskGroup) c.getData( KEY_ITASKGROUP );
-            if( tg != null )
-            {
-              logger.info( "=================" + tg.getTasks() );
-              for( ITask task : tg.getTasks() )
-              {
-                tasks.add( task );
-              }
-            }
-
-            ISubTaskGroup stg = (ISubTaskGroup) c.getData( KEY_ISUBTASKGROUP );
-            if( stg != null )
-            {
-              logger.info( "===STG==============" + stg.getTasks() );
-              for( ITask task : stg.getTasks() )
-              {
-                tasks.add( task );
-              }
-            }
-            // /
-            actions = new ArrayList<TaskAction>();
-            TaskAction ta;
-            for( ITask task : tasks )
-            {
-              logger.info( "ADDING:" + task );
-              ta = new TaskAction( task );
-              tTBMng.add( ta );
-              // tTBMng.getControl().
-              actions.add( ta );
-            }
-            c.setData( KEY_ITASK_ACTIONS, actions );
-          }
-          else
-          {
-            final IWorkbench workbench = PlatformUI.getWorkbench();
-            final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-            for( TaskAction ta : actions )
-            {
-              final Command command = getCommand( commandService, ta.getId() );
-              if( isTaskPossible( command ) )
-              {
-                tTBMng.add( ta );
-              }
-            }
-          }
-          tTBMng.update( true );
-          tTBComp.reflow( true );
-        }
-        // IPhase p = (IPhase) ((Control) source).getData(KEY_IPHASE);
-        // if (p != null) {
-        // final String PP =
-        // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Preprocessing";
-        // String actualURI = p.getURI();
-        // if (PP.equals(actualURI)) {
-        // openEditor();
-        // }
-        // }
-      }
-      tTBMng.update( true );
-      tTBComp.reflow( false );
-      aTBMng.update( true );
-      if( lastExpanded != e.getSource() )
-      {
-        if( lastExpanded != null )
-        {
-          Control cs[] = lastExpanded.getChildren();
-          if( cs != null )
-          {
-            for( Control c : cs )
-            {
-              if( c instanceof Section )
-              {
-                ((Section) c).setExpanded( false );
-              }
-            }
-          }
-          lastExpanded.setExpanded( false );
-          // lastExpanded.redraw();
-        }
-        lastExpanded = (Section) e.getSource();
-        m_form.reflow( false );
-      }
-      // top.update();
-    }
-
-    public void expansionStateChanging( ExpansionEvent e )
-    {
-
-    }
-
-    public Section getLastExpanded( )
-    {
-      return lastExpanded;
-    }
-  }
-
-  // ///////////////////////////////////////////////////////////
-  class TaskAction<E extends IWorkflowPart> extends Action
-  {
-    private E m_workflowPart;
-
-    private List<TaskAction<IActivity>> activityActions;
-
-    // public TaskAction(ITask task)
-    // {
-    // this.task=task;
-    // }
-
-    public TaskAction( E workflowPart )
-    {
-      this.m_workflowPart = workflowPart;
-    }
-
-    @Override
-    public String getText( )
-    {
-      return getWorkflowPartName( m_workflowPart );
-    }
-
-    @Override
-    public void runWithEvent( Event event )
-    {
-      logger.info( "RUNNING=" + m_workflowPart );
-      if( m_workflowPart instanceof ITask )
-      {
-        aTBMng.removeAll();
-        new Label( aTBMng.getControl(), SWT.BORDER ).setText( ((ITask) m_workflowPart).getName() );
-        if( activityActions == null )
-        {
-          activityActions = new ArrayList<TaskAction<IActivity>>();
-          for( IActivity a : ((ITask) m_workflowPart).getActivities() )
-          {
-            TaskAction<IActivity> action = new TaskAction<IActivity>( a );
-            activityActions.add( action );
-            aTBMng.add( action );
-          }
-
-        }
-        else
-        {
-          // TODO nullPEx while using iterator throw compactloo
-          final IWorkbench workbench = PlatformUI.getWorkbench();
-          final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-          for( int i = 0; i < activityActions.size(); i++ )
-          {
-            final TaskAction<IActivity> ta = activityActions.get( i );
-            final Command command = getCommand( commandService, ta.getId() );
-            if( isTaskPossible( command ) )
-            {
-              aTBMng.add( ta );
-            }
-
-          }
-        }
-        aTBMng.update( true );
-
-        aTBComp.reflow( true );
-      }
-      else
-      {
-        // Empty not iTak
-      }
-
-      String uri = m_workflowPart.getURI();
-      doURITask( uri, event );
-    }
-
-    @Override
-    public String getId( )
-    {
-      return m_workflowPart.getURI();
-    }
-
-    @Override
-    public int getStyle( )
-    {
-      return Action.AS_PUSH_BUTTON;// super.getStyle();
-    }
-
-    @Override
-    public String getToolTipText( )
-    {
-      try
-      {
-        return m_workflowPart.getHelp().getHelp();
-      }
-      catch( Throwable th )
-      {
-        return null;
-      }
-    }
-
-    public E getWorkflowPart( )
-    {
-      return m_workflowPart;
-    }
-  }
-
-  final static public String URI = "_URI_";
-
-  final static public String KEY_ITASK_ACTIONS = "_KEY_ITASK_ACTIONS_";
-
-  final static public String KEY_IPHASE = IPhase.class.toString();
-
-  final static public String KEY_ITASKGROUP = ITaskGroup.class.toString();
-
-  final static public String KEY_ISUBTASKGROUP = ISubTaskGroup.class.toString();
-
-  final static public String KEY_ITASK = ITask.class.toString();
+  final static String KEY_ISUBTASKGROUP = ISubTaskGroup.class.getName();
 
   private IWorkflow m_workflow;
 
-  private List<Section> stgSecs;
-
-  private List<Section> taskGroupECs;
-
-  private List<Section> phaseCntls;
-
   private Composite top;
-
-  // private boolean allowMultiPhase = false;
-  //
-  // private boolean allowMultiTG = false;
-  //
-  // private boolean allowMultiSTG = false;
 
   private FormToolkit toolkit;
 
@@ -359,13 +97,21 @@ public class WorkflowControl
     }
   };
 
-  SectionListener stgEL = new SectionListener();
+  SectionListener m_subTaskGroupListener;
 
-  SectionListener tgEL = new SectionListener();
+  SectionListener m_taskGroupListener;
 
-  SectionListener pEL = new SectionListener();
+  SectionListener m_phaseListener;
 
   IProject m_activeProject;
+
+  Map<Object, List<Control>> taskControlMap;
+
+  private String m_phaseFromMemento;
+
+  private String m_taskGroupFromMemento;
+
+  private String m_subTaskGroupFromMemento;
 
   public WorkflowControl( IWorkflow workflow )
   {
@@ -378,8 +124,11 @@ public class WorkflowControl
     top = new Composite( parent, SWT.FILL );
     top.setLayout( new FillLayout() );
 
-    // createBaseContainers(parent);
-    createBaseContainersBottomToolbars( parent );
+    m_subTaskGroupListener = new SectionListener();
+    m_taskGroupListener = new SectionListener();
+    m_phaseListener = new SectionListener();
+
+    createBaseContainersBottomToolbars();
     createWorkFlowView();
   }
 
@@ -392,10 +141,6 @@ public class WorkflowControl
   {
     this.m_workflow = workflow;
     createWorkFlowView();
-    m_form.reflow( true );
-    tTBComp.reflow( true );
-    aTBComp.reflow( true );
-
   }
 
   public void setVisible( boolean visible )
@@ -406,262 +151,129 @@ public class WorkflowControl
     tTBMng.update( true );
     aTBMng.removeAll();
     aTBMng.update( true );
-    // this.workflow = workflow;
-    // createWorkFlowView();
-    // form.reflow(true);
-    // tTBComp.reflow(true);
-    // aTBComp.reflow(true);
-
   }
-
-  Map<Object, List<Control>> taskControlMap;
 
   private void createWorkFlowView( )
   {
     // remove old layout element in form
-    for( Control c : m_form.getBody().getChildren() )
+    for( final Control c : m_form.getBody().getChildren() )
     {
       // recycle getData(key)
       c.dispose();
     }
-    aTBMng.removeAll();
-    tTBMng.removeAll();
+
     if( m_workflow == null )
     {
       return;
     }
 
-    // /IPhase
-    phaseCntls = new ArrayList<Section>();
-    Section madeSec;
-
-    // twd.rowspan=TableWrapData.FILL;
-    // form.getBody().setLayout(new TableWrapLayout());
     m_form.getBody().setLayout( new FormLayout() );
     FormData fd = new FormData();
     fd.left = new FormAttachment( 0, 0 );
     fd.right = new FormAttachment( 100, 0 );
     fd.top = new FormAttachment( 0, 0 );
 
-    for( IPhase phase : m_workflow.getPhases() )
+    Section phaseToExpand = null;
+    Section taskGroupToExpand = null;
+    Section subTaskGroupToExpand = null;
+
+    // /IPhase
+    final ArrayList<Section> phaseCntls = new ArrayList<Section>();
+    for( final IPhase phase : m_workflow.getPhases() )
     {
-      madeSec = createPhaseExpandable( phase, m_form );
+      final Section madeSec = createPhaseExpandable( phase, m_form );
       phaseCntls.add( madeSec );
       madeSec.setLayoutData( fd );
       fd = new FormData();
       fd.left = new FormAttachment( 0, 0 );
       fd.right = new FormAttachment( 100, 0 );
       fd.top = new FormAttachment( madeSec );
-      madeSec.addExpansionListener( pEL );
-      // toolkit.createCompositeSeparator(madeSec);
-
+      madeSec.addExpansionListener( m_phaseListener );
+      if( phase.getURI().equals( m_phaseFromMemento ) )
+      {
+        phaseToExpand = madeSec;
+      }
     }
 
-    taskGroupECs = new ArrayList<Section>();
-
-    IPhase phase;
-    List<ITaskGroup> curTGList;
-    for( Section ec : phaseCntls )
+    final ArrayList<Section> taskGroupECs = new ArrayList<Section>();
+    for( final Section ec : phaseCntls )
     {
-      phase = (IPhase) ec.getData( KEY_IPHASE );
-      curTGList = phase.getTaskGroups();
-      if( curTGList.isEmpty() )
+      final IPhase phase = (IPhase) ec.getData( KEY_IPHASE );
+      final List<ITaskGroup> curTGList = phase.getTaskGroups();
+      if( !curTGList.isEmpty() )
       {
-        // empty
-      }
-      else
-      {
-        Composite comp = toolkit.createComposite( ec, SWT.BORDER );
+        final Composite comp = toolkit.createComposite( ec, SWT.BORDER );
         comp.setLayout( new GridLayout() );
-        for( ITaskGroup tg : phase.getTaskGroups() )
+        for( final ITaskGroup tg : phase.getTaskGroups() )
         {
-          madeSec = createTaskGroupExpandable( tg, comp, phase );
+          final Section madeSec = createTaskGroupExpandable( tg, comp, phase );
           taskGroupECs.add( madeSec );
-          madeSec.addExpansionListener( tgEL );
-          // toolkit.createCompositeSeparator(madeSec);
+          madeSec.addExpansionListener( m_taskGroupListener );
+          if( tg.getURI().equals( m_taskGroupFromMemento ) )
+          {
+            taskGroupToExpand = madeSec;
+          }
         }
         ec.setClient( comp );
       }
     }
 
     // /SubTaskGroup
-    ITaskGroup taskGroup;
-    List<ISubTaskGroup> curSTGList;
-    stgSecs = new ArrayList<Section>();
-    for( Section sec : taskGroupECs )// ;int i=0;i<taskGroupECs.size();i++)
+    final ArrayList<Section> stgSecs = new ArrayList<Section>();
+    for( final Section sec : taskGroupECs )
     {
-      // logger.info("III="+i);
-      taskGroup = (ITaskGroup) sec.getData( KEY_ITASKGROUP );
-      curSTGList = taskGroup.getSubTaskGroups();
-      if( curSTGList.isEmpty() )
+      final ITaskGroup taskGroup = (ITaskGroup) sec.getData( KEY_ITASKGROUP );
+      final List<ISubTaskGroup> curSTGList = taskGroup.getSubTaskGroups();
+      if( !curSTGList.isEmpty() )
       {
-        // empty
-      }
-      else
-      {
-        phase = (IPhase) sec.getData( KEY_IPHASE );
-        Composite comp = toolkit.createComposite( sec, SWT.BORDER );
+        final Composite comp = toolkit.createComposite( sec, SWT.BORDER );
         comp.setLayout( new GridLayout() );
-        for( ISubTaskGroup stg : curSTGList )
+        for( final ISubTaskGroup stg : curSTGList )
         {
-          madeSec = createSubTaskGroupExpandable( stg, comp, taskGroup, phase );
-          madeSec.addExpansionListener( stgEL );
+          final IPhase phase = (IPhase) sec.getData( KEY_IPHASE );
+          final Section madeSec = createSubTaskGroupExpandable( stg, comp, taskGroup, phase );
+          madeSec.addExpansionListener( m_subTaskGroupListener );
+          if( stg.getURI().equals( m_subTaskGroupFromMemento ) )
+          {
+            subTaskGroupToExpand = madeSec;
+          }
           stgSecs.add( madeSec );
         }
         sec.setClient( comp );
       }
     }
+
+    if( phaseToExpand != null )
+    {
+      phaseToExpand.setExpanded( true );
+      if( taskGroupToExpand != null )
+      {
+        taskGroupToExpand.setExpanded( true );
+        if( subTaskGroupToExpand != null )
+        {
+          subTaskGroupToExpand.setExpanded( true );
+        }
+      }
+    }
+
+    m_form.reflow( true );
+    tTBComp.reflow( true );
+    aTBComp.reflow( true );
   }
 
-  // private Composite contributeToStack(List<ITask> tasks)
-  // {
-  // Composite c=toolkit.createComposite(tTBComp);
-  //		
-  // String name;
-  // c.setLayout(new GridLayout());
-  // for(ITask task:tasks)
-  // {
-  // name=getWorkflowPartName(task);
-  // toolkit.createButton(tTBComp,name,SWT.PUSH);
-  // }
-  //		
-  // return c;
-  // }
-
-  // private void contributeToTasksPanel(List<ITask> tasks)
-  // {
-  // String name;
-  // tTBComp.setLayout(new GridLayout());
-  // for(ITask task:tasks)
-  // {
-  // name=getWorkflowPartName(task);
-  // toolkit.createButton(tTBComp,name,SWT.PUSH);
-  // }
-  // tTBComp.getParent().pack();
-  // tTBComp.redraw();
-  // }
-
-  // private Button createTaskButton(ITask t, Composite comp)
-  // {
-  // ArrayList<Object> l=null;
-  //		
-  // String name=getWorkflowPartName(t);
-  // Button b= toolkit.createButton(comp, name, SWT.NONE);
-  // return b;
-  // }
-
-  private Section createSubTaskGroupExpandable( ISubTaskGroup stg, Composite ec, ITaskGroup parentTG, IPhase phase )
+  private Section createSubTaskGroupExpandable( final ISubTaskGroup stg, final Composite ec, final ITaskGroup parentTG, final IPhase phase )
   {
-    Section childEC = toolkit.createSection( ec, Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE );
-    String name = getWorkflowPartName( stg );
+    final Section childEC = toolkit.createSection( ec, Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE );
+    final String name = getWorkflowPartName( stg );
     childEC.setText( name );
     childEC.setData( KEY_IPHASE, phase );
     childEC.setData( KEY_ISUBTASKGROUP, stg );
     childEC.setData( KEY_ITASKGROUP, parentTG );
-
     return childEC;
-
   }
 
-  // private void createBaseContainers(Composite parent)
-  // {
-  // top = new Composite(parent,SWT.FILL);
-  // top.setLayout(new FillLayout());
-  // toolkit= new FormToolkit(top.getDisplay());
-  // Composite containerForm=toolkit.createComposite(top);
-  //		
-  //			
-  // containerForm.setLayout(new FormLayout());
-  //		
-  // FormData fd;
-  //		
-  // fd= new FormData();
-  // fd.left= new FormAttachment(0,0);
-  // fd.bottom= new FormAttachment(100,0);
-  // fd.top= new FormAttachment(0,0);
-  // form =
-  // toolkit.createScrolledForm(containerForm);
-  // form.setLayoutData(fd);
-  //		
-  // //sep activities
-  // Label al=toolkit.createSeparator(containerForm, SWT.VERTICAL|SWT.BOLD);
-  // fd= new FormData();
-  // fd.width=1;
-  // fd.left=new FormAttachment(form);
-  // //fd.right= new FormAttachment(90,0);
-  // fd.bottom= new FormAttachment(100,0);
-  // fd.top= new FormAttachment(0,0);
-  // al.setLayoutData(fd);
-  // //activities
-  // fd= new FormData();
-  // //fd.width=16;
-  // fd.left=new FormAttachment(al);//form);
-  // fd.right= new FormAttachment(100,0);
-  // fd.bottom= new FormAttachment(100,0);
-  // fd.top= new FormAttachment(0,0);
-  // aTBComp=
-  // toolkit.createScrolledForm(containerForm);
-  // aTBComp.setLayoutData(fd);
-  // aTBComp.getBody().setLayout(new TableWrapLayout());
-  // ToolBar aTB= new ToolBar(
-  // aTBComp.getBody(),
-  // SWT.H_SCROLL|SWT.WRAP);
-  // aTBMng= new ToolBarManager(aTB);
-  // //Control tbC=tbMng.createControl(taskComposite);
-  // //toolkit.adapt(aTB);
-  // // Action a= new Action()
-  // // {
-  // // };
-  // // a.setText("DADADADAD");
-  // // aTBMng.add(a);
-  // // aTB.update();
-  //		
-  // //SEPARAtor
-  // Label l=toolkit.createSeparator(containerForm, SWT.HORIZONTAL|SWT.BOLD);
-  // fd= new FormData();
-  // fd.left= new FormAttachment(0,0);
-  // fd.bottom= new FormAttachment(71,0);
-  // fd.top= new FormAttachment(form);//30,0);
-  // fd.right=new FormAttachment(al);//aTBComp);
-  // l.setLayoutData(fd);
-  //		
-  // //tasks
-  // tTBComp=toolkit.createScrolledForm(containerForm);
-  // // toolkit.createComposite(
-  // // containerForm,
-  // // SWT.BORDER|SWT.BOLD);
-  //		
-  // fd= new FormData();
-  // fd.left= new FormAttachment(0,0);
-  // fd.bottom= new FormAttachment(100,0);
-  // fd.top= new FormAttachment(l);//form);//30,0);
-  // fd.right=new FormAttachment(aTBComp);
-  // tTBComp.setLayoutData(fd);
-  // //taskComposite.setLayout(new FillLayout());
-  // //ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
-  // //cf.getBody().setLayout(new TableWrapLayout());
-  //		
-  // tTBComp.getBody().setLayout(new TableWrapLayout());
-  // ToolBar tb= new ToolBar(
-  // tTBComp.getBody(),
-  // SWT.V_SCROLL|SWT.WRAP|SWT.VERTICAL);
-  // tTBMng= new ToolBarManager(tb);
-  // tTBMng.add(new GroupMarker(KEY_GROUP_TASKS));
-  // //Group g= new Group(tb,SWT.NONE);
-  //		
-  // tTBMng.add(new GroupMarker(KEY_GROUP_ACTIVITIES));
-  // //Control tbC=tbMng.createControl(taskComposite);
-  // toolkit.adapt(tb);
-  // form.getBody().setLayout(new TableWrapLayout());
-  //		
-  // }
-
-  private void createBaseContainersBottomToolbars( @SuppressWarnings("unused")
-  Composite parent )
+  private void createBaseContainersBottomToolbars( )
   {
-
-    // top = new Composite(parent,SWT.FILL);
-    // top.setLayout(new FillLayout());
     toolkit = new FormToolkit( top.getDisplay() );
     Composite containerForm = toolkit.createComposite( top );
 
@@ -721,37 +333,25 @@ public class WorkflowControl
     aTBComp.setLayoutData( fd );
     aTBComp.getBody().setLayout( new TableWrapLayout() );
     ToolBar aTB = new ToolBar( aTBComp.getBody(), SWT.V_SCROLL | SWT.WRAP | SWT.VERTICAL );
+
     aTBMng = new ToolBarManager( aTB );
     toolkit.adapt( aTB );
-
-    // taskComposite.setLayout(new FillLayout());
-    // ScrolledForm cf=toolkit.createScrolledForm(taskComposite);
-    // cf.getBody().setLayout(new TableWrapLayout());
 
     tTBComp.getBody().setLayout( new TableWrapLayout() );
     ToolBar tb = new ToolBar( tTBComp.getBody(), SWT.V_SCROLL | SWT.WRAP | SWT.VERTICAL );
 
     tTBMng = new ToolBarManager( tb );
-    // Control tbC=tbMng.createControl(taskComposite);
     toolkit.adapt( tb );
-
-    // form.getBody().setLayout(new TableWrapLayout());
-
   }
 
   private Section createTaskGroupExpandable( ITaskGroup tg, Composite ec, IPhase phase )
   {
     Section childEC = toolkit.createSection( ec, Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-
     childEC.setText( getWorkflowPartName( tg ) );
     childEC.setToolTipText( getWorkflowPartHelp( tg ) );
     childEC.setData( KEY_ITASKGROUP, tg );
     childEC.setData( KEY_IPHASE, phase );
-
-    // childEC.setLayout(new TableWrapLayout());
-
     return childEC;
-
   }
 
   private Section createPhaseExpandable( IPhase phase, ScrolledForm form )
@@ -759,27 +359,22 @@ public class WorkflowControl
     Section ec = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     ec.setText( getWorkflowPartName( phase ) );
     ec.setToolTipText( getWorkflowPartHelp( phase ) );
-
     ec.setData( KEY_IPHASE, phase );
-    // ec.setLayout(new TableWrapLayout());
     return ec;
   }
 
-  final static public String getWorkflowPartName( IWorkflowPart wp )
+  String getWorkflowPartName( IWorkflowPart wp )
   {
     String name = wp.getName();
-    if( name == null )
+    final String uri = wp.getURI();
+    if( name == null || name.equals( "" ) )
     {
-      name = wp.getURI();
+      name = uri;
     }
-    if( name.equals( "" ) )
-    {
-      name = wp.getURI();
-    }
-    return name;
+    return name;// .concat( uri.equals( m_lastExecuted ) ? "*" : "" );
   }
 
-  final static public String getWorkflowPartHelp( IWorkflowPart wp )
+  private String getWorkflowPartHelp( IWorkflowPart wp )
   {
     IHelp help = wp.getHelp();
 
@@ -801,226 +396,23 @@ public class WorkflowControl
     }
   }
 
-  // public static final String LOAD_URI =
-  // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#MapLoad";
-  //
-  // public static final String LOAD_K2D2D =
-  // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadK2D2D";
-  //
-  // public static final String LOAD_IMG_TIFF =
-  // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadTiff";
-  //
-  // public static final String LOAD_IMG_JPG =
-  // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadJPEG";
-  //
-  // public static final String LOAD_ROUGHNESS_SHP =
-  // "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#LoadRoughshp";
-
-  // private IWorkbenchPage page;
-
-  // private GisMapOutlineViewer m_outlineviewer;
-
-  // private void resolveGisMapOutlineViewer() {
-  // for(IWorkbenchPage
-  // p:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages())
-  // {
-  // ContentOutline co;
-  // IViewPart vp=p.findView(IPageLayout.ID_OUTLINE);
-  // vp.get
-  //			
-  // }
-
-  // go through editor
-  // IContentOutlinePage outlinePage = (IContentOutlinePage)
-  // editor.getAdapter(IContentOutlinePage.class);
-  // }
-
-  // public void openEditor() {
-  // logger.info("Opening editor");
-  // if (page == null) {
-  // page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-  // .getActivePage();
-  // }
-  // if (page != null) {
-  //
-  // try {
-  // if (activeProject == null) {
-  // logger.warn("Active project is null");
-  // return;
-  // }
-  // IWorkspace ws = ResourcesPlugin.getWorkspace();
-  //
-  // IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
-  // IFile gmtFile = activeProject
-  // .getFile("project:/.metadata/agger_karte.gmt");
-  // if (!gmtFile.exists()) {
-  // logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
-  // + activeProject);
-  // return;
-  // }
-  //
-  // IEditorPart ep = IDE.openEditor(page, gmtFile);
-  // GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
-  // .getAdapter(IContentOutlinePage.class);
-  //
-  // //
-  // logger.info("ContentOutLine="+ep.getAdapter(IContentOutlinePage.class));
-  // // GisMapOutlinePage getModelView for setting themes
-  // } catch (PartInitException e) {
-  // logger.error("/test/Karte.gmt", e);
-  // }
-  // // IEditorDescriptor desc = PlatformUI.getWorkbench().
-  // // getEditorRegistry().getDefaultEditor(file.getName());
-  // // page.openEditor(
-  // // new FileEditorInput(file),
-  // // desc.getId());
-  // }
-  //
-  // }
-
-  // public void importAll() {
-  // if (page == null) {
-  // page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-  // .getActivePage();
-  // }
-  // if (page != null) {
-  //
-  // try {
-  // if (activeProject == null) {
-  // logger.warn("Active project is null");
-  // return;
-  // }
-  // IWorkspace ws = ResourcesPlugin.getWorkspace();
-  //
-  // IPath gmtPath = new Path("/.metadata/agger_karte.gmt");
-  // IFile gmtFile = activeProject
-  // .getFile("project:/.metadata/agger_karte.gmt");
-  // if (!gmtFile.exists()) {
-  // logger.warn("DO NOT EXISTS:" + gmtFile + " pjt="
-  // + activeProject);
-  // return;
-  // }
-  //
-  // IEditorPart ep = IDE.openEditor(page, gmtFile);
-  // GisMapOutlinePage gmoPage = (GisMapOutlinePage) ep
-  // .getAdapter(IContentOutlinePage.class);
-  //
-  // KalypsoAddLayerWizard wiz = new KalypsoAddLayerWizard(gmoPage
-  // .getModellView());
-  // wiz.init(PlatformUI.getWorkbench());
-  // // TODO add wizard page
-  // // ImportImageWizardPage imgIP=
-  // // new ImportImageWizardPage("","",null);
-  // // wiz.addPage(imgIP);
-  // // dlg
-  // WizardDialog wd = new WizardDialog(top.getShell(), wiz);
-  // wd.setTitle("Neue Simulationsmodel");
-  // // wd.setMessage("Neue Simulationsmodell");
-  // // wd.setBlockOnOpen(true);
-  // int decision = wd.open();
-  // } catch (PartInitException e) {
-  // logger.error("/test/Karte.gmt", e);
-  // }
-  // // IEditorDescriptor desc = PlatformUI.getWorkbench().
-  // // getEditorRegistry().getDefaultEditor(file.getName());
-  // // page.openEditor(
-  // // new FileEditorInput(file),
-  // // desc.getId());
-  // }
-  //
-  // }
-
-  // static final IFolder getImportFolder(IProject project) {
-  // Object nature = null;
-  // try {
-  // nature = project
-  // .getNature("org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature");
-  // Class natureClass = nature.getClass();
-  // Method method = natureClass.getMethod("getImportFolder",
-  // new Class[0]);
-  // Object ret = method.invoke(nature, new Object[] {});
-  // logger.info("Folder=" + ret);
-  // return (IFolder) ret;
-  // } catch (Exception e) {
-  // logger.error("could not get nature", e);
-  // return null;
-  // }
-  //
-  // }
-
-  // static final void doImportRoughnessShape(IProject project, Shell shell) {
-  //
-  // final String ID =
-  // "org.kalypso.ui.shapeImportWizards.utils.importRoughness.ImportWizard";
-  // if (project == null) {
-  // logger.info("project is null");
-  // return;
-  // }
-  // IWorkbench workbench = PlatformUI.getWorkbench();
-  //
-  // IWizardRegistry registry = workbench.getNewWizardRegistry();
-  // if (registry == null) {
-  // logger.warn("new Wizard registry is null");
-  // return;
-  // }
-  //
-  // IWorkbenchWizard wbWizard = null;
-  //
-  // try {
-  // wbWizard = registry.findWizard(ID).createWizard();
-  // } catch (CoreException e1) {
-  // logger.error("could not found wizard", e1);
-  // }
-  // if (wbWizard == null) {
-  // logger.warn("Wizard not found:" + ID);
-  // return;
-  // }
-  //
-  // try {
-  // IFolder folder = getImportFolder(project);
-  // if (folder == null) {
-  // logger.info("Could not get project ifolfer=" + project);
-  // return;
-  // }
-  // IStructuredSelection selection = new StructuredSelection(
-  // new IFolder[] { folder });
-  // wbWizard.init(workbench, selection);
-  // WizardDialog wd = new WizardDialog(shell, wbWizard);
-  // wbWizard.addPages();
-  // wd.setTitle("Neue Simulationsmodel");
-  //
-  // int decision = wd.open();
-  // } catch (RuntimeException e) {
-  // logger.error("could not start wizard", e);
-  // }
-  //
-  // }
-
-  final void doURITask( final String uri, final Event event )
+  final void doTaskOrActivity( final TaskAction task, final Event event )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    final String name = task.getId();
     try
     {
-      final Command command = getCommand( commandService, uri );
+      final Command command = getCommand( commandService, name );
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-//      if( OPEN_MAP_VIEW_COMMANDS_CATEGORY.equals( command.getCategory().getId() ) )
-//      {
-//        final Parameterization param = new Parameterization( command.getParameter( PARAM_RESOURCE ), command.getDescription() );
-//        final ParameterizedCommand parameterizedCommand = new ParameterizedCommand( command, new Parameterization[] { param } );
-//        handlerService.executeCommand( parameterizedCommand, event );
-//      }
-//      else
-      {
-        handlerService.executeCommand( command.getId(), event );
-      }
+      handlerService.executeCommand( command.getId(), event );
     }
     catch( final Throwable e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( m_form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + uri, status );
+      ErrorDialog.openError( m_form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-      logger.log( Level.SEVERE, "Failed to execute command: " + uri, e );
+      logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
     }
   }
 
@@ -1036,18 +428,6 @@ public class WorkflowControl
       }
       command.define( commandId, null, category );
     }
-//    try
-//    {
-//      if( OPEN_MAP_VIEW_COMMANDS_CATEGORY.equals( command.getCategory().getId() ) )
-//      {
-//        final Command mapViewCommand = commandService.getCommand( MAP_VIEW_COMMAND_ID );
-//        command.define( commandId, command.getDescription(), mapViewCommand.getCategory(), mapViewCommand.getParameters() );
-//      }
-//    }
-//    catch( final NotDefinedException e )
-//    {
-//      throw new RuntimeException( e );
-//    }
     return command;
   }
 
@@ -1055,6 +435,237 @@ public class WorkflowControl
   {
     return // command.isEnabled() &&
     (!WorkflowConnector.isWorkflowMode() || WorkflowConnector.getConnector().canRequest( command.getId() ));
+  }
+
+  /**
+   * Saves the state for the workflow view
+   * 
+   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+   */
+  public void saveState( final IMemento memento )
+  {
+    final Section lastPhase = m_phaseListener.getLastExpanded();
+    if( lastPhase != null )
+    {
+      final IPhase phase = (IPhase) lastPhase.getData( KEY_IPHASE );
+      memento.putString( KEY_IPHASE, phase != null ? phase.getURI() : null );
+    }
+    final Section lastTaskGroup = m_taskGroupListener.getLastExpanded();
+    if( lastTaskGroup != null )
+    {
+      final ITaskGroup taskGroup = (ITaskGroup) lastTaskGroup.getData( KEY_ITASKGROUP );
+      memento.putString( KEY_ITASKGROUP, taskGroup != null ? taskGroup.getURI() : null );
+    }
+    final Section lastSubTaskGroup = m_subTaskGroupListener.getLastExpanded();
+    if( lastSubTaskGroup != null )
+    {
+      final ISubTaskGroup subTaskGroup = (ISubTaskGroup) lastSubTaskGroup.getData( KEY_ISUBTASKGROUP );
+      memento.putString( KEY_ISUBTASKGROUP, subTaskGroup != null ? subTaskGroup.getURI() : null );
+    }
+  }
+
+  public void restoreState( final IMemento memento )
+  {
+    if( memento != null )
+    {
+      m_phaseFromMemento = memento.getString( KEY_IPHASE );
+      m_taskGroupFromMemento = memento.getString( KEY_ITASKGROUP );
+      m_subTaskGroupFromMemento = memento.getString( KEY_ISUBTASKGROUP );
+    }
+  }
+
+  // ///////////////////////////////////////////////
+  private class SectionListener implements IExpansionListener
+  {
+    private Section m_lastExpanded;
+
+    public SectionListener( )
+    {
+    }
+
+    @SuppressWarnings("unchecked")
+    public void expansionStateChanged( final ExpansionEvent e )
+    {
+      tTBMng.removeAll();
+      aTBMng.removeAll();
+      final Section section = (Section) e.getSource();
+      List<TaskAction<ITask>> actions = (List<TaskAction<ITask>>) section.getData( KEY_ITASK_ACTIONS );
+      if( actions == null )
+      {
+        actions = makeTaskActions( section );
+      }
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      for( TaskAction ta : actions )
+      {
+        final Command command = getCommand( commandService, ta.getId() );
+        if( isTaskPossible( command ) )
+        {
+          tTBMng.add( ta );
+        }
+      }
+      if( m_lastExpanded != section )
+      {
+        if( m_lastExpanded != null )
+        {
+          final Control cs[] = m_lastExpanded.getChildren();
+          if( cs != null )
+          {
+            for( final Control innerSection : cs )
+            {
+              if( innerSection instanceof Section )
+              {
+                ((Section) innerSection).setExpanded( false );
+              }
+            }
+          }
+          m_lastExpanded.setExpanded( false );
+        }
+        m_lastExpanded = section;
+        m_form.reflow( false );
+      }
+      else
+      {
+        section.setExpanded( true );
+      }
+      tTBMng.update( true );
+      tTBComp.reflow( true );
+      aTBMng.update( true );
+      aTBComp.reflow( true );
+    }
+
+    private List<TaskAction<ITask>> makeTaskActions( final Section section )
+    {
+      final List<TaskAction<ITask>> actions = new ArrayList<TaskAction<ITask>>();
+      final ArrayList<ITask> tasks = new ArrayList<ITask>();
+
+      final IPhase p = (IPhase) section.getData( KEY_IPHASE );
+      if( p != null )
+      {
+        tasks.addAll( p.getTasks() );
+      }
+      final ITaskGroup tg = (ITaskGroup) section.getData( KEY_ITASKGROUP );
+      if( tg != null )
+      {
+        for( final ITask task : tg.getTasks() )
+        {
+          tasks.add( task );
+        }
+      }
+      final ISubTaskGroup stg = (ISubTaskGroup) section.getData( KEY_ISUBTASKGROUP );
+      if( stg != null )
+      {
+        for( final ITask task : stg.getTasks() )
+        {
+          tasks.add( task );
+        }
+      }
+      for( final ITask task : tasks )
+      {
+        final TaskAction<ITask> ta = new TaskAction<ITask>( task );
+        actions.add( ta );
+      }
+      section.setData( KEY_ITASK_ACTIONS, actions );
+      return actions;
+    }
+
+    public void expansionStateChanging( ExpansionEvent e )
+    {
+
+    }
+
+    public Section getLastExpanded( )
+    {
+      return m_lastExpanded;
+    }
+  }
+
+  // ///////////////////////////////////////////////////////////
+  class TaskAction<E extends IWorkflowPart> extends Action
+  {
+    private final E m_workflowPart;
+
+    private List<TaskAction<IActivity>> m_activityActions;
+
+    public TaskAction( final E workflowPart )
+    {
+      this.m_workflowPart = workflowPart;
+    }
+
+    @Override
+    public String getText( )
+    {
+      return getWorkflowPartName( m_workflowPart );
+    }
+
+    @Override
+    public void runWithEvent( final Event event )
+    {
+      if( m_workflowPart instanceof ITask )
+      {
+        final ITask task = (ITask) m_workflowPart;
+        aTBMng.removeAll();
+        new Label( aTBMng.getControl(), SWT.BORDER ).setText( task.getName() );
+        if( m_activityActions == null )
+        {
+          m_activityActions = new ArrayList<TaskAction<IActivity>>();
+          for( final IActivity a : task.getActivities() )
+          {
+            final TaskAction<IActivity> action = new TaskAction<IActivity>( a );
+            m_activityActions.add( action );
+            aTBMng.add( action );
+          }
+        }
+        else
+        {
+          // TODO nullPEx while using iterator throw compactloo
+          final IWorkbench workbench = PlatformUI.getWorkbench();
+          final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+          for( int i = 0; i < m_activityActions.size(); i++ )
+          {
+            final TaskAction<IActivity> ta = m_activityActions.get( i );
+            final Command command = getCommand( commandService, ta.getId() );
+            if( isTaskPossible( command ) )
+            {
+              aTBMng.add( ta );
+            }
+          }
+        }
+        aTBMng.update( true );
+        aTBComp.reflow( true );
+      }
+      doTaskOrActivity( this, event );
+    }
+
+    @Override
+    public String getId( )
+    {
+      return m_workflowPart.getURI();
+    }
+
+    @Override
+    public int getStyle( )
+    {
+      return Action.AS_PUSH_BUTTON;
+    }
+
+    @Override
+    public String getToolTipText( )
+    {
+      try
+      {
+        return m_workflowPart.getHelp().getHelp();
+      }
+      catch( final Throwable th )
+      {
+        return null;
+      }
+    }
+
+    public E getWorkflowPart( )
+    {
+      return m_workflowPart;
+    }
   }
 
 }
