@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <mapv:gismapview xmlns:ns1="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:layers active="ID_2">
+    	<mapv:mapviewRef xlink:href="base.gmt"/>
         <mapv:layer visible="true" name="Node" id="ID_2" featurePath="#fid#root/node[Node]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="Edge" id="ID_3" featurePath="#fid#root/edge[Edge]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
         <mapv:layer visible="true" name="PolyElement" id="ID_4" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest"/>
