@@ -38,41 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
-
-import java.util.Comparator;
+package org.kalypsodeegree.model.TypeHandlers;
 
 import javax.xml.namespace.QName;
 
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
+
 /**
- * @author schlienger
+ * @author kuch
  */
-public interface IComponent extends Comparator<Object>
+public class XsdBaseTypeHandlerQName extends XsdBaseTypeHandler<QName>
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
-   */
-  public String getId( );
+  public XsdBaseTypeHandlerQName( )
+  {
+    super( "QName", QName.class );
+  }
 
   /**
-   * User-firednly name of this component.
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
-  public String getName( );
+  @Override
+  public QName convertToJavaValue( final String xmlString )
+  {
+    return QName.valueOf( xmlString );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+   */
+  @Override
+  public String convertToXMLString( final QName value )
+  {
+    return value.toString();
+  }
 
-  public String getUnit( );
-
-  public String getFrame( );
-
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final QName o1, final QName o2 )
+  {
+    return ("" + o1).compareTo( "" + o2 );
+  }
 }

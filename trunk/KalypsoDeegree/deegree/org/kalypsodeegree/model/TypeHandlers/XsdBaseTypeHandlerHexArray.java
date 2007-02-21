@@ -38,41 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypsodeegree.model.TypeHandlers;
 
-import java.util.Comparator;
-
-import javax.xml.namespace.QName;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.xmlbeans.impl.util.HexBin;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
- * @author schlienger
+ * @author kuch
  */
-public interface IComponent extends Comparator<Object>
+public class XsdBaseTypeHandlerHexArray extends XsdBaseTypeHandler<Byte[]>
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
-   */
-  public String getId( );
+
+  public XsdBaseTypeHandlerHexArray( )
+  {
+    super( "hexBinary", Byte[].class );
+  }
 
   /**
-   * User-firednly name of this component.
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
-  public String getName( );
+  @Override
+  public Byte[] convertToJavaValue( final String xmlString )
+  {
+    final byte[] bytes = HexBin.stringToBytes( xmlString );
+    return ArrayUtils.toObject( bytes );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   */
+  @Override
+  public String convertToXMLString( final Byte[] value )
+  {
+    final byte[] bytes = ArrayUtils.toPrimitive( value );
+    return HexBin.bytesToString( bytes );
+  }
 
-  public String getUnit( );
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final Byte[] o1, final Byte[] o2 )
+  {
+    return ("" + o1).compareTo( "" + o2 );
+  }
 
-  public String getFrame( );
-
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
 }

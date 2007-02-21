@@ -38,41 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypsodeegree.model.TypeHandlers;
 
-import java.util.Comparator;
-
-import javax.xml.namespace.QName;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
- * @author schlienger
+ * @author kuch
  */
-public interface IComponent extends Comparator<Object>
+public class XsdBaseTypeHandlerStringArray extends XsdBaseTypeHandler<String[]>
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
-   */
-  public String getId( );
+
+  public XsdBaseTypeHandlerStringArray( final String xsdTypeName )
+  {
+    super( xsdTypeName, String[].class );
+
+  }
 
   /**
-   * User-firednly name of this component.
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
-  public String getName( );
+  @Override
+  public String[] convertToJavaValue( final String xmlString )
+  {
+    return xmlString.split( "/s+" );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   */
+  @Override
+  public String convertToXMLString( final String value[] )
+  {
+    final StringBuffer result = new StringBuffer();
+    for( int k = 0; k < value.length; k++ )
+    {
+      if( k != 0 )
+      {
+        result.append( " " );
+      }
+      result.append( value[k] );
+    }
+    return result.toString();
+  }
 
-  public String getUnit( );
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final String[] o1, final String[] o2 )
+  {
+    return ("" + o1).compareTo( "" + o2 );
+  }
 
-  public String getFrame( );
-
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
 }

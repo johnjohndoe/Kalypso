@@ -38,41 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypsodeegree.model.TypeHandlers;
 
-import java.util.Comparator;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
-import javax.xml.namespace.QName;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
- * @author schlienger
+ * @author kuch
  */
-public interface IComponent extends Comparator<Object>
+public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<XMLGregorianCalendar>
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
-   */
-  public String getId( );
+
+  private final DatatypeFactory m_dataTypeFactory;
+
+  public XsdBaseTypeHandlerXMLGregorianCalendar( final DatatypeFactory dataTypeFactory, final String xsdTypeName )
+  {
+    super( xsdTypeName, XMLGregorianCalendar.class );
+    m_dataTypeFactory = dataTypeFactory;
+  }
 
   /**
-   * User-firednly name of this component.
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
-  public String getName( );
+  @Override
+  public XMLGregorianCalendar convertToJavaValue( final String xmlString )
+  {
+    return m_dataTypeFactory.newXMLGregorianCalendar( xmlString );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   */
+  @Override
+  public String convertToXMLString( final XMLGregorianCalendar value )
+  {
+    return value.toXMLFormat();
+  }
 
-  public String getUnit( );
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final XMLGregorianCalendar o1, final XMLGregorianCalendar o2 )
+  {
+    if( (o1 == null) && (o2 == null) )
+    {
+      return 0; // equals
+    }
+    else if( o1 == null )
+    {
+      return -1; // lesser
+    }
 
-  public String getFrame( );
+    return o1.compare( o2 );
+  }
 
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
 }
