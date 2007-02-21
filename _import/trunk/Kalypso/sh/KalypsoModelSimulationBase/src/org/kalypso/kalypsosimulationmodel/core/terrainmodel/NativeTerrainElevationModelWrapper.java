@@ -73,8 +73,8 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
   private URL sourceURL;
   
   /**
-   * Crate a new {@link NativeTerrainElevationModelWrapper} as child of the
-   * given parent Feature and link to it bei a property of the guven QName.
+   * Create a new {@link NativeTerrainElevationModelWrapper} as child of the
+   * given parent Feature and link to it by a property of the guven QName.
    * the name of the source (file) containing the native terrain model is
    * given must be also specified
    * @param parentFeature the parent feature

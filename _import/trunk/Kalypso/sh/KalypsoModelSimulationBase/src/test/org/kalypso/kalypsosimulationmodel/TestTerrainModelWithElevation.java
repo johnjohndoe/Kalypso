@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
+import junit.framework.TestCase;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -52,8 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author Patrice Congo
@@ -76,7 +73,8 @@ public class TestTerrainModelWithElevation extends TestCase
           
           Feature rcFeature=workspace.getRootFeature();
           ITerrainModel itrModel = (ITerrainModel) rcFeature.getAdapter(ITerrainModel.class);
-          
+          //System.out.println("ITerrainModel.class"+ITerrainModel.class);
+                    
           assertNull("Must be Null.. Not Avai in GML", itrModel.getTerrainElevationModelSystem() );
           
           ITerrainElevationModelSystem itrEleSystem = new TerrainElevationModelSystem(itrModel);
@@ -100,8 +98,7 @@ public class TestTerrainModelWithElevation extends TestCase
                     x, y, TestWorkspaces.getGaussKrueger() );
                 double ele=itrEleSystem.getElevation( curPoint  );
                 assertEquals(
-                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);
-                
+                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);                
               }
               else
               {
