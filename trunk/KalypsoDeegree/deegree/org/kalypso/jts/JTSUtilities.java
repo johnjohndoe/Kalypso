@@ -157,9 +157,23 @@ public class JTSUtilities
         LinearEquation computeY = new LinearEquation( startPoint.getY(), 0, endPoint.getY(), max );
         y = computeY.computeX( distance );
       }
+      /* If the two Z koords are equal, take one of them for the new point. */
+      double zStart = startPoint.getCoordinate().z;
+      double zEnd = endPoint.getCoordinate().z;
+
+      if( zStart != Double.NaN && zEnd != Double.NaN )
+      {
+        if( Double.compare( zStart, zEnd ) != 0 )
+        {
+          LinearEquation computeZ = new LinearEquation( zStart, 0, zEnd, max );
+          zStart = computeZ.computeX( distance );
+        }
+      }
+      else
+        zStart = Double.NaN;
 
       GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
-      Point pointJTS = factory.createPoint( new Coordinate( x, y ) );
+      Point pointJTS = factory.createPoint( new Coordinate( x, y, zStart ) );
 
       return pointJTS;
     }
@@ -201,11 +215,13 @@ public class JTSUtilities
    * @param start
    *          The start point of the new line (it has to be one point that lies on the original line).
    * @param end
-   *          The end point of the new line (it has to be one point that lies on the original line).
+   *          The end point of the new line (it has to be one point that lies on the original line). TODO: the used
+   *          distance is calculated only by the x- and y-coordinates!! for an 3-dimensaional distance calculation, the
+   *          start and end point should have z-coordinates.
    */
   public static LineString createLineSegment( Geometry line, Point start, Point end )
   {
-    /* Check if both points are lying on the line. */
+    /* Check if both points are lying on the line (2d!). */
     if( (line.distance( start ) >= 10E-08) || (line.distance( start ) >= 10E-08) )
       return null;
 
