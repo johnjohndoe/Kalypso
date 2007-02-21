@@ -91,6 +91,11 @@ public class TupleResult implements List<IRecord>
 
     return sort();
   }
+  
+  public IComponent[] getSortComponents( )
+  {
+    return m_sortComponents;
+  }
 
   public boolean sort( )
   {
