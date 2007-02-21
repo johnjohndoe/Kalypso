@@ -642,6 +642,29 @@ class GridPointCollector /*implements IGeometryBuilder*/
     }
   }
   
+  /**
+   * To get the with for the square that are drawn to show 
+   * point. 
+   * if ther is an active {@link LinePointCollectorConfig} its 
+   * actual point rect size  is resturn otherwise the point 
+   * square size of the first {@link LinePointCollectorConfig}
+   *  
+   * @return Returns the with for the square that are drawn to show 
+   * point
+   */
+  public int getPointRectSize()
+  {
+    if(actualSideKey<SIDE_MAX_NUM)
+    {
+      return lpcConfigs[actualSideKey].getPointRectSize();
+    }
+    else
+    {
+      return lpcConfigs[0].getPointRectSize();
+    }
+  }
+  
+  
   public void addGridPointCollectorStateChangeListener(
                               IGridPointCollectorStateListener listener)
   {
