@@ -270,12 +270,13 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         final Rectangle hover = RectangleUtils.buffer( p );
         if( hover.contains( mousePos ) )
         {
-          final IProfilPoint point = ProfilUtil.findPoint( getProfil(), points[i].getX(), points[i].getY() );
+          final double delta = 0.0001;
+          // TODO This is potentially wrong. We have to check for both x and y!
+          final IProfilPoint point = ProfilUtil.findPoint( getProfil(), points[i].getX(), /*should also use y: points[i].getY(),*/delta );
           final int index = getProfil().getPoints().indexOf( point );
           final IProfilPointProperty prop = getProfil().getPointProperty( property );
           final String text = prop == null ? property : prop.getLabel();
-          return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", points[i].getX(), text, points[i].getY() } ) )
-              : null;
+          return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", points[i].getX(), text, points[i].getY() } ) ) : null;
         }
       }
     }
