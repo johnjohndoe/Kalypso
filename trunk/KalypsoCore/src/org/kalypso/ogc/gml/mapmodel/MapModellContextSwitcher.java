@@ -144,6 +144,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
         }
         if( theme == null )
         {
+          m_activeContextHandle = null;
           return;
         }
         else
@@ -165,7 +166,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   public void dispose( )
   {
-    m_activeContextHandle = null;
+    activateContextFor( null );    
     m_contextService = null;
     for( IKalypsoTheme theme : m_themes )
     {
