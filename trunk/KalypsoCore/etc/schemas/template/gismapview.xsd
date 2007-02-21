@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org">
-	
-	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+<xs:schema targetNamespace="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:kalypso="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd" />
 
 	<xs:element name="gismapview">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="extent" type="kalypso:extentType" minOccurs="0"/>
+				<xs:element name="extent" type="kalypso:extentType" minOccurs="0" />
 				<xs:element name="layers">
 					<xs:complexType>
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="layer" type="kalypso:styledLayerType"/>
+							<xs:choice>
+								<xs:element name="layer" type="kalypso:styledLayerType" />
+								<xs:element name="mapviewRef">
+									<xs:complexType>
+										<xs:attribute ref="xlink:href"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
 						</xs:sequence>
-						<xs:attribute name="active" type="xs:IDREF" use="optional"/>
+						<xs:attribute name="active" type="xs:IDREF" use="optional" />
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
