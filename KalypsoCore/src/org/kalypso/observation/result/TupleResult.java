@@ -42,6 +42,8 @@ package org.kalypso.observation.result;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -68,6 +70,8 @@ public class TupleResult implements List<IRecord>
 
   private final Set<ITupleResultChangedListener> m_listeners = new HashSet<ITupleResultChangedListener>();
 
+  protected IComponent[] m_sortComponents; // for sorting this tuple result
+
   public TupleResult( )
   {
     // default constructor
@@ -75,8 +79,51 @@ public class TupleResult implements List<IRecord>
 
   public TupleResult( final IComponent[] comps )
   {
-    for( int i = 0; i < comps.length; i++ )
-      addComponent( comps[i] );
+    for( IComponent element : comps )
+    {
+      addComponent( element );
+    }
+  }
+
+  public boolean setSortComponents( final IComponent[] comps )
+  {
+    m_sortComponents = comps;
+
+    return sort();
+  }
+
+  public boolean sort( )
+  {
+    if( (m_sortComponents != null) && (m_sortComponents.length > 0) )
+    {
+      // compareTo doesn't work, because of sortComponents!
+      // we have to implement our own sorting functionality
+
+      // QUESTION insert index - sort this list?
+
+      // TODO subSorts
+
+      final Comparator<IRecord> comp = new Comparator<IRecord>()
+      {
+        public int compare( final IRecord o1, final IRecord o2 )
+        {
+          final IComponent component = m_sortComponents[0];
+
+          final Object v1 = o1.getValue( component );
+          final Object v2 = o2.getValue( component );
+
+          return component.compare( v1, v2 );
+        }
+      };
+
+      Collections.sort( m_records, comp );
+
+      // TupleResultUtilities.sortRecordList( m_records, m_sortComponents );
+
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -96,6 +143,7 @@ public class TupleResult implements List<IRecord>
     checkRecord( element );
 
     m_records.add( index, element );
+    sort();
 
     fireRecordsChanged( new IRecord[] { element }, TYPE.ADDED );
   }
@@ -108,6 +156,7 @@ public class TupleResult implements List<IRecord>
     checkRecord( o );
 
     final boolean result = m_records.add( o );
+    sort();
 
     fireRecordsChanged( new IRecord[] { o }, TYPE.ADDED );
 
@@ -122,6 +171,7 @@ public class TupleResult implements List<IRecord>
     checkRecords( c );
 
     final boolean result = m_records.addAll( c );
+    sort();
 
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
@@ -136,6 +186,7 @@ public class TupleResult implements List<IRecord>
     checkRecords( c );
 
     final boolean result = m_records.addAll( index, c );
+    sort();
 
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
@@ -157,7 +208,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#contains(java.lang.Object)
    */
-  public boolean contains( Object o )
+  public boolean contains( final Object o )
   {
     return m_records.contains( o );
   }
@@ -165,7 +216,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#containsAll(java.util.Collection)
    */
-  public boolean containsAll( Collection< ? > c )
+  public boolean containsAll( final Collection< ? > c )
   {
     return m_records.containsAll( c );
   }
@@ -173,7 +224,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#get(int)
    */
-  public IRecord get( int index )
+  public IRecord get( final int index )
   {
     return m_records.get( index );
   }
@@ -181,7 +232,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
-  public int indexOf( Object o )
+  public int indexOf( final Object o )
   {
     return m_records.indexOf( o );
   }
@@ -207,7 +258,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
-  public int lastIndexOf( Object o )
+  public int lastIndexOf( final Object o )
   {
     return m_records.lastIndexOf( o );
   }
@@ -227,7 +278,7 @@ public class TupleResult implements List<IRecord>
    * 
    * @see java.util.List#listIterator(int)
    */
-  public ListIterator<IRecord> listIterator( int index )
+  public ListIterator<IRecord> listIterator( final int index )
   {
     return m_records.listIterator( index );
   }
@@ -252,7 +303,9 @@ public class TupleResult implements List<IRecord>
     final boolean result = m_records.remove( o );
 
     if( result )
+    {
       fireRecordsChanged( new IRecord[] { (IRecord) o }, TYPE.REMOVED );
+    }
 
     return result;
   }
@@ -267,7 +320,9 @@ public class TupleResult implements List<IRecord>
     final Object[] objects = c.toArray();
     final IRecord[] removedRecords = new IRecord[objects.length];
     for( int i = 0; i < objects.length; i++ )
+    {
       removedRecords[i] = (IRecord) objects[i];
+    }
     fireRecordsChanged( removedRecords, TYPE.REMOVED );
 
     return removeAll;
@@ -304,7 +359,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#subList(int, int)
    */
-  public List<IRecord> subList( int fromIndex, int toIndex )
+  public List<IRecord> subList( final int fromIndex, final int toIndex )
   {
     return m_records.subList( fromIndex, toIndex );
   }
@@ -320,7 +375,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#toArray(T[])
    */
-  public <T> T[] toArray( T[] a )
+  public <T> T[] toArray( final T[] a )
   {
     return m_records.toArray( a );
   }
@@ -329,7 +384,9 @@ public class TupleResult implements List<IRecord>
   {
     final Record r = (Record) record;
     if( r.getTableResult() != this )
+    {
       throw new IllegalArgumentException( "Illegal record." );
+    }
 
     r.checkComponents( m_components );
   }
@@ -337,7 +394,9 @@ public class TupleResult implements List<IRecord>
   private void checkRecords( final Collection< ? extends IRecord> c )
   {
     for( final IRecord record : c )
+    {
       checkRecord( record );
+    }
   }
 
   public IComponent[] getComponents( )
@@ -390,10 +449,14 @@ public class TupleResult implements List<IRecord>
     if( oldValue == null )
     {
       if( value == null )
+      {
         return;
+      }
     }
     else if( oldValue.equals( value ) )
+    {
       return;
+    }
 
     record.setValue( comp, value );
 

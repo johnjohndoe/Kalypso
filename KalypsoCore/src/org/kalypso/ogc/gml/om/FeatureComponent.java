@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.swe.RepresentationType;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -67,23 +68,27 @@ public class FeatureComponent implements IComponent
     final Feature phenomenon = FeatureHelper.resolveLink( m_itemDef, ObservationFeatureFactory.SWE_PROPERTY );
     return phenomenon;
   }
-  
+
   /**
    * @see org.kalypso.observation.result.IComponent#getId()
    */
   public String getId( )
   {
     if( m_itemDef instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl)m_itemDef).getHref();
-    
+    {
+      return ((XLinkedFeature_Impl) m_itemDef).getHref();
+    }
+
     return m_itemDef.getId();
   }
-  
+
   public String getName( )
   {
     final Feature phenomenon = getPhenomenon();
     if( phenomenon == null )
+    {
       return "<unknown phenomenon>";
+    }
     return (String) FeatureHelper.getFirstProperty( phenomenon, ObservationFeatureFactory.GML_NAME );
   }
 
@@ -92,7 +97,7 @@ public class FeatureComponent implements IComponent
     final Feature phenomenon = getPhenomenon();
     return (String) FeatureHelper.getFirstProperty( phenomenon, ObservationFeatureFactory.GML_DESCRIPTION );
   }
-  
+
   /**
    * @see org.kalypso.observation.result.IComponent#getUnit()
    */
@@ -100,7 +105,7 @@ public class FeatureComponent implements IComponent
   {
     return getRepresentationType().getUnit();
   }
-  
+
   /**
    * @see org.kalypso.observation.result.IComponent#getFrame()
    */
@@ -134,5 +139,15 @@ public class FeatureComponent implements IComponent
   public Feature getItemDefinition( )
   {
     return m_itemDef;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final Object objFirst, final Object objSecond )
+  {
+    final XsdBaseTypeHandler handler = ObservationFeatureFactory.typeHanderForComponent( this );
+
+    return handler.compare( objFirst, objSecond );
   }
 }

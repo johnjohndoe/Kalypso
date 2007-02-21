@@ -38,41 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.observation.result;
+package org.kalypsodeegree.model.TypeHandlers;
 
-import java.util.Comparator;
-
-import javax.xml.namespace.QName;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
- * @author schlienger
+ * @author kuch
  */
-public interface IComponent extends Comparator<Object>
+public class XsdBaseTypeHandlerByteArray extends XsdBaseTypeHandler<Byte[]>
 {
-  /**
-   * Id or internal name of this component. For example if this component really was read from a dictionary, the id
-   * should be the urn of the coressponding dictionary entry.
-   */
-  public String getId( );
+
+  public XsdBaseTypeHandlerByteArray( )
+  {
+    super( "base64Binary", Byte[].class );
+  }
 
   /**
-   * User-firednly name of this component.
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
-  public String getName( );
+  @Override
+  public Byte[] convertToJavaValue( final String xmlString )
+  {
+    final byte[] bytes = xmlString.getBytes();
+    final byte[] encodeBase64 = Base64.encodeBase64( bytes );
+    return ArrayUtils.toObject( encodeBase64 );
+  }
 
-  public String getDescription( );
+  /**
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   */
+  @Override
+  public String convertToXMLString( final Byte[] value )
+  {
+    final byte[] base64Data = ArrayUtils.toPrimitive( value );
+    final byte[] bytes = Base64.decodeBase64( base64Data );
+    return new String( bytes );
+  }
 
-  public String getUnit( );
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final Byte[] o1, final Byte[] o2 )
+  {
+    return ("" + o1).compareTo( "" + o2 );
+  }
 
-  public String getFrame( );
-
-  public QName getValueTypeName( );
-
-  public Object getDefaultValue( );
-
-  /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
-  public boolean equals( final Object object );
-
-  /** override hashCode according to equals */
-  public int hashCode( );
 }

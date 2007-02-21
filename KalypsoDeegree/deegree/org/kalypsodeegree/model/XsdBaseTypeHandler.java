@@ -43,6 +43,7 @@ package org.kalypsodeegree.model;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -58,7 +59,7 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  * @author doemming
  */
-public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
+public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler, Comparator<T>
 {
   private final XsdBaseContentHandler m_contentHandler = new XsdBaseContentHandler( this, null );
 
@@ -82,7 +83,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
   {
     try
     {
@@ -145,7 +146,9 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     if( objectToClone == null )
+    {
       return null;
+    }
     try
     {
       if( objectToClone instanceof List )
@@ -163,7 +166,7 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
       final String stringOfClone = convertToXMLString( (T) objectToClone );
       return parseType( stringOfClone );
     }
-    catch( ParseException p )
+    catch( final ParseException p )
     {
       throw new CloneNotSupportedException( p.getMessage() );
     }
@@ -174,8 +177,10 @@ public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler
    */
   public Object parseType( final String xmlString ) throws ParseException
   {
-    if( xmlString == null || xmlString.length() < 1 )
+    if( (xmlString == null) || (xmlString.length() < 1) )
+    {
       return null;
+    }
     try
     {
       return convertToJavaValue( xmlString );

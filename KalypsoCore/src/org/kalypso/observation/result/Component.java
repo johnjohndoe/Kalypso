@@ -70,9 +70,13 @@ public class Component implements IComponent
     m_unit = unit;
     m_frame = frame;
     if( name == null )
+    {
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
+    }
     if( valueTypeName == null )
+    {
       throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
+    }
 
     m_name = name;
     m_description = description;
@@ -87,14 +91,20 @@ public class Component implements IComponent
   public boolean equals( final Object obj )
   {
     if( !(obj instanceof IComponent) )
+    {
       return false;
+    }
 
     if( this == obj )
+    {
       return true;
+    }
 
     // subclass are sure that the component they receive is of the same class
     if( !getClass().getName().equals( obj.getClass().getName() ) )
+    {
       return false;
+    }
 
     final IComponent comp = (IComponent) obj;
 
@@ -141,7 +151,7 @@ public class Component implements IComponent
   {
     return m_id;
   }
-  
+
   /**
    * @see org.kalypso.om.tuple.IComponent#getName()
    */
@@ -194,5 +204,14 @@ public class Component implements IComponent
   public String getFrame( )
   {
     return m_frame;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IComponent#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final Object objFirst, final Object objSecond )
+  {
+    // TODO perhaps someday implement something meaningful
+    return ("" + objFirst).compareTo( "" + objSecond );
   }
 }

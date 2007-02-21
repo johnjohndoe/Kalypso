@@ -40,14 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
@@ -56,10 +50,6 @@ import ogc31.www.opengis.net.gml.DirectionPropertyType;
 import ogc31.www.opengis.net.gml.LocationPropertyType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.xmlbeans.impl.util.HexBin;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
@@ -70,6 +60,25 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.ogc.swe.RepresentationTypeHandler;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerBigDecimal;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerBigInteger;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerBoolean;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerByte;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerByteArray;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerDirectory;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerDouble;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerDuration;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerFile;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerFloat;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerHexArray;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerInteger;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerLong;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerQName;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerRGB;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerShort;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerString;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerStringArray;
+import org.kalypsodeegree.model.TypeHandlers.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_EnvelopeBindingTypeHandler;
@@ -115,49 +124,11 @@ public class TypeHandlerUtilities
       final String[] calendarTypes = { "gMonthDay", "gDay", "gMonth", "gYear", "gYearMonth", "date", "time", "dateTime" };
       for( final String xmlTypeName : calendarTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<XMLGregorianCalendar>( xmlTypeName, XMLGregorianCalendar.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public XMLGregorianCalendar convertToJavaValue( String xmlString )
-          {
-            return dataTypeFactory.newXMLGregorianCalendar( xmlString );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( XMLGregorianCalendar value )
-          {
-            return value.toXMLFormat();
-          }
-        } );
+        registry.registerTypeHandler( new XsdBaseTypeHandlerXMLGregorianCalendar( dataTypeFactory, xmlTypeName ) );
       }
 
       // <element name="duration" type="duration" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Duration>( "duration", Duration.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Duration convertToJavaValue( String xmlString )
-        {
-          return dataTypeFactory.newDuration( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Duration value )
-        {
-          return value.toString();
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerDuration( dataTypeFactory ) );
 
       // <element name="string" type="string" />
       // <element name="normalizedString" type="normalizedString" />
@@ -177,182 +148,32 @@ public class TypeHandlerUtilities
       final String[] stringTypes = { "string", "normalizedString", "token", "language", "Name", "NCName", "ID", "ENTITY", "NMTOKEN", "anyURI", "IDREF", "IDREFS", "anyType" };
       for( final String xmlTypeName : stringTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<String>( xmlTypeName, String.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public String convertToJavaValue( final String xmlString )
-          {
-            return xmlString;
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( String value )
-          {
-            return value;
-          }
-        } );
-
+        registry.registerTypeHandler( new XsdBaseTypeHandlerString( xmlTypeName ) );
       }
+
       // <element name="ENTITIES" type="ENTITIES" />
       // <element name="NMTOKENS" type="NMTOKENS" />
       final String[] stringArrayTypes = { "ENTITIES", "NMTOKENS" };
       for( final String xmlType : stringArrayTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<String[]>( xmlType, String[].class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public String[] convertToJavaValue( String xmlString )
-          {
-            return xmlString.split( "/s+" );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( String value[] )
-          {
-            final StringBuffer result = new StringBuffer();
-            for( int k = 0; k < value.length; k++ )
-            {
-              if( k != 0 )
-                result.append( " " );
-              result.append( value[k] );
-            }
-            return result.toString();
-          }
-        } );
+        registry.registerTypeHandler( new XsdBaseTypeHandlerStringArray( xmlType ) );
       }
 
       // <element name="boolean" type="boolean" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Boolean>( "boolean", Boolean.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Boolean convertToJavaValue( String xmlString )
-        {
-          return Boolean.parseBoolean( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Boolean value )
-        {
-          return value == null ? null : Boolean.toString( value );
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerBoolean() );
 
       // <element name="base64Binary" type="base64Binary" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Byte[]>( "base64Binary", Byte[].class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Byte[] convertToJavaValue( String xmlString )
-        {
-          final byte[] bytes = xmlString.getBytes();
-          final byte[] encodeBase64 = Base64.encodeBase64( bytes );
-          return ArrayUtils.toObject( encodeBase64 );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Byte[] value )
-        {
-          final byte[] base64Data = ArrayUtils.toPrimitive( value );
-          byte[] bytes = Base64.decodeBase64( base64Data );
-          return new String( bytes );
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerByteArray() );
 
       // <element name="hexBinary" type="hexBinary" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Byte[]>( "hexBinary", Byte[].class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Byte[] convertToJavaValue( String xmlString )
-        {
-          final byte[] bytes = HexBin.stringToBytes( xmlString );
-          return ArrayUtils.toObject( bytes );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Byte[] value )
-        {
-          final byte[] bytes = ArrayUtils.toPrimitive( value );
-          return HexBin.bytesToString( bytes );
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerHexArray() );
 
       // <element name="float" type="float" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Float>( "float", Float.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Float convertToJavaValue( String xmlString )
-        {
-          return Float.valueOf( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Float value )
-        {
-          return Float.toString( value );
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerFloat() );
 
       // <element name="decimal" type="decimal" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<BigDecimal>( "decimal", BigDecimal.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public BigDecimal convertToJavaValue( final String xmlString )
-        {
-          return new BigDecimal( xmlString );
-        }
+      registry.registerTypeHandler( new XsdBaseTypeHandlerBigDecimal() );
 
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( final BigDecimal value )
-        {
-          // TODO: format according to fraction digits
-
-          // TODO: decide this from outside!
-          // GML should write/read the empty string
-          // Observations should read/write 'null'
-          return value == null ? "" : value.toString();
-        }
-      } );
       // <element name="integer" type="integer" />
       // <element name="positiveInteger" type="positiveInteger" />
       // <element name="nonPositiveInteger" type="nonPositiveInteger" />
@@ -362,280 +183,50 @@ public class TypeHandlerUtilities
       final String[] bigIntegerTypes = { "integer", "positiveInteger", "nonPositiveInteger", "negativeInteger", "nonNegativeInteger", "unsignedLong" };
       for( final String xmlType : bigIntegerTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<BigInteger>( xmlType, BigInteger.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public BigInteger convertToJavaValue( String xmlString )
-          {
-            return new BigInteger( xmlString );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( BigInteger value )
-          {
-            return value.toString();
-          }
-        } );
-
+        registry.registerTypeHandler( new XsdBaseTypeHandlerBigInteger( xmlType ) );
       }
+
       // <element name="long" type="long" />
       // <element name="unsignedInt" type="unsignedInt" />
       final String[] longTypes = { "long", "unsignedInt" };
-      for( String xmlType : longTypes )
+      for( final String xmlType : longTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<Long>( xmlType, Long.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public Long convertToJavaValue( String xmlString )
-          {
-            return Long.valueOf( xmlString );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( Long value )
-          {
-            return Long.toString( value );
-          }
-        } );
+        registry.registerTypeHandler( new XsdBaseTypeHandlerLong( xmlType ) );
       }
 
       // <element name="int" type="int" />
       // <element name="unsignedShort" type="unsignedShort" />
       final String[] integerTypes = { "int", "unsignedShort" };
-      for( String xmlType : integerTypes )
+      for( final String xmlType : integerTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<Integer>( xmlType, Integer.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public Integer convertToJavaValue( String xmlString )
-          {
-            return Integer.valueOf( xmlString );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( Integer value )
-          {
-            return Integer.toString( value );
-          }
-        } );
+        registry.registerTypeHandler( new XsdBaseTypeHandlerInteger( xmlType ) );
       }
+
       // <element name="short" type="short" />
       // <element name="unsignedByte" type="unsignedByte" />
       final String[] shortTypes = { "short", "unsignedByte" };
       for( final String xmlType : shortTypes )
       {
-        registry.registerTypeHandler( new XsdBaseTypeHandler<Short>( xmlType, Short.class )
-        {
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-           */
-          @Override
-          public Short convertToJavaValue( String xmlString )
-          {
-            return Short.valueOf( xmlString );
-          }
-
-          /**
-           * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-           */
-          @Override
-          public String convertToXMLString( Short value )
-          {
-            return Integer.toString( value );
-          }
-        } );
+        registry.registerTypeHandler( new XsdBaseTypeHandlerShort( xmlType ) );
       }
 
       // <element name="byte" type="byte" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Byte>( "byte", Byte.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Byte convertToJavaValue( String xmlString )
-        {
-          return Byte.valueOf( xmlString );
-        }
+      registry.registerTypeHandler( new XsdBaseTypeHandlerByte() );
 
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Byte value )
-        {
-          return Byte.toString( value );
-        }
-      } );
       // <element name="double" type="double" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<Double>( "double", Double.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public Double convertToJavaValue( String xmlString )
-        {
-          return Double.valueOf( xmlString );
-        }
+      registry.registerTypeHandler( new XsdBaseTypeHandlerDouble() );
 
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( Double value )
-        {
-          return Double.toString( value );
-        }
-      } );
       // <element name="QName" type="QName" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<QName>( "QName", QName.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public QName convertToJavaValue( String xmlString )
-        {
-          return QName.valueOf( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( QName value )
-        {
-          return value.toString();
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerQName() );
 
       // <element name="color" type="color" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<RGB>( new QName( NS.COMMON, "color" ), RGB.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public RGB convertToJavaValue( String xmlString )
-        {
-          if( xmlString.length() == 7 )
-          {
-            RGB rgb = new RGB( 0, 0, 0 );
-
-            String red = xmlString.substring( 1, 3 );
-            rgb.red = Integer.decode( "0x" + red );
-
-            String green = xmlString.substring( 3, 5 );
-            rgb.green = Integer.decode( "0x" + green );
-
-            String blue = xmlString.substring( 5, 7 );
-            rgb.blue = Integer.decode( "0x" + blue );
-
-            return rgb;
-          }
-          else
-            return null;
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( RGB value )
-        {
-          if( value == null )
-            return new String( "" );
-
-          String red = Integer.toHexString( value.red );
-          if( red.length() < 2 )
-            red = "0" + red;
-
-          String green = Integer.toHexString( value.green );
-          if( green.length() < 2 )
-            green = "0" + green;
-
-          String blue = Integer.toHexString( value.blue );
-          if( blue.length() < 2 )
-            blue = "0" + blue;
-
-          return new String( "#" + red + green + blue );
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerRGB() );
 
       // <element name="directory" type="directory" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<File>( new QName( NS.COMMON, "directory" ), File.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public File convertToJavaValue( String xmlString )
-        {
-          if( (xmlString == null) || (xmlString.equals( "" )) )
-            return null;
-
-          return new File( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( File value )
-        {
-          if( value == null )
-            return "";
-
-          return value.getAbsolutePath();
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerDirectory() );
 
       // <element name="file" type="file" />
-      registry.registerTypeHandler( new XsdBaseTypeHandler<File>( new QName( NS.COMMON, "file" ), File.class )
-      {
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-         */
-        @Override
-        public File convertToJavaValue( String xmlString )
-        {
-          if( (xmlString == null) || (xmlString.equals( "" )) )
-            return null;
-
-          return new File( xmlString );
-        }
-
-        /**
-         * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-         */
-        @Override
-        public String convertToXMLString( File value )
-        {
-          if( value == null )
-            return "";
-
-          return value.getAbsolutePath();
-        }
-      } );
+      registry.registerTypeHandler( new XsdBaseTypeHandlerFile() );
     }
     catch( final Exception e )
     {
@@ -652,10 +243,14 @@ public class TypeHandlerUtilities
     {
       public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
       {
-        if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
+        if( (gmlVersion == null) || gmlVersion.startsWith( "2" ) )
+        {
           return KalypsoOGC2xJAXBcontext.getContext();
+        }
         else if( gmlVersion.startsWith( "3" ) )
+        {
           return KalypsoOGC31JAXBcontext.getContext();
+        }
         throw new UnsupportedOperationException( "GMLVersion " + gmlVersion + " is not supported" );
       }
     };
