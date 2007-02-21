@@ -142,7 +142,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private boolean m_disposed = false;
 
   private String m_partName;
-  
+
   protected IFile m_file;
 
   private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
@@ -349,7 +349,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     monitor.beginTask( "Kartenvorlage laden", 2 );
-    
+
+    final IWorkbenchPartSite site = getSite();
     try
     {
       // prepare for exception
@@ -381,34 +382,38 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
         m_mapPanel.setBoundingBox( env );
 
-        final UIJob job = new UIJob( "" )
+        if( site != null )
         {
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor uiMonitor )
+
+          final UIJob job = new UIJob( "" )
           {
-            // Apply action filters to action bars and refresh them
-            final IActionBars actionBars = getActionBars( getSite() );
-            GisTemplateHelper.applyActionFilters( actionBars, gisview );
+            @Override
+            public IStatus runInUIThread( final IProgressMonitor uiMonitor )
+            {
+              // Apply action filters to action bars and refresh them
+              final IActionBars actionBars = getActionBars( site );
+              GisTemplateHelper.applyActionFilters( actionBars, gisview );
 
-            // must frce on toolBarManager, just update action bars is not enough
-            final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-            toolBarManager.update( true );
+              // must frce on toolBarManager, just update action bars is not enough
+              final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+              toolBarManager.update( true );
 
-            actionBars.updateActionBars();
+              actionBars.updateActionBars();
 
-            return Status.OK_STATUS;
-          }
+              return Status.OK_STATUS;
+            }
 
-          /**
-           * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-           */
-          @Override
-          public boolean belongsTo( final Object family )
-          {
-            return MapView.JOB_FAMILY.equals( family );
-          }
-        };
-        job.schedule();
+            /**
+             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+             */
+            @Override
+            public boolean belongsTo( final Object family )
+            {
+              return MapView.JOB_FAMILY.equals( family );
+            }
+          };
+          job.schedule();
+        }
       }
     }
     catch( final Throwable e )
@@ -428,14 +433,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
       final String partName = m_partName == null ? fileName : m_partName;
       // must set part name in ui thread
-      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      if( site != null )
       {
-        @SuppressWarnings("synthetic-access")
-        public void run( )
+        site.getShell().getDisplay().asyncExec( new Runnable()
         {
-          setPartName( partName );
-        }
-      } );
+          @SuppressWarnings("synthetic-access")
+          public void run( )
+          {
+            setPartName( partName );
+          }
+        } );
+      }
     }
   }
 
