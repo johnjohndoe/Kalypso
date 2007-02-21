@@ -81,7 +81,7 @@ public class SimulationModelDBView extends ViewPart
       tv.setInput( activeWorkContext );
       if( m_scenarioFromMemento != null )
       {
-        final IWorkflowData scenario = activeWorkContext.getWorkflowDB().getWorkflowDataById( m_scenarioFromMemento );        
+        final IWorkflowData scenario = activeWorkContext.getWorkflowDB().getWorkflowDataById( m_scenarioFromMemento );
         final IStructuredSelection selection = new StructuredSelection( scenario );
         tv.setSelection( selection, true );
         activeWorkContext.selectScenario( m_scenarioFromMemento );
@@ -99,7 +99,7 @@ public class SimulationModelDBView extends ViewPart
   {
     public void workflowDBChanged( )
     {
-      tv.setInput( activeWorkContext );      
+      tv.setInput( activeWorkContext );
       logger.info( "DB changed " );
     }
   };
@@ -114,10 +114,13 @@ public class SimulationModelDBView extends ViewPart
   {
     super.init( site, memento );
 
-    final String scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
-    if( scenarioFromMemento != null )
+    if( memento != null )
     {
-      m_scenarioFromMemento = scenarioFromMemento;
+      final String scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
+      if( scenarioFromMemento != null )
+      {
+        m_scenarioFromMemento = scenarioFromMemento;
+      }
     }
   }
 
@@ -138,7 +141,7 @@ public class SimulationModelDBView extends ViewPart
     tv.setInput( activeWorkContext );
     activeWorkContext.addActiveContextChangeListener( activeProjectChangeListener );
     getSite().setSelectionProvider( tv );
-    tv.setLabelProvider( labelProvider );    
+    tv.setLabelProvider( labelProvider );
   }
 
   /*
