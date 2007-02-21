@@ -109,6 +109,8 @@ public class CreateChannelData
   private boolean datacomplete;
 
   private int m_numBankSelections;
+  
+  private int m_globNumbBankIntersections;
 
   private List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
 
@@ -300,7 +302,34 @@ public class CreateChannelData
       m_segmentList.clear();
     }
     if( datacomplete == true )
+      /* intersects the banks with the profiles and manages the segment creation */
       intersectBanksWithProfs();
+    if (m_segmentList.size()> 0)
+      /* if there are segments, start Quadmesher */
+      manageQuadMesher();
+  }
+
+  /**
+   * this is the manager for starting the JTSQuadMesher for all complete segments
+   */
+  private void manageQuadMesher( )
+  {
+    for( int i = 0; i < m_segmentList.size(); i++ )
+    {
+      final boolean complete;
+      SegmentData segment = m_segmentList.get( i );
+      complete = segment.complete();
+      if (complete == true )
+      {
+        /* arrange the for lines for the mesher */
+        
+        
+      }
+      
+      
+      
+    }
+    
   }
 
   /**
@@ -337,7 +366,11 @@ public class CreateChannelData
       if( lastProfile != null )
       {
         // behandle das segment
-        final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks );
+        final int numBankIntersections = getGlobNumBankIntersections(); 
+        final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks, numBankIntersections );
+        System.out.println( "Last profile: " + lastProfile.getStation() );
+        System.out.println( "Profile: " + profile.getStation() );
+        
         // add to list
         m_segmentList.add( segment );   
       }
@@ -357,13 +390,6 @@ public class CreateChannelData
   private void calculateAllSegment( )
   {
 
-  }
-
-  public void setNumBankIntersections( final int numBankSelections )
-  {
-    m_numBankSelections = numBankSelections;
-
-    // TODO update gui???
   }
 
   public void paintAllSegments( final Graphics g, final MapPanel mapPanel )
@@ -389,12 +415,25 @@ public class CreateChannelData
   public void setNumProfileIntersections ( int numProfileIntersections)
   {
     m_numbProfileIntersections = numProfileIntersections;
+    completationCheck();
   }
 
   public int getNumProfileIntersections ()
   {
     final int numProfileIntersections = m_numbProfileIntersections;
     return numProfileIntersections;
+  }
+  
+  public void setGlobNumBankIntersections ( int globNumBankIntersections)
+  {
+    m_globNumbBankIntersections = globNumBankIntersections;
+    completationCheck();
+  }
+  
+  public int getGlobNumBankIntersections ()
+  {
+    final int globNumBankIntersections = m_globNumbBankIntersections;
+    return globNumBankIntersections;
   }
   
 }

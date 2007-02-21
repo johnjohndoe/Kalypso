@@ -339,7 +339,7 @@ public class CreateMainChannelComposite extends Composite
     spinNumBankIntersections.setMinimum( 2 );
     spinNumBankIntersections.setMaximum( 100 );
     spinNumBankIntersections.setSelection( 6 );
-    m_data.setNumBankIntersections( 6 );
+    m_data.setGlobNumBankIntersections( 6 );
     spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein." );
     spinNumBankIntersections.addSelectionListener( new SelectionAdapter()
     {
@@ -350,7 +350,8 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         final int selection = spinNumBankIntersections.getSelection();
-        m_data.setNumBankIntersections( selection );
+        m_data.setGlobNumBankIntersections( selection );
+        updateControl();
       }
     } );
 
@@ -464,6 +465,7 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( SelectionEvent e )
       {
         m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
+        updateControl();
       }
     } );
 

@@ -178,7 +178,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         
         defaultstroke = symb.getStroke();
           
-        stroke.setWidth( 3 );
+        stroke.setWidth( 1 );
         stroke.setStroke( color );
         symb.setStroke( stroke );
 
