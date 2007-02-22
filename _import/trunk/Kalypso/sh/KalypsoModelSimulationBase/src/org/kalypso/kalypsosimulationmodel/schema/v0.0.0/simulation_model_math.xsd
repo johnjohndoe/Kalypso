@@ -3,268 +3,166 @@
 <!--  
 	Provides Generic math types and elements:
 	==Polynomes
-		
+	
 	@author Patrice Congo
 -->
 
 
-<xs:schema 
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
-	xmlns:gml="http://www.opengis.net/gml" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
-	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	elementFormDefault="qualified" 
-	attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
-	
-	<xs:import
-		namespace="http://www.opengis.net/gml"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/>
+
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<!--xs:import
 		namespace="http://www.opengis.net/gml"
 		schemaLocation="../gml3.1.1/base/gml.xsd"
 		/-->
-	
+
 	<!-- =================================================================
 		polynom property 
-	================================================================== -->
-	<xs:element 
-		name="polynomial"
-		type="simBase:Polynomial1DPropertyType"/>
-		
-	<xs:complexType 
-		name="PolynomialPropertyType">
+		================================================================== -->
+	<xs:element name="polynomial" type="simBase:Polynomial1DPropertyType" />
+
+	<xs:complexType name="PolynomialPropertyType">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">				
-			</xs:documentation>			
+			<xs:documentation xml:lang="en"></xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:_Polynomial"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:_Polynomial" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
+
 	<!-- ======================================================================
-			_Polynom element
-	======================================================================= -->
+		_Polynom element
+		======================================================================= -->
 	<!-- TODO: substitute _Feature -->
-	<xs:element
-		name="_Polynomial"
-		type="simBase:AbstractPolynomialType">
+	<xs:element name="_Polynomial" type="simBase:AbstractPolynomialType">
 		<xs:annotation>
-			<xs:documentation>
-				Substitutions head for all polynom
-			</xs:documentation>
+			<xs:documentation>Substitutions head for all polynom</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
+
 	<!-- ======================================================================
-			AbstractPolynomType
-	======================================================================= -->
-	<xs:complexType 
-		name="AbstractPolynomialType"
-		abstract="true">
+		AbstractPolynomType
+		======================================================================= -->
+	<xs:complexType name="AbstractPolynomialType" abstract="true">
 		<xs:annotation>
-			<xs:documentation>
-				Base type for all polynoms
-			</xs:documentation>
+			<xs:documentation>Base type for all polynoms</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractFeatureType"/>
+			<xs:extension base="gml:AbstractFeatureType" />
 		</xs:complexContent>
 	</xs:complexType>
 
 
 	<!-- ====================================================================
 		polynom1D property
-	====================================================================-->	
-	<xs:element 
-		name="polynomial1D"
-		type="simBase:Polynomial1DPropertyType"/>
-		
+		====================================================================-->
+	<xs:element name="polynomial1D" type="simBase:Polynomial1DPropertyType" />
+
 	<xs:complexType name="Polynomial1DPropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
-				
-			</xs:documentation>			
+
+			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:Polynomial1D"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:Polynomial1D" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>	
-	
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
 	<!-- ======================================================================
-			Polynom1D element
-	======================================================================= -->
-	<xs:element 
-		name="Polynomial1D"
-		type="simBase:Polynomial1DType"
-		substitutionGroup="simBase:_Polynomial">
+		Polynom1D element
+		======================================================================= -->
+	<xs:element name="Polynomial1D" type="simBase:Polynomial1DType" substitutionGroup="simBase:_Polynomial">
 		<xs:annotation>
-			<xs:documentation>
-				1D polynom; a0+a1*x^1+...+an*x^n
-			</xs:documentation>
+			<xs:documentation>1D polynom; a0+a1*x^1+...+an*x^n</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	
+
 	<!-- ======================================================================
-			Polynom1DType
-	======================================================================= -->
-	<xs:complexType 
-		name="Polynomial1DType"
-		abstract="false">
+		Polynom1DType
+		======================================================================= -->
+	<xs:complexType name="Polynomial1DType" abstract="false">
 		<xs:annotation>
-			<xs:documentation>
-				Type for 1D polynoms: y=sum of ai*xi for all i less than oder
-			</xs:documentation>
+			<xs:documentation>Type for 1D polynoms: y=sum of ai*xi for all positive i less than order</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractPolynomialType">
+			<xs:extension base="simBase:AbstractPolynomialType">
 				<xs:sequence>
-					<xs:element 
-						name="order"
-						type="xs:positiveInteger"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element
-						ref="simBase:coefficients"
-						minOccurs="1" maxOccurs="1"/>	
+					<xs:element name="order" type="xs:positiveInteger" />
+					<xs:element ref="simBase:coefficients" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:element
-		name="coefficients"
-		type="gml:doubleOrNullList"/>
-	
-	<xs:simpleType
-		name="doubleList">
-		<xs:list itemType="xs:double"/>
-	</xs:simpleType>
-	
-	<xs:element
-		name="doubleListProperty"
-		type="simBase:DoubleListPropertyType"/>
-	<xs:complexType 
-		name="DoubleListPropertyType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">				
-			</xs:documentation>			
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element 
-				ref="simBase:DoubleList"
-				minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
-	<xs:element 
-		name="DoubleList"
-		type="simBase:DoubleListType"/>
-	<xs:complexType name="DoubleListType">
-		<xs:simpleContent>
-			<xs:extension base="gml:doubleList"/>			
-		</xs:simpleContent>
-	</xs:complexType>
-	
-	
+
+	<xs:element name="coefficients" type="gml:doubleList" />
+
 	<!-- =================================================================
 		polynom2D property 
-	================================================================== -->
-	<xs:element 
-		name="polynomial2D"
-		type="simBase:Polynomial1DPropertyType"/>
-		
-	<xs:complexType 
-		name="Polynomial2DPropertyType">
+		================================================================== -->
+	<xs:element name="polynomial2D" type="simBase:Polynomial1DPropertyType" />
+
+	<xs:complexType name="Polynomial2DPropertyType">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">				
-			</xs:documentation>			
+			<xs:documentation xml:lang="en"></xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="simBase:Polynomial2D"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="simBase:Polynomial2D" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
+
 	<!-- ======================================================================
-			Polynom2D element
-	======================================================================= -->
-	<xs:element 
-		name="Polynomial2D"
-		type="simBase:Polynomial2DType"
-		substitutionGroup="simBase:_Polynomial">
+		Polynom2D element
+		======================================================================= -->
+	<xs:element name="Polynomial2D" type="simBase:Polynomial2DType" substitutionGroup="simBase:_Polynomial">
 		<xs:annotation>
-			<xs:documentation>
-				Represent a 2D polynom
-			</xs:documentation>
+			<xs:documentation>Represent a 2D polynom</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<!-- ======================================================================
-			Polynom2DType
-	======================================================================= -->
-	<xs:complexType 
-		name="Polynomial2DType"
-		abstract="false">
+		Polynom2DType
+		======================================================================= -->
+	<xs:complexType name="Polynomial2DType" abstract="false">
 		<xs:annotation>
-			<xs:documentation>
-				Type for 2D polynoms
-				z=SUM(aij*x^i*y^j) for  i from 0 to degreeX 
-										j from 0 to degreeY
-			</xs:documentation>
+			<xs:documentation>Type for 2D polynoms z=SUM(aij*x^i*y^j) for i from 0 to degreeX j from 0 to degreeY</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractPolynomialType">
+			<xs:extension base="simBase:AbstractPolynomialType">
 				<xs:sequence>
-					<xs:element 
-						name="degreeX"
-						type="xs:positiveInteger"
-						minOccurs="1" maxOccurs="1"/>
-					<xs:element 
-						name="degreeY"
-						type="xs:positiveInteger"
-						minOccurs="1" maxOccurs="1"/>
+					<xs:element name="degreeX" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
+					<xs:element name="degreeY" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
 					<!--xs:element 
 						name="data"
-						type="gml:DataBlockType"/-->	
+						type="gml:DataBlockType"/-->
 					<!-- xs:element
 						name="coeficients"
 						minOccurs="1" maxOccurs="1">
 						<xs:annotation>
-							<xs:documentation>
-								Table of coeficients as one dimentional array
-								of double. index for aij is i*oderX+j  
-							</xs:documentation>
+						<xs:documentation>
+						Table of coeficients as one dimentional array
+						of double. index for aij is i*oderX+j  
+						</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
-							<xs:list itemType="xs:double"/>
+						<xs:list itemType="xs:double"/>
 						</xs:simpleType>
-					</xs:element-->	
+						</xs:element-->
 					<!--xs:element
 						name="coefficients"
-						type="gml:doubleOrNullList"/-->	
-					<xs:element
-						ref="simBase:coefficients"/>			
+						type="gml:doubleOrNullList"/-->
+					<xs:element ref="simBase:coefficients" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 </xs:schema>
-	
