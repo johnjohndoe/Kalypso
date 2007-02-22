@@ -83,5 +83,8 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
 
     catalog.put( NS.COMMON_SHP, getClass().getResource( "commons/shape.xsd" ) );
     prefixes.put( NS.COMMON, "commonShp" );
+
+    catalog.put( NS.SWE_EXTENSIONS, getClass().getResource( "commons/sweExtensions.xsd" ) );
+    prefixes.put( NS.SWE_EXTENSIONS, "sweExt" );
   }
 }

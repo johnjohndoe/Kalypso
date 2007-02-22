@@ -266,7 +266,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final IRelationType resultDefPT = (IRelationType) obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final IPropertyType resultPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULT );
 
-    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultDefPT, m_tupleResult.getComponents() );
+    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultDefPT, m_tupleResult.getComponents(), m_tupleResult.getSortComponents() );
 
     final String strResult = ObservationFeatureFactory.serializeResultAsString( m_tupleResult );
 
