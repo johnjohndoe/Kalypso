@@ -309,6 +309,7 @@ public class Util
                      workspace.getGMLSchema().getFeatureType( featureQName );
              Feature feature=
                workspace.createFeature( parentFeature, (IRelationType)property, newFeatureType );
+             parentFeature.setProperty( property, feature );
              return feature;
            }
            
