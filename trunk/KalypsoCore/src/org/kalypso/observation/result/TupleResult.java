@@ -91,7 +91,7 @@ public class TupleResult implements List<IRecord>
 
     return sort();
   }
-  
+
   public IComponent[] getSortComponents( )
   {
     return m_sortComponents;
@@ -101,11 +101,6 @@ public class TupleResult implements List<IRecord>
   {
     if( (m_sortComponents != null) && (m_sortComponents.length > 0) )
     {
-      // compareTo doesn't work, because of sortComponents!
-      // we have to implement our own sorting functionality
-
-      // QUESTION insert index - sort this list?
-
       // TODO subSorts
 
       final Comparator<IRecord> comp = new Comparator<IRecord>()
@@ -122,8 +117,6 @@ public class TupleResult implements List<IRecord>
       };
 
       Collections.sort( m_records, comp );
-
-      // TupleResultUtilities.sortRecordList( m_records, m_sortComponents );
 
       return true;
     }
@@ -162,7 +155,6 @@ public class TupleResult implements List<IRecord>
 
     final boolean result = m_records.add( o );
     sort();
-
     fireRecordsChanged( new IRecord[] { o }, TYPE.ADDED );
 
     return result;
@@ -177,7 +169,6 @@ public class TupleResult implements List<IRecord>
 
     final boolean result = m_records.addAll( c );
     sort();
-
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
     return result;
@@ -192,7 +183,6 @@ public class TupleResult implements List<IRecord>
 
     final boolean result = m_records.addAll( index, c );
     sort();
-
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
     return result;
@@ -374,6 +364,8 @@ public class TupleResult implements List<IRecord>
    */
   public Object[] toArray( )
   {
+    sort();
+
     return m_records.toArray();
   }
 
@@ -477,7 +469,7 @@ public class TupleResult implements List<IRecord>
 
   public boolean hasComponent( final IComponent comp )
   {
-    return m_components.contains( comp );
+     return m_components.contains( comp );
   }
 
   /**

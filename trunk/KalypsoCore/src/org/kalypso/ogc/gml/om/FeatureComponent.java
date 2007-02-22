@@ -148,6 +148,40 @@ public class FeatureComponent implements IComponent
   {
     final XsdBaseTypeHandler handler = ObservationFeatureFactory.typeHanderForComponent( this );
 
+    if( objFirst == null && objSecond == null )
+    {
+      return 0; // equals
+    }
+    else if( objFirst == null )
+    {
+      return -1; // lesser
+    }
+    else if( objSecond == null )
+    {
+      return 1; // greater
+    }
+
     return handler.compare( objFirst, objSecond );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof FeatureComponent )
+      return m_itemDef.equals( ((FeatureComponent) obj).m_itemDef );
+
+    return false;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_itemDef.hashCode();
   }
 }

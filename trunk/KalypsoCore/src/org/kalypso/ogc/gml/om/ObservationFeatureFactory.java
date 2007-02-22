@@ -108,6 +108,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" );
 
+  private static final QName QNAME_F_SORTED_RECORD_DEFINITION = new QName( NS.SWE_EXTENSIONS, "SortedRecordDefinition" );
+
+  private static final QName QNAME_P_SORTED_COMPONENT = new QName( NS.SWE_EXTENSIONS, "sortedComponent" );
+
   /**
    * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
@@ -163,9 +167,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String result = resultRaw == null ? "" : resultRaw.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
 
     final IComponent[] components = ObservationFeatureFactory.buildComponents( recordDefinition );
+    final IComponent[] sortComponents = ObservationFeatureFactory.buildSortComponents( recordDefinition );
     final XsdBaseTypeHandler[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
     final TupleResult tupleResult = new TupleResult( components );
+    tupleResult.setSortComponents( sortComponents );
 
     final StringTokenizer tk = new StringTokenizer( result );
     int nb = 0;
@@ -205,6 +211,28 @@ public class ObservationFeatureFactory implements IAdapterFactory
     }
 
     return tupleResult;
+  }
+
+  /**
+   * Creates the list of components the observation should be sorted by. Returns always null, excpet redordDefinition is
+   * of type sweExt:SortedRecordDefinition.
+   */
+  private static IComponent[] buildSortComponents( final Feature recordDefinition )
+  {
+    if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), QNAME_F_SORTED_RECORD_DEFINITION ) )
+      return new IComponent[0];
+
+    final List<IComponent> components = new ArrayList<IComponent>();
+    
+    final FeatureList comps = (FeatureList) recordDefinition.getProperty( QNAME_P_SORTED_COMPONENT );
+    for( int i = 0; i < comps.size(); i++ )
+    {
+      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
+
+      components.add( new FeatureComponent( itemDef ) );
+    }
+
+    return components.toArray( new IComponent[components.size()] );
   }
 
   private static XsdBaseTypeHandler[] typeHandlersForComponents( final IComponent[] components )
@@ -329,9 +357,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final TupleResult result = source.getResult();
 
     final IComponent[] components = result.getComponents();
+    final IComponent[] sortComponents = result.getSortComponents();
 
     final IRelationType targetObsFeatureRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
-    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components );
+    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components, sortComponents );
     changes.add( new FeatureChange( targetObsFeature, targetObsFeatureRelation, rd ) );
 
     final String strResult = ObservationFeatureFactory.serializeResultAsString( result );
@@ -346,19 +375,35 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
-  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components )
+  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components, final IComponent[] sortComponents )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
+    final IFeatureType recordDefinitionFT;
+    if( sortComponents == null )
+      recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE );
+    else
+      recordDefinitionFT = schema.getFeatureType( QNAME_F_SORTED_RECORD_DEFINITION );
+
     // set resultDefinition property, create RecordDefinition feature
-    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, targetObsFeatureRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
+    final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, targetObsFeatureRelation, recordDefinitionFT );
     final IRelationType itemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+
     // for each component, set a component property, create a feature: ItemDefinition
     for( final IComponent comp : components )
     {
       final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, itemDefRelation, schema, comp );
-
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.SWE_COMPONENT, featureItemDef );
+    }
+
+    if( sortComponents != null )
+    {
+      final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( QNAME_P_SORTED_COMPONENT );
+      for( final IComponent comp : sortComponents )
+      {
+        final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, sortedItemDefRelation, schema, comp );
+        FeatureHelper.addProperty( featureRD, QNAME_P_SORTED_COMPONENT, featureItemDef );
+      }
     }
 
     return featureRD;
@@ -524,7 +569,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     /* Make sure there is always a record definition */
     if( recordDefinition == null )
     {
-      final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultRelation, new IComponent[] {} );
+      final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultRelation, new IComponent[] {}, null );
       obsFeature.setProperty( ObservationFeatureFactory.OM_RESULTDEFINITION, rd );
       return rd;
     }
