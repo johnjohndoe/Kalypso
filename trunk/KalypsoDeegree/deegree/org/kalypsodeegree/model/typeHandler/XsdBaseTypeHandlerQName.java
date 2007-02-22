@@ -38,55 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
+
+import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerStringArray extends XsdBaseTypeHandler<String[]>
+public class XsdBaseTypeHandlerQName extends XsdBaseTypeHandler<QName>
 {
-
-  public XsdBaseTypeHandlerStringArray( final String xsdTypeName )
+  public XsdBaseTypeHandlerQName( )
   {
-    super( xsdTypeName, String[].class );
-
+    super( "QName", QName.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public String[] convertToJavaValue( final String xmlString )
+  public QName convertToJavaValue( final String xmlString )
   {
-    return xmlString.split( "/s+" );
+    return QName.valueOf( xmlString );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final String value[] )
+  public String convertToXMLString( final QName value )
   {
-    final StringBuffer result = new StringBuffer();
-    for( int k = 0; k < value.length; k++ )
-    {
-      if( k != 0 )
-      {
-        result.append( " " );
-      }
-      result.append( value[k] );
-    }
-    return result.toString();
+    return value.toString();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final String[] o1, final String[] o2 )
+  public int compare( final QName o1, final QName o2 )
   {
     return ("" + o1).compareTo( "" + o2 );
   }
-
 }

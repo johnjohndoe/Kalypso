@@ -38,49 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerHexArray extends XsdBaseTypeHandler<Byte[]>
+public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
 {
-
-  public XsdBaseTypeHandlerHexArray( )
+  public XsdBaseTypeHandlerDouble( )
   {
-    super( "hexBinary", Byte[].class );
+    super( "double", Double.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Byte[] convertToJavaValue( final String xmlString )
+  public Double convertToJavaValue( final String xmlString )
   {
-    final byte[] bytes = HexBin.stringToBytes( xmlString );
-    return ArrayUtils.toObject( bytes );
+    return Double.valueOf( xmlString );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final Byte[] value )
+  public String convertToXMLString( final Double value )
   {
-    final byte[] bytes = ArrayUtils.toPrimitive( value );
-    return HexBin.bytesToString( bytes );
+    return Double.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Byte[] o1, final Byte[] o2 )
+  public int compare( final Double o1, final Double o2 )
   {
-    return ("" + o1).compareTo( "" + o2 );
-  }
+    if( (o1 == null) && (o2 == null) )
+    {
+      return 0; // equals
+    }
+    else if( o1 == null )
+    {
+      return -1; // lesser
+    }
 
+    return o1.compareTo( o2 );
+  }
 }

@@ -38,57 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import java.io.File;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerDirectory extends XsdBaseTypeHandler<File>
+public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<XMLGregorianCalendar>
 {
-  public XsdBaseTypeHandlerDirectory( )
+
+  private final DatatypeFactory m_dataTypeFactory;
+
+  public XsdBaseTypeHandlerXMLGregorianCalendar( final DatatypeFactory dataTypeFactory, final String xsdTypeName )
   {
-    super( new QName( NS.COMMON, "directory" ), File.class );
+    super( xsdTypeName, XMLGregorianCalendar.class );
+    m_dataTypeFactory = dataTypeFactory;
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public File convertToJavaValue( final String xmlString )
+  public XMLGregorianCalendar convertToJavaValue( final String xmlString )
   {
-    if( (xmlString == null) || (xmlString.equals( "" )) )
-    {
-      return null;
-    }
-
-    return new File( xmlString );
+    return m_dataTypeFactory.newXMLGregorianCalendar( xmlString );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final File value )
+  public String convertToXMLString( final XMLGregorianCalendar value )
   {
-    if( value == null )
-    {
-      return "";
-    }
-
-    return value.getAbsolutePath();
+    return value.toXMLFormat();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final File o1, final File o2 )
+  public int compare( final XMLGregorianCalendar o1, final XMLGregorianCalendar o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {
@@ -99,6 +91,7 @@ public class XsdBaseTypeHandlerDirectory extends XsdBaseTypeHandler<File>
       return -1; // lesser
     }
 
-    return o1.compareTo( o2 );
+    return o1.compare( o2 );
   }
+
 }

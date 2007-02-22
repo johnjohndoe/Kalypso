@@ -38,51 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerByteArray extends XsdBaseTypeHandler<Byte[]>
+public class XsdBaseTypeHandlerBoolean extends XsdBaseTypeHandler<Boolean>
 {
 
-  public XsdBaseTypeHandlerByteArray( )
+  public XsdBaseTypeHandlerBoolean( )
   {
-    super( "base64Binary", Byte[].class );
+    super( "boolean", Boolean.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Byte[] convertToJavaValue( final String xmlString )
+  public Boolean convertToJavaValue( final String xmlString )
   {
-    final byte[] bytes = xmlString.getBytes();
-    final byte[] encodeBase64 = Base64.encodeBase64( bytes );
-    return ArrayUtils.toObject( encodeBase64 );
+    return Boolean.parseBoolean( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final Byte[] value )
+  public String convertToXMLString( final Boolean value )
   {
-    final byte[] base64Data = ArrayUtils.toPrimitive( value );
-    final byte[] bytes = Base64.decodeBase64( base64Data );
-    return new String( bytes );
+    return value == null ? null : Boolean.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Byte[] o1, final Byte[] o2 )
+  public int compare( final Boolean o1, final Boolean o2 )
   {
-    return ("" + o1).compareTo( "" + o2 );
+    if( (o1 == null) && (o2 == null) )
+    {
+      return 0; // equals
+    }
+    else if( o1 == null )
+    {
+      return -1; // lesser
+    }
+
+    return o1.compareTo( o2 );
   }
 
 }

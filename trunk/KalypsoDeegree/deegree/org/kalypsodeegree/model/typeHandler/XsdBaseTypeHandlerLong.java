@@ -38,49 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
-
-import java.math.BigDecimal;
+package org.kalypsodeegree.model.typeHandler;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
+public class XsdBaseTypeHandlerLong extends XsdBaseTypeHandler<Long>
 {
-  public XsdBaseTypeHandlerBigDecimal( )
+  public XsdBaseTypeHandlerLong( final String xsdTypeName )
   {
-    super( "decimal", BigDecimal.class );
+    super( xsdTypeName, Long.class );
+    // TODO Auto-generated constructor stub
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public BigDecimal convertToJavaValue( final String xmlString )
+  public Long convertToJavaValue( final String xmlString )
   {
-    return new BigDecimal( xmlString );
+    return Long.valueOf( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final BigDecimal value )
+  public String convertToXMLString( final Long value )
   {
-    // TODO: format according to fraction digits
-
-    // TODO: decide this from outside!
-    // GML should write/read the empty string
-    // Observations should read/write 'null'
-    return value == null ? "" : value.toString();
+    return Long.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final BigDecimal o1, final BigDecimal o2 )
+  public int compare( final Long o1, final Long o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {

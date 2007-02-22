@@ -38,52 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
-
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
+package org.kalypsodeegree.model.typeHandler;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
+public class XsdBaseTypeHandlerShort extends XsdBaseTypeHandler<Short>
 {
-
-  private final DatatypeFactory m_datatypeFactory;
-
-  public XsdBaseTypeHandlerDuration( final DatatypeFactory datatypeFactory )
+  public XsdBaseTypeHandlerShort( final String xsdTypeName )
   {
-    super( "duration", Duration.class );
-    m_datatypeFactory = datatypeFactory;
-
+    super( xsdTypeName, Short.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Duration convertToJavaValue( final String xmlString )
+  public Short convertToJavaValue( final String xmlString )
   {
-    return m_datatypeFactory.newDuration( xmlString );
+    return Short.valueOf( xmlString );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final Duration value )
+  public String convertToXMLString( final Short value )
   {
-    return value.toString();
+    return Integer.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Duration o1, final Duration o2 )
+  public int compare( final Short o1, final Short o2 )
   {
-    return ("" + o1).compareTo( "" + o2 );
-  }
+    if( (o1 == null) && (o2 == null) )
+    {
+      return 0; // equals
+    }
+    else if( o1 == null )
+    {
+      return -1; // lesser
+    }
 
+    return o1.compareTo( o2 );
+  }
 }

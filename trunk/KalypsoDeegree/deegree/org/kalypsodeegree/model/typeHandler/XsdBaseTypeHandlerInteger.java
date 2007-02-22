@@ -38,57 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import java.io.File;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerFile extends XsdBaseTypeHandler<File>
+public class XsdBaseTypeHandlerInteger extends XsdBaseTypeHandler<Integer>
 {
-  public XsdBaseTypeHandlerFile( )
+  public XsdBaseTypeHandlerInteger( final String xmlType )
   {
-    super( new QName( NS.COMMON, "file" ), File.class );
+    super( xmlType, Integer.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public File convertToJavaValue( final String xmlString )
+  public Integer convertToJavaValue( final String xmlString )
   {
-    if( (xmlString == null) || (xmlString.equals( "" )) )
-    {
-      return null;
-    }
-
-    return new File( xmlString );
+    return Integer.valueOf( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final File value )
+  public String convertToXMLString( final Integer value )
   {
-    if( value == null )
-    {
-      return "";
-    }
-
-    return value.getAbsolutePath();
+    return Integer.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final File o1, final File o2 )
+  public int compare( final Integer o1, final Integer o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {
@@ -101,4 +86,5 @@ public class XsdBaseTypeHandlerFile extends XsdBaseTypeHandler<File>
 
     return o1.compareTo( o2 );
   }
+
 }

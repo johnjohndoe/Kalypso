@@ -38,88 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerRGB extends XsdBaseTypeHandler<RGB>
+public class XsdBaseTypeHandlerByte extends XsdBaseTypeHandler<Byte>
 {
-  public XsdBaseTypeHandlerRGB( )
+  public XsdBaseTypeHandlerByte( )
   {
-    super( new QName( NS.COMMON, "color" ), RGB.class );
+    super( "byte", Byte.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public RGB convertToJavaValue( final String xmlString )
+  public Byte convertToJavaValue( final String xmlString )
   {
-    if( xmlString.length() == 7 )
-    {
-      final RGB rgb = new RGB( 0, 0, 0 );
-
-      final String red = xmlString.substring( 1, 3 );
-      rgb.red = Integer.decode( "0x" + red );
-
-      final String green = xmlString.substring( 3, 5 );
-      rgb.green = Integer.decode( "0x" + green );
-
-      final String blue = xmlString.substring( 5, 7 );
-      rgb.blue = Integer.decode( "0x" + blue );
-
-      return rgb;
-    }
-    else
-    {
-      return null;
-    }
+    return Byte.valueOf( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final RGB value )
+  public String convertToXMLString( final Byte value )
   {
-    if( value == null )
-    {
-      return new String( "" );
-    }
-
-    String red = Integer.toHexString( value.red );
-    if( red.length() < 2 )
-    {
-      red = "0" + red;
-    }
-
-    String green = Integer.toHexString( value.green );
-    if( green.length() < 2 )
-    {
-      green = "0" + green;
-    }
-
-    String blue = Integer.toHexString( value.blue );
-    if( blue.length() < 2 )
-    {
-      blue = "0" + blue;
-    }
-
-    return new String( "#" + red + green + blue );
+    return Byte.toString( value );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final RGB o1, final RGB o2 )
+  public int compare( final Byte o1, final Byte o2 )
   {
-    return ("" + o1).compareTo( "" + o2 );
+    if( (o1 == null) && (o2 == null) )
+    {
+      return 0; // equals
+    }
+    else if( o1 == null )
+    {
+      return -1; // lesser
+    }
+
+    return o1.compareTo( o2 );
   }
 }
