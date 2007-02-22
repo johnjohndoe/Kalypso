@@ -111,7 +111,7 @@ public class MapUtils
     style.setType( "simple" ); //$NON-NLS-1$    
     styleList.add( style );
 
-    layers.getLayerOrMapviewRef().add( 0, element );
+    layers.getLayer().add( 0, element );
     GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" );
     writer.close();
     if( createStyle )

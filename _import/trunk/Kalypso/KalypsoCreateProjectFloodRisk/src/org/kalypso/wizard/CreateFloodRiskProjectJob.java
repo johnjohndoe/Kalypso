@@ -162,7 +162,7 @@ public class CreateFloodRiskProjectJob extends Job
 
   private final String m_resourceBase = "resources/projecttemplate.zip"; //$NON-NLS-1$
 
-  private List<Object> m_layerList;
+  private List<StyledLayerType> m_layerList;
 
   private GMLWorkspace m_landuseShapeWS;
 
@@ -267,7 +267,7 @@ public class CreateFloodRiskProjectJob extends Job
       final Gismapview gismapview = mapTemplateOF.createGismapview();
       final Layers layers = mapTemplateOF.createGismapviewLayers();
       ExtentType extent = typeOF.createExtentType();
-      m_layerList = layers.getLayerOrMapviewRef();
+      m_layerList = layers.getLayer();
 
       // copy landuseData as shape
       copyLanduseShape();

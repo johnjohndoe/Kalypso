@@ -163,7 +163,7 @@ public class URLActionFLOWSAddFilterToGMT extends AbstractURLActionAnalizeTheme
     final InputSource isToGMT = new InputSource( new InputStreamReader( gmtURL.openStream() ) );
     final Gismapview mapview = (Gismapview) unmarshaller.unmarshal( isToGMT );
     final Layers mapViewLayers = mapview.getLayers();
-    final List<Object> styledLayers = mapViewLayers.getLayerOrMapviewRef();
+    final List<StyledLayerType> styledLayers = mapViewLayers.getLayer();
 
     for( IKalypsoFeatureTheme kft : themes )
     {
@@ -197,7 +197,7 @@ public class URLActionFLOWSAddFilterToGMT extends AbstractURLActionAnalizeTheme
 
   }
 
-  private StyledLayerType getStyledLayerType( List<Object> styledLayers, IKalypsoTheme theme )
+  private StyledLayerType getStyledLayerType( List<StyledLayerType> styledLayers, IKalypsoTheme theme )
   {
     for( Object sldLayer : styledLayers )
     {
