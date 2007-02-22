@@ -101,18 +101,26 @@ public class TupleResult implements List<IRecord>
   {
     if( (m_sortComponents != null) && (m_sortComponents.length > 0) )
     {
-      // TODO subSorts
-
       final Comparator<IRecord> comp = new Comparator<IRecord>()
       {
         public int compare( final IRecord o1, final IRecord o2 )
         {
-          final IComponent component = m_sortComponents[0];
+          for( IComponent component : m_sortComponents )
+          {
+            final Object v1 = o1.getValue( component );
+            final Object v2 = o2.getValue( component );
 
-          final Object v1 = o1.getValue( component );
-          final Object v2 = o2.getValue( component );
+            int result = component.compare( v1, v2 );
 
-          return component.compare( v1, v2 );
+            /* obj differs? no further sorting needed! */
+            if( result != 0 )
+            {
+              return result;
+            }
+          }
+
+          /* return equals */
+          return 0;
         }
       };
 
@@ -469,7 +477,7 @@ public class TupleResult implements List<IRecord>
 
   public boolean hasComponent( final IComponent comp )
   {
-     return m_components.contains( comp );
+    return m_components.contains( comp );
   }
 
   /**
