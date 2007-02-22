@@ -71,6 +71,9 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   {
     final Map currentState = new TreeMap();
     currentState.put( ACTIVE_SZENARIO_FOLDER_NAME, getSzenarioFolder() );
+    currentState.put(
+        ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME, 
+        getNativeTerrainElevationModelFolder());
     currentState.put( ACTIVE_SZENARIO_DATA_PROVIDER_NAME, getDataProvider() );
     return currentState;
   }
@@ -92,7 +95,7 @@ public class SzenarioSourceProvider extends AbstractSourceProvider
   private IFolder getNativeTerrainElevationModelFolder( )
   {
     final IProject project = activeWorkContext.getActiveProject();
-    return project == null ? null : project.getFolder( "szenario/native_tem" );
+    return project == null ? null : project.getFolder( "szenario/models/native_tem" );
   }
   
   private ISzenarioDataProvider getDataProvider( )

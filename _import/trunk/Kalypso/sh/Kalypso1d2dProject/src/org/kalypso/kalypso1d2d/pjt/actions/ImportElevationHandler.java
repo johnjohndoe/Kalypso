@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -82,11 +83,16 @@ public class ImportElevationHandler extends WorkflowCommandHandler
       (ISzenarioDataProvider) context.getVariable( 
             SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
     final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
-    final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+    final IFolder modelFolder= 
+      (IFolder) context.getVariable( 
+                      SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);//"activeSimulationModelBaseFolder" );
     
+    final IFolder temFolder = 
+      (IFolder) context.getVariable( 
+                      SzenarioSourceProvider.ACTIVE_NATIVE_TERRAIN_ELEVATION_MODEL_FOLDER_NAME);//"activeSimulationModelBaseFolder" );
     
     IStructuredSelection selection = 
-      new StructuredSelection(new Object[]{terrainModel, currentFolder });
+      new StructuredSelection(new Object[]{terrainModel, modelFolder, temFolder });
     
 //    if(selection == null)
 //    {
@@ -99,8 +105,8 @@ public class ImportElevationHandler extends WorkflowCommandHandler
 
     final IWizardDescriptor wizardDescriptor = 
             workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
-    final INewWizardKalypsoImport wizard = 
-           (INewWizardKalypsoImport) wizardDescriptor.createWizard();
+    final INewWizard wizard = 
+           (INewWizard) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
     
     final HashMap<String, Object> data = new HashMap<String, Object>();
