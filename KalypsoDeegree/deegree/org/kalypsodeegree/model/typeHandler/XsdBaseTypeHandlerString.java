@@ -38,43 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerLong extends XsdBaseTypeHandler<Long>
+public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
 {
-  public XsdBaseTypeHandlerLong( final String xsdTypeName )
+
+  public XsdBaseTypeHandlerString( final String xsdTypeName )
   {
-    super( xsdTypeName, Long.class );
-    // TODO Auto-generated constructor stub
+    super( xsdTypeName, String.class );
+
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Long convertToJavaValue( final String xmlString )
+  public String convertToJavaValue( final String xmlString )
   {
-    return Long.valueOf( xmlString );
+    return xmlString;
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final Long value )
+  public String convertToXMLString( final String value )
   {
-    return Long.toString( value );
+    return value;
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Long o1, final Long o2 )
+  public int compare( final String o1, final String o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {
@@ -87,4 +88,5 @@ public class XsdBaseTypeHandlerLong extends XsdBaseTypeHandler<Long>
 
     return o1.compareTo( o2 );
   }
+
 }

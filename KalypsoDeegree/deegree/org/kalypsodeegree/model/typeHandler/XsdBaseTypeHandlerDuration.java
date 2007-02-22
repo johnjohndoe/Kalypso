@@ -38,19 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
+
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
+public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
 {
 
-  public XsdBaseTypeHandlerString( final String xsdTypeName )
+  private final DatatypeFactory m_datatypeFactory;
+
+  public XsdBaseTypeHandlerDuration( final DatatypeFactory datatypeFactory )
   {
-    super( xsdTypeName, String.class );
+    super( "duration", Duration.class );
+    m_datatypeFactory = datatypeFactory;
 
   }
 
@@ -58,35 +64,26 @@ public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public String convertToJavaValue( final String xmlString )
+  public Duration convertToJavaValue( final String xmlString )
   {
-    return xmlString;
+    return m_datatypeFactory.newDuration( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final String value )
+  public String convertToXMLString( final Duration value )
   {
-    return value;
+    return value.toString();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final String o1, final String o2 )
+  public int compare( final Duration o1, final Duration o2 )
   {
-    if( (o1 == null) && (o2 == null) )
-    {
-      return 0; // equals
-    }
-    else if( o1 == null )
-    {
-      return -1; // lesser
-    }
-
-    return o1.compareTo( o2 );
+    return ("" + o1).compareTo( "" + o2 );
   }
 
 }

@@ -38,42 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
+
+import java.math.BigInteger;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
+public class XsdBaseTypeHandlerBigInteger extends XsdBaseTypeHandler<BigInteger>
 {
-  public XsdBaseTypeHandlerDouble( )
+  public XsdBaseTypeHandlerBigInteger( final String xsdTypeName )
   {
-    super( "double", Double.class );
+    super( xsdTypeName, BigInteger.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Double convertToJavaValue( final String xmlString )
+  public BigInteger convertToJavaValue( final String xmlString )
   {
-    return Double.valueOf( xmlString );
+    return new BigInteger( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final Double value )
+  public String convertToXMLString( final BigInteger value )
   {
-    return Double.toString( value );
+    return value.toString();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Double o1, final Double o2 )
+  public int compare( final BigInteger o1, final BigInteger o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {

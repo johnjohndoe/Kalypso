@@ -38,43 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
+
+import java.math.BigDecimal;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerBoolean extends XsdBaseTypeHandler<Boolean>
+public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
 {
-
-  public XsdBaseTypeHandlerBoolean( )
+  public XsdBaseTypeHandlerBigDecimal( )
   {
-    super( "boolean", Boolean.class );
+    super( "decimal", BigDecimal.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Boolean convertToJavaValue( final String xmlString )
+  public BigDecimal convertToJavaValue( final String xmlString )
   {
-    return Boolean.parseBoolean( xmlString );
+    return new BigDecimal( xmlString );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final Boolean value )
+  public String convertToXMLString( final BigDecimal value )
   {
-    return value == null ? null : Boolean.toString( value );
+    // TODO: format according to fraction digits
+
+    // TODO: decide this from outside!
+    // GML should write/read the empty string
+    // Observations should read/write 'null'
+    return value == null ? "" : value.toString();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Boolean o1, final Boolean o2 )
+  public int compare( final BigDecimal o1, final BigDecimal o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {
@@ -87,5 +93,4 @@ public class XsdBaseTypeHandlerBoolean extends XsdBaseTypeHandler<Boolean>
 
     return o1.compareTo( o2 );
   }
-
 }

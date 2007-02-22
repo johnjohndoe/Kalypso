@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 

@@ -38,42 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
+import java.io.File;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerByte extends XsdBaseTypeHandler<Byte>
+public class XsdBaseTypeHandlerDirectory extends XsdBaseTypeHandler<File>
 {
-  public XsdBaseTypeHandlerByte( )
+  public XsdBaseTypeHandlerDirectory( )
   {
-    super( "byte", Byte.class );
+    super( new QName( NS.COMMON, "directory" ), File.class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public Byte convertToJavaValue( final String xmlString )
+  public File convertToJavaValue( final String xmlString )
   {
-    return Byte.valueOf( xmlString );
+    if( (xmlString == null) || (xmlString.equals( "" )) )
+    {
+      return null;
+    }
+
+    return new File( xmlString );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
    */
   @Override
-  public String convertToXMLString( final Byte value )
+  public String convertToXMLString( final File value )
   {
-    return Byte.toString( value );
+    if( value == null )
+    {
+      return "";
+    }
+
+    return value.getAbsolutePath();
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final Byte o1, final Byte o2 )
+  public int compare( final File o1, final File o2 )
   {
     if( (o1 == null) && (o2 == null) )
     {

@@ -38,54 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.TypeHandlers;
+package org.kalypsodeegree.model.typeHandler;
 
-import java.math.BigInteger;
-
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.xmlbeans.impl.util.HexBin;
 import org.kalypsodeegree.model.XsdBaseTypeHandler;
 
 /**
  * @author kuch
  */
-public class XsdBaseTypeHandlerBigInteger extends XsdBaseTypeHandler<BigInteger>
+public class XsdBaseTypeHandlerHexArray extends XsdBaseTypeHandler<Byte[]>
 {
-  public XsdBaseTypeHandlerBigInteger( final String xsdTypeName )
+
+  public XsdBaseTypeHandlerHexArray( )
   {
-    super( xsdTypeName, BigInteger.class );
+    super( "hexBinary", Byte[].class );
   }
 
   /**
    * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
    */
   @Override
-  public BigInteger convertToJavaValue( final String xmlString )
+  public Byte[] convertToJavaValue( final String xmlString )
   {
-    return new BigInteger( xmlString );
+    final byte[] bytes = HexBin.stringToBytes( xmlString );
+    return ArrayUtils.toObject( bytes );
   }
 
   /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
+   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
    */
   @Override
-  public String convertToXMLString( final BigInteger value )
+  public String convertToXMLString( final Byte[] value )
   {
-    return value.toString();
+    final byte[] bytes = ArrayUtils.toPrimitive( value );
+    return HexBin.bytesToString( bytes );
   }
 
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final BigInteger o1, final BigInteger o2 )
+  public int compare( final Byte[] o1, final Byte[] o2 )
   {
-    if( (o1 == null) && (o2 == null) )
-    {
-      return 0; // equals
-    }
-    else if( o1 == null )
-    {
-      return -1; // lesser
-    }
-
-    return o1.compareTo( o2 );
+    return ("" + o1).compareTo( "" + o2 );
   }
+
 }
