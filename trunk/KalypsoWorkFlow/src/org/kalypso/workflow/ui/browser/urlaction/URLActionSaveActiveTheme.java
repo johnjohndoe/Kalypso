@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ITemplateTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
@@ -71,9 +72,9 @@ public class URLActionSaveActiveTheme extends AbstractURLAction
       final MapPanel mapPanel = gisMapEditor.getMapPanel();
       final IMapModell modell = mapPanel.getMapModell();
       final IKalypsoTheme activeTheme = modell.getActiveTheme();
-      if( activeTheme instanceof IKalypsoFeatureTheme )
+      if( activeTheme instanceof ITemplateTheme )
       {
-        final IKalypsoFeatureTheme kTheme = (IKalypsoFeatureTheme) activeTheme;
+        final ITemplateTheme kTheme = (ITemplateTheme) activeTheme;
         try
         {
           gisMapEditor.saveTheme( kTheme, new NullProgressMonitor() );

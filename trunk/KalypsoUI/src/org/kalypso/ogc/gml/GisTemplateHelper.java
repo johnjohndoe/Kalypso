@@ -334,7 +334,7 @@ public class GisTemplateHelper
     final Layers layers = TemplateUtilitites.OF_GISMAPVIEW.createGismapviewLayers();
     gismapview.setLayers( layers );
 
-    final List<Object> layer = layers.getLayerOrMapviewRef();
+    final List<StyledLayerType> layer = layers.getLayer();
 
     int count = 0;
     for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
