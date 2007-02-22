@@ -9,6 +9,8 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoModelProductPlugin extends AbstractUIPlugin
 {
+  public static final String ALWAYS_SHOW_INTRO_ON_START = "alwaysShowIntroOnStart";
+  
   // The shared instance.
   private static KalypsoModelProductPlugin plugin;
 
