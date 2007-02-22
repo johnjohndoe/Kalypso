@@ -110,7 +110,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       layer.setFeaturePath( "featureMember" );
 
       final Layers layers = gisMapFactory.createGismapviewLayers();
-      layers.getLayerOrMapviewRef().add( layer );
+      layers.getLayer().add( layer );
       layers.setActive( layer );
 
       final ExtentType extent = new ObjectFactory().createExtentType();

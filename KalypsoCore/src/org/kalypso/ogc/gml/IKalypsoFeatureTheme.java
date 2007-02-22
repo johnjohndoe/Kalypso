@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -70,5 +72,5 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public FeatureList getFeatureListVisible( final GM_Envelope env );
   
-  public IFeatureSelectionManager getSelectionManager();
+  public IFeatureSelectionManager getSelectionManager();  
 }

@@ -80,6 +80,8 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   public static final String JOB_FAMILY = "mapViewJobFamily";
 
+  private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
+
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -135,23 +137,27 @@ public class MapView extends AbstractMapPart implements IViewPart
       memento.putString( MEMENTO_PARTNAME, customName );
     }
 
-    final Job disposeJob = new Job( "Saving map state..." )
+    final String saveOnCloseString = getConfigurationElement().getAttribute( SAVE_MAP_ON_CLOSE );
+    if( "true".equals( saveOnCloseString ) )
     {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
+      final Job disposeJob = new Job( "Saving map state..." )
       {
-        try
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
         {
-          saveMap( monitor, m_file );
+          try
+          {
+            saveMap( monitor, m_file );
+          }
+          catch( final CoreException e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
+          return Status.OK_STATUS;
         }
-        catch( final CoreException e )
-        {
-          return StatusUtilities.statusFromThrowable( e );
-        }
-        return Status.OK_STATUS;
-      }
-    };
-    disposeJob.setUser( true );
-    disposeJob.schedule();
+      };
+      disposeJob.setUser( true );
+      disposeJob.schedule();
+    }
   }
 }

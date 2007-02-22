@@ -55,6 +55,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ITemplateTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -87,9 +88,9 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
       if( mapModell != null )
       {
         final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof IKalypsoFeatureTheme )
+        if( activeTheme instanceof ITemplateTheme )
         {
-          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+          final ITemplateTheme theme = (ITemplateTheme) activeTheme;
 
           final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
