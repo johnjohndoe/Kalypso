@@ -174,6 +174,19 @@ public class CreateMainChannelComposite extends Composite
     SegmentSwitchSection.setExpanded( false );
     SegmentSwitchSection.setDescription( "Wählen Sie das gewünschte Segment" );
 
+    /* Button for the model conversion */
+    final Button convertToModel = new Button( sectionClient, SWT.TOGGLE );
+    m_buttonList.add( convertToModel );
+    convertToModel.setText( "ins Modell übernehmen..." );
+    convertToModel.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        m_data.convertToModel();
+      }
+    } );
+    
     return SegmentSwitchSection;
   }
 

@@ -625,10 +625,10 @@ public class SegmentData
       paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
     if( m_bankLeftOrg != null )
       paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
-    if( m_profDownInters != null )
-      paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    if( m_profUpInters != null )
-      paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
+//    if( m_profDownInters != null )
+//      paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
+//    if( m_profUpInters != null )
+//      paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
     if( m_bankLeftInters != null )
       paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
     if( m_bankRightInters != null )

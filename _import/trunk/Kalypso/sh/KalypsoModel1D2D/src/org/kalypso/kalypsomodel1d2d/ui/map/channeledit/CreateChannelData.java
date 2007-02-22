@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,11 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.jts.JTSUtilities;
+import org.kalypso.jts.LineStringUtilities;
+import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
+import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.jts.QuadMesher.JTSQuadMesherTest;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -66,14 +72,25 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
+import xp.TempGrid;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.noding.SegmentPointComparator;
 
 /**
  * State object for create main channel widget and composite.
@@ -93,13 +110,13 @@ public class CreateChannelData
     UP,
     DOWN;
   }
-  
+
   private IKalypsoFeatureTheme m_profileTheme;
 
   private IKalypsoFeatureTheme m_bankTheme;
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
-  
+
   private int m_numbProfileIntersections;
 
   private Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
@@ -109,10 +126,14 @@ public class CreateChannelData
   private boolean datacomplete;
 
   private int m_numBankSelections;
-  
+
   private int m_globNumbBankIntersections;
 
   private List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
+
+  private List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
+
+  private Coordinate[][] m_meshCoords;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -286,16 +307,14 @@ public class CreateChannelData
   /* --------------------- workflow handling ---------------------------------- */
 
   /**
-   * check, if all necessary data is specified (profiles, bank lines...).
+   * checks, if all necessary data is specified (profiles, bank lines...).
    */
   public void completationCheck( )
   {
-
-    // TODO: check for left and right banks and the selected profiles
     datacomplete = false;
     if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
     {
-        datacomplete = true;
+      datacomplete = true;
     }
     else if( m_selectedProfiles.size() <= 1 )
     {
@@ -304,9 +323,55 @@ public class CreateChannelData
     if( datacomplete == true )
       /* intersects the banks with the profiles and manages the segment creation */
       intersectBanksWithProfs();
-    if (m_segmentList.size()> 0)
-      /* if there are segments, start Quadmesher */
+    if( m_segmentList.size() > 0 )
+    /* if there are segments, start Quadmesher */
+    // TODO: error handling implementation!!
+    {
       manageQuadMesher();
+      mergeMeshList();
+    }
+  }
+
+  /**
+   * converts the mesh coordinates into the 2d model
+   */
+  public void convertToModel( )
+  {
+    GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
+    importingGridPoints = convertToGMPoints( m_meshCoords );
+
+    final TempGrid tempGrid = new TempGrid();
+    tempGrid.importMesh( importingGridPoints );
+    //tempGrid.getAddToModelCommand( mapPanel, model, commandableWorkspace, calculateOverallYCoordNum() )
+  }
+
+  /**
+   * converts a Coordinate[][] array into a GM_Point[][] array
+   */
+  private GM_Point[][] convertToGMPoints( Coordinate[][] meshCoords )
+  {
+    GeometryFactory geometryFactory = new GeometryFactory();
+
+    GM_Point points2D[][] = new GM_Point[meshCoords.length][];
+    for( int i = 0; i < meshCoords.length; i++ )
+    {
+      Coordinate[] line = meshCoords[i];
+      GM_Point[] points1D = new GM_Point[line.length];
+      points2D[i] = points1D;
+      for( int j = 0; j < line.length; j++ )
+      {
+        Coordinate coord = line[j];
+        try
+        {
+          points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
+        }
+        catch( GM_Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+    return points2D;
   }
 
   /**
@@ -314,22 +379,265 @@ public class CreateChannelData
    */
   private void manageQuadMesher( )
   {
+    m_coordList.clear();
+
     for( int i = 0; i < m_segmentList.size(); i++ )
     {
       final boolean complete;
       SegmentData segment = m_segmentList.get( i );
       complete = segment.complete();
-      if (complete == true )
+      if( complete == true )
       {
-        /* arrange the for lines for the mesher */
-        
-        
+        /* arrange the lines for the mesher */
+        /*
+         * -the lines have to be oriented (clw or cclw), the order ist top (profile) - left (bank) - bottom (profile) -
+         * right (bank) or top - right - bottom - left -the end point of a line must be the same as the start point of
+         * the next line -the lines itselfes must be also oriented all in the same way (clw/cclw)
+         */
+
+        // at the end point of the profile line there should follow the start point of the next line
+        LineString[] lines = new LineString[4];
+
+        lines[0] = segment.getProfUpInters();
+        lines[1] = segment.getBankRightInters();
+        lines[2] = segment.getProfDownInters();
+        lines[3] = segment.getBankLeftInters();
+        lines = checkLineOrientation( lines );
+
+        // now the two lines are right oriented...
+        final LineString topLine = lines[0];
+        final LineString rightLine = lines[1];
+        final LineString bottomLine = lines[2];
+        final LineString leftLine = lines[3];
+
+        final JTSQuadMesher mesher = new JTSQuadMesher( topLine, bottomLine, leftLine, rightLine );
+        final Coordinate[][] coords = mesher.calculateMesh();
+        final JTSCoordsElevInterpol adjuster = new JTSCoordsElevInterpol( coords );
+        final Coordinate[][] coords2 = adjuster.calculateElevations();
+
+        m_coordList.add( coords2 );
       }
-      
-      
-      
     }
-    
+  }
+
+  public boolean checkMesh( int segmentNumber )
+  {
+    boolean check = false;
+    if( m_coordList.get( segmentNumber ) != null )
+      check = true;
+
+    return check;
+  }
+
+  /**
+   * erases the double coords and merges the coords list to an array of coords
+   */
+  private void mergeMeshList( )
+  {
+    final int overallYCoordNum = calculateOverallYCoordNum();
+    final int numX = m_numbProfileIntersections;
+    final int numY = overallYCoordNum;
+    Coordinate[][] newCoords = new Coordinate[numX][numY];
+
+    int coordYPosPointer = 0;
+    int coordSegmentPointer = 0;
+
+    // loop over all segments -> coords
+    for( int i = 0; i < m_coordList.size(); i++ )
+    {
+      // coordSegmentPointer = coordYPosPointer;
+      // loop over all profile intersections -> coords [x][]
+      for( int j = 0; j < numX; j++ )
+      {
+        // loop over all bank intersections -> coords [][x]
+
+        for( int k = 0; k < m_coordList.get( i )[j].length; k++ )
+        {
+          coordYPosPointer = coordSegmentPointer + k;
+          newCoords[j][coordYPosPointer] = m_coordList.get( i )[j][k];
+        }
+      }
+      coordSegmentPointer = coordSegmentPointer + m_coordList.get( i )[0].length - 1;
+    }
+    if( coordYPosPointer != overallYCoordNum - 1 )
+      System.out.println( "consolidateMesh: wrong number of coord array!! " );
+
+    m_meshCoords = newCoords;
+  }
+
+  private int calculateOverallYCoordNum( )
+  {
+    int num = 0;
+
+    // add the coords lengths to num
+    for( int i = 0; i < m_coordList.size(); i++ )
+    {
+      num = num + m_coordList.get( i )[0].length;
+    }
+
+    // substract the number of double profile coords
+    num = num - (m_segmentList.size() - 1);
+
+    return num;
+  }
+
+  private LineString[] checkLineOrientation( LineString[] lines )
+  {
+    final LineString[] lineArray = new LineString[4];
+
+    GeometryFactory factory1 = new GeometryFactory();
+    Coordinate[] coords1 = new Coordinate[lines[0].getNumPoints()];
+
+    GeometryFactory factory2 = new GeometryFactory();
+    Coordinate[] coords2 = new Coordinate[lines[1].getNumPoints()];
+
+    GeometryFactory factory3 = new GeometryFactory();
+    Coordinate[] coords3 = new Coordinate[lines[2].getNumPoints()];
+
+    GeometryFactory factory4 = new GeometryFactory();
+    Coordinate[] coords4 = new Coordinate[lines[3].getNumPoints()];
+
+    boolean error = false;
+
+    // At first line[0] and line [1]
+    // check if the lines lie allready in a right orientation.
+
+    Point startpoint1 = lines[0].getStartPoint();
+    Point endpoint1 = lines[0].getEndPoint();
+    Point startpoint2 = lines[1].getStartPoint();
+    Point endpoint2 = lines[1].getEndPoint();
+
+    if( endpoint1.distance( startpoint2 ) < 0.001 ) // the distance method checks only in a 2d way!
+    {
+      for( int i = 0; i < coords1.length; i++ )
+      {
+        coords1[i] = lines[0].getCoordinateN( i );
+      }
+      LineString line1 = factory1.createLineString( coords1 );
+
+      for( int i = 0; i < coords2.length; i++ )
+      {
+        coords2[i] = lines[1].getCoordinateN( i );
+      }
+      LineString line2 = factory2.createLineString( coords2 );
+
+      lineArray[0] = line1;
+      lineArray[1] = line2;
+    }
+    else if( endpoint1.distance( endpoint2 ) < 0.001 )
+    {
+      // switch line 2
+      for( int i = 0; i < coords1.length; i++ )
+      {
+        coords1[i] = lines[0].getCoordinateN( i );
+      }
+      LineString line1 = factory1.createLineString( coords1 );
+      LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
+
+      lineArray[0] = line1;
+      lineArray[1] = line2;
+    }
+    else if( startpoint1.distance( startpoint2 ) < 0.001 )
+    {
+      // switch line 1
+      LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
+
+      for( int i = 0; i < coords2.length; i++ )
+      {
+        coords2[i] = lines[1].getCoordinateN( i );
+      }
+      LineString line2 = factory1.createLineString( coords2 );
+
+      lineArray[0] = line1;
+      lineArray[1] = line2;
+    }
+    else if( startpoint1.distance( endpoint2 ) < 0.001 )
+    {
+      // switch both lines
+      LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
+      LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
+
+      lineArray[0] = line1;
+      lineArray[1] = line2;
+    }
+
+    // now the first two lines have the same orientation...
+    // update the corresponding start and end point informations
+    startpoint1 = lineArray[0].getStartPoint();
+    endpoint1 = lineArray[0].getEndPoint();
+    startpoint2 = lineArray[1].getStartPoint();
+    endpoint2 = lineArray[1].getEndPoint();
+
+    Point startpoint3 = lines[2].getStartPoint();
+    Point endpoint3 = lines[2].getEndPoint();
+
+    // next: check line[2] but don't change line 1 and line 2
+
+    if( endpoint2.distance( startpoint3 ) < 0.001 ) // the distance method checks only in a 2d way!
+    {
+      for( int i = 0; i < coords3.length; i++ )
+      {
+        coords3[i] = lines[2].getCoordinateN( i );
+      }
+      LineString line3 = factory3.createLineString( coords3 );
+
+      lineArray[2] = line3;
+    }
+    else if( endpoint2.distance( endpoint3 ) < 0.001 )
+    {
+      // switch line 3
+      LineString line3 = LineStringUtilities.changeOrientation( lines[2] );
+
+      lineArray[2] = line3;
+    }
+    else
+    {
+      // this should actually never happen!!
+      error = true;
+    }
+
+    // now the first three lines have the same orientation...
+    // update start / end point informations
+    startpoint3 = lineArray[2].getStartPoint();
+    endpoint3 = lineArray[2].getEndPoint();
+
+    // next: check line[3] but don't change line 1, line 2 and line 3
+    final Point startpoint4 = lines[3].getStartPoint();
+    final Point endpoint4 = lines[3].getEndPoint();
+
+    if( endpoint3.distance( startpoint4 ) < 0.001 ) // the distance method checks only in a 2d way!
+    {
+      for( int i = 0; i < coords4.length; i++ )
+      {
+        coords4[i] = lines[3].getCoordinateN( i );
+      }
+      LineString line4 = factory4.createLineString( coords4 );
+
+      lineArray[3] = line4;
+    }
+    else if( endpoint3.distance( endpoint4 ) < 0.001 )
+    {
+      // switch line 4
+      LineString line4 = LineStringUtilities.changeOrientation( lines[3] );
+
+      lineArray[3] = line4;
+    }
+    else
+    {
+      // this should actually never happen!!
+      error = true;
+    }
+
+    // final check: the last point of the last line should be the same as the first point of the first line
+    final Point endpoint = lineArray[3].getEndPoint();
+    final Point startpoint = lineArray[0].getStartPoint();
+
+    if( endpoint.distance( startpoint ) > 0.001 || error == true )
+    {
+      System.out.println( "Flussschlauchgenerator: An error during the orientation of the segment lines occured " );
+    }
+
+    return lineArray;
   }
 
   /**
@@ -340,7 +648,6 @@ public class CreateChannelData
   {
     /* at first -> clear the segment list! */
     m_segmentList.clear();
-    
 
     final Feature[] profileFeatures = m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
 
@@ -366,13 +673,13 @@ public class CreateChannelData
       if( lastProfile != null )
       {
         // behandle das segment
-        final int numBankIntersections = getGlobNumBankIntersections(); 
+        final int numBankIntersections = getGlobNumBankIntersections();
         final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks, numBankIntersections );
         System.out.println( "Last profile: " + lastProfile.getStation() );
         System.out.println( "Profile: " + profile.getStation() );
-        
+
         // add to list
-        m_segmentList.add( segment );   
+        m_segmentList.add( segment );
       }
       else
       {
@@ -402,6 +709,7 @@ public class CreateChannelData
         try
         {
           segment.paintSegment( g, mapPanel );
+
         }
         catch( GM_Exception e )
         {
@@ -409,31 +717,59 @@ public class CreateChannelData
           e.printStackTrace();
         }
     }
+    if( m_meshCoords != null )
+      paintCoords( m_meshCoords, g, mapPanel );
 
   }
-  
-  public void setNumProfileIntersections ( int numProfileIntersections)
+
+  public void setNumProfileIntersections( int numProfileIntersections )
   {
     m_numbProfileIntersections = numProfileIntersections;
     completationCheck();
   }
 
-  public int getNumProfileIntersections ()
+  public int getNumProfileIntersections( )
   {
     final int numProfileIntersections = m_numbProfileIntersections;
     return numProfileIntersections;
   }
-  
-  public void setGlobNumBankIntersections ( int globNumBankIntersections)
+
+  public void setGlobNumBankIntersections( int globNumBankIntersections )
   {
     m_globNumbBankIntersections = globNumBankIntersections;
     completationCheck();
   }
-  
-  public int getGlobNumBankIntersections ()
+
+  public int getGlobNumBankIntersections( )
   {
     final int globNumBankIntersections = m_globNumbBankIntersections;
     return globNumBankIntersections;
   }
-  
+
+  private void paintCoords( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel )
+  {
+    final PointSymbolizer symb = new PointSymbolizer_Impl();
+    DisplayElement de;
+
+    for( int i = 0; i < coords.length; i++ )
+    {
+      for( int j = 0; j < coords[i].length; j++ )
+      {
+        GeometryFactory factory = new GeometryFactory();
+        Point point = factory.createPoint( coords[i][j] );
+        try
+        {
+          GM_Point gmpoint = (GM_Point) JTSAdapter.wrap( point );
+          de = DisplayElementFactory.buildPointDisplayElement( null, gmpoint, symb );
+          de.paint( g, mapPanel.getProjection() );
+        }
+        catch( GM_Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
 }

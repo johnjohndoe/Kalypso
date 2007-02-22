@@ -158,9 +158,14 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     final MapPanel mapPanel = getMapPanel();
     m_data.paintAllSegments( g, mapPanel );
     
+//    if (m_data.checkMesh() == true )
+//      m_data.paintMesh( g, mapPanel );
+
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
   }
+  
+  
   
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )
   {
