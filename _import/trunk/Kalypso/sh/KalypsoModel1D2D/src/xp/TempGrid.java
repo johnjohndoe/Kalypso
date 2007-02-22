@@ -136,7 +136,7 @@ public class TempGrid
                   final int pointRectSize)
   {
     
-    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
+    // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if(gridPoints.length!=0)
@@ -264,6 +264,14 @@ public class TempGrid
               bottomSidePoints, 
               leftSidePoints, rightSidePoints );
     drawPoints=null;
+  }
+  
+  /**
+   * in case that the data comes allready as mesh  
+   */
+  public void importMesh( GM_Point[][] importedGridPoints)
+  {
+    this.gridPoints  = importedGridPoints;
   }
   
   /**
