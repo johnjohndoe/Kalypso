@@ -99,13 +99,13 @@ public class JTSCoordsElevInterpol
    */
   public Coordinate[][] calculateElevations( )
   {
-    final int numCross = m_coords[0].length;
-    final int numLong = m_coords.length;
+    final int numLong = m_coords[0].length;
+    final int numCross = m_coords.length;
 
     for( int j = 0; j < numCross; j++ )
     {
       final double zStart = m_coords[j][0].z;
-      final double zEnd = m_coords[j][numCross-1].z;
+      final double zEnd = m_coords[j][numLong-1].z;
       double distTotal = 0;
       double dist = 0;
       double ratio;
