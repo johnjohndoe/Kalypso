@@ -49,9 +49,10 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnMarshallResultEater;
+import org.kalypso.gmlschema.types.XsdBaseContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
@@ -59,7 +60,7 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  * @author doemming
  */
-public abstract class XsdBaseTypeHandler<T> implements IMarshallingTypeHandler, Comparator<T>
+public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHandler<T>, Comparator<T>
 {
   private final XsdBaseContentHandler m_contentHandler = new XsdBaseContentHandler( this, null );
 
