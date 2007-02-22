@@ -280,13 +280,6 @@ public class GMLContentHandler implements ContentHandler, FeatureTypeProvider
         }
         else
           throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qName ); // they
-                                                                                                                    // sould
-                                                                                                                    // not
-                                                                                                                    // be
-        // parsed here
-        // else
-        // m_propParser.setContent( parentFE, (IValuePropertyType) pt, uri,
-        // localName, qName, atts );
         break;
       }
 

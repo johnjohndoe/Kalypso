@@ -41,7 +41,10 @@
 package org.kalypso.ogc.gml.featureview.maker;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.javax.xml.namespace.ListQName;
+import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -70,18 +73,29 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
    *      javax.xml.bind.JAXBElement)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
+  protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
   {
     if( !(pt instanceof IValuePropertyType) )
       return null;
 
     final IValuePropertyType vpt = (IValuePropertyType) pt;
 
+    final QName valueQName = vpt.getValueQName();
     /* We try to delegate to the gui type handlers. If this is not possible, we are not responsible. */
-    if( !GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( vpt.getValueQName() ) )
+    if( !GuiTypeRegistrySingleton.getTypeRegistry().hasTypeName( valueQName ) )
       return null;
 
-    final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( vpt.getValueQName() );
+    if( valueQName instanceof ListQName )
+    {
+      return null;
+    }
+    else if( valueQName instanceof MixedQName )
+    {
+      // TODO: what to do?
+      return null;
+    }
+    
+    final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
 
     final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilitites.OF_FEATUREVIEW );
 
