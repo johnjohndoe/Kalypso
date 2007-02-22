@@ -188,7 +188,7 @@
 	                     	value="ContinuityLine"/>
 	       			</class>
          	</action>
-        	<action
+        	<!--<action
                	id="xp.CreateGridDelegate"
                	label="FE-Elementgitter erzeugen"
                	style="radio"
@@ -203,7 +203,7 @@
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="Element2D"/>
 	       			</class>
-       		</action>      
+       		</action>     --> 
         </viewContribution>
      </extension>
      <extension

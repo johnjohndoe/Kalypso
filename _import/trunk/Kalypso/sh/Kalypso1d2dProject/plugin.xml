@@ -202,6 +202,24 @@
      <handler
            class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>
+     <handler
+           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
+           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+           <parameter
+                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                 value="xp.CreateGridWidget"/>
+           <parameter
+                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                 value="org.kalypso.model1d2d"/>
+	       <activeWhen>   
+	         <with variable="activeContexts">
+	            <iterate operator="or">
+	               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
+	            </iterate>
+	         </with>
+	      </activeWhen>
+        </class>
+     </handler>
 	</extension>
         <extension
          point="org.eclipse.ui.commands">
