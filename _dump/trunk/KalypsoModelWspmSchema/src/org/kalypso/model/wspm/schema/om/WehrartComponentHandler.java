@@ -78,4 +78,12 @@ public class WehrartComponentHandler extends XsdBaseTypeHandler<String> implemen
   {
     return this;
   }
+
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  public int compare( final String o1, final String o2 )
+  {
+    return ("" + o1).compareTo( "" + o2 );
+  }
 }

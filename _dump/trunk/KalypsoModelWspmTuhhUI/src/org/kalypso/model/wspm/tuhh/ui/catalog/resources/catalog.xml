@@ -16,5 +16,10 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif"/>
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:featureview:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.properties" />
+
+    <!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WPointsObservation -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WPointsObservation:featureview:default" uri="org.kalypso.model.wspm.tuhh.WPointsObservation.gft" />
+
+
 </catalog:catalog>
 

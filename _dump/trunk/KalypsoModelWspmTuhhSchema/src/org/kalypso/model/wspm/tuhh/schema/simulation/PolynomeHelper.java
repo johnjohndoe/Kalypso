@@ -57,13 +57,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.metadata.MetadataObject;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -74,7 +71,6 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -85,7 +81,6 @@ import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
@@ -215,7 +210,9 @@ public class PolynomeHelper
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
     try
     {
-      readResults( resultDir, targetGmlFile, log );
+      readResults( resultDir, targetGmlFile, log, resultEater );
+      final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" );
+      resultEater.addResult( "qIntervallResultGmv", gmvResultFile );
     }
     catch( MalformedURLException e )
     {
@@ -239,7 +236,7 @@ public class PolynomeHelper
     }
   }
 
-  private static void readResults( final File resultDir, final File targetGmlFile, final LogHelper log ) throws InvocationTargetException, IOException, GmlSerializeException
+  private static void readResults( final File resultDir, final File targetGmlFile, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
   {
     /* Read results */
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
@@ -250,7 +247,8 @@ public class PolynomeHelper
       return;
 
     /* Write workspace into file */
-    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "UTF-8" );
+    GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "CP1252" );
+    resultEater.addResult( "qIntervallResultGml", targetGmlFile );
   }
 
   private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final LogHelper log )
@@ -258,7 +256,7 @@ public class PolynomeHelper
     final GMLWorkspace workspace = resultCollectionFeature.getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
-    final IFeatureType ftObservation = schema.getFeatureType( new QName( NS.OM, "Observation" ) );
+    final IFeatureType ftObservation = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_WPointsObservation );
 
     final IRelationType resultRelation = (IRelationType) resultCollectionFeature.getFeatureType().getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResultCollection_resultMember );
 
@@ -291,7 +289,7 @@ public class PolynomeHelper
         NamedFeatureHelper.setDescription( resultFeature, "Gelesen aus: " + name );
 
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station, station );
-        
+
         final Feature obsFeature = workspace.createFeature( resultFeature, pointsObsRelation, ftObservation );
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember, obsFeature );
 

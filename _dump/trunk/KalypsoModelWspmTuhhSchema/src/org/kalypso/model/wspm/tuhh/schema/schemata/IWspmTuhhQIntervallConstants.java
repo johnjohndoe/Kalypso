@@ -64,6 +64,9 @@ public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
   public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
 
   public static final QName QNAME_P_QIntervallResult_station = new QName( NS_WSPM_TUHH, "station" );
+
   
+  
+  public static final QName QNAME_F_WPointsObservation = new QName( NS_WSPM_TUHH, "WPointsObservation" );
   
 }

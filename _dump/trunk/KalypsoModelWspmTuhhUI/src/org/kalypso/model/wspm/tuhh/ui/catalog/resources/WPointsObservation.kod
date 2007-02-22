@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<Configuration xmlns="http://www.ksp.org/chart/configuration">
+	<Axis name="wsp_Axis">
+		<label>Wasserspiegel [NN+m]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>BOTTOM</position>
+		<minVal>0.0</minVal>
+		<maxVal>100.0</maxVal>
+	</Axis>
+	<Chart name="runoffChart">
+		<title>Abfluss</title>
+		<description>Abflusswerte der Berechnung</description>
+		<layers>
+			<LayerRef ref="runoffLayer" />
+			<!--LayerRef ref="runoffDeltaLayer" /-->
+		</layers>
+	</Chart>
+	<Layer visible="true" name="runoffLayer">
+		<title>Abfluss</title>
+		<description>Abfluss abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="runoff_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="runoffStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+		</parameters>
+	</Layer>
+	<Layer visible="true" name="runoffDeltaLayer">
+		<title>Abfluss-Delta</title>
+		<description>Abfluss Differenzen bei der Polynomerstellung</description>
+		<!-- TODO: show Histogramm instead -->
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="runoffDelta_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="runoffDeltaStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" />
+		</parameters>
+	</Layer>
+	<Axis name="runoff_Axis">
+		<label>Abfluss [m³/s]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Axis name="runoffDelta_Axis">
+		<label>Abfluss-Delta [m³/s]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Style name="runoffStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#ff0000" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+	<Style name="runoffDeltaStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#00ff00" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+
+	<Chart name="areaChart">
+		<title>Fläche</title>
+		<description>Flächenwerte der Berechnung</description>
+		<layers>
+			<LayerRef ref="areaLayer" />
+			<!--LayerRef ref="areaDeltaLayer" /-->
+		</layers>
+	</Chart>
+		<Layer visible="true" name="areaLayer">
+		<title>Fläche</title>
+		<description>Fläche abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="area_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="areaStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+		</parameters>
+	</Layer>
+	<Layer visible="true" name="areaDeltaLayer">
+		<title>Flächen-Delta</title>
+		<description>Flächen Differenzen bei der Polynomerstellung</description>
+		<!-- TODO: show Histogramm instead -->
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="areaDelta_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="areaDeltaStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" />
+		</parameters>
+	</Layer>
+	<Axis name="area_Axis">
+		<label>Fläche [m²]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Axis name="areaDelta_Axis">
+		<label>Fläche-Delta [m³/s]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Style name="areaStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#ff00ff" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+	<Style name="areaDeltaStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#00ffff" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+
+	<!-- ALPHA -->	
+	<Chart name="alphaChart">
+		<title>Alpha</title>
+		<description>Alphawerte der Berechnung</description>
+		<layers>
+			<LayerRef ref="alphaLayer" />
+			<!--LayerRef ref="alphaDeltaLayer" /-->
+		</layers>
+	</Chart>
+	<Layer visible="true" name="alphaLayer">
+		<title>Alpha</title>
+		<description>Alpha abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="alpha_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="alphaStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
+		</parameters>
+	</Layer>
+	<Layer visible="true" name="alphaDeltaLayer">
+		<title>Abfluss-Delta</title>
+		<description>Alpha Differenzen bei der Polynomerstellung</description>
+		<!-- TODO: show Histogramm instead -->
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="alphaDelta_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="alphaDeltaStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="showPoints" value="true" />
+			<Parameter name="showLines" value="false" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" />
+		</parameters>
+	</Layer>
+	<Axis name="alpha_Axis">
+		<label>Alpha [-]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Axis name="alphaDelta_Axis">
+		<label>Alpha-Delta [-]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Style name="alphaStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#990000" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+	<Style name="alphaDeltaStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#009900" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+</Configuration>
+

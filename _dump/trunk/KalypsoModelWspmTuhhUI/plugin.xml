@@ -202,5 +202,14 @@
       <extensionControl
             class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
             id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
+      <extensionControl
+            class="org.kalypso.model.wspm.tuhh.ui.featureview.ChartFeatureControlFactory"
+            id="org.kalypso.model.wspm.tuhh.ui.featureview.ChartFeatureControlFactory"/>
+   </extension>
+   <extension
+         point="org.kalypso.chart.LayerProvider">
+      <provider
+            class="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"
+            id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"/>
    </extension>
 </plugin>

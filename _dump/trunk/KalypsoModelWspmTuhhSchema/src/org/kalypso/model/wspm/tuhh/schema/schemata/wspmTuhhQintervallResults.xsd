@@ -131,8 +131,10 @@
 	<!-- Reference to an Observation -->
 	<complexType name="WPointsPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="om:Observation" />
+			<element ref="tuhh:WPointsObservation" />
 		</sequence>
 	</complexType>
+	
+	<element name="WPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation"/>
 
 </schema>
