@@ -6,11 +6,13 @@ package org.kalypso.kalypso1d2d.pjt.views;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -18,14 +20,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.afgui.db.EWorkflowProperty;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
+import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.SimModelBasedContentProvider;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.WorkflowDataLabelProvider;
 
@@ -47,6 +50,8 @@ public class SimulationModelDBView extends ViewPart
   static public final String ID = "org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView";
 
   private static final String MEMENTO_SCENARIO = "scenario";
+
+  private static final String MEMENTO_PROJECT = "project";
 
   TreeViewer tv;
 
@@ -106,6 +111,8 @@ public class SimulationModelDBView extends ViewPart
 
   private String m_scenarioFromMemento;
 
+  private String m_projectFromMemento;
+
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
@@ -116,11 +123,8 @@ public class SimulationModelDBView extends ViewPart
 
     if( memento != null )
     {
-      final String scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
-      if( scenarioFromMemento != null )
-      {
-        m_scenarioFromMemento = scenarioFromMemento;
-      }
+      m_scenarioFromMemento = memento.getString( MEMENTO_SCENARIO );
+      m_projectFromMemento = memento.getString( MEMENTO_PROJECT );
     }
   }
 
@@ -142,6 +146,15 @@ public class SimulationModelDBView extends ViewPart
     activeWorkContext.addActiveContextChangeListener( activeProjectChangeListener );
     getSite().setSelectionProvider( tv );
     tv.setLabelProvider( labelProvider );
+    if( m_projectFromMemento != null )
+    {
+      final IPath projectPath = Path.fromPortableString( m_projectFromMemento );
+      final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
+      activeWorkContext.setActiveProject( (IProject) resource );
+    }
+    //TODO: 
+//    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
+//    activeWorkContext.addActiveContextChangeListener( projectChangeListener );
   }
 
   /*
@@ -167,6 +180,12 @@ public class SimulationModelDBView extends ViewPart
     {
       final IWorkflowData data = (IWorkflowData) firstElement;
       memento.putString( MEMENTO_SCENARIO, data.getURI() );
+    }
+    final IProject activeProject = activeWorkContext.getActiveProject();
+    if( activeProject != null )
+    {
+      final String projectPath = activeProject.getName();
+      memento.putString( MEMENTO_PROJECT, projectPath );
     }
   }
 

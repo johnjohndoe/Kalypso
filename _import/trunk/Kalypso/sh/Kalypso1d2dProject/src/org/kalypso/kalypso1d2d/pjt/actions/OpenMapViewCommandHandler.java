@@ -25,6 +25,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
+import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeEvent;
@@ -76,16 +78,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
     if( file.exists() && activeWorkbenchWindow != null)
     {
-      final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-      final IViewReference[] viewReferences = workbenchPage.getViewReferences();
-      for( final IViewReference reference : viewReferences )
-      {
-        if( !shouldKeepView( reference ) )
-        {
-          logger.info( "Hiding view " + reference.getPartName() );
-          workbenchPage.hideView( reference );
-        }
-      }
+      final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();      
       m_mapView = (MapView) workbenchPage.showView( MapView.ID );
 
       // final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable(
@@ -153,26 +146,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
       logger.severe( "Could not initialize with data of type " + data.getClass().getName() );
     }
   }
-
-  private boolean shouldKeepView( final IViewReference reference )
-  {
-    return true;
-
-    // final String viewId = reference.getId();
-    // if( WorkflowView.ID.equals( viewId ) )
-    // {
-    // return true;
-    // }
-    // else if( SimulationModelDBView.ID.equals( viewId ) )
-    // {
-    // return true;
-    // }
-    // else
-    // {
-    // return false;
-    // }
-  }
-
+  
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
    */

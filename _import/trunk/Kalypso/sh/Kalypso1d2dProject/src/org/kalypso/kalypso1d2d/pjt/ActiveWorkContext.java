@@ -20,6 +20,7 @@ import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
+import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 
@@ -107,11 +108,11 @@ public class ActiveWorkContext
     window.getSelectionService().addPostSelectionListener( resSelListener );
     final SzenarioSourceProvider simModelProvider = new SzenarioSourceProvider( this );
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    service.addSourceProvider( simModelProvider );
-    // TODO remove source provider somewhere
+    service.addSourceProvider( simModelProvider );    
+    // TODO remove source provider and projectChangeListener somewhere
   }
 
-  synchronized public void setActiveProject( IProject activeProject ) throws CoreException
+  synchronized public void setActiveProject( IProject activeProject )
   {
     if( this.m_activeProject == activeProject )
     {
@@ -145,10 +146,10 @@ public class ActiveWorkContext
         logger.warning( "Project to set is not of 1d2d nature" );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       logger.log( Level.SEVERE, "Error setting current project", e );
-      throw e;
+      return;
     }
     finally
     {
@@ -252,6 +253,12 @@ public class ActiveWorkContext
   public void setCurrentSzenario( final IProject project, final IWorkflowData data )
   {
     m_dataProvider.setCurrent( project, data );
+  }
+  
+  public void selectScenario( final IProject project, final String scenarioURI )
+  {
+    setActiveProject( project );
+    setCurrentSzenario( project, workflowDB.getWorkflowDataById( scenarioURI ) );
   }
 
   public void selectScenario( final String scenarioURI )
