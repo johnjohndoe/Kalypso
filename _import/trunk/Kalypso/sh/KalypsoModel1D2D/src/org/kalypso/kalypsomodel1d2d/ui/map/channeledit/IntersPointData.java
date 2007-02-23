@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 
 import com.vividsolutions.jts.geom.Point;
 

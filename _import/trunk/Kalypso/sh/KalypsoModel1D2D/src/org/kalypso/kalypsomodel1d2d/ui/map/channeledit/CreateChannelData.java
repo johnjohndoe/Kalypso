@@ -40,28 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.LineStringUtilities;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
-import org.kalypso.jts.QuadMesher.JTSQuadMesherTest;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -72,10 +72,10 @@ import org.kalypso.model.wspm.ui.action.FeatureComparator;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -85,12 +85,10 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.noding.SegmentPointComparator;
 
 /**
  * State object for create main channel widget and composite.
@@ -117,7 +115,7 @@ public class CreateChannelData
 
   private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
 
-  private int m_numbProfileIntersections;
+  private int m_numbProfileIntersections = 6;
 
   private Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
 
@@ -134,6 +132,10 @@ public class CreateChannelData
   private List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
 
   private Coordinate[][] m_meshCoords;
+  
+  private boolean m_meshStatus;
+
+  public int m_selectedSegment;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -311,6 +313,7 @@ public class CreateChannelData
    */
   public void completationCheck( )
   {
+    m_meshStatus = false;
     datacomplete = false;
     if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
     {
@@ -320,18 +323,29 @@ public class CreateChannelData
     {
       m_segmentList.clear();
     }
-    if( datacomplete == true )
+    if( datacomplete == true)
       /* intersects the banks with the profiles and manages the segment creation */
       intersectBanksWithProfs();
+//    else if ( datacomplete == true & m_segmentList != null)
+//    {
+//      //TODO: segment managment
+//    }
+    
     if( m_segmentList.size() > 0 )
     /* if there are segments, start Quadmesher */
     // TODO: error handling implementation!!
     {
       manageQuadMesher();
       mergeMeshList();
+      m_meshStatus = true;
     }
   }
 
+  public boolean getMeshStatus ()
+  {
+    return m_meshStatus;
+  }
+  
   /**
    * converts the mesh coordinates into the 2d model
    */
@@ -339,10 +353,25 @@ public class CreateChannelData
   {
     GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
     importingGridPoints = convertToGMPoints( m_meshCoords );
-
+    
+    final MapPanel mapPanel = m_widget.getPanel();
+    final IMapModell mapModel = mapPanel.getMapModell();
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableThem( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final CommandableWorkspace workspace = theme.getWorkspace();
+    
     final TempGrid tempGrid = new TempGrid();
     tempGrid.importMesh( importingGridPoints );
-    //tempGrid.getAddToModelCommand( mapPanel, model, commandableWorkspace, calculateOverallYCoordNum() )
+    try
+    {
+      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0.01 );
+      workspace.postCommand( command );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -648,7 +677,7 @@ public class CreateChannelData
   {
     /* at first -> clear the segment list! */
     m_segmentList.clear();
-
+    
     final Feature[] profileFeatures = m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
 
     if( profileFeatures.length == 0 )
@@ -772,4 +801,19 @@ public class CreateChannelData
     }
   }
 
+  public int getNumOfSegments( )
+  {
+    return m_segmentList.size();
+  }
+  
+  public int getSelectedSegment()
+  {
+    return m_selectedSegment;
+  }
+  
+  public void setSelectedSegment( int selectedSegment )
+  {
+    m_selectedSegment = selectedSegment;
+  }
+  
 }

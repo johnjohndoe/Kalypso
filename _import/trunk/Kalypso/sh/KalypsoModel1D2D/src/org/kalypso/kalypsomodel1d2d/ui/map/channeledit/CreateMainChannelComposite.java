@@ -47,7 +47,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -56,7 +55,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -64,7 +62,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -91,12 +88,17 @@ public class CreateMainChannelComposite extends Composite
   private final CreateMainChannelWidget m_widget;
 
   private Section m_profilSection;
+  
+  private Section m_segmentSection;
 
+  
   /*********************************************************************************************************************
    * m_buttonList Following buttons are present in the Schlauchgenerator: Profile wählen Uferlinie 1 wählen Uferlinie 1
    * zeichnen Uferlinie 2 wählen Uferlinie 2 zeichnen
    */
   private final List<Button> m_buttonList = new ArrayList<Button>();
+
+  private Button m_buttonConvertToModel;
 
   public CreateMainChannelComposite( final Composite parent, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -123,6 +125,7 @@ public class CreateMainChannelComposite extends Composite
     /* Retrieve data */
     final IKalypsoFeatureTheme[] profileThemes = m_data.getProfileThemes();
     final IKalypsoFeatureTheme[] bankThemes = m_data.getBankThemes();
+    final int numOfSegments = m_data.getNumOfSegments();
 
     /* Create gui */
     this.setLayout( new GridLayout( 1, false ) );
@@ -161,24 +164,77 @@ public class CreateMainChannelComposite extends Composite
     return m_profilSection;
   }
 
+  
   /**
-   * in the segment section you can switch between the channel segments
+   * in the segment section the crosssections will be displayed. the data filling is done in the function
+   * "updateSegmentSection" (see below)
    */
   private Control createSegmentSwitchSection( Composite parent )
   {
-    Section SegmentSwitchSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    Composite sectionClient = new Composite( SegmentSwitchSection, SWT.NONE );
-    sectionClient.setLayout( new GridLayout( 3, false ) );
-    SegmentSwitchSection.setClient( sectionClient );
-    SegmentSwitchSection.setText( "Segmentliste" );
-    SegmentSwitchSection.setExpanded( false );
-    SegmentSwitchSection.setDescription( "Wählen Sie das gewünschte Segment" );
+    m_segmentSection = new Section( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
 
-    /* Button for the model conversion */
-    final Button convertToModel = new Button( sectionClient, SWT.TOGGLE );
-    m_buttonList.add( convertToModel );
-    convertToModel.setText( "ins Modell übernehmen..." );
-    convertToModel.addSelectionListener( new SelectionAdapter()
+    return m_segmentSection;
+  }
+  
+  /**
+   * in the segment section you can switch between the channel segments and convert the data into a model
+   */
+  private Control updateSegmentSwitchSection( )
+  {
+    final Control client = m_segmentSection.getClient();
+    if( client != null && !client.isDisposed() )
+      client.dispose();
+
+    final Composite sectionClient = new Composite( m_segmentSection, SWT.NONE );
+    sectionClient.setLayout( new GridLayout( 3, false ) );
+
+    m_segmentSection.setClient( sectionClient );
+    m_segmentSection.setText( "Segmentliste" );
+    m_segmentSection.setDescription( "Wählen Sie das gewünschte Segment" );
+    m_segmentSection.setExpanded( false );
+    
+    /* segment switcher */
+    final ComboViewer combviewerSegmentSwitch = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
+    combviewerSegmentSwitch.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerSegmentSwitch.setContentProvider( new ArrayContentProvider() );
+    combviewerSegmentSwitch.setLabelProvider( new LabelProvider() );
+    int selectedSegment = m_data.getSelectedSegment();
+    int select = 0;
+    
+    int numOfSegments = m_data.getNumOfSegments();
+    
+    if( numOfSegments == 0 )
+    {
+      combviewerSegmentSwitch.getControl().setEnabled( false );
+      String msg = "<kein Segment selektiert...>";
+      combviewerSegmentSwitch.setInput( new String[] { msg } );
+      combviewerSegmentSwitch.setSelection( new StructuredSelection( msg ) );
+      select = 0;
+    }
+    else
+    {
+      for( int i = 0; i < numOfSegments; i++ )
+      {
+        
+        //TODO fill it!
+        combviewerSegmentSwitch.setInput( i );      
+      }
+      if( numOfSegments != 0 )
+        select = selectedSegment;
+      else
+        select = 0;
+
+      combviewerSegmentSwitch.setSelection( new StructuredSelection( select ) );
+    }
+
+    if( select != m_data.getSelectedSegment() )
+      m_data.setSelectedSegment( select );
+    
+    
+    /* conversion button */
+    m_buttonConvertToModel = new Button( sectionClient, SWT.PUSH );
+    m_buttonConvertToModel.setText( "ins Modell übernehmen..." );
+    m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
@@ -186,8 +242,8 @@ public class CreateMainChannelComposite extends Composite
         m_data.convertToModel();
       }
     } );
-    
-    return SegmentSwitchSection;
+
+    return m_segmentSection;
   }
 
   /**
@@ -492,7 +548,11 @@ public class CreateMainChannelComposite extends Composite
 
   public void updateControl( )
   {
+    updateSegmentSwitchSection();
     updateProfilSection();
+    
+    m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
+    
   }
 
   /**
@@ -551,4 +611,19 @@ public class CreateMainChannelComposite extends Composite
       }
     }
   }
+
+  public void setConversionButton( )
+  {
+
+    Button button = m_buttonList.get( getStyle() );
+    for( int i = 0; i < m_buttonList.size(); i++ )
+    {
+      final Button currentButton = m_buttonList.get( i );
+      if( button.equals( currentButton ) )
+      {
+        currentButton.setEnabled( true );
+      }
+    }
+  }
+
 }

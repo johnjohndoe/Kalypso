@@ -46,27 +46,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilDataException;
-
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -74,13 +68,9 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.Fill_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Graphic_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Mark_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -207,7 +197,7 @@ public class SegmentData
     // DOWNSTREAM
     try
     {
-      m_previousProfLineString = createCroppedProfileLiineString( m_previousProfile, CreateChannelData.PROF.DOWN );
+      m_previousProfLineString = createCroppedProfileLineString( m_previousProfile, CreateChannelData.PROF.DOWN );
       m_profDownInters = intersectLineString( m_previousProfLineString, m_channelData.getNumProfileIntersections() );
 
       // m_profDownInters = intersectProfile( m_previousProfile, CreateChannelData.PROF.DOWN );
@@ -220,7 +210,7 @@ public class SegmentData
     // UPSTREAM
     try
     {
-      m_nextProfLineString = createCroppedProfileLiineString( m_nextProfile, CreateChannelData.PROF.UP );
+      m_nextProfLineString = createCroppedProfileLineString( m_nextProfile, CreateChannelData.PROF.UP );
       m_profUpInters = intersectLineString( m_nextProfLineString, m_channelData.getNumProfileIntersections() );
       // m_profUpInters = intersectProfile( m_nextProfile, CreateChannelData.PROF.UP );
     }
@@ -235,6 +225,8 @@ public class SegmentData
    */
   private LineString intersectLineString( LineString linestring, int numIntersects )
   {
+    if( linestring == null )
+      return null;
 
     // calculate the distance between the intersection points by the distance along the profile linestring.
     final double totaldistance = linestring.getLength();
@@ -288,48 +280,7 @@ public class SegmentData
     return factory.createLineString( coordinates );
   }
 
-  // /**
-  // * intersects a specific linestring
-  // */
-  // //private LineString intersectProfileLineString( LineString ProfLineString ) throws GM_Exception
-  // {
-  //
-  // // calculate the distance between the intersection points by the distance along the profile linestring.
-  // final double totaldistance = ProfLineString.getLength();
-  //
-  // // then compute the additional coodinates of the intersected profile linestring
-  // // by the given spinner data of the composite
-  // final int numProfInters = m_channelData.getNumProfileIntersections();
-  //
-  // /* TODO: implement Douglas-Peucker for width calculation */
-  //
-  // /* for now: equidistant widths */
-  // final double dDist = totaldistance / (numProfInters - 1); // equidistant widths
-  // final double[] dist = new double[numProfInters];
-  // final Point[] points = new Point[numProfInters];
-  //
-  // dist[0] = 0;
-  // points[0] = ProfLineString.getStartPoint();
-  //
-  // for( int i = 1; i < dist.length - 1; i++ )
-  // {
-  // dist[i] = dist[0] + dDist * i;
-  // points[i] = JTSUtilities.pointOnLine( ProfLineString, dist[i] );
-  // }
-  // dist[numProfInters - 1] = totaldistance;
-  // points[numProfInters - 1] = ProfLineString.getEndPoint();
-  //
-  // final GM_Point[] gmpoints = new GM_Point[numProfInters]; // points for the LineString
-  // GeometryFactory factory = new GeometryFactory();
-  // Coordinate[] coordinates = new Coordinate[points.length];
-  // for( int i = 0; i < gmpoints.length; i++ )
-  // {
-  // gmpoints[i] = (GM_Point) JTSAdapter.wrap( points[i] );
-  // coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY(), gmpoints[i].getZ() );
-  // }
-  // return factory.createLineString( coordinates );
-  // }
-
+ 
   /**
    * calculates the intersection of a segment profile. at first the width coordinates will be calculated and added to
    * the profile. next step is to intersect the profile (a) by Douglas-Peucker (b) equidistant the geographical data is
@@ -421,12 +372,10 @@ public class SegmentData
     }
     catch( GM_Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return 0;
@@ -435,7 +384,7 @@ public class SegmentData
   /**
    * crops the WSPM profile at the intersection points and converts it to a LineString
    */
-  private LineString createCroppedProfileLiineString( WspmProfile profile, CreateChannelData.PROF prof ) throws GM_Exception
+  private LineString createCroppedProfileLineString( WspmProfile profile, CreateChannelData.PROF prof ) throws GM_Exception
   {
     final LineString lsProfile = (LineString) JTSAdapter.export( profile.getLine() );
     final LineString intersProfile;
@@ -489,7 +438,6 @@ public class SegmentData
           }
           catch( Exception e )
           {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
 
@@ -530,7 +478,6 @@ public class SegmentData
           }
           catch( Exception e )
           {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
 
@@ -579,7 +526,6 @@ public class SegmentData
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -596,28 +542,11 @@ public class SegmentData
     }
     catch( GM_Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
     }
   }
 
-  private LineString convertBanksToLineStrings( Feature bank )
-  {
-    // get the profile line
-    final GM_Curve bankCurve = (GM_Curve) bank.getDefaultGeometryProperty();
-    try
-    {
-      final LineString bankLine = (LineString) JTSAdapter.export( bankCurve );
-      return bankLine;
-    }
-    catch( GM_Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
-  }
 
   public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws GM_Exception
   {
@@ -660,28 +589,6 @@ public class SegmentData
       }
       catch( GM_Exception e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private void paintPoints( final Point[] points, final Graphics g, final MapPanel mapPanel, final Color color )
-  {
-    final PointSymbolizer symb = new PointSymbolizer_Impl();
-    DisplayElement de;
-
-    for( int i = 0; i < points.length; i++ )
-    {
-      try
-      {
-        GM_Point point = (GM_Point) JTSAdapter.wrap( points[i] );
-        de = DisplayElementFactory.buildPointDisplayElement( null, point, symb );
-        de.paint( g, mapPanel.getProjection() );
-      }
-      catch( GM_Exception e )
-      {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -716,11 +623,10 @@ public class SegmentData
     }
     catch( IncompatibleGeometryTypeException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
-    // TODO: Set the Stroke back to default
+    // Set the Stroke back to default
     symb.setStroke( defaultstroke );
 
   }

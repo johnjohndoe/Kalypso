@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -61,10 +60,8 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -153,8 +150,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
     paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
-    
-    
+
     final MapPanel mapPanel = getMapPanel();
     m_data.paintAllSegments( g, mapPanel );
     
@@ -196,7 +192,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       }
       catch( final IncompatibleGeometryTypeException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -447,9 +442,10 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     {
       public void run( )
       {
-        m_composite.updateControl();
-        //check if all needed data is specified
         m_data.completationCheck();
+
+        //check if all needed data is specified
+        m_composite.updateControl();
       }
     } );
 
