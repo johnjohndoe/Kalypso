@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
  */
 public class PointPropertyProvider implements IProfilPointPropertyProvider
 {
-  final Map<String, IProfilPointProperty> m_properties = new HashMap<String, IProfilPointProperty>();
+  private final Map<String, IProfilPointProperty> m_properties = new HashMap<String, IProfilPointProperty>();
 
   public PointPropertyProvider( )
   {
@@ -77,7 +77,6 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
 
   private final IProfilPointProperty createPointProperty( final String property )
   {
-
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
       return new PointProperty( property,"Breite", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, false );
     if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
