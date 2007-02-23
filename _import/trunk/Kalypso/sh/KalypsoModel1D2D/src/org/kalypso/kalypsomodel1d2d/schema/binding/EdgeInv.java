@@ -253,7 +253,6 @@ public class EdgeInv implements IEdgeInv
   {
     throw new UnsupportedOperationException(
         "getting not in an inverted edge not allow");
-//    return edge.getContainers();
   }
 
   /**

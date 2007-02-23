@@ -1,6 +1,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -259,7 +260,8 @@ public class FE1D2DNode
       final IFeatureWrapperCollection<IFE1D2DEdge> edges = elt.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-        final IFeatureWrapperCollection nodes = edge.getNodes();
+        final IFeatureWrapperCollection nodes = 
+          (edge instanceof IEdgeInv)?((IEdgeInv)edge).getInverted().getNodes():edge.getNodes();
         if( nodes.contains( this ) )
         {
           foundElements.add( elt );
@@ -319,7 +321,7 @@ public class FE1D2DNode
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()
    */
-  public IFE1D2DNode<IFE1D2DEdge>[] getNeighbours( )
+  public Collection<IFE1D2DNode> getNeighbours( )
   {
     final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = getElements();
 
@@ -328,18 +330,23 @@ public class FE1D2DNode
     // alle Nachbarknoten
     for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
     {
-      final IFeatureWrapperCollection<IFE1D2DEdge> edges = element.getEdges();
-      for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
-      {
-        for( final IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes() )
-        {
-          if( !equals( node ) )
-            neighbourNodes.add( node );
-        }
-      }
+      neighbourNodes.addAll( (Collection< ? extends IFE1D2DNode<IFE1D2DEdge>>) element.getNodes());
+      neighbourNodes.remove( this );
+      
+//      final IFeatureWrapperCollection<IFE1D2DEdge> edges = element.getEdges();
+//      for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
+//      {
+//        IFeatureWrapperCollection<IFE1D2DNode> nodes = 
+//          (edge instanceof IEdgeInv)? ((EdgeInv)edge).getInverted().getNodes():edge.getNodes();
+//        for( final IFE1D2DNode<IFE1D2DEdge> node : nodes )
+//        {
+//          if( !equals( node ) )
+//            neighbourNodes.add( node );
+//        }
+//      }
     }
 
-    return neighbourNodes.toArray( new IFE1D2DNode[neighbourNodes.size()] );
+    return (Collection<IFE1D2DNode>) neighbourNodes;//neighbourNodes.toArray( new IFE1D2DNode[neighbourNodes.size()] );
   }
 
   

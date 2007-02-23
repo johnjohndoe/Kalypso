@@ -164,8 +164,21 @@
 	</xs:complexType>
 
 	<!-- =================================================================
-		Fe1D2dEdge 
+		Fe1D2dEdgeINV 
 	================================================================== -->
+	<xs:element 
+		name="edgeInv"
+		type="wb1d2d:EdgeInvPropertyType"></xs:element>
+	<xs:complexType 
+		name="EdgeInvPropertyType">
+				<xs:sequence>
+					<xs:element 
+						ref="wb1d2d:EdgeInv"
+						minOccurs="0"	maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
+
 	<xs:element 
 		name="EdgeInv"
 		type="wb1d2d:EdgeInvType"
@@ -174,28 +187,20 @@
 	<xs:complexType 
 		name="EdgeInvType">
 		<xs:annotation>
-			<xs:documentation>
-				Edge in a finite element network.
-				It is defined by 2 FE nodes and a middle node.
-				Tow cases are possible:
-					==For a real edge these 3 node muss have different 
-						geometric properties.
-					==Single point edge are also possible, in that case the all
-				
-			</xs:documentation>
-		<!--xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
-					kapp:property="wb1d2d:geometry"/>
-			</xs:appinfo -->
+		<xs:documentation>
+			Edge in a finite element network.
+			It is defined by 2 FE nodes and a middle node.
+			Tow cases are possible:
+				==For a real edge these 3 node muss have different 
+					geometric properties.
+				==Single point edge are also possible, in that case the all
+			
+		</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:restriction 
 				base="wb1d2d:EdgeType">
 				<xs:sequence>	
-					<!--xs:element 
-						name="geometry" 
-						type="gml:LineStringPropertyType"/ -->
 					<xs:element 
 						ref="wb1d2d:edge"
 						minOccurs="1" 
@@ -243,6 +248,9 @@
 						name="edgeGeometry" 
 						type="gml:CurvePropertyType"
 						minOccurs="0" maxOccurs="1"/-->
+					<xs:element
+						ref="wb1d2d:edgeInv"
+						minOccurs="0" maxOccurs="1"/>
 					<xs:element 
 						ref="wb1d2d:directedNode"
 						minOccurs="2" 

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -56,7 +59,7 @@ public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode<CT>
   
   public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
 
-  public IFE1D2DNode<IFE1D2DEdge>[] getNeighbours( );
+  public Collection<IFE1D2DNode> getNeighbours( );
   
   public void addContainer(String linkRef);
 }

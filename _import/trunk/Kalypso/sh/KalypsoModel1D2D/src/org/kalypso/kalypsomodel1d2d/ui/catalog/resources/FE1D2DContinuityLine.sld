@@ -4,12 +4,12 @@
 	xmlns:ogc="http://www.opengis.net/ogc"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>FE1D2DContinuityLine</Name>
-	<Title>FE1D2DContinuityLine</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}FE1D2DContinuityLine</FeatureTypeName>
+	<Name>ContinuityLine</Name>
+	<Title>ContinuityLine</Title>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine</FeatureTypeName>
 	<Rule>
-		<Name>FE1D2DContinuityLine</Name>
-		<Title>FE1D2DContinuityLine</Title>
+		<Name>ContinuityLine</Name>
+		<Title>ContinuityLine</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>

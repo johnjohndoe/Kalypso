@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.geom;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -57,7 +58,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author congo
+ * Provide methods to build the geometry of the 1D 2D finite 
+ * element model constituants like 2D element, continuity line ... 
+ * 
+ * @author Patrice Congo
  *
  */
 public class ModelGeometryBuilder
@@ -132,6 +136,54 @@ public class ModelGeometryBuilder
                         new GM_SurfaceInterpolation_Impl( 
                                       GM_SurfaceInterpolation.PLANAR ), 
                         crs );
+      }
+      catch( Throwable th )
+      {
+        th.printStackTrace();
+        return null;
+      }
+      
+  }
+  
+  /**
+   * Recalculates the geometry of this element. Used by the corresponding property function.
+   */
+  static public GM_Object computeContiniutyLineGeometry(
+              IFE1D2DContinuityLine<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine) 
+  {
+      try
+      {
+        //TODO this implementation is from element, check if its work for CLs
+        List<IFE1D2DNode> nodes=continuityLine.getNodes();
+        
+        final int SIZE=nodes.size();
+        
+        final GM_Position[] poses = new GM_Position[SIZE];
+ 
+        if( SIZE <= 1 )
+        {
+          return null;
+        }
+ 
+        final CS_CoordinateSystem crs = 
+          nodes.get(0).getPoint().getCoordinateSystem();
+ 
+        for( int i = 0; i < poses.length; i++ )
+        {
+          final GM_Point point = nodes.get( i ).getPoint();
+          poses[i] = point.getPosition();
+        }
+        
+        GM_Curve curve = GeometryFactory.createGM_Curve( poses, crs );
+        
+//        GM_LineString lineString= curve.getAsLineString();
+        return curve;
+//        return GeometryFactory.createGM_Surface( 
+//                        poses, 
+//                        new GM_Position[0][], 
+//                        new GM_SurfaceInterpolation_Impl( 
+//                                      GM_SurfaceInterpolation.PLANAR ), 
+//                        crs );
       }
       catch( Throwable th )
       {

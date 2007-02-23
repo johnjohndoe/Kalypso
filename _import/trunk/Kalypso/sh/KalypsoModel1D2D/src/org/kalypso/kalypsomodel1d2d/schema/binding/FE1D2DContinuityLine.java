@@ -40,8 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -52,6 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
+@SuppressWarnings("unchecked")
 /**
  * Default implementation for {@link IFE1D2DContinuityLine} for
  * binding a feature of the type wb1d2d:ContinuityLine
@@ -145,6 +150,10 @@ public class FE1D2DContinuityLine
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
+   if(true)
+   {
+    return ModelGeometryBuilder.computeContiniutyLineGeometry( this );
+   }
     final FE1D2DEdge[] edges = getEdgesAsArray();
 
     if( edges.length == 0 )
@@ -217,4 +226,69 @@ public class FE1D2DContinuityLine
 
     return GeometryFactory.createGM_Curve( poses, crs );
   }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement#getNodes()
+   */
+  
+  @Override
+  public List<IFE1D2DNode> getNodes( )
+  {
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = super.getEdges();
+    List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
+    IFE1D2DNode lasAddedNode=null;
+    
+    for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
+    {
+      if(edge instanceof IEdgeInv)
+      {
+        IFE1D2DEdge invertedEdge=((IEdgeInv)edge).getInverted();
+        List<IFE1D2DNode> edgeNodes=invertedEdge.getNodes();
+        IFE1D2DNode<IFE1D2DEdge> node;
+        for(int i=edgeNodes.size()-1;i>=0;i--)
+        {
+          node=edgeNodes.get( i );
+          if(node!=null)
+          {
+            if(!node.equals( lasAddedNode ))
+            {
+              nodes.add( node );
+              lasAddedNode=node;
+            }
+          }
+        }
+        
+      }
+      else
+      {
+        for(IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes())
+        {
+          if(node!=null)
+          {
+            if(!node.equals( lasAddedNode ))
+            {
+              nodes.add( node );
+              lasAddedNode=node;
+            }
+          }
+        }
+      }
+    }
+//    if(lasAddedNode!=null && nodes.size()>0)
+//    {
+//      if(!lasAddedNode.equals( nodes.get( 0 ) ))
+//      {
+//        nodes.add( nodes.get( 0 ) );
+//      }
+//    }
+    return nodes;
+//    List<IFE1D2DNode> list = super.getNodes();
+//    int index=list.size()-1;
+//    if(index>=0)
+//    {
+//      list.remove( index );
+//    }
+//    return list;
+  }
+  
 }

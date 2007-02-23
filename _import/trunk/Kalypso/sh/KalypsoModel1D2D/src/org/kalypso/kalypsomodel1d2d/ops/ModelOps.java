@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -116,14 +117,14 @@ public class ModelOps
         }
 
         // alle benachbarten elemente des aktuellen knoten
-        final IFE1D2DNode<IFE1D2DEdge>[] neighbourNodes = lastFoundNode.getNeighbours( );
+        final Collection<IFE1D2DNode> neighbourNodes = lastFoundNode.getNeighbours( );
 
-        if( neighbourNodes.length == 0 )
+        if( neighbourNodes.size()/*length*/ == 0 )
         {
           final IStatus status = StatusUtilities.createErrorStatus( "No good nodes found for node:" + lastFoundNode.getWrappedFeature().getId() );
           throw new CoreException( status );
         }
-        final List<IFE1D2DNode<IFE1D2DEdge>> neighbourNodeList = Arrays.asList( neighbourNodes );
+        final Collection<IFE1D2DNode> neighbourNodeList = neighbourNodes;//Arrays.asList( neighbourNodes );
 
         // find suitable edge
         IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> shortestFoundEdge = null;

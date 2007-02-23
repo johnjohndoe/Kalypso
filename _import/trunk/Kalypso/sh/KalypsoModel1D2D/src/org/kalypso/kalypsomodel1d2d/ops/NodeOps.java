@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2D_2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
@@ -119,20 +120,18 @@ public class NodeOps
 	    return nearestNodeOfElements( point, element2DList );
   }
   
-  private static /*FE1D2DNode*/IFE1D2DNode nearestNodeOfElements( final GM_Point point, final List foundElements )
+  private static IFE1D2DNode nearestNodeOfElements( final GM_Point point, final List foundElements )
   {
     double currentDistance = Double.MAX_VALUE;
-    //FE1D2DNode nearestNode = null;
     IFE1D2DNode nearestNode = null;
     for( final Object object : foundElements )
     {
       final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele = new FE1D2D_2DElement( (Feature) object );
-//      final FE1D2DEdge[] edges = ele.getEdgesAsArray();
       List<IFE1D2DEdge> edges=ele.getEdges();
-      for( final /*FE1D2DEdge*/IFE1D2DEdge edge : edges )
+      for( final IFE1D2DEdge edge : edges )
       {
-//        final FE1D2DNode[] nodes = edge.getNodesAsArray();
-    	final List<IFE1D2DNode<IFE1D2DEdge>> nodes = edge.getNodes();
+    	final List<IFE1D2DNode<IFE1D2DEdge>> nodes = 
+            (edge instanceof IEdgeInv)? ((IEdgeInv)edge).getInverted().getNodes():edge.getNodes();
         for( final IFE1D2DNode node : nodes )
         {
           final GM_Point nodePoint = node.getPoint();
