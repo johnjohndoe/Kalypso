@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BoxLayout;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -51,25 +56,39 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -145,10 +164,12 @@ class ApplyElevationWidgetFace
     
     
   }
-
+  
     private Composite rootPanel;
     private FormToolkit toolkit;
-    private TableViewer tableViewer;
+    private ListViewer areaViewer;
+    private Section elevationSelectStatus;
+    private Section areaSelectSection;
 
 
     static private IPreferenceStore preferenceStore = 
@@ -174,29 +195,21 @@ class ApplyElevationWidgetFace
       
       scrolledForm.getBody().setLayout(new TableWrapLayout() );
       
-//      FormData fd;
-//
-//      fd = new FormData();
-//      //fd.width = 270;// TODO check how not to use width
-//      fd.left = new FormAttachment( 0, 0 );
-//      fd.bottom = new FormAttachment( 100, 0 );
-//      fd.top = new FormAttachment( 0, 0 );
-      
-      Section terrainSelectStatus = 
+      elevationSelectStatus = 
                   toolkit.createSection( 
                       scrolledForm.getBody(), 
                       Section.TREE_NODE | Section.CLIENT_INDENT | 
                         Section.TWISTIE | Section.DESCRIPTION | 
                         Section.TITLE_BAR);
-      terrainSelectStatus.setText( "Select Elevation Model" );
+      elevationSelectStatus.setText( "Select Elevation Model" );
       TableWrapData tableWrapData = 
             new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
-      terrainSelectStatus.setLayoutData(tableWrapData );
-      terrainSelectStatus.setExpanded( true );
+      elevationSelectStatus.setLayoutData(tableWrapData );
+      elevationSelectStatus.setExpanded( true );
       
       
-      Section areaSelectSection = 
+      areaSelectSection = 
           toolkit.createSection( 
               scrolledForm.getBody(), 
               Section.TREE_NODE | Section.CLIENT_INDENT | 
@@ -207,73 +220,163 @@ class ApplyElevationWidgetFace
       tableWrapData.grabHorizontal=true;
       tableWrapData.align=TableWrapData.FILL_GRAB;
       areaSelectSection.setLayoutData(tableWrapData );
-      areaSelectSection.setExpanded( false );
-//      
-//      //help
-//      Section helpSection = 
-//        toolkit.createSection( 
-//            scrolledForm.getBody(), 
-//            Section.TREE_NODE | Section.CLIENT_INDENT | 
-//              Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-//      helpSection.setText( "Hilfe" );
-//      tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
-//      tableWrapData.grabHorizontal=true;
-//      helpSection.setLayoutData(tableWrapData );
-//      helpSection.setExpanded( true );
-//      
+      areaSelectSection.setExpanded( false );    
+      areaSelectSection.setEnabled( false );
       
-      createConfigSection( areaSelectSection );
-      createWorkStatus( terrainSelectStatus );
-   //   createHelp( helpSection );
-      
+      createAreaSelectSection( areaSelectSection );
+      createElevationModelSelectStatus( elevationSelectStatus );
+        
       return rootPanel;
     }
     
-    private final void createWorkStatus(Section workStatusSection)
+    private final void createElevationModelSelectStatus(Section workStatusSection)
     {
-      
-      workStatusSection.setLayout( new FillLayout() );
+      workStatusSection.setLayout(null );
       
       Composite clientComposite = 
               toolkit.createComposite( workStatusSection , SWT.FLAT);
       workStatusSection.setClient( clientComposite );
-      clientComposite.setLayout( new GridLayout() );
-      Table table = toolkit.createTable( clientComposite, SWT.FILL );
+      clientComposite.setLayout( null );
+     
       
-//      final int WIDTH=clientComposite.getClientArea().width;
-      GridData gridData = new GridData(GridData.FILL_BOTH);
-      gridData.grabExcessVerticalSpace = true;
-      gridData.grabExcessHorizontalSpace = true;
-//      gridData.widthHint=200;
-//      gridData.horizontalSpan = 1;
-      table.setLayoutData(gridData);
+      
+//        terrainModelLabel = new Label(this, SWT.NONE);
+//        terrainModelLabel.setBounds(new Rectangle(15, 15, 121, 13));
+//        terrainModelLabel.setText("Select the Terrain Model");
+//        terrainModelList = new List(this, SWT.NONE);
+//        terrainModelList.setBounds(new Rectangle(62, 38, 119, 83));
+//        autoFocusLabel = new Label(this, SWT.NONE);
+//        autoFocusLabel.setBounds(new Rectangle(15, 135, 106, 13));
+//        autoFocusLabel.setText("Action : Auto Focus");
+//        focusButton = new Button(this, SWT.CHECK);
+//        focusButton.setBounds(new Rectangle(135, 135, 13, 16));
+//        gotoTerrainModel = new Button(this, SWT.NONE);
+//        gotoTerrainModel.setBounds(new Rectangle(81, 163, 115, 23));
+//        gotoTerrainModel.setText("Goto Terrain Model");
+//        setSize(new Point(300, 200));
+//        setLayout(null);
+      
+      Label terrainModelLabel = new Label(clientComposite, SWT.NONE);
+      terrainModelLabel.setBounds(new Rectangle(15, 15, 121, 13));
+      terrainModelLabel.setText("Select the Terrain Model");
+      
+      Composite smallComposite = new Composite(clientComposite, SWT.None);
+      smallComposite.setLayout( new RowLayout() );
+      
+      ListViewer elevationList = new ListViewer(smallComposite, SWT.FILL|SWT.BORDER);
+      elevationList.setContentProvider( new ArrayContentProvider());
+      elevationList.setInput(Person.example());      
+      
+      elevationList.addSelectionChangedListener(
+         new ISelectionChangedListener() {
+         public void selectionChanged(
+            SelectionChangedEvent event) {
+            IStructuredSelection selection =
+               (IStructuredSelection) event.getSelection();
+            System.out.println("Selected: "
+               + selection.getFirstElement());
+            areaSelectSection.setEnabled( true );
+            areaSelectSection.setExpanded( true );
+         }
+      });
+
+      
+      Label autoFocus = new Label(clientComposite,SWT.FLAT);
+      autoFocus.setBounds(new Rectangle(15, 135, 106, 13));
+      autoFocus.setText( "Action - Auto Focus" );
+      
+      Button focusButton = new Button(clientComposite,SWT.CHECK);
+      focusButton.setBounds(new Rectangle(135, 135, 13, 16));
+      focusButton.addSelectionListener( new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent event) {
+
         
-      TableColumn lineColumn= new TableColumn(table,SWT.LEFT);
-       lineColumn.setText( "Linie" ); 
-       lineColumn.setWidth( 100/1 );
-       
-      TableColumn actualPointNum= new TableColumn(table,SWT.LEFT);
-      actualPointNum.setText( "Akt. PunktAnzahl" ); 
-    actualPointNum.setWidth( 100/2 );  
+        }
+        
+      });
+
+      Button showTerrain = new Button(clientComposite,SWT.PUSH);
       
-      TableColumn targetPointNum= new TableColumn(table,SWT.LEFT|SWT.WRAP);
-      targetPointNum.setText( "Ziel Punktanzahl" );
-      targetPointNum.setWidth( 100/2 );
-      targetPointNum.setResizable( true );
+      showTerrain.setText( "Goto Terrain" );
+      showTerrain.setBounds(new Rectangle(81, 163, 115, 23));
+      showTerrain.addSelectionListener( new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent event) {
+          areaSelectSection.setEnabled( true );
+          areaSelectSection.setExpanded( true );
+
+       }
+
+      });
+      clientComposite.setSize( 300, 200 );
       
-      table.setHeaderVisible( true );
-      table.setLinesVisible( true );
+ /*
+  *      
+      ListViewer elevationList = new ListViewer(clientComposite, SWT.FILL|SWT.BORDER);
+//      elevationList.setLabelProvider(elevationLabelProvider());
+      elevationList.setContentProvider( new ArrayContentProvider());
+      elevationList.setInput(Person.example());      
       
+      elevationList.addSelectionChangedListener(
+         new ISelectionChangedListener() {
+         public void selectionChanged(
+            SelectionChangedEvent event) {
+            IStructuredSelection selection =
+               (IStructuredSelection) event.getSelection();
+            System.out.println("Selected: "
+               + selection.getFirstElement());
+            areaSelectSection.setEnabled( true );
+            areaSelectSection.setExpanded( true );
+         }
+      });
+
       
-      tableViewer = new TableViewer(table);         
-      tableViewer.setContentProvider( 
-                    getTableContentProvider());
-      tableViewer.setLabelProvider( getTableLabelProvider() );
+      Label autoFocus = new Label(clientComposite,SWT.FLAT);
+      autoFocus.setText( "Action - Auto Focus" );
       
-      
+      Button focusButton = new Button(clientComposite,SWT.CHECK);
+      focusButton.addSelectionListener( new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent event) {
+
+        
+        }
+        
+      });
+
+      Button showTerrain = new Button(clientComposite,SWT.PUSH);
+      showTerrain.setText( "Goto Terrain" );
+      showTerrain.addSelectionListener( new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent event) {
+          areaSelectSection.setEnabled( true );
+          areaSelectSection.setExpanded( true );
+
+       }
+
+      });
+  */
       
     }
     
+      
+   
+
+    private IBaseLabelProvider elevationLabelProvider( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    private IBaseLabelProvider elevationListLabelProvider( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    private IContentProvider getContentProvider( )
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
     public void disposeControl( )
     {
       preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
@@ -294,14 +397,14 @@ class ApplyElevationWidgetFace
     
     public void setInput(Object input)
     {
-      Object oldInput = tableViewer.getInput();
+      Object oldInput = areaViewer.getInput();
       if(oldInput==input)
       {
-        tableViewer.refresh();
+        areaViewer.refresh();
       }
       else
       {
-        tableViewer.setInput( input );
+        areaViewer.setInput( input );
                
       }
     }
@@ -321,87 +424,10 @@ class ApplyElevationWidgetFace
         preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
         preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
       }
-      String[] keys =
-        new String[]{LINE_COLOR_0, LINE_COLOR_1,LINE_COLOR_2,LINE_COLOR_3};
-      java.awt.Color colors[] =
-          new java.awt.Color[]{
-          java.awt.Color.BLUE, java.awt.Color.DARK_GRAY, 
-          java.awt.Color.RED, java.awt.Color.GREEN};
-      
-      for(int i=0;i<keys.length;i++)
-      {
-        if(!preferenceStore.contains( keys[i]))
-        {
-          RGB rgb= new RGB(
-                      colors[i].getRed(),
-                      colors[i].getGreen(), 
-                      colors[i].getBlue());
-          PreferenceConverter.setDefault( 
-                preferenceStore, 
-                LINE_COLOR_0, 
-                rgb );
-          PreferenceConverter.setValue( 
-              preferenceStore, 
-              LINE_COLOR_0, 
-              rgb );
-          
-        }
-      }
     }
     
-    public static java.awt.Color[] getLineColors()
-    {
-      if(!preferenceStore.contains( HANDLE_WIDTH_NAME ))
-      {
-        preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
-        preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
-      }
-      String[] keys =
-        new String[]{LINE_COLOR_0, LINE_COLOR_1,LINE_COLOR_2,LINE_COLOR_3};
-      java.awt.Color colors[] =
-          new java.awt.Color[]{
-          java.awt.Color.BLUE, java.awt.Color.DARK_GRAY, 
-          java.awt.Color.RED, java.awt.Color.GREEN};
-      
-      for(int i=0;i<keys.length;i++)
-      {
-        if(!preferenceStore.contains( keys[i]))
-        {
-          RGB rgb= new RGB(
-                      colors[i].getRed(),
-                      colors[i].getGreen(), 
-                      colors[i].getBlue());
-          PreferenceConverter.setDefault( 
-                preferenceStore, 
-                keys[i],//LINE_COLOR_0, 
-                rgb );
-          PreferenceConverter.setValue( 
-              preferenceStore, 
-              keys[i],//LINE_COLOR_0, 
-              rgb );
-          
-        }
-      }
-      
-      return new java.awt.Color[]{
-         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_0 ) ),
-         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_1 ) ),
-         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_2 ) ),
-         makeAWTColor( PreferenceConverter.getColor( preferenceStore, LINE_COLOR_3 ) )
-          };
-    }
-    
-    public static final int getPointRectSize()
-    {
-      if(!preferenceStore.contains( HANDLE_WIDTH_NAME ))
-      {
-        preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
-        preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
-      }
-      return preferenceStore.getInt( HANDLE_WIDTH_NAME );
-    }
-    
-    private void createConfigSection(Section configSection)
+   
+    private void createAreaSelectSection(Section configSection)
     {
       configSection.setLayout( new FillLayout() );
       
@@ -409,43 +435,39 @@ class ApplyElevationWidgetFace
               toolkit.createComposite( configSection , SWT.FLAT);
       configSection.setClient( clientComposite );
       clientComposite.setLayout( new GridLayout() );
-      
-     handleWidth=
-        new IntegerFieldEditor(HANDLE_WIDTH_NAME,"Handle Breite", clientComposite);
-     handleWidth.setPreferenceStore( preferenceStore ); 
-     handleWidth.load();
-     handleWidth.setPropertyChangeListener( storePropertyChangeListener );
-      
-     lineColorFieldEditor[0]=
-       new ColorFieldEditor(LINE_COLOR_0,"Farbe Linie0",clientComposite);
-     lineColorFieldEditor[1]=
-       new ColorFieldEditor(LINE_COLOR_1,"Farbe Linie1",clientComposite);
-     lineColorFieldEditor[2]=
-       new ColorFieldEditor(LINE_COLOR_2,"Farbe Linie2",clientComposite);
-     lineColorFieldEditor[3]=
-       new ColorFieldEditor(LINE_COLOR_3,"Farbe Linie3",clientComposite);
+    
+     Label infoLabel = new Label (clientComposite,SWT.FLAT);
+     infoLabel.setText("Selected Terrain Model");
+     Text inputText = new Text (clientComposite,SWT.FLAT);
+     inputText.setText( "One of the Field Name Comes Here" );
      
-     for(ColorFieldEditor colorFieldEditor:lineColorFieldEditor)
-     {
-       colorFieldEditor.setPreferenceStore( preferenceStore );
-       colorFieldEditor.setPropertyChangeListener( storePropertyChangeListener );
-       colorFieldEditor.getColorSelector().addListener( storePropertyChangeListener );
-       colorFieldEditor.load();
-     }
+     Label areaSelectLabel = new Label (clientComposite,SWT.FLAT);
+     areaSelectLabel.setText("Select Area");
      
      
-//      toolkit.adapt( handleWidth.get, true, true );
-      
-//      Table table = toolkit.createTable( clientComposite, SWT.FILL );
-//      
-////      final int WIDTH=clientComposite.getClientArea().width;
-//      GridData gridData = new GridData(GridData.FILL_BOTH);
-//      gridData.grabExcessVerticalSpace = true;
-//      gridData.grabExcessHorizontalSpace = true;
-////      gridData.widthHint=200;
-////      gridData.horizontalSpan = 1;
-//      table.setLayoutData(gridData);
+     Table table = toolkit.createTable( clientComposite, SWT.FILL|SWT.BORDER );
+     
+     TableColumn lineColumn= new TableColumn(table,SWT.LEFT);
+     lineColumn.setText( "Node" ); 
+     lineColumn.setWidth( 100/1 );  
+     TableColumn actualPointNum= new TableColumn(table,SWT.LEFT);
+     actualPointNum.setText( "Elevation" ); 
+     actualPointNum.setWidth( 100/2 );
+     table.setHeaderVisible( true );
+     table.setLinesVisible( true );
+     ListViewer areaViewer = new ListViewer(table);         
+     areaViewer.setContentProvider( 
+                   getTableContentProvider());
+    // areaViewer.setLabelProvider( getTableLabelProvider() );
+     
+     Button applyAll = new Button(clientComposite,SWT.PUSH);
+     applyAll.setText( "Apply All" );
+     
+     Button applySelected = new Button(clientComposite,SWT.PUSH);
+     applySelected.setText( "Apply Selected" );
+     
     }
+    
     
 
     
@@ -481,6 +503,7 @@ class ApplyElevationWidgetFace
       return new GridWorkStatusCnCProvider();
     }
     
+    
     private IPropertyChangeListener createPropertyChangeLis( )
     {
       return new IPropertyChangeListener ()
@@ -507,12 +530,4 @@ class ApplyElevationWidgetFace
         
       };
     }
-    
-    static private final java.awt.Color makeAWTColor(RGB rgb)
-    {
-      
-      return new java.awt.Color(rgb.red, rgb.green, rgb.blue);
-    }
-    
-
   }
