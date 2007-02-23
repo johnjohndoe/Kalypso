@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.TypeIdAppendIdProvider;
@@ -57,8 +59,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
-
-import junit.framework.TestCase;
 
 /**
  * Test bce2d conversion

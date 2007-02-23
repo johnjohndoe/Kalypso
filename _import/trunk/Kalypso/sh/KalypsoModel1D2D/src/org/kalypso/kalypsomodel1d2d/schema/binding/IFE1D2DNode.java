@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode;
 import org.kalypsodeegree.model.geometry.GM_Point;

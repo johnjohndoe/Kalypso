@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
