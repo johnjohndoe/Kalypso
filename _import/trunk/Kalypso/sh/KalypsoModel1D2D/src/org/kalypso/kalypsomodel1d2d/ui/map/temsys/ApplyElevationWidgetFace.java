@@ -83,7 +83,7 @@ class ApplyElevationWidgetFace
   
 /**
    * @author Patrice Congo
-   *
+   * @author Madanagopal
    */
   private final class GridWorkStatusCnCProvider 
                             implements ITableLabelProvider, IColorProvider
@@ -182,49 +182,49 @@ class ApplyElevationWidgetFace
 //      fd.bottom = new FormAttachment( 100, 0 );
 //      fd.top = new FormAttachment( 0, 0 );
       
-      Section workStatus = 
+      Section terrainSelectStatus = 
                   toolkit.createSection( 
                       scrolledForm.getBody(), 
                       Section.TREE_NODE | Section.CLIENT_INDENT | 
                         Section.TWISTIE | Section.DESCRIPTION | 
                         Section.TITLE_BAR);
-      workStatus.setText( "Aktuelle Bearbeitungsstatus" );
+      terrainSelectStatus.setText( "Select Elevation Model" );
       TableWrapData tableWrapData = 
             new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
-      workStatus.setLayoutData(tableWrapData );
-      workStatus.setExpanded( true );
+      terrainSelectStatus.setLayoutData(tableWrapData );
+      terrainSelectStatus.setExpanded( true );
       
       
-      Section configSection = 
+      Section areaSelectSection = 
           toolkit.createSection( 
               scrolledForm.getBody(), 
               Section.TREE_NODE | Section.CLIENT_INDENT | 
                 Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      configSection.setText( "Konfiguration" );
+      areaSelectSection.setText( "Select A Region" );
       tableWrapData = 
           new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
       tableWrapData.grabHorizontal=true;
       tableWrapData.align=TableWrapData.FILL_GRAB;
-      configSection.setLayoutData(tableWrapData );
-      configSection.setExpanded( false );
+      areaSelectSection.setLayoutData(tableWrapData );
+      areaSelectSection.setExpanded( false );
+//      
+//      //help
+//      Section helpSection = 
+//        toolkit.createSection( 
+//            scrolledForm.getBody(), 
+//            Section.TREE_NODE | Section.CLIENT_INDENT | 
+//              Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+//      helpSection.setText( "Hilfe" );
+//      tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
+//      tableWrapData.grabHorizontal=true;
+//      helpSection.setLayoutData(tableWrapData );
+//      helpSection.setExpanded( true );
+//      
       
-      //help
-      Section helpSection = 
-        toolkit.createSection( 
-            scrolledForm.getBody(), 
-            Section.TREE_NODE | Section.CLIENT_INDENT | 
-              Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-      helpSection.setText( "Hilfe" );
-      tableWrapData = new TableWrapData(TableWrapData.LEFT,TableWrapData.TOP,1,1);
-      tableWrapData.grabHorizontal=true;
-      helpSection.setLayoutData(tableWrapData );
-      helpSection.setExpanded( true );
-      
-      
-      createConfigSection( configSection );
-      createWorkStatus( workStatus );
-      createHelp( helpSection );
+      createConfigSection( areaSelectSection );
+      createWorkStatus( terrainSelectStatus );
+   //   createHelp( helpSection );
       
       return rootPanel;
     }
@@ -447,38 +447,7 @@ class ApplyElevationWidgetFace
 //      table.setLayoutData(gridData);
     }
     
-    private void createHelp(Section helpSection)
-    {
-      helpSection.setLayout( new FillLayout());
-      
-      Composite clientComposite = 
-              toolkit.createComposite( helpSection , SWT.FLAT);
-      helpSection.setClient( clientComposite );
-//      TableWrapData gridData = new TableWrapData();
-//      gridData.grabHorizontal = true;
-//      gridData.grabVertical = true;
-//      gridData.colspan=TableWrapData.FILL_GRAB;
-//      gridData.rowspan=TableWrapData.FILL;
-//      clientComposite.setLayoutData( gridData );
-      clientComposite.setLayout( new FillLayout() );
-      Browser browser= new Browser(clientComposite,SWT.FLAT|SWT.FILL_EVEN_ODD);
-      
-//    browser.setLayoutData( gridData );
-    toolkit.adapt( browser );
-      try
-      {
-        URL htmlURL=ApplyElevationWidgetFace.class.getResource( "grid_widget_small_help.html" );
-//        browser.setUrl( FileLocator.toFileURL(  htmlURL ).toExternalForm());
-        
-        System.out.println("URI="+htmlURL.toURI().toASCIIString());
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-      
-      
-    }
+
     
     private IContentProvider getTableContentProvider()
     {
