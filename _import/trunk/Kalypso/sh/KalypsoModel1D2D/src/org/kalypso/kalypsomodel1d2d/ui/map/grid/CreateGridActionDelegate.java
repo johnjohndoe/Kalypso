@@ -38,27 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
 
 /**
- * A command that changed the discretisation model
- * 
  * @author Patrice Congo
+ *
  */
-public interface IDiscrModel1d2dChangeCommand extends ICommand
+public class CreateGridActionDelegate extends AbstractGisMapEditorActionDelegate implements IEditorActionDelegate
 {
-  /**
-   * Gets the discretisation model edited by this command
-   */
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d();
-  
-  /**
-   * Get the feature which is being edited od changed
-   * @return I
-   */
-  public IFeatureWrapper getChangedFeature();  
+  public CreateGridActionDelegate( )
+  {
+    super( new CreateGridWidget() );
+  }
+
 }

@@ -38,17 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
@@ -58,12 +56,12 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
  * 
  * @author Patrice Congo
  */
-public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
+public class AddElementCommand implements IDiscrModel1d2dChangeCommand
 {
   //TODO donot forget firering update events
   private IFE1D2DElement addedElement;
   
-  private AddNodeCommand elementNodeCmds[];
+  private IDiscrModel1d2dChangeCommand elementEdgeCmds[];
   
   private IFEDiscretisationModel1d2d model;
   
@@ -73,25 +71,26 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
    *  by this command. the array must contains only {@link AddEdgeCommand} and 
    *    {@link AddEdgeInvCommand} commands
    */
-  public AddElementCmdFromNodeCmd(
+  public AddElementCommand(
               IFEDiscretisationModel1d2d model,
-              AddNodeCommand[] elementNodeCmds)
+              IDiscrModel1d2dChangeCommand[] elementEdgeCmds)
   {
     Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
-    for(IDiscrModel1d2dChangeCommand cmd:elementNodeCmds)
+    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
+    for(IDiscrModel1d2dChangeCommand cmd:elementEdgeCmds)
     {
-      if(  cmd==null  )
+      if(   !(
+              (cmd instanceof AddEdgeCommand) || 
+              (cmd instanceof AddEdgeInvCommand)) )
       {
         throw new IllegalArgumentException(
-            "elementNodeCmds must only contains non null node cmds:"+
-            elementNodeCmds); 
+            "elementEdgeCmds must only contains edge or edgeinv  command: "+cmd); 
       }
     }
     
     this.model=model;
     
-    this.elementNodeCmds= elementNodeCmds;
+    this.elementEdgeCmds= elementEdgeCmds;
     
   }
   
@@ -120,33 +119,14 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
     {
       List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
       IFE1D2DEdge curEdge;
-      final int MAX_INDEX=elementNodeCmds.length-2;
-      for(int i=0;i<=MAX_INDEX;i++)
+      for(IDiscrModel1d2dChangeCommand edgeCmd:elementEdgeCmds)
       {
-          IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[i].getAddedNode();
-          IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[i+1].getAddedNode();
-          
-          curEdge=model.findEdge( node0, node1  );
-          if(curEdge==null)
-          {
-            //create edge
-            
-              curEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-              String edgeGmlID = curEdge.getGmlID();
-              curEdge.addNode( node0.getGmlID() );
-              node0.addContainer( edgeGmlID );
-              //
-              curEdge.addNode( node1.getGmlID() );
-              node1.addContainer( edgeGmlID );
-              edges.add( curEdge );
-              curEdge.getWrappedFeature().invalidEnvelope();
-              
-          }
-          else
+          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
+          if(curEdge!=null)
           {
             edges.add( curEdge );
-//            throw new RuntimeException("Edge not found");
           }
+        
       }
       addedElement=ModelOps.createElement2d( model, edges );
       System.out.println("Adding elment:"+addedElement);

@@ -38,13 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 /**
- * @author congo
- *
+ * 
+ * @author Patrice Congo
  */
-public interface IEditStrategySet
+public class GridPointColectorChangeEvent
 {
-
+  public enum EVENT_TYPE
+  {
+    POINT_ADDED,
+    LINE_COLECTOR_CHANGED,
+    
+  };
+  
+  
 }

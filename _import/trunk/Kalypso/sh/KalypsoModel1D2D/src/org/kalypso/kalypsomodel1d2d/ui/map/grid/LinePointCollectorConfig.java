@@ -38,20 +38,76 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
-import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
+import java.awt.Color;
+
+
 
 /**
+ * Hold config data for a line point collector
+ * 
  * @author Patrice Congo
- *
  */
-public class CreateGridActionDelegate extends AbstractGisMapEditorActionDelegate implements IEditorActionDelegate
+public class LinePointCollectorConfig
 {
-  public CreateGridActionDelegate( )
+  
+  
+  private String name;
+  private Color color;
+  private int pointRectSize;
+  private LinePointCollector configLinePointCollector;
+  
+  public LinePointCollectorConfig(
+            String name,
+            Color color,
+            LinePointCollector linePointCollector)
   {
-    super( new CreateGridWidget() );
+    this.name=name;
+    this.configLinePointCollector = configLinePointCollector;
+    this.color=color;
+  }
+  
+  
+
+  public Color getColor( )
+  {
+    return color;
   }
 
+  public void setColor( Color color )
+  {
+    this.color = color;
+  }
+
+  public LinePointCollector getConfigLinePointCollector( )
+  {
+    return configLinePointCollector;
+  }
+
+  public void setConfigLinePointCollector( LinePointCollector configLinePointCollector )
+  {
+    this.configLinePointCollector = configLinePointCollector;
+  }
+
+  public String getName( )
+  {
+    return name;
+  }
+
+  public void setName( String name )
+  {
+    this.name = name;
+  }
+  
+   public int getPointRectSize( )
+  {
+    return pointRectSize;
+  }
+   
+  public void setPointRectSize( int pointRectSize )
+  {
+    this.pointRectSize = pointRectSize;
+  }
+  
 }

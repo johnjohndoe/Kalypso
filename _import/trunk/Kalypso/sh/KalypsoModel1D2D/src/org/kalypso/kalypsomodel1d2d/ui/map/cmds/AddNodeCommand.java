@@ -38,38 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv;
+
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
 
 /**
- * Unduable add edge command.
+ * Undoable command to add node to a simulation model
+ * Broken links are not removed
  * 
  * @author Patrice Congo
  */
-public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
+public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 {
-  private AddEdgeCommand edgeCommand;
-  private IFEDiscretisationModel1d2d model;
-  private IEdgeInv addedEdgeInv;
   
-  public AddEdgeInvCommand(
-          IFEDiscretisationModel1d2d model, 
-          AddEdgeCommand addEdgeCommand)
+  private IFE1D2DNode<IFE1D2DEdge>  addedNode;
+  private GM_Point nodePoint;
+  private IFEDiscretisationModel1d2d discretisationModel;
+  private boolean notCreated[]= new boolean[1];
+  private double searchRectWidth;
+  
+  public AddNodeCommand(
+              IFEDiscretisationModel1d2d model, 
+              GM_Point nodePoint,
+              double searchRectWidth)
   {
-    this.model=model;
-    this.edgeCommand=addEdgeCommand;
+    this.discretisationModel=model;
+    //FIXME point z coordinate causes problem
+    this.nodePoint=
+      GeometryFactory.createGM_Point(
+              nodePoint.getX(),
+              nodePoint.getY(),
+              nodePoint.getCoordinateSystem());
+    this.searchRectWidth=searchRectWidth;
   }
+  
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Add EdgeInv";
+    return "Adding Node";
   }
 
   /**
@@ -85,28 +100,9 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    //TODO move code into discretisation model
-    IFE1D2DEdge edgeToInv = (IFE1D2DEdge)edgeCommand.getChangedFeature();
-    if(edgeToInv==null)
-    {
-      return;
-    }
-    
-    if(edgeToInv.getNodes().size()!=2)
-    {
-      throw new RuntimeException(
-            "Edge does not contains 2 nodes:"+edgeToInv.getNodes().size());
-    }
-    
-    
-    IFE1D2DNode<IFE1D2DEdge> addedNode1 = edgeToInv.getNode( 0 );
-    IFE1D2DNode<IFE1D2DEdge> addedNode2 = edgeToInv.getNode( 1 );
-    addedEdgeInv = (IEdgeInv)model.findEdge( addedNode2, addedNode1 );//got the node inverted
-    if(addedEdgeInv==null)
-    {
-      throw new RuntimeException("Could not create edge for");
-    }
-        
+    addedNode=discretisationModel.createNode( 
+                    nodePoint,searchRectWidth, notCreated );
+//    <System.out.println("Adding node from command:"+addedNode+" "+notCreated[0]);
   }
 
   /**
@@ -114,7 +110,7 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedEdgeInv!=null)
+    if(addedNode==null)
     {
       process();
     }
@@ -125,18 +121,31 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedEdgeInv!=null)
+    if(notCreated[0])
     {
-      model.getEdges().remove( addedEdgeInv.getWrappedFeature() );
-      //TODO remove edges from node add method to node interface
+      return;
     }
+    else
+    {
+      //TODO check broken links issue
+      discretisationModel.getNodes().remove( addedNode.getGmlID() );
+      addedNode=null;
+    }
+    
+    
   }
+
+  public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
+  {
+    return addedNode;
+  }
+  
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper getChangedFeature( )
   {
-    return addedEdgeInv;
+    return addedNode;
   }
   
   /**
@@ -144,7 +153,7 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model;
+    return discretisationModel;
   }
   
   /**
@@ -153,9 +162,9 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String toString( )
   {
-    StringBuffer buf= new StringBuffer(128);
-    buf.append("AddEdgeCommand[");
-    buf.append( edgeCommand);
+    StringBuffer buf= new StringBuffer();
+    buf.append( "AddNodeCommand[" );
+    buf.append( nodePoint );
     buf.append( ']' );
     return buf.toString();
   }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.net.URL;
 
@@ -585,7 +585,10 @@ class GridWidgetFace
     toolkit.adapt( browser );
       try
       {
-        URL htmlURL=GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
+        URL htmlURL = 
+          KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" );
+//        URL htmlURL = 
+//          GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
         browser.setUrl( FileLocator.toFileURL(  htmlURL ).toExternalForm());
         
         System.out.println("URI="+htmlURL.toURI().toASCIIString());

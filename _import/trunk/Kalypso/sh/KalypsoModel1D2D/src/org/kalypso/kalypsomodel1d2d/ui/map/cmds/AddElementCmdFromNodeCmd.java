@@ -38,40 +38,69 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
- * Unduable add edge command.
+ * Undoable Add fe element command
  * 
  * @author Patrice Congo
  */
-public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
+public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
 {
-  private AddNodeCommand node1Command;
-  private AddNodeCommand node2Command;
+  //TODO donot forget firering update events
+  private IFE1D2DElement addedElement;
+  
+  private AddNodeCommand elementNodeCmds[];
+  
   private IFEDiscretisationModel1d2d model;
-  private IFE1D2DEdge addedEdge;
-  public AddEdgeCommand(
-          IFEDiscretisationModel1d2d model, 
-          AddNodeCommand node1Command,
-          AddNodeCommand node2Command)
+  
+  /**
+   * @param model
+   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
+   *  by this command. the array must contains only {@link AddEdgeCommand} and 
+   *    {@link AddEdgeInvCommand} commands
+   */
+  public AddElementCmdFromNodeCmd(
+              IFEDiscretisationModel1d2d model,
+              AddNodeCommand[] elementNodeCmds)
   {
-    this.node1Command=node1Command;
-    this.node2Command=node2Command;
+    Assert.throwIAEOnNullParam( model, "model" );
+    Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
+    for(IDiscrModel1d2dChangeCommand cmd:elementNodeCmds)
+    {
+      if(  cmd==null  )
+      {
+        throw new IllegalArgumentException(
+            "elementNodeCmds must only contains non null node cmds:"+
+            elementNodeCmds); 
+      }
+    }
+    
     this.model=model;
+    
+    this.elementNodeCmds= elementNodeCmds;
+    
   }
+  
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Adding Edge";
+    return "Add FE element";
   }
 
   /**
@@ -87,23 +116,41 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    //TODO move code into discretisation model
-    IFE1D2DNode<IFE1D2DEdge> addedNode1 = node1Command.getAddedNode();
-    IFE1D2DNode<IFE1D2DEdge> addedNode2 = node2Command.getAddedNode();
-    addedEdge=model.findEdge( addedNode1, addedNode2 );
-    if(addedEdge==null)
+    if(addedElement==null)
     {
-    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    String edgeGmlID = addedEdge.getGmlID();
-    addedEdge.addNode( addedNode1.getGmlID() );
-    addedNode1.addContainer( edgeGmlID );
-    //
-    addedEdge.addNode( addedNode2.getGmlID() );
-    addedNode2.addContainer( edgeGmlID );
+      List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
+      IFE1D2DEdge curEdge;
+      final int MAX_INDEX=elementNodeCmds.length-2;
+      for(int i=0;i<=MAX_INDEX;i++)
+      {
+          IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[i].getAddedNode();
+          IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[i+1].getAddedNode();
+          
+          curEdge=model.findEdge( node0, node1  );
+          if(curEdge==null)
+          {
+            //create edge
+            
+              curEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+              String edgeGmlID = curEdge.getGmlID();
+              curEdge.addNode( node0.getGmlID() );
+              node0.addContainer( edgeGmlID );
+              //
+              curEdge.addNode( node1.getGmlID() );
+              node1.addContainer( edgeGmlID );
+              edges.add( curEdge );
+              curEdge.getWrappedFeature().invalidEnvelope();
+              
+          }
+          else
+          {
+            edges.add( curEdge );
+//            throw new RuntimeException("Edge not found");
+          }
+      }
+      addedElement=ModelOps.createElement2d( model, edges );
+      System.out.println("Adding elment:"+addedElement);
     }
-    
-    
-    
   }
 
   /**
@@ -111,7 +158,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if(addedElement==null)
     {
       process();
     }
@@ -122,18 +169,18 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if(addedElement!=null)
     {
-      model.getEdges().remove( addedEdge.getWrappedFeature() );
-      //TODO remove edges from node add method to node interface
+      //TODO remove element and links to it edges
     }
   }
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper getChangedFeature( )
   {
-    return addedEdge;
+    return addedElement;
   }
   
   /**
@@ -142,27 +189,5 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return model;
-  }
-  
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    StringBuffer buf= new StringBuffer(128);
-    buf.append("AddEdgeCommand[");
-    buf.append( node1Command );
-    buf.append( node2Command );
-    buf.append( ']' );
-    return buf.toString();
-}
-  public AddNodeCommand getNode1Command( )
-  {
-    return node1Command;
-  }
-  public AddNodeCommand getNode2Command( )
-  {
-    return node2Command;
   }
 }

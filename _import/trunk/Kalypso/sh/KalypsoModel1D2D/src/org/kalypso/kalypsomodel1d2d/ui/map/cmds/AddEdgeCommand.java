@@ -38,68 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
- * Undoable Add fe element command
+ * Unduable add edge command.
  * 
  * @author Patrice Congo
  */
-public class AddElementCommand implements IDiscrModel1d2dChangeCommand
+public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
 {
-  //TODO donot forget firering update events
-  private IFE1D2DElement addedElement;
-  
-  private IDiscrModel1d2dChangeCommand elementEdgeCmds[];
-  
+  private AddNodeCommand node1Command;
+  private AddNodeCommand node2Command;
   private IFEDiscretisationModel1d2d model;
-  
-  /**
-   * @param model
-   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
-   *  by this command. the array must contains only {@link AddEdgeCommand} and 
-   *    {@link AddEdgeInvCommand} commands
-   */
-  public AddElementCommand(
-              IFEDiscretisationModel1d2d model,
-              IDiscrModel1d2dChangeCommand[] elementEdgeCmds)
+  private IFE1D2DEdge addedEdge;
+  public AddEdgeCommand(
+          IFEDiscretisationModel1d2d model, 
+          AddNodeCommand node1Command,
+          AddNodeCommand node2Command)
   {
-    Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
-    for(IDiscrModel1d2dChangeCommand cmd:elementEdgeCmds)
-    {
-      if(   !(
-              (cmd instanceof AddEdgeCommand) || 
-              (cmd instanceof AddEdgeInvCommand)) )
-      {
-        throw new IllegalArgumentException(
-            "elementEdgeCmds must only contains edge or edgeinv  command: "+cmd); 
-      }
-    }
-    
+    this.node1Command=node1Command;
+    this.node2Command=node2Command;
     this.model=model;
-    
-    this.elementEdgeCmds= elementEdgeCmds;
-    
   }
-  
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return "Add FE element";
+    return "Adding Edge";
   }
 
   /**
@@ -115,22 +87,23 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if(addedElement==null)
+    //TODO move code into discretisation model
+    IFE1D2DNode<IFE1D2DEdge> addedNode1 = node1Command.getAddedNode();
+    IFE1D2DNode<IFE1D2DEdge> addedNode2 = node2Command.getAddedNode();
+    addedEdge=model.findEdge( addedNode1, addedNode2 );
+    if(addedEdge==null)
     {
-      List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
-      IFE1D2DEdge curEdge;
-      for(IDiscrModel1d2dChangeCommand edgeCmd:elementEdgeCmds)
-      {
-          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature();
-          if(curEdge!=null)
-          {
-            edges.add( curEdge );
-          }
-        
-      }
-      addedElement=ModelOps.createElement2d( model, edges );
-      System.out.println("Adding elment:"+addedElement);
+    addedEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    String edgeGmlID = addedEdge.getGmlID();
+    addedEdge.addNode( addedNode1.getGmlID() );
+    addedNode1.addContainer( edgeGmlID );
+    //
+    addedEdge.addNode( addedNode2.getGmlID() );
+    addedNode2.addContainer( edgeGmlID );
     }
+    
+    
+    
   }
 
   /**
@@ -138,7 +111,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedElement==null)
+    if(addedEdge!=null)
     {
       process();
     }
@@ -149,18 +122,18 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedElement!=null)
+    if(addedEdge!=null)
     {
-      //TODO remove element and links to it edges
+      model.getEdges().remove( addedEdge.getWrappedFeature() );
+      //TODO remove edges from node add method to node interface
     }
   }
-
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper getChangedFeature( )
   {
-    return addedElement;
+    return addedEdge;
   }
   
   /**
@@ -169,5 +142,27 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return model;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(128);
+    buf.append("AddEdgeCommand[");
+    buf.append( node1Command );
+    buf.append( node2Command );
+    buf.append( ']' );
+    return buf.toString();
+}
+  public AddNodeCommand getNode1Command( )
+  {
+    return node1Command;
+  }
+  public AddNodeCommand getNode2Command( )
+  {
+    return node2Command;
   }
 }

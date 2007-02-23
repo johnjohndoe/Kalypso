@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp.geom_to_struct;
+package org.kalypso.kalypsomodel1d2d.update;
 
 import java.util.ArrayList;
 import java.util.List;

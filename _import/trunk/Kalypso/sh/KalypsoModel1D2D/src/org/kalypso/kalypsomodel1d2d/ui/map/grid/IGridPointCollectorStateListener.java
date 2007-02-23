@@ -38,26 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
-
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 /**
- * Action delegate which brings the that starts the 
+ * Interface to listen to grid point collector state changes
+ * 
  * @author Patrice Congo
  *
  */
-public class ActivateModelMapEditProtocolViewDelegate extends AbstractGisMapEditorActionDelegate
+public interface IGridPointCollectorStateListener
 {
-  public ActivateModelMapEditProtocolViewDelegate( )
-  {
-    super( new ActivateModelMapEditProtocolView() );
-  }
-  
-  public ActivateModelMapEditProtocolViewDelegate( IWidget widget )
-  {
-    super( widget );
-  }
-
+    public void stateChanged(GridPointColectorChangeEvent changeEvent);
 }

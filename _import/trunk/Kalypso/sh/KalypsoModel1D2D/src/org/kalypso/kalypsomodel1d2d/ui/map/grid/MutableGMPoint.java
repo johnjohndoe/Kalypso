@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Boundary;

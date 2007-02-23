@@ -61,6 +61,7 @@ import org.kalypso.jts.LineStringUtilities;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.jts.QuadMesher.JTSQuadMesherTest;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -84,7 +85,6 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import xp.TempGrid;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;

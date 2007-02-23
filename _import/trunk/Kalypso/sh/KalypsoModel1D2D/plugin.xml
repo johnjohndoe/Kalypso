@@ -88,7 +88,7 @@
                	tooltip="Ein FE-Elementgitter innerhalb von vier Punkten erzeugen">
 	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="xp.CreateGridWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
@@ -97,8 +97,8 @@
        	</action>            
        	
         <action
-              class="xp.CreateGridActionDelegate"
-              id="x.createGrid"
+              class="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridActionDelegate"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
               label="Grid"
               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
               style="radio"
@@ -148,7 +148,7 @@
      <extension
            point="org.kalypso.deegree.gmlWorkspaceListener">
         <listener
-              class="xp.geom_to_struct.GeometryToStructUpdater"
+              class="org.kalypso.kalypsomodel1d2d.update.GeometryToStructUpdater"
               id="xp.geom_to_struct.geometryToStructUpdater"
               name="xp.geom_to_struct.geometryToStructUpdater"/>
      </extension>
@@ -197,7 +197,7 @@
                	tooltip="Ein FE-Elementgitter innerhalb von vier Punkten erzeugen">
 	               	<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="xp.CreateGridWidget"/>
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
 	                     	value="org.kalypso.model1d2d"/>
                      	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 

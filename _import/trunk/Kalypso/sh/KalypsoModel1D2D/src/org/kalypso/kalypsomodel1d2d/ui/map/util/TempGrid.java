@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -49,6 +49,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -233,7 +237,7 @@ public class TempGrid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
    * @throws IllegalArgumentException if crs is null
    */ 
-  void resetTempGrid(CS_CoordinateSystem crs)
+  public void resetTempGrid(CS_CoordinateSystem crs)
                     throws IllegalArgumentException
   {
     gridPoints= new GM_Point[0][0];
@@ -248,7 +252,7 @@ public class TempGrid
    * @param rightSidePoints the collector containing the to right side points
    * @throws IllegalArgumentException if one the the side point collector is null
    */
-  void setTempGrid(
+  public void setTempGrid(
           LinePointCollector topSidePoints, 
           LinePointCollector bottomSidePoints, 
           LinePointCollector leftSidePoints, 

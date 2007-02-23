@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -58,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
+
 
 
 @SuppressWarnings("unchecked")

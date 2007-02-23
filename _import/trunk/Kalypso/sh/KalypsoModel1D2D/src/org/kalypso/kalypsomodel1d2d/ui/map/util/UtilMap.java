@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map;
+package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
 import javax.xml.namespace.QName;
 

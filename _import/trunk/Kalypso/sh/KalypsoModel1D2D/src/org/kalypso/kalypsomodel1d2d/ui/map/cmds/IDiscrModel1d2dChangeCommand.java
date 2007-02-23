@@ -38,76 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package xp;
+package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import java.awt.Color;
-
-
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper;
 
 /**
- * Hold config data for a line point collector
+ * A command that changed the discretisation model
  * 
  * @author Patrice Congo
  */
-public class LinePointCollectorConfig
+public interface IDiscrModel1d2dChangeCommand extends ICommand
 {
+  /**
+   * Gets the discretisation model edited by this command
+   */
+  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d();
   
-  
-  private String name;
-  private Color color;
-  private int pointRectSize;
-  private LinePointCollector configLinePointCollector;
-  
-  public LinePointCollectorConfig(
-            String name,
-            Color color,
-            LinePointCollector linePointCollector)
-  {
-    this.name=name;
-    this.configLinePointCollector = configLinePointCollector;
-    this.color=color;
-  }
-  
-  
-
-  public Color getColor( )
-  {
-    return color;
-  }
-
-  public void setColor( Color color )
-  {
-    this.color = color;
-  }
-
-  public LinePointCollector getConfigLinePointCollector( )
-  {
-    return configLinePointCollector;
-  }
-
-  public void setConfigLinePointCollector( LinePointCollector configLinePointCollector )
-  {
-    this.configLinePointCollector = configLinePointCollector;
-  }
-
-  public String getName( )
-  {
-    return name;
-  }
-
-  public void setName( String name )
-  {
-    this.name = name;
-  }
-  
-   public int getPointRectSize( )
-  {
-    return pointRectSize;
-  }
-   
-  public void setPointRectSize( int pointRectSize )
-  {
-    this.pointRectSize = pointRectSize;
-  }
-  
+  /**
+   * Get the feature which is being edited od changed
+   * @return I
+   */
+  public IFeatureWrapper getChangedFeature();  
 }
