@@ -265,7 +265,7 @@ class ApplyElevationWidgetFace
       
       ListViewer elevationList = new ListViewer(smallComposite, SWT.FILL|SWT.BORDER);
       elevationList.setContentProvider( new ArrayContentProvider());
-      elevationList.setInput(Person.example());      
+      elevationList.setInput(new String[]{"ele1", "ele2"}/*Person.example()*/);      
       
       elevationList.addSelectionChangedListener(
          new ISelectionChangedListener() {
