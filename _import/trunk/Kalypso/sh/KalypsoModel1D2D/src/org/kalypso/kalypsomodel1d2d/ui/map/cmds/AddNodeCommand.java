@@ -70,12 +70,19 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
               double searchRectWidth)
   {
     this.discretisationModel=model;
-    //FIXME point z coordinate causes problem
+    if (nodePoint.getCoordinateDimension()==3)
     this.nodePoint=
       GeometryFactory.createGM_Point(
               nodePoint.getX(),
               nodePoint.getY(),
+              nodePoint.getZ(),
               nodePoint.getCoordinateSystem());
+    else 
+      this.nodePoint=
+        GeometryFactory.createGM_Point(
+                nodePoint.getX(),
+                nodePoint.getY(),
+                nodePoint.getCoordinateSystem());
     this.searchRectWidth=searchRectWidth;
   }
   
