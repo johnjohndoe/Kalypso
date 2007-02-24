@@ -53,6 +53,7 @@ import java.util.Properties;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
@@ -210,7 +211,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public Control createControl( final Composite parent, final int style )
   {
-    return createControl( parent, style, getFeature().getFeatureType() );
+    try
+    {
+      return createControl( parent, style, getFeature().getFeatureType() );
+    }
+    catch( final Throwable t )
+    {
+      final org.eclipse.swt.widgets.Text text = new org.eclipse.swt.widgets.Text( parent, SWT.NONE );
+      text.setEnabled( false );
+      final String trace = ExceptionUtils.getStackTrace( t );
+      text.setText( trace );
+      return text;
+    }
   }
 
   public Control createControl( final Composite parent, final int style, final ControlType controlType )
