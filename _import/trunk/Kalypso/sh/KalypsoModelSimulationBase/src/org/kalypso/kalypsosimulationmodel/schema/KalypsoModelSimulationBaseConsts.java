@@ -11,27 +11,6 @@ public class KalypsoModelSimulationBaseConsts
 	
 	public static final CS_CoordinateSystem CS_GAUSS_KRUEGER = ConvenienceCSFactory.getInstance().getOGCCSByName(STRING_GAUSS_KRUEGER);
 	
-	public static final QName SIM_BASE_PLYNOMIAL1D=
-		new QName(
-				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
-				"Polynomial1D");
-	
-	public static final QName SIM_BASE_PROP_POLYNOMIAL1D = 
-		new QName(
-				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
-		"polynomial1D");
-
-	public static final QName SIM_BASE_PROP_ORDER=
-			new QName(
-					UrlCatalogModelSimulationBase.SIM_MODEL_NS,
-					"order");
-		
-	
-	public static final QName SIM_BASE_PROP_COEFFICIENTS=
-				new QName(
-						UrlCatalogModelSimulationBase.SIM_MODEL_NS,
-						"coefficients");
-	
 	public static final QName SIM_BASE_F_ROUGHNESS_POLYGON=
 		new QName(
 				UrlCatalogModelSimulationBase.SIM_MODEL_NS,
@@ -71,20 +50,6 @@ public class KalypsoModelSimulationBaseConsts
 					UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
 					"polygonProperty");
 	
-	public static final QName SIM_BASE_PROP_DEGREEX = 
-			new QName(
-					UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
-					"degreeX");
-	
-	public static final QName SIM_BASE_PROP_DEGREEY = 
-		new QName(
-				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
-				"degreeY");
-	
-	public static final QName SIM_BASE_F_POLYNOMIAL2D = 
-		new QName(
-				UrlCatalogModelSimulationBase.SIM_MODEL_NS, 
-				"Polynomial2D");
     
     public static final QName SIM_BASE_PROP_TERRAIN_ELE_SYS = 
         new QName(

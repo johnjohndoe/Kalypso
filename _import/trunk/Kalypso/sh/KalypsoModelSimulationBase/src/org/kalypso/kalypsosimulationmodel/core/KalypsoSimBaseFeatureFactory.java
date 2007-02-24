@@ -3,15 +3,12 @@
  */
 package org.kalypso.kalypsosimulationmodel.core;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.kalypsosimulationmodel.core.mpcoverage.TerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
@@ -29,10 +26,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
-import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D;
-import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
-import org.kalypso.kalypsosimulationmodel.util.math.Polynomial2D;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -127,33 +120,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
         };
         cMap.put(ITerrainModel.class, cTor);
         
-		//polynomial 1d
-		cTor= new AdapterConstructor()
-		{
-			public Object constructAdapter(
-										Feature feature, 
-										Class cls) 
-										throws IllegalArgumentException
-			{
-				return new Polynomial1D(feature);
-			}
-		};
-		cMap.put(IPolynomial1D.class, cTor);
-		
-		//Polynomial 2d
-		cTor= new AdapterConstructor()
-		{
-			public Object constructAdapter(
-										Feature feature, 
-										Class cls) 
-										throws IllegalArgumentException
-			{
-				
-				return new Polynomial2D(feature);
-			}
-		};
-		cMap.put(IPolynomial2D.class, cTor);
-		
 		//IRoughnessCls
 		cTor= new AdapterConstructor()
 		{

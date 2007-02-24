@@ -22,7 +22,6 @@
             adaptableType="org.kalypsodeegree.model.feature.Feature"
             class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls"/>
-         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection"/>
@@ -30,7 +29,6 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem"/>
-         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
       </factory>
       
       <!--factory

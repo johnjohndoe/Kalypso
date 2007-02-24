@@ -5,15 +5,15 @@ package test.org.kalypso.kalypsosimulationmodel;
 
 
 
+import junit.framework.TestCase;
+
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.MultiPointCoverage;
-import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Test the {@link MultiPointCoverage} class with a coverage over

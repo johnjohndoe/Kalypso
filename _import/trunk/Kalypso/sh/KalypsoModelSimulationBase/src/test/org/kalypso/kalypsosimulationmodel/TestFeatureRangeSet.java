@@ -8,13 +8,17 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.mpcoverage.FeatureRangeSet;
-import org.kalypso.kalypsosimulationmodel.util.math.IPolynomial1D;
-import org.kalypso.kalypsosimulationmodel.util.math.Polynomial1D;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.gml.binding.math.Polynomial1D;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Test case for the feature range set.
@@ -97,12 +101,13 @@ public class TestFeatureRangeSet extends TestCase
 			assertEquals(0, frs.size());
 			assertEquals(frsPol1d, frs);
 			
-			Polynomial1D pol1= new Polynomial1D(workspace);
-			pol1.setOrder(1);
-			pol1.setCoefficients(new double[]{0,1});
-			frs.add(pol1);
-			assertEquals(1, frs.size());
-			assertEquals(pol1, frs.get(0));
+            // this test could never work, because the name of the relation
+            // of the example file is not 'polynomial1d' but 'featureMember'
+//			Polynomial1D pol1= new Polynomial1D(workspace);
+//			pol1.setCoefficients(new double[]{0,1});
+//			frs.add(pol1);
+//			assertEquals(1, frs.size());
+//			assertEquals(pol1, frs.get(0));
 		}
 		catch(Throwable th)
 		{
@@ -111,4 +116,24 @@ public class TestFeatureRangeSet extends TestCase
 		}
 		
 	}
+    
+//     public IPolynomial1D polynomial1DFromWorkspace(GMLWorkspace workWorkspace)
+//     {
+//       IFeatureType featureType=
+//       workWorkspace.getGMLSchema().getFeatureType(
+//       IPolynomial1D.QNAME);
+//              
+//       final IFeatureType parentFT = workWorkspace.getRootFeature().getFeatureType();
+//              
+//       // TODO: @Patrice: this is probably not always the case, so better provide parent instead of workspace as parameter
+//       final IRelationType parentRelation = (IRelationType) parentFT.getProperty(
+//       KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_POLYNOMIAL1D );
+//              
+//       this.polFeature=
+//       FeatureFactory.createFeature(
+//       workWorkspace.getRootFeature(),parentRelation,
+//       "Polynom1d"+System.currentTimeMillis(),//TODO better ids , random?
+//       featureType,
+//       true);
+//     }
 }
