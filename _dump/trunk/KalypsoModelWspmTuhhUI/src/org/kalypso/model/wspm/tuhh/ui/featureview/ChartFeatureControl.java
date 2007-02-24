@@ -42,12 +42,20 @@ package org.kalypso.model.wspm.tuhh.ui.featureview;
 
 import java.net.URL;
 
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.chart.ui.editor.actions.ChartActionContributor;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -62,14 +70,21 @@ import org.ksp.chart.configuration.ChartType;
  */
 public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
+  /** These settings are used locally to remember the last selected tab-folder. */
+  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" );
+
+  private final static String STR_SETTINGS_TAB = "tabIndex";
+
   private Chart[] m_charts;
+
   private final ChartType[] m_chartTypes;
+
   private final URL m_context;
 
   public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartType[] charts, final URL context )
   {
     super( feature, ftp );
-    
+
     m_chartTypes = charts;
     m_context = context;
   }
@@ -79,26 +94,65 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final TabFolder folder = new TabFolder( parent, SWT.TOP );
+    final ChartActionContributor contributor = new ChartActionContributor();
     
+    final TabFolder folder = new TabFolder( parent, SWT.TOP );
+
     m_charts = new Chart[m_chartTypes.length];
     for( int i = 0; i < m_chartTypes.length; i++ )
     {
       final TabItem item = new TabItem( folder, SWT.NONE );
+
+      final Composite composite = new Composite( folder, style );
+      final GridLayout gridLayout = new GridLayout(  );
+      gridLayout.horizontalSpacing = 0;
+      gridLayout.verticalSpacing = 0;
+      composite.setLayout( gridLayout );
       
+      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+      manager.createControl( composite );
+
       final ChartType chartType = m_chartTypes[i];
       item.setText( chartType.getTitle() );
       item.setToolTipText( chartType.getDescription() );
+
+      final Chart chart = new Chart( composite, SWT.BORDER );
+      final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
       
-      m_charts[i] = new Chart( folder, style );
-      item.setControl( m_charts[i] );
+      chart.setLayoutData( gridData );
+      contributor.contributeActions( chart, manager );
+      m_charts[i] = chart;
+
+      item.setControl( composite );
     }
-    
+
+    final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
+    final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
+    if( selectedTab < folder.getTabList().length )
+      folder.setSelection( selectedTab );
+
+    folder.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleFolderSelectionChanged( folder.getSelectionIndex() );
+      }
+    } );
+
     updateControl();
-    
+
     return folder;
   }
-  
+
+  protected void handleFolderSelectionChanged( final int selectionIndex )
+  {
+    SETTINGS.put( STR_SETTINGS_TAB, selectionIndex );
+  }
+
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
@@ -114,7 +168,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   {
     // TODO Auto-generated method stub
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
@@ -133,7 +187,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     {
       final Chart chart = m_charts[i];
       final ChartType chartType = m_chartTypes[i];
-      
+
       ChartLoader.configureChart( chart, chartType, m_context );
       ChartUtilities.maximize( chart );
     }

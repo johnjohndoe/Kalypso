@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -102,44 +101,35 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
    */
   public void paint( final GCWrapper gc )
   {
-    try
-    {
-      final Color background = gc.getBackground();
-      gc.setBackground( getColor() );
+    final Color background = gc.getBackground();
+    gc.setBackground( getColor() );
 
-      final double[] trapezArray = createTrapez();
-      final Rectangle2D trapezRect = new Rectangle2D.Double( trapezArray[0], trapezArray[1], trapezArray[2] - trapezArray[0], trapezArray[5] - trapezArray[1] );
-      final Rectangle trapezScreen = logical2screen( trapezRect );
-      final Point2D topLeft = new Point2D.Double( trapezArray[6], trapezArray[7] );
-      final Point2D topRight = new Point2D.Double( trapezArray[4], trapezArray[5] );
-      final Point topLeftScreen = logical2screen( topLeft );
-      final Point topRightScreen = logical2screen( topRight );
-      final int[] trapezScreenArray = new int[8];
-      trapezScreenArray[0] = trapezScreen.x;
-      trapezScreenArray[1] = trapezScreen.y;
+    final double[] trapezArray = createTrapez();
+    final Rectangle2D trapezRect = new Rectangle2D.Double( trapezArray[0], trapezArray[1], trapezArray[2] - trapezArray[0], trapezArray[5] - trapezArray[1] );
+    final Rectangle trapezScreen = logical2screen( trapezRect );
+    final Point2D topLeft = new Point2D.Double( trapezArray[6], trapezArray[7] );
+    final Point2D topRight = new Point2D.Double( trapezArray[4], trapezArray[5] );
+    final Point topLeftScreen = logical2screen( topLeft );
+    final Point topRightScreen = logical2screen( topRight );
+    final int[] trapezScreenArray = new int[8];
+    trapezScreenArray[0] = trapezScreen.x;
+    trapezScreenArray[1] = trapezScreen.y;
 
-      trapezScreenArray[2] = trapezScreen.x + trapezScreen.width;
-      trapezScreenArray[3] = trapezScreen.y;
+    trapezScreenArray[2] = trapezScreen.x + trapezScreen.width;
+    trapezScreenArray[3] = trapezScreen.y;
 
-      trapezScreenArray[4] = topRightScreen.x;
-      trapezScreenArray[5] = topRightScreen.y;
+    trapezScreenArray[4] = topRightScreen.x;
+    trapezScreenArray[5] = topRightScreen.y;
 
-      trapezScreenArray[6] = topLeftScreen.x;
-      trapezScreenArray[7] = topLeftScreen.y;
+    trapezScreenArray[6] = topLeftScreen.x;
+    trapezScreenArray[7] = topLeftScreen.y;
 
-      gc.fillPolygon( trapezScreenArray );
+    gc.fillPolygon( trapezScreenArray );
 
-      gc.setBackground( background );
-    }
-    catch( final ProfilDataException e )
-    {
-      // sollte nie passieren
-      e.printStackTrace();
-      throw new IllegalStateException( e );
-    }
+    gc.setBackground( background );
   }
 
-  private double[] createTrapez( ) throws ProfilDataException
+  private double[] createTrapez( ) 
   {
     final IProfileObject building = getBuilding();
     final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );

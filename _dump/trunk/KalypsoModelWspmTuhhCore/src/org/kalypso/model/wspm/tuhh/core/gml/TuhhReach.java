@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants
 {

@@ -17,9 +17,11 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:featureview:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.properties" />
 
-    <!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WPointsObservation -->
-    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WPointsObservation:featureview:default" uri="org.kalypso.model.wspm.tuhh.WPointsObservation.gft" />
+    <!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:featureview:default" uri="org.kalypso.model.wspm.tuhh.QIntervallResult.gft" />
 
+	<!-- Diagramm Konfiguration for QIntervallResult -->
+    <catalog:system systemId="urn:kalypso:chart:configuration:QIntervallResult" uri="QIntervallResult.kod" />
 
 </catalog:catalog>
 

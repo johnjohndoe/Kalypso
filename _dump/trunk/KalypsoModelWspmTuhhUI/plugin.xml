@@ -211,5 +211,8 @@
       <provider
             class="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"
             id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider"/>
+      <provider
+            class="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider"
+            id="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider"/>
    </extension>
 </plugin>

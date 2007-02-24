@@ -163,10 +163,10 @@ public class WspWinExporter
           // we don't process folders
           continue;
       }
-      catch( final Exception e1 )
+      catch( final Throwable t )
       {
-        e1.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e1 );
+        t.printStackTrace();
+        return StatusUtilities.statusFromThrowable( t );
       }
       finally
       {
@@ -198,7 +198,15 @@ public class WspWinExporter
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
     write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
-      write1DTuhhRunOff( calculation.getRunOffEvent(), isDirectionUpstreams, qwtFile );
+    {
+      final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
+      if( runOffEvent == null )
+      {
+        throw new IllegalArgumentException( "Kein Abflussereignis angegeben. Abbruch der Berechnung." );
+      }
+      else
+        write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
+    }
   }
 
   private static void write1DTuhhRunOff( final IObservation<TupleResult> runOffEvent, final boolean isDirectionUpstreams, final File qwtFile ) throws IOException

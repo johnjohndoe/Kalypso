@@ -52,19 +52,27 @@ import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -80,11 +88,13 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
- * Helper clas to start the processing of the polynomes.
+ * Helper class to start the processing of the polynomes.
  * 
  * @author Gernot Belger
  */
@@ -106,16 +116,16 @@ public class PolynomeHelper
     final File ausFile = new File( dathDir, "Beiwerte.AUS" );
 
     /* Check input data */
-    // TODO: comment in
+    // TODO comment in
     // if( !lsFile.exists() )
     // {
-    // log.log( false, "Ergebnisdatei %s für Polynonerzeugung nicht vorhanden. Abbruch.", lsFile );
+    // log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", lsFile );
     // return false;
     // }
     //
     // if( !ausFile.exists() )
     // {
-    // log.log( false, "Ergebnisdatei %s für Polynonerzeugung nicht vorhanden. Abbruch.", ausFile );
+    // log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", ausFile );
     // return false;
     // }
     /* Prepare exe dir */
@@ -152,7 +162,7 @@ public class PolynomeHelper
     return true;
   }
 
-  public static void processPolynomes( final File tmpDir, final File dathDir, final LogHelper log, final long timeout, final ISimulationResultEater resultEater ) throws SimulationException
+  public static void processPolynomes( final File tmpDir, final File dathDir, final TuhhReach reach, final LogHelper log, final long timeout, final ISimulationResultEater resultEater ) throws SimulationException
   {
     if( !preparePolynomes( tmpDir, dathDir, log ) )
       return;
@@ -163,7 +173,7 @@ public class PolynomeHelper
 
     /* Start the polynome1d process */
     final File exeFile = new File( tmpDir, "Polynome1d.exe" );
-    final String cmdLine = exeFile.getAbsolutePath();
+    final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
 
     final File logFile = new File( tmpDir, "Polynome1d.log" );
     // resultEater.addResult( "Polynome1DLog", logFile );
@@ -177,9 +187,7 @@ public class PolynomeHelper
       logStream = new BufferedOutputStream( new FileOutputStream( logFile ) );
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
-      // TODO: comment in
-      // ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream,
-      // null );
+      ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
 
       logStream.close();
       errStream.close();
@@ -188,15 +196,14 @@ public class PolynomeHelper
     {
       log.log( e, "Fehler bei der Ausführung der Polynome1D.exe: %s" + e.getLocalizedMessage() );
       monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der ausführung der Polynome1D.exe" );
+      throw new SimulationException( "Fehler bei der Ausführung der Polynome1D.exe: %s" + e.getLocalizedMessage(), e );
+    }
+    catch( final ProcessTimeoutException e )
+    {
+      log.log( false, "Polynome1D-Prozess wurde abgebrochen. Grund: timeout" );
+      monitor.setFinishInfo( IStatus.ERROR, "Polynome1D Prozess wurde abgebrochen. Grund: timeout" );
       return;
     }
-    // TODO: comment in
-    // catch( final ProcessTimeoutException e )
-    // {
-    // log.log( false, "Polynome1D-Prozess wurde abgebrochen. Grund: timeout" );
-    // monitor.setFinishInfo( IStatus.ERROR, "Polynome1D Prozess wurde abgebrochen. Grund: timeout" );
-    // return;
-    // }
     finally
     {
       IOUtils.closeQuietly( logStream );
@@ -206,42 +213,34 @@ public class PolynomeHelper
     if( log.checkCanceled() )
       return;
 
+    /* Read results */
     final File resultDir = new File( tmpDir, "02Ausgang" );
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
     try
     {
-      readResults( resultDir, targetGmlFile, log, resultEater );
+      readResults( resultDir, targetGmlFile, reach, log, resultEater );
       final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" );
       resultEater.addResult( "qIntervallResultGmv", gmvResultFile );
     }
-    catch( MalformedURLException e )
+    catch( final Throwable e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( InvocationTargetException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( GmlSerializeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.log( e, "Fehler beim Lesen der Polynom1D-Ergebnisse: %s", e.getLocalizedMessage() );
+      monitor.setFinishInfo( IStatus.ERROR, "Fehler beim Lesen der Polynom1D-Ergebnisse: " + e.getLocalizedMessage() );
+      return;
     }
   }
 
-  private static void readResults( final File resultDir, final File targetGmlFile, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
+  private static void readResults( final File resultDir, final File targetGmlFile, final TuhhReach reach, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
   {
     /* Read results */
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature resultCollectionFeature = workspace.getRootFeature();
-    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, log );
+    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, reach, log );
+
+    if( log.checkCanceled() )
+      return;
+
+    readPolynomeFile( resultDir, pointResults, log );
 
     if( log.checkCanceled() )
       return;
@@ -251,33 +250,41 @@ public class PolynomeHelper
     resultEater.addResult( "qIntervallResultGml", targetGmlFile );
   }
 
-  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final LogHelper log )
+  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final TuhhReach reach, final LogHelper log )
   {
+    log.log( true, "Lese Punktwolken" );
+
     final GMLWorkspace workspace = resultCollectionFeature.getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
     final IFeatureType ftObservation = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_WPointsObservation );
+    final IFeatureType ftProfile = schema.getFeatureType( WspmProfile.QNAME_PROFILE );
 
     final IRelationType resultRelation = (IRelationType) resultCollectionFeature.getFeatureType().getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResultCollection_resultMember );
 
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
+    final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_profileMember );
 
     final Map<BigDecimal, Feature> results = new HashMap<BigDecimal, Feature>();
 
     /* Read w-points first: PROFxxx.xxxx.txt files */
     final FilenameFilter filter = new PrefixSuffixFilter( "PROF", ".txt" );
     final File[] profFiles = resultDir.listFiles( filter );
-    if( profFiles == null )
-      // TODO error message
+    if( profFiles == null || profFiles.length == 0 )
+    {
+      log.finish( IStatus.ERROR, "Fehler beim Lesen der Polynom1D-Ergebnisse: keine PROFxxx.xx.txt Dateien vorhanden." );
       return results;
+    }
+
+    final SortedMap<BigDecimal, WspmProfile> profileIndex = indexProfiles( reach );
 
     for( final File profFile : profFiles )
     {
       final String name = profFile.getName();
-      if( name.length() != 14 )
+      if( name.length() < 9 )
         continue;
 
-      final String stationString = name.substring( 4, 10 );
+      final String stationString = name.substring( 4, name.length() - 4 );
       final BigDecimal station = new BigDecimal( stationString );
 
       try
@@ -293,6 +300,15 @@ public class PolynomeHelper
         final Feature obsFeature = workspace.createFeature( resultFeature, pointsObsRelation, ftObservation );
         resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember, obsFeature );
 
+        final WspmProfile profile = profileForStation( profileIndex, station );
+        
+        if( profile != null )
+        {
+          final String href = "project:/modell.gml#" + profile.getGmlID();
+          final Feature profileFeatureRef = new XLinkedFeature_Impl( resultFeature, profileRelation, ftProfile, href, "", "", "", "", "" );
+          resultFeature.setProperty( profileRelation, profileFeatureRef );
+        }
+
         final IComponent[] pointsComponents = createPointsComponents( obsFeature );
 
         final TupleResult tupleResult = readProfFile( profFile, pointsComponents, log );
@@ -303,23 +319,42 @@ public class PolynomeHelper
 
         results.put( station, obsFeature );
       }
-      catch( final IOException e )
+      catch( final Exception e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.log( e, "Fehler beim Lesen einer PROF-Datei: ", name );
       }
     }
 
     return results;
   }
 
-  private static TupleResult readProfFile( final File profFile, final IComponent[] pointsComponents, final LogHelper log ) throws IOException
+  private static WspmProfile profileForStation( final SortedMap<BigDecimal, WspmProfile> profileIndex, final BigDecimal station )
   {
+    final double delta = 0.00001;
+    final BigDecimal pred = new BigDecimal( station.doubleValue() - delta );
+    final BigDecimal succ = new BigDecimal( station.doubleValue() + delta );
+    final SortedMap<BigDecimal, WspmProfile> subMap = profileIndex.subMap( pred, succ );
+    if( !subMap.isEmpty() )
+      return subMap.values().iterator().next();
+    
+    return profileIndex.get( station );
+  }
+
+  private static SortedMap<BigDecimal, WspmProfile> indexProfiles( final TuhhReach reach )
+  {
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+    final SortedMap<BigDecimal, WspmProfile> index = new TreeMap<BigDecimal, WspmProfile>(  );
+    for( final TuhhReachProfileSegment segment : reachProfileSegments )
+    {
+      final WspmProfile profileMember = segment.getProfileMember();
+      index.put( segment.getStation(), profileMember );
+    }
+
+    return index;
+  }
+
+  private static TupleResult readProfFile( final File profFile, final IComponent[] pointsComponents, final LogHelper log ) throws IOException
+  { 
     final TupleResult tupleResult = new TupleResult( pointsComponents );
 
     LineNumberReader reader = null;
@@ -338,7 +373,7 @@ public class PolynomeHelper
           continue;
 
         /* Determine if this is a good line */
-        final String firstToken = tokens[0];
+        final String firstToken = tokens[0].replace( 'D', 'E' );
         try
         {
           new Double( firstToken );
@@ -362,7 +397,7 @@ public class PolynomeHelper
           catch( final NumberFormatException nfe )
           {
             /* A good line but bad content. Give user a hint that something might be wrong. */
-            log.log( false, "Lesefehler in Datei: %s - Line: %d - Token: %s", profFile.getName(), reader.getLineNumber(), token );
+            log.log( false, "Lesefehler in Datei: %s - Zeile: %d - Token: %s", profFile.getName(), reader.getLineNumber(), token );
           }
         }
 
@@ -395,4 +430,133 @@ public class PolynomeHelper
 
     return components;
   }
+
+  private static void readPolynomeFile( final File resultDir, final Map<BigDecimal, Feature> pointResults, final LogHelper log ) throws IOException
+  {
+    log.log( true, "Lese Polynome" );
+
+    final File polyFile = new File( resultDir, "Polynome.TXT" );
+
+    LineNumberReader reader = null;
+    try
+    {
+      reader = new LineNumberReader( new FileReader( polyFile ) );
+
+      while( reader.ready() )
+      {
+        final String line = reader.readLine();
+        if( line == null )
+          break;
+
+        final String trimmedLine = line.trim().replaceAll( " \\(h\\)", "\\(h\\)" );
+        final String[] tokens = trimmedLine.split( " +" );
+        if( tokens.length < 8 )
+          continue;
+
+        /* Determine if this is a good line: good lines are lines whos first token is a number */
+        final String firstToken = tokens[0];
+        try
+        {
+          new Double( firstToken );
+        }
+        catch( final NumberFormatException nfe )
+        {
+          /* Just ignore this line */
+          continue;
+        }
+
+        try
+        {
+          final BigDecimal station = new BigDecimal( tokens[0] );
+          final String description = tokens[1];
+          // final String whatIsN = tokens[2];
+          final char type = tokens[3].charAt( 0 );
+
+          final int order = Integer.parseInt( tokens[4] );
+          final double rangeMin = Double.parseDouble( tokens[5].replace( 'D', 'E' ) );
+          final double rangeMax = Double.parseDouble( tokens[6].replace( 'D', 'E' ) );
+
+          if( tokens.length < 7 + order + 1 )
+          {
+            /* A good line but bad content. Give user a hint that something might be wrong. */
+            log.log( false, "Anzahl der Koeffizienten falsche in Datei: %s - Zeile: %d", polyFile.getName(), reader.getLineNumber() );
+            continue;
+          }
+
+          final List<Double> coefficients = new ArrayList<Double>( order );
+          for( int i = 7; i < 7 + order + 1; i++ )
+          {
+            final double coeff = Double.parseDouble( tokens[i].replace( 'D', 'E' ) );
+            coefficients.add( coeff );
+          }
+
+          final Double[] doubles = coefficients.toArray( new Double[coefficients.size()] );
+          final double[] coeffDoubles = ArrayUtils.toPrimitive( doubles );
+
+          final String domainId;
+          final String rangeId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonWaterlevel";
+          switch( type )
+          {
+            case 'Q':
+              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonRunoff";
+              break;
+            case 'A':
+              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonArea";
+              break;
+            case 'a':
+              domainId = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#" + "phenomenonAlpha";
+              break;
+
+            default:
+              log.log( false, "Unbekannter Wert-Typ '%c' in Zeile %s: %s ", station );
+              continue;
+          }
+
+          /* find feature for station */
+          final Feature pointsFeature = pointResults.get( station );
+          if( pointsFeature == null )
+            log.log( false, "Keine passende Station für Polynom bei km %.4f: %s", station, line );
+          else
+          {
+            final Feature resultFeature = pointsFeature.getParent();
+            final GMLWorkspace workspace = pointsFeature.getWorkspace();
+            final IGMLSchema schema = workspace.getGMLSchema();
+            final IFeatureType resultFT = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
+            final IRelationType polynomialRelation = (IRelationType) resultFT.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
+
+            final IFeatureType polynomialFT = schema.getFeatureType( IPolynomial1D.QNAME );
+
+            /* create new polynome */
+            final Feature polynomialFeature = workspace.createFeature( resultFeature, polynomialRelation, polynomialFT );
+            workspace.addFeatureAsComposition( resultFeature, polynomialRelation, -1, polynomialFeature );
+            final IPolynomial1D poly1d = (IPolynomial1D) polynomialFeature.getAdapter( IPolynomial1D.class );
+            poly1d.setName( description );
+            poly1d.setDescription( description );
+            poly1d.setCoefficients( coeffDoubles );
+            poly1d.setRange( rangeMin, rangeMax );
+
+            poly1d.setDomainPhenomenon( domainId );
+            poly1d.setRangePhenomenon( rangeId );
+          }
+        }
+        catch( final NumberFormatException nfe )
+        {
+          /* A good line but bad content. Give user a hint that something might be wrong. */
+          log.log( false, "Lesefehler in Datei: %s - Zeile: %d: %s", polyFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() );
+        }
+        catch( final Exception e )
+        {
+          // should never happen
+          log.log( e, "Lesefehler in Datei: %s - Zeile: %d: %s", polyFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() );
+        }
+
+      }
+      reader.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:math="org.kalypso.gml.common.math" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
 	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
@@ -10,6 +10,7 @@
 			This is the gml-application schema wich describes the types for results of a Q-Intervall calculation ('ungleichförmige Bordvollberechnung') of the TUHH-WSPM modell (Kalypso1D-Rechenkern)
 		</documentation>
 	</annotation>
+	<import namespace="org.kalypso.gml.common.math"/>
 	<import namespace="org.kalypso.model.wspm" />
 	<import namespace="org.kalypso.model.wspmcommon" />
 	<import namespace="org.kalypso.model.wspmprofile" />
@@ -112,6 +113,16 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Points</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="polynomialMember" type="math:Polynomial1DPropertyType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Polygon</label>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Polygone</label>
 							</documentation>
 						</annotation>
 					</element>

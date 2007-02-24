@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <Configuration xmlns="http://www.ksp.org/chart/configuration">
 	<Axis name="wsp_Axis">
-		<label>Wasserspiegel [NN+m]</label>
+		<label>Wassertiefe [m]</label>
 		<provider id="org.kalypso.axisprovider.Number" />
 		<direction>POSITIVE</direction>
 		<position>BOTTOM</position>
@@ -12,10 +12,27 @@
 		<title>Abfluss</title>
 		<description>Abflusswerte der Berechnung</description>
 		<layers>
+			<LayerRef ref="runoffPolynomeLayer" />
 			<LayerRef ref="runoffLayer" />
 			<!--LayerRef ref="runoffDeltaLayer" /-->
 		</layers>
 	</Chart>
+	<Layer visible="true" name="runoffPolynomeLayer">
+		<title>Abflusspolynome</title>
+		<description>Abflusspolynome abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="runoff_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="runoffPolynomeStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="thePolynomeFeatureKey" />
+			<Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonRunoff" />
+		</parameters>
+	</Layer>
 	<Layer visible="true" name="runoffLayer">
 		<title>Abfluss</title>
 		<description>Abfluss abhängig vom Wasserspiegel</description>
@@ -28,10 +45,10 @@
 			<StyleRef ref="runoffStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
 		</parameters>
 	</Layer>
@@ -48,10 +65,10 @@
 			<StyleRef ref="runoffDeltaStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" />
 		</parameters>
 	</Layer>
@@ -100,11 +117,28 @@
 		<title>Fläche</title>
 		<description>Flächenwerte der Berechnung</description>
 		<layers>
+			<LayerRef ref="areaPolynomeLayer" />
 			<LayerRef ref="areaLayer" />
 			<!--LayerRef ref="areaDeltaLayer" /-->
 		</layers>
 	</Chart>
-		<Layer visible="true" name="areaLayer">
+	<Layer visible="true" name="areaPolynomeLayer">
+		<title>Flächenpolynome</title>
+		<description>Flächenpolynome abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="area_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="areaPolynomeStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="thePolynomeFeatureKey" />
+			<Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
+		</parameters>
+	</Layer>
+	<Layer visible="true" name="areaLayer">
 		<title>Fläche</title>
 		<description>Fläche abhängig vom Wasserspiegel</description>
 		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.TupleResultLayerProvider" />
@@ -116,10 +150,10 @@
 			<StyleRef ref="areaStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
 		</parameters>
 	</Layer>
@@ -136,10 +170,10 @@
 			<StyleRef ref="areaDeltaStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" />
 		</parameters>
 	</Layer>
@@ -184,15 +218,32 @@
 		</parameters>
 	</Style>
 
-	<!-- ALPHA -->	
+	<!-- ALPHA -->
 	<Chart name="alphaChart">
 		<title>Alpha</title>
 		<description>Alphawerte der Berechnung</description>
 		<layers>
+			<LayerRef ref="alphaPolynomeLayer" />
 			<LayerRef ref="alphaLayer" />
 			<!--LayerRef ref="alphaDeltaLayer" /-->
 		</layers>
 	</Chart>
+	<Layer visible="true" name="alphaPolynomeLayer">
+		<title>Alpha-Polynome</title>
+		<description>Alpha-Polynome abhängig vom Wasserspiegel</description>
+		<provider id="org.kalypso.model.wspm.tuhh.ui.featureview.PolynomeLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="wsp_Axis" />
+			<ValueAxisRef ref="alpha_Axis" />
+		</axes>
+		<style>
+			<StyleRef ref="alphaPolynomeStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="thePolynomeFeatureKey" />
+			<Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonAlpha" />
+		</parameters>
+	</Layer>	
 	<Layer visible="true" name="alphaLayer">
 		<title>Alpha</title>
 		<description>Alpha abhängig vom Wasserspiegel</description>
@@ -205,10 +256,10 @@
 			<StyleRef ref="alphaStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
 		</parameters>
 	</Layer>
@@ -225,10 +276,10 @@
 			<StyleRef ref="alphaDeltaStyle" />
 		</style>
 		<parameters>
-			<Parameter name="featureKey" value="theChartFeatureControlKey" />
+			<Parameter name="featureKey" value="thePointsFeatureKey" />
 			<Parameter name="showPoints" value="true" />
 			<Parameter name="showLines" value="false" />
-			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
 			<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" />
 		</parameters>
 	</Layer>

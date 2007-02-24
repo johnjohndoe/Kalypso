@@ -2,6 +2,7 @@
 <Configuration xmlns="http://www.ksp.org/chart/configuration">
     <Chart name="ls">
         <title>Längsschnitt</title>
+        <description>Längsschnitt</description>
         <layers>
             <LayerRef ref="wsp"/>
             <LayerRef ref="runoff"/>

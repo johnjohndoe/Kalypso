@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.featureview;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
@@ -71,14 +76,14 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
    */
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String configurationPath = arguments.getProperty( "configuration", null );
+    final String configurationUrn = arguments.getProperty( "configuration", null );
 
-    // TODO: use gft-file as context for resolution of url
+    final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog().resolve( configurationUrn, configurationUrn );
+    
     try
     {
-      final URL context = new File( "D:\\Eclipse\\Kalypso32\\KalypsoModelWspmTuhhUI\\src\\org\\kalypso\\model\\wspm\\tuhh\\ui\\catalog\\resources\\catalog.xml" ).toURL();
-      final URL configUrl = new URL( context, configurationPath );
-      final ConfigurationType config = ConfigLoader.loadConfig( configUrl );
+      final URL configUrl = new URL( configurationUrl );
+      final ConfigurationType config = loadConfig( configUrl );
 
       final List<Object> chartOrLayerOrAxis = config.getChartOrLayerOrAxis();
       final List<ChartType> charts = new ArrayList<ChartType>();
@@ -88,7 +93,10 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
           charts.add( (ChartType) object );
       }
 
-      TupleResultLayerProvider.FEATURE_MAP.put( "theChartFeatureControlKey", feature );
+      // TODO: Better concept to provider data to the chart layer providers
+      final Feature pointsFeature = (Feature) feature.getProperty( new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" ) );
+      ChartDataProvider.FEATURE_MAP.put( "thePointsFeatureKey", pointsFeature );
+      ChartDataProvider.FEATURE_MAP.put( "thePolynomeFeatureKey", feature );
 
       final ChartType[] chartTypes = charts.toArray( new ChartType[charts.size()] );
       return new ChartFeatureControl( feature, pt, chartTypes, configUrl );
@@ -100,6 +108,12 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
     }
 
     return null;
+  }
+
+  private ConfigurationType loadConfig( final URL configUrl ) throws IOException, JAXBException
+  {
+    final ConfigurationType config = ConfigLoader.loadConfig( configUrl );
+    return config;
   }
 
 }

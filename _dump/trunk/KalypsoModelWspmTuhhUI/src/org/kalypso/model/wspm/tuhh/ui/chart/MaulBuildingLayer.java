@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilDataException;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -101,29 +100,20 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
    */
   public void paint( final GCWrapper gc )
   {
-    try
-    {
-      final Color background = gc.getBackground();
-      gc.setBackground( getColor() );
+    final Color background = gc.getBackground();
+    gc.setBackground( getColor() );
 
-      final Rectangle2D oval = createOval();
+    final Rectangle2D oval = createOval();
 
-      final Rectangle ovalScreen = logical2screen( oval );
-      gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
-      // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
-      // ovalScreen.height );
+    final Rectangle ovalScreen = logical2screen( oval );
+    gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
+    // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
+    // ovalScreen.height );
 
-      gc.setBackground( background );
-    }
-    catch( final ProfilDataException e )
-    {
-      // sollte nie passieren
-      e.printStackTrace();
-      throw new IllegalStateException( e );
-    }
+    gc.setBackground( background );
   }
 
-  private Rectangle2D createOval( ) throws ProfilDataException
+  private Rectangle2D createOval( )
   {
     final IProfileObject building = getBuilding();
     final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );

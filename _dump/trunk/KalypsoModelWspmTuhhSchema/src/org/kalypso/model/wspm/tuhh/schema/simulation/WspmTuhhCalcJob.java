@@ -61,6 +61,7 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
@@ -472,7 +473,9 @@ public class WspmTuhhCalcJob implements ISimulation
           // bankfull nonuniform
 
           final File polynomeTmpDir = new File( tmpDir, "polynome" );
-          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, lTimeout, resultEater );
+
+          final TuhhReach reach = calculation.getReach();
+          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, reach, log, lTimeout, resultEater );
 
           // TODO :check everything below if it still makes sense?
 
