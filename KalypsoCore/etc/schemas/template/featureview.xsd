@@ -141,7 +141,7 @@
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
 					<xs:sequence>
-						<xs:element name="entry" minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
 							<xs:annotation>
 								<xs:documentation> An entry represant a selectable item from the
 									combo box. The label is the string displayed to the user. The
