@@ -108,6 +108,8 @@ public interface NS
 
   public static final String COMMON_SHP = "org.kalypso.gml.common.shape";
 
+  public static final String COMMON_MATH = "org.kalypso.gml.common.math";
+
   public static final String SWE_EXTENSIONS = "org.kalypso.swe.ext";
 
 }
