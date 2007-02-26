@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.db.IWorkflowDBChangeListerner;
@@ -152,9 +151,8 @@ public class SimulationModelDBView extends ViewPart
       final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectPath );
       activeWorkContext.setActiveProject( (IProject) resource );
     }
-    //TODO: 
-//    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
-//    activeWorkContext.addActiveContextChangeListener( projectChangeListener );
+    final ProjectChangeListener projectChangeListener = new ProjectChangeListener();
+    activeWorkContext.addActiveContextChangeListener( projectChangeListener );
   }
 
   /*

@@ -19,7 +19,6 @@ import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
 import org.kalypso.afgui.views.WorkflowControl2;
-import org.kalypso.afgui.viz.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.ActiveWorkContext;
 import org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener;
 
@@ -119,7 +118,7 @@ public class WorkflowView extends ViewPart
     super.init( site, memento );
     m_activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
     m_workflowControl = new WorkflowControl2();
-//    m_workflowControl = new WorkflowControl( m_activeWorkContext.getCurrentWorkflow() );
+    // m_workflowControl = new WorkflowControl( m_activeWorkContext.getCurrentWorkflow() );
     m_workflowControl.restoreState( memento );
   }
 
