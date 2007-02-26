@@ -1,7 +1,7 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -67,7 +67,7 @@ public class PageSecond extends WizardPage
     for( String key : m_data.getRoughnessStaticCollectionMap().keySet() )
       names[i++] = key;
     Composite composite = (Composite) getControl();
-    HashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
+    LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
     m_shpNamesList = new ArrayList<String>();
     m_comboRoughnessIDs = new Combo[map.size()];
     GridData gridDataID = new GridData();
@@ -92,7 +92,7 @@ public class PageSecond extends WizardPage
   {
     if( isCurrentPage() )
     {
-      HashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
+      LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
       String shpName, dbName;
       for( String shpID : map.keySet() )
       {

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModel2DCalcJob
-Bundle-SymbolicName: org.kalypso.Model2D; singleton:=true
+Bundle-SymbolicName: org.kalypso.Model2D;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: kalypso2DCalcJob.jar
 Bundle-Localization: plugin
@@ -21,4 +21,4 @@ Require-Bundle: org.kalypso.deegree,
  org.kalypso.simulation.core,
  org.kalypso.commons,
  org.kalypso.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -49,7 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 
 /**
- * Provides algorithm to convert between a bce2d model and
+ * Provides algorithm to convert from a bce2d model to
  * a 1d2d discretisation model
  * 
  * @author Patrice Congo

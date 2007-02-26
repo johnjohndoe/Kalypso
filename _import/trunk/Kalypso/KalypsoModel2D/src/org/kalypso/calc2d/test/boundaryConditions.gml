@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<boundaryConditions xmlns="http://elbe.wb.tu-harburg.de/2dModel" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://elbe.wb.tu-harburg.de/2dModel  project:/.model/schema/bc_gml2.xsd">
+<boundaryConditions xmlns="http://elbe.wb.tu-harburg.de/2dModel/bc2d" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<generalCollectionMember>
 		<generalCollection>
 			<generalMember>
@@ -153,61 +153,39 @@
 				<line>
 					<listLinePos>
 						<gml:LineString>
-							<gml:coord>
-								<gml:X>3586573.2421875</gml:X>
-								<gml:Y>5936654.49609375</gml:Y>
-								<gml:Z>66.09310150146484</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586563.3046875</gml:X>
-								<gml:Y>5936655.625</gml:Y>
-								<gml:Z>66.65267944335938</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586552.09375</gml:X>
-								<gml:Y>5936656.875</gml:Y>
-								<gml:Z>65.80844116210938</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586540.484375</gml:X>
-								<gml:Y>5936658.2734375</gml:Y>
-								<gml:Z>65.27558898925781</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586534.6640625</gml:X>
-								<gml:Y>5936658.70703125</gml:Y>
-								<gml:Z>65.22056579589844</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586526.640625</gml:X>
-								<gml:Y>5936659.52734375</gml:Y>
-								<gml:Z>63.05455780029297</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586518.6171875</gml:X>
-								<gml:Y>5936660.34765625</gml:Y>
-								<gml:Z>63.076107025146484</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586511.6640625</gml:X>
-								<gml:Y>5936661.05859375</gml:Y>
-								<gml:Z>62.9671745300293</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586504.0390625</gml:X>
-								<gml:Y>5936661.8359375</gml:Y>
-								<gml:Z>63.2440299987793</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586496.8125</gml:X>
-								<gml:Y>5936662.57421875</gml:Y>
-								<gml:Z>65.23587036132812</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3586487.859375</gml:X>
-								<gml:Y>5936662.92578125</gml:Y>
-								<gml:Z>66.72566223144531</gml:Z>
-							</gml:coord>
+							<gml:Point>
+								<gml:pos>3586573.2421875 5936654.49609375 66.09310150146484</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586563.3046875 5936655.625 66.65267944335938</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586552.09375 5936656.875 65.80844116210938</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586540.484375 5936658.2734375 65.27558898925781</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586534.6640625 5936658.70703125 65.22056579589844</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586526.640625 5936659.52734375 63.05455780029297</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586518.6171875 5936660.34765625 63.076107025146484</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586511.6640625 5936661.05859375 62.9671745300293</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586504.0390625 5936661.8359375 63.2440299987793</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586496.8125 5936662.57421875 65.23587036132812</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3586487.859375 5936662.92578125 66.72566223144531</gml:pos>
+							</gml:Point>
 						</gml:LineString>
 					</listLinePos>
 				</line>
@@ -216,106 +194,66 @@
 				<line>
 					<listLinePos>
 						<gml:LineString>
-							<gml:coord>
-								<gml:X>3585864.0546875</gml:X>
-								<gml:Y>5935921.453125</gml:Y>
-								<gml:Z>65.19999694824219</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585863.3984375</gml:X>
-								<gml:Y>5935928.01171875</gml:Y>
-								<gml:Z>63.641944885253906</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585861.8671875</gml:X>
-								<gml:Y>5935948.6796875</gml:Y>
-								<gml:Z>63.23611068725586</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585860.5546875</gml:X>
-								<gml:Y>5935959.39453125</gml:Y>
-								<gml:Z>63.152435302734375</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585859.4609375</gml:X>
-								<gml:Y>5935967.48828125</gml:Y>
-								<gml:Z>63.097721099853516</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585857.4140625</gml:X>
-								<gml:Y>5935976.578125</gml:Y>
-								<gml:Z>62.749000549316406</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585856.671875</gml:X>
-								<gml:Y>5935981.94140625</gml:Y>
-								<gml:Z>62.74896240234375</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585856.375</gml:X>
-								<gml:Y>5935985.41796875</gml:Y>
-								<gml:Z>60.79853820800781</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585856.0078125</gml:X>
-								<gml:Y>5935989.6484375</gml:Y>
-								<gml:Z>60.70586013793945</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585855.578125</gml:X>
-								<gml:Y>5935994.62890625</gml:Y>
-								<gml:Z>60.792171478271484</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585855.1171875</gml:X>
-								<gml:Y>5935999.984375</gml:Y>
-								<gml:Z>60.998756408691406</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585854.7109375</gml:X>
-								<gml:Y>5936004.68359375</gml:Y>
-								<gml:Z>63.47718811035156</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585854.078125</gml:X>
-								<gml:Y>5936010.81640625</gml:Y>
-								<gml:Z>63.47700119018555</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585853.046875</gml:X>
-								<gml:Y>5936029.69140625</gml:Y>
-								<gml:Z>63.117088317871094</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585853.40625</gml:X>
-								<gml:Y>5936036.55078125</gml:Y>
-								<gml:Z>63.132747650146484</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585851.6015625</gml:X>
-								<gml:Y>5936057.4765625</gml:Y>
-								<gml:Z>63.26240539550781</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585849.4375</gml:X>
-								<gml:Y>5936080.93359375</gml:Y>
-								<gml:Z>63.566612243652344</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585848.0</gml:X>
-								<gml:Y>5936094.6484375</gml:Y>
-								<gml:Z>63.84449768066406</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585847.2734375</gml:X>
-								<gml:Y>5936108.0</gml:Y>
-								<gml:Z>64.0763168334961</gml:Z>
-							</gml:coord>
-							<gml:coord>
-								<gml:X>3585843.671875</gml:X>
-								<gml:Y>5936151.6640625</gml:Y>
-								<gml:Z>66.06494140625</gml:Z>
-							</gml:coord>
+							<gml:Point>
+								<gml:pos>3585864.0546875 5935921.453125 65.19999694824219</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585863.3984375 5935928.01171875 63.641944885253906</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585861.8671875 5935948.6796875 63.23611068725586</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585860.5546875 5935959.39453125 63.152435302734375</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585859.4609375 5935967.48828125 63.097721099853516</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585857.4140625 5935976.578125 62.749000549316406</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585856.671875 5935981.94140625 62.74896240234375</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585856.375 5935985.41796875 60.79853820800781</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585856.0078125 5935989.6484375 60.70586013793945</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585855.578125 5935994.62890625 60.792171478271484</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585855.1171875 5935999.984375 60.998756408691406</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585854.7109375 5936004.68359375 63.47718811035156</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585854.078125 5936010.81640625 63.47700119018555</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585853.046875 5936029.69140625 63.117088317871094</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585853.40625 5936036.55078125 63.132747650146484</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585851.6015625 5936057.4765625 63.26240539550781</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585849.4375 5936080.93359375 63.566612243652344</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585848.0 5936094.6484375 63.84449768066406</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585847.2734375 5936108.0 64.0763168334961</gml:pos>
+							</gml:Point>
+							<gml:Point>
+								<gml:pos>3585843.671875 5936151.6640625 66.06494140625</gml:pos>
+							</gml:Point>
 						</gml:LineString>
 					</listLinePos>
 				</line>

@@ -3,9 +3,6 @@
 	<name>KalypsoModel2D</name>
 	<comment></comment>
 	<projects>
-		<project>KalypsoDeegree</project>
-		<project>KalypsoUI</project>
-		<project>KalypsoUtil</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -199,7 +199,7 @@ public class CalcJob2dTest extends TestCase
     try
     {
       final ISimulation job = new CalcJob2d();
-      final File tmpDir = new File( "C:\\Temp\\2DCalcTest" );
+      final File tmpDir = new File( "D:\\Eclipse\\TESTS_RESULTS\\CalcJob" );
       tmpDir.mkdirs();
       FileUtils.cleanDirectory( tmpDir );
       job.run( tmpDir, dataProvider, resultEater, monitor );

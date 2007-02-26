@@ -167,6 +167,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if(elementLeftID==elementRightID)
     {
       //one d element
+      System.out.println("1D elements not supported!");
       throw new RuntimeException("2d ONLY for now");
     }
     else

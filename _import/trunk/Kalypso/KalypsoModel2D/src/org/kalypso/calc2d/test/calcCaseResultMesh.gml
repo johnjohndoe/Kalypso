@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<simulation2d xmlns="http://elbe.wb.tu-harburg.de/2dModel" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://elbe.wb.tu-harburg.de/2dModel project:/.model/schema/2dgml.xsd">
+<simulation2d xmlns="http://elbe.wb.tu-harburg.de/2dModel/sim2d" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://elbe.wb.tu-harburg.de/2dModel/sim2d project:/.model/schema/2dgml.xsd">
 <featurePointCollectionMember>
 <pointsCollection>
 <featurePointMember>

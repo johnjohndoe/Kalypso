@@ -3,6 +3,7 @@ package org.kalypso.ui.wizards.imports.roughness;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
@@ -25,9 +26,9 @@ public class DataContainer
   
   private RoughnessPolygonCollection m_feature;
   
-  private HashMap<String, String> m_roughnessStaticCollectionMap;
+  private LinkedHashMap<String, String> m_roughnessStaticCollectionMap;
   
-  private HashMap<String, String> m_roughnessShapeStaticRelationMap;
+  private LinkedHashMap<String, String> m_roughnessShapeStaticRelationMap;
   
   private String m_roughnessDatabaseLocation;
   
@@ -40,8 +41,8 @@ public class DataContainer
   public DataContainer( )
   {
     super();
-    m_roughnessStaticCollectionMap = new HashMap<String, String>();
-    m_roughnessShapeStaticRelationMap = new HashMap<String, String>();
+    m_roughnessStaticCollectionMap = new LinkedHashMap<String, String>();
+    m_roughnessShapeStaticRelationMap = new LinkedHashMap<String, String>();
   }
 
   public final void setInputFile( String inputFile )
@@ -90,12 +91,12 @@ public class DataContainer
       return m_coordinateSystem;
   }
 
-  public final HashMap<String, String> getRoughnessStaticCollectionMap( )
+  public final LinkedHashMap<String, String> getRoughnessStaticCollectionMap( )
   {
     return m_roughnessStaticCollectionMap;
   }
 
-  public final HashMap<String, String> getRoughnessShapeStaticRelationMap( )
+  public final LinkedHashMap<String, String> getRoughnessShapeStaticRelationMap( )
   {
     return m_roughnessShapeStaticRelationMap;
   }
