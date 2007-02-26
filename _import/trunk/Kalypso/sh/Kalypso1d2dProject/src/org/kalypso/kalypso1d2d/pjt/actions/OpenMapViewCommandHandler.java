@@ -20,13 +20,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
-import org.kalypso.kalypso1d2d.pjt.views.SimulationModelDBView;
-import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeEvent;
@@ -59,6 +56,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   protected IStatus executeInternal( final ExecutionEvent event ) throws CoreException
   {
@@ -76,18 +74,18 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
 
     logger.info( "Opening " + file );
 
-    if( file.exists() && activeWorkbenchWindow != null)
+    if( file.exists() && activeWorkbenchWindow != null )
     {
-      final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();      
+      final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
       m_mapView = (MapView) workbenchPage.showView( MapView.ID );
 
-      // final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable(
-      // SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-      // TODO check dirty-state of workspace and ask if editor should be saved
-
-      m_mapView.startLoadJob( file );
-
       final MapPanel mapPanel = (MapPanel) m_mapView.getAdapter( MapPanel.class );
+
+      if( !file.equals( m_mapView.getFile() ) )
+      {
+        m_mapView.startLoadJob( file );
+      }
+
       if( m_featureType != null )
       {
         final Job job = new Job( "Activate layer..." )
@@ -109,13 +107,20 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
             }
 
             m_mapModell = mapPanel.getMapModell();
-            final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-            for( IKalypsoTheme theme : allThemes )
+            final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+            if( !m_featureType.equals( activeTheme.getContext() ) )
             {
-              if( !theme.isLoaded() ) {
-                theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
-              } else {
-                maybeActivateTheme( theme );
+              final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+              for( final IKalypsoTheme theme : allThemes )
+              {
+                if( !theme.isLoaded() )
+                {
+                  theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
+                }
+                else
+                {
+                  maybeActivateTheme( theme );
+                }
               }
             }
             return Status.OK_STATUS;
@@ -146,7 +151,7 @@ public class OpenMapViewCommandHandler extends WorkflowCommandHandler implements
       logger.severe( "Could not initialize with data of type " + data.getClass().getName() );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeListener#kalypsoThemeChanged(org.kalypso.ogc.gml.KalypsoThemeEvent)
    */
