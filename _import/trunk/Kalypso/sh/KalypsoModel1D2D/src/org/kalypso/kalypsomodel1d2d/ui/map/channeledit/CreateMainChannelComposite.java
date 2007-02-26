@@ -88,10 +88,9 @@ public class CreateMainChannelComposite extends Composite
   private final CreateMainChannelWidget m_widget;
 
   private Section m_profilSection;
-  
+
   private Section m_segmentSection;
 
-  
   /*********************************************************************************************************************
    * m_buttonList Following buttons are present in the Schlauchgenerator: Profile wählen Uferlinie 1 wählen Uferlinie 1
    * zeichnen Uferlinie 2 wählen Uferlinie 2 zeichnen
@@ -164,7 +163,6 @@ public class CreateMainChannelComposite extends Composite
     return m_profilSection;
   }
 
-  
   /**
    * in the segment section the crosssections will be displayed. the data filling is done in the function
    * "updateSegmentSection" (see below)
@@ -175,7 +173,7 @@ public class CreateMainChannelComposite extends Composite
 
     return m_segmentSection;
   }
-  
+
   /**
    * in the segment section you can switch between the channel segments and convert the data into a model
    */
@@ -191,8 +189,31 @@ public class CreateMainChannelComposite extends Composite
     m_segmentSection.setClient( sectionClient );
     m_segmentSection.setText( "Segmentliste" );
     m_segmentSection.setDescription( "Wählen Sie das gewünschte Segment" );
-    m_segmentSection.setExpanded( false );
-    
+    if( m_data.getNumOfSegments() > 0 )
+      m_segmentSection.setExpanded( true );
+    else
+      m_segmentSection.setExpanded( false );
+
+    /* segment spinner */
+    final Spinner spinnerSegment = new Spinner( sectionClient, 0 );
+    if( m_data.getNumOfSegments() > 0 )
+    {
+      spinnerSegment.setEnabled( true );
+      spinnerSegment.setMinimum( 1 );
+      spinnerSegment.setMaximum( m_data.getNumOfSegments() );
+      spinnerSegment.setSelection( 1 );  // TODO: get current selection
+    }
+    else
+      spinnerSegment.setEnabled( false );
+
+    spinnerSegment.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        System.out.println( spinnerSegment.getSelection() );
+      }
+    } );
+
     /* segment switcher */
     final ComboViewer combviewerSegmentSwitch = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     combviewerSegmentSwitch.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -200,9 +221,9 @@ public class CreateMainChannelComposite extends Composite
     combviewerSegmentSwitch.setLabelProvider( new LabelProvider() );
     int selectedSegment = m_data.getSelectedSegment();
     int select = 0;
-    
+
     int numOfSegments = m_data.getNumOfSegments();
-    
+
     if( numOfSegments == 0 )
     {
       combviewerSegmentSwitch.getControl().setEnabled( false );
@@ -215,9 +236,9 @@ public class CreateMainChannelComposite extends Composite
     {
       for( int i = 0; i < numOfSegments; i++ )
       {
-        
-        //TODO fill it!
-        combviewerSegmentSwitch.setInput( i );      
+
+        // TODO fill it!
+        combviewerSegmentSwitch.setInput( i );
       }
       if( numOfSegments != 0 )
         select = selectedSegment;
@@ -229,11 +250,10 @@ public class CreateMainChannelComposite extends Composite
 
     if( select != m_data.getSelectedSegment() )
       m_data.setSelectedSegment( select );
-    
-    
+
     /* conversion button */
     m_buttonConvertToModel = new Button( sectionClient, SWT.PUSH );
-    m_buttonConvertToModel.setText( "ins Modell übernehmen..." );
+    m_buttonConvertToModel.setText( "alle Segmente ins Modell übernehmen..." );
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -550,9 +570,9 @@ public class CreateMainChannelComposite extends Composite
   {
     updateSegmentSwitchSection();
     updateProfilSection();
-    
+
     m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
-    
+
   }
 
   /**
