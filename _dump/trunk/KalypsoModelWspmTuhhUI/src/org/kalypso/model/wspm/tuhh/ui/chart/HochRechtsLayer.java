@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.eclipse.swt.SWT;
@@ -50,7 +49,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -63,6 +61,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
+import de.belger.swtchart.layer.IChartLayer;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -70,12 +69,12 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   private Color m_color;
 
-  public HochRechtsLayer( final ProfilChartView  pcv )
+  public HochRechtsLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_GEOKOORDINATEN, pcv,pcv.getDomainRange(), pcv.getValueRangeLeft(),"Geokoordinaten", false );
+    super( IWspmTuhhConstants.LAYER_GEOKOORDINATEN, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Geokoordinaten", false );
 
-    m_pem = pcv.getProfilEventManager() ;
-    m_color = pcv.getColorRegistry().get(IWspmTuhhConstants.LAYER_GELAENDE);
+    m_pem = pcv.getProfilEventManager();
+    m_color = pcv.getColorRegistry().get( IWspmTuhhConstants.LAYER_GELAENDE );
   }
 
   @Override
@@ -96,21 +95,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   public Rectangle2D getBounds( )
   {
-    try
-    {
-      final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
-      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-      final Point2D p2 = new Point2D.Double( x, y );
-      return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return new Rectangle2D.Double( 0, 0, 0, 0 );
-
-    }
-
+    return IChartLayer.MINIMAL_RECT;
   }
 
   @Override
@@ -150,7 +135,6 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
     gc.drawOval( midx, midy, 3, 3 );
   }
-  
 
   @Override
   public boolean isNotPainting( )
@@ -159,7 +143,8 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   }
 
   /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
   protected void editProfil( Point point, Object data )
@@ -174,7 +159,8 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )

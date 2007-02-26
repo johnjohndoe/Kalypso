@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.belger.swtchart.EditInfo;
+import de.belger.swtchart.layer.IChartLayer;
 
 public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -107,21 +108,21 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public Rectangle2D getBounds( )
   {
-    try
-    {
-      final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
-      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-      final Point2D p2 = new Point2D.Double( x, y );
-      return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return new Rectangle2D.Double( 0, 0, 0, 0 );
-
-    }
-
+//    try
+//    {
+//      final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
+//      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+//      final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+//      final Point2D p2 = new Point2D.Double( x, y );
+//      return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
+//    }
+//    catch( Exception e )
+//    {
+//      e.printStackTrace();
+//      return new Rectangle2D.Double( 0, 0, 0, 0 );
+//
+//    }
+return IChartLayer.MINIMAL_RECT;
   }
 
   private Point2D[] getPoints( )
