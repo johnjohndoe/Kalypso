@@ -374,8 +374,8 @@ class ApplyElevationWidgetFace
       }
       if(!rootPanel.isDisposed())
       {
-        handleWidth.setPropertyChangeListener( null );
-        handleWidth.store();
+//        handleWidth.setPropertyChangeListener( null );
+//        handleWidth.store();
         rootPanel.dispose();
         toolkit.dispose();
       }

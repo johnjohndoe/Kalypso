@@ -60,4 +60,8 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   // TODO: comment: is the back reference handled here or must it be handled from outside?
   // TODO: also invalidate the edge-feature-envelope here
   public void addNode( String nodeID );
+  
+  public void setInvEdge(String invEdgeID);
+  
+  public IEdgeInv getEdgeInv();
 }

@@ -130,7 +130,7 @@ public class ModelOps
         double minEdgeLength = Double.MAX_VALUE;
 
         final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = lastFoundNode.getEdges();
-        for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
+        for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
         {
           if( edgeList.contains( edge ) )
             continue;
@@ -141,9 +141,15 @@ public class ModelOps
           {
             final IFE1D2DNode oppositeNode;
             if( nodes.get( 0 ).equals( lastFoundNode ) )
+            {
               oppositeNode = nodes.get( 1 );
+            }
             else
+            {
+              //TODO cope with direction here by finding the right edge
               oppositeNode = nodes.get( 0 );
+              edge=model.findEdge( lastFoundNode, oppositeNode );
+            }
 
             if( neighbourNodeList.contains( oppositeNode ) )
             {
@@ -165,7 +171,9 @@ public class ModelOps
         {
           edgeList.add( shortestFoundEdge );
 
-          final IFeatureWrapperCollection<IFE1D2DNode> nodes = shortestFoundEdge.getNodes();
+          final IFeatureWrapperCollection<IFE1D2DNode> nodes = 
+            (shortestFoundEdge instanceof IEdgeInv)?
+                  ((IEdgeInv)shortestFoundEdge).getInverted().getNodes():shortestFoundEdge.getNodes();
           if( nodes.size() == 2 )
           {
             if( nodes.get( 0 ).equals( lastFoundNode ) )
@@ -205,7 +213,7 @@ public class ModelOps
       System.out.println( "FINISHED: Routing" );
     }
 
-    return edgeList.toArray( new FE1D2DEdge[edgeList.size()] );
+    return edgeList.toArray( new IFE1D2DEdge[edgeList.size()] );
 
   }
   
@@ -336,6 +344,7 @@ public class ModelOps
     
 //  just select the first node
     IFE1D2DEdge edge=edges.remove(0);    
+    edgeFeatureList.add( edge.getGmlID() );
     for(int i=0; edges.size()>0;)
     {
       
@@ -385,7 +394,8 @@ public class ModelOps
     FeatureList edgeFeatureList=elementEdges.getWrappedList();
     
 //  just select the first node
-    IFE1D2DEdge edge=edges.remove(0);    
+    IFE1D2DEdge edge=edges.remove(0);
+    edgeFeatureList.add( edge.getGmlID() );
     for(int i=0; edges.size()>0;)
     {
       
@@ -393,9 +403,14 @@ public class ModelOps
       i=edges.size()-1;
       for(;i>=0;i--)
       {
-        if( nodeEnd.getGmlID().equals( edges.get( i ).getNode( 0 ).getGmlID()) )
+        IFE1D2DEdge edge2 = edges.get( i );
+        if( nodeEnd.getGmlID().equals( edge2.getNode( 0 ).getGmlID()) )
         {
           break;
+        }
+        else
+        {
+          continue;
         }
       }
       if(i==-1)

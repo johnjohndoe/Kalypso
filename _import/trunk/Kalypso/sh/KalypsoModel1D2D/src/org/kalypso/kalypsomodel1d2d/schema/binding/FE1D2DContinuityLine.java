@@ -236,43 +236,66 @@ public class FE1D2DContinuityLine
   {
     IFeatureWrapperCollection<IFE1D2DEdge> edges = super.getEdges();
     List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
-    IFE1D2DNode lasAddedNode=null;
+    IFE1D2DNode lastAddedNode=null;
     
     for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
     {
-      if(edge instanceof IEdgeInv)
+      IFE1D2DNode<IFE1D2DEdge> node0=edge.getNode( 0 );
+      IFE1D2DNode<IFE1D2DEdge> node1=edge.getNode( 1 );
+      
+      if(node0.equals( lastAddedNode ))
       {
-        IFE1D2DEdge invertedEdge=((IEdgeInv)edge).getInverted();
-        List<IFE1D2DNode> edgeNodes=invertedEdge.getNodes();
-        IFE1D2DNode<IFE1D2DEdge> node;
-        for(int i=edgeNodes.size()-1;i>=0;i--)
-        {
-          node=edgeNodes.get( i );
-          if(node!=null)
-          {
-            if(!node.equals( lasAddedNode ))
-            {
-              nodes.add( node );
-              lasAddedNode=node;
-            }
-          }
-        }
-        
+        //skip because expected
       }
       else
       {
-        for(IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes())
+        if(lastAddedNode==null)
         {
-          if(node!=null)
-          {
-            if(!node.equals( lasAddedNode ))
-            {
-              nodes.add( node );
-              lasAddedNode=node;
-            }
-          }
+          //first node
+          nodes.add( node0 );
+          lastAddedNode=node0;
+        }
+        else
+        {
+          //bad list not following each other
+          throw new RuntimeException("Continuity line node is bad:"+edges);
         }
       }
+      nodes.add( node1 );
+      lastAddedNode=node1;
+//      if(edge instanceof IEdgeInv)
+//      {
+//        IFE1D2DEdge invertedEdge=((IEdgeInv)edge).getInverted();
+//        List<IFE1D2DNode> edgeNodes=invertedEdge.getNodes();
+//        IFE1D2DNode<IFE1D2DEdge> node;
+//        for(int i=edgeNodes.size()-1;i>=0;i--)
+//        {
+//          node=edgeNodes.get( i );
+//          if(node!=null)
+//          {
+//            if(!node.equals( lastAddedNode ))
+//            {
+//              nodes.add( node );
+//              lastAddedNode=node;
+//            }
+//          }
+//        }
+//        
+//      }
+//      else
+//      {
+//        for(IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes())
+//        {
+//          if(node!=null)
+//          {
+//            if(!node.equals( lastAddedNode ))
+//            {
+//              nodes.add( node );
+//              lastAddedNode=node;
+//            }
+//          }
+//        }
+//      }
     }
 //    if(lasAddedNode!=null && nodes.size()>0)
 //    {

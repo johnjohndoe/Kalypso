@@ -30,7 +30,7 @@
 		schemaLocation="../gml3.1.1/base/gml.xsd"
 		/-->
 		
-	<xs:include schemaLocation="simulation_model_math.xsd"/>
+	<!--xs:include schemaLocation="simulation_model_math.xsd"/-->
 	
 	<!-- xs:element 
 		name="flowRelationshipModel" 

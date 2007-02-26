@@ -139,13 +139,13 @@ public class CreateFEContlineWidget extends AbstractWidget
       final Feature parentFeature = model.getFeature();
       final IRelationType rt = 
           (IRelationType) parentFeature.getFeatureType().getProperty( 
-              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS
-              /*FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS*/ );
+              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS);
       final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, rt, -1, continuityLine.getWrappedFeature(), null, true );
       workspace.postCommand( addElementCommand );
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );

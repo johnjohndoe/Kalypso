@@ -125,7 +125,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
       {
           IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[i].getAddedNode();
           IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[i+1].getAddedNode();
-          
+           
           curEdge=model.findEdge( node0, node1  );
           if(curEdge==null)
           {
@@ -138,6 +138,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
               //
               curEdge.addNode( node1.getGmlID() );
               node1.addContainer( edgeGmlID );
+              
               edges.add( curEdge );
               curEdge.getWrappedFeature().invalidEnvelope();
               
@@ -148,6 +149,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
 //            throw new RuntimeException("Edge not found");
           }
       }
+      System.out.println(""+edges+ " ");
       addedElement=ModelOps.createElement2d( model, edges );
       System.out.println("Adding elment:"+addedElement);
     }

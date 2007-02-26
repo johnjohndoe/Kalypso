@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -193,31 +194,34 @@ public class FE1D2D_2DElement extends AbstractFeatureBinder
     
     for( final IFE1D2DEdge edge : edges )
     {
-      if(edge instanceof IEdgeInv)
-      {
-        edgeInvFeature=((IEdgeInv)edge).getWrappedFeature();
-        if(edgeInvFeature==null)
-        {
-//           new EdgeInv(
-//               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-//               feature,
-//               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-          ((IEdgeInv)edge).addInvEdgeToElement( this );
-        }
-        else
-        {
-//          new EdgeInv(
-//              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
-//              feature,
-//              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
-          
-        }
-      }
-      else
-      {
-        edgeList.add( edge.getWrappedFeature().getId() );
-      }
+      edgeList.add( edge.getGmlID() );
+//      if(edge instanceof IEdgeInv)
+//      {
+//        edgeInvFeature=((IEdgeInv)edge).getWrappedFeature();
+//        if(edgeInvFeature==null)
+//        {
+////           new EdgeInv(
+////               ((IEdgeInv)edge).getInverted().getWrappedFeature(),
+////               feature,
+////               Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+//          //TODO why is invedge not added
+//          ((IEdgeInv)edge).addInvEdgeToElement( this );
+//        }
+//        else
+//        {
+////          new EdgeInv(
+////              ((IEdgeInv)edge).getInverted().getWrappedFeature(),
+////              feature,
+////              Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE);
+//          
+//        }
+//      }
+//      else
+//      {
+//        edgeList.add( edge.getWrappedFeature().getId() );
+//      }
     }
+    ModelOps.sortElementEdges( this );
   }
 
   /**

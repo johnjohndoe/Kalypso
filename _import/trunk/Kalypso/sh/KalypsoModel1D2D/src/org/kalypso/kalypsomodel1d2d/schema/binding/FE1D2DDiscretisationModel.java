@@ -150,38 +150,45 @@ public class FE1D2DDiscretisationModel
         }
         else
         {
+          IEdgeInv edgeInv=edge.getEdgeInv();
+          if(edgeInv==null)
+          {
+            edgeInv=new EdgeInv(edge,this);
+          }
+          return edgeInv;
+          
           //TODO find inv edge
-          GM_Envelope env=edge.getCurve().getEnvelope();
-          IEdgeInv foundEdgeInv=null;
-                            
-          for(Feature edgeFeature:(List<Feature>)m_edges.getWrappedList().query( env, null))
-          {
-            if(GMLSchemaUtilities.substitutes( 
-                            edgeFeature.getFeatureType(),
-                            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV))
-            {
-              IEdgeInv tempEdgeInv= (IEdgeInv)edgeFeature.getAdapter( IEdgeInv.class );
-              if(tempEdgeInv==null)
-              {
-                throw new NullPointerException(
-                    "Could not adapt to inv edge:"+edgeFeature);
-              }
-              if( edge.equals( tempEdgeInv.getInverted()))
-              {
-                foundEdgeInv=tempEdgeInv;
-              }
-                
-                
-            }
-          }
-          if(foundEdgeInv==null)
-          {
-            return foundEdgeInv;
-          }
-          else 
-          {
-            return new EdgeInv(edge,this);
-          }
+//          GM_Envelope env=edge.getCurve().getEnvelope();
+//          IEdgeInv foundEdgeInv=null;
+//                            
+//          for(Feature edgeFeature:(List<Feature>)m_edges.getWrappedList().query( env, null))
+//          {
+//            if(GMLSchemaUtilities.substitutes( 
+//                            edgeFeature.getFeatureType(),
+//                            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV))
+//            {
+//              IEdgeInv tempEdgeInv= (IEdgeInv)edgeFeature.getAdapter( IEdgeInv.class );
+//              if(tempEdgeInv==null)
+//              {
+//                throw new NullPointerException(
+//                    "Could not adapt to inv edge:"+edgeFeature);
+//              }
+//              if( edge.equals( tempEdgeInv.getInverted()))
+//              {
+//                foundEdgeInv=tempEdgeInv;
+//              }
+//                
+//                
+//            }
+//          }
+//          if(foundEdgeInv==null)
+//          {
+//            return foundEdgeInv;
+//          }
+//          else 
+//          {
+//            return new EdgeInv(edge,this);
+//          }
           
         }
       }

@@ -208,6 +208,7 @@
 					<xs:element
 						ref="wb1d2d:edgeContainer"
 						minOccurs="0" maxOccurs="unbounded"/>
+					<group ref="gml:StandardObjectProperties"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>

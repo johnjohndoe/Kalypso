@@ -20,6 +20,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -296,5 +297,55 @@ public class FE1D2DEdge extends AbstractFeatureBinder
   public void addNode( String nodeID )
   {
     m_nodes.getWrappedList().add( nodeID );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setInvEdge(java.lang.String)
+   */
+  public void setInvEdge( String invEdgeID )
+  {
+    invEdgeID=Assert.throwIAEOnNullOrEmpty( invEdgeID );
+    m_featureToBind.setProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, invEdgeID );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getEdgeInv()
+   */
+  public IEdgeInv getEdgeInv( )
+  {
+    Object prop= m_featureToBind.getProperty( 
+        Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
+    Feature edgeInvFeature=FeatureHelper.getFeature(
+        m_featureToBind.getWorkspace(),
+        prop);         
+
+    if(edgeInvFeature==null)
+    {
+      return null;
+    }
+    else
+    {
+      IEdgeInv edgeInv = (IEdgeInv) edgeInvFeature.getAdapter( IEdgeInv.class );
+      return edgeInv;
+    }
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    StringBuffer buf= new StringBuffer(256);
+    buf.append( m_featureToBind );
+    buf.append( '[' );
+    for(IFE1D2DNode node:m_nodes)
+    {
+      buf.append(node.getWrappedFeature());
+      buf.append( ' ' );
+    }
+    buf.append(']');
+    return buf.toString();
   }
 }
