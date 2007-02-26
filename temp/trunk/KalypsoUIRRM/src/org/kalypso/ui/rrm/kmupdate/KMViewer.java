@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.model.km.ProfileData;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;
@@ -85,6 +86,7 @@ public class KMViewer
   final Text m_textKm1;
 
   final Text m_textKm2;
+  final StringBuffer m_selectionBuffer=new StringBuffer();
 
   private DirectoryFieldWidget m_dirField;
 
@@ -92,6 +94,7 @@ public class KMViewer
 
   public KMViewer( Composite parent )
   {
+//    m_selectionBuffer=new StringBuffer();
     m_top = parent;
     parent.setLayout( new GridLayout( 3, false ) );
 
@@ -417,7 +420,7 @@ public class KMViewer
           profileData.setFile( file.toString() );
           profileData.setPositionKM( position );
           System.out.print("Profil: " + pd.getPosition());
-          profileData.setEnabled( pd.isValidForKalypso() );
+          profileData.setEnabled( pd.isValidForKalypso(m_selectionBuffer) );
           profileList.add( profileData );
           // m_profileListViewer.setChecked( profileData, true );
         }
@@ -437,6 +440,11 @@ public class KMViewer
   private KalininMiljukovType getInput( )
   {
     return (KalininMiljukovType) m_profileListViewer.getInput();
+  }
+
+  public StringBuffer getSelectionBuffer( )
+  {
+    return m_selectionBuffer;
   }
 
 }

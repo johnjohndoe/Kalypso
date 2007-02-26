@@ -18,12 +18,15 @@ public class ProfileData
 
   private final File m_file;
 
+  private String m_comment;
+
   public ProfileData( final File file, double min, double max, double meter )
   {
     m_file = file;
     m_meter = meter;
     m_min = min;
     m_max = max;
+    m_comment = null;
   }
 
   public File getFile( )
@@ -96,52 +99,48 @@ public class ProfileData
     return new KMValue( getRange( m_min, m_max ), m_rows[index], m_rows[index + 1] );
   }
 
-  public boolean isValidForKalypso( )
+  public boolean isValidForKalypso( StringBuffer buffer )
   {
+
     if( m_rows.length < 6 ) // not enough values for calculation
     {
-      System.out.println( ", Profildaten nicht O.K.! Es liegen nicht genug Abflüsse zur Berechnung vor (mind. 6). \n" );
+      buffer.append( m_meter + ": Profildaten nicht O.K.! Es liegen nicht genug Abflüsse zur Berechnung vor (mind. 6). \n" );
       return false;
     }
     for( int i = 0; i < m_rows.length - 1; i++ )
     {
       if( (m_rows[i].getQ() - m_rows[i + 1].getQ()) > 0.009 )// Änderung in der dritten Nachkommastelle O.K. -
-                                                              // Rechenungenauigkeiten im Hydraulikmodell
+      // Rechenungenauigkeiten im Hydraulikmodell
       {
-        System.out.println( ", Profildaten nicht O.K.! Es liegt ein Rücksprung in den Abflüssen des Flussschlauches vor. Zeile: "+(i+2)+ "\n" );
+        buffer.append( m_meter + ": Profildaten nicht O.K.! Es liegt ein Rücksprung in den Abflüssen des Flussschlauches vor. Zeile: " + (i + 2) + "\n" );
         return false;
       }
     }
 
-    // if( m_rows[0].getAlpha() < 1 ) // q is allways > q-bordfull
-    // {
-    // System.out.println( ", Profildaten nicht O.K.! Keine Abflüsse unter bordvollem Abfluss vorhanden. \n" );
-    // return false;
-    // }
-    // if( m_rows[2].getAlpha() < 1 ) // no enough values below bordfull (Mindestens die ersten 3 Werte müssen!)
-    // {
-    // System.out.println( ", Profildaten nicht O.K.! Nicht genug Abflüsse unter bordvollem Abfluss vorhanden (Die
-    // ersten 3 Werte müssen unter dem bordvollem Abfluss liegen). \n" );
-    // return false;
-    // }
-
     // TODO: Check if values above bordfull is necessary!
-    // if( m_rows[m_rows.length - 1].getAlpha() >= 1.0 ) // no values above bordfull
-    // {
-    // System.out.println( ", Profildaten nicht O.K.! Keine Abflüsse über bordvollem Abfluss vorhanden. \n" );
-    // return false;
-    // }
-    // if( m_rows[m_rows.length - 1 - 2].getAlpha() >= 1.0 ) // no enough values above bordfull (Mindestens die letzten
-    // 3
-    // // Werte müssen!)
-    // {
-    // System.out.println( ", Profildaten nicht O.K.! Nicht genug Abflüsse über bordvollem Abfluss vorhanden (Die
-    // letzten 3 Werte müssen über dem bordvollem Abfluss liegen). \n" );
-    // return false;
-    // }
-    System.out.println( ", Profildaten sind O.K.. \n" );
+    if( m_rows[m_rows.length - 1].getAlpha() >= 1.0 ) // no values above bordfull
+    {
+      buffer.append( m_meter + ": Profildaten nicht O.K.! Keine Abflüsse über bordvollem Abfluss vorhanden. \n" );
+      return false;
+    }
+    for( int i = 0; i < m_rows.length - 1; i++ )
+    {
+      if( m_rows[i].getSlope() < 0.0 )
+      {
+        buffer.append( m_meter + ": Profildaten nicht vollständig O.K.! Es liegt ein negatives Spiegelliniengefälle vor. Zeile: " + (i + 2) + "\n"
+            + "        Es wird mit dem Absolutwert der Gefälles weiter gerechnet." );
+        return true;
+      }
+    }
+
+    buffer.append( m_meter + ": Profildaten sind O.K.. \n" );
     return true;
 
+  }
+
+  public String getComment( )
+  {
+    return m_comment;
   }
 
 }

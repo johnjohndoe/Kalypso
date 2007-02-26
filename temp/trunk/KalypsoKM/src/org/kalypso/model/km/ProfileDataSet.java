@@ -151,79 +151,6 @@ public class ProfileDataSet
     return (AbstractKMValue[]) result.toArray( new AbstractKMValue[result.size()] );
   }
 
-  // public AbstractKMValue[] getKMValues( int numberOfDischarges ) throws SameXValuesException
-  // {
-  // final ProfileData data = m_profileSort.first();
-  //
-  // // generate kmValues for each q;
-  // int maxValues = data.getNumberKMValues();
-  // final List<AbstractKMValue> kmMergedForIndexOverProfiles = new ArrayList<AbstractKMValue>();
-  // for( int index = 0; index < maxValues; index++ )
-  // {
-  // final ProfileData[] profiles = (ProfileData[]) m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
-  // // collect KMValues for one index (row) over all profiles
-  // final List<AbstractKMValue> kmForIndexOverProfiles = new ArrayList<AbstractKMValue>();
-  // for( int counterProfile = 0; counterProfile < profiles.length; counterProfile++ )
-  // {
-  // final ProfileData profile = profiles[counterProfile];
-  // kmForIndexOverProfiles.add( profile.getKMValue( index ) );
-  // }
-  // // merge collection to one kmvalue
-  // final AbstractKMValue[] kmForIndexOverProfileArray = (AbstractKMValue[]) kmForIndexOverProfiles.toArray( new
-  // AbstractKMValue[kmForIndexOverProfiles.size()] );
-  // kmMergedForIndexOverProfiles.add( new MulitKMValue( kmForIndexOverProfileArray ) );
-  // }
-  //
-  // final AbstractKMValue[] kmMerged = (AbstractKMValue[]) kmMergedForIndexOverProfiles.toArray( new
-  // AbstractKMValue[kmMergedForIndexOverProfiles.size()] );
-  //
-  // final SortedSet<AbstractKMValue> sort = new TreeSet<AbstractKMValue>( new Comparator<AbstractKMValue>()
-  // {
-  //
-  // public int compare( AbstractKMValue km1, AbstractKMValue km2 )
-  // {
-  // return Double.compare( km1.getQSum(), km2.getQSum() );
-  // }
-  //
-  // } );
-  // for( int i = 0; i < kmMerged.length; i++ )
-  // sort.add( kmMerged[i] );
-  //
-  // // Calculate for the number of discharges (at the moment always 5)
-  // final AbstractKMValue kmFirst = kmMerged[0];
-  // final AbstractKMValue kmLast = kmMerged[kmMerged.length - 1];
-  // double qFirst = kmFirst.getQSum();
-  // double qLast = kmLast.getQSum();
-  // double qbankfull;
-  // final List<AbstractKMValue> result = new ArrayList<AbstractKMValue>();
-  // try
-  // {
-  // final AbstractKMValue kmBankFull = getBankFull( kmMerged );
-  // qbankfull = kmBankFull.getQSum();
-  // }
-  // catch( Exception e )
-  // {
-  // // TODO: Add logger! There is the possibility, that the strand has no bv discharge!
-  // System.out.println( "Der bordvolle Abfluss des Stranges wird auf den mittleren Abfluss gesetzt, da er nicht korrekt
-  // ermittelt werden konnte!" );
-  // qbankfull = (qLast + qFirst) / 2;
-  // }
-  //
-  // // double dq1 = (qbankfull - qFirst) / (numberOfDischarges / 2);
-  // int max1 = numberOfDischarges / 2; // Bei 5 insgesamt sind dies immer 2
-  // for( int i = 0; i < max1; i++ )
-  // {
-  // double q = qFirst + i * (qbankfull - qFirst) / max1;
-  // result.add( getKM( sort, q ) );
-  // }
-  // for( int i = max1; i < numberOfDischarges; i++ )
-  // {
-  // double q = qbankfull + (i - (max1)) * (qLast - qbankfull) / (numberOfDischarges - (max1 + 1));
-  // result.add( getKM( sort, q ) );
-  // }
-  // return (AbstractKMValue[]) result.toArray( new AbstractKMValue[result.size()] );
-  // }
-
   private AbstractKMValue getKM( SortedSet<AbstractKMValue> sort, double q ) throws SameXValuesException
   {
 
@@ -235,27 +162,22 @@ public class ProfileDataSet
     }
     final AbstractKMValue km1 = headSet.last();
     final AbstractKMValue km2 = sort.tailSet( value ).first();
-    return new KMValueFromQinterpolation( q, km1, km2 );
+    KMValueFromQinterpolation strandKMValue = new KMValueFromQinterpolation( q, km1, km2 );
+    // TODO: check if this is right: Setting n to maximum 30 (Prof.Pasche)
+    if( strandKMValue.getN() > 30d )
+    {
+      double prod = strandKMValue.getN() * strandKMValue.getK();
+      strandKMValue.setN( 30d );
+      strandKMValue.setK( prod / 30d );
+    }
+    if( strandKMValue.getNForeland() > 30d )
+    {
+      double prod = strandKMValue.getNForeland() * strandKMValue.getKForeland();
+      strandKMValue.setNf( 30d );
+      strandKMValue.setKf( prod / 30d );
+    }
+    return strandKMValue;
   }
-
-  // private AbstractKMValue getBankFull( final AbstractKMValue[] kmValues ) throws Exception
-  // {
-  // // TODO: more Restrictions to the km-Values can be added here. Add logger.
-  // for( int i = 0; i < kmValues.length; i++ )
-  // {
-  // final AbstractKMValue km = kmValues[i];
-  // if( km.getAlpha() < 1 && i == 0 )
-  // throw new Exception( "Kein Bordvoller Abfluss für den Strang vorhanden, minimaler Abfluss übersteigt den bordvollen
-  // Abfluss." );
-  // else if( km.getAlpha() < 1 && i < 2 )
-  // throw new Exception( "Nicht genug Abflüsse unter dem bordvollen Abfluss für den Strang vorhanden (bordvoller
-  // Abfluss ist erster oder zweiter ermittelter Abfluss im Strang)." );
-  // else if( km.getAlpha() < 1 && i > 0 )
-  // return kmValues[i - 1];
-  // }
-  // throw new Exception( "Bordvoller Abfluss konnte für den Strang nicht korrekt ermittelt wrden. Überprüfe Profile
-  // oder der Bordvolle Abfluss wird im Strang nie erreicht." );
-  //  }
 
   private class DummyKMValue extends AbstractKMValue
   {

@@ -22,6 +22,8 @@ public class KMValueFromQinterpolation extends AbstractKMValue
 
   private final AbstractKMValue m_km1;
 
+  private boolean m_changed;
+
   public KMValueFromQinterpolation( double q, AbstractKMValue km1, AbstractKMValue km2 ) throws SameXValuesException
   {
     m_km1 = km1;
@@ -88,6 +90,31 @@ public class KMValueFromQinterpolation extends AbstractKMValue
   public double getQForeland( )
   {
     return m_qf;
+  }
+
+  public void setK( double k )
+  {
+    m_k = k;
+  }
+
+  public void setKf( double kf )
+  {
+    m_kf = kf;
+  }
+
+  public void setN( double n )
+  {
+    m_n = n;
+  }
+
+  public void setNf( double nf )
+  {
+    m_nf = nf;
+  }
+
+  public void setMaxNReached( boolean isChanged )
+  {
+    m_changed = isChanged;
   }
 
 }

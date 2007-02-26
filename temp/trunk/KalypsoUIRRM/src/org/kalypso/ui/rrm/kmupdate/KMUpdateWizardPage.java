@@ -406,7 +406,7 @@ public class KMUpdateWizardPage extends WizardPage
     final StringBuffer detailBuffer = new StringBuffer();
     final StringBuffer errorBuffer = new StringBuffer();
     final StringBuffer monitorBuffer = new StringBuffer();
-
+    final StringBuffer selectionBuffer = m_kmViewer.getSelectionBuffer();
     final ILogger detailedLogger = new ILogger()
     {
       public void log( String message )
@@ -491,7 +491,9 @@ public class KMUpdateWizardPage extends WizardPage
         + separator//
         + "Fehler:\n" + errorBuffer.toString() // 
         + separator //  
-        + "Details\n" + detailBuffer.toString();
+        + "Details\n" + detailBuffer.toString() //
+        + separator //
+        + "Profilauswahl\n" + selectionBuffer.toString();
     // MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
     Dialog dialog = new ScrolledTextInformationDialog( getShell(), "Erfolg der Berechnungen", "Log", message );
     dialog.open();
@@ -578,7 +580,7 @@ public class KMUpdateWizardPage extends WizardPage
     final ProfileDataSet profileSet = ProfileFactory.createProfileSet( files, kmStart, kmEnd );
     // TODO:make it more general - not reduced to 5
     int max = 5;
-    final AbstractKMValue[] values = profileSet.getKMValues( );
+    final AbstractKMValue[] values = profileSet.getKMValues();
     final Feature[] kmParameter = m_workspace.resolveLinks( feature, kmRT );
 
     result.add( new FeatureChange( feature, kmKMStartPT, km.getKmStart() ) );
