@@ -6,11 +6,9 @@ package org.kalypso.afgui.model;
 import java.util.List;
 
 /**
- * 
  * @author Patrice Congo
  */
-public interface IPhase extends ITaskGroup
+public interface IPhase extends IWorkflowPart
 {
-	List<ITaskGroup> getTaskGroups();
-	
+  public List<ITaskGroup> getTaskGroups( );
 }

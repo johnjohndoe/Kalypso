@@ -19,8 +19,7 @@ public class SubTaskGroupTest extends TestCase
 	
 	public void testTaskGroup()
 	{
-		SubTaskGroup tg1= new SubTaskGroup(taskGroup1);
-		assertTrue(tg1.getActivities().isEmpty());
+		SubTaskGroup tg1= new SubTaskGroup(taskGroup1);		
 		assertEquals( 
 				new TaskSeq(model.getSeq(TestRDFModel.TASK_1_2)),
 				tg1.getTasks());

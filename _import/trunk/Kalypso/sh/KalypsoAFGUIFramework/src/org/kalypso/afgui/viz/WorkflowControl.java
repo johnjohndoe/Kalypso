@@ -113,12 +113,12 @@ public class WorkflowControl
 
   private String m_subTaskGroupFromMemento;
 
-  public WorkflowControl( IWorkflow workflow )
+  public WorkflowControl( final IWorkflow workflow )
   {
     this.m_workflow = workflow;
   }
 
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     // top
     top = new Composite( parent, SWT.FILL );
@@ -394,27 +394,7 @@ public class WorkflowControl
         return helpString;
       }
     }
-  }
-
-  final void doTaskOrActivity( final TaskAction task, final Event event )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    final String name = task.getId();
-    try
-    {
-      final Command command = getCommand( commandService, name );
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      handlerService.executeCommand( command.getId(), event );
-    }
-    catch( final Throwable e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( m_form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
-      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-      logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
-    }
-  }
+  }  
 
   Command getCommand( final ICommandService commandService, final String commandId )
   {
@@ -539,11 +519,11 @@ public class WorkflowControl
       final List<TaskAction<ITask>> actions = new ArrayList<TaskAction<ITask>>();
       final ArrayList<ITask> tasks = new ArrayList<ITask>();
 
-      final IPhase p = (IPhase) section.getData( KEY_IPHASE );
-      if( p != null )
-      {
-        tasks.addAll( p.getTasks() );
-      }
+//      final IPhase p = (IPhase) section.getData( KEY_IPHASE );
+//      if( p != null )
+//      {
+//        tasks.addAll( p.getTasks() );
+//      }
       final ITaskGroup tg = (ITaskGroup) section.getData( KEY_ITASKGROUP );
       if( tg != null )
       {
@@ -665,6 +645,26 @@ public class WorkflowControl
     public E getWorkflowPart( )
     {
       return m_workflowPart;
+    }
+    
+    private final void doTaskOrActivity( final TaskAction task, final Event event )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      final String name = task.getId();
+      try
+      {
+        final Command command = getCommand( commandService, name );
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        handlerService.executeCommand( command.getId(), event );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( m_form.getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+        logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
+      }
     }
   }
 

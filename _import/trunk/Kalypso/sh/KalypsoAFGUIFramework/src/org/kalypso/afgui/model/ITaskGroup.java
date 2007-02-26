@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface ITaskGroup extends ISubTaskGroup
 {
-	List<ISubTaskGroup> getSubTaskGroups();
+	public List<ISubTaskGroup> getSubTaskGroups();
 }

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Patrice Congo
  */
-public interface ISubTaskGroup extends ITask
+public interface ISubTaskGroup extends IWorkflowPart
 {
-	List<ITask>getTasks();
+	public List<ITask>getTasks();
 }
