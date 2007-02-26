@@ -446,11 +446,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       final GM_Envelope remoteEnv = geoTransformerToRemoteSRS.transformEnvelope( targetEnvLocalSRS, m_localSRS );
       // paint image on buffer
       WMSHelper.transformImage( image, remoteEnv, m_localSRS, m_remoteSRS, geoTransform, buffer.getGraphics() );
+      if( m_buffer != null )
+        m_buffer.flush();
       m_buffer = buffer;
       m_bufferEnvLocalSRS = targetEnvLocalSRS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
+      m_buffer.flush();
       m_buffer = null;
       m_bufferEnvLocalSRS = null;
       throw e;
@@ -468,6 +471,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   {
     if( m_buffer != null )
       m_buffer.flush();
+    m_buffer = null;
 
     super.dispose();
   }

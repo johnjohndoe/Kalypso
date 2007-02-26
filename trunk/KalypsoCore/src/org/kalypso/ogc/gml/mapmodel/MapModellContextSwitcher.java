@@ -61,17 +61,72 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  */
 public class MapModellContextSwitcher implements ModellEventListener, IKalypsoThemeListener
 {
+
+  private final class ContextSwitcherThread extends Thread
+  {
+    private IContextService m_contextService;
+
+    private IContextActivation m_oldContext;
+
+    private IKalypsoTheme m_theme;
+
+    ContextSwitcherThread( final IContextService contextService )
+    {
+      m_contextService = contextService;
+    }
+
+    public void setTheme( final IKalypsoTheme theme )
+    {
+      m_theme = theme;
+    }
+
+    /**
+     * @see java.lang.Thread#run()
+     */
+    @Override
+    public void run( )
+    {
+      if( m_oldContext != null )
+      {
+        logger.info( "Deactivating context: " + m_oldContext.getContextId() );
+        m_contextService.deactivateContext( m_oldContext );
+      }
+      if( m_theme == null )
+      {
+        return;
+      }
+      else
+      {
+        final String contextId = m_theme.getContext();
+        final Context context = m_contextService.getContext( contextId );
+        if( !context.isDefined() )
+        {
+          context.define( contextId, contextId, "org.eclipse.ui.contexts.window" );
+        }
+        logger.info( "Activating context: " + contextId );
+        m_oldContext = m_contextService.activateContext( contextId );
+        logger.info( "Active contexts: " + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) );
+      }
+      super.run();
+    }
+
+    public void dispose( )
+    {
+      m_contextService = null;
+      m_oldContext = null;
+      m_theme = null;
+    }
+  }
+
   static final Logger logger = Logger.getLogger( MapModellContextSwitcher.class.getName() );
-
-  IContextActivation m_activeContextHandle;
-
-  IContextService m_contextService;
 
   private final Collection<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
 
+  private ContextSwitcherThread m_contextSwitcherThread;
+
   public MapModellContextSwitcher( final IContextService contextService )
   {
-    m_contextService = contextService;
+    m_contextSwitcherThread = new ContextSwitcherThread( contextService );
   }
 
   /**
@@ -79,7 +134,7 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent == null || m_contextService == null )
+    if( modellEvent == null )
     {
       return;
     }
@@ -129,45 +184,14 @@ public class MapModellContextSwitcher implements ModellEventListener, IKalypsoTh
 
   private synchronized void activateContextFor( final IKalypsoTheme theme )
   {
-    PlatformUI.getWorkbench().getDisplay().asyncExec( new Thread()
-    {
-      /**
-       * @see java.lang.Thread#run()
-       */
-      @Override
-      public void run( )
-      {
-        if( m_activeContextHandle != null )
-        {
-          logger.info( "Deactivating context: " + m_activeContextHandle.getContextId() );
-          m_activeContextHandle.getContextService().deactivateContext( m_activeContextHandle );
-        }
-        if( theme == null )
-        {
-          m_activeContextHandle = null;
-          return;
-        }
-        else
-        {
-          final String contextId = theme.getContext();
-          final Context context = m_contextService.getContext( contextId );
-          if( !context.isDefined() )
-          {
-            context.define( contextId, contextId, "org.eclipse.ui.contexts.window" );
-          }
-          logger.info( "Activating context: " + contextId );
-          m_activeContextHandle = m_contextService.activateContext( contextId );
-          logger.info( "Active contexts: " + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) );
-        }
-        super.run();
-      }
-    } );
+    m_contextSwitcherThread.setTheme( theme );
+    PlatformUI.getWorkbench().getDisplay().asyncExec( m_contextSwitcherThread );
   }
 
   public void dispose( )
   {
-    activateContextFor( null );    
-    m_contextService = null;
+    activateContextFor( null );
+    m_contextSwitcherThread.dispose();
     for( IKalypsoTheme theme : m_themes )
     {
       theme.removeKalypsoThemeListener( this );
