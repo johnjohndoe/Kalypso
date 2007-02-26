@@ -123,6 +123,7 @@
 		         <with variable="activeContexts">
 		            <iterate operator="or">
 		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
+		               <!--equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/-->
 		            </iterate>
 		         </with>
 		      </activeWhen>
@@ -144,7 +145,8 @@
 		      <activeWhen>   
 		         <with variable="activeContexts">
 		            <iterate operator="or">
-		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		               <!--equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/-->
+		               <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element2D"/>
 		            </iterate>
 		         </with>
 		      </activeWhen>

@@ -133,7 +133,9 @@ public class ModelOps
         for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
         {
           if( edgeList.contains( edge ) )
+          {
             continue;
+          }
 
           // get opposite node (not me)
           final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
@@ -147,6 +149,7 @@ public class ModelOps
             else
             {
               //TODO cope with direction here by finding the right edge
+              System.out.println();
               oppositeNode = nodes.get( 0 );
               edge=model.findEdge( lastFoundNode, oppositeNode );
             }

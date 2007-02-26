@@ -161,6 +161,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
           edgeID );
       edge.addNode( gmlNode1ID );
       edge.addNode( gmlNode2ID);
+      node1.addContainer( edgeID );
+      node2.addContainer( edgeID );
       isNew=true;
     }
     //TODO set elements
