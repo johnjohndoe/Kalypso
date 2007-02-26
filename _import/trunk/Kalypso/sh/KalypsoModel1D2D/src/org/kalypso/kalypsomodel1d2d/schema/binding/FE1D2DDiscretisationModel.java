@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -105,10 +106,6 @@ public class FE1D2DDiscretisationModel
     super( 
         featureToBind, 
         Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel);
-    
-//    featureToBind.getWorkspace().addModellListener( meListener );
-//    System.out.println("Model event added");
-    
   }
   
   /**
@@ -116,23 +113,6 @@ public class FE1D2DDiscretisationModel
    */
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-//    final List edgeList = 
-//        (List) getFeature().getProperty( 
-//            Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-//    // TODO: brute force search, check if this scales good with big models
-//    for( final Object object : edgeList )
-//    {
-//      final FE1D2DEdge edge = new FE1D2DEdge( (Feature) object );
-//      final FE1D2DNode[] nodes = edge.getNodesAsArray();
-//
-//      if( nodes.length != 2 )
-//        return null;
-//
-//      if( (node0.equals( nodes[0] ) && node1.equals( nodes[1] )) || (node0.equals( nodes[1] ) && node1.equals( nodes[0] )) )
-//        return edge;
-//    }
-//
-//    return null;
       List<IFE1D2DEdge> edges= new ArrayList<IFE1D2DEdge>();
       edges.addAll(node0.getContainers() );
       if(edges.size()==0)
@@ -144,9 +124,9 @@ public class FE1D2DDiscretisationModel
       if(size==1)
       {
         IFE1D2DEdge edge=edges.get( 0 );
-        if(edge.equals( node0 ))
+        if(NodeOps.startOf( node0, edge ))
         {
-          return edges.get( 0 );
+          return edge;
         }
         else
         {
@@ -161,9 +141,8 @@ public class FE1D2DDiscretisationModel
       }
       else if(size==2)
       {
-        //found edge and edgeinv
         IFE1D2DEdge edge=edges.get( 0 );
-        if(edge.getNode( 0 ).getGmlID().equals( node0.getGmlID() ))
+        if(NodeOps.startOf( node0, edge ))
         {
           return edge;
         }

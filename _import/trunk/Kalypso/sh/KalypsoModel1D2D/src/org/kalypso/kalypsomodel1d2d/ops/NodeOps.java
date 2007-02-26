@@ -72,7 +72,7 @@ public class NodeOps
   /**
    * Finds the nearest node to the given position.
    */
-  public static /*FE1D2DNode*/IFE1D2DNode findNode( 
+  public static IFE1D2DNode findNode( 
                       final GM_Point point, 
                       final FE1D2DDiscretisationModel model )
   {
