@@ -84,11 +84,13 @@ public class MapModell implements IMapModell
   }
 
   public void dispose( )
-  {
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+  {    
+    for( final IKalypsoTheme theme : m_themes )
+      theme.dispose();
     m_themes.clear();
-    for( int i = 0; i < themes.length; i++ )
-      themes[i].dispose();
+    m_enabledThemeStatus.clear();
+    m_activeTheme = null;
+    m_project = null;
   }
 
   public void activateTheme( final IKalypsoTheme theme )

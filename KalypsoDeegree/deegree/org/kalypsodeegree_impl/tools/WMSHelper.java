@@ -95,8 +95,8 @@ public class WMSHelper
 	 * @return result an array of possible coordiante systems
 	 */
 	public static CS_CoordinateSystem[] negotiateCRS(
-			CS_CoordinateSystem localCRS, WMSCapabilities capabilities,
-			String[] layerNames) throws Exception
+			final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities,
+			final String[] layerNames) throws Exception
 	{
 		final Layer topLayer = capabilities.getCapability().getLayer();
 		final CS_CoordinateSystem crs = matchCrs(topLayer, layerNames, localCRS);
@@ -105,7 +105,7 @@ public class WMSHelper
 			{ localCRS };
 		// get crs from top layer
 		final String[] topLayerSRS = topLayer.getSrs();
-		final List result = new ArrayList();
+		final List<CS_CoordinateSystem> result = new ArrayList<CS_CoordinateSystem>();
 		try
 		// try to create all coordinate systems
 		{
@@ -117,8 +117,7 @@ public class WMSHelper
 			e.printStackTrace();
 			return null;
 		}
-		return (CS_CoordinateSystem[]) result
-				.toArray(new CS_CoordinateSystem[result.size()]);
+		return result.toArray(new CS_CoordinateSystem[result.size()]);
 	}
 
 	/**
@@ -137,17 +136,17 @@ public class WMSHelper
 	 * 
 	 */
 
-	private static CS_CoordinateSystem matchCrs(Layer topLayer,
-			String[] layerSelection, CS_CoordinateSystem localCRS)
+	private static CS_CoordinateSystem matchCrs(final Layer topLayer,
+			final String[] layerSelection, final CS_CoordinateSystem localCRS)
 			throws Exception
 	{
-		HashSet collector = new HashSet();
+		final HashSet<Layer> collector = new HashSet<Layer>();
 
 		collect(collector, topLayer, layerSelection);
 		for (Iterator iter = collector.iterator(); iter.hasNext();)
 		{
-			Layer layer = (Layer) iter.next();
-			String[] layerSRS = layer.getSrs();
+			final Layer layer = (Layer) iter.next();
+			final String[] layerSRS = layer.getSrs();
 			if (contains(layerSRS, localCRS.getName()))
 				continue;
 			return null;
@@ -164,13 +163,13 @@ public class WMSHelper
 	 * @param set
 	 *            the Set where the layers are collected in
 	 */
-	public static void getAllLayers(WMSCapabilities capabilites, Set set)
+	public static void getAllLayers(final WMSCapabilities capabilites, final Set<Layer> set)
 	{
 		try
 		{
-			Layer topLayer = capabilites.getCapability().getLayer();
+			final Layer topLayer = capabilites.getCapability().getLayer();
 			collect(set, topLayer, null);
-		} catch (Exception e)
+		} catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -189,7 +188,7 @@ public class WMSHelper
 	 * @param layerSelection
 	 *            an array of layer names to search for.
 	 */
-	private static void collect(final Set collector, final Layer layer,
+	private static void collect(final Set<Layer> collector, final Layer layer,
 			final String[] layerSelection)
 	{
 		final Layer[] layerTree = layer.getLayer();
@@ -221,7 +220,7 @@ public class WMSHelper
 	 * @return boolean true if the String is the array, false otherwise
 	 */
 
-	public static boolean contains(String[] array, String toMatch)
+	public static boolean contains(final String[] array, final String toMatch)
 	{
 		for (int i = 0; i < array.length; i++)
 			if (array[i].equals(toMatch))
@@ -241,7 +240,7 @@ public class WMSHelper
 			throws Exception
 	{
 		final Layer topLayer = capabilites.getCapability().getLayer();
-		final HashSet layerCollector = new HashSet();
+		final HashSet<Layer> layerCollector = new HashSet<Layer>();
 		collect(layerCollector, topLayer, layers);
 
 		GM_Envelope resultEnvelope = null;
@@ -254,7 +253,7 @@ public class WMSHelper
 				final LayerBoundingBox env = bbox[i];
 				if (env.getSRS().equals(srs.getName()))
 				{
-					org.deegree.model.geometry.GM_Position min = env.getMin();
+//					org.deegree.model.geometry.GM_Position min = env.getMin();
 					// convert deegree Envelope to kalypsodeegree Envelope
 					final GM_Envelope kalypsoEnv = GeometryFactory
 							.createGM_Envelope(env.getMin().getX(), env
@@ -302,9 +301,9 @@ public class WMSHelper
 	 * @param targetCS
 	 *            target coodriate system (local CS from client)
 	 */
-	private static void internalTransformation(Graphics2D g2d,
-			GeoTransform projection, TiledImage rasterImage,
-			RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS)
+	private static void internalTransformation(final Graphics2D g2d,
+			final GeoTransform projection, final TiledImage rasterImage,
+			final RectifiedGridDomain gridDomain, final CS_CoordinateSystem targetCS)
 			throws Exception
 	{
 
@@ -423,14 +422,14 @@ public class WMSHelper
 				(int) buffImageEnv.getMin().getY(), null);
 	}
 
-	public static GM_Envelope getTransformedEnvelope(GM_Envelope serverEnv,
-			CS_CoordinateSystem serverCRS, CS_CoordinateSystem local)
+	public static GM_Envelope getTransformedEnvelope(final GM_Envelope serverEnv,
+			final CS_CoordinateSystem serverCRS, final CS_CoordinateSystem local)
 	{
 		try
 		{
-			GeoTransformer gt = new GeoTransformer(local);
+			final GeoTransformer gt = new GeoTransformer(local);
 			return gt.transformEnvelope(serverEnv, serverCRS);
-		} catch (Exception e)
+		} catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -462,23 +461,20 @@ public class WMSHelper
 			final GeoTransform worldToScreenTransformation, final Graphics g)
 			throws Exception
 	{
-		// System.out.println( "env: " + env );
-		int height = remoteImage.getHeight();
-		int width = remoteImage.getWidth();
+		final int height = remoteImage.getHeight();
+		final int width = remoteImage.getWidth();
 
-		double[] offset = new double[]
+		final double[] offset = new double[]
 		{ (env.getMax().getX() - env.getMin().getX()) / width,
 				(env.getMax().getY() - env.getMin().getY()) / height };
 
-		GridRange range = new GridRange_Impl(new double[]
+		final GridRange range = new GridRange_Impl(new double[]
 		{ 0, 0 }, new double[]
 		{ width, height });
 
-		RectifiedGridDomain gridDomain = new RectifiedGridDomain(
+		final RectifiedGridDomain gridDomain = new RectifiedGridDomain(
 				GeometryFactory.createGM_Point(env.getMin().getX(), env
 						.getMin().getY(), remoteCSR), offset, range);
-
-		// TiledImage ti = new TiledImage( remoteImage, true );
 
 		internalTransformation((Graphics2D) g, worldToScreenTransformation,
 				remoteImage, gridDomain, localCSR);
@@ -498,7 +494,7 @@ public class WMSHelper
 		// + round( env.getMax().getY() );
 	}
 
-	private static String round(double value)
+	private static String round(final double value)
 	{
 		// do not remove method until checked that deegree-WMS is working
 		// without

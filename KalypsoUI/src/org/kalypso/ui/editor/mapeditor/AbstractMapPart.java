@@ -697,6 +697,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     } );
   }
+  
+  public IFile getFile( )
+  {
+    return m_file;
+  }
 
   @Override
   public void dispose( )
