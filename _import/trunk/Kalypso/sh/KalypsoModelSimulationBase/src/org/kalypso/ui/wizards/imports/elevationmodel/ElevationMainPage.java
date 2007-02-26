@@ -97,6 +97,8 @@ public class ElevationMainPage extends WizardPage {
         return;
      
      fileExtensions.add( new String ("asc") );
+     //fileExtensions.add( new String ("tif") );
+     
          
      // Find the first plugin.xml file.
      Iterator iter = ((IStructuredSelection) selection).iterator();

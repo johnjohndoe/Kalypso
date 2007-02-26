@@ -42,8 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.IDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -59,7 +59,7 @@ public class ApplyElevationWidgetDataModel
   private ITerrainModel terrainModel;
   private ITerrainElevationModelSystem elevationModelSystem;
   private ITerrainElevationModel elevationModel;
-  private IDiscretisationModel discretisationModel;
+  private IFEDiscretisationModel1d2d discretisationModel;
   private List<IFE1D2DNode> selectedNode;
   private GM_Polygon selectionArea;
   
@@ -68,12 +68,12 @@ public class ApplyElevationWidgetDataModel
     //empty
   }
 
-  public IDiscretisationModel getDiscretisationModel( )
+  public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
     return discretisationModel;
   }
 
-  public void setDiscretisationModel( IDiscretisationModel discretisationModel )
+  public void setDiscretisationModel( IFEDiscretisationModel1d2d discretisationModel )
   {
     this.discretisationModel = discretisationModel;
   }
@@ -126,6 +126,7 @@ public class ApplyElevationWidgetDataModel
   public void setTerrainModel( ITerrainModel terrainModel )
   {
     this.terrainModel = terrainModel;
+    this.elevationModelSystem=terrainModel.getTerrainElevationModelSystem();
   }
   
   

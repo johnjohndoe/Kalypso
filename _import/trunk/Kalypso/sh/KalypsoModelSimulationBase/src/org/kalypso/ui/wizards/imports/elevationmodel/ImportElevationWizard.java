@@ -241,6 +241,7 @@ public class ImportElevationWizard extends Wizard
       while( (len = in.read( buf )) > 0 )
       {
         monitor2.worked(1);
+       // monitor2.wait( 1000 );
         out.write( buf, 0, len );
       }
       monitor2.done();

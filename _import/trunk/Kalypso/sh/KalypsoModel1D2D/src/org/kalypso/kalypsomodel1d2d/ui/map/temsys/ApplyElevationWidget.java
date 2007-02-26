@@ -40,10 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 /**
@@ -52,15 +65,18 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
  * @author Madanagopal
  *
  */
-public class ApplyElevationWidget extends AbstractWidget implements IWidgetWithOptions
+public class ApplyElevationWidget 
+                    extends AbstractWidget 
+                    implements IWidgetWithOptions, IEvaluationContextConsumer
 {
   private Composite rootComposite;
   
   private WizardComposite wizardComposite;
   
-  private ApplyElevationWidgetFace widgetFace = 
-                      new ApplyElevationWidgetFace();
   
+  ApplyElevationWidgetDataModel dataModel= new ApplyElevationWidgetDataModel();
+  private ApplyElevationWidgetFace widgetFace = 
+    new ApplyElevationWidgetFace(dataModel);
   
   public ApplyElevationWidget()
   {
@@ -72,7 +88,19 @@ public class ApplyElevationWidget extends AbstractWidget implements IWidgetWithO
     super( name, toolTip );
   }
 
-  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate(commandPoster, mapPanel);
+    
+    IFEDiscretisationModel1d2d model1d2d = 
+      UtilMap.findFEModelTheme( 
+          mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT);
+    dataModel.setDiscretisationModel( model1d2d );
+  }
   
   
   /**
@@ -94,4 +122,57 @@ public class ApplyElevationWidget extends AbstractWidget implements IWidgetWithO
     }
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.ITerrainModelConsumer#setTerrainModel(org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel)
+   */
+  public void setTerrainModel( ITerrainElevationModel terrainModel )
+  {
+    dataModel.setElevationModel( terrainModel );
+    
+  }
+   /**
+   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
+   */
+  public void setEvaluationContext( IEvaluationContext evaluationContext )
+  {
+    Assert.throwIAEOnNullParam( evaluationContext, "evaluationContext" );
+//    final ISzenarioDataProvider szenarioDataProvider = 
+//      (ISzenarioDataProvider) context.getVariable( 
+//            SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+//    final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );    
+    try
+    {
+      ITerrainModel terrainModel= refelectTerrainModel( evaluationContext );
+      dataModel.setTerrainModel( terrainModel );
+    }
+    catch( Throwable e )
+    {
+      e.printStackTrace();
+    }
+   
+  }
+  
+  private final ITerrainModel refelectTerrainModel(IEvaluationContext evaluationContext) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+  {
+    Object dataProvider=evaluationContext.getVariable( "activeSzenarioDataProvider" );
+    
+    if(dataProvider==null)
+    {
+      throw new IllegalArgumentException(
+          "evaluation context does not contain an active szenarion data provider");
+    }
+    Method getModelMethod=
+      dataProvider.getClass().getMethod( "getModel", new Class[]{Class.class});
+    if(getModelMethod==null)
+    {
+      throw new IllegalArgumentException(
+          "Data provider in "+evaluationContext+" does not have getModel method"); 
+    }
+    
+    ITerrainModel terrainModel=
+      (ITerrainModel) getModelMethod.invoke( 
+          dataProvider, new Object[]{ITerrainModel.class});
+    return terrainModel;
+  }
+  
 }
