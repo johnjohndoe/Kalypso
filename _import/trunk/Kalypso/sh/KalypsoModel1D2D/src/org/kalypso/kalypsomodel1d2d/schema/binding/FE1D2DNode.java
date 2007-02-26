@@ -365,7 +365,9 @@ public class FE1D2DNode
   public String toString( )
   {
     StringBuffer buf= new StringBuffer(128);
-    buf.append( "FE1D2DNode[" );
+    buf.append( "FE1D2DNode" );
+    buf.append(getGmlID());
+    buf.append( '[' );
     buf.append( getPoint() );
     //edges
     IFeatureWrapperCollection<IFE1D2DEdge> edges = getContainers();

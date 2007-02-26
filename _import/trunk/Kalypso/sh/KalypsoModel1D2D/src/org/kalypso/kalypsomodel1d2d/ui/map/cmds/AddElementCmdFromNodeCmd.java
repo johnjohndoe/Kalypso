@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -129,29 +130,15 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
           curEdge=model.findEdge( node0, node1  );
           if(curEdge==null)
           {
-            //create edge
-            
-              curEdge = model.getEdges().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-              String edgeGmlID = curEdge.getGmlID();
-              curEdge.addNode( node0.getGmlID() );
-              node0.addContainer( edgeGmlID );
-              //
-              curEdge.addNode( node1.getGmlID() );
-              node1.addContainer( edgeGmlID );
-              
+              curEdge=FE1D2DEdge.createFromModel( model, node0, node1 );
               edges.add( curEdge );
-              curEdge.getWrappedFeature().invalidEnvelope();
-              
           }
           else
           {
             edges.add( curEdge );
-//            throw new RuntimeException("Edge not found");
           }
       }
-      System.out.println(""+edges+ " ");
       addedElement=ModelOps.createElement2d( model, edges );
-      System.out.println("Adding elment:"+addedElement);
     }
   }
 

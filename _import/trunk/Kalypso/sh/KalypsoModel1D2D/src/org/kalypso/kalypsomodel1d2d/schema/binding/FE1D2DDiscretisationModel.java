@@ -157,39 +157,19 @@ public class FE1D2DDiscretisationModel
           }
           return edgeInv;
           
-          //TODO find inv edge
-//          GM_Envelope env=edge.getCurve().getEnvelope();
-//          IEdgeInv foundEdgeInv=null;
-//                            
-//          for(Feature edgeFeature:(List<Feature>)m_edges.getWrappedList().query( env, null))
-//          {
-//            if(GMLSchemaUtilities.substitutes( 
-//                            edgeFeature.getFeatureType(),
-//                            Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV))
-//            {
-//              IEdgeInv tempEdgeInv= (IEdgeInv)edgeFeature.getAdapter( IEdgeInv.class );
-//              if(tempEdgeInv==null)
-//              {
-//                throw new NullPointerException(
-//                    "Could not adapt to inv edge:"+edgeFeature);
-//              }
-//              if( edge.equals( tempEdgeInv.getInverted()))
-//              {
-//                foundEdgeInv=tempEdgeInv;
-//              }
-//                
-//                
-//            }
-//          }
-//          if(foundEdgeInv==null)
-//          {
-//            return foundEdgeInv;
-//          }
-//          else 
-//          {
-//            return new EdgeInv(edge,this);
-//          }
-          
+        }
+      }
+      else if(size==2)
+      {
+        //found edge and edgeinv
+        IFE1D2DEdge edge=edges.get( 0 );
+        if(edge.getNode( 0 ).getGmlID().equals( node0.getGmlID() ))
+        {
+          return edge;
+        }
+        else
+        {
+          return edges.get( 1 );
         }
       }
       else if(size==0)

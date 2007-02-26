@@ -220,12 +220,12 @@ public class ModelOps
 
   }
   
-  public static final void sortElementEdgesOld(IFE1D2DElement element)
+  public static final void sortElementEdgesOLD(IFE1D2DElement element)
   {
     List<IFE1D2DEdge> edges= 
                    new ArrayList<IFE1D2DEdge>(
-                       Arrays.asList( 
-                           ((FE1D2D_2DElement)element).getEdgesAsArray()));
+                       element.getEdges()/*Arrays.asList( 
+                           ((FE1D2D_2DElement)element).getEdgesAsArray())*/);
     Comparator<IFE1D2DEdge> c=new Comparator<IFE1D2DEdge>()
     {
 
@@ -236,16 +236,16 @@ public class ModelOps
       public int compare( IFE1D2DEdge edge1, IFE1D2DEdge edge2 )
       {
 //        System.out.println("EDge1="+edge1+" edge2"+edge2);
-        if((edge1 instanceof IEdgeInv) && !(edge2 instanceof IEdgeInv))
-        {
-          System.out.println("EEEEDge1="+edge1+" edge2"+edge2);
-          return -1;
-        }
-        else if(!(edge1 instanceof IEdgeInv) && (edge2 instanceof IEdgeInv))
-        {
-          System.out.println("EDge1="+edge1+" edge2"+edge2);
-          return +1;
-        } 
+//        if((edge1 instanceof IEdgeInv) && !(edge2 instanceof IEdgeInv))
+//        {
+//          System.out.println("EEEEDge1="+edge1+" edge2"+edge2);
+//          return -1;
+//        }
+//        else if(!(edge1 instanceof IEdgeInv) && (edge2 instanceof IEdgeInv))
+//        {
+//          System.out.println("EDge1="+edge1+" edge2"+edge2);
+//          return +1;
+//        } 
         
         IFE1D2DNode<IFE1D2DEdge> node0_1=edge1.getNode( 0 ); 
         IFE1D2DNode<IFE1D2DEdge> node0_2=edge2.getNode( 0 );
@@ -391,6 +391,7 @@ public class ModelOps
     List<IFE1D2DEdge> edges=
           new ArrayList<IFE1D2DEdge>(element.getEdges());
     
+    
     //clear old edge for reordering
     elementEdges.clear();
     
@@ -399,33 +400,68 @@ public class ModelOps
 //  just select the first node
     IFE1D2DEdge edge=edges.remove(0);
     edgeFeatureList.add( edge.getGmlID() );
-    for(int i=0; edges.size()>0;)
+    int SIZE=edges.size();
+    for(int i=0; SIZE>0;SIZE=edges.size())
     {
       
       IFE1D2DNode nodeEnd=edge.getNode( 1 );
-      i=edges.size()-1;
-      for(;i>=0;i--)
+      
+      findingNextNode: for(int j=0;j<SIZE;j++)
       {
-        IFE1D2DEdge edge2 = edges.get( i );
-        if( nodeEnd.getGmlID().equals( edge2.getNode( 0 ).getGmlID()) )
+        IFE1D2DEdge nextEdge=edges.get( j );//:endNodeEdges
+        if(NodeOps.startOf(nodeEnd,nextEdge))
         {
-          break;
+          edge=nextEdge;
+          break findingNextNode; 
         }
-        else
-        {
-          continue;
-        }
+        
       }
-      if(i==-1)
+      
+      if(edge==null)
       {
-        ///no following not found ordering ends
-        return;
+        throw new RuntimeException("Could not fround next edge:"+
+                  "\n\tnode:"+nodeEnd+
+                  "\n\tedges="+edges);
       }
       else
       {
-        edge=edges.remove( i );
-        edgeFeatureList.add( edge.getGmlID() );
+        if(edges.remove( edge ))
+        {
+          edgeFeatureList.add( edge.getGmlID() );
+        }
+        else
+        {
+          throw new RuntimeException(
+              "edge not in list:"+
+              "\n\tedge="+edge+
+              "\n\tlist:"+edges);
+        }
       }
+      
+//      i=edges.size()-1;
+//      for(;i>=0;i--)
+//      {
+//        IFE1D2DEdge edge2 = edges.get( i );
+//        if( nodeEnd.getGmlID().equals( edge2.getNode( 0 ).getGmlID()) )
+//        {
+//          break;
+//        }
+//        else
+//        {
+//          continue;
+//        }
+//      }
+//      
+//      if(i==-1)
+//      {
+//        ///no following not found ordering ends
+//        return;
+//      }
+//      else
+//      {
+//        edge=edges.remove( i );
+//        edgeFeatureList.add( edge.getGmlID() );
+//      }
     }
     
     

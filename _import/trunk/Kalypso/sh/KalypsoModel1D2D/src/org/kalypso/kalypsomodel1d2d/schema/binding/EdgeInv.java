@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
 
+import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
@@ -187,7 +189,12 @@ public class EdgeInv implements IEdgeInv
       wrappedFeature.setProperty( 
           Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, 
           edge.getGmlID() );
-      edge.setInvEdge( getGmlID() );
+      String edgeInvID = getGmlID();
+      edge.setInvEdge( edgeInvID );
+      for(IFE1D2DNode<IFE1D2DEdge> node : (List<IFE1D2DNode<IFE1D2DEdge>>)edge.getNodes())
+      {
+        node.addContainer( edgeInvID );
+      }
     }
     else
     {
@@ -376,6 +383,6 @@ public class EdgeInv implements IEdgeInv
     buf.append(']');
     
     
-    return super.toString();
+    return buf.toString();
   }
 }

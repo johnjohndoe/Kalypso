@@ -89,7 +89,30 @@ public class FE1D2DEdge extends AbstractFeatureBinder
       m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
     }
   }
+  
+  
 
+  public static final IFE1D2DEdge createFromModel(
+                                  IFEDiscretisationModel1d2d model, 
+                                  IFE1D2DNode<IFE1D2DEdge> node0, 
+                                  IFE1D2DNode<IFE1D2DEdge> node1)
+  {
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = 
+              edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    String edgeGmlID = curEdge.getGmlID();
+    curEdge.addNode( node0.getGmlID() );
+    node0.addContainer( edgeGmlID );
+    //
+    curEdge.addNode( node1.getGmlID() );
+    node1.addContainer( edgeGmlID );
+    
+    edges.add( curEdge );
+    curEdge.getWrappedFeature().invalidEnvelope();
+    
+    return curEdge;
+    
+  }
   /**
    * This constructor creates {@link FE1D2DNode} based on a wb1d2d:FE1D2DNode feature which is created as child of the
    * given parent feaure and linked to it by the property of the type specified by the argument propQName.

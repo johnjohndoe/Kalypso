@@ -50,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -146,6 +147,14 @@ public class NodeOps
       }
     }
     return nearestNode;
+  }
+
+  public static boolean startOf( IFE1D2DNode<IFE1D2DEdge> startNode, IFE1D2DEdge edgeToTest)
+  {
+    Assert.throwIAEOnNullParam( startNode, "startNode" );
+    IFE1D2DNode edgeStart = edgeToTest.getNode( 0 );
+    boolean equals = startNode.equals( edgeStart );
+    return equals;    
   }
   
   
