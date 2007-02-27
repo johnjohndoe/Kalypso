@@ -58,6 +58,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -229,21 +230,24 @@ class ApplyElevationWidgetFace
     elevationList = new ListViewer( clientComposite, SWT.FILL | SWT.BORDER );
     elevationList.setContentProvider( new ArrayContentProvider() );
     elevationList.setLabelProvider( new ElevationListLabelProvider() );
-   elevationList.setInput(dataModel.getElevationModelSystem().getTerrainElevationModels().toArray());
-    //System.out.println("Size :"+dataModel.getElevationModelSystem().getTerrainElevationModels());
-    //elevationList.setInput(dataModel.getElevationModelSystem().getTerrainElevationModels().toArray());
-    // elevationList.setInput( elevationListContentProvider());
-    //elevationList.setInput();
-    
+    elevationList.setInput(dataModel.getElevationModelSystem().getTerrainElevationModels().toArray());   
     elevationList.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
-        nameSel = (String) selection.getFirstElement();
-        System.out.println( "Selected: " + nameSel );
-        inputText.setText( nameSel );
+        //nameSel = (String) selection.getFirstElement();
+        if (selection.getFirstElement() == null)
+         throw new NullPointerException("Null Value while selection.getFirstElement() :"+
+             selection.getFirstElement());
+        else
+        {
+          if (selection.getFirstElement() instanceof ITerrainElevationModel)
+          {            
+            inputText.setText(((ITerrainElevationModel)selection.getFirstElement()).getName());            
+          }
+        }
         areaSelectSection.setEnabled( true );
         areaSelectSection.setExpanded( true );
       }
@@ -300,17 +304,6 @@ class ApplyElevationWidgetFace
     return null;
   }
   
-//  private List elevationListLabelProvider(){
-//    List names = new ArrayList();
-//    Iterator itr;
-//    for (itr = dataModel.getElevationModelSystem().
-//        getTerrainElevationModels().iterator();
-//            itr.hasNext();){
-//      names.add(itr.next().get);      
-//    }
-//    return names;
-//  }
-
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
@@ -412,6 +405,7 @@ class ApplyElevationWidgetFace
     Label areaSelectLabel = new Label( clientComposite, SWT.FLAT );
     areaSelectLabel.setText( "Select Area" );
 
+    // Dummy Label to Provide a Empty Cell in the GridLayout
     Label areaSelectLabel1 = new Label( clientComposite, SWT.FLAT );
 
     Table table = toolkit.createTable( clientComposite, SWT.FILL | SWT.BORDER );
@@ -426,17 +420,15 @@ class ApplyElevationWidgetFace
     actualPointNum.setText( "Elevation" );
     actualPointNum.setWidth( 100 / 2 );
     table.setHeaderVisible( true );
-    table.setLinesVisible( true );
-    ListViewer areaViewer = new ListViewer( table );
-    areaViewer.setContentProvider( getTableContentProvider() );
+    table.setLinesVisible( true );    
+    TableViewer areaViewer11 = new TableViewer( table );
+    areaViewer11.setContentProvider( getTableContentProvider() );
     Button applyAll = new Button( clientComposite, SWT.PUSH );
     applyAll.setText( "Apply All" );
     applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
     Button applySelected = new Button( clientComposite, SWT.PUSH );
     applySelected.setText( "Apply Selected" );
     applySelected.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
   }
 
   private IContentProvider getTableContentProvider( )
