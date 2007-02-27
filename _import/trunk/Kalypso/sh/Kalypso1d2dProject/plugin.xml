@@ -38,6 +38,12 @@
 				Creates a new project
 		</description>
 		</wizard>
+		<wizard
+            class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            icon="icons/kalypso_gmt.gif"
+            id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+            name="BaseMap"
+            project="false"/>
 	</extension>
 	
 	<!-- perspectives-->

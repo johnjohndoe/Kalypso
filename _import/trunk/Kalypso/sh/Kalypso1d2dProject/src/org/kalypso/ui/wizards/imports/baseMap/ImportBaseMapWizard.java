@@ -48,15 +48,19 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizard.image.ImportImageWizardPage;
 import org.kalypso.ui.wizards.imports.INewWizardKalypsoImport;
 import org.kalypso.ui.wizards.imports.Messages;
 
@@ -70,6 +74,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   private BaseMapMainPage mPage;
 
   private String m_scenarioFolder;
+
   ProgressMonitorDialog monitor;
 
   /**
@@ -99,8 +104,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   public void initModelProperties( HashMap<String, Object> map )
   {
     m_scenarioFolder = (String) map.get( "ScenarioFolder" );
-    System.out.println("FolderName :" +m_scenarioFolder);
-    
   }
 
   @Override
@@ -117,105 +120,86 @@ public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImpo
   @Override
   public boolean performFinish( )
   {
-    String dstFilePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + m_scenarioFolder + File.separator;
+    final String dstFilePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + m_scenarioFolder + File.separator;
     final File srcFileTif = new File( mPage.getSourceLocation().toOSString() );
     final File srcFileTfw = new File( mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
     final File dstFileTif = new File( dstFilePath + mPage.getSourceLocation().lastSegment() );
     final File dstFileTfw = new File( dstFilePath + mPage.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
-   
-    try {
-      getContainer().run(true, true, new IRunnableWithProgress() {
-         public void run(IProgressMonitor monitor)
-            throws InvocationTargetException, InterruptedException
-         {
-           copy(srcFileTif, dstFileTif, monitor);
-           copy(srcFileTfw, dstFileTfw, monitor);         }
-
-         
-      });
-   }
-   catch (InvocationTargetException e) {
-      return false;
-   }
-   catch (InterruptedException e) {
-      // User canceled, so stop but don’t close wizard.
-      return false;
-   }
-  
-//    long lengthKB = (srcFileTif.length() + srcFileTfw.length())/1024;
-
-    
-
 
     try
     {
-      IResource resource = (IResource)initialSelection.getFirstElement();
-      resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      getContainer().run( true, true, new IRunnableWithProgress()
+      {
+        public void run( final IProgressMonitor monitor )
+        {
+          copy( srcFileTif, dstFileTif, monitor );
+          copy( srcFileTfw, dstFileTfw, monitor );
+        }
+
+        private boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
+        {
+          InputStream in = null;
+          OutputStream out = null;
+          try
+          {
+            in = new FileInputStream( src );
+            out = new FileOutputStream( dst );
+
+            final byte[] buf = new byte[1024];
+            final int lens = ((int) src.length() / 1024 + 1);
+            monitor2.beginTask( "Copying..", lens );
+            int len;
+            while( (len = in.read( buf )) > 0 )
+            {
+              monitor2.worked( 1 );
+              out.write( buf, 0, len );
+            }
+            monitor2.done();
+            return true;
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+            return false;
+          }
+          finally
+          {
+            IOUtils.closeQuietly( in );
+            IOUtils.closeQuietly( out );
+          }
+        }
+      } );
     }
-    catch( Exception e )
+    catch( final InvocationTargetException e1 )
     {
-      e.printStackTrace();
+      e1.printStackTrace();
     }
-    
-    // try
-    // {
-    // getContainer().run( true, true, new IRunnableWithProgress()
-    // {
-    // public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
-    // {
-    // // performOperation(monitor);
-    // }
-    //
-    // } );
-    // }
-    // catch( InvocationTargetException e )
-    // {
-    // return false;
-    // }
-    // catch( InterruptedException e )
-    // {
-    // // User canceled, so stop but don’t close wizard.
-    // return false;
-    // }
+    catch( final InterruptedException e1 )
+    {
+      e1.printStackTrace();
+      if( dstFileTfw.exists() )
+      {
+        dstFileTfw.delete();
+      }
+      if( dstFileTif.exists() )
+      {
+        dstFileTif.delete();
+      }
+    }
+
+    if( !initialSelection.isEmpty() )
+    {
+      try
+      {
+        final IResource resource = (IResource) initialSelection.getFirstElement();
+        resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
     return true;
   }
-  
-  boolean copy(File src, File dst, IProgressMonitor monitor2)
-  {
-    InputStream in;
-    OutputStream out;
-    try
-    {
-      in = new FileInputStream( src );
-      out = new FileOutputStream( dst );
-
-      byte[] buf = new byte[1024];
-      int len;
-      int lens = ((int)src.length()/1024+1);
-      monitor2.beginTask( "Copying..", lens );
-      while( (len = in.read( buf )) > 0 )
-      {
-        monitor2.worked(1);
-        out.write( buf, 0, len );
-      }
-      monitor2.done();
-      in.close();
-      out.close();
-      return true;
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-  }
-
-  /**
-   * Answer the selected source location
-   */
-  public IPath getSourceLocation( )
-  {
-    return mPage.getSourceLocation();
-  }
-
 }

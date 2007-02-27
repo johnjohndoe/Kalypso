@@ -1,5 +1,6 @@
 package org.kalypso.ui.wizards.imports.baseMap;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class BaseMapMainPage extends WizardPage
 
   private IPath initialSourcePath;
 
-  List<String> fileExtensions = new LinkedList<String>();
+  private static final String[] fileExtensions = new String[] { "*.tif", "*.jpg" };
 
   public BaseMapMainPage( )
   {
@@ -103,19 +104,15 @@ public class BaseMapMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "tif" ) );
-//    fileExtensions.add( new String( "jpg" ) );
-//    fileExtensions.add( new String( "gml" ) );
-
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
-      Object item = (Object) iter.next();
+      Object item = iter.next();
       if( item instanceof IFile )
       {
         IFile file = (IFile) item;
-        if( fileExtensions.contains( file.getFileExtension() ) )
+        if( Arrays.asList( fileExtensions ).contains( file.getFileExtension() ) )
         {
           initialSourcePath = file.getLocation();
           break;
@@ -151,7 +148,7 @@ public class BaseMapMainPage extends WizardPage
     setPageComplete( false );
 
     IPath sourceLoc = getSourceLocation();
-    if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
+    if( sourceLoc == null || !(Arrays.asList( fileExtensions ).contains( sourceLoc.getFileExtension() )) )
     {
       setMessage( null );
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapMainPage.5" ) );
@@ -165,9 +162,9 @@ public class BaseMapMainPage extends WizardPage
   /**
    * Open a file browser dialog to locate a source file
    */
-  protected void browseForSourceFile( )
+  private void browseForSourceFile( )
   {
-    IPath path = browse( getSourceLocation(), false );
+    IPath path = browse( getSourceLocation() );
     if( path == null )
       return;
     IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
@@ -185,9 +182,10 @@ public class BaseMapMainPage extends WizardPage
    *          <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
-  private IPath browse( IPath path, boolean mustExist )
+  private IPath browse( IPath path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
+    dialog.setFilterExtensions( fileExtensions );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
