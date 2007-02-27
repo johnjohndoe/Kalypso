@@ -11,7 +11,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 /**
  * @author Patrice Congo
  */
-public class Phase extends WorkflowPart implements IPhase
+public class Phase extends Task implements IPhase
 {
   public Phase( Resource resource )
   {

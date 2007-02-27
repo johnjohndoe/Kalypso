@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Patrice Congo
  */
-public interface IPhase extends IWorkflowPart
+public interface IPhase extends ITask
 {
   public List<ITaskGroup> getTaskGroups( );
 }

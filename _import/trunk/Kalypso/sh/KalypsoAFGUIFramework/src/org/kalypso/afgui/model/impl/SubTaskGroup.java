@@ -8,7 +8,7 @@ import org.kalypso.afgui.schema.Schema;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class SubTaskGroup extends WorkflowPart implements ISubTaskGroup
+public class SubTaskGroup extends Task implements ISubTaskGroup
 {
   public SubTaskGroup( Resource resource )
   {

@@ -12,7 +12,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 /**
  * @author Patrice Congo
  */
-public class TaskGroup extends WorkflowPart implements ITaskGroup
+public class TaskGroup extends SubTaskGroup implements ITaskGroup
 {
   public TaskGroup( Resource resource )
   {
