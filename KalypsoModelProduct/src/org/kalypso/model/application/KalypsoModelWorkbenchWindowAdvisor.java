@@ -42,15 +42,12 @@ package org.kalypso.model.application;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
-import org.eclipse.ui.internal.ide.IDEInternalPreferences;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.config.CustomizableIntroPart;
-import org.kalypso.model.product.KalypsoModelProductPlugin;
 
 /**
  * @author albert
@@ -75,12 +72,13 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
   @Override
   public void openIntro( )
   {
-    final boolean show = KalypsoModelProductPlugin.getDefault().getPreferenceStore().getBoolean( KalypsoModelProductPlugin.ALWAYS_SHOW_INTRO_ON_START );
-    if( !show )
-    {
-      super.openIntro();
-      return;
-    }
+    // final boolean show = KalypsoModelProductPlugin.getDefault().getPreferenceStore().getBoolean(
+    // KalypsoModelProductPlugin.ALWAYS_SHOW_INTRO_ON_START );
+    // if( !show )
+    // {
+    // super.openIntro();
+    // return;
+    // }
     // TRICKY: we want to open the welcome page always as the starting page, not in
     // standby mode (the latter is the default behaviour, if we closed the workbench in standby)
     // This seemes the only way to force it.
