@@ -168,11 +168,18 @@ public class ApplyElevationWidget
       throw new IllegalArgumentException(
           "Data provider in "+evaluationContext+" does not have getModel method"); 
     }
-    
-    ITerrainModel terrainModel=
-      (ITerrainModel) getModelMethod.invoke( 
-          dataProvider, new Object[]{ITerrainModel.class});
-    return terrainModel;
+    try
+    {
+      ITerrainModel terrainModel=
+        (ITerrainModel) getModelMethod.invoke( 
+            dataProvider, new Object[]{ITerrainModel.class});
+      return terrainModel;
+    }
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
   
 }

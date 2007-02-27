@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
@@ -100,11 +101,16 @@ public class ApplyElevationWidgetDataModel
 
   public List<IFE1D2DNode> getSelectedNode( )
   {
+    ArrayList<IFE1D2DNode> fakeSelection = 
+      new ArrayList<IFE1D2DNode>(this.discretisationModel.getNodes());
+    selectedNode=fakeSelection;
+    
     return selectedNode;
   }
 
   public void setSelectedNode( List<IFE1D2DNode> selectedNode )
   {
+    
     this.selectedNode = selectedNode;
   }
 

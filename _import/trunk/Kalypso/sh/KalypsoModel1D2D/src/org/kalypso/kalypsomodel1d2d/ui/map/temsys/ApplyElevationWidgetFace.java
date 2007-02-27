@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -81,6 +84,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 
@@ -95,64 +99,6 @@ class ApplyElevationWidgetFace
    * @author Patrice Congo
    * @author Madanagopal
    */
-  private final class GridWorkStatusCnCProvider implements ITableLabelProvider, IColorProvider
-  {
-    public Image getColumnImage( Object element, int columnIndex )
-    {
-      return null;
-    }
-
-    public String getColumnText( Object element, int columnIndex )
-    {
-      // if(element instanceof LinePointCollectorConfig)
-      // {
-      // return getColumnText( (LinePointCollectorConfig)element, columnIndex );
-      // }
-      // else
-      // {
-      // return ""+element;
-      // }
-      return null;
-    }
-
-    public void addListener( ILabelProviderListener listener )
-    {
-
-    }
-
-    public void dispose( )
-    {
-
-    }
-
-    public boolean isLabelProperty( Object element, String property )
-    {
-      return false;
-    }
-
-    public void removeListener( ILabelProviderListener listener )
-    {
-
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-     */
-    public Color getBackground( Object element )
-    {
-      return null;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-     */
-    public Color getForeground( Object element )
-    {
-      return null;
-    }
-
-  }
-
   private Composite rootPanel;
 
   private FormToolkit toolkit;
@@ -252,6 +198,8 @@ class ApplyElevationWidgetFace
         areaSelectSection.setExpanded( true );
       }
     } );
+    
+    // Dummy Label to create a Empty Cell in GridLayout
     Label autoFocus1 = new Label( clientComposite, SWT.FLAT );
     Label autoFocus = new Label( clientComposite, SWT.FLAT );
     autoFocus.setText( "Action - Auto Focus" );
@@ -260,7 +208,7 @@ class ApplyElevationWidgetFace
     {
       public void widgetSelected( SelectionEvent event )
       {
-
+        // TODO Send the Focus on the particular area of the Map
       }
 
     } );
@@ -279,31 +227,6 @@ class ApplyElevationWidgetFace
     } );
   }
 
-  private IBaseLabelProvider elevationLabelProvider( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  
-  private String[] elevationListLabelProvider()
-  {
-    int size = dataModel.getElevationModelSystem().getTerrainElevationModels().size();
-    String[] arr = new String[size];
-    IFeatureWrapperCollection<ITerrainElevationModel> itr = 
-        dataModel.getElevationModelSystem().getTerrainElevationModels();
-    for (int it = 0; it< size;it++){
-      arr[it] = itr.getWrappedFeature().getFeatureType().getName();
-    }   
-    return arr;
-  }
-
-  private IContentProvider getContentProvider( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
@@ -333,6 +256,9 @@ class ApplyElevationWidgetFace
 
     }
   }
+  
+  
+  
   class ElevationListLabelProvider extends LabelProvider{
   
   public Image getImage(Object element)
@@ -356,14 +282,14 @@ class ApplyElevationWidgetFace
      }
      else
      {
-//       String[] arr = (String[]) dataModel.getElevationModelSystem().getTerrainElevationModels().toArray();
-//       return arr[index++];
        throw new RuntimeException("Only terrain elevation model are supported:"+
            "but got \n\tclass="+ (element==null?null:element.getClass())+
            "\n\t value="+element);
      }
    }
   }
+  
+  
   private IntegerFieldEditor handleWidth;
 
   public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
@@ -375,6 +301,8 @@ class ApplyElevationWidgetFace
   public static final String LINE_COLOR_2 = "LINE_COLOR_2";
 
   public static final String LINE_COLOR_3 = "LINE_COLOR_3";
+  private List selectionNodeList;
+  private Table table;
 
   private void initStoreDefaults( )
   {
@@ -393,13 +321,10 @@ class ApplyElevationWidgetFace
     Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
     configSection.setClient( clientComposite );
     clientComposite.setLayout( new GridLayout( 2, false ) );
-   // clientComposite.setSize( 400, 300 );
-
     Label infoLabel = new Label( clientComposite, SWT.FLAT );
     infoLabel.setText( "Selected Terrain Model" );
     inputText = new Text( clientComposite, SWT.FLAT | SWT.BORDER );
     inputText.setEditable( false );
-    // configSection.redraw();
     inputText.setText( nameSel );
 
     Label areaSelectLabel = new Label( clientComposite, SWT.FLAT );
@@ -408,10 +333,14 @@ class ApplyElevationWidgetFace
     // Dummy Label to Provide a Empty Cell in the GridLayout
     Label areaSelectLabel1 = new Label( clientComposite, SWT.FLAT );
 
-    Table table = toolkit.createTable( clientComposite, SWT.FILL | SWT.BORDER );
+    
+    TableViewer nodeElevationViewer = new TableViewer(clientComposite,
+          SWT.FULL_SELECTION | SWT.BORDER| SWT.MULTI);
+    table = nodeElevationViewer.getTable();
     GridData tableGridData = new GridData( GridData.FILL_BOTH );
     tableGridData.horizontalSpan = 1;
-    tableGridData.verticalSpan = 2;
+    tableGridData.verticalSpan = 3;
+    //nodeElevationViewer.set
     table.setLayoutData( tableGridData );
     TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
     lineColumn.setText( "Node" );
@@ -420,18 +349,146 @@ class ApplyElevationWidgetFace
     actualPointNum.setText( "Elevation" );
     actualPointNum.setWidth( 100 / 2 );
     table.setHeaderVisible( true );
-    table.setLinesVisible( true );    
-    TableViewer areaViewer11 = new TableViewer( table );
-    areaViewer11.setContentProvider( getTableContentProvider() );
+    table.setLinesVisible( true );
+    
+    
+    nodeElevationViewer.setLabelProvider(new FENodeLabelProvider());
+    nodeElevationViewer.setContentProvider(new ArrayContentProvider());
+    List<IFE1D2DNode> selectedNode = dataModel.getSelectedNode();
+    if(selectedNode==null)
+    {
+      nodeElevationViewer.setInput(new IFE1D2DNode[]{});
+    }
+    else
+    {
+      nodeElevationViewer.setInput(selectedNode.toArray( new IFE1D2DNode[]{} ));
+    }
+    
+    nodeElevationViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      
+
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        selectionNodeList = new ArrayList();
+        selectionNodeList = selection.toList();        
+       // System.out.println("Selected :"+ selList.size());        
+      }
+    } );
+    
+
+//    nodeElevationViewer.setContentProvider( new ArrayContentProvider());
+//    nodeElevationViewer.setLabelProvider( new GetNodeElevationLabelContentProvider() );
+//    nodeElevationViewer.setInput( DataInput.example() );    
+
+//    nodeElevationViewer.setContentProvider( new ArrayContentProvider());
+//    nodeElevationViewer.setLabelProvider( new GetNodeElevationLabelContentProvider() );
+//    nodeElevationViewer.setInput( DataInput.example() );    
+    
     Button applyAll = new Button( clientComposite, SWT.PUSH );
     applyAll.setText( "Apply All" );
     applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    applyAll.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+        table.selectAll();
+      //nodeElevationViewer.setSelection( selection, reveal )
+      }
+
+    } );
+    
+    Button deSelectAll = new Button( clientComposite, SWT.PUSH );
+    deSelectAll.setText( "DeSelect All" );
+    deSelectAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    deSelectAll.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+        table.deselectAll();
+        selectionNodeList.clear();
+      //nodeElevationViewer.setSelection( selection, reveal )
+      }
+
+    } );
+    
     Button applySelected = new Button( clientComposite, SWT.PUSH );
     applySelected.setText( "Apply Selected" );
     applySelected.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-  }
+    applySelected.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent event )
+      {
+        System.out.println("List of Elements Selected "+selectionNodeList.size());
+      }
 
-  private IContentProvider getTableContentProvider( )
+    } );
+
+  }
+  
+  
+  
+  class GetNodeElevationLabelContentProvider extends LabelProvider{
+    public Image getImage(Object element,int columnIndex)
+    {     
+      return null;
+    }
+    
+    public String getText(Object element,int columnIndex)
+    {
+      DataInput inp = (DataInput)element;
+      switch (columnIndex){
+        case 0:
+          System.out.println("inp.node: "+inp.node);
+          return inp.node+"";
+        case 1:
+          System.out.println("inp.terrain: "+inp.terrain);
+          return inp.terrain+"";
+        default:
+          return "invalidData";
+      } //return null;
+    }    
+  }
+  
+  
+  
+
+
+//  private IBaseLabelProvider getNodeElevationLabelContentProvider( )
+//  {
+//
+//    public Image getImage(Object element)
+//    {
+//      
+//      return null;
+//    }
+//     public String getText(Object element)
+//     {
+//       if(element instanceof ITerrainElevationModel)
+//       {
+//         String name = ((ITerrainElevationModel)element).getName();
+//         if(name!=null)
+//         {
+//           return name; 
+//         }
+//         else
+//         {
+//           return ((ITerrainElevationModel)element).getGmlID();
+//         }
+//       }
+//       else
+//       {
+//         throw new RuntimeException("Only terrain elevation model are supported:"+
+//             "but got \n\tclass="+ (element==null?null:element.getClass())+
+//             "\n\t value="+element);
+//       }
+//     }
+//     
+//    return null;
+//  }
+
+  private IContentProvider getNodeElevationTableContentProvider( )
   {
     return new IStructuredContentProvider()
     {
@@ -453,11 +510,6 @@ class ApplyElevationWidgetFace
       }
 
     };
-  }
-
-  private ITableLabelProvider getTableLabelProvider( )
-  {
-    return new GridWorkStatusCnCProvider();
   }
 
   private IPropertyChangeListener createPropertyChangeLis( )
