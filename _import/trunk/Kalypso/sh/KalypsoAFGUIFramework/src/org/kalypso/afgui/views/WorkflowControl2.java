@@ -13,8 +13,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -88,13 +90,13 @@ public class WorkflowControl2
           m_lastTreePath = newTreePath;
           if( first instanceof ITask )
           {
-            doTaskOrActivity( (ITask) first );
+            doTask( (ITask) first );
           }
           m_treeViewer.setSelection( new StructuredSelection( first ) );
         }
       }
 
-      private final void doTaskOrActivity( final ITask task )
+      private final void doTask( final ITask task )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
@@ -108,7 +110,10 @@ public class WorkflowControl2
         catch( final Throwable e )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( m_treeViewer.getControl().getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
+          if( !(task instanceof IPhase || task instanceof ISubTaskGroup) )
+          {
+            ErrorDialog.openError( m_treeViewer.getControl().getShell(), "Workflow Commmand", "Kommando konnte nicht ausgeführt werden: " + name, status );
+          }
           KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
           logger.log( Level.SEVERE, "Failed to execute command: " + name, e );
         }
@@ -210,8 +215,8 @@ public class WorkflowControl2
     if( m_selectionFromMemento != null && workflow != null )
     {
       final TreePath findPart = findPart( m_selectionFromMemento, workflow );
-      if( findPart != null && findPart.getParentPath() != null)
-      {        
+      if( findPart != null && findPart.getParentPath() != null )
+      {
         m_treeViewer.setSelection( new TreeSelection( findPart.getParentPath() ), true );
       }
       m_selectionFromMemento = null;
