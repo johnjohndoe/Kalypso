@@ -34,9 +34,9 @@ import java.net.MalformedURLException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -50,8 +50,11 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
  */
 public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
+  public static final String ID = "org.kalypso.ui.wizard.image";
 
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
+
+  private IMapModell m_mapModel;
 
   private ImportImageWizardPage m_page;
 
@@ -61,8 +64,8 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   @Override
   public boolean performFinish( )
   {
-    IMapModell mapModell = m_outlineviewer.getMapModell();
-    if( m_outlineviewer.getMapModell() != null )
+    final IMapModell mapModell = m_mapModel;
+    if( mapModell != null )
     {
       try
       {
@@ -84,9 +87,9 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
+    m_outlineviewer = commandTarget;
 
   }
 
@@ -107,9 +110,17 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
     m_page = new ImportImageWizardPage( "imageimport", "Bild importieren (tif, jpg, png)", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     if( m_outlineviewer != null )
     {
-      m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
+      m_page.setProjectSelection( m_mapModel.getProject() );
     }
     addPage( m_page );
 
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_mapModel = modell;
   }
 }

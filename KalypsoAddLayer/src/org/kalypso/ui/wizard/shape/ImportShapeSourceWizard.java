@@ -6,10 +6,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -62,7 +62,9 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 {
   private ImportShapeFileImportPage m_page;
 
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
+
+  private IMapModell m_modell;
 
   public ImportShapeSourceWizard( )
   {
@@ -78,14 +80,14 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       // Add Layer to mapModell
-      final IMapModell mapModell = m_outlineviewer.getMapModell();
+      final IMapModell mapModell = m_modell;
       final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
-      
+
       final IPath stylePath = m_page.getStylePath();
       final String styleLocation = stylePath == null ? null : stylePath.toString();
       final String styleName = m_page.getStyleName();
-      
+
       final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, themeName, "shape", "featureMember", fileName, "sld", styleName, styleLocation, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
@@ -113,7 +115,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     m_page = new ImportShapeFileImportPage( "shapefileimport", "ESRI(tm) ein Projekt importieren", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     if( m_outlineviewer != null )
     {
-      m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
+      m_page.setProjectSelection( m_modell.getProject() );
     }
     addPage( m_page );
 
@@ -122,9 +124,17 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
+    m_outlineviewer = commandTarget;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_modell = modell;
   }
 
 }

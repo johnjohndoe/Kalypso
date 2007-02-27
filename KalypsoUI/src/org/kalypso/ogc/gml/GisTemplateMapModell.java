@@ -141,7 +141,7 @@ public class GisTemplateMapModell implements IMapModell
     }
     else if( "gmt".equals( layerType.getLinktype() ) )
     {
-      return new CascadingKalypsoTheme( layerType, m_context, m_selectionManager, this );
+      return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
     }
     else
     {

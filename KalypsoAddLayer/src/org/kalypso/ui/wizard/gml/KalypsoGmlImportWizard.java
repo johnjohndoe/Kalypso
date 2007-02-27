@@ -48,13 +48,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AnnotationUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -69,7 +69,9 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
  */
 public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
+
+  private IMapModell m_mapModel;
 
   private GmlFileImportPage m_page;
 
@@ -77,7 +79,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   public void addPages( )
   {
     m_page = new GmlFileImportPage( "GML:importPage", "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
+    m_page.setProjectSelection( m_mapModel.getProject() );
 
     addPage( m_page );
   }
@@ -90,8 +92,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     try
     {
-      final IMapModell mapModell = m_outlineviewer.getMapModell();
-      final ICommand[] commands = getCommands( (GisTemplateMapModell) mapModell );
+      final ICommand[] commands = getCommands( (GisTemplateMapModell) m_mapModel );
 
       for( int i = 0; i < commands.length; i++ )
       {
@@ -111,7 +112,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     final String source = m_page.getSource();
     final IStructuredSelection selection = m_page.getSelection();
     final GMLWorkspace workspace = m_page.getWorkspace();
-    
+
     final Object firstElement = selection.getFirstElement();
     final List<String> pathList = new ArrayList<String>();
     final List<String> titleList = new ArrayList<String>();
@@ -151,7 +152,6 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       }
     }
 
-    
     final ICommand[] result = new ICommand[pathList.size()];
     final Iterator titleIterator = titleList.iterator();
     int pos = 0;
@@ -167,9 +167,9 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
+    m_outlineviewer = commandTarget;
   }
 
   /**
@@ -179,6 +179,14 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     setWindowTitle( "GML Datei" );
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_mapModel = modell;
   }
 
 }

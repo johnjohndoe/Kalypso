@@ -115,7 +115,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   private Combo m_CS;
 
-  protected ImportImageWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportImageWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
   }
