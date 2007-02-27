@@ -136,14 +136,11 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       try
       {
         final LineSymbolizer symb = getProfilLineSymbolizer();
-
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
-
         de.paint( g, getMapPanel().getProjection() );
       }
       catch( final IncompatibleGeometryTypeException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -152,17 +149,14 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
 
     final MapPanel mapPanel = getMapPanel();
-    m_data.paintAllSegments( g, mapPanel );
-    
-//    if (m_data.checkMesh() == true )
-//      m_data.paintMesh( g, mapPanel );
+
+    if( m_data.getMeshStatus() == true ) 
+      m_data.paintAllSegments( g, mapPanel );
 
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
   }
-  
-  
-  
+
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )
   {
     final Feature[] selectedBanks = m_data.getSelectedBanks( side );
@@ -176,19 +170,19 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
 
         Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
-        
+
         defaultstroke = symb.getStroke();
-          
+
         stroke.setWidth( 1 );
         stroke.setStroke( color );
         symb.setStroke( stroke );
 
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
         de.paint( g, getMapPanel().getProjection() );
-        
-        //TODO: Set the Stroke back to default
+
+        // TODO: Set the Stroke back to default
         symb.setStroke( defaultstroke );
-        
+
       }
       catch( final IncompatibleGeometryTypeException e )
       {
@@ -444,7 +438,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       {
         m_data.completationCheck();
 
-        //check if all needed data is specified
+        // check if all needed data is specified
         m_composite.updateControl();
       }
     } );

@@ -107,7 +107,7 @@ public class SegmentData
   /* intersection data */
   private final List<IntersPointData> m_intersPoints = new ArrayList<IntersPointData>();
 
-  private final int m_numBankIntersections;
+  private int m_numBankIntersections;
 
   // private IProfil m_intersUpIProfil;
 
@@ -280,7 +280,6 @@ public class SegmentData
     return factory.createLineString( coordinates );
   }
 
- 
   /**
    * calculates the intersection of a segment profile. at first the width coordinates will be calculated and added to
    * the profile. next step is to intersect the profile (a) by Douglas-Peucker (b) equidistant the geographical data is
@@ -547,21 +546,22 @@ public class SegmentData
     }
   }
 
-
   public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws GM_Exception
   {
-    if( m_bankRightOrg != null )
-      paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
-    if( m_bankLeftOrg != null )
-      paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
-//    if( m_profDownInters != null )
-//      paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
-//    if( m_profUpInters != null )
-//      paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    if( m_bankLeftInters != null )
-      paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
-    if( m_bankRightInters != null )
-      paintLinePoints( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
+    //g.dispose();
+    
+//    if( m_bankRightOrg != null )
+//      paintBankLine( m_bankRightOrg, g, mapPanel, new Color( 150, 0, 0 ) );
+//    if( m_bankLeftOrg != null )
+//      paintBankLine( m_bankLeftOrg, g, mapPanel, new Color( 0, 150, 0 ) );
+    // if( m_profDownInters != null )
+    // paintLinePoints( m_profDownInters, g, mapPanel, new Color( 100, 255, 50 ) );
+    // if( m_profUpInters != null )
+    // paintLinePoints( m_profUpInters, g, mapPanel, new Color( 100, 255, 50 ) );
+//    if( m_bankLeftInters != null )
+//      paintLinePoints( m_bankLeftInters, g, mapPanel, new Color( 100, 255, 50 ) );
+//    if( m_bankRightInters != null )
+//      paintLinePoints( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
     // if( m_intersPoints != null )
     // {
     // final Point[] points = new Point[m_intersPoints.size()];
@@ -739,4 +739,48 @@ public class SegmentData
     return pointsToRemove.toArray( new IProfilPoint[pointsToRemove.size()] );
   }
 
+  public int getNumBankIntersections( )
+  {
+    return m_numBankIntersections;
+  }
+
+  public void setNumBankIntersections( int numIntersections )
+  {
+    m_numBankIntersections = numIntersections;
+  }
+
+  public void updateBankIntersection( )
+  {
+    if( m_bankLeftInters != null )
+      m_bankLeftInters = intersectLineString( m_bankLeftOrg, m_numBankIntersections );
+    if( m_bankRightInters != null )
+      m_bankRightInters = intersectLineString( m_bankRightOrg, m_numBankIntersections );
+  }
+  
+  public void updateProfileIntersection( )
+  {
+    /* get the profile linestrings */
+
+    // TODO: Flächenausgleich!!
+    // DOWNSTREAM
+    try
+    {
+      m_profDownInters = intersectLineString( m_previousProfLineString, m_channelData.getNumProfileIntersections() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    // UPSTREAM
+    try
+    {
+      m_profUpInters = intersectLineString( m_nextProfLineString, m_channelData.getNumProfileIntersections() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
 }

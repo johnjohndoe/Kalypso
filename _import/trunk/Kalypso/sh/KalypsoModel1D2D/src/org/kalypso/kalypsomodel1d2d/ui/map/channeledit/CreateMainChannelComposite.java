@@ -60,6 +60,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Section;
@@ -124,7 +125,6 @@ public class CreateMainChannelComposite extends Composite
     /* Retrieve data */
     final IKalypsoFeatureTheme[] profileThemes = m_data.getProfileThemes();
     final IKalypsoFeatureTheme[] bankThemes = m_data.getBankThemes();
-    final int numOfSegments = m_data.getNumOfSegments();
 
     /* Create gui */
     this.setLayout( new GridLayout( 1, false ) );
@@ -184,24 +184,44 @@ public class CreateMainChannelComposite extends Composite
       client.dispose();
 
     final Composite sectionClient = new Composite( m_segmentSection, SWT.NONE );
-    sectionClient.setLayout( new GridLayout( 3, false ) );
+    sectionClient.setLayout( new GridLayout( 4, false ) );
 
     m_segmentSection.setClient( sectionClient );
-    m_segmentSection.setText( "Segmentliste" );
-    m_segmentSection.setDescription( "Wählen Sie das gewünschte Segment" );
+    m_segmentSection.setText( "Segmentansicht" );
     if( m_data.getNumOfSegments() > 0 )
       m_segmentSection.setExpanded( true );
     else
       m_segmentSection.setExpanded( false );
 
-    /* segment spinner */
+    /* Header */
+    final Label labelSpinnnerSegment = new Label( sectionClient, 0 );
+    labelSpinnnerSegment.setText( "Wählen Sie das gewünschte Segment  ->" );
+    GridData gridDataLabelSpinner = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridDataLabelSpinner.horizontalSpan = 1;
+    labelSpinnnerSegment.setLayoutData( gridDataLabelSpinner );
+
     final Spinner spinnerSegment = new Spinner( sectionClient, 0 );
-    if( m_data.getNumOfSegments() > 0 )
+    GridData gridDataSegmentSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
+    gridDataSegmentSpinner.horizontalSpan = 3;
+    spinnerSegment.setLayoutData( gridDataSegmentSpinner );
+
+    if( m_data.getNumOfSegments() > 1 )
     {
       spinnerSegment.setEnabled( true );
       spinnerSegment.setMinimum( 1 );
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
-      spinnerSegment.setSelection( 1 );  // TODO: get current selection
+
+      if( m_data.getNumOfSegments() > 0 )
+        spinnerSegment.setSelection( m_data.getSelectedSegment() );
+      else
+        spinnerSegment.setSelection( 0 );
+    }
+    else if( m_data.getNumOfSegments() == 1 )
+    {
+      spinnerSegment.setEnabled( false );
+      spinnerSegment.setMinimum( 0 );
+      spinnerSegment.setMaximum( m_data.getNumOfSegments() );
+      spinnerSegment.setSelection( 1 );
     }
     else
       spinnerSegment.setEnabled( false );
@@ -210,50 +230,123 @@ public class CreateMainChannelComposite extends Composite
     {
       public void widgetSelected( SelectionEvent e )
       {
-        System.out.println( spinnerSegment.getSelection() );
+        m_data.setSelectedSegment( spinnerSegment.getSelection() );
+        updateControl();
       }
     } );
 
-    /* segment switcher */
-    final ComboViewer combviewerSegmentSwitch = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
-    combviewerSegmentSwitch.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    combviewerSegmentSwitch.setContentProvider( new ArrayContentProvider() );
-    combviewerSegmentSwitch.setLabelProvider( new LabelProvider() );
-    int selectedSegment = m_data.getSelectedSegment();
-    int select = 0;
+    /* Group Segmentdaten */
+    Group groupSegment = new Group( sectionClient, SWT.NULL );
+    groupSegment.setText( "Segmentdaten" );
 
-    int numOfSegments = m_data.getNumOfSegments();
+    GridLayout gridLayout = new GridLayout();
+    gridLayout.numColumns = 4;
+    groupSegment.setLayout( gridLayout );
+    GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridData.horizontalSpan = 4;
+    groupSegment.setLayoutData( gridData );
 
-    if( numOfSegments == 0 )
+    Composite compSegmentDataHeader = new Composite( groupSegment, SWT.NULL );
+    GridLayout gridLayoutDataHeader = new GridLayout();
+    gridLayoutDataHeader.numColumns = 2;
+    compSegmentDataHeader.setLayout( gridLayoutDataHeader );
+    GridData gridDataHeader = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridDataHeader.horizontalSpan = 4;
+    compSegmentDataHeader.setLayoutData( gridDataHeader );
+
+    Label labelNumIntersSegment = new Label( compSegmentDataHeader, SWT.NULL );
+    labelNumIntersSegment.setText( "Anzahl der Uferlinienunterteilungen ->" );
+    GridData gridDatalabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridDatalabel.horizontalSpan = 1;
+    labelNumIntersSegment.setLayoutData( gridDatalabel );
+
+    final Spinner spinnerNumIntersSegment = new Spinner( compSegmentDataHeader, 0 );
+
+    GridData gridDataNumIntersSpinner = new GridData( SWT.LEFT, SWT.CENTER, true, false );
+    gridDataNumIntersSpinner.horizontalSpan = 1;
+    spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
+    spinnerNumIntersSegment.setEnabled( true );
+    spinnerNumIntersSegment.setMinimum( 2 );
+    spinnerNumIntersSegment.setMaximum( 100 );
+    if( m_data.getNumOfSegments() > 0 )
     {
-      combviewerSegmentSwitch.getControl().setEnabled( false );
-      String msg = "<kein Segment selektiert...>";
-      combviewerSegmentSwitch.setInput( new String[] { msg } );
-      combviewerSegmentSwitch.setSelection( new StructuredSelection( msg ) );
-      select = 0;
+      spinnerNumIntersSegment.setSelection( m_data.getNumBankIntersections( spinnerSegment.getSelection() ) );
     }
     else
     {
-      for( int i = 0; i < numOfSegments; i++ )
-      {
-
-        // TODO fill it!
-        combviewerSegmentSwitch.setInput( i );
-      }
-      if( numOfSegments != 0 )
-        select = selectedSegment;
-      else
-        select = 0;
-
-      combviewerSegmentSwitch.setSelection( new StructuredSelection( select ) );
+      spinnerNumIntersSegment.setEnabled( false );
+      spinnerNumIntersSegment.setSelection( 0 );
     }
+    spinnerNumIntersSegment.setToolTipText( "Wählen Sie die Anzahl der Uferlinienunterteilungen für das aktuelle Segment." );
+    spinnerNumIntersSegment.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
+        updateControl();
+      }
+    } );
 
-    if( select != m_data.getSelectedSegment() )
-      m_data.setSelectedSegment( select );
+    Label labelProfile1 = new Label( groupSegment, SWT.NULL );
+    labelProfile1.setText( "Profil 1" );
+
+    Button buttonEditProf1 = new Button( groupSegment, SWT.PUSH );
+    buttonEditProf1.setText( "edit" );
+    buttonEditProf1.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        // bring profile 1 on the ChartView
+      }
+    } );
+
+    Label labelBankline1 = new Label( groupSegment, SWT.NULL );
+    labelBankline1.setText( "Uferlinie 1" );
+
+    Button buttonEditBank1 = new Button( groupSegment, SWT.PUSH );
+    buttonEditBank1.setText( "edit" );
+    buttonEditBank1.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        // set LineString for Bank 1 editable
+      }
+    } );
+
+    Label labelProfile2 = new Label( groupSegment, SWT.NULL );
+    labelProfile2.setText( "Profil 2" );
+
+    Button buttonEditProf2 = new Button( groupSegment, SWT.PUSH );
+    buttonEditProf2.setText( "edit" );
+    buttonEditProf2.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        // bring profile 2 on the ChartView
+      }
+    } );
+
+    Label labelBankline2 = new Label( groupSegment, SWT.NULL );
+    labelBankline2.setText( "Uferlinie 2" );
+
+    Button buttonEditBank2 = new Button( groupSegment, SWT.PUSH );
+    buttonEditBank2.setText( "edit" );
+    buttonEditBank2.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        // set LineString for Bank 2 editable
+      }
+    } );
 
     /* conversion button */
     m_buttonConvertToModel = new Button( sectionClient, SWT.PUSH );
     m_buttonConvertToModel.setText( "alle Segmente ins Modell übernehmen..." );
+    m_buttonConvertToModel.setToolTipText( "alle Segmente ins Modell übernehmen..." );
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -416,20 +509,32 @@ public class CreateMainChannelComposite extends Composite
     m_buttonList.add( drawSecondBankButton );
     drawSecondBankButton.setText( "zeichnen" );
 
-    Label bankLabel = new Label( sectionClient, SWT.NULL );
+    Composite compNumBankIntersections = new Composite( sectionClient, SWT.NONE );
+    // Layout
+    GridLayout gridLayoutNumBankInters = new GridLayout();
+    gridLayoutNumBankInters.numColumns = 2;
+    compNumBankIntersections.setLayout( gridLayoutNumBankInters );
+    GridData gridDataNumProfInters = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    gridDataNumProfInters.horizontalSpan = 3;
+    compNumBankIntersections.setLayoutData( gridDataNumProfInters );
+
+    Label bankLabel = new Label( compNumBankIntersections, SWT.NULL );
     bankLabel.setText( "Anzahl der Stützstellen pro Uferlinie (global):" );
     final GridData gridData = new GridData();
-    gridData.horizontalSpan = 2;
+    gridData.horizontalSpan = 1;
     bankLabel.setLayoutData( gridData );
 
-    final Spinner spinNumBankIntersections = new Spinner( sectionClient, SWT.NONE );
+    final Spinner spinNumBankIntersections = new Spinner( compNumBankIntersections, SWT.NONE );
 
     spinNumBankIntersections.setDigits( 0 );
     spinNumBankIntersections.setMinimum( 2 );
     spinNumBankIntersections.setMaximum( 100 );
-    spinNumBankIntersections.setSelection( 6 );
+    if( m_data.getGlobNumBankIntersections() == 0 )
+      spinNumBankIntersections.setSelection( 6 );
+    else
+      spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
     m_data.setGlobNumBankIntersections( 6 );
-    spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein." );
+    spinNumBankIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Uferlinie ein. Diese Angabe gilt zunächst global für alle Segmente. Eine genaue Definition für jedes einzelne Segment kann in der Segmentansicht vorgenommen werden." );
     spinNumBankIntersections.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -535,13 +640,15 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     new Label( sectionClient, SWT.NULL ).setText( "Anzahl der Stützstellen pro Profil (global):" );
-
     final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
 
     spinNumProfIntersections.setDigits( 0 );
     spinNumProfIntersections.setMinimum( 2 );
     spinNumProfIntersections.setMaximum( 100 );
-    spinNumProfIntersections.setSelection( 6 );
+    if( m_data.getNumProfileIntersections() == 0 )
+      spinNumProfIntersections.setSelection( 6 );
+    else
+      spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
     spinNumProfIntersections.setToolTipText( "Geben Sie hier die Anzahl der Stützstellen je Profil ein." );
 
     spinNumProfIntersections.addSelectionListener( new SelectionAdapter()
@@ -554,6 +661,7 @@ public class CreateMainChannelComposite extends Composite
       public void widgetSelected( SelectionEvent e )
       {
         m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
+
         updateControl();
       }
     } );
@@ -568,11 +676,11 @@ public class CreateMainChannelComposite extends Composite
 
   public void updateControl( )
   {
+
     updateSegmentSwitchSection();
+    m_data.updateSegments();
     updateProfilSection();
-
     m_buttonConvertToModel.setEnabled( m_data.getMeshStatus() );
-
   }
 
   /**
@@ -645,5 +753,4 @@ public class CreateMainChannelComposite extends Composite
       }
     }
   }
-
 }

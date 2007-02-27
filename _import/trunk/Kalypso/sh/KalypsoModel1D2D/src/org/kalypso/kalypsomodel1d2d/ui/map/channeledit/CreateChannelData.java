@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.LineStringUtilities;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
@@ -75,13 +77,18 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -132,7 +139,7 @@ public class CreateChannelData
   private List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
 
   private Coordinate[][] m_meshCoords;
-  
+
   private boolean m_meshStatus;
 
   public int m_selectedSegment;
@@ -229,15 +236,46 @@ public class CreateChannelData
   public void addSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.addAll( Arrays.asList( profileFeatures ) );
-
+    m_segmentList.clear(); // changes in the profile list force an initialisation of the segments
+    m_coordList.clear();
+    initSegments();
     m_widget.update();
   }
 
   public void removeSelectedProfiles( final Feature[] profileFeatures )
   {
     m_selectedProfiles.removeAll( Arrays.asList( profileFeatures ) );
-
+    m_segmentList.clear();// changes in the profile list force an initialisation of the segments
+    m_coordList.clear();
+    initSegments();
     m_widget.update();
+  }
+
+  private void initSegments( )
+  {
+    datacomplete = false;
+
+    // there must be at least two selected profiles and one selected bank.
+    if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
+    {
+      datacomplete = true;
+    }
+    else if( m_selectedProfiles.size() <= 1 )
+    {
+      m_segmentList.clear();
+      m_coordList.clear();
+
+    }
+
+    if( datacomplete == false )
+    {
+      m_segmentList.clear();
+      m_coordList.clear();
+    }
+
+    if( datacomplete == true )
+      /* intersects the banks with the profiles and manages the initial segment creation */
+      intersectBanksWithProfs(); // initial calculation of the segments by global parameters
   }
 
   public Feature[] getSelectedProfiles( )
@@ -254,6 +292,7 @@ public class CreateChannelData
     for( final Feature feature : bankFeatures )
       m_selectedBanks.put( feature, side );
 
+    initSegments();
     m_widget.update();
   }
 
@@ -315,6 +354,8 @@ public class CreateChannelData
   {
     m_meshStatus = false;
     datacomplete = false;
+
+    // there must be at least two selected profiles and one selected bank.
     if( m_selectedBanks.size() > 0 && m_selectedProfiles.size() > 1 )
     {
       datacomplete = true;
@@ -322,30 +363,33 @@ public class CreateChannelData
     else if( m_selectedProfiles.size() <= 1 )
     {
       m_segmentList.clear();
+      m_coordList.clear();
     }
-    if( datacomplete == true)
-      /* intersects the banks with the profiles and manages the segment creation */
-      intersectBanksWithProfs();
-//    else if ( datacomplete == true & m_segmentList != null)
-//    {
-//      //TODO: segment managment
-//    }
-    
+
+    if( datacomplete == false )
+      m_segmentList.clear();
+
+    // if( datacomplete == true )
+    // /* intersects the banks with the profiles and manages the initial segment creation */
+    // intersectBanksWithProfs(); // initial calculation of the segments by global parameters
+    // // else if ( datacomplete == true & m_coordList.size() > 0)
+
     if( m_segmentList.size() > 0 )
     /* if there are segments, start Quadmesher */
     // TODO: error handling implementation!!
     {
       manageQuadMesher();
       mergeMeshList();
-      m_meshStatus = true;
+      if( m_meshCoords[0].length > 0 )
+        m_meshStatus = true;
     }
   }
 
-  public boolean getMeshStatus ()
+  public boolean getMeshStatus( )
   {
     return m_meshStatus;
   }
-  
+
   /**
    * converts the mesh coordinates into the 2d model
    */
@@ -353,13 +397,13 @@ public class CreateChannelData
   {
     GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
     importingGridPoints = convertToGMPoints( m_meshCoords );
-    
+
     final MapPanel mapPanel = m_widget.getPanel();
     final IMapModell mapModel = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final IKalypsoFeatureTheme theme = UtilMap.findEditableThem( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
-    
+
     final TempGrid tempGrid = new TempGrid();
     tempGrid.importMesh( importingGridPoints );
     try
@@ -369,7 +413,6 @@ public class CreateChannelData
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -503,9 +546,9 @@ public class CreateChannelData
     {
       num = num + m_coordList.get( i )[0].length;
     }
-
     // substract the number of double profile coords
-    num = num - (m_segmentList.size() - 1);
+    if( m_coordList.size() > 0 )
+      num = num - (m_segmentList.size() - 1);
 
     return num;
   }
@@ -677,7 +720,7 @@ public class CreateChannelData
   {
     /* at first -> clear the segment list! */
     m_segmentList.clear();
-    
+
     final Feature[] profileFeatures = m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
 
     if( profileFeatures.length == 0 )
@@ -697,11 +740,10 @@ public class CreateChannelData
 
       // get the profile line
       final WspmProfile profile = new WspmProfile( profileFeature );
-      final GM_Curve profCurve = profile.getLine();
 
       if( lastProfile != null )
       {
-        // behandle das segment
+        // working on the segment
         final int numBankIntersections = getGlobNumBankIntersections();
         final SegmentData segment = new SegmentData( this, lastProfile, profile, m_selectedBanks, numBankIntersections );
         System.out.println( "Last profile: " + lastProfile.getStation() );
@@ -718,43 +760,34 @@ public class CreateChannelData
     }
   }
 
-  private void calculateSegment( int segNumB )
-  {
-
-  }
-
-  private void calculateAllSegment( )
-  {
-
-  }
-
   public void paintAllSegments( final Graphics g, final MapPanel mapPanel )
   {
-    // loop over all segments
-    final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
-    for( final SegmentData segment : datas )
+    if( m_meshCoords != null ) 
     {
-      if( segment != null )
-        try
-        {
-          segment.paintSegment( g, mapPanel );
-
-        }
-        catch( GM_Exception e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-    }
-    if( m_meshCoords != null )
+      try
+      {
+        paintEdges( m_meshCoords, g, mapPanel );
+      }
+      catch( GM_Exception e )
+      {
+        e.printStackTrace();
+      }
+      catch( IncompatibleGeometryTypeException e )
+      {
+        e.printStackTrace();
+      }
       paintCoords( m_meshCoords, g, mapPanel );
-
+    }
   }
 
   public void setNumProfileIntersections( int numProfileIntersections )
   {
-    m_numbProfileIntersections = numProfileIntersections;
-    completationCheck();
+    if( m_numbProfileIntersections != numProfileIntersections )
+    {
+      m_numbProfileIntersections = numProfileIntersections;
+      updateSegments();
+      // initSegments();
+    }
   }
 
   public int getNumProfileIntersections( )
@@ -765,8 +798,11 @@ public class CreateChannelData
 
   public void setGlobNumBankIntersections( int globNumBankIntersections )
   {
-    m_globNumbBankIntersections = globNumBankIntersections;
-    completationCheck();
+    if( globNumBankIntersections != m_globNumbBankIntersections )
+    {
+      m_globNumbBankIntersections = globNumBankIntersections;
+      initSegments();
+    }
   }
 
   public int getGlobNumBankIntersections( )
@@ -794,9 +830,51 @@ public class CreateChannelData
         }
         catch( GM_Exception e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
+      }
+    }
+  }
+
+  private void paintEdges( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel ) throws GM_Exception, IncompatibleGeometryTypeException
+  {
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+    defaultstroke = symb.getStroke();
+    Color grey = new Color( 200, 200, 200 );
+
+    stroke.setWidth( 1 );
+    stroke.setStroke( grey );
+    symb.setStroke( stroke );
+    DisplayElement de;
+
+    Coordinate[] lineCoords = new Coordinate[2];
+
+    for( int i = 0; i < coords.length; i++ )
+    {
+      GeometryFactory factory = new GeometryFactory();
+      for( int j = 0; j < coords[i].length - 1; j++ )
+      {
+        lineCoords[0] = coords[i][j];
+        lineCoords[1] = coords[i][j + 1];
+        LineString line = factory.createLineString( lineCoords );
+        final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
+        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g, mapPanel.getProjection() );
+      }
+    }
+    for( int j = 0; j < coords[0].length; j++ )
+    {
+      GeometryFactory factory = new GeometryFactory();
+      for( int i = 0; i < coords.length - 1; i++ )
+      {
+        lineCoords[0] = coords[i][j];
+        lineCoords[1] = coords[i + 1][j];
+        LineString line = factory.createLineString( lineCoords );
+        final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
+        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g, mapPanel.getProjection() );
       }
     }
   }
@@ -805,15 +883,49 @@ public class CreateChannelData
   {
     return m_segmentList.size();
   }
-  
-  public int getSelectedSegment()
+
+  public int getSelectedSegment( )
   {
     return m_selectedSegment;
   }
-  
+
   public void setSelectedSegment( int selectedSegment )
   {
     m_selectedSegment = selectedSegment;
   }
-  
+
+  /**
+   * returns the number of bank intersections for the current segment
+   */
+  public int getNumBankIntersections( int segment )
+  {
+    return m_segmentList.get( segment - 1 ).getNumBankIntersections();
+  }
+
+  /**
+   * sets the number of bank intersections for the current segment
+   */
+  public void setNumBankIntersections( int segment, int numIntersections )
+  {
+    m_segmentList.get( segment - 1 ).setNumBankIntersections( numIntersections );
+  }
+
+  /**
+   * this method updates the segment data
+   */
+  public void updateSegments( )
+  {
+    // loop over all segments
+    final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
+    for( final SegmentData segment : datas )
+    {
+      if( segment != null )
+      {
+        // intersect the bankline by the defined number of intersections
+        segment.updateBankIntersection();
+        segment.updateProfileIntersection();
+      }
+    }
+    completationCheck();
+  }
 }
