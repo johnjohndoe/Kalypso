@@ -106,6 +106,14 @@
               style="radio"
               toolbarPath="karte/tools"
               tooltip="Grid draw tool"/>
+        <action
+              class="org.kalypso.kalypsomodel1d2d.ui.map.del.TestDeleteFEElementActionDelegate"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.grid.createGrid"
+              label="FEDel"
+              menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+              style="radio"
+              toolbarPath="karte/tools"
+              tooltip="Delete  FE Element"/>
   
           <action
                	id="org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelActionDelegate"
@@ -152,7 +160,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d"/>
       </factory>
    </extension>
-     <extension
+     <!--extension
          name="Workflow Views"
          point="org.eclipse.ui.views">
 	      <view
@@ -160,7 +168,7 @@
 	            class="xp.ModelMapEditStrategyView"
 	            id="xp.ModelMapEditProtocolView"
 	            name="Model Map Edit Protocol View "/>
-	  </extension>
+	  </extension-->
      <extension
            point="org.kalypso.model1d2d.mapEditStrategy">
      </extension>

@@ -3,6 +3,9 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 import java.awt.Graphics;
 import java.awt.Point;
 
+
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -11,11 +14,15 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 /**
+ * Provide widget for deleting finit elements 
+ * 
  * @author Patrice Congo
  */
-public class DeleteFEElementsWidget extends AbstractWidget
+public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWithOptions, WidgetStrategyContext
 {
   private Point m_currentPoint = null;
 
@@ -24,10 +31,16 @@ public class DeleteFEElementsWidget extends AbstractWidget
   private SelectionWidget selectionWidget;
   
   private IKalypsoFeatureTheme m_nodeTheme;
+  
+  private DeleteFEElementsWidgetFace widgetFace=
+    new DeleteFEElementsWidgetFace(this);
 
+  private IWidget widgetStrategy;
+  
+  
   public DeleteFEElementsWidget( )
   {
-    super( "New FE-Element", "Creates a new FE-Element" );
+    super( "Delete Finite element", "Delete finite element" );
   }
 
   /**
@@ -160,4 +173,35 @@ public class DeleteFEElementsWidget extends AbstractWidget
 //    }
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  public Control createControl( Composite parent )
+  {
+    return widgetFace.createControl( parent );
+  }
+  
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
+   */
+  public void disposeControl( )
+  {
+    widgetFace.disposeControl();
+  }
+  
+  public void setStrategy(IWidget widgetStrategy)
+  {
+    if(this.widgetStrategy==widgetStrategy)
+    {
+      return;
+    }
+    
+    this.widgetStrategy=widgetStrategy;
+    
+    widgetStrategy.finish();
+    
+    widgetStrategy.activate( getCommandTarget(), getMapPanel() );
+    
+  }
+  
 }
