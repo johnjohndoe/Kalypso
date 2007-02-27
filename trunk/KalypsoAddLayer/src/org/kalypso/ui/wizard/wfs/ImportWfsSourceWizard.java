@@ -55,10 +55,10 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
@@ -81,11 +81,13 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 {
   private ImportWfsWizardPage m_importWFSPage;
 
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
 
   private ArrayList<String> m_catalog;
 
   private ImportWfsFilterWizardPage m_filterWFSPage;
+
+  private IMapModell m_modell;
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -93,8 +95,8 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public boolean performFinish( )
   {
-    IMapModell mapModell = m_outlineviewer.getMapModell();
-    if( m_outlineviewer.getMapModell() != null )
+    IMapModell mapModell = m_modell;
+    if( mapModell != null )
       try
       {
         final IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
@@ -203,7 +205,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void addPages( )
   {
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_outlineviewer );
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell );
     addPage( m_importWFSPage );
     addPage( m_filterWFSPage );
   }
@@ -218,9 +220,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
+    m_outlineviewer = commandTarget;
   }
 
   public ArrayList<String> getCatalog( )
@@ -252,5 +254,13 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     visitor.visit( filter.getOperation() );
     xml = filter.toXML().toString();
     return xml;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_modell = modell;
   }
 }

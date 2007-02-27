@@ -53,10 +53,10 @@ import org.deegree.services.wms.capabilities.Style;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -69,9 +69,11 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 {
   private ImportWmsWizardPage m_page = null;
 
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
 
   private final ArrayList<String> m_catalog = new ArrayList<String>();
+
+  private IMapModell m_modell;
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -79,8 +81,8 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public boolean performFinish( )
   {
-    IMapModell mapModell = m_outlineviewer.getMapModell();
-    if( m_outlineviewer.getMapModell() != null )
+    IMapModell mapModell = m_modell;
+    if( mapModell != null )
 
       try
       {
@@ -160,7 +162,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     catch( final IOException e )
     {
       e.printStackTrace();
-      
+
       m_catalog.clear();
     }
     finally
@@ -179,9 +181,9 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
+    m_outlineviewer = commandTarget;
   }
 
   public ArrayList<String> getCatalog( )
@@ -192,12 +194,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void readCatalog( final InputStream is ) throws IOException
   {
     m_catalog.clear();
-    
+
     // use properties to parse catalog: dont do everything yourself
     // fixes bug with '=' inside of URLs
     final Properties properties = new Properties();
     properties.load( is );
-    
+
     final Set<Entry<Object, Object>> name = properties.entrySet();
     for( final Entry<Object, Object> entry : name )
     {
@@ -213,5 +215,13 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   public boolean needsProgressMonitor( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_modell = modell;
   }
 }

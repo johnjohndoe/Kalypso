@@ -10,12 +10,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
 
-  private GisMapOutlineViewer m_outlineviewer;
+  private ICommandTarget m_outlineviewer;
 
   private ImportRasterSourceWizardPage m_page;
 
@@ -75,9 +75,21 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
   private URL m_mapContextURL;
 
+  private IMapModell m_mapModel;
+
   public ImportRasterSourceWizard( )
   {
     super();
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void setMapModel( IMapModell modell )
+  {
+    m_mapModel = modell;
+    m_project = m_mapModel.getProject();
+    m_mapContextURL = ((GisTemplateMapModell) modell).getContext();
   }
 
   @Override
@@ -111,10 +123,10 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       {
         gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver, null );
-        
+
         // FIXME: Change this, RectifiedGridCoverageMember doesn't exists any more
-        //IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverage" );
-        IFeatureType ft = workspace.getFeatureType( new QName(NS.GML3, "RectifiedGridCoverage", null ));
+        // IFeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverage" );
+        IFeatureType ft = workspace.getFeatureType( new QName( NS.GML3, "RectifiedGridCoverage", null ) );
         styleName = ft.getName();
         stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft, styleName ).toString();
       }
@@ -134,8 +146,8 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     }
 
     // Add Layer to mapModell
-    IMapModell mapModell = m_outlineviewer.getMapModell();
-    if( m_outlineviewer.getMapModell() != null )
+    IMapModell mapModell = m_mapModel;
+    if( mapModell != null )
       try
       {
         AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, filePath.lastSegment(), "gml", "RectifiedGridCoverage", getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
@@ -157,11 +169,9 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    m_outlineviewer = outlineviewer;
-    m_project = m_outlineviewer.getMapModell().getProject();
-    m_mapContextURL = ((GisTemplateMapModell) m_outlineviewer.getMapModell()).getContext();
+    m_outlineviewer = commandTarget;
   }
 
   /**

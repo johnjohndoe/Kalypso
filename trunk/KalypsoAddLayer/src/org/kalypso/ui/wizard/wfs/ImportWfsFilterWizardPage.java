@@ -108,7 +108,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   Button m_activeSelectionButton;
 
-  GisMapOutlineViewer m_gisMapOutlineViewer;
+  IMapModell m_gisMapOutlineViewer;
 
   // GM_Surface m_BBox;
 
@@ -132,7 +132,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   ComboViewer m_geomComboViewer;
 
-  public ImportWfsFilterWizardPage( String pageName, String title, ImageDescriptor titleImage, GisMapOutlineViewer viewer )
+  public ImportWfsFilterWizardPage( String pageName, String title, ImageDescriptor titleImage, IMapModell viewer )
   {
     super( pageName, title, titleImage );
     m_gisMapOutlineViewer = viewer;
@@ -450,7 +450,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     m_themeName = "Thema ohne Namen";
     if( m_gisMapOutlineViewer == null )
       return new Object[0];
-    final IMapModell mapModell = m_gisMapOutlineViewer.getMapModell();
+    final IMapModell mapModell = m_gisMapOutlineViewer;
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )

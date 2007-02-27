@@ -41,9 +41,13 @@
 package org.kalypso.ui.wizard;
 
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 public interface IKalypsoDataImportWizard extends IWorkbenchWizard
 {
-  public void setOutlineViewer( GisMapOutlineViewer outlineviewer );
+  public void setCommandTarget( final ICommandTarget commandTarget );
+
+  public void setMapModel( final IMapModell modell );
+
 }
