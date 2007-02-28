@@ -21,8 +21,18 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -67,8 +77,97 @@ public class WorkflowControl2
   {
     final Composite top = new Composite( parent, SWT.FILL );
     top.setLayout( new FillLayout() );
-    m_treeViewer = new TreeViewer( top, SWT.SINGLE );
+    m_treeViewer = new TreeViewer( top, SWT.SINGLE )
+    {
+      /**
+       * @see org.eclipse.jface.viewers.TreeViewer#doUpdateItem(org.eclipse.swt.widgets.Item, java.lang.Object)
+       */
+      @Override
+      protected void doUpdateItem( final Item item, final Object element )
+      {
+        super.doUpdateItem( item, element );
+        if( item != null && element instanceof IWorkflowPart )
+        {
+          item.setData( "_HELP", ((IWorkflowPart) element).getHelp().getHelp() );
+        }
+      }
+    };
     m_treeViewer.setContentProvider( new WorkflowContentProvider() );
+
+    final Tree tree = m_treeViewer.getTree();
+    final Display display = tree.getDisplay();
+    // Disable native tooltip
+    tree.setToolTipText( "" );
+
+    // Implement a "fake" tooltip
+    final Listener labelListener = new Listener()
+    {
+      public void handleEvent( final Event event )
+      {
+        final Label control = (Label) event.widget;
+        final Shell shell = control.getShell();
+        switch( event.type )
+        {
+          case SWT.MouseDown:
+            final Event e = new Event();
+            e.item = ((TreeItem) control.getData( "_TREEITEM" ));
+            // set the selection as if
+            // the mouse down event went through to the tree
+            tree.setSelection( new TreeItem[] { (TreeItem) e.item } );
+            tree.notifyListeners( SWT.Selection, e );
+            tree.setFocus();
+          case SWT.MouseExit:
+            shell.dispose();
+            break;
+        }
+      }
+    };
+
+    final Listener treeListener = new Listener()
+    {
+      Shell tip = null;
+
+      Label label = null;
+
+      public void handleEvent( final Event event )
+      {
+        if( event.type == SWT.MouseHover )
+        {
+          final TreeItem item = tree.getItem( new Point( event.x, event.y ) );
+          if( item != null )
+          {
+            if( tip != null && !tip.isDisposed() )
+              tip.dispose();
+            tip = new Shell( display, SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL );
+            tip.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+            final FillLayout layout = new FillLayout();
+            layout.marginWidth = 2;
+            tip.setLayout( layout );
+            label = new Label( tip, SWT.NONE );
+            label.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+            label.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+            label.setData( "_TREEITEM", item );
+            final Object help = item.getData( "_HELP" );
+            if( help != null )
+            {
+              label.setText( (String) help );
+            }
+            label.addListener( SWT.MouseExit, labelListener );
+            label.addListener( SWT.MouseDown, labelListener );
+            final Point size = tip.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+            final Rectangle rect = item.getBounds( 0 );
+            final Point pt = tree.toDisplay( rect.x, rect.y );
+            tip.setBounds( pt.x, pt.y, size.x, size.y );
+            tip.setVisible( true );
+          }
+        }
+      }
+    };
+    tree.addListener( SWT.Dispose, treeListener );
+    tree.addListener( SWT.KeyDown, treeListener );
+    tree.addListener( SWT.MouseMove, treeListener );
+    tree.addListener( SWT.MouseHover, treeListener );
+
     m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
     m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
