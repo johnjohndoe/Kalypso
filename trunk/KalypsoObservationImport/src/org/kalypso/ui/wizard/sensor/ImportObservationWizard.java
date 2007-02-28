@@ -219,7 +219,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       }
       final String href = "";
       final String id = "";
-      final String name = "";
+      final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
