@@ -44,7 +44,7 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     if(selection == null)
     {
-      final IResource currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+      final IResource currentFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
       selection = new StructuredSelection(currentFolder);
     }
     
@@ -58,7 +58,7 @@ public class ImportRoughnessHandler extends WorkflowCommandHandler
     final INewWizardKalypsoImport wizard = (INewWizardKalypsoImport) wizardDescriptor.createWizard();
     final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
 
-    final IFolder currentFolder = (IFolder) context.getVariable( "activeSimulationModelBaseFolder" );
+    final IFolder currentFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME);
     final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
     final HashMap<String, Object> data = new HashMap<String, Object>();
     data.put( "IRoughnessPolygonCollection", roughnessPolygonCollection );
