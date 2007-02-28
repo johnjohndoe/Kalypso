@@ -384,14 +384,14 @@ class ApplyElevationWidgetFace
       }
     } );
     
-    Button applyAll = new Button( clientComposite, SWT.PUSH );
+    Button selectAll = new Button( clientComposite, SWT.PUSH );
     GridData applyAllGridData = new GridData(GridData.FILL_HORIZONTAL);
     applyAllGridData.horizontalSpan = 1;
     applyAllGridData.verticalSpan = 1;
-    applyAll.setLayoutData( applyAllGridData);
-    applyAll.setText( "Apply All" );
+    selectAll.setLayoutData( applyAllGridData);
+    selectAll.setText( "Select All" );
   //  applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    applyAll.addSelectionListener( new SelectionAdapter()
+    selectAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {

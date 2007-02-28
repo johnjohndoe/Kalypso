@@ -69,6 +69,7 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Madanagopal
+ * @author Dejan
  */
 public class ImportBaseMapWizard extends Wizard implements INewWizardKalypsoImport
 {

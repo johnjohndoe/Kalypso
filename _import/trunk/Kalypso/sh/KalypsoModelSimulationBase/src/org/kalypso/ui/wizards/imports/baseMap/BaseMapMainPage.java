@@ -27,6 +27,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 
 /**
  * @author Madanagopal
+ * @author Dejan
  */
 public class BaseMapMainPage extends WizardPage
 {
