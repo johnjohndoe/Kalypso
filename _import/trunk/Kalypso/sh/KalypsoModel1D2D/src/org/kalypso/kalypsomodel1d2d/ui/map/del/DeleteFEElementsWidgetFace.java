@@ -66,6 +66,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.ScrolledPageBook;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 
 class DeleteFEElementsWidgetFace
   {
@@ -144,19 +145,42 @@ class DeleteFEElementsWidgetFace
         }
       };
       
+      
+      final Action actionSelNode= new Action("SelNode")
+      {
+        final private FENetConceptSelectionWidget nodeSelectionWidget=
+          new FENetConceptSelectionWidget(
+              Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
+
+        /**
+         * @see org.eclipse.jface.action.Action#run()
+         */
+        @Override
+        public void run( )
+        {
+          book.showEmptyPage();
+          strategyContext.setStrategy( nodeSelectionWidget );
+        }
+        
+      };
+      
       try
       {
         action.setText( "dadad" );
-        action.setToolTipText( "Selectieren ein Finite element durch klicken" );
+        action.setToolTipText( 
+            "Selectieren ein Finite element durch klicken" );
         action.setImageDescriptor( 
             getImageDescriptor( "/icons/viewmag1.png" ));
-        ActionContributionItem aci = new ActionContributionItem(action);
+        ActionContributionItem aci = 
+                new ActionContributionItem(action);
         aci.fill( toolBar, 0 );  
         
         images.add( image );
-        ToolItem item= new ToolItem(toolBar,SWT.PUSH);
-        item.setText( "T" );
-        item.setImage( image );
+        
+        ActionContributionItem aciNodeSel = 
+            new ActionContributionItem(actionSelNode);
+       actionSelNode.setToolTipText( "Select nodes" );
+        aciNodeSel.fill( toolBar, 1 );
         
         toolkit.adapt( toolBar, true, true );   
         toolkit.paintBordersFor( toolBar );
@@ -166,7 +190,6 @@ class DeleteFEElementsWidgetFace
       {
         e.printStackTrace();
       }
-//      item1.setText( "Selection by clicking" );
       
       
       //page book

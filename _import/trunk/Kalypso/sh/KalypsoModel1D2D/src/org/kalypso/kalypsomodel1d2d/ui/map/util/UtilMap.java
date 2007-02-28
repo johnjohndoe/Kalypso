@@ -81,7 +81,7 @@ public class UtilMap
         final IFeatureType featureType = ftheme.getFeatureType();
         if( GMLSchemaUtilities.substitutes( 
                     featureType, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_NODE) )
+                    editElementQName/*Kalypso1D2DSchemaConstants.WB1D2D_F_NODE*/) )
         {
           return ftheme;
           //m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );

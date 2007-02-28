@@ -4,17 +4,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
-import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
@@ -295,10 +289,12 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
       return;
     }
     
-    this.widgetStrategy=widgetStrategy;
+    if(this.widgetStrategy!=null)
+    {
+      this.widgetStrategy.finish();
+    }
     
-    widgetStrategy.finish();
-    
+    this.widgetStrategy = widgetStrategy;    
     widgetStrategy.activate( getCommandTarget(), getMapPanel() );
     
   }
