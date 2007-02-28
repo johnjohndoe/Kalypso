@@ -50,14 +50,10 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -66,7 +62,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -85,20 +80,18 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-
+/**
+ * @author Patrice Congo
+ * @author Madanagopal
+ */
 class ApplyElevationWidgetFace
 {
   ListViewer elevationList;
   static int index=0;
   public String nameSel = "";
   Text inputText;
-
-  /**
-   * @author Patrice Congo
-   * @author Madanagopal
-   */
+  
   private Composite rootPanel;
 
   private FormToolkit toolkit;
@@ -320,25 +313,39 @@ class ApplyElevationWidgetFace
 
     Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
     configSection.setClient( clientComposite );
-    clientComposite.setLayout( new GridLayout( 2, false ) );
+    clientComposite.setLayout( new GridLayout( 4, false ) );
+    
     Label infoLabel = new Label( clientComposite, SWT.FLAT );
     infoLabel.setText( "Selected Terrain Model" );
+    GridData infoLabelGridData = new GridData( GridData.FILL_HORIZONTAL);
+    infoLabelGridData.horizontalSpan = 2;
+    infoLabelGridData.verticalSpan = 1;
+    infoLabel.setLayoutData( infoLabelGridData);
+    
     inputText = new Text( clientComposite, SWT.FLAT | SWT.BORDER );
     inputText.setEditable( false );
     inputText.setText( nameSel );
+    GridData inputTextGridData = new GridData( GridData.BEGINNING);
+    inputTextGridData.horizontalSpan = 2;
+    inputTextGridData.verticalSpan = 1;
+    inputText.setLayoutData( inputTextGridData);
 
     Label areaSelectLabel = new Label( clientComposite, SWT.FLAT );
     areaSelectLabel.setText( "Select Area" );
+    GridData areaSelectGridData = new GridData(GridData.FILL_HORIZONTAL);
+    areaSelectGridData.horizontalSpan = 4;
+    areaSelectGridData.verticalSpan = 1;
+    areaSelectLabel.setLayoutData( areaSelectGridData);
 
     // Dummy Label to Provide a Empty Cell in the GridLayout
-    Label areaSelectLabel1 = new Label( clientComposite, SWT.FLAT );
+//    Label areaSelectLabel1 = new Label( clientComposite, SWT.FLAT );
 
     
     TableViewer nodeElevationViewer = new TableViewer(clientComposite,
           SWT.FULL_SELECTION | SWT.BORDER| SWT.MULTI);
     table = nodeElevationViewer.getTable();
     GridData tableGridData = new GridData( GridData.FILL_BOTH );
-    tableGridData.horizontalSpan = 1;
+    tableGridData.horizontalSpan = 3;
     tableGridData.verticalSpan = 3;
     //nodeElevationViewer.set
     table.setLayoutData( tableGridData );
@@ -377,31 +384,29 @@ class ApplyElevationWidgetFace
       }
     } );
     
-
-//    nodeElevationViewer.setContentProvider( new ArrayContentProvider());
-//    nodeElevationViewer.setLabelProvider( new GetNodeElevationLabelContentProvider() );
-//    nodeElevationViewer.setInput( DataInput.example() );    
-
-//    nodeElevationViewer.setContentProvider( new ArrayContentProvider());
-//    nodeElevationViewer.setLabelProvider( new GetNodeElevationLabelContentProvider() );
-//    nodeElevationViewer.setInput( DataInput.example() );    
-    
     Button applyAll = new Button( clientComposite, SWT.PUSH );
+    GridData applyAllGridData = new GridData(GridData.FILL_HORIZONTAL);
+    applyAllGridData.horizontalSpan = 1;
+    applyAllGridData.verticalSpan = 1;
+    applyAll.setLayoutData( applyAllGridData);
     applyAll.setText( "Apply All" );
-    applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+  //  applyAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     applyAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
       {
         table.selectAll();
-      //nodeElevationViewer.setSelection( selection, reveal )
-      }
+           }
 
     } );
     
     Button deSelectAll = new Button( clientComposite, SWT.PUSH );
+    GridData deSelectGridData = new GridData(GridData.FILL_HORIZONTAL);
+    deSelectGridData.horizontalSpan = 1;
+    deSelectGridData.verticalSpan = 1;
+    deSelectAll.setLayoutData( deSelectGridData);
     deSelectAll.setText( "DeSelect All" );
-    deSelectAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    //deSelectAll.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( SelectionEvent event )
@@ -414,6 +419,10 @@ class ApplyElevationWidgetFace
     } );
     
     Button applySelected = new Button( clientComposite, SWT.PUSH );
+    GridData applySelectedGridData = new GridData(GridData.FILL_HORIZONTAL);
+    applySelectedGridData.horizontalSpan = 1;
+    applySelectedGridData.verticalSpan = 1;
+    applySelected.setLayoutData( applySelectedGridData);
     applySelected.setText( "Apply Selected" );
     applySelected.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     applySelected.addSelectionListener( new SelectionAdapter()
@@ -427,91 +436,6 @@ class ApplyElevationWidgetFace
 
   }
   
-  
-  
-  class GetNodeElevationLabelContentProvider extends LabelProvider{
-    public Image getImage(Object element,int columnIndex)
-    {     
-      return null;
-    }
-    
-    public String getText(Object element,int columnIndex)
-    {
-      DataInput inp = (DataInput)element;
-      switch (columnIndex){
-        case 0:
-          System.out.println("inp.node: "+inp.node);
-          return inp.node+"";
-        case 1:
-          System.out.println("inp.terrain: "+inp.terrain);
-          return inp.terrain+"";
-        default:
-          return "invalidData";
-      } //return null;
-    }    
-  }
-  
-  
-  
-
-
-//  private IBaseLabelProvider getNodeElevationLabelContentProvider( )
-//  {
-//
-//    public Image getImage(Object element)
-//    {
-//      
-//      return null;
-//    }
-//     public String getText(Object element)
-//     {
-//       if(element instanceof ITerrainElevationModel)
-//       {
-//         String name = ((ITerrainElevationModel)element).getName();
-//         if(name!=null)
-//         {
-//           return name; 
-//         }
-//         else
-//         {
-//           return ((ITerrainElevationModel)element).getGmlID();
-//         }
-//       }
-//       else
-//       {
-//         throw new RuntimeException("Only terrain elevation model are supported:"+
-//             "but got \n\tclass="+ (element==null?null:element.getClass())+
-//             "\n\t value="+element);
-//       }
-//     }
-//     
-//    return null;
-//  }
-
-  private IContentProvider getNodeElevationTableContentProvider( )
-  {
-    return new IStructuredContentProvider()
-    {
-
-      public Object[] getElements( Object inputElement )
-      {
-        return new Object[] {};
-
-      }
-
-      public void dispose( )
-      {
-
-      }
-
-      public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
-      {
-
-      }
-
-    };
-  }
-
   private IPropertyChangeListener createPropertyChangeLis( )
   {
     return new IPropertyChangeListener()
