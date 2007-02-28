@@ -3335,7 +3335,7 @@
 		</arg>
 	</page>
 	<!-- Speicher-Exporte -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Pegel" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Speicher"/>
