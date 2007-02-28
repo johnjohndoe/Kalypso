@@ -5,9 +5,7 @@
 	<!ENTITY k1d2dwf 'http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#'>
 	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
 ]>
-<rdf:RDF xmlns:k1d2dwf="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-	xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
+<rdf:RDF xmlns:k1d2dwf="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:wbs="http://www.tu-harburg.de/wb/kalypso/schema/workflow#">
 
 	<!--program defintion, that contains the workflow Kalypso-1D2D-->
 	<wbs:Workflow rdf:about="&k1d2dwf;WF_Kalypso1D2D">
@@ -26,29 +24,19 @@
 	<!--first hierarchical level are the Phases (Processings)-->
 	<wbs:Phase rdf:about="&k1d2dwf;Preprocessing">
 		<wbs:hasName>Preprocessing: Modellaufbau</wbs:hasName>
-		<wbs:hasHelp>
-			Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. Es
-			lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden.
-			Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.
-		</wbs:hasHelp>
+		<wbs:hasHelp>Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut. Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.</wbs:hasHelp>
 		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ModBuild" />
 	</wbs:Phase>
 
 	<wbs:Phase rdf:about="&k1d2dwf;Processing">
 		<wbs:hasName>Processing: Kalibrieren und Rechnen</wbs:hasName>
-		<wbs:hasHelp>
-			Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen
-			werden.
-		</wbs:hasHelp>
+		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
 		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;CalSim" />
 	</wbs:Phase>
 
 	<wbs:Phase rdf:about="&k1d2dwf;Postprocessing">
 		<wbs:hasName>Postprocessing: Ergebnisauswertungen</wbs:hasName>
-		<wbs:hasHelp>
-			Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen
-			werden.
-		</wbs:hasHelp>
+		<wbs:hasHelp>Nach Aufbau der Modelldaten können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung vorgenommen werden.</wbs:hasHelp>
 		<wbs:hasTaskGroups rdf:resource="&k1d2dwf;ResVis" />
 	</wbs:Phase>
 
@@ -838,9 +826,7 @@
 	</wbs:Activity>
 	<wbs:Activity rdf:about="&k1d2dwf;Chan2DDefMinMax">
 		<wbs:hasName>Stützstellenkontrolle</wbs:hasName>
-		<wbs:hasHelp>
-			Ermöglicht die Eingabe der maximalen Stützstellen in jedem Profil und gibt die aktuelle Maximalzahl aus
-		</wbs:hasHelp>
+		<wbs:hasHelp>Ermöglicht die Eingabe der maximalen Stützstellen in jedem Profil und gibt die aktuelle Maximalzahl aus</wbs:hasHelp>
 	</wbs:Activity>
 	<wbs:Activity rdf:about="&k1d2dwf;Chan2DCheckNodes">
 		<wbs:hasName>Stützstellenzahl prüfen</wbs:hasName>
@@ -943,9 +929,7 @@
 	</wbs:Activity>
 	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupProps">
 		<wbs:hasName>Gruppeneigenschaften</wbs:hasName>
-		<wbs:hasHelp>
-			Bearbeitet die Eigenschaften einer Elementgruppierung, z.B. Abschnittsbezeichnung oder Kommentar
-		</wbs:hasHelp>
+		<wbs:hasHelp>Bearbeitet die Eigenschaften einer Elementgruppierung, z.B. Abschnittsbezeichnung oder Kommentar</wbs:hasHelp>
 	</wbs:Activity>
 	<wbs:Activity rdf:about="&k1d2dwf;EltsGroupDelGroupElt">
 		<wbs:hasName>Element aus Gruppe löschen</wbs:hasName>
