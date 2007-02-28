@@ -1,5 +1,6 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,12 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -128,11 +135,16 @@ public class Transformer implements ICoreRunnableWithProgress
   private void serialize( ) throws IOException, GmlSerializeException
   {
     GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
-    String relPath = myWorkspace.getContext().getPath().toString();
-    relPath = relPath.substring( 9 ); // trimming "/resource"
+    String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "szenario" + File.separator + "models" + File.separator + "terrain.gml";
     String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
     FileWriter writer = new FileWriter( absPath );
     GmlSerializer.serializeWorkspace( writer, myWorkspace );
     writer.close();
+    relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "szenario" + File.separator + "maps" + File.separator + "base.gmt";
+    absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
+//    
+//    GisTemplateMapModell model = GisTemplateHelper.loadGisMapView( new File(absPath) ); 
+//    new AddThemeCommand();
+//    m_data.getProjectBaseFolder();
   }
 }

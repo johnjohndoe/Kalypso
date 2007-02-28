@@ -54,7 +54,7 @@ public class PageSecond extends WizardPage
     composite.setSize( 400, 5000 );
     sc.setExpandHorizontal( false );
     sc.setExpandVertical( true );
-    sc.setMinSize( composite.computeSize( 400, 200 ) );
+    sc.setMinSize( composite.computeSize( 400, 300 ) );
     sc.setContent( composite );
     setControl( composite );
     setPageComplete( false );
