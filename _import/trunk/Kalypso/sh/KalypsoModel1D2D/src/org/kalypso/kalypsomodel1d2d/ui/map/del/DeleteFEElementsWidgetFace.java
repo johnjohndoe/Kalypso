@@ -130,6 +130,9 @@ class DeleteFEElementsWidgetFace
       
       final Action action= new Action("dadadad")
       {
+        final private FeElementPointSelectionWidget pointSelectionWidget=
+          new FeElementPointSelectionWidget();
+
         /**
          * @see org.eclipse.jface.action.Action#run()
          */
@@ -137,6 +140,7 @@ class DeleteFEElementsWidgetFace
         public void run( )
         {
           book.showPage("_POINT_CLICK_SEL_");
+          strategyContext.setStrategy( pointSelectionWidget);
         }
       };
       
@@ -225,6 +229,7 @@ class DeleteFEElementsWidgetFace
     }
     
 
+    
     private final void addPointSelection()
     {
       

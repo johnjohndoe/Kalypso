@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 
 import org.eclipse.swt.widgets.Composite;
@@ -95,43 +96,36 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   {
     try
     {
-//      /* snap to next node */
-//      // TODO: exclude already found nodes?
-//      final FE1D2DNode snapNode;
-//
-//      final MapPanel mapPanel = getMapPanel();
-//      final EasyFeatureWrapper[] allNodeWrappers = m_provider.getFeatures( mapPanel );
-//      final EasyFeatureWrapper[] nearNodeWrappers = MapfunctionHelper.findFeatureToSelect( mapPanel, new Rectangle( p.x, p.y, 0, 0 ), allNodeWrappers, m_radius );
-//      if( nearNodeWrappers.length > 0 )
-//      {
-//        final FE1D2DNode nearestNode = new FE1D2DNode( nearNodeWrappers[0].getFeature() );
-//        snapNode = nearestNode;
-//      }
-//      else
-//        snapNode = null;
-//
-//      final ICommand command;
-//      if( snapNode != null )
-//        command = m_builder.addNode( snapNode );
-//      else
-//      {
-//        final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
-//        command = m_builder.addNode( currentPos );
-//      }
-//
-//      if( command != null )
-//      {
-//        m_nodeTheme.getWorkspace().postCommand( command );
-//
-//        reinit();
-//      }
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.leftClicked( p );
+      }
     }
     catch( final Exception e )
     {
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      e.printStackTrace();
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
+   */
+  @Override
+  public void leftReleased( Point p )
+  {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.leftReleased( p );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
   /**
    * TODO: change to right-clicked: BUT!: at the moment the xontext menu is opened, so the framework must know wether
    * this widget is editing something at the moment or not
@@ -141,6 +135,17 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   @Override
   public void doubleClickedLeft( final Point p )
   {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.doubleClickedLeft( p );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 //    try
 //    {
 //      final ICommand command = m_builder.finish();
@@ -163,6 +168,18 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   @Override
   public void paint( final Graphics g )
   {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.paint( g );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    
 //    final Point currentPoint = m_currentPoint;
 //
 //    if( currentPoint != null )
@@ -173,6 +190,64 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
 //    }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( KeyEvent e )
+  {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.keyPressed( e );
+      }
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( KeyEvent e )
+  {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.keyReleased( e );
+      }
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+  
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
+  @Override
+  public void dragged( Point p )
+  {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.dragged( p );
+      }
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+  
+  
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
