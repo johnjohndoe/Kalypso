@@ -25,16 +25,9 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
  */
 public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWithOptions, WidgetStrategyContext
 {
-  private Point m_currentPoint = null;
 
-  private PolygonGeometryBuilder  m_builder = null;
- 
-  private SelectionWidget selectionWidget;
-  
-  private IKalypsoFeatureTheme m_nodeTheme;
-  
   private DeleteFEElementsWidgetFace widgetFace=
-    new DeleteFEElementsWidgetFace(this);
+                      new DeleteFEElementsWidgetFace(this);
 
   private IWidget widgetStrategy;
   
@@ -85,7 +78,17 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.moved( p );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -107,6 +110,27 @@ public class DeleteFEElementsWidget extends AbstractWidget implements IWidgetWit
     }
   }
 
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
+   */
+  @Override
+  public void leftPressed( Point p )
+  {
+    try
+    {
+      if(widgetStrategy!=null)
+      {
+        widgetStrategy.leftPressed( p );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */

@@ -58,15 +58,19 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Implements a Strategy for selectio an fe element
@@ -88,24 +92,34 @@ public class FeElementPointSelectionWidget implements IWidget
 
   private CommandableWorkspace cmdWorkspace;
   
+  private PolygonGeometryBuilder polygonGeometryBuilder; 
+  
   private JMSelector selector= new JMSelector();
+
+  private IMapModell mapModell;
   
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( 
+                ICommandTarget commandPoster, 
+                MapPanel mapPanel )
   {
    this.commandPoster=commandPoster;
    this.mapPanel=mapPanel;
-   IMapModell mapModell = mapPanel.getMapModell();
-  this.model1d2d = 
+   mapModell = mapPanel.getMapModell();
+   this.model1d2d = 
      UtilMap.findFEModelTheme( 
        mapModell, 
        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
    Assert.throwIAEOnNull( this.model1d2d, "Could not found model" );
    this.featureTheme = 
-     UtilMap.findEditableThem( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
+     UtilMap.findEditableThem( 
+         mapModell, 
+         Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
    cmdWorkspace = this.featureTheme.getWorkspace();
+   crs = mapModell.getCoordinatesSystem();
+   
   }
 
   /**
@@ -129,7 +143,40 @@ public class FeElementPointSelectionWidget implements IWidget
    */
   public void doubleClickedLeft( Point p )
   {
-    
+    if(polygonSelectModus)
+    {
+      if(polygonGeometryBuilder!=null)
+      {
+        try
+        {
+          GM_Object object = 
+              polygonGeometryBuilder.finish();
+          GM_Envelope env = object.getEnvelope();
+          List selected = 
+                  selector.select( 
+                          env, 
+                          model1d2d.getElements().getWrappedList(), 
+                          false );
+          for(int i=selected.size()-1;i>=0;i--)
+          {
+            ((Feature)selected.get( i )).getDefaultGeometryProperty();
+          }
+          addSelection( selected );
+          
+//          selector.selectNearestHandel( geom, pos, snapRadius )
+          
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+          throw new RuntimeException(e);
+        }
+        finally
+        {
+          polygonGeometryBuilder= new PolygonGeometryBuilder(0,crs);
+        }
+      }
+    }
   }
 
   /**
@@ -142,6 +189,12 @@ public class FeElementPointSelectionWidget implements IWidget
   
   Point draggedPoint0;
   Point draggedPoint1;
+
+  private boolean polygonSelectModus;
+
+  private CS_CoordinateSystem crs;
+
+  private Point currentPoint;
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
@@ -188,9 +241,20 @@ public class FeElementPointSelectionWidget implements IWidget
    */
   public void keyPressed( KeyEvent e )
   {
-    if(KeyEvent.CTRL_MASK == e.getModifiers())
+    int modifiers = e.getModifiers();
+    if(KeyEvent.CTRL_MASK == modifiers)
     {
       this.addToSelection=true;
+    }
+    else if(e.isShiftDown())
+    {
+      this.polygonSelectModus=true;
+      if(polygonGeometryBuilder==null)
+      {
+        polygonGeometryBuilder= 
+          new PolygonGeometryBuilder(0,crs);
+        System.out.println("DDCDCD="+crs);
+      }
     }
   }
 
@@ -199,10 +263,16 @@ public class FeElementPointSelectionWidget implements IWidget
    */
   public void keyReleased( KeyEvent e )
   {
-    if(e.VK_CONTROL  == e.getKeyCode())
+    int keyCode = e.getKeyCode();
+    if(e.VK_CONTROL  == keyCode)
     {
       this.addToSelection=false;
     }
+    else if(e.VK_SHIFT == keyCode )
+    {
+      this.polygonSelectModus=false;
+    }
+    
   }
 
   /**
@@ -219,12 +289,30 @@ public class FeElementPointSelectionWidget implements IWidget
   public void leftClicked( Point p )
   {
     GM_Point point = MapUtilities.transform( mapPanel, p );
-    //model1d2d.getElements().getWrappedList().query( env, result )
-    
-    
-    List selected = 
-      selector.select( point.getPosition(), model1d2d.getElements().getWrappedList() );
-   addSelection( selected );
+    if(polygonSelectModus)
+    {
+      try
+      {
+        polygonGeometryBuilder.addPoint( point );
+        mapPanel.getMapModell().fireModellEvent( null );
+      }
+      catch (Exception e) 
+      {
+        //TODO better exception handling
+        e.printStackTrace();
+        throw new RuntimeException(e);
+      }
+    }
+    else
+    {
+      //klick point select modus
+      //model1d2d.getElements().getWrappedList().query( env, result )
+      
+      
+      List selected = 
+        selector.select( point.getPosition(), model1d2d.getElements().getWrappedList() );
+     addSelection( selected );
+    }
   }
 
   
@@ -268,7 +356,7 @@ public class FeElementPointSelectionWidget implements IWidget
    */
   public void leftPressed( Point p )
   {
-    
+    System.out.println("Left pressed");
   }
 
   /**
@@ -281,9 +369,15 @@ public class FeElementPointSelectionWidget implements IWidget
       System.out.println("DO Select");
       GM_Point point0=MapUtilities.transform( mapPanel, draggedPoint0 );
       GM_Point point1=MapUtilities.transform( mapPanel, draggedPoint1 );
-      GM_Envelope env= GeometryFactory.createGM_Envelope( 
-                                    point0.getPosition(), point1.getPosition() );
-      List selected=selector.select( env, model1d2d.getElements().getWrappedList(), false );
+      GM_Envelope env= 
+        GeometryFactory.createGM_Envelope( 
+                                    point0.getPosition(), 
+                                    point1.getPosition() );
+      List selected = 
+        selector.select( 
+            env, 
+            model1d2d.getElements().getWrappedList(), 
+            false );
       addSelection( selected );
     }
     draggedPoint0=null;
@@ -320,7 +414,8 @@ public class FeElementPointSelectionWidget implements IWidget
    */
   public void moved( Point p )
   {
-    
+//    currentPoint = MapUtilities.transform( mapPanel, p );
+    currentPoint=p;
   }
 
   /**
@@ -337,6 +432,12 @@ public class FeElementPointSelectionWidget implements IWidget
       double height = Math.abs( draggedPoint0.getY()-draggedPoint1.getY());
       
       g.drawRect( (int)x, (int)y, (int)width, (int)height );
+    }
+    
+    if(polygonGeometryBuilder!=null)
+    {
+      GeoTransform projection = mapPanel.getProjection();
+      polygonGeometryBuilder.paint( g, projection, currentPoint );
     }
   }
 
