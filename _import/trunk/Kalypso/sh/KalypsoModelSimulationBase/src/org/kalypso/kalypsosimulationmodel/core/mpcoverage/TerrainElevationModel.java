@@ -99,14 +99,14 @@ public abstract class TerrainElevationModel
 
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
-   */
-  public String getGmlID( )
-  {
-    
-    return super.getGmlID();
-  }
+//  /**
+//   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
+//   */
+//  public String getGmlID( )
+//  {
+//    
+//    return super.getGmlID();
+//  }
 
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()

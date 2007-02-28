@@ -45,10 +45,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * An elevation provider base on ASC file
@@ -59,6 +63,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class ASCTerrainElevationModel implements IElevationProvider
 {
+  private static final Iterator<GM_Position> NULL_ITERATOR = null;
+
   /**
    * the asc data source File or URL containing the elevation info 
    */
@@ -77,6 +83,15 @@ public class ASCTerrainElevationModel implements IElevationProvider
   private int N_ROWS;
   private double xllcorner;
   private double yllcorner;
+  
+  private double minElevation;
+  
+  private double maxElevation;
+  
+  /**
+   * The maximal envelop for the elevation
+   */
+  private  GM_Envelope maxEnvelope;
   
   /**
    * Create an elevation provider based on the given asc file, in the specified 
@@ -111,58 +126,98 @@ public class ASCTerrainElevationModel implements IElevationProvider
   
 
   
-private void parse(InputStream inputStream)
-{
-  BufferedReader br = null;
-  try
+  private void parse(InputStream inputStream)
   {
-    br = new BufferedReader( new InputStreamReader(inputStream) );
-    final String[] data = new String[6];
-    String line;
-    //reading header data
-    for( int i = 0; i < 6; i++ )
+    BufferedReader br = null;
+    try
     {
-      line = br.readLine();
-      final int index = line.indexOf( " " ); //$NON-NLS-1$
-      final String subString = line.substring( index );
-      data[i] = subString.trim();
-    }
-    N_COLS = Integer.parseInt( data[0] );
-    N_ROWS = Integer.parseInt( data[1] );
-    xllcorner= Double.parseDouble( data[2] );
-    yllcorner= Double.parseDouble( data[3] );
-    cellSize=Integer.parseInt( data[4] );
-    double noDataValue = Double.parseDouble( data[5] );
-    double currentValue;
-
-    elevations = new double[N_ROWS][N_COLS];
-
-    String[] strRow;
-    for(int y=0; y<N_ROWS; y++)
-    {
-      strRow = br.readLine().trim().split( " " );
-      for(int x=0; x<N_COLS; x++)
+      br = new BufferedReader( new InputStreamReader(inputStream) );
+      final String[] data = new String[6];
+      String line;
+      //reading header data
+      for( int i = 0; i < 6; i++ )
       {
-        currentValue = Double.parseDouble( strRow[x] );
-        elevations[y][x] = (currentValue != noDataValue)?currentValue:Double.NaN;
+        line = br.readLine();
+        final int index = line.indexOf( " " ); //$NON-NLS-1$
+        final String subString = line.substring( index );
+        data[i] = subString.trim();
       }
+      N_COLS = Integer.parseInt( data[0] );
+      N_ROWS = Integer.parseInt( data[1] );
+      xllcorner= Double.parseDouble( data[2] );
+      yllcorner= Double.parseDouble( data[3] );
+      cellSize=Integer.parseInt( data[4] );
+      double noDataValue = Double.parseDouble( data[5] );
+      double currentValue;
+  
+      elevations = new double[N_ROWS][N_COLS];
+      minElevation=Double.MAX_VALUE;
+      maxElevation=Double.MIN_VALUE;
+      String[] strRow;
+      for(int y=0; y<N_ROWS; y++)
+      {
+        strRow = br.readLine().trim().split( " " );
+        for(int x=0; x<N_COLS; x++)
+        {
+          currentValue = Double.parseDouble( strRow[x] );
+  //        elevations[y][x] = 
+  //            (currentValue != noDataValue)?currentValue:Double.NaN;
+          
+          if(currentValue!=noDataValue)
+          {
+            elevations[y][x] = currentValue;
+            
+            if(minElevation>currentValue)
+            {
+              minElevation = currentValue;
+            }
+            
+            if(maxElevation<currentValue)
+            {
+              maxElevation = currentValue;
+            }
+            
+          }
+          else
+          {
+            elevations[y][x] = Double.NaN;
+          }
+          
+        }
+      }
+      maxEnvelope=makeMaxEnvelope();
+  //    br.close();
     }
-//    br.close();
+    catch( NumberFormatException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    finally {
+      IOUtils.closeQuietly( br );
+    }
   }
-  catch( NumberFormatException e )
+  
+  private final GM_Envelope makeMaxEnvelope()
   {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
+    
+    GM_Position posMin = 
+        GeometryFactory.createGM_Position( xllcorner, yllcorner );
+    GM_Position posMax = 
+        GeometryFactory.createGM_Position( 
+                            xllcorner+cellSize*N_COLS, 
+                            yllcorner+cellSize*N_ROWS );
+    GM_Envelope envelope = 
+        GeometryFactory.createGM_Envelope( posMin, posMax );
+    
+    return envelope;
+    
   }
-  catch( IOException e )
-  {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-  }
-  finally {
-    IOUtils.closeQuietly( br );
-  }
-}
   
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
@@ -179,6 +234,35 @@ private void parse(InputStream inputStream)
     {
       return Double.NaN;
     }
+  }
+  
+  public Iterator<GM_Position> getCellLLCornerIterator(GM_Envelope env)
+  {
+    
+    GM_Envelope envToShow = intersect( maxElevation, env );
+    if(envToShow==null)
+    {
+      return NULL_ITERATOR; 
+    }
+    else
+    {
+      return makeCellsLLCornerIterator(env);
+    }
+  }
+
+
+
+  private Iterator<GM_Position> makeCellsLLCornerIterator( GM_Envelope env )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+
+  private GM_Envelope intersect( double maxElevation2, GM_Envelope env )
+  {
+    return null;
   }
 
 }

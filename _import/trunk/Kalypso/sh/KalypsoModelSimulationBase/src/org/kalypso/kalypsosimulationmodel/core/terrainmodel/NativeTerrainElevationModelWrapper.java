@@ -196,5 +196,9 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel
     return elevationProvider.getElevation( location );
   }
 
+  public IElevationProvider getElevationProvider( )
+  {
+    return elevationProvider;
+  }
   
 }
