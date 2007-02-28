@@ -11,12 +11,12 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -70,29 +70,20 @@ public class WorkflowControl2
     m_treeViewer = new TreeViewer( top, SWT.SINGLE );
     m_treeViewer.setContentProvider( new WorkflowContentProvider() );
     m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
-    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
       private static final String TASKS_COMMANDS_CATEGORY = "org.kalypso.kalypso1d2d.pjt.TasksCommands";
 
-      public void selectionChanged( final SelectionChangedEvent event )
+      public void doubleClick( final DoubleClickEvent event )
       {
         final ITreeSelection selection = (ITreeSelection) event.getSelection();
         final Object first = selection.getFirstElement();
-        if( first != null && m_lastTreePath != null ? m_lastTreePath.getLastSegment() != first : true )
+        if( first != null )
         {
-          final TreePath newTreePath = selection.getPathsFor( first )[0];
-          if( m_lastTreePath != null )
-          {
-            final Object segment = m_lastTreePath.getSegment( Math.min( m_lastTreePath.getSegmentCount(), newTreePath.getSegmentCount() ) - 1 );
-            m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
-          }
-          m_treeViewer.expandToLevel( first, 1 );
-          m_lastTreePath = newTreePath;
           if( first instanceof ITask )
           {
             doTask( (ITask) first );
           }
-          m_treeViewer.setSelection( new StructuredSelection( first ) );
         }
       }
 
@@ -132,6 +123,26 @@ public class WorkflowControl2
           command.define( commandId, null, category );
         }
         return command;
+      }
+    } );
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final ITreeSelection selection = (ITreeSelection) event.getSelection();
+        final Object first = selection.getFirstElement();
+        if( first != null && m_lastTreePath != null ? m_lastTreePath.getLastSegment() != first : true )
+        {
+          final TreePath newTreePath = selection.getPathsFor( first )[0];
+          if( m_lastTreePath != null )
+          {
+            final Object segment = m_lastTreePath.getSegment( Math.min( m_lastTreePath.getSegmentCount(), newTreePath.getSegmentCount() ) - 1 );
+            m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
+          }
+          m_treeViewer.expandToLevel( first, 1 );
+          m_lastTreePath = newTreePath;
+          m_treeViewer.setSelection( new StructuredSelection( first ) );
+        }
       }
     } );
   }
