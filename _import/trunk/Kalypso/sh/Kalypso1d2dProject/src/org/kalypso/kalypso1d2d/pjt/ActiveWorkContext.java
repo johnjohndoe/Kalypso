@@ -8,19 +8,12 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.afgui.db.IWorkflowDB;
 import org.kalypso.afgui.model.IWorkflow;
 import org.kalypso.afgui.model.IWorkflowData;
 import org.kalypso.afgui.model.IWorkflowSystem;
-import org.kalypso.kalypso1d2d.pjt.actions.ProjectChangeListener;
 import org.kalypso.kalypso1d2d.pjt.views.ISzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 
@@ -36,50 +29,6 @@ import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
  */
 public class ActiveWorkContext
 {
-  ISelectionListener resSelListener = new ISelectionListener()
-  {
-    public void selectionChanged( IWorkbenchPart part, ISelection selection )
-    {
-      // logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-      if( part instanceof ResourceNavigator )
-      {
-
-        if( selection instanceof IStructuredSelection )
-        {
-          IStructuredSelection isl = (IStructuredSelection) selection;
-          int size = isl.size();
-          if( size == 1 )
-          {
-            Object firstEl = isl.getFirstElement();
-            if( firstEl instanceof IProject )
-            {
-              try
-              {
-                setActiveProject( (IProject) firstEl );
-              }
-              catch( Throwable th )
-              {
-                logger.log( Level.SEVERE, "Error secting active:" + firstEl, th );
-                try
-                {
-                  setActiveProject( null );
-                }
-                catch( Throwable th1 )
-                {
-                }
-
-              }
-            }
-          }
-          else
-          {
-            logger.warning( "Can only cope with single selection: " + isl );
-          }
-        }
-      }
-    }
-  };
-
   final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
@@ -104,11 +53,9 @@ public class ActiveWorkContext
 
   private ActiveWorkContext( )
   {
-    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    window.getSelectionService().addPostSelectionListener( resSelListener );
     final SzenarioSourceProvider simModelProvider = new SzenarioSourceProvider( this );
     final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    service.addSourceProvider( simModelProvider );    
+    service.addSourceProvider( simModelProvider );
     // TODO remove source provider and projectChangeListener somewhere
   }
 
@@ -254,7 +201,7 @@ public class ActiveWorkContext
   {
     m_dataProvider.setCurrent( project, data );
   }
-  
+
   public void selectScenario( final IProject project, final String scenarioURI )
   {
     setActiveProject( project );
